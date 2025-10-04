@@ -455,6 +455,14 @@ export interface ApiAllUsersAddChannelResponse {
   limit?: number;
   //
   user_ids?: Array<string>;
+  //
+  usernames?: Array<string>;
+  //
+  display_names?: Array<string>;
+  //
+  avatars?: Array<string>;
+  //
+  onlines?: Array<boolean>;  
 }
 
 /**  */
@@ -796,6 +804,8 @@ export interface ApiChannelDescription {
   onlines?: Array<boolean>;
   // DM status
   avatars?: Array<string>;
+  // member count
+  member_count?: number;
 }
 
 /** A message sent on a channel. */
@@ -5186,6 +5196,7 @@ export class MezonApi {
     cursor?: string,
     clanId?: string,
     channelType?: number,
+    isMobile?: boolean,
     options: any = {}
   ): Promise<ApiChannelDescList> {
     const urlPath = "/v2/channeldesc";
@@ -5195,6 +5206,7 @@ export class MezonApi {
     queryParams.set("cursor", cursor);
     queryParams.set("clan_id", clanId);
     queryParams.set("channel_type", channelType);
+    queryParams.set("is_mobile", isMobile);
 
     let bodyJson: string = "";
 

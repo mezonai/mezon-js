@@ -1545,6 +1545,8 @@ export interface ChannelDescription {
   topic: string;
   /** e2ee */
   e2ee: number;
+  /** channel member count */
+  member_count: number;
 }
 
 /** A list of channel description, usually a result of a list operation. */
@@ -1596,6 +1598,8 @@ export interface ListChannelDescsRequest {
   clan_id: string;
   /** channel type */
   channel_type: number;
+  /** is mobile */
+  is_mobile: boolean;
 }
 
 /** List channel description detail */
@@ -2362,6 +2366,10 @@ export interface AllUsersAddChannelResponse {
   channel_id: string;
   user_ids: string[];
   limit: number | undefined;
+  usernames: string[];
+  display_names: string[];
+  avatars: string[];
+  onlines: boolean[];
 }
 
 export interface ClanEmojiCreateRequest {
@@ -14198,6 +14206,7 @@ function createBaseChannelDescription(): ChannelDescription {
     age_restricted: 0,
     topic: "",
     e2ee: 0,
+    member_count: 0,
   };
 }
 
@@ -14294,6 +14303,9 @@ export const ChannelDescription = {
     }
     if (message.e2ee !== 0) {
       writer.uint32(240).int32(message.e2ee);
+    }
+    if (message.member_count !== 0) {
+      writer.uint32(248).int32(message.member_count);
     }
     return writer;
   },
@@ -14525,6 +14537,13 @@ export const ChannelDescription = {
 
           message.e2ee = reader.int32();
           continue;
+        case 31:
+          if (tag !== 248) {
+            break;
+          }
+
+          message.member_count = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -14574,6 +14593,7 @@ export const ChannelDescription = {
       age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
       topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
       e2ee: isSet(object.e2ee) ? globalThis.Number(object.e2ee) : 0,
+      member_count: isSet(object.member_count) ? globalThis.Number(object.member_count) : 0,
     };
   },
 
@@ -14669,6 +14689,9 @@ export const ChannelDescription = {
     if (message.e2ee !== 0) {
       obj.e2ee = Math.round(message.e2ee);
     }
+    if (message.member_count !== 0) {
+      obj.member_count = Math.round(message.member_count);
+    }
     return obj;
   },
 
@@ -14711,6 +14734,7 @@ export const ChannelDescription = {
     message.age_restricted = object.age_restricted ?? 0;
     message.topic = object.topic ?? "";
     message.e2ee = object.e2ee ?? 0;
+    message.member_count = object.member_count ?? 0;
     return message;
   },
 };
@@ -14971,7 +14995,7 @@ export const ListThreadRequest = {
 };
 
 function createBaseListChannelDescsRequest(): ListChannelDescsRequest {
-  return { limit: undefined, state: undefined, cursor: "", clan_id: "", channel_type: 0 };
+  return { limit: undefined, state: undefined, cursor: "", clan_id: "", channel_type: 0, is_mobile: false };
 }
 
 export const ListChannelDescsRequest = {
@@ -14990,6 +15014,9 @@ export const ListChannelDescsRequest = {
     }
     if (message.channel_type !== 0) {
       writer.uint32(40).int32(message.channel_type);
+    }
+    if (message.is_mobile !== false) {
+      writer.uint32(48).bool(message.is_mobile);
     }
     return writer;
   },
@@ -15036,6 +15063,13 @@ export const ListChannelDescsRequest = {
 
           message.channel_type = reader.int32();
           continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.is_mobile = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -15052,6 +15086,7 @@ export const ListChannelDescsRequest = {
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
+      is_mobile: isSet(object.is_mobile) ? globalThis.Boolean(object.is_mobile) : false,
     };
   },
 
@@ -15072,6 +15107,9 @@ export const ListChannelDescsRequest = {
     if (message.channel_type !== 0) {
       obj.channel_type = Math.round(message.channel_type);
     }
+    if (message.is_mobile !== false) {
+      obj.is_mobile = message.is_mobile;
+    }
     return obj;
   },
 
@@ -15085,6 +15123,7 @@ export const ListChannelDescsRequest = {
     message.cursor = object.cursor ?? "";
     message.clan_id = object.clan_id ?? "";
     message.channel_type = object.channel_type ?? 0;
+    message.is_mobile = object.is_mobile ?? false;
     return message;
   },
 };
@@ -22885,7 +22924,7 @@ export const AllUsersAddChannelRequest = {
 };
 
 function createBaseAllUsersAddChannelResponse(): AllUsersAddChannelResponse {
-  return { channel_id: "", user_ids: [], limit: undefined };
+  return { channel_id: "", user_ids: [], limit: undefined, usernames: [], display_names: [], avatars: [], onlines: [] };
 }
 
 export const AllUsersAddChannelResponse = {
@@ -22899,6 +22938,20 @@ export const AllUsersAddChannelResponse = {
     if (message.limit !== undefined) {
       Int32Value.encode({ value: message.limit! }, writer.uint32(26).fork()).ldelim();
     }
+    for (const v of message.usernames) {
+      writer.uint32(34).string(v!);
+    }
+    for (const v of message.display_names) {
+      writer.uint32(42).string(v!);
+    }
+    for (const v of message.avatars) {
+      writer.uint32(50).string(v!);
+    }
+    writer.uint32(58).fork();
+    for (const v of message.onlines) {
+      writer.bool(v);
+    }
+    writer.ldelim();
     return writer;
   },
 
@@ -22930,6 +22983,44 @@ export const AllUsersAddChannelResponse = {
 
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.usernames.push(reader.string());
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.display_names.push(reader.string());
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.avatars.push(reader.string());
+          continue;
+        case 7:
+          if (tag === 56) {
+            message.onlines.push(reader.bool());
+
+            continue;
+          }
+
+          if (tag === 58) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.onlines.push(reader.bool());
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -22944,6 +23035,14 @@ export const AllUsersAddChannelResponse = {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
+      usernames: globalThis.Array.isArray(object?.usernames)
+        ? object.usernames.map((e: any) => globalThis.String(e))
+        : [],
+      display_names: globalThis.Array.isArray(object?.display_names)
+        ? object.display_names.map((e: any) => globalThis.String(e))
+        : [],
+      avatars: globalThis.Array.isArray(object?.avatars) ? object.avatars.map((e: any) => globalThis.String(e)) : [],
+      onlines: globalThis.Array.isArray(object?.onlines) ? object.onlines.map((e: any) => globalThis.Boolean(e)) : [],
     };
   },
 
@@ -22958,6 +23057,18 @@ export const AllUsersAddChannelResponse = {
     if (message.limit !== undefined) {
       obj.limit = message.limit;
     }
+    if (message.usernames?.length) {
+      obj.usernames = message.usernames;
+    }
+    if (message.display_names?.length) {
+      obj.display_names = message.display_names;
+    }
+    if (message.avatars?.length) {
+      obj.avatars = message.avatars;
+    }
+    if (message.onlines?.length) {
+      obj.onlines = message.onlines;
+    }
     return obj;
   },
 
@@ -22969,6 +23080,10 @@ export const AllUsersAddChannelResponse = {
     message.channel_id = object.channel_id ?? "";
     message.user_ids = object.user_ids?.map((e) => e) || [];
     message.limit = object.limit ?? undefined;
+    message.usernames = object.usernames?.map((e) => e) || [];
+    message.display_names = object.display_names?.map((e) => e) || [];
+    message.avatars = object.avatars?.map((e) => e) || [];
+    message.onlines = object.onlines?.map((e) => e) || [];
     return message;
   },
 };

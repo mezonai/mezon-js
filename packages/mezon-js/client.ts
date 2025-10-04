@@ -1557,7 +1557,8 @@ export class Client {
     state?: number,
     cursor?: string,
     clanId?: string,
-    channelType?: number
+    channelType?: number,
+    isMobile?: boolean
   ): Promise<ApiChannelDescList> {
     if (
       this.autoRefreshSession &&
@@ -1574,7 +1575,8 @@ export class Client {
         state,
         cursor,
         clanId,
-        channelType
+        channelType,
+        isMobile
       )
       .then((response: ApiChannelDescList) => {
         var result: ApiChannelDescList = {
