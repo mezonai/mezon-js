@@ -174,6 +174,8 @@ import {
   ApiStoreWalletKeyRequest,
   ApiLinkAccountConfirmRequest,
   ApiLinkAccountMezon,
+  ApiUser,
+  ApiFriend,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -309,124 +311,16 @@ export interface ChannelMessageList {
   prev_cursor?: string;
 }
 
-/** A user in the system. */
-export interface User {
-  /** A URL for an avatar image. */
-  avatar_url?: string;
-  /** The UNIX time when the user was created. */
-  create_time?: string;
-  /** The display name of the user. */
-  display_name?: string;
-  /** Number of related edges to this user. */
-  edge_count?: number;
-  /** The id of the user's account. */
-  id?: string;
-  /** The language expected to be a tag which follows the BCP-47 spec. */
-  lang_tag?: string;
-  /** The location set by the user. */
-  location?: string;
-  /** Additional information stored as a JSON object. */
-  metadata?: { status?: string; user_status?: string };
-  /** Indicates whether the user is currently online. */
-  online?: boolean;
-  /** The timezone set by the user. */
-  timezone?: string;
-  /** The UNIX time when the user was last updated. */
-  update_time?: string;
-  /** The username of the user's account. */
-  username?: string;
-  //
-  is_mobile?: boolean;
-}
-
 /** A collection of zero or more users. */
 export interface Users {
   /** The User objects. */
-  users?: Array<User>;
-}
-
-/** A friend of a user. */
-export interface Friend {
-  /** The friend status. */
-  state?: number;
-  /** The user object. */
-  user?: User;
-  //Source ID
-  source_id?: string;
+  users?: Array<ApiUser>;
 }
 
 /** A collection of zero or more friends of the user. */
 export interface Friends {
   /** The Friend objects. */
-  friends?: Array<Friend>;
-  /** Cursor for the next page of results, if any. */
-  cursor?: string;
-}
-
-/** A user-role pair representing the user's role in a group. */
-export interface GroupUser {
-  /** The user. */
-  user?: User;
-  /** Their role within the group. */
-  state?: number;
-}
-
-/** A list of users belonging to a group along with their role in it. */
-export interface GroupUserList {
-  /** The user-role pairs. */
-  group_users?: Array<GroupUser>;
-  /** Cursor for the next page of results, if any. */
-  cursor?: string;
-}
-
-/** A group in the server. */
-export interface Group {
-  /** A URL for an avatar image. */
-  avatar_url?: string;
-  /** The UNIX time when the group was created. */
-  create_time?: string;
-  /** The id of the user who created the group. */
-  creator_id?: string;
-  /** A description for the group. */
-  description?: string;
-  /** The current count of all members in the group. */
-  edge_count?: number;
-  /** The id of a group. */
-  id?: string;
-  /** The language expected to be a tag which follows the BCP-47 spec. */
-  lang_tag?: string;
-  /** The maximum number of members allowed. */
-  max_count?: number;
-  /** Additional information stored as a JSON object. */
-  metadata?: {};
-  /** The unique name of the group. */
-  name?: string;
-  /** Anyone can join open groups, otherwise only admins can accept members. */
-  open?: boolean;
-  /** The UNIX time when the group was last updated. */
-  update_time?: string;
-}
-
-/** One or more groups returned from a listing operation. */
-export interface GroupList {
-  /** A cursor used to get the next page. */
-  cursor?: string;
-  /** One or more groups. */
-  groups?: Array<Group>;
-}
-
-/** A group-role pair representing the user's groups and their role in each. */
-export interface UserGroup {
-  /** The group. */
-  group?: Group;
-  /** The user's role within the group. */
-  state?: number;
-}
-
-/** A list of groups belonging to a user along with their role in it. */
-export interface UserGroupList {
-  /** The group-role pairs. */
-  user_groups?: Array<UserGroup>;
+  friends?: Array<ApiFriend>;
   /** Cursor for the next page of results, if any. */
   cursor?: string;
 }
@@ -1911,9 +1805,8 @@ export class Client {
               update_time: f.user!.update_time,
               username: f.user!.username,
               is_mobile: f.user?.is_mobile,
-              metadata: f.user!.user_status
-                ? safeJSONParse(f.user!.user_status!)
-                : undefined,
+              user_status: f.user!.user_status,
+              status: f.user!.status
             },
             state: f.state,
             source_id: f.source_id,

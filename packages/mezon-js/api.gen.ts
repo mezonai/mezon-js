@@ -986,6 +986,10 @@ export interface ApiClanDesc {
   about?: string;
   // short url for community
   short_url?: string;
+  // prevent anonymous
+  prevent_anonymous?: boolean;
+  // has unread message
+  has_unread_message?: boolean;
 }
 
 /**  */
