@@ -21,8 +21,8 @@ You'll now see the code in the "node_modules" folder and package listed in your 
 2. Use the connection credentials to build a client object.
 
 ```js
-import { Client } from 'mezon-sdk';
-const client = new Client('apiKey');
+import { Client } from "mezon-sdk";
+const client = new Client("apiKey");
 ```
 
 ## Usage
@@ -99,35 +99,31 @@ console.info("Flags:", flags);
 
 The mezon-sdk supports secure token transfers using the **Mezon Money Network (MMN)** with zero-knowledge proofs for enhanced privacy and security.
 
-#### Required Steps for Token Transfer
-
-Before sending tokens, you must complete these steps to gather the required data:
-
-**Step 1: Generate Ephemeral Key Pair**
+**Generate Ephemeral Key Pair**
 
 ```js
 const keyPair = await client.getEphemeralKeyPair();
 // Returns: { publicKey: string, privateKey: string }
 ```
 
-**Step 2: Get Recipient Wallet Address**
+**Get Recipient Wallet Address**
 
 ```js
 const address = await client.getAddress(senderId);
 // Returns: string (wallet address)
 ```
 
-**Step 3: Fetch Current Nonce**
+**Fetch Current Nonce**
 
 ```js
-const nonce = await client.getCurrentNonce(senderId, 'pending');
+const nonce = await client.getCurrentNonce(senderId, "pending");
 // Returns: number (transaction sequence)
 ```
 
-**Step 4: Generate Zero-Knowledge Proof**
+**Generate Zero-Knowledge Proof**
 
 ```js
-const session = client.sessionManager.getSession();
+const session = client.login();
 const zkProofs = await client.getZkProofs({
   user_id: senderId,
   jwt: session.token,
@@ -137,31 +133,25 @@ const zkProofs = await client.getZkProofs({
 // Returns: { zkProof: string, zkPub: string }
 ```
 
-**Step 5: Execute Token Transfer**
+**Execute Token Transfer**
 
 ```js
-const tokenEvent = {
-  ...,
-  nonce: nonce + 1
-};
-
-const result = await client.sendToken(tokenEvent);
-// Returns: { transactionId: string, status: string, ... }
+const sendTokenData: APISentTokenRequest = {
+      sender_id: client.clientId,
+      sender_name: BOT_NAME,
+      receiver_id: receiver_id,
+      amount: amount,
+    }
+const result = await client.sendToken(sendTokenData);
+// Returns: { tx_hash: string, ok: boolean, error: string }
 ```
 
 #### Setting Up the Client for Token Transfers
 
 ```js
-import { MezonClient } from 'mezon-sdk';
+import { MezonClient } from "mezon-sdk";
 
-const client = new MezonClient(
-  'token_id',
-  'host',
-  'port',
-  true,
-  "mmn-api",
-  "zk-api"
-);
+const client = new MezonClient(BOT_MEZON_TOKEN);
 
 // Login to initialize session
 await client.login();
