@@ -1207,6 +1207,8 @@ export interface ClanDesc {
   short_url: string;
   /** prevent anonymous */
   prevent_anonymous: boolean;
+  /** has unread message */
+  has_unread_message: boolean;
 }
 
 /** Clan information */
@@ -1280,6 +1282,14 @@ export interface ListClanDescRequest {
     | undefined;
   /** Cursor to start from */
   cursor: string;
+}
+
+export interface ListClanUnreadMsgIndicatorRequest {
+  clan_id: string;
+}
+
+export interface ListClanUnreadMsgIndicatorResponse {
+  has_unread_message: boolean;
 }
 
 /** A list of clan */
@@ -11422,6 +11432,7 @@ function createBaseClanDesc(): ClanDesc {
     about: "",
     short_url: "",
     prevent_anonymous: false,
+    has_unread_message: false,
   };
 }
 
@@ -11477,6 +11488,9 @@ export const ClanDesc = {
     }
     if (message.prevent_anonymous !== false) {
       writer.uint32(136).bool(message.prevent_anonymous);
+    }
+    if (message.has_unread_message !== false) {
+      writer.uint32(144).bool(message.has_unread_message);
     }
     return writer;
   },
@@ -11607,6 +11621,13 @@ export const ClanDesc = {
 
           message.prevent_anonymous = reader.bool();
           continue;
+        case 18:
+          if (tag !== 144) {
+            break;
+          }
+
+          message.has_unread_message = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -11635,6 +11656,7 @@ export const ClanDesc = {
       about: isSet(object.about) ? globalThis.String(object.about) : "",
       short_url: isSet(object.short_url) ? globalThis.String(object.short_url) : "",
       prevent_anonymous: isSet(object.prevent_anonymous) ? globalThis.Boolean(object.prevent_anonymous) : false,
+      has_unread_message: isSet(object.has_unread_message) ? globalThis.Boolean(object.has_unread_message) : false,
     };
   },
 
@@ -11691,6 +11713,9 @@ export const ClanDesc = {
     if (message.prevent_anonymous !== false) {
       obj.prevent_anonymous = message.prevent_anonymous;
     }
+    if (message.has_unread_message !== false) {
+      obj.has_unread_message = message.has_unread_message;
+    }
     return obj;
   },
 
@@ -11716,6 +11741,7 @@ export const ClanDesc = {
     message.about = object.about ?? "";
     message.short_url = object.short_url ?? "";
     message.prevent_anonymous = object.prevent_anonymous ?? false;
+    message.has_unread_message = object.has_unread_message ?? false;
     return message;
   },
 };
@@ -12220,6 +12246,130 @@ export const ListClanDescRequest = {
     message.limit = object.limit ?? undefined;
     message.state = object.state ?? undefined;
     message.cursor = object.cursor ?? "";
+    return message;
+  },
+};
+
+function createBaseListClanUnreadMsgIndicatorRequest(): ListClanUnreadMsgIndicatorRequest {
+  return { clan_id: "" };
+}
+
+export const ListClanUnreadMsgIndicatorRequest = {
+  encode(message: ListClanUnreadMsgIndicatorRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListClanUnreadMsgIndicatorRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListClanUnreadMsgIndicatorRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListClanUnreadMsgIndicatorRequest {
+    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+  },
+
+  toJSON(message: ListClanUnreadMsgIndicatorRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListClanUnreadMsgIndicatorRequest>, I>>(
+    base?: I,
+  ): ListClanUnreadMsgIndicatorRequest {
+    return ListClanUnreadMsgIndicatorRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListClanUnreadMsgIndicatorRequest>, I>>(
+    object: I,
+  ): ListClanUnreadMsgIndicatorRequest {
+    const message = createBaseListClanUnreadMsgIndicatorRequest();
+    message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
+function createBaseListClanUnreadMsgIndicatorResponse(): ListClanUnreadMsgIndicatorResponse {
+  return { has_unread_message: false };
+}
+
+export const ListClanUnreadMsgIndicatorResponse = {
+  encode(message: ListClanUnreadMsgIndicatorResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.has_unread_message !== false) {
+      writer.uint32(8).bool(message.has_unread_message);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListClanUnreadMsgIndicatorResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListClanUnreadMsgIndicatorResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.has_unread_message = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListClanUnreadMsgIndicatorResponse {
+    return {
+      has_unread_message: isSet(object.has_unread_message) ? globalThis.Boolean(object.has_unread_message) : false,
+    };
+  },
+
+  toJSON(message: ListClanUnreadMsgIndicatorResponse): unknown {
+    const obj: any = {};
+    if (message.has_unread_message !== false) {
+      obj.has_unread_message = message.has_unread_message;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListClanUnreadMsgIndicatorResponse>, I>>(
+    base?: I,
+  ): ListClanUnreadMsgIndicatorResponse {
+    return ListClanUnreadMsgIndicatorResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListClanUnreadMsgIndicatorResponse>, I>>(
+    object: I,
+  ): ListClanUnreadMsgIndicatorResponse {
+    const message = createBaseListClanUnreadMsgIndicatorResponse();
+    message.has_unread_message = object.has_unread_message ?? false;
     return message;
   },
 };

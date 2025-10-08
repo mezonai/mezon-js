@@ -61,6 +61,7 @@ import {
   ApiFriendList,
   ApiListChannelAppsResponse,
   ApiListUserActivity,
+  ApiListClanUnreadMsgIndicatorResponse,
 } from "./api.gen";
 import { Session } from "./session";
 import { ChannelMessage } from "./client";
@@ -86,8 +87,8 @@ export interface Presence {
   status: string;
   // User Mobile
   is_mobile: boolean;
-  // Metadata
-  metadata: string;
+  // user status
+  user_status: string;
 }
 
 export interface NotificationInfo {
@@ -1243,6 +1244,8 @@ export interface ChannelCanvas {
 
 export interface ListDataSocket {
   api_name?: string;
+  list_unread_msg_indicator_req?: any;
+  unread_msg_indicator?: ApiListClanUnreadMsgIndicatorResponse;
   list_clan_req?: any;
   clan_desc_list?: ApiClanDescList;
   list_thread_req?: any;

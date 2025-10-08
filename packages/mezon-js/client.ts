@@ -176,6 +176,7 @@ import {
   ApiLinkAccountMezon,
   ApiUser,
   ApiFriend,
+  ApiListClanUnreadMsgIndicatorResponse,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -1486,6 +1487,26 @@ export class Client {
 
         result.channeldesc = response.channeldesc;
         return Promise.resolve(result);
+      });
+  }
+
+  /** List clans */
+  async listClanUnreadMsgIndicator(
+    session: Session,
+    clanId: string
+  ): Promise<ApiListClanUnreadMsgIndicatorResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listClanUnreadMsgIndicator(session.token, clanId)
+      .then((response: ApiListClanUnreadMsgIndicatorResponse) => {
+        return Promise.resolve(response);
       });
   }
 

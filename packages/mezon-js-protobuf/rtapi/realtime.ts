@@ -39,6 +39,8 @@ import {
   ListChannelMessagesRequest,
   ListChannelUsersRequest,
   ListClanDescRequest,
+  ListClanUnreadMsgIndicatorRequest,
+  ListClanUnreadMsgIndicatorResponse,
   ListClanUsersRequest,
   ListClanWebhookRequest,
   ListClanWebhookResponse,
@@ -1324,8 +1326,8 @@ export interface UserPresence {
     | undefined;
   /**  */
   is_mobile: boolean;
-  /** Metadata */
-  metadata: string;
+  /** user_status */
+  user_status: string;
 }
 
 /** A custom status presence */
@@ -1698,6 +1700,8 @@ export interface ListDataSocket {
   list_category_req: CategoryDesc | undefined;
   category_list: CategoryDescList | undefined;
   stream_user_list: StreamingChannelUserList | undefined;
+  list_unread_msg_indicator_req: ListClanUnreadMsgIndicatorRequest | undefined;
+  unread_msg_indicator: ListClanUnreadMsgIndicatorResponse | undefined;
 }
 
 export interface MeetParticipantEvent {
@@ -10697,7 +10701,7 @@ function createBaseUserPresence(): UserPresence {
     persistence: false,
     status: undefined,
     is_mobile: false,
-    metadata: "",
+    user_status: "",
   };
 }
 
@@ -10721,8 +10725,8 @@ export const UserPresence = {
     if (message.is_mobile !== false) {
       writer.uint32(48).bool(message.is_mobile);
     }
-    if (message.metadata !== "") {
-      writer.uint32(58).string(message.metadata);
+    if (message.user_status !== "") {
+      writer.uint32(58).string(message.user_status);
     }
     return writer;
   },
@@ -10781,7 +10785,7 @@ export const UserPresence = {
             break;
           }
 
-          message.metadata = reader.string();
+          message.user_status = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -10800,7 +10804,7 @@ export const UserPresence = {
       persistence: isSet(object.persistence) ? globalThis.Boolean(object.persistence) : false,
       status: isSet(object.status) ? String(object.status) : undefined,
       is_mobile: isSet(object.is_mobile) ? globalThis.Boolean(object.is_mobile) : false,
-      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
+      user_status: isSet(object.user_status) ? globalThis.String(object.user_status) : "",
     };
   },
 
@@ -10824,8 +10828,8 @@ export const UserPresence = {
     if (message.is_mobile !== false) {
       obj.is_mobile = message.is_mobile;
     }
-    if (message.metadata !== "") {
-      obj.metadata = message.metadata;
+    if (message.user_status !== "") {
+      obj.user_status = message.user_status;
     }
     return obj;
   },
@@ -10841,7 +10845,7 @@ export const UserPresence = {
     message.persistence = object.persistence ?? false;
     message.status = object.status ?? undefined;
     message.is_mobile = object.is_mobile ?? false;
-    message.metadata = object.metadata ?? "";
+    message.user_status = object.user_status ?? "";
     return message;
   },
 };
@@ -14165,6 +14169,8 @@ function createBaseListDataSocket(): ListDataSocket {
     list_category_req: undefined,
     category_list: undefined,
     stream_user_list: undefined,
+    list_unread_msg_indicator_req: undefined,
+    unread_msg_indicator: undefined,
   };
 }
 
@@ -14362,6 +14368,13 @@ export const ListDataSocket = {
     }
     if (message.stream_user_list !== undefined) {
       StreamingChannelUserList.encode(message.stream_user_list, writer.uint32(514).fork()).ldelim();
+    }
+    if (message.list_unread_msg_indicator_req !== undefined) {
+      ListClanUnreadMsgIndicatorRequest.encode(message.list_unread_msg_indicator_req, writer.uint32(522).fork())
+        .ldelim();
+    }
+    if (message.unread_msg_indicator !== undefined) {
+      ListClanUnreadMsgIndicatorResponse.encode(message.unread_msg_indicator, writer.uint32(530).fork()).ldelim();
     }
     return writer;
   },
@@ -14824,6 +14837,20 @@ export const ListDataSocket = {
 
           message.stream_user_list = StreamingChannelUserList.decode(reader, reader.uint32());
           continue;
+        case 65:
+          if (tag !== 522) {
+            break;
+          }
+
+          message.list_unread_msg_indicator_req = ListClanUnreadMsgIndicatorRequest.decode(reader, reader.uint32());
+          continue;
+        case 66:
+          if (tag !== 530) {
+            break;
+          }
+
+          message.unread_msg_indicator = ListClanUnreadMsgIndicatorResponse.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -14982,6 +15009,12 @@ export const ListDataSocket = {
       category_list: isSet(object.category_list) ? CategoryDescList.fromJSON(object.category_list) : undefined,
       stream_user_list: isSet(object.stream_user_list)
         ? StreamingChannelUserList.fromJSON(object.stream_user_list)
+        : undefined,
+      list_unread_msg_indicator_req: isSet(object.list_unread_msg_indicator_req)
+        ? ListClanUnreadMsgIndicatorRequest.fromJSON(object.list_unread_msg_indicator_req)
+        : undefined,
+      unread_msg_indicator: isSet(object.unread_msg_indicator)
+        ? ListClanUnreadMsgIndicatorResponse.fromJSON(object.unread_msg_indicator)
         : undefined,
     };
   },
@@ -15181,6 +15214,14 @@ export const ListDataSocket = {
     }
     if (message.stream_user_list !== undefined) {
       obj.stream_user_list = StreamingChannelUserList.toJSON(message.stream_user_list);
+    }
+    if (message.list_unread_msg_indicator_req !== undefined) {
+      obj.list_unread_msg_indicator_req = ListClanUnreadMsgIndicatorRequest.toJSON(
+        message.list_unread_msg_indicator_req,
+      );
+    }
+    if (message.unread_msg_indicator !== undefined) {
+      obj.unread_msg_indicator = ListClanUnreadMsgIndicatorResponse.toJSON(message.unread_msg_indicator);
     }
     return obj;
   },
@@ -15391,6 +15432,13 @@ export const ListDataSocket = {
       : undefined;
     message.stream_user_list = (object.stream_user_list !== undefined && object.stream_user_list !== null)
       ? StreamingChannelUserList.fromPartial(object.stream_user_list)
+      : undefined;
+    message.list_unread_msg_indicator_req =
+      (object.list_unread_msg_indicator_req !== undefined && object.list_unread_msg_indicator_req !== null)
+        ? ListClanUnreadMsgIndicatorRequest.fromPartial(object.list_unread_msg_indicator_req)
+        : undefined;
+    message.unread_msg_indicator = (object.unread_msg_indicator !== undefined && object.unread_msg_indicator !== null)
+      ? ListClanUnreadMsgIndicatorResponse.fromPartial(object.unread_msg_indicator)
       : undefined;
     return message;
   },
