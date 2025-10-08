@@ -1,4 +1,9 @@
-import { MmnClient, ZkClient } from "mmn-client-js";
+import {
+  IEphemeralKeyPair,
+  IZkProof,
+  MmnClient,
+  ZkClient,
+} from "mmn-client-js";
 import { MezonApi } from "../../api";
 import { ChannelType } from "../../constants";
 import {
@@ -28,6 +33,10 @@ export class Clan {
   public users: CacheManager<string, User>;
   public sessionToken: string;
   public apiClient: MezonApi;
+  public clientId!: string;
+  public keyGen!: IEphemeralKeyPair;
+  public addressMMN!: string;
+  public zkProofs!: IZkProof;
   public mmnClient!: MmnClient;
   public zkClient!: ZkClient;
 
@@ -48,14 +57,18 @@ export class Clan {
     socketManager: SocketManager,
     sessionToken: string,
     messageQueue: AsyncThrottleQueue,
-    messageDB: MessageDatabase,
-    mmnApiUrl?: string,
-    zkApiUrl?: string
+    messageDB: MessageDatabase
   ) {
     this.id = initClanData.id;
     this.name = initClanData.name;
     this.welcome_channel_id = initClanData.welcome_channel_id;
     this.client = client;
+    this.clientId = client.clientId!;
+    this.keyGen = client.keyGen;
+    this.addressMMN = client.addressMMN;
+    this.zkProofs = client.zkProofs;
+    this.mmnClient = client.mmnClient;
+    this.zkClient = client.zkClient;
     this.apiClient = apiClient;
     this.socketManager = socketManager;
     this.messageQueue = messageQueue;
@@ -83,17 +96,6 @@ export class Clan {
       this.users.set(user_id, user);
       return user;
     });
-
-    if (mmnApiUrl) {
-      this.mmnClient = new MmnClient({
-        baseUrl: mmnApiUrl,
-      });
-    }
-    if (zkApiUrl) {
-      this.zkClient = new ZkClient({
-        endpoint: zkApiUrl,
-      });
-    }
   }
 
   getClientId() {

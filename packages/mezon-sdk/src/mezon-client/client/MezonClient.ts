@@ -49,13 +49,20 @@ import { User, UserInitData } from "../structures/User";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 import { Session } from "../../session";
 import { MessageDatabase } from "../../sqlite/MessageDatabase";
-import { MmnClient, ZkClient } from "mmn-client-js";
+import {
+  IEphemeralKeyPair,
+  IZkProof,
+  MmnClient,
+  ZkClient,
+} from "mmn-client-js";
 
 const DEFAULT_HOST = "gw.mezon.ai";
 const DEFAULT_PORT = "443";
 const DEFAULT_API_KEY = "";
 const DEFAULT_SSL = true;
 const DEFAULT_TIMEOUT_MS = 7000;
+const DEFAULT_MMN_API = "https://dong.mezon.ai/mmn-api/";
+const DEFAULT_ZK_API = "https://dong.mezon.ai/zk-api/";
 
 export class MezonClient extends EventEmitter {
   public token: string;
@@ -66,9 +73,12 @@ export class MezonClient extends EventEmitter {
   public loginBasePath: string | undefined;
   public mmnApiUrl: string | undefined;
   public zkApiUrl: string | undefined;
+  public keyGen!: IEphemeralKeyPair;
+  public addressMMN!: string;
+  public zkProofs!: IZkProof;
   private apiClient!: MezonApi;
-  private mmnClient!: MmnClient;
-  private zkClient!: ZkClient;
+  private _mmnClient!: MmnClient;
+  private _zkClient!: ZkClient;
   private socketManager!: SocketManager;
   private channelManager!: ChannelManager;
   private sessionManager!: SessionManager;
@@ -85,8 +95,8 @@ export class MezonClient extends EventEmitter {
     port = DEFAULT_PORT,
     useSSL = DEFAULT_SSL,
     readonly timeout = DEFAULT_TIMEOUT_MS,
-    mmnApiUrl?: string,
-    zkApiUrl?: string
+    mmnApiUrl = DEFAULT_MMN_API,
+    zkApiUrl = DEFAULT_ZK_API
   ) {
     super();
     const scheme = useSSL ? "https://" : "http://";
@@ -98,6 +108,20 @@ export class MezonClient extends EventEmitter {
     this.mmnApiUrl = mmnApiUrl;
     this.zkApiUrl = zkApiUrl;
     this.messageDB = new MessageDatabase();
+  }
+
+  public get mmnClient(): MmnClient {
+    if (!this._mmnClient) {
+      throw new Error("MmnClient not initialized");
+    }
+    return this._mmnClient;
+  }
+
+  public get zkClient(): ZkClient {
+    if (!this._zkClient) {
+      throw new Error("ZkClient not initialized");
+    }
+    return this._zkClient;
   }
 
   initManager(basePath: string, sessionApi?: Session) {
@@ -123,13 +147,13 @@ export class MezonClient extends EventEmitter {
       this.sessionManager
     );
     if (this.mmnApiUrl) {
-      this.mmnClient = new MmnClient({
+      this._mmnClient = new MmnClient({
         baseUrl: this.mmnApiUrl,
         timeout: this.timeout,
       });
     }
     if (this.zkApiUrl) {
-      this.zkClient = new ZkClient({
+      this._zkClient = new ZkClient({
         endpoint: this.zkApiUrl,
         timeout: this.timeout,
       });
@@ -138,33 +162,53 @@ export class MezonClient extends EventEmitter {
 
   /** Login bot */
   public async login(): Promise<string> {
-    const tempApiClient = new MezonApi(
-      this.token,
-      this.loginBasePath!,
-      this.timeout
-    );
-    const tempSessionManager = new SessionManager(tempApiClient);
-    const sessionApi = await tempSessionManager.authenticate(this.token);
+    try {
+      const tempApiClient = new MezonApi(
+        this.token,
+        this.loginBasePath!,
+        this.timeout
+      );
+      const tempSessionManager = new SessionManager(tempApiClient);
+      const sessionApi = await tempSessionManager.authenticate(this.token);
 
-    if (sessionApi?.api_url) {
-      const { host, port, useSSL } = parseUrlToHostAndSSL(sessionApi.api_url);
-      this.host = host;
-      this.port = port || (useSSL ? "443" : "80");
-      this.useSSL = useSSL;
+      if (sessionApi?.api_url) {
+        const { host, port, useSSL } = parseUrlToHostAndSSL(sessionApi.api_url);
+        this.host = host;
+        this.port = port || (useSSL ? "443" : "80");
+        this.useSSL = useSSL;
 
-      const scheme = this.useSSL ? "https://" : "http://";
-      const basePath = `${scheme}${this.host}:${this.port}`;
-      this.initManager(basePath, sessionApi);
+        const scheme = this.useSSL ? "https://" : "http://";
+        const basePath = `${scheme}${this.host}:${this.port}`;
+        this.initManager(basePath, sessionApi);
+      }
+
+      this.clientId = sessionApi?.user_id;
+
+      // init for MMN
+      if (sessionApi?.user_id) {
+        this.keyGen = await this.getEphemeralKeyPair();
+
+        this.addressMMN = await this.getAddress(sessionApi.user_id);
+
+        this.zkProofs = await this.getZkProofs({
+          user_id: sessionApi.user_id!,
+          jwt: sessionApi?.token,
+          address: this.addressMMN,
+          ephemeral_public_key: this.keyGen.publicKey,
+        });
+      }
+
+      const sessionConnected = await this.socketManager.connect(sessionApi!);
+      if (sessionConnected?.token) {
+        await this.socketManager.connectSocket(sessionConnected.token);
+        await this.channelManager.initAllDmChannels(sessionConnected.token);
+      }
+      this.emit("ready");
+      return JSON.stringify(sessionApi ?? {});
+    } catch (error) {
+      this.socketManager.closeSocket();
+      throw new Error("Some thing went wrong, please reset bot!");
     }
-
-    this.clientId = sessionApi?.user_id;
-    const sessionConnected = await this.socketManager.connect(sessionApi!);
-    if (sessionConnected?.token) {
-      await this.socketManager.connectSocket(sessionConnected.token);
-      await this.channelManager.initAllDmChannels(sessionConnected.token);
-    }
-    this.emit("ready");
-    return JSON.stringify(sessionApi ?? {});
   }
 
   /** Create DM channel */
@@ -221,23 +265,23 @@ export class MezonClient extends EventEmitter {
   }
 
   async getEphemeralKeyPair() {
-    if (!this.mmnClient) {
+    if (!this._mmnClient) {
       throw new Error("MmnClient not initialized");
     }
 
-    return this.mmnClient.generateEphemeralKeyPair();
+    return this._mmnClient.generateEphemeralKeyPair();
   }
 
   async getAddress(user_id: string) {
-    if (!this.mmnClient) {
+    if (!this._mmnClient) {
       throw new Error("MmnClient not initialized");
     }
 
-    return this.mmnClient.getAddressFromUserId(user_id);
+    return this._mmnClient.getAddressFromUserId(user_id);
   }
 
   async getZkProofs(data: ApiGetZkProofRequest) {
-    if (!this.zkClient) {
+    if (!this._zkClient) {
       throw new Error("ZkClient not initialized");
     }
     const req = {
@@ -247,33 +291,35 @@ export class MezonClient extends EventEmitter {
       ephemeralPublicKey: data.ephemeral_public_key,
     };
 
-    return this.zkClient.getZkProofs(req);
+    return this._zkClient.getZkProofs(req);
   }
 
   async getCurrentNonce(user_id: string, tag?: "latest" | "pending") {
-    if (!this.mmnClient) {
+    if (!this._mmnClient) {
       throw new Error("MmnClient not initialized");
     }
 
-    return this.mmnClient.getCurrentNonce(user_id, tag || "pending");
+    return this._mmnClient.getCurrentNonce(user_id, tag || "pending");
   }
 
   async sendToken(tokenEvent: APISentTokenRequest) {
-    if (!this.mmnClient) {
+    if (!this._mmnClient) {
       throw new Error("MmnClient not initialized");
     }
 
-    return this.mmnClient.sendTransaction({
+    const nonce = await this.getCurrentNonce(this.clientId!, "pending");
+
+    return this._mmnClient.sendTransaction({
       sender: tokenEvent.sender_id,
       recipient: tokenEvent.receiver_id,
-      amount: this.mmnClient.scaleAmountToDecimals(tokenEvent.amount),
-      nonce: tokenEvent.nonce,
+      amount: this._mmnClient.scaleAmountToDecimals(tokenEvent.amount),
+      nonce: nonce.nonce + 1,
       textData: tokenEvent.note,
       extraInfo: tokenEvent.extra_attribute,
-      publicKey: tokenEvent.public_key,
-      privateKey: tokenEvent.private_key,
-      zkProof: tokenEvent.zk_proof,
-      zkPub: tokenEvent.zk_pub,
+      publicKey: this.keyGen.publicKey,
+      privateKey: this.keyGen.privateKey,
+      zkProof: this.zkProofs.proof,
+      zkPub: this.zkProofs.public_input,
     });
   }
 
@@ -345,7 +391,9 @@ export class MezonClient extends EventEmitter {
         const receiver = await clan?.users.fetch(e.receiver_id);
         await receiver?.sendDM(
           {
-            t: `Funds Transferred: ${(+e.amount).toLocaleString()}₫ | ${e.note}`,
+            t: `Funds Transferred: ${(+e.amount).toLocaleString()}₫ | ${
+              e.note
+            }`,
           },
           TypeMessage.SendToken
         );
