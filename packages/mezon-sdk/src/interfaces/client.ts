@@ -664,20 +664,20 @@ export interface ApiGetZkProofRequest {
   address: string;
 }
 
-export interface APISentTokenRequest {
-  sender_id: string;
+export interface BaseSentTokenRequest {
   sender_name?: string;
-  receiver_id: string;
+  sender_id: string;
   amount: number;
   note?: string;
   extra_attribute?: ExtraInfo;
-  nonce: number;
   timestamp?: number;
-  public_key: string;
-  private_key: string;
-  zk_proof: string;
-  zk_pub: string;
 }
+
+export interface APISentTokenRequest extends BaseSentTokenRequest {
+  receiver_id: string;
+}
+
+export type APISentTokenRequestUser = BaseSentTokenRequest;
 
 export interface TokenSentEvent {
   sender_id?: string;

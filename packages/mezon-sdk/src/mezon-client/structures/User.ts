@@ -1,8 +1,8 @@
 import { ChannelStreamMode } from "../../constants";
 import {
   ApiGetZkProofRequest,
-  APISentTokenRequest,
-  ChannelMessageContent
+  APISentTokenRequestUser,
+  ChannelMessageContent,
 } from "../../interfaces";
 import { ChannelManager } from "../manager/channel_manager";
 import { SocketManager } from "../manager/socket_manager";
@@ -89,23 +89,25 @@ export class User {
     return this.clan.mmnClient.getCurrentNonce(user_id, tag || "pending");
   }
 
-  async sendToken(tokenEvent: APISentTokenRequest) {
+  async sendToken(tokenEvent: APISentTokenRequestUser) {
     if (!this.clan.mmnClient) {
       throw new Error("MmnClient not initialized");
     }
 
+    const nonce = await this.getCurrentNonce(this.clan.clientId!, "pending");
+
     try {
       return this.clan.mmnClient.sendTransaction({
         sender: tokenEvent.sender_id,
-        recipient: tokenEvent.receiver_id,
+        recipient: this.id,
         amount: this.clan.mmnClient.scaleAmountToDecimals(tokenEvent.amount),
-        nonce: tokenEvent.nonce,
+        nonce: nonce.nonce + 1,
         textData: tokenEvent.note,
         extraInfo: tokenEvent.extra_attribute,
-        publicKey: tokenEvent.public_key,
-        privateKey: tokenEvent.private_key,
-        zkProof: tokenEvent.zk_proof,
-        zkPub: tokenEvent.zk_pub,
+        publicKey: this.clan.keyGen.publicKey,
+        privateKey: this.clan.keyGen.privateKey,
+        zkProof: this.clan.zkProofs.proof,
+        zkPub: this.clan.zkProofs.public_input,
       });
     } catch (error) {
       console.log("Error sendToken");

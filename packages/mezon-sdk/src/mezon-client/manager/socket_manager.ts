@@ -132,15 +132,15 @@ export class SocketManager {
   }
 
   async retriesConnect(): Promise<void> {
-    if (this.isRetrying) return;
-    this.isRetrying = true;
-
     let retryInterval = 5000;
     const maxRetryInterval = 60000;
 
     console.log("Reconnecting...");
 
     const retry = async () => {
+      if (this.isRetrying || this.isHardDisconnect) return;
+      this.isRetrying = true;
+
       try {
         await this.client.login();
 
