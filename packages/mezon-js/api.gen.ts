@@ -2721,7 +2721,7 @@ export interface ApiUser {
   // list nick name
   list_nick_names?: Array<string>;
   // phone number
-  phone_number?: number;
+  phone_number?: string;
 }
 
 /**  */
