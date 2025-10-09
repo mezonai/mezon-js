@@ -60,29 +60,6 @@ console.warn(
   "Session will expire at:",
   new Date(expiresAt * 1000).toISOString()
 );
-```
-
-It is recommended to store the auth token from the session and check at startup if it has expired. If the token has expired you must reauthenticate. The expiry time of the token can be changed as a setting in the server.
-
-```js
-// Assume we've stored the auth token in browser Web Storage.
-const authtoken = window.localStorage.getItem("satori_authtoken");
-const refreshtoken = window.localStorage.getItem("satori_refreshtoken");
-
-let session = satorijs.Session.restore(authtoken, refreshtoken);
-
-// Check whether a session is close to expiry.
-
-const unixTimeInFuture = Date.now() + 8.64e7; // one day from now
-
-if (session.isexpired(unixTimeInFuture / 1000)) {
-  try {
-    session = await client.sessionRefresh(session);
-  } catch (e) {
-    console.info("Session can no longer be refreshed. Must reauthenticate!");
-  }
-}
-```
 
 ### Requests
 
