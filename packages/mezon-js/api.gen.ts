@@ -2720,6 +2720,8 @@ export interface ApiUser {
   mezon_id?: string;
   // list nick name
   list_nick_names?: Array<string>;
+  // phone number
+  phone_number?: number;
 }
 
 /**  */
