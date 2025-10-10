@@ -169,7 +169,13 @@ export class MezonClient extends EventEmitter {
         this.timeout
       );
       const tempSessionManager = new SessionManager(tempApiClient);
-      const sessionApi = await tempSessionManager.authenticate(this.token);
+      let sessionApi = null;
+      try {
+        sessionApi = await tempSessionManager.authenticate(this.token);
+      } catch (error) {
+        this.socketManager?.closeSocket();
+        throw new Error("Some thing went wrong, please reset bot!");
+      }
 
       if (sessionApi?.api_url) {
         const { host, port, useSSL } = parseUrlToHostAndSSL(sessionApi.api_url);
