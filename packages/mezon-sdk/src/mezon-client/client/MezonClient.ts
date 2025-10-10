@@ -206,7 +206,7 @@ export class MezonClient extends EventEmitter {
       this.emit("ready");
       return JSON.stringify(sessionApi ?? {});
     } catch (error) {
-      this.socketManager.closeSocket();
+      this.socketManager?.closeSocket();
       throw new Error("Some thing went wrong, please reset bot!");
     }
   }
