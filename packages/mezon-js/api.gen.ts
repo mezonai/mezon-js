@@ -676,6 +676,10 @@ export interface ApiChannelCanvasItem {
   is_default?: boolean;
   //
   title?: string;
+  // update time
+  update_time?: string;
+  // create time
+  create_time?: string;
 }
 
 /**  */

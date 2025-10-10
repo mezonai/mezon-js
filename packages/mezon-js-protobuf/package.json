@@ -1,6 +1,6 @@
 {
     "name": "mezon-js-protobuf",
-    "version": "1.8.44",
+    "version": "1.8.45",
     "description": "Websocket adapter adding protocol buffer support to the Mezon Javascript client.",
     "main": "dist/mezon-js-protobuf.cjs.js",
     "module": "dist/mezon-js-protobuf.esm.mjs",
