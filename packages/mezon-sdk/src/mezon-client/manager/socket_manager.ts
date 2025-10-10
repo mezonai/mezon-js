@@ -94,40 +94,44 @@ export class SocketManager {
   }
 
   async connectSocket(sessionToken: string) {
-    const clans = await this.apiClient.listClanDescs(sessionToken);
-    const clanList = clans?.clandesc ?? [];
-    clanList.push({ clan_id: "0", clan_name: "" });
-    clanList.forEach(async (clan) => {
-      await this.socket.joinClanChat(clan.clan_id || "");
-      if (!this.client.clans.get(clan.clan_id!)) {
-        const clanObj = new Clan(
-          {
-            id: clan.clan_id!,
-            name: clan?.clan_name ?? "unknown",
-            welcome_channel_id: clan?.welcome_channel_id ?? "",
-          },
-          this.client,
-          this.apiClient,
-          this,
-          sessionToken,
-          this.messageQueue,
-          this.messageDB
-        );
-        this.client.clans.set(clan.clan_id!, clanObj);
-      }
-    });
-
-    // join direct message
-    await this.socket.joinClanChat("0");
-    ["ondisconnect", "onerror", "onheartbeattimeout"].forEach((event) => {
-      this.socket[event] = (this[event as keyof this] as Function).bind(this);
-    });
-
-    for (const event in Events) {
-      const key = Events[event as keyof typeof Events].toString();
-      this.socket.socketEvents.on(key, (...args: any[]) => {
-        this.client.emit(key, ...args);
+    try {
+      const clans = await this.apiClient.listClanDescs(sessionToken);
+      const clanList = clans?.clandesc ?? [];
+      clanList.push({ clan_id: "0", clan_name: "" });
+      clanList.forEach(async (clan) => {
+        await this.socket.joinClanChat(clan.clan_id || "");
+        if (!this.client.clans.get(clan.clan_id!)) {
+          const clanObj = new Clan(
+            {
+              id: clan.clan_id!,
+              name: clan?.clan_name ?? "unknown",
+              welcome_channel_id: clan?.welcome_channel_id ?? "",
+            },
+            this.client,
+            this.apiClient,
+            this,
+            sessionToken,
+            this.messageQueue,
+            this.messageDB
+          );
+          this.client.clans.set(clan.clan_id!, clanObj);
+        }
       });
+
+      // join direct message
+      await this.socket.joinClanChat("0");
+      ["ondisconnect", "onerror", "onheartbeattimeout"].forEach((event) => {
+        this.socket[event] = (this[event as keyof this] as Function).bind(this);
+      });
+
+      for (const event in Events) {
+        const key = Events[event as keyof typeof Events].toString();
+        this.socket.socketEvents.on(key, (...args: any[]) => {
+          this.client.emit(key, ...args);
+        });
+      }
+    } catch (error) {
+      this.closeSocket()
     }
   }
 
