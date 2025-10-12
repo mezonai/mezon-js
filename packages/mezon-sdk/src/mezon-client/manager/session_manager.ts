@@ -9,10 +9,11 @@ export class SessionManager {
     this.session = session;
   }
 
-  async authenticate(apiKey: string) {
+  async authenticate(botId: string, apiKey: string) {
     return this.apiClient
       .mezonAuthenticate(apiKey, "", {
         account: {
+          appid: botId,
           token: apiKey,
         },
       })
