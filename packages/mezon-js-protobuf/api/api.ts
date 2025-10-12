@@ -171,8 +171,6 @@ export interface Account {
   user:
     | User
     | undefined;
-  /** The user's wallet data. */
-  wallet: string;
   /** The email address of the user. */
   email: string;
   /** The mezon id in the user's account. */
@@ -3024,6 +3022,7 @@ export interface ChannelCanvasItem {
   creator_id: string;
   /**  */
   update_time: Date | undefined;
+  create_time: Date | undefined;
 }
 
 export interface ChannelCanvasListResponse {
@@ -3466,56 +3465,6 @@ export interface UpdateOnboardingStepRequest {
   onboarding_step: number | undefined;
 }
 
-export interface WalletLedger {
-  /** change set id */
-  id: string;
-  /** user id */
-  user_id: string;
-  /** create time */
-  create_time:
-    | Date
-    | undefined;
-  /** value */
-  value: number;
-  /** transaction id */
-  transaction_id: string;
-}
-
-export interface WalletLedgerList {
-  wallet_ledger: WalletLedger[];
-  count: number;
-}
-
-export interface WalletLedgerListReq {
-  limit:
-    | number
-    | undefined;
-  /**
-   * filter = 0 for all
-   * filter = 1 for sent
-   * filter = 2 for recieve
-   */
-  filter: number;
-  transaction_id: string;
-  page: number | undefined;
-}
-
-export interface TransactionDetailReq {
-  trans_id: string;
-}
-
-export interface TransactionDetail {
-  sender_id: string;
-  sender_username: string;
-  receiver_id: string;
-  receiver_username: string;
-  amount: number;
-  trans_id: string;
-  metadata: string;
-  create_time: Date | undefined;
-  update_time: Date | undefined;
-}
-
 export interface SdTopic {
   id: string;
   creator_id: string;
@@ -3759,7 +3708,6 @@ export interface TransferOwnershipRequest {
 function createBaseAccount(): Account {
   return {
     user: undefined,
-    wallet: "",
     email: "",
     mezon_id: "",
     verify_time: undefined,
@@ -3776,32 +3724,29 @@ export const Account = {
     if (message.user !== undefined) {
       User.encode(message.user, writer.uint32(10).fork()).ldelim();
     }
-    if (message.wallet !== "") {
-      writer.uint32(18).string(message.wallet);
-    }
     if (message.email !== "") {
-      writer.uint32(26).string(message.email);
+      writer.uint32(18).string(message.email);
     }
     if (message.mezon_id !== "") {
-      writer.uint32(34).string(message.mezon_id);
+      writer.uint32(26).string(message.mezon_id);
     }
     if (message.verify_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.verify_time), writer.uint32(42).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.verify_time), writer.uint32(34).fork()).ldelim();
     }
     if (message.disable_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.disable_time), writer.uint32(50).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.disable_time), writer.uint32(42).fork()).ldelim();
     }
     if (message.logo !== "") {
-      writer.uint32(58).string(message.logo);
+      writer.uint32(50).string(message.logo);
     }
     if (message.splash_screen !== "") {
-      writer.uint32(66).string(message.splash_screen);
+      writer.uint32(58).string(message.splash_screen);
     }
     if (message.encrypt_private_key !== "") {
-      writer.uint32(74).string(message.encrypt_private_key);
+      writer.uint32(66).string(message.encrypt_private_key);
     }
     if (message.password_setted !== false) {
-      writer.uint32(80).bool(message.password_setted);
+      writer.uint32(72).bool(message.password_setted);
     }
     return writer;
   },
@@ -3825,59 +3770,52 @@ export const Account = {
             break;
           }
 
-          message.wallet = reader.string();
+          message.email = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.email = reader.string();
+          message.mezon_id = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.mezon_id = reader.string();
+          message.verify_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.verify_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.disable_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.disable_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.logo = reader.string();
           continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          message.logo = reader.string();
+          message.splash_screen = reader.string();
           continue;
         case 8:
           if (tag !== 66) {
             break;
           }
 
-          message.splash_screen = reader.string();
-          continue;
-        case 9:
-          if (tag !== 74) {
-            break;
-          }
-
           message.encrypt_private_key = reader.string();
           continue;
-        case 10:
-          if (tag !== 80) {
+        case 9:
+          if (tag !== 72) {
             break;
           }
 
@@ -3895,7 +3833,6 @@ export const Account = {
   fromJSON(object: any): Account {
     return {
       user: isSet(object.user) ? User.fromJSON(object.user) : undefined,
-      wallet: isSet(object.wallet) ? globalThis.String(object.wallet) : "",
       email: isSet(object.email) ? globalThis.String(object.email) : "",
       mezon_id: isSet(object.mezon_id) ? globalThis.String(object.mezon_id) : "",
       verify_time: isSet(object.verify_time) ? fromJsonTimestamp(object.verify_time) : undefined,
@@ -3911,9 +3848,6 @@ export const Account = {
     const obj: any = {};
     if (message.user !== undefined) {
       obj.user = User.toJSON(message.user);
-    }
-    if (message.wallet !== "") {
-      obj.wallet = message.wallet;
     }
     if (message.email !== "") {
       obj.email = message.email;
@@ -3948,7 +3882,6 @@ export const Account = {
   fromPartial<I extends Exact<DeepPartial<Account>, I>>(object: I): Account {
     const message = createBaseAccount();
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
-    message.wallet = object.wallet ?? "";
     message.email = object.email ?? "";
     message.mezon_id = object.mezon_id ?? "";
     message.verify_time = object.verify_time ?? undefined;
@@ -29514,7 +29447,15 @@ export const ChannelCanvasListRequest = {
 };
 
 function createBaseChannelCanvasItem(): ChannelCanvasItem {
-  return { id: "", title: "", is_default: false, content: "", creator_id: "", update_time: undefined };
+  return {
+    id: "",
+    title: "",
+    is_default: false,
+    content: "",
+    creator_id: "",
+    update_time: undefined,
+    create_time: undefined,
+  };
 }
 
 export const ChannelCanvasItem = {
@@ -29536,6 +29477,9 @@ export const ChannelCanvasItem = {
     }
     if (message.update_time !== undefined) {
       Timestamp.encode(toTimestamp(message.update_time), writer.uint32(50).fork()).ldelim();
+    }
+    if (message.create_time !== undefined) {
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(58).fork()).ldelim();
     }
     return writer;
   },
@@ -29589,6 +29533,13 @@ export const ChannelCanvasItem = {
 
           message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -29606,6 +29557,7 @@ export const ChannelCanvasItem = {
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
+      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
     };
   },
 
@@ -29629,6 +29581,9 @@ export const ChannelCanvasItem = {
     if (message.update_time !== undefined) {
       obj.update_time = message.update_time.toISOString();
     }
+    if (message.create_time !== undefined) {
+      obj.create_time = message.create_time.toISOString();
+    }
     return obj;
   },
 
@@ -29643,6 +29598,7 @@ export const ChannelCanvasItem = {
     message.content = object.content ?? "";
     message.creator_id = object.creator_id ?? "";
     message.update_time = object.update_time ?? undefined;
+    message.create_time = object.create_time ?? undefined;
     return message;
   },
 };
@@ -34430,551 +34386,6 @@ export const UpdateOnboardingStepRequest = {
     const message = createBaseUpdateOnboardingStepRequest();
     message.clan_id = object.clan_id ?? "";
     message.onboarding_step = object.onboarding_step ?? undefined;
-    return message;
-  },
-};
-
-function createBaseWalletLedger(): WalletLedger {
-  return { id: "", user_id: "", create_time: undefined, value: 0, transaction_id: "" };
-}
-
-export const WalletLedger = {
-  encode(message: WalletLedger, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
-    }
-    if (message.user_id !== "") {
-      writer.uint32(18).string(message.user_id);
-    }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(26).fork()).ldelim();
-    }
-    if (message.value !== 0) {
-      writer.uint32(32).int32(message.value);
-    }
-    if (message.transaction_id !== "") {
-      writer.uint32(42).string(message.transaction_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): WalletLedger {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseWalletLedger();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.user_id = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-        case 4:
-          if (tag !== 32) {
-            break;
-          }
-
-          message.value = reader.int32();
-          continue;
-        case 5:
-          if (tag !== 42) {
-            break;
-          }
-
-          message.transaction_id = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): WalletLedger {
-    return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
-      value: isSet(object.value) ? globalThis.Number(object.value) : 0,
-      transaction_id: isSet(object.transaction_id) ? globalThis.String(object.transaction_id) : "",
-    };
-  },
-
-  toJSON(message: WalletLedger): unknown {
-    const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
-    }
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
-    }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
-    }
-    if (message.value !== 0) {
-      obj.value = Math.round(message.value);
-    }
-    if (message.transaction_id !== "") {
-      obj.transaction_id = message.transaction_id;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<WalletLedger>, I>>(base?: I): WalletLedger {
-    return WalletLedger.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<WalletLedger>, I>>(object: I): WalletLedger {
-    const message = createBaseWalletLedger();
-    message.id = object.id ?? "";
-    message.user_id = object.user_id ?? "";
-    message.create_time = object.create_time ?? undefined;
-    message.value = object.value ?? 0;
-    message.transaction_id = object.transaction_id ?? "";
-    return message;
-  },
-};
-
-function createBaseWalletLedgerList(): WalletLedgerList {
-  return { wallet_ledger: [], count: 0 };
-}
-
-export const WalletLedgerList = {
-  encode(message: WalletLedgerList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.wallet_ledger) {
-      WalletLedger.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.count !== 0) {
-      writer.uint32(16).int32(message.count);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): WalletLedgerList {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseWalletLedgerList();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.wallet_ledger.push(WalletLedger.decode(reader, reader.uint32()));
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.count = reader.int32();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): WalletLedgerList {
-    return {
-      wallet_ledger: globalThis.Array.isArray(object?.wallet_ledger)
-        ? object.wallet_ledger.map((e: any) => WalletLedger.fromJSON(e))
-        : [],
-      count: isSet(object.count) ? globalThis.Number(object.count) : 0,
-    };
-  },
-
-  toJSON(message: WalletLedgerList): unknown {
-    const obj: any = {};
-    if (message.wallet_ledger?.length) {
-      obj.wallet_ledger = message.wallet_ledger.map((e) => WalletLedger.toJSON(e));
-    }
-    if (message.count !== 0) {
-      obj.count = Math.round(message.count);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<WalletLedgerList>, I>>(base?: I): WalletLedgerList {
-    return WalletLedgerList.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<WalletLedgerList>, I>>(object: I): WalletLedgerList {
-    const message = createBaseWalletLedgerList();
-    message.wallet_ledger = object.wallet_ledger?.map((e) => WalletLedger.fromPartial(e)) || [];
-    message.count = object.count ?? 0;
-    return message;
-  },
-};
-
-function createBaseWalletLedgerListReq(): WalletLedgerListReq {
-  return { limit: undefined, filter: 0, transaction_id: "", page: undefined };
-}
-
-export const WalletLedgerListReq = {
-  encode(message: WalletLedgerListReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.filter !== 0) {
-      writer.uint32(16).int32(message.filter);
-    }
-    if (message.transaction_id !== "") {
-      writer.uint32(26).string(message.transaction_id);
-    }
-    if (message.page !== undefined) {
-      Int32Value.encode({ value: message.page! }, writer.uint32(34).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): WalletLedgerListReq {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseWalletLedgerListReq();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.filter = reader.int32();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.transaction_id = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.page = Int32Value.decode(reader, reader.uint32()).value;
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): WalletLedgerListReq {
-    return {
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      filter: isSet(object.filter) ? globalThis.Number(object.filter) : 0,
-      transaction_id: isSet(object.transaction_id) ? globalThis.String(object.transaction_id) : "",
-      page: isSet(object.page) ? Number(object.page) : undefined,
-    };
-  },
-
-  toJSON(message: WalletLedgerListReq): unknown {
-    const obj: any = {};
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
-    }
-    if (message.filter !== 0) {
-      obj.filter = Math.round(message.filter);
-    }
-    if (message.transaction_id !== "") {
-      obj.transaction_id = message.transaction_id;
-    }
-    if (message.page !== undefined) {
-      obj.page = message.page;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<WalletLedgerListReq>, I>>(base?: I): WalletLedgerListReq {
-    return WalletLedgerListReq.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<WalletLedgerListReq>, I>>(object: I): WalletLedgerListReq {
-    const message = createBaseWalletLedgerListReq();
-    message.limit = object.limit ?? undefined;
-    message.filter = object.filter ?? 0;
-    message.transaction_id = object.transaction_id ?? "";
-    message.page = object.page ?? undefined;
-    return message;
-  },
-};
-
-function createBaseTransactionDetailReq(): TransactionDetailReq {
-  return { trans_id: "" };
-}
-
-export const TransactionDetailReq = {
-  encode(message: TransactionDetailReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.trans_id !== "") {
-      writer.uint32(10).string(message.trans_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): TransactionDetailReq {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseTransactionDetailReq();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.trans_id = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): TransactionDetailReq {
-    return { trans_id: isSet(object.trans_id) ? globalThis.String(object.trans_id) : "" };
-  },
-
-  toJSON(message: TransactionDetailReq): unknown {
-    const obj: any = {};
-    if (message.trans_id !== "") {
-      obj.trans_id = message.trans_id;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<TransactionDetailReq>, I>>(base?: I): TransactionDetailReq {
-    return TransactionDetailReq.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<TransactionDetailReq>, I>>(object: I): TransactionDetailReq {
-    const message = createBaseTransactionDetailReq();
-    message.trans_id = object.trans_id ?? "";
-    return message;
-  },
-};
-
-function createBaseTransactionDetail(): TransactionDetail {
-  return {
-    sender_id: "",
-    sender_username: "",
-    receiver_id: "",
-    receiver_username: "",
-    amount: 0,
-    trans_id: "",
-    metadata: "",
-    create_time: undefined,
-    update_time: undefined,
-  };
-}
-
-export const TransactionDetail = {
-  encode(message: TransactionDetail, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.sender_id !== "") {
-      writer.uint32(10).string(message.sender_id);
-    }
-    if (message.sender_username !== "") {
-      writer.uint32(18).string(message.sender_username);
-    }
-    if (message.receiver_id !== "") {
-      writer.uint32(26).string(message.receiver_id);
-    }
-    if (message.receiver_username !== "") {
-      writer.uint32(34).string(message.receiver_username);
-    }
-    if (message.amount !== 0) {
-      writer.uint32(40).int32(message.amount);
-    }
-    if (message.trans_id !== "") {
-      writer.uint32(50).string(message.trans_id);
-    }
-    if (message.metadata !== "") {
-      writer.uint32(58).string(message.metadata);
-    }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(66).fork()).ldelim();
-    }
-    if (message.update_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(74).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): TransactionDetail {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseTransactionDetail();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.sender_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.sender_username = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.receiver_id = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.receiver_username = reader.string();
-          continue;
-        case 5:
-          if (tag !== 40) {
-            break;
-          }
-
-          message.amount = reader.int32();
-          continue;
-        case 6:
-          if (tag !== 50) {
-            break;
-          }
-
-          message.trans_id = reader.string();
-          continue;
-        case 7:
-          if (tag !== 58) {
-            break;
-          }
-
-          message.metadata = reader.string();
-          continue;
-        case 8:
-          if (tag !== 66) {
-            break;
-          }
-
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-        case 9:
-          if (tag !== 74) {
-            break;
-          }
-
-          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): TransactionDetail {
-    return {
-      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
-      sender_username: isSet(object.sender_username) ? globalThis.String(object.sender_username) : "",
-      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
-      receiver_username: isSet(object.receiver_username) ? globalThis.String(object.receiver_username) : "",
-      amount: isSet(object.amount) ? globalThis.Number(object.amount) : 0,
-      trans_id: isSet(object.trans_id) ? globalThis.String(object.trans_id) : "",
-      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
-      update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
-    };
-  },
-
-  toJSON(message: TransactionDetail): unknown {
-    const obj: any = {};
-    if (message.sender_id !== "") {
-      obj.sender_id = message.sender_id;
-    }
-    if (message.sender_username !== "") {
-      obj.sender_username = message.sender_username;
-    }
-    if (message.receiver_id !== "") {
-      obj.receiver_id = message.receiver_id;
-    }
-    if (message.receiver_username !== "") {
-      obj.receiver_username = message.receiver_username;
-    }
-    if (message.amount !== 0) {
-      obj.amount = Math.round(message.amount);
-    }
-    if (message.trans_id !== "") {
-      obj.trans_id = message.trans_id;
-    }
-    if (message.metadata !== "") {
-      obj.metadata = message.metadata;
-    }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
-    }
-    if (message.update_time !== undefined) {
-      obj.update_time = message.update_time.toISOString();
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<TransactionDetail>, I>>(base?: I): TransactionDetail {
-    return TransactionDetail.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<TransactionDetail>, I>>(object: I): TransactionDetail {
-    const message = createBaseTransactionDetail();
-    message.sender_id = object.sender_id ?? "";
-    message.sender_username = object.sender_username ?? "";
-    message.receiver_id = object.receiver_id ?? "";
-    message.receiver_username = object.receiver_username ?? "";
-    message.amount = object.amount ?? 0;
-    message.trans_id = object.trans_id ?? "";
-    message.metadata = object.metadata ?? "";
-    message.create_time = object.create_time ?? undefined;
-    message.update_time = object.update_time ?? undefined;
     return message;
   },
 };
