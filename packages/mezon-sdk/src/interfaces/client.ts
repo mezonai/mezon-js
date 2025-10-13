@@ -673,7 +673,6 @@ export interface BaseSentTokenRequest {
   sender_id: string;
   amount: number;
   note?: string;
-  extra_attribute?: string;
   mmn_extra_info?: MMNExtraInfo;
   timestamp?: number;
 }
