@@ -2,9 +2,7 @@ import { ExtraInfo } from "mmn-client-js";
 import { Events } from "../constants/enum";
 import { ChannelMessageAck } from "./socket";
 
-export interface MMNExtraInfo extends ExtraInfo {
-  ExtraAttribute?: string;
-}
+export interface MMNExtraInfo extends ExtraInfo {}
 
 /**  */
 export interface ApiChannelDescription {
@@ -670,9 +668,10 @@ export interface ApiGetZkProofRequest {
 
 export interface BaseSentTokenRequest {
   sender_name?: string;
-  sender_id: string;
+  sender_id?: string;
   amount: number;
   note?: string;
+  extra_attribute?: string;
   mmn_extra_info?: MMNExtraInfo;
   timestamp?: number;
 }
@@ -839,6 +838,17 @@ export interface DropdownBoxSelected {
   sender_id: string;
   user_id: string;
   values: string[];
+}
+
+export interface ClientConfigDto {
+  botId: string;
+  token: string;
+  host?: string;
+  port?: string;
+  useSSL?: boolean;
+  timeout?: number;
+  mmnApiUrl?: string;
+  zkApiUrl?: string;
 }
 
 export interface Client {

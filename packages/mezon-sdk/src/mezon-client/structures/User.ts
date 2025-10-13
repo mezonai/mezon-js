@@ -1,8 +1,10 @@
+import { ETransferType } from "mmn-client-js";
 import { ChannelStreamMode } from "../../constants";
 import {
   ApiGetZkProofRequest,
   APISentTokenRequestUser,
   ChannelMessageContent,
+  MMNExtraInfo,
 } from "../../interfaces";
 import { ChannelManager } from "../manager/channel_manager";
 import { SocketManager } from "../manager/socket_manager";
@@ -94,16 +96,27 @@ export class User {
       throw new Error("MmnClient not initialized");
     }
 
+    const sender_id = tokenEvent?.sender_id ?? this.clan.clientId;
+    const receiver_id = this.id;
+    const mmn_extra_info: MMNExtraInfo = {
+      ExtraAttribute: tokenEvent?.extra_attribute ?? "",
+      UserSenderUsername: tokenEvent?.sender_name ?? "",
+      type: ETransferType.TransferToken,
+      ...(tokenEvent?.mmn_extra_info ?? {}),
+      UserSenderId: sender_id,
+      UserReceiverId: receiver_id,
+    };
+
     const nonce = await this.getCurrentNonce(this.clan.clientId!, "pending");
 
     try {
       return this.clan.mmnClient.sendTransaction({
-        sender: tokenEvent.sender_id,
-        recipient: this.id,
+        sender: sender_id,
+        recipient: receiver_id,
         amount: this.clan.mmnClient.scaleAmountToDecimals(tokenEvent.amount),
         nonce: nonce.nonce + 1,
-        textData: tokenEvent.note,
-        extraInfo: JSON.stringify(tokenEvent.mmn_extra_info),
+        textData: tokenEvent?.note || "No note",
+        extraInfo: mmn_extra_info,
         publicKey: this.clan.keyGen.publicKey,
         privateKey: this.clan.keyGen.privateKey,
         zkProof: this.clan.zkProofs.proof,

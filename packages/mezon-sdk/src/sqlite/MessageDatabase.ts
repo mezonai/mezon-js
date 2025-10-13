@@ -43,9 +43,9 @@ export class MessageDatabase {
     this.db
       .prepare(
         `CREATE TABLE IF NOT EXISTS messages (
-        id TEXT PRIMARY KEY,
+        id TEXT NOT NULL,
+        channel_id TEXT NOT NULL,
         clan_id TEXT,
-        channel_id TEXT,
         sender_id TEXT,
         content TEXT,
         mentions TEXT,
@@ -53,13 +53,14 @@ export class MessageDatabase {
         reactions TEXT,
         msg_references TEXT,
         topic_id TEXT,
-        create_time_seconds INTEGER
-      )`
+        create_time_seconds INTEGER,
+        PRIMARY KEY (id, channel_id)
+          )`
       )
       .run();
     this.db
       .prepare(
-        `CREATE INDEX IF NOT EXISTS idx_channel_id_id ON messages(channel_id, id)`
+        `CREATE INDEX IF NOT EXISTS idx_messages_channel_id ON messages(channel_id)`
       )
       .run();
   }
