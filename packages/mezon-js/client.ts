@@ -700,6 +700,22 @@ export class Client {
   }
 
   /** Create a new group with the current user as the creator and superadmin. */
+  async uploadOauthFile(
+    session: Session,
+    request: ApiUploadAttachmentRequest
+  ): Promise<ApiUploadAttachment> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.uploadOauthFile(session.token, request);
+  }
+
+  /** Create a new group with the current user as the creator and superadmin. */
   async uploadAttachmentFile(
     session: Session,
     request: ApiUploadAttachmentRequest
