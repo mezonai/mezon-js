@@ -109,23 +109,29 @@ export class User {
 
     const nonce = await this.getCurrentNonce(this.clan.clientId!, "pending");
 
-    try {
-      return this.clan.mmnClient.sendTransaction({
-        sender: sender_id,
-        recipient: receiver_id,
-        amount: this.clan.mmnClient.scaleAmountToDecimals(tokenEvent.amount),
-        nonce: nonce.nonce + 1,
-        textData: tokenEvent?.note || "No note",
-        extraInfo: mmn_extra_info,
-        publicKey: this.clan.keyGen.publicKey,
-        privateKey: this.clan.keyGen.privateKey,
-        zkProof: this.clan.zkProofs.proof,
-        zkPub: this.clan.zkProofs.public_input,
-      });
-    } catch (error) {
-      console.log("Error sendToken");
-      return null;
+    const result = await this.clan.mmnClient.sendTransaction({
+      sender: sender_id,
+      recipient: receiver_id,
+      amount: this.clan.mmnClient.scaleAmountToDecimals(tokenEvent.amount),
+      nonce: nonce.nonce + 1,
+      textData: tokenEvent?.note || "No note",
+      extraInfo: mmn_extra_info,
+      publicKey: this.clan.keyGen.publicKey,
+      privateKey: this.clan.keyGen.privateKey,
+      zkProof: this.clan.zkProofs.proof,
+      zkPub: this.clan.zkProofs.public_input,
+    });
+
+    if (!result.ok) {
+      let errorMsg = result.error;
+      try {
+        const parsed = JSON.parse(result.error);
+        errorMsg = parsed.message || result.error;
+      } catch (_) {}
+      throw new Error(`Transaction failed: ${errorMsg}`);
     }
+
+    return result;
   }
 
   async sendDM(content: ChannelMessageContent, code?: number) {
