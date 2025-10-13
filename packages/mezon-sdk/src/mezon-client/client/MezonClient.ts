@@ -19,9 +19,11 @@ import {
   ChannelDeletedEvent,
   ChannelMessage,
   ChannelUpdatedEvent,
+  ClientConfigDto,
   DropdownBoxSelected,
   GiveCoffeeEvent,
   MessageReaction,
+  MMNExtraInfo,
   QuickMenuEvent,
   StreamingJoinedEvent,
   StreamingLeavedEvent,
@@ -50,6 +52,7 @@ import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 import { Session } from "../../session";
 import { MessageDatabase } from "../../sqlite/MessageDatabase";
 import {
+  ETransferType,
   IEphemeralKeyPair,
   IZkProof,
   MmnClient,
@@ -66,10 +69,11 @@ const DEFAULT_ZK_API = "https://dong.mezon.ai/zk-api/";
 
 export class MezonClient extends EventEmitter {
   public token: string;
-  public clientId: string | undefined;
+  public clientId: string;
   public host: string;
   public useSSL: boolean;
   public port: string;
+  private readonly timeout: number;
   public loginBasePath: string | undefined;
   public mmnApiUrl: string | undefined;
   public zkApiUrl: string | undefined;
@@ -89,21 +93,29 @@ export class MezonClient extends EventEmitter {
   public channels!: CacheManager<string, TextChannel>;
   private messageDB: MessageDatabase;
 
-  constructor(
-    token = DEFAULT_API_KEY,
-    host = DEFAULT_HOST,
-    port = DEFAULT_PORT,
-    useSSL = DEFAULT_SSL,
-    readonly timeout = DEFAULT_TIMEOUT_MS,
-    mmnApiUrl = DEFAULT_MMN_API,
-    zkApiUrl = DEFAULT_ZK_API
-  ) {
+  constructor(config: ClientConfigDto) {
     super();
+    const {
+      botId,
+      token = DEFAULT_API_KEY,
+      host = DEFAULT_HOST,
+      port = DEFAULT_PORT,
+      useSSL = DEFAULT_SSL,
+      timeout = DEFAULT_TIMEOUT_MS,
+      mmnApiUrl = DEFAULT_MMN_API,
+      zkApiUrl = DEFAULT_ZK_API,
+    } = config;
+
+    if (!botId) throw new Error("botId is required");
+    if (!token) throw new Error("token is required");
+
     const scheme = useSSL ? "https://" : "http://";
     this.token = token;
+    this.clientId = botId;
     this.host = host;
-    this.useSSL = useSSL;
     this.port = port;
+    this.useSSL = useSSL;
+    this.timeout = timeout;
     this.loginBasePath = `${scheme}${host}:${port}`;
     this.mmnApiUrl = mmnApiUrl;
     this.zkApiUrl = zkApiUrl;
@@ -171,7 +183,10 @@ export class MezonClient extends EventEmitter {
       const tempSessionManager = new SessionManager(tempApiClient);
       let sessionApi = null;
       try {
-        sessionApi = await tempSessionManager.authenticate(this.token);
+        sessionApi = await tempSessionManager.authenticate(
+          this.clientId,
+          this.token
+        );
       } catch (error) {
         this.socketManager?.closeSocket();
         throw new Error("Some thing went wrong, please reset bot!");
@@ -187,8 +202,6 @@ export class MezonClient extends EventEmitter {
         const basePath = `${scheme}${this.host}:${this.port}`;
         this.initManager(basePath, sessionApi);
       }
-
-      this.clientId = sessionApi?.user_id;
 
       // init for MMN
       if (sessionApi?.user_id) {
@@ -313,15 +326,26 @@ export class MezonClient extends EventEmitter {
       throw new Error("MmnClient not initialized");
     }
 
+    const sender_id = tokenEvent?.sender_id ?? this.clientId;
+    const receiver_id = tokenEvent.receiver_id;
+    const mmn_extra_info: MMNExtraInfo = {
+      ExtraAttribute: tokenEvent?.extra_attribute ?? "",
+      UserSenderUsername: tokenEvent?.sender_name ?? "",
+      type: ETransferType.TransferToken,
+      ...(tokenEvent?.mmn_extra_info ?? {}),
+      UserSenderId: sender_id,
+      UserReceiverId: receiver_id,
+    };
+
     const nonce = await this.getCurrentNonce(this.clientId!, "pending");
 
     return this._mmnClient.sendTransaction({
-      sender: tokenEvent.sender_id,
-      recipient: tokenEvent.receiver_id,
+      sender: sender_id,
+      recipient: receiver_id,
       amount: this._mmnClient.scaleAmountToDecimals(tokenEvent.amount),
       nonce: nonce.nonce + 1,
-      textData: tokenEvent.note,
-      extraInfo: tokenEvent.extra_attribute,
+      textData: tokenEvent?.note || "No note",
+      extraInfo: mmn_extra_info,
       publicKey: this.keyGen.publicKey,
       privateKey: this.keyGen.privateKey,
       zkProof: this.zkProofs.proof,
@@ -695,9 +719,21 @@ export class MezonClient extends EventEmitter {
     try {
       if (clan_id && clan_id !== "0") {
         const clan = this.clans.get(clan_id);
-        await clan?.loadChannels();
+        if (clan) {
+          try {
+            await clan.loadChannels();
+          } catch (err) {
+            console.warn("Failed to load channels", err);
+          }
+        }
       }
-      const channel = await this.channels.fetch(channel_id);
+
+      const channel = await this.channels.fetch(channel_id).catch((err) => {
+        console.warn("Fetch channel failed", err);
+        return null;
+      });
+
+      if (!message_id || !channel) return;
       const messageRaw: MessageInitData = {
         id: message_id!,
         clan_id: clan_id!,
@@ -716,8 +752,12 @@ export class MezonClient extends EventEmitter {
         this.socketManager,
         this.messageQueue
       );
-      channel.messages.set(message_id!, message);
-      this.messageDB.saveMessage(e);
+      channel.messages.set(message_id, message);
+      try {
+        this.messageDB.saveMessage(e);
+      } catch (err) {
+        console.warn("Failed to save message", err);
+      }
     } catch (error) {
       console.log("Error initChannelMessageCache");
     }

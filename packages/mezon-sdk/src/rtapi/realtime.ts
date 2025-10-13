@@ -39,6 +39,8 @@ import {
   ListChannelMessagesRequest,
   ListChannelUsersRequest,
   ListClanDescRequest,
+  ListClanUnreadMsgIndicatorRequest,
+  ListClanUnreadMsgIndicatorResponse,
   ListClanUsersRequest,
   ListClanWebhookRequest,
   ListClanWebhookResponse,
@@ -430,7 +432,15 @@ export interface Envelope {
     | UnblockFriend
     | undefined;
   /** mezon meet participant event */
-  meet_participant_event?: MeetParticipantEvent | undefined;
+  meet_participant_event?:
+    | MeetParticipantEvent
+    | undefined;
+  /** tranfer ownership event */
+  transfer_ownership_event?:
+    | TransferOwnershipEvent
+    | undefined;
+  /** Add friend event */
+  add_friend?: AddFriend | undefined;
 }
 
 export interface FollowEvent {
@@ -874,6 +884,17 @@ export interface Notifications {
   notifications: Notification[];
 }
 
+export interface AddFriend {
+  /** user id */
+  user_id: string;
+  /** username */
+  username: string;
+  /** display name */
+  display_name: string;
+  /** avatar */
+  avatar: string;
+}
+
 export interface RemoveFriend {
   /**  */
   user_id: string;
@@ -983,6 +1004,8 @@ export interface MessageTypingEvent {
   sender_username: string;
   /** sender display name */
   sender_display_name: string;
+  /** topic id */
+  topic_id: string;
 }
 
 /** Voice Joined event */
@@ -1303,8 +1326,8 @@ export interface UserPresence {
     | undefined;
   /**  */
   is_mobile: boolean;
-  /** Metadata */
-  metadata: string;
+  /** user_status */
+  user_status: string;
 }
 
 /** A custom status presence */
@@ -1384,6 +1407,14 @@ export interface ClanUpdatedEvent {
   welcome_channel_id: string;
   /** onboarding_banner. */
   onboarding_banner: string;
+  /** community banner */
+  community_banner: string;
+  /** is community */
+  is_community: boolean;
+  /** about */
+  about: string;
+  /** description */
+  description: string;
 }
 
 /** clan profile updated event */
@@ -1428,16 +1459,16 @@ export interface UserProfileRedis {
   display_name: string;
   /** about me */
   about_me: string;
-  /** custom status */
-  custom_status: string;
+  /** user status */
+  user_status: string;
+  /** status online, offline, invisible, idle, do not disturb */
+  status: string;
   /** create time */
   create_time_second: number;
   /** FCM token */
   fcm_tokens: FCMTokens[];
   /** isOnline */
   online: boolean;
-  /** Metadata */
-  metadata: string;
   /** is disabled */
   is_disabled: boolean;
   /** clans */
@@ -1595,6 +1626,8 @@ export interface HandleParticipantMeetStateEvent {
   display_name: string;
   /** state (0: join, 1: leave) */
   state: number;
+  /** room name */
+  room_name: string;
 }
 
 export interface DeleteAccountEvent {
@@ -1667,6 +1700,8 @@ export interface ListDataSocket {
   list_category_req: CategoryDesc | undefined;
   category_list: CategoryDescList | undefined;
   stream_user_list: StreamingChannelUserList | undefined;
+  list_unread_msg_indicator_req: ListClanUnreadMsgIndicatorRequest | undefined;
+  unread_msg_indicator: ListClanUnreadMsgIndicatorResponse | undefined;
 }
 
 export interface MeetParticipantEvent {
@@ -1675,6 +1710,12 @@ export interface MeetParticipantEvent {
   channel_id: string;
   clan_id: string;
   action: number;
+}
+
+export interface TransferOwnershipEvent {
+  clan_id: string;
+  prev_owner: string;
+  curr_owner: string;
 }
 
 function createBaseEnvelope(): Envelope {
@@ -1765,6 +1806,8 @@ function createBaseEnvelope(): Envelope {
     quick_menu_event: undefined,
     un_block_friend: undefined,
     meet_participant_event: undefined,
+    transfer_ownership_event: undefined,
+    add_friend: undefined,
   };
 }
 
@@ -2028,6 +2071,12 @@ export const Envelope = {
     }
     if (message.meet_participant_event !== undefined) {
       MeetParticipantEvent.encode(message.meet_participant_event, writer.uint32(690).fork()).ldelim();
+    }
+    if (message.transfer_ownership_event !== undefined) {
+      TransferOwnershipEvent.encode(message.transfer_ownership_event, writer.uint32(698).fork()).ldelim();
+    }
+    if (message.add_friend !== undefined) {
+      AddFriend.encode(message.add_friend, writer.uint32(706).fork()).ldelim();
     }
     return writer;
   },
@@ -2641,6 +2690,20 @@ export const Envelope = {
 
           message.meet_participant_event = MeetParticipantEvent.decode(reader, reader.uint32());
           continue;
+        case 87:
+          if (tag !== 698) {
+            break;
+          }
+
+          message.transfer_ownership_event = TransferOwnershipEvent.decode(reader, reader.uint32());
+          continue;
+        case 88:
+          if (tag !== 706) {
+            break;
+          }
+
+          message.add_friend = AddFriend.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2848,6 +2911,10 @@ export const Envelope = {
       meet_participant_event: isSet(object.meet_participant_event)
         ? MeetParticipantEvent.fromJSON(object.meet_participant_event)
         : undefined,
+      transfer_ownership_event: isSet(object.transfer_ownership_event)
+        ? TransferOwnershipEvent.fromJSON(object.transfer_ownership_event)
+        : undefined,
+      add_friend: isSet(object.add_friend) ? AddFriend.fromJSON(object.add_friend) : undefined,
     };
   },
 
@@ -3112,6 +3179,12 @@ export const Envelope = {
     }
     if (message.meet_participant_event !== undefined) {
       obj.meet_participant_event = MeetParticipantEvent.toJSON(message.meet_participant_event);
+    }
+    if (message.transfer_ownership_event !== undefined) {
+      obj.transfer_ownership_event = TransferOwnershipEvent.toJSON(message.transfer_ownership_event);
+    }
+    if (message.add_friend !== undefined) {
+      obj.add_friend = AddFriend.toJSON(message.add_friend);
     }
     return obj;
   },
@@ -3397,6 +3470,13 @@ export const Envelope = {
       (object.meet_participant_event !== undefined && object.meet_participant_event !== null)
         ? MeetParticipantEvent.fromPartial(object.meet_participant_event)
         : undefined;
+    message.transfer_ownership_event =
+      (object.transfer_ownership_event !== undefined && object.transfer_ownership_event !== null)
+        ? TransferOwnershipEvent.fromPartial(object.transfer_ownership_event)
+        : undefined;
+    message.add_friend = (object.add_friend !== undefined && object.add_friend !== null)
+      ? AddFriend.fromPartial(object.add_friend)
+      : undefined;
     return message;
   },
 };
@@ -6765,6 +6845,110 @@ export const Notifications = {
   },
 };
 
+function createBaseAddFriend(): AddFriend {
+  return { user_id: "", username: "", display_name: "", avatar: "" };
+}
+
+export const AddFriend = {
+  encode(message: AddFriend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
+    if (message.username !== "") {
+      writer.uint32(18).string(message.username);
+    }
+    if (message.display_name !== "") {
+      writer.uint32(26).string(message.display_name);
+    }
+    if (message.avatar !== "") {
+      writer.uint32(34).string(message.avatar);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AddFriend {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAddFriend();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.username = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.display_name = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.avatar = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AddFriend {
+    return {
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
+      avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
+    };
+  },
+
+  toJSON(message: AddFriend): unknown {
+    const obj: any = {};
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.display_name !== "") {
+      obj.display_name = message.display_name;
+    }
+    if (message.avatar !== "") {
+      obj.avatar = message.avatar;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AddFriend>, I>>(base?: I): AddFriend {
+    return AddFriend.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AddFriend>, I>>(object: I): AddFriend {
+    const message = createBaseAddFriend();
+    message.user_id = object.user_id ?? "";
+    message.username = object.username ?? "";
+    message.display_name = object.display_name ?? "";
+    message.avatar = object.avatar ?? "";
+    return message;
+  },
+};
+
 function createBaseRemoveFriend(): RemoveFriend {
   return { user_id: "" };
 }
@@ -7647,6 +7831,7 @@ function createBaseMessageTypingEvent(): MessageTypingEvent {
     is_public: false,
     sender_username: "",
     sender_display_name: "",
+    topic_id: "",
   };
 }
 
@@ -7672,6 +7857,9 @@ export const MessageTypingEvent = {
     }
     if (message.sender_display_name !== "") {
       writer.uint32(58).string(message.sender_display_name);
+    }
+    if (message.topic_id !== "") {
+      writer.uint32(66).string(message.topic_id);
     }
     return writer;
   },
@@ -7732,6 +7920,13 @@ export const MessageTypingEvent = {
 
           message.sender_display_name = reader.string();
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.topic_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -7750,6 +7945,7 @@ export const MessageTypingEvent = {
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
       sender_username: isSet(object.sender_username) ? globalThis.String(object.sender_username) : "",
       sender_display_name: isSet(object.sender_display_name) ? globalThis.String(object.sender_display_name) : "",
+      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
     };
   },
 
@@ -7776,6 +7972,9 @@ export const MessageTypingEvent = {
     if (message.sender_display_name !== "") {
       obj.sender_display_name = message.sender_display_name;
     }
+    if (message.topic_id !== "") {
+      obj.topic_id = message.topic_id;
+    }
     return obj;
   },
 
@@ -7791,6 +7990,7 @@ export const MessageTypingEvent = {
     message.is_public = object.is_public ?? false;
     message.sender_username = object.sender_username ?? "";
     message.sender_display_name = object.sender_display_name ?? "";
+    message.topic_id = object.topic_id ?? "";
     return message;
   },
 };
@@ -10501,7 +10701,7 @@ function createBaseUserPresence(): UserPresence {
     persistence: false,
     status: undefined,
     is_mobile: false,
-    metadata: "",
+    user_status: "",
   };
 }
 
@@ -10525,8 +10725,8 @@ export const UserPresence = {
     if (message.is_mobile !== false) {
       writer.uint32(48).bool(message.is_mobile);
     }
-    if (message.metadata !== "") {
-      writer.uint32(58).string(message.metadata);
+    if (message.user_status !== "") {
+      writer.uint32(58).string(message.user_status);
     }
     return writer;
   },
@@ -10585,7 +10785,7 @@ export const UserPresence = {
             break;
           }
 
-          message.metadata = reader.string();
+          message.user_status = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -10604,7 +10804,7 @@ export const UserPresence = {
       persistence: isSet(object.persistence) ? globalThis.Boolean(object.persistence) : false,
       status: isSet(object.status) ? String(object.status) : undefined,
       is_mobile: isSet(object.is_mobile) ? globalThis.Boolean(object.is_mobile) : false,
-      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
+      user_status: isSet(object.user_status) ? globalThis.String(object.user_status) : "",
     };
   },
 
@@ -10628,8 +10828,8 @@ export const UserPresence = {
     if (message.is_mobile !== false) {
       obj.is_mobile = message.is_mobile;
     }
-    if (message.metadata !== "") {
-      obj.metadata = message.metadata;
+    if (message.user_status !== "") {
+      obj.user_status = message.user_status;
     }
     return obj;
   },
@@ -10645,7 +10845,7 @@ export const UserPresence = {
     message.persistence = object.persistence ?? false;
     message.status = object.status ?? undefined;
     message.is_mobile = object.is_mobile ?? false;
-    message.metadata = object.metadata ?? "";
+    message.user_status = object.user_status ?? "";
     return message;
   },
 };
@@ -11162,6 +11362,10 @@ function createBaseClanUpdatedEvent(): ClanUpdatedEvent {
     is_onboarding: false,
     welcome_channel_id: "",
     onboarding_banner: "",
+    community_banner: "",
+    is_community: false,
+    about: "",
+    description: "",
   };
 }
 
@@ -11190,6 +11394,18 @@ export const ClanUpdatedEvent = {
     }
     if (message.onboarding_banner !== "") {
       writer.uint32(66).string(message.onboarding_banner);
+    }
+    if (message.community_banner !== "") {
+      writer.uint32(74).string(message.community_banner);
+    }
+    if (message.is_community !== false) {
+      writer.uint32(80).bool(message.is_community);
+    }
+    if (message.about !== "") {
+      writer.uint32(90).string(message.about);
+    }
+    if (message.description !== "") {
+      writer.uint32(98).string(message.description);
     }
     return writer;
   },
@@ -11257,6 +11473,34 @@ export const ClanUpdatedEvent = {
 
           message.onboarding_banner = reader.string();
           continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.community_banner = reader.string();
+          continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.is_community = reader.bool();
+          continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.about = reader.string();
+          continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.description = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -11276,6 +11520,10 @@ export const ClanUpdatedEvent = {
       is_onboarding: isSet(object.is_onboarding) ? globalThis.Boolean(object.is_onboarding) : false,
       welcome_channel_id: isSet(object.welcome_channel_id) ? globalThis.String(object.welcome_channel_id) : "",
       onboarding_banner: isSet(object.onboarding_banner) ? globalThis.String(object.onboarding_banner) : "",
+      community_banner: isSet(object.community_banner) ? globalThis.String(object.community_banner) : "",
+      is_community: isSet(object.is_community) ? globalThis.Boolean(object.is_community) : false,
+      about: isSet(object.about) ? globalThis.String(object.about) : "",
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
     };
   },
 
@@ -11305,6 +11553,18 @@ export const ClanUpdatedEvent = {
     if (message.onboarding_banner !== "") {
       obj.onboarding_banner = message.onboarding_banner;
     }
+    if (message.community_banner !== "") {
+      obj.community_banner = message.community_banner;
+    }
+    if (message.is_community !== false) {
+      obj.is_community = message.is_community;
+    }
+    if (message.about !== "") {
+      obj.about = message.about;
+    }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
     return obj;
   },
 
@@ -11321,6 +11581,10 @@ export const ClanUpdatedEvent = {
     message.is_onboarding = object.is_onboarding ?? false;
     message.welcome_channel_id = object.welcome_channel_id ?? "";
     message.onboarding_banner = object.onboarding_banner ?? "";
+    message.community_banner = object.community_banner ?? "";
+    message.is_community = object.is_community ?? false;
+    message.about = object.about ?? "";
+    message.description = object.description ?? "";
     return message;
   },
 };
@@ -11593,11 +11857,11 @@ function createBaseUserProfileRedis(): UserProfileRedis {
     avatar: "",
     display_name: "",
     about_me: "",
-    custom_status: "",
+    user_status: "",
+    status: "",
     create_time_second: 0,
     fcm_tokens: [],
     online: false,
-    metadata: "",
     is_disabled: false,
     joined_clans: [],
     pubkey: "",
@@ -11626,20 +11890,20 @@ export const UserProfileRedis = {
     if (message.about_me !== "") {
       writer.uint32(42).string(message.about_me);
     }
-    if (message.custom_status !== "") {
-      writer.uint32(50).string(message.custom_status);
+    if (message.user_status !== "") {
+      writer.uint32(50).string(message.user_status);
+    }
+    if (message.status !== "") {
+      writer.uint32(58).string(message.status);
     }
     if (message.create_time_second !== 0) {
-      writer.uint32(56).uint32(message.create_time_second);
+      writer.uint32(64).uint32(message.create_time_second);
     }
     for (const v of message.fcm_tokens) {
-      FCMTokens.encode(v!, writer.uint32(66).fork()).ldelim();
+      FCMTokens.encode(v!, writer.uint32(74).fork()).ldelim();
     }
     if (message.online !== false) {
-      writer.uint32(72).bool(message.online);
-    }
-    if (message.metadata !== "") {
-      writer.uint32(82).string(message.metadata);
+      writer.uint32(80).bool(message.online);
     }
     if (message.is_disabled !== false) {
       writer.uint32(88).bool(message.is_disabled);
@@ -11715,35 +11979,35 @@ export const UserProfileRedis = {
             break;
           }
 
-          message.custom_status = reader.string();
+          message.user_status = reader.string();
           continue;
         case 7:
-          if (tag !== 56) {
+          if (tag !== 58) {
+            break;
+          }
+
+          message.status = reader.string();
+          continue;
+        case 8:
+          if (tag !== 64) {
             break;
           }
 
           message.create_time_second = reader.uint32();
           continue;
-        case 8:
-          if (tag !== 66) {
+        case 9:
+          if (tag !== 74) {
             break;
           }
 
           message.fcm_tokens.push(FCMTokens.decode(reader, reader.uint32()));
           continue;
-        case 9:
-          if (tag !== 72) {
+        case 10:
+          if (tag !== 80) {
             break;
           }
 
           message.online = reader.bool();
-          continue;
-        case 10:
-          if (tag !== 82) {
-            break;
-          }
-
-          message.metadata = reader.string();
           continue;
         case 11:
           if (tag !== 88) {
@@ -11817,13 +12081,13 @@ export const UserProfileRedis = {
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
       about_me: isSet(object.about_me) ? globalThis.String(object.about_me) : "",
-      custom_status: isSet(object.custom_status) ? globalThis.String(object.custom_status) : "",
+      user_status: isSet(object.user_status) ? globalThis.String(object.user_status) : "",
+      status: isSet(object.status) ? globalThis.String(object.status) : "",
       create_time_second: isSet(object.create_time_second) ? globalThis.Number(object.create_time_second) : 0,
       fcm_tokens: globalThis.Array.isArray(object?.fcm_tokens)
         ? object.fcm_tokens.map((e: any) => FCMTokens.fromJSON(e))
         : [],
       online: isSet(object.online) ? globalThis.Boolean(object.online) : false,
-      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
       is_disabled: isSet(object.is_disabled) ? globalThis.Boolean(object.is_disabled) : false,
       joined_clans: globalThis.Array.isArray(object?.joined_clans)
         ? object.joined_clans.map((e: any) => globalThis.String(e))
@@ -11854,8 +12118,11 @@ export const UserProfileRedis = {
     if (message.about_me !== "") {
       obj.about_me = message.about_me;
     }
-    if (message.custom_status !== "") {
-      obj.custom_status = message.custom_status;
+    if (message.user_status !== "") {
+      obj.user_status = message.user_status;
+    }
+    if (message.status !== "") {
+      obj.status = message.status;
     }
     if (message.create_time_second !== 0) {
       obj.create_time_second = Math.round(message.create_time_second);
@@ -11865,9 +12132,6 @@ export const UserProfileRedis = {
     }
     if (message.online !== false) {
       obj.online = message.online;
-    }
-    if (message.metadata !== "") {
-      obj.metadata = message.metadata;
     }
     if (message.is_disabled !== false) {
       obj.is_disabled = message.is_disabled;
@@ -11906,11 +12170,11 @@ export const UserProfileRedis = {
     message.avatar = object.avatar ?? "";
     message.display_name = object.display_name ?? "";
     message.about_me = object.about_me ?? "";
-    message.custom_status = object.custom_status ?? "";
+    message.user_status = object.user_status ?? "";
+    message.status = object.status ?? "";
     message.create_time_second = object.create_time_second ?? 0;
     message.fcm_tokens = object.fcm_tokens?.map((e) => FCMTokens.fromPartial(e)) || [];
     message.online = object.online ?? false;
-    message.metadata = object.metadata ?? "";
     message.is_disabled = object.is_disabled ?? false;
     message.joined_clans = object.joined_clans?.map((e) => e) || [];
     message.pubkey = object.pubkey ?? "";
@@ -13662,7 +13926,7 @@ export const UnpinMessageEvent = {
 };
 
 function createBaseHandleParticipantMeetStateEvent(): HandleParticipantMeetStateEvent {
-  return { clan_id: "", channel_id: "", display_name: "", state: 0 };
+  return { clan_id: "", channel_id: "", display_name: "", state: 0, room_name: "" };
 }
 
 export const HandleParticipantMeetStateEvent = {
@@ -13678,6 +13942,9 @@ export const HandleParticipantMeetStateEvent = {
     }
     if (message.state !== 0) {
       writer.uint32(32).int32(message.state);
+    }
+    if (message.room_name !== "") {
+      writer.uint32(42).string(message.room_name);
     }
     return writer;
   },
@@ -13717,6 +13984,13 @@ export const HandleParticipantMeetStateEvent = {
 
           message.state = reader.int32();
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.room_name = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -13732,6 +14006,7 @@ export const HandleParticipantMeetStateEvent = {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
       state: isSet(object.state) ? globalThis.Number(object.state) : 0,
+      room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
     };
   },
 
@@ -13749,6 +14024,9 @@ export const HandleParticipantMeetStateEvent = {
     if (message.state !== 0) {
       obj.state = Math.round(message.state);
     }
+    if (message.room_name !== "") {
+      obj.room_name = message.room_name;
+    }
     return obj;
   },
 
@@ -13763,6 +14041,7 @@ export const HandleParticipantMeetStateEvent = {
     message.channel_id = object.channel_id ?? "";
     message.display_name = object.display_name ?? "";
     message.state = object.state ?? 0;
+    message.room_name = object.room_name ?? "";
     return message;
   },
 };
@@ -13890,6 +14169,8 @@ function createBaseListDataSocket(): ListDataSocket {
     list_category_req: undefined,
     category_list: undefined,
     stream_user_list: undefined,
+    list_unread_msg_indicator_req: undefined,
+    unread_msg_indicator: undefined,
   };
 }
 
@@ -14087,6 +14368,13 @@ export const ListDataSocket = {
     }
     if (message.stream_user_list !== undefined) {
       StreamingChannelUserList.encode(message.stream_user_list, writer.uint32(514).fork()).ldelim();
+    }
+    if (message.list_unread_msg_indicator_req !== undefined) {
+      ListClanUnreadMsgIndicatorRequest.encode(message.list_unread_msg_indicator_req, writer.uint32(522).fork())
+        .ldelim();
+    }
+    if (message.unread_msg_indicator !== undefined) {
+      ListClanUnreadMsgIndicatorResponse.encode(message.unread_msg_indicator, writer.uint32(530).fork()).ldelim();
     }
     return writer;
   },
@@ -14549,6 +14837,20 @@ export const ListDataSocket = {
 
           message.stream_user_list = StreamingChannelUserList.decode(reader, reader.uint32());
           continue;
+        case 65:
+          if (tag !== 522) {
+            break;
+          }
+
+          message.list_unread_msg_indicator_req = ListClanUnreadMsgIndicatorRequest.decode(reader, reader.uint32());
+          continue;
+        case 66:
+          if (tag !== 530) {
+            break;
+          }
+
+          message.unread_msg_indicator = ListClanUnreadMsgIndicatorResponse.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -14707,6 +15009,12 @@ export const ListDataSocket = {
       category_list: isSet(object.category_list) ? CategoryDescList.fromJSON(object.category_list) : undefined,
       stream_user_list: isSet(object.stream_user_list)
         ? StreamingChannelUserList.fromJSON(object.stream_user_list)
+        : undefined,
+      list_unread_msg_indicator_req: isSet(object.list_unread_msg_indicator_req)
+        ? ListClanUnreadMsgIndicatorRequest.fromJSON(object.list_unread_msg_indicator_req)
+        : undefined,
+      unread_msg_indicator: isSet(object.unread_msg_indicator)
+        ? ListClanUnreadMsgIndicatorResponse.fromJSON(object.unread_msg_indicator)
         : undefined,
     };
   },
@@ -14906,6 +15214,14 @@ export const ListDataSocket = {
     }
     if (message.stream_user_list !== undefined) {
       obj.stream_user_list = StreamingChannelUserList.toJSON(message.stream_user_list);
+    }
+    if (message.list_unread_msg_indicator_req !== undefined) {
+      obj.list_unread_msg_indicator_req = ListClanUnreadMsgIndicatorRequest.toJSON(
+        message.list_unread_msg_indicator_req,
+      );
+    }
+    if (message.unread_msg_indicator !== undefined) {
+      obj.unread_msg_indicator = ListClanUnreadMsgIndicatorResponse.toJSON(message.unread_msg_indicator);
     }
     return obj;
   },
@@ -15117,6 +15433,13 @@ export const ListDataSocket = {
     message.stream_user_list = (object.stream_user_list !== undefined && object.stream_user_list !== null)
       ? StreamingChannelUserList.fromPartial(object.stream_user_list)
       : undefined;
+    message.list_unread_msg_indicator_req =
+      (object.list_unread_msg_indicator_req !== undefined && object.list_unread_msg_indicator_req !== null)
+        ? ListClanUnreadMsgIndicatorRequest.fromPartial(object.list_unread_msg_indicator_req)
+        : undefined;
+    message.unread_msg_indicator = (object.unread_msg_indicator !== undefined && object.unread_msg_indicator !== null)
+      ? ListClanUnreadMsgIndicatorResponse.fromPartial(object.unread_msg_indicator)
+      : undefined;
     return message;
   },
 };
@@ -15236,6 +15559,95 @@ export const MeetParticipantEvent = {
     message.channel_id = object.channel_id ?? "";
     message.clan_id = object.clan_id ?? "";
     message.action = object.action ?? 0;
+    return message;
+  },
+};
+
+function createBaseTransferOwnershipEvent(): TransferOwnershipEvent {
+  return { clan_id: "", prev_owner: "", curr_owner: "" };
+}
+
+export const TransferOwnershipEvent = {
+  encode(message: TransferOwnershipEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.prev_owner !== "") {
+      writer.uint32(18).string(message.prev_owner);
+    }
+    if (message.curr_owner !== "") {
+      writer.uint32(26).string(message.curr_owner);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): TransferOwnershipEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTransferOwnershipEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.prev_owner = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.curr_owner = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): TransferOwnershipEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      prev_owner: isSet(object.prev_owner) ? globalThis.String(object.prev_owner) : "",
+      curr_owner: isSet(object.curr_owner) ? globalThis.String(object.curr_owner) : "",
+    };
+  },
+
+  toJSON(message: TransferOwnershipEvent): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.prev_owner !== "") {
+      obj.prev_owner = message.prev_owner;
+    }
+    if (message.curr_owner !== "") {
+      obj.curr_owner = message.curr_owner;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<TransferOwnershipEvent>, I>>(base?: I): TransferOwnershipEvent {
+    return TransferOwnershipEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<TransferOwnershipEvent>, I>>(object: I): TransferOwnershipEvent {
+    const message = createBaseTransferOwnershipEvent();
+    message.clan_id = object.clan_id ?? "";
+    message.prev_owner = object.prev_owner ?? "";
+    message.curr_owner = object.curr_owner ?? "";
     return message;
   },
 };

@@ -128,7 +128,7 @@ const result = await client.sendToken(sendTokenData);
 ```js
 import { MezonClient } from "mezon-sdk";
 
-const client = new MezonClient(BOT_MEZON_TOKEN);
+const client = new MezonClient({botId: BOT_ID, token: BOT_MEZON_TOKEN});
 
 // Login to initialize session
 await client.login();

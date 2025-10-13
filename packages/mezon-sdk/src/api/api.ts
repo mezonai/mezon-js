@@ -171,8 +171,6 @@ export interface Account {
   user:
     | User
     | undefined;
-  /** The user's wallet data. */
-  wallet: string;
   /** The email address of the user. */
   email: string;
   /** The mezon id in the user's account. */
@@ -191,6 +189,8 @@ export interface Account {
   splash_screen: string;
   /** E2ee encrypt private key */
   encrypt_private_key: string;
+  /** password is setted */
+  password_setted: boolean;
 }
 
 /** Obtain a new authentication token using a refresh token. */
@@ -611,129 +611,11 @@ export interface FriendList {
 }
 
 /** Fetch a batch of zero or more users from the server. */
-export interface GetUsersRequest {
-  /** The account id of a user. */
-  ids: string[];
-  /** The account username of a user. */
-  usernames: string[];
-  /** The Facebook ID of a user. */
-  facebook_ids: string[];
-}
-
-/** Fetch a batch of zero or more users from the server. */
 export interface UpdateUsersRequest {
   /** The account username of a user. */
   display_name: string;
   /** The avarar_url of a user. */
   avatar_url: string;
-}
-
-/** A group in the server. */
-export interface Group {
-  /** The id of a group. */
-  id: string;
-  /** The id of the user who created the group. */
-  creator_id: string;
-  /** The unique name of the group. */
-  name: string;
-  /** A description for the group. */
-  description: string;
-  /** The language expected to be a tag which follows the BCP-47 spec. */
-  lang_tag: string;
-  /** Additional information stored as a JSON object. */
-  metadata: string;
-  /** A URL for an avatar image. */
-  avatar_url: string;
-  /** Anyone can join open groups, otherwise only admins can accept members. */
-  open:
-    | boolean
-    | undefined;
-  /** The current count of all members in the group. */
-  edge_count: number;
-  /** The maximum number of members allowed. */
-  max_count: number;
-  /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the group was created. */
-  create_time:
-    | Date
-    | undefined;
-  /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the group was last updated. */
-  update_time: Date | undefined;
-}
-
-/** One or more groups returned from a listing operation. */
-export interface GroupList {
-  /** One or more groups. */
-  groups: Group[];
-  /** A cursor used to get the next page. */
-  cursor: string;
-}
-
-/** A list of users belonging to a group, along with their role. */
-export interface GroupUserList {
-  /** User-role pairs for a group. */
-  group_users: GroupUserList_GroupUser[];
-  /** Cursor for the next page of results, if any. */
-  cursor: string;
-}
-
-/** A single user-role pair. */
-export interface GroupUserList_GroupUser {
-  /** User. */
-  user:
-    | User
-    | undefined;
-  /** Their relationship to the group. */
-  state: number | undefined;
-}
-
-/** The group role status. */
-export enum GroupUserList_GroupUser_State {
-  /** SUPERADMIN - The user is a superadmin with full control of the group. */
-  SUPERADMIN = 0,
-  /** ADMIN - The user is an admin with additional privileges. */
-  ADMIN = 1,
-  /** MEMBER - The user is a regular member. */
-  MEMBER = 2,
-  /** JOIN_REQUEST - The user has requested to join the group */
-  JOIN_REQUEST = 3,
-  UNRECOGNIZED = -1,
-}
-
-export function groupUserList_GroupUser_StateFromJSON(object: any): GroupUserList_GroupUser_State {
-  switch (object) {
-    case 0:
-    case "SUPERADMIN":
-      return GroupUserList_GroupUser_State.SUPERADMIN;
-    case 1:
-    case "ADMIN":
-      return GroupUserList_GroupUser_State.ADMIN;
-    case 2:
-    case "MEMBER":
-      return GroupUserList_GroupUser_State.MEMBER;
-    case 3:
-    case "JOIN_REQUEST":
-      return GroupUserList_GroupUser_State.JOIN_REQUEST;
-    case -1:
-    case "UNRECOGNIZED":
-    default:
-      return GroupUserList_GroupUser_State.UNRECOGNIZED;
-  }
-}
-
-export function groupUserList_GroupUser_StateToJSON(object: GroupUserList_GroupUser_State): string {
-  switch (object) {
-    case GroupUserList_GroupUser_State.SUPERADMIN:
-      return "SUPERADMIN";
-    case GroupUserList_GroupUser_State.ADMIN:
-      return "ADMIN";
-    case GroupUserList_GroupUser_State.MEMBER:
-      return "MEMBER";
-    case GroupUserList_GroupUser_State.JOIN_REQUEST:
-      return "JOIN_REQUEST";
-    case GroupUserList_GroupUser_State.UNRECOGNIZED:
-    default:
-      return "UNRECOGNIZED";
-  }
 }
 
 /** A list of users belonging to a channel, along with their role. */
@@ -1141,7 +1023,9 @@ export interface UpdateAccountRequest {
     | string
     | undefined;
   /** update about me */
-  about_me: string;
+  about_me:
+    | string
+    | undefined;
   /** date of birth */
   dob:
     | Date
@@ -1151,9 +1035,13 @@ export interface UpdateAccountRequest {
     | string
     | undefined;
   /** splash screen */
-  splash_screen: string;
+  splash_screen:
+    | string
+    | undefined;
   /** e2ee encrypt private key */
   encrypt_private_key: string;
+  /** The email of the user's account. */
+  email: string | undefined;
 }
 
 /** Update fields in a given group. */
@@ -1203,18 +1091,12 @@ export interface User {
   location: string;
   /** The timezone set by the user. */
   timezone: string;
-  /** Additional information stored as a JSON object. */
-  metadata: string;
-  /** The Facebook id in the user's account. */
-  facebook_id: string;
-  /** The Google id in the user's account. */
-  google_id: string;
-  /** The Apple Game Center in of the user's account. */
-  gamecenter_id: string;
-  /** The Steam id in the user's account. */
-  steam_id: string;
+  /** custom status */
+  user_status: string;
   /** Indicates whether the user is currently online. */
   online: boolean;
+  /** The phone number */
+  phone_number: string;
   /** Number of related edges to this user. */
   edge_count: number;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was created. */
@@ -1225,8 +1107,6 @@ export interface User {
   update_time:
     | Date
     | undefined;
-  /** The Apple Sign In ID in the user's account. */
-  apple_id: string;
   /** About me */
   about_me: string;
   /** Join time */
@@ -1243,74 +1123,8 @@ export interface User {
   mezon_id: string;
   /** list clan nick name */
   list_nick_names: string[];
-}
-
-/** A list of groups belonging to a user, along with the user's role in each group. */
-export interface UserGroupList {
-  /** Group-role pairs for a user. */
-  user_groups: UserGroupList_UserGroup[];
-  /** Cursor for the next page of results, if any. */
-  cursor: string;
-}
-
-/** A single group-role pair. */
-export interface UserGroupList_UserGroup {
-  /** Group. */
-  group:
-    | Group
-    | undefined;
-  /** The user's relationship to the group. */
-  state: number | undefined;
-}
-
-/** The group role status. */
-export enum UserGroupList_UserGroup_State {
-  /** SUPERADMIN - The user is a superadmin with full control of the group. */
-  SUPERADMIN = 0,
-  /** ADMIN - The user is an admin with additional privileges. */
-  ADMIN = 1,
-  /** MEMBER - The user is a regular member. */
-  MEMBER = 2,
-  /** JOIN_REQUEST - The user has requested to join the group */
-  JOIN_REQUEST = 3,
-  UNRECOGNIZED = -1,
-}
-
-export function userGroupList_UserGroup_StateFromJSON(object: any): UserGroupList_UserGroup_State {
-  switch (object) {
-    case 0:
-    case "SUPERADMIN":
-      return UserGroupList_UserGroup_State.SUPERADMIN;
-    case 1:
-    case "ADMIN":
-      return UserGroupList_UserGroup_State.ADMIN;
-    case 2:
-    case "MEMBER":
-      return UserGroupList_UserGroup_State.MEMBER;
-    case 3:
-    case "JOIN_REQUEST":
-      return UserGroupList_UserGroup_State.JOIN_REQUEST;
-    case -1:
-    case "UNRECOGNIZED":
-    default:
-      return UserGroupList_UserGroup_State.UNRECOGNIZED;
-  }
-}
-
-export function userGroupList_UserGroup_StateToJSON(object: UserGroupList_UserGroup_State): string {
-  switch (object) {
-    case UserGroupList_UserGroup_State.SUPERADMIN:
-      return "SUPERADMIN";
-    case UserGroupList_UserGroup_State.ADMIN:
-      return "ADMIN";
-    case UserGroupList_UserGroup_State.MEMBER:
-      return "MEMBER";
-    case UserGroupList_UserGroup_State.JOIN_REQUEST:
-      return "JOIN_REQUEST";
-    case UserGroupList_UserGroup_State.UNRECOGNIZED:
-    default:
-      return "UNRECOGNIZED";
-  }
+  /** online, offline, invisible, idle, do not disturb */
+  status: string;
 }
 
 /** A collection of zero or more users. */
@@ -1383,6 +1197,16 @@ export interface ClanDesc {
   is_community: boolean;
   /** community banner */
   community_banner: string;
+  /** description */
+  description: string;
+  /** about */
+  about: string;
+  /** short_url */
+  short_url: string;
+  /** prevent anonymous */
+  prevent_anonymous: boolean;
+  /** has unread message */
+  has_unread_message: boolean;
 }
 
 /** Clan information */
@@ -1428,10 +1252,14 @@ export interface UpdateClanDescRequest {
     | undefined;
   /** string description */
   description: string;
-  /** about */
+  /** About */
   about: string;
-  /** short url for community */
-  short_url: string | undefined;
+  /** Short url for community */
+  short_url:
+    | string
+    | undefined;
+  /** Prevent anonymous */
+  prevent_anonymous: boolean;
 }
 
 /** Delete a clan the user has access to. */
@@ -1452,6 +1280,14 @@ export interface ListClanDescRequest {
     | undefined;
   /** Cursor to start from */
   cursor: string;
+}
+
+export interface ListClanUnreadMsgIndicatorRequest {
+  clan_id: string;
+}
+
+export interface ListClanUnreadMsgIndicatorResponse {
+  has_unread_message: boolean;
 }
 
 /** A list of clan */
@@ -1535,6 +1371,8 @@ export interface ClanProfile {
   avatar: string;
   /** id clan */
   clan_id: string;
+  /** about clan */
+  about: string;
 }
 
 /** information user by clan requset */
@@ -1669,10 +1507,10 @@ export interface ChannelDescription {
   channel_label: string;
   /** The channel private */
   channel_private: number;
-  /** The channel avatar */
-  channel_avatar: string[];
-  /** The user id */
-  user_id: string[];
+  /** DM avatars */
+  avatars: string[];
+  /** List DM user ids */
+  user_ids: string[];
   /** last message id */
   last_sent_message:
     | ChannelMessageHeader
@@ -1681,8 +1519,8 @@ export interface ChannelDescription {
   last_seen_message:
     | ChannelMessageHeader
     | undefined;
-  /** status */
-  is_online: boolean[];
+  /** DM status */
+  onlines: boolean[];
   /** meeting code */
   meeting_code: string;
   /** count message unread */
@@ -1691,7 +1529,7 @@ export interface ChannelDescription {
   active: number;
   /** last pin message */
   last_pin_message: string;
-  /** the usernames */
+  /** List DM usernames */
   usernames: string[];
   /** creator name */
   creator_name: string;
@@ -1699,24 +1537,24 @@ export interface ChannelDescription {
   create_time_seconds: number;
   /** update time ms */
   update_time_seconds: number;
-  /** Additional information stored as a JSON object. */
-  metadata: string[];
-  /** about_me */
-  about_me: string[];
+  /** List DM diplay names */
+  display_names: string[];
+  /** channel avatar */
+  channel_avatar: string;
   /** clan_name */
   clan_name: string;
-  /** app url */
+  /** app id */
   app_id: string;
   /** channel all message */
   is_mute: boolean;
   /** age restricted */
   age_restricted: number;
-  /** topic */
+  /** channel description topic */
   topic: string;
   /** e2ee */
   e2ee: number;
-  /** display name */
-  display_names: string[];
+  /** channel member count */
+  member_count: number;
 }
 
 /** A list of channel description, usually a result of a list operation. */
@@ -1768,6 +1606,8 @@ export interface ListChannelDescsRequest {
   clan_id: string;
   /** channel type */
   channel_type: number;
+  /** is mobile */
+  is_mobile: boolean;
 }
 
 /** List channel description detail */
@@ -1810,12 +1650,16 @@ export interface CreateChannelDescRequest {
 
 /** Delete a channel the user has access to. */
 export interface DeleteChannelDescRequest {
+  /** The clan id */
+  clan_id: string;
   /** The id of a channel. */
   channel_id: string;
 }
 
 /** Update fields in a given channel. */
 export interface UpdateChannelDescRequest {
+  /** The clan ID */
+  clan_id: string;
   /** The ID of the channel to update. */
   channel_id: string;
   /** The channel lable */
@@ -1834,10 +1678,14 @@ export interface UpdateChannelDescRequest {
   age_restricted: number;
   /**  */
   e2ee: number;
+  /** channel avatar */
+  channel_avatar: string;
 }
 
 /** Update fields in a given channel. */
 export interface ChangeChannelPrivateRequest {
+  /** The clan ID */
+  clan_id: string;
   /** The ID of the channel to update. */
   channel_id: string;
   /** The channel private */
@@ -1874,6 +1722,7 @@ export interface RemoveClanUsersRequest {
 
 /** Leave a channel. */
 export interface LeaveThreadRequest {
+  clan_id: string;
   /** The channel ID to leave. */
   channel_id: string;
 }
@@ -2454,6 +2303,8 @@ export interface RegistrationEmailRequest {
   email: string;
   /** A password for the user account. */
   password: string;
+  /** A old password for the user account. */
+  old_password: string;
   /** Set the username on the account at register. Must be unique. */
   username: string;
   /** Display name */
@@ -2523,6 +2374,10 @@ export interface AllUsersAddChannelResponse {
   channel_id: string;
   user_ids: string[];
   limit: number | undefined;
+  usernames: string[];
+  display_names: string[];
+  avatars: string[];
+  onlines: boolean[];
 }
 
 export interface ClanEmojiCreateRequest {
@@ -3167,6 +3022,7 @@ export interface ChannelCanvasItem {
   creator_id: string;
   /**  */
   update_time: Date | undefined;
+  create_time: Date | undefined;
 }
 
 export interface ChannelCanvasListResponse {
@@ -3210,6 +3066,7 @@ export interface AddFavoriteChannelRequest {
 }
 
 export interface RemoveFavoriteChannelRequest {
+  clan_id: string;
   channel_id: string;
 }
 
@@ -3608,56 +3465,6 @@ export interface UpdateOnboardingStepRequest {
   onboarding_step: number | undefined;
 }
 
-export interface WalletLedger {
-  /** change set id */
-  id: string;
-  /** user id */
-  user_id: string;
-  /** create time */
-  create_time:
-    | Date
-    | undefined;
-  /** value */
-  value: number;
-  /** transaction id */
-  transaction_id: string;
-}
-
-export interface WalletLedgerList {
-  wallet_ledger: WalletLedger[];
-  count: number;
-}
-
-export interface WalletLedgerListReq {
-  limit:
-    | number
-    | undefined;
-  /**
-   * filter = 0 for all
-   * filter = 1 for sent
-   * filter = 2 for recieve
-   */
-  filter: number;
-  transaction_id: string;
-  page: number | undefined;
-}
-
-export interface TransactionDetailReq {
-  trans_id: string;
-}
-
-export interface TransactionDetail {
-  sender_id: string;
-  sender_username: string;
-  receiver_id: string;
-  receiver_username: string;
-  amount: number;
-  trans_id: string;
-  metadata: string;
-  create_time: Date | undefined;
-  update_time: Date | undefined;
-}
-
 export interface SdTopic {
   id: string;
   creator_id: string;
@@ -3817,6 +3624,8 @@ export interface AccountEmail {
   email: string;
   /** A password for the user account. */
   password: string;
+  /** Prev email */
+  prev_email: string;
   /** Extra information that will be bundled in the session token. */
   vars: { [key: string]: string };
 }
@@ -3828,8 +3637,8 @@ export interface AccountEmail_VarsEntry {
 
 /** Send a Mezon token to the server. Used with authenticate/link/unlink. */
 export interface AccountMezon {
-  /** The OAuth token received from Google to access their profile API. */
-  token: string;
+  /** The phone number. */
+  phone_number: string;
   /** Extra information that will be bundled in the session token. */
   vars: { [key: string]: string };
 }
@@ -3837,6 +3646,15 @@ export interface AccountMezon {
 export interface AccountMezon_VarsEntry {
   key: string;
   value: string;
+}
+
+export interface LinkAccountConfirmRequest {
+  /** The request id */
+  req_id: string;
+  /** Status */
+  status: number;
+  /** The confirm code */
+  otp_code: string;
 }
 
 export interface QuickMenuAccess {
@@ -3890,7 +3708,6 @@ export interface TransferOwnershipRequest {
 function createBaseAccount(): Account {
   return {
     user: undefined,
-    wallet: "",
     email: "",
     mezon_id: "",
     verify_time: undefined,
@@ -3898,6 +3715,7 @@ function createBaseAccount(): Account {
     logo: "",
     splash_screen: "",
     encrypt_private_key: "",
+    password_setted: false,
   };
 }
 
@@ -3906,29 +3724,29 @@ export const Account = {
     if (message.user !== undefined) {
       User.encode(message.user, writer.uint32(10).fork()).ldelim();
     }
-    if (message.wallet !== "") {
-      writer.uint32(18).string(message.wallet);
-    }
     if (message.email !== "") {
-      writer.uint32(26).string(message.email);
+      writer.uint32(18).string(message.email);
     }
     if (message.mezon_id !== "") {
-      writer.uint32(34).string(message.mezon_id);
+      writer.uint32(26).string(message.mezon_id);
     }
     if (message.verify_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.verify_time), writer.uint32(42).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.verify_time), writer.uint32(34).fork()).ldelim();
     }
     if (message.disable_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.disable_time), writer.uint32(50).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.disable_time), writer.uint32(42).fork()).ldelim();
     }
     if (message.logo !== "") {
-      writer.uint32(58).string(message.logo);
+      writer.uint32(50).string(message.logo);
     }
     if (message.splash_screen !== "") {
-      writer.uint32(66).string(message.splash_screen);
+      writer.uint32(58).string(message.splash_screen);
     }
     if (message.encrypt_private_key !== "") {
-      writer.uint32(74).string(message.encrypt_private_key);
+      writer.uint32(66).string(message.encrypt_private_key);
+    }
+    if (message.password_setted !== false) {
+      writer.uint32(72).bool(message.password_setted);
     }
     return writer;
   },
@@ -3952,56 +3770,56 @@ export const Account = {
             break;
           }
 
-          message.wallet = reader.string();
+          message.email = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.email = reader.string();
+          message.mezon_id = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.mezon_id = reader.string();
+          message.verify_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.verify_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.disable_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.disable_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.logo = reader.string();
           continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          message.logo = reader.string();
+          message.splash_screen = reader.string();
           continue;
         case 8:
           if (tag !== 66) {
             break;
           }
 
-          message.splash_screen = reader.string();
+          message.encrypt_private_key = reader.string();
           continue;
         case 9:
-          if (tag !== 74) {
+          if (tag !== 72) {
             break;
           }
 
-          message.encrypt_private_key = reader.string();
+          message.password_setted = reader.bool();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -4015,7 +3833,6 @@ export const Account = {
   fromJSON(object: any): Account {
     return {
       user: isSet(object.user) ? User.fromJSON(object.user) : undefined,
-      wallet: isSet(object.wallet) ? globalThis.String(object.wallet) : "",
       email: isSet(object.email) ? globalThis.String(object.email) : "",
       mezon_id: isSet(object.mezon_id) ? globalThis.String(object.mezon_id) : "",
       verify_time: isSet(object.verify_time) ? fromJsonTimestamp(object.verify_time) : undefined,
@@ -4023,6 +3840,7 @@ export const Account = {
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       splash_screen: isSet(object.splash_screen) ? globalThis.String(object.splash_screen) : "",
       encrypt_private_key: isSet(object.encrypt_private_key) ? globalThis.String(object.encrypt_private_key) : "",
+      password_setted: isSet(object.password_setted) ? globalThis.Boolean(object.password_setted) : false,
     };
   },
 
@@ -4030,9 +3848,6 @@ export const Account = {
     const obj: any = {};
     if (message.user !== undefined) {
       obj.user = User.toJSON(message.user);
-    }
-    if (message.wallet !== "") {
-      obj.wallet = message.wallet;
     }
     if (message.email !== "") {
       obj.email = message.email;
@@ -4055,6 +3870,9 @@ export const Account = {
     if (message.encrypt_private_key !== "") {
       obj.encrypt_private_key = message.encrypt_private_key;
     }
+    if (message.password_setted !== false) {
+      obj.password_setted = message.password_setted;
+    }
     return obj;
   },
 
@@ -4064,7 +3882,6 @@ export const Account = {
   fromPartial<I extends Exact<DeepPartial<Account>, I>>(object: I): Account {
     const message = createBaseAccount();
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
-    message.wallet = object.wallet ?? "";
     message.email = object.email ?? "";
     message.mezon_id = object.mezon_id ?? "";
     message.verify_time = object.verify_time ?? undefined;
@@ -4072,6 +3889,7 @@ export const Account = {
     message.logo = object.logo ?? "";
     message.splash_screen = object.splash_screen ?? "";
     message.encrypt_private_key = object.encrypt_private_key ?? "";
+    message.password_setted = object.password_setted ?? false;
     return message;
   },
 };
@@ -7263,99 +7081,6 @@ export const FriendList = {
   },
 };
 
-function createBaseGetUsersRequest(): GetUsersRequest {
-  return { ids: [], usernames: [], facebook_ids: [] };
-}
-
-export const GetUsersRequest = {
-  encode(message: GetUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.ids) {
-      writer.uint32(10).string(v!);
-    }
-    for (const v of message.usernames) {
-      writer.uint32(18).string(v!);
-    }
-    for (const v of message.facebook_ids) {
-      writer.uint32(26).string(v!);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetUsersRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetUsersRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.ids.push(reader.string());
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.usernames.push(reader.string());
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.facebook_ids.push(reader.string());
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): GetUsersRequest {
-    return {
-      ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => globalThis.String(e)) : [],
-      usernames: globalThis.Array.isArray(object?.usernames)
-        ? object.usernames.map((e: any) => globalThis.String(e))
-        : [],
-      facebook_ids: globalThis.Array.isArray(object?.facebook_ids)
-        ? object.facebook_ids.map((e: any) => globalThis.String(e))
-        : [],
-    };
-  },
-
-  toJSON(message: GetUsersRequest): unknown {
-    const obj: any = {};
-    if (message.ids?.length) {
-      obj.ids = message.ids;
-    }
-    if (message.usernames?.length) {
-      obj.usernames = message.usernames;
-    }
-    if (message.facebook_ids?.length) {
-      obj.facebook_ids = message.facebook_ids;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<GetUsersRequest>, I>>(base?: I): GetUsersRequest {
-    return GetUsersRequest.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<GetUsersRequest>, I>>(object: I): GetUsersRequest {
-    const message = createBaseGetUsersRequest();
-    message.ids = object.ids?.map((e) => e) || [];
-    message.usernames = object.usernames?.map((e) => e) || [];
-    message.facebook_ids = object.facebook_ids?.map((e) => e) || [];
-    return message;
-  },
-};
-
 function createBaseUpdateUsersRequest(): UpdateUsersRequest {
   return { display_name: "", avatar_url: "" };
 }
@@ -7426,467 +7151,6 @@ export const UpdateUsersRequest = {
     const message = createBaseUpdateUsersRequest();
     message.display_name = object.display_name ?? "";
     message.avatar_url = object.avatar_url ?? "";
-    return message;
-  },
-};
-
-function createBaseGroup(): Group {
-  return {
-    id: "",
-    creator_id: "",
-    name: "",
-    description: "",
-    lang_tag: "",
-    metadata: "",
-    avatar_url: "",
-    open: undefined,
-    edge_count: 0,
-    max_count: 0,
-    create_time: undefined,
-    update_time: undefined,
-  };
-}
-
-export const Group = {
-  encode(message: Group, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
-    }
-    if (message.creator_id !== "") {
-      writer.uint32(18).string(message.creator_id);
-    }
-    if (message.name !== "") {
-      writer.uint32(26).string(message.name);
-    }
-    if (message.description !== "") {
-      writer.uint32(34).string(message.description);
-    }
-    if (message.lang_tag !== "") {
-      writer.uint32(42).string(message.lang_tag);
-    }
-    if (message.metadata !== "") {
-      writer.uint32(50).string(message.metadata);
-    }
-    if (message.avatar_url !== "") {
-      writer.uint32(58).string(message.avatar_url);
-    }
-    if (message.open !== undefined) {
-      BoolValue.encode({ value: message.open! }, writer.uint32(66).fork()).ldelim();
-    }
-    if (message.edge_count !== 0) {
-      writer.uint32(72).int32(message.edge_count);
-    }
-    if (message.max_count !== 0) {
-      writer.uint32(80).int32(message.max_count);
-    }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(90).fork()).ldelim();
-    }
-    if (message.update_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(98).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): Group {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGroup();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.creator_id = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.name = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.description = reader.string();
-          continue;
-        case 5:
-          if (tag !== 42) {
-            break;
-          }
-
-          message.lang_tag = reader.string();
-          continue;
-        case 6:
-          if (tag !== 50) {
-            break;
-          }
-
-          message.metadata = reader.string();
-          continue;
-        case 7:
-          if (tag !== 58) {
-            break;
-          }
-
-          message.avatar_url = reader.string();
-          continue;
-        case 8:
-          if (tag !== 66) {
-            break;
-          }
-
-          message.open = BoolValue.decode(reader, reader.uint32()).value;
-          continue;
-        case 9:
-          if (tag !== 72) {
-            break;
-          }
-
-          message.edge_count = reader.int32();
-          continue;
-        case 10:
-          if (tag !== 80) {
-            break;
-          }
-
-          message.max_count = reader.int32();
-          continue;
-        case 11:
-          if (tag !== 90) {
-            break;
-          }
-
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-        case 12:
-          if (tag !== 98) {
-            break;
-          }
-
-          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): Group {
-    return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      name: isSet(object.name) ? globalThis.String(object.name) : "",
-      description: isSet(object.description) ? globalThis.String(object.description) : "",
-      lang_tag: isSet(object.lang_tag) ? globalThis.String(object.lang_tag) : "",
-      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
-      avatar_url: isSet(object.avatar_url) ? globalThis.String(object.avatar_url) : "",
-      open: isSet(object.open) ? Boolean(object.open) : undefined,
-      edge_count: isSet(object.edge_count) ? globalThis.Number(object.edge_count) : 0,
-      max_count: isSet(object.max_count) ? globalThis.Number(object.max_count) : 0,
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
-      update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
-    };
-  },
-
-  toJSON(message: Group): unknown {
-    const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
-    }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
-    }
-    if (message.name !== "") {
-      obj.name = message.name;
-    }
-    if (message.description !== "") {
-      obj.description = message.description;
-    }
-    if (message.lang_tag !== "") {
-      obj.lang_tag = message.lang_tag;
-    }
-    if (message.metadata !== "") {
-      obj.metadata = message.metadata;
-    }
-    if (message.avatar_url !== "") {
-      obj.avatar_url = message.avatar_url;
-    }
-    if (message.open !== undefined) {
-      obj.open = message.open;
-    }
-    if (message.edge_count !== 0) {
-      obj.edge_count = Math.round(message.edge_count);
-    }
-    if (message.max_count !== 0) {
-      obj.max_count = Math.round(message.max_count);
-    }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
-    }
-    if (message.update_time !== undefined) {
-      obj.update_time = message.update_time.toISOString();
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<Group>, I>>(base?: I): Group {
-    return Group.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<Group>, I>>(object: I): Group {
-    const message = createBaseGroup();
-    message.id = object.id ?? "";
-    message.creator_id = object.creator_id ?? "";
-    message.name = object.name ?? "";
-    message.description = object.description ?? "";
-    message.lang_tag = object.lang_tag ?? "";
-    message.metadata = object.metadata ?? "";
-    message.avatar_url = object.avatar_url ?? "";
-    message.open = object.open ?? undefined;
-    message.edge_count = object.edge_count ?? 0;
-    message.max_count = object.max_count ?? 0;
-    message.create_time = object.create_time ?? undefined;
-    message.update_time = object.update_time ?? undefined;
-    return message;
-  },
-};
-
-function createBaseGroupList(): GroupList {
-  return { groups: [], cursor: "" };
-}
-
-export const GroupList = {
-  encode(message: GroupList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.groups) {
-      Group.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.cursor !== "") {
-      writer.uint32(18).string(message.cursor);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): GroupList {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGroupList();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.groups.push(Group.decode(reader, reader.uint32()));
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.cursor = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): GroupList {
-    return {
-      groups: globalThis.Array.isArray(object?.groups) ? object.groups.map((e: any) => Group.fromJSON(e)) : [],
-      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
-    };
-  },
-
-  toJSON(message: GroupList): unknown {
-    const obj: any = {};
-    if (message.groups?.length) {
-      obj.groups = message.groups.map((e) => Group.toJSON(e));
-    }
-    if (message.cursor !== "") {
-      obj.cursor = message.cursor;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<GroupList>, I>>(base?: I): GroupList {
-    return GroupList.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<GroupList>, I>>(object: I): GroupList {
-    const message = createBaseGroupList();
-    message.groups = object.groups?.map((e) => Group.fromPartial(e)) || [];
-    message.cursor = object.cursor ?? "";
-    return message;
-  },
-};
-
-function createBaseGroupUserList(): GroupUserList {
-  return { group_users: [], cursor: "" };
-}
-
-export const GroupUserList = {
-  encode(message: GroupUserList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.group_users) {
-      GroupUserList_GroupUser.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.cursor !== "") {
-      writer.uint32(18).string(message.cursor);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): GroupUserList {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGroupUserList();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.group_users.push(GroupUserList_GroupUser.decode(reader, reader.uint32()));
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.cursor = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): GroupUserList {
-    return {
-      group_users: globalThis.Array.isArray(object?.group_users)
-        ? object.group_users.map((e: any) => GroupUserList_GroupUser.fromJSON(e))
-        : [],
-      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
-    };
-  },
-
-  toJSON(message: GroupUserList): unknown {
-    const obj: any = {};
-    if (message.group_users?.length) {
-      obj.group_users = message.group_users.map((e) => GroupUserList_GroupUser.toJSON(e));
-    }
-    if (message.cursor !== "") {
-      obj.cursor = message.cursor;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<GroupUserList>, I>>(base?: I): GroupUserList {
-    return GroupUserList.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<GroupUserList>, I>>(object: I): GroupUserList {
-    const message = createBaseGroupUserList();
-    message.group_users = object.group_users?.map((e) => GroupUserList_GroupUser.fromPartial(e)) || [];
-    message.cursor = object.cursor ?? "";
-    return message;
-  },
-};
-
-function createBaseGroupUserList_GroupUser(): GroupUserList_GroupUser {
-  return { user: undefined, state: undefined };
-}
-
-export const GroupUserList_GroupUser = {
-  encode(message: GroupUserList_GroupUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user !== undefined) {
-      User.encode(message.user, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.state !== undefined) {
-      Int32Value.encode({ value: message.state! }, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): GroupUserList_GroupUser {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGroupUserList_GroupUser();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.user = User.decode(reader, reader.uint32());
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.state = Int32Value.decode(reader, reader.uint32()).value;
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): GroupUserList_GroupUser {
-    return {
-      user: isSet(object.user) ? User.fromJSON(object.user) : undefined,
-      state: isSet(object.state) ? Number(object.state) : undefined,
-    };
-  },
-
-  toJSON(message: GroupUserList_GroupUser): unknown {
-    const obj: any = {};
-    if (message.user !== undefined) {
-      obj.user = User.toJSON(message.user);
-    }
-    if (message.state !== undefined) {
-      obj.state = message.state;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<GroupUserList_GroupUser>, I>>(base?: I): GroupUserList_GroupUser {
-    return GroupUserList_GroupUser.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<GroupUserList_GroupUser>, I>>(object: I): GroupUserList_GroupUser {
-    const message = createBaseGroupUserList_GroupUser();
-    message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
-    message.state = object.state ?? undefined;
     return message;
   },
 };
@@ -10889,11 +10153,12 @@ function createBaseUpdateAccountRequest(): UpdateAccountRequest {
     lang_tag: undefined,
     location: undefined,
     timezone: undefined,
-    about_me: "",
+    about_me: undefined,
     dob: undefined,
     logo: undefined,
-    splash_screen: "",
+    splash_screen: undefined,
     encrypt_private_key: "",
+    email: undefined,
   };
 }
 
@@ -10917,8 +10182,8 @@ export const UpdateAccountRequest = {
     if (message.timezone !== undefined) {
       StringValue.encode({ value: message.timezone! }, writer.uint32(50).fork()).ldelim();
     }
-    if (message.about_me !== "") {
-      writer.uint32(58).string(message.about_me);
+    if (message.about_me !== undefined) {
+      StringValue.encode({ value: message.about_me! }, writer.uint32(58).fork()).ldelim();
     }
     if (message.dob !== undefined) {
       Timestamp.encode(toTimestamp(message.dob), writer.uint32(66).fork()).ldelim();
@@ -10926,11 +10191,14 @@ export const UpdateAccountRequest = {
     if (message.logo !== undefined) {
       StringValue.encode({ value: message.logo! }, writer.uint32(74).fork()).ldelim();
     }
-    if (message.splash_screen !== "") {
-      writer.uint32(82).string(message.splash_screen);
+    if (message.splash_screen !== undefined) {
+      StringValue.encode({ value: message.splash_screen! }, writer.uint32(82).fork()).ldelim();
     }
     if (message.encrypt_private_key !== "") {
       writer.uint32(90).string(message.encrypt_private_key);
+    }
+    if (message.email !== undefined) {
+      StringValue.encode({ value: message.email! }, writer.uint32(98).fork()).ldelim();
     }
     return writer;
   },
@@ -10989,7 +10257,7 @@ export const UpdateAccountRequest = {
             break;
           }
 
-          message.about_me = reader.string();
+          message.about_me = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 8:
           if (tag !== 66) {
@@ -11010,7 +10278,7 @@ export const UpdateAccountRequest = {
             break;
           }
 
-          message.splash_screen = reader.string();
+          message.splash_screen = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 11:
           if (tag !== 90) {
@@ -11018,6 +10286,13 @@ export const UpdateAccountRequest = {
           }
 
           message.encrypt_private_key = reader.string();
+          continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.email = StringValue.decode(reader, reader.uint32()).value;
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -11036,11 +10311,12 @@ export const UpdateAccountRequest = {
       lang_tag: isSet(object.lang_tag) ? String(object.lang_tag) : undefined,
       location: isSet(object.location) ? String(object.location) : undefined,
       timezone: isSet(object.timezone) ? String(object.timezone) : undefined,
-      about_me: isSet(object.about_me) ? globalThis.String(object.about_me) : "",
+      about_me: isSet(object.about_me) ? String(object.about_me) : undefined,
       dob: isSet(object.dob) ? fromJsonTimestamp(object.dob) : undefined,
       logo: isSet(object.logo) ? String(object.logo) : undefined,
-      splash_screen: isSet(object.splash_screen) ? globalThis.String(object.splash_screen) : "",
+      splash_screen: isSet(object.splash_screen) ? String(object.splash_screen) : undefined,
       encrypt_private_key: isSet(object.encrypt_private_key) ? globalThis.String(object.encrypt_private_key) : "",
+      email: isSet(object.email) ? String(object.email) : undefined,
     };
   },
 
@@ -11064,7 +10340,7 @@ export const UpdateAccountRequest = {
     if (message.timezone !== undefined) {
       obj.timezone = message.timezone;
     }
-    if (message.about_me !== "") {
+    if (message.about_me !== undefined) {
       obj.about_me = message.about_me;
     }
     if (message.dob !== undefined) {
@@ -11073,11 +10349,14 @@ export const UpdateAccountRequest = {
     if (message.logo !== undefined) {
       obj.logo = message.logo;
     }
-    if (message.splash_screen !== "") {
+    if (message.splash_screen !== undefined) {
       obj.splash_screen = message.splash_screen;
     }
     if (message.encrypt_private_key !== "") {
       obj.encrypt_private_key = message.encrypt_private_key;
+    }
+    if (message.email !== undefined) {
+      obj.email = message.email;
     }
     return obj;
   },
@@ -11093,11 +10372,12 @@ export const UpdateAccountRequest = {
     message.lang_tag = object.lang_tag ?? undefined;
     message.location = object.location ?? undefined;
     message.timezone = object.timezone ?? undefined;
-    message.about_me = object.about_me ?? "";
+    message.about_me = object.about_me ?? undefined;
     message.dob = object.dob ?? undefined;
     message.logo = object.logo ?? undefined;
-    message.splash_screen = object.splash_screen ?? "";
+    message.splash_screen = object.splash_screen ?? undefined;
     message.encrypt_private_key = object.encrypt_private_key ?? "";
+    message.email = object.email ?? undefined;
     return message;
   },
 };
@@ -11341,22 +10621,19 @@ function createBaseUser(): User {
     lang_tag: "",
     location: "",
     timezone: "",
-    metadata: "",
-    facebook_id: "",
-    google_id: "",
-    gamecenter_id: "",
-    steam_id: "",
+    user_status: "",
     online: false,
+    phone_number: "",
     edge_count: 0,
     create_time: undefined,
     update_time: undefined,
-    apple_id: "",
     about_me: "",
     join_time: undefined,
     is_mobile: false,
     dob: undefined,
     mezon_id: "",
     list_nick_names: [],
+    status: "",
   };
 }
 
@@ -11383,53 +10660,44 @@ export const User = {
     if (message.timezone !== "") {
       writer.uint32(58).string(message.timezone);
     }
-    if (message.metadata !== "") {
-      writer.uint32(66).string(message.metadata);
-    }
-    if (message.facebook_id !== "") {
-      writer.uint32(74).string(message.facebook_id);
-    }
-    if (message.google_id !== "") {
-      writer.uint32(82).string(message.google_id);
-    }
-    if (message.gamecenter_id !== "") {
-      writer.uint32(90).string(message.gamecenter_id);
-    }
-    if (message.steam_id !== "") {
-      writer.uint32(98).string(message.steam_id);
+    if (message.user_status !== "") {
+      writer.uint32(66).string(message.user_status);
     }
     if (message.online !== false) {
-      writer.uint32(104).bool(message.online);
+      writer.uint32(72).bool(message.online);
+    }
+    if (message.phone_number !== "") {
+      writer.uint32(82).string(message.phone_number);
     }
     if (message.edge_count !== 0) {
-      writer.uint32(112).int32(message.edge_count);
+      writer.uint32(88).int32(message.edge_count);
     }
     if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(122).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(98).fork()).ldelim();
     }
     if (message.update_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(130).fork()).ldelim();
-    }
-    if (message.apple_id !== "") {
-      writer.uint32(138).string(message.apple_id);
+      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(106).fork()).ldelim();
     }
     if (message.about_me !== "") {
-      writer.uint32(146).string(message.about_me);
+      writer.uint32(114).string(message.about_me);
     }
     if (message.join_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.join_time), writer.uint32(154).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.join_time), writer.uint32(122).fork()).ldelim();
     }
     if (message.is_mobile !== false) {
-      writer.uint32(160).bool(message.is_mobile);
+      writer.uint32(128).bool(message.is_mobile);
     }
     if (message.dob !== undefined) {
-      Timestamp.encode(toTimestamp(message.dob), writer.uint32(170).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.dob), writer.uint32(138).fork()).ldelim();
     }
     if (message.mezon_id !== "") {
-      writer.uint32(178).string(message.mezon_id);
+      writer.uint32(146).string(message.mezon_id);
     }
     for (const v of message.list_nick_names) {
-      writer.uint32(186).string(v!);
+      writer.uint32(154).string(v!);
+    }
+    if (message.status !== "") {
+      writer.uint32(162).string(message.status);
     }
     return writer;
   },
@@ -11495,112 +10763,91 @@ export const User = {
             break;
           }
 
-          message.metadata = reader.string();
+          message.user_status = reader.string();
           continue;
         case 9:
-          if (tag !== 74) {
+          if (tag !== 72) {
             break;
           }
 
-          message.facebook_id = reader.string();
+          message.online = reader.bool();
           continue;
         case 10:
           if (tag !== 82) {
             break;
           }
 
-          message.google_id = reader.string();
+          message.phone_number = reader.string();
           continue;
         case 11:
-          if (tag !== 90) {
+          if (tag !== 88) {
             break;
           }
 
-          message.gamecenter_id = reader.string();
+          message.edge_count = reader.int32();
           continue;
         case 12:
           if (tag !== 98) {
             break;
           }
 
-          message.steam_id = reader.string();
+          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 13:
-          if (tag !== 104) {
+          if (tag !== 106) {
             break;
           }
 
-          message.online = reader.bool();
+          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 14:
-          if (tag !== 112) {
+          if (tag !== 114) {
             break;
           }
 
-          message.edge_count = reader.int32();
+          message.about_me = reader.string();
           continue;
         case 15:
           if (tag !== 122) {
             break;
           }
 
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.join_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 16:
-          if (tag !== 130) {
+          if (tag !== 128) {
             break;
           }
 
-          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.is_mobile = reader.bool();
           continue;
         case 17:
           if (tag !== 138) {
             break;
           }
 
-          message.apple_id = reader.string();
+          message.dob = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 18:
           if (tag !== 146) {
             break;
           }
 
-          message.about_me = reader.string();
+          message.mezon_id = reader.string();
           continue;
         case 19:
           if (tag !== 154) {
             break;
           }
 
-          message.join_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.list_nick_names.push(reader.string());
           continue;
         case 20:
-          if (tag !== 160) {
+          if (tag !== 162) {
             break;
           }
 
-          message.is_mobile = reader.bool();
-          continue;
-        case 21:
-          if (tag !== 170) {
-            break;
-          }
-
-          message.dob = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-        case 22:
-          if (tag !== 178) {
-            break;
-          }
-
-          message.mezon_id = reader.string();
-          continue;
-        case 23:
-          if (tag !== 186) {
-            break;
-          }
-
-          message.list_nick_names.push(reader.string());
+          message.status = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -11620,16 +10867,12 @@ export const User = {
       lang_tag: isSet(object.lang_tag) ? globalThis.String(object.lang_tag) : "",
       location: isSet(object.location) ? globalThis.String(object.location) : "",
       timezone: isSet(object.timezone) ? globalThis.String(object.timezone) : "",
-      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
-      facebook_id: isSet(object.facebook_id) ? globalThis.String(object.facebook_id) : "",
-      google_id: isSet(object.google_id) ? globalThis.String(object.google_id) : "",
-      gamecenter_id: isSet(object.gamecenter_id) ? globalThis.String(object.gamecenter_id) : "",
-      steam_id: isSet(object.steam_id) ? globalThis.String(object.steam_id) : "",
+      user_status: isSet(object.user_status) ? globalThis.String(object.user_status) : "",
       online: isSet(object.online) ? globalThis.Boolean(object.online) : false,
+      phone_number: isSet(object.phone_number) ? globalThis.String(object.phone_number) : "",
       edge_count: isSet(object.edge_count) ? globalThis.Number(object.edge_count) : 0,
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
-      apple_id: isSet(object.apple_id) ? globalThis.String(object.apple_id) : "",
       about_me: isSet(object.about_me) ? globalThis.String(object.about_me) : "",
       join_time: isSet(object.join_time) ? fromJsonTimestamp(object.join_time) : undefined,
       is_mobile: isSet(object.is_mobile) ? globalThis.Boolean(object.is_mobile) : false,
@@ -11638,6 +10881,7 @@ export const User = {
       list_nick_names: globalThis.Array.isArray(object?.list_nick_names)
         ? object.list_nick_names.map((e: any) => globalThis.String(e))
         : [],
+      status: isSet(object.status) ? globalThis.String(object.status) : "",
     };
   },
 
@@ -11664,23 +10908,14 @@ export const User = {
     if (message.timezone !== "") {
       obj.timezone = message.timezone;
     }
-    if (message.metadata !== "") {
-      obj.metadata = message.metadata;
-    }
-    if (message.facebook_id !== "") {
-      obj.facebook_id = message.facebook_id;
-    }
-    if (message.google_id !== "") {
-      obj.google_id = message.google_id;
-    }
-    if (message.gamecenter_id !== "") {
-      obj.gamecenter_id = message.gamecenter_id;
-    }
-    if (message.steam_id !== "") {
-      obj.steam_id = message.steam_id;
+    if (message.user_status !== "") {
+      obj.user_status = message.user_status;
     }
     if (message.online !== false) {
       obj.online = message.online;
+    }
+    if (message.phone_number !== "") {
+      obj.phone_number = message.phone_number;
     }
     if (message.edge_count !== 0) {
       obj.edge_count = Math.round(message.edge_count);
@@ -11690,9 +10925,6 @@ export const User = {
     }
     if (message.update_time !== undefined) {
       obj.update_time = message.update_time.toISOString();
-    }
-    if (message.apple_id !== "") {
-      obj.apple_id = message.apple_id;
     }
     if (message.about_me !== "") {
       obj.about_me = message.about_me;
@@ -11712,6 +10944,9 @@ export const User = {
     if (message.list_nick_names?.length) {
       obj.list_nick_names = message.list_nick_names;
     }
+    if (message.status !== "") {
+      obj.status = message.status;
+    }
     return obj;
   },
 
@@ -11727,172 +10962,19 @@ export const User = {
     message.lang_tag = object.lang_tag ?? "";
     message.location = object.location ?? "";
     message.timezone = object.timezone ?? "";
-    message.metadata = object.metadata ?? "";
-    message.facebook_id = object.facebook_id ?? "";
-    message.google_id = object.google_id ?? "";
-    message.gamecenter_id = object.gamecenter_id ?? "";
-    message.steam_id = object.steam_id ?? "";
+    message.user_status = object.user_status ?? "";
     message.online = object.online ?? false;
+    message.phone_number = object.phone_number ?? "";
     message.edge_count = object.edge_count ?? 0;
     message.create_time = object.create_time ?? undefined;
     message.update_time = object.update_time ?? undefined;
-    message.apple_id = object.apple_id ?? "";
     message.about_me = object.about_me ?? "";
     message.join_time = object.join_time ?? undefined;
     message.is_mobile = object.is_mobile ?? false;
     message.dob = object.dob ?? undefined;
     message.mezon_id = object.mezon_id ?? "";
     message.list_nick_names = object.list_nick_names?.map((e) => e) || [];
-    return message;
-  },
-};
-
-function createBaseUserGroupList(): UserGroupList {
-  return { user_groups: [], cursor: "" };
-}
-
-export const UserGroupList = {
-  encode(message: UserGroupList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.user_groups) {
-      UserGroupList_UserGroup.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.cursor !== "") {
-      writer.uint32(18).string(message.cursor);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserGroupList {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUserGroupList();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.user_groups.push(UserGroupList_UserGroup.decode(reader, reader.uint32()));
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.cursor = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): UserGroupList {
-    return {
-      user_groups: globalThis.Array.isArray(object?.user_groups)
-        ? object.user_groups.map((e: any) => UserGroupList_UserGroup.fromJSON(e))
-        : [],
-      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
-    };
-  },
-
-  toJSON(message: UserGroupList): unknown {
-    const obj: any = {};
-    if (message.user_groups?.length) {
-      obj.user_groups = message.user_groups.map((e) => UserGroupList_UserGroup.toJSON(e));
-    }
-    if (message.cursor !== "") {
-      obj.cursor = message.cursor;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<UserGroupList>, I>>(base?: I): UserGroupList {
-    return UserGroupList.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<UserGroupList>, I>>(object: I): UserGroupList {
-    const message = createBaseUserGroupList();
-    message.user_groups = object.user_groups?.map((e) => UserGroupList_UserGroup.fromPartial(e)) || [];
-    message.cursor = object.cursor ?? "";
-    return message;
-  },
-};
-
-function createBaseUserGroupList_UserGroup(): UserGroupList_UserGroup {
-  return { group: undefined, state: undefined };
-}
-
-export const UserGroupList_UserGroup = {
-  encode(message: UserGroupList_UserGroup, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.group !== undefined) {
-      Group.encode(message.group, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.state !== undefined) {
-      Int32Value.encode({ value: message.state! }, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserGroupList_UserGroup {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUserGroupList_UserGroup();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.group = Group.decode(reader, reader.uint32());
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.state = Int32Value.decode(reader, reader.uint32()).value;
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): UserGroupList_UserGroup {
-    return {
-      group: isSet(object.group) ? Group.fromJSON(object.group) : undefined,
-      state: isSet(object.state) ? Number(object.state) : undefined,
-    };
-  },
-
-  toJSON(message: UserGroupList_UserGroup): unknown {
-    const obj: any = {};
-    if (message.group !== undefined) {
-      obj.group = Group.toJSON(message.group);
-    }
-    if (message.state !== undefined) {
-      obj.state = message.state;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<UserGroupList_UserGroup>, I>>(base?: I): UserGroupList_UserGroup {
-    return UserGroupList_UserGroup.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<UserGroupList_UserGroup>, I>>(object: I): UserGroupList_UserGroup {
-    const message = createBaseUserGroupList_UserGroup();
-    message.group = (object.group !== undefined && object.group !== null) ? Group.fromPartial(object.group) : undefined;
-    message.state = object.state ?? undefined;
+    message.status = object.status ?? "";
     return message;
   },
 };
@@ -12279,6 +11361,11 @@ function createBaseClanDesc(): ClanDesc {
     clan_order: 0,
     is_community: false,
     community_banner: "",
+    description: "",
+    about: "",
+    short_url: "",
+    prevent_anonymous: false,
+    has_unread_message: false,
   };
 }
 
@@ -12322,6 +11409,21 @@ export const ClanDesc = {
     }
     if (message.community_banner !== "") {
       writer.uint32(106).string(message.community_banner);
+    }
+    if (message.description !== "") {
+      writer.uint32(114).string(message.description);
+    }
+    if (message.about !== "") {
+      writer.uint32(122).string(message.about);
+    }
+    if (message.short_url !== "") {
+      writer.uint32(130).string(message.short_url);
+    }
+    if (message.prevent_anonymous !== false) {
+      writer.uint32(136).bool(message.prevent_anonymous);
+    }
+    if (message.has_unread_message !== false) {
+      writer.uint32(144).bool(message.has_unread_message);
     }
     return writer;
   },
@@ -12424,6 +11526,41 @@ export const ClanDesc = {
 
           message.community_banner = reader.string();
           continue;
+        case 14:
+          if (tag !== 114) {
+            break;
+          }
+
+          message.description = reader.string();
+          continue;
+        case 15:
+          if (tag !== 122) {
+            break;
+          }
+
+          message.about = reader.string();
+          continue;
+        case 16:
+          if (tag !== 130) {
+            break;
+          }
+
+          message.short_url = reader.string();
+          continue;
+        case 17:
+          if (tag !== 136) {
+            break;
+          }
+
+          message.prevent_anonymous = reader.bool();
+          continue;
+        case 18:
+          if (tag !== 144) {
+            break;
+          }
+
+          message.has_unread_message = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -12448,6 +11585,11 @@ export const ClanDesc = {
       clan_order: isSet(object.clan_order) ? globalThis.Number(object.clan_order) : 0,
       is_community: isSet(object.is_community) ? globalThis.Boolean(object.is_community) : false,
       community_banner: isSet(object.community_banner) ? globalThis.String(object.community_banner) : "",
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      about: isSet(object.about) ? globalThis.String(object.about) : "",
+      short_url: isSet(object.short_url) ? globalThis.String(object.short_url) : "",
+      prevent_anonymous: isSet(object.prevent_anonymous) ? globalThis.Boolean(object.prevent_anonymous) : false,
+      has_unread_message: isSet(object.has_unread_message) ? globalThis.Boolean(object.has_unread_message) : false,
     };
   },
 
@@ -12492,6 +11634,21 @@ export const ClanDesc = {
     if (message.community_banner !== "") {
       obj.community_banner = message.community_banner;
     }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.about !== "") {
+      obj.about = message.about;
+    }
+    if (message.short_url !== "") {
+      obj.short_url = message.short_url;
+    }
+    if (message.prevent_anonymous !== false) {
+      obj.prevent_anonymous = message.prevent_anonymous;
+    }
+    if (message.has_unread_message !== false) {
+      obj.has_unread_message = message.has_unread_message;
+    }
     return obj;
   },
 
@@ -12513,6 +11670,11 @@ export const ClanDesc = {
     message.clan_order = object.clan_order ?? 0;
     message.is_community = object.is_community ?? false;
     message.community_banner = object.community_banner ?? "";
+    message.description = object.description ?? "";
+    message.about = object.about ?? "";
+    message.short_url = object.short_url ?? "";
+    message.prevent_anonymous = object.prevent_anonymous ?? false;
+    message.has_unread_message = object.has_unread_message ?? false;
     return message;
   },
 };
@@ -12621,6 +11783,7 @@ function createBaseUpdateClanDescRequest(): UpdateClanDescRequest {
     description: "",
     about: "",
     short_url: undefined,
+    prevent_anonymous: false,
   };
 }
 
@@ -12664,6 +11827,9 @@ export const UpdateClanDescRequest = {
     }
     if (message.short_url !== undefined) {
       StringValue.encode({ value: message.short_url! }, writer.uint32(106).fork()).ldelim();
+    }
+    if (message.prevent_anonymous !== false) {
+      writer.uint32(112).bool(message.prevent_anonymous);
     }
     return writer;
   },
@@ -12766,6 +11932,13 @@ export const UpdateClanDescRequest = {
 
           message.short_url = StringValue.decode(reader, reader.uint32()).value;
           continue;
+        case 14:
+          if (tag !== 112) {
+            break;
+          }
+
+          message.prevent_anonymous = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -12790,6 +11963,7 @@ export const UpdateClanDescRequest = {
       description: isSet(object.description) ? globalThis.String(object.description) : "",
       about: isSet(object.about) ? globalThis.String(object.about) : "",
       short_url: isSet(object.short_url) ? String(object.short_url) : undefined,
+      prevent_anonymous: isSet(object.prevent_anonymous) ? globalThis.Boolean(object.prevent_anonymous) : false,
     };
   },
 
@@ -12834,6 +12008,9 @@ export const UpdateClanDescRequest = {
     if (message.short_url !== undefined) {
       obj.short_url = message.short_url;
     }
+    if (message.prevent_anonymous !== false) {
+      obj.prevent_anonymous = message.prevent_anonymous;
+    }
     return obj;
   },
 
@@ -12855,6 +12032,7 @@ export const UpdateClanDescRequest = {
     message.description = object.description ?? "";
     message.about = object.about ?? "";
     message.short_url = object.short_url ?? undefined;
+    message.prevent_anonymous = object.prevent_anonymous ?? false;
     return message;
   },
 };
@@ -13001,6 +12179,130 @@ export const ListClanDescRequest = {
     message.limit = object.limit ?? undefined;
     message.state = object.state ?? undefined;
     message.cursor = object.cursor ?? "";
+    return message;
+  },
+};
+
+function createBaseListClanUnreadMsgIndicatorRequest(): ListClanUnreadMsgIndicatorRequest {
+  return { clan_id: "" };
+}
+
+export const ListClanUnreadMsgIndicatorRequest = {
+  encode(message: ListClanUnreadMsgIndicatorRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListClanUnreadMsgIndicatorRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListClanUnreadMsgIndicatorRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListClanUnreadMsgIndicatorRequest {
+    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+  },
+
+  toJSON(message: ListClanUnreadMsgIndicatorRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListClanUnreadMsgIndicatorRequest>, I>>(
+    base?: I,
+  ): ListClanUnreadMsgIndicatorRequest {
+    return ListClanUnreadMsgIndicatorRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListClanUnreadMsgIndicatorRequest>, I>>(
+    object: I,
+  ): ListClanUnreadMsgIndicatorRequest {
+    const message = createBaseListClanUnreadMsgIndicatorRequest();
+    message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
+function createBaseListClanUnreadMsgIndicatorResponse(): ListClanUnreadMsgIndicatorResponse {
+  return { has_unread_message: false };
+}
+
+export const ListClanUnreadMsgIndicatorResponse = {
+  encode(message: ListClanUnreadMsgIndicatorResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.has_unread_message !== false) {
+      writer.uint32(8).bool(message.has_unread_message);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListClanUnreadMsgIndicatorResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListClanUnreadMsgIndicatorResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.has_unread_message = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListClanUnreadMsgIndicatorResponse {
+    return {
+      has_unread_message: isSet(object.has_unread_message) ? globalThis.Boolean(object.has_unread_message) : false,
+    };
+  },
+
+  toJSON(message: ListClanUnreadMsgIndicatorResponse): unknown {
+    const obj: any = {};
+    if (message.has_unread_message !== false) {
+      obj.has_unread_message = message.has_unread_message;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListClanUnreadMsgIndicatorResponse>, I>>(
+    base?: I,
+  ): ListClanUnreadMsgIndicatorResponse {
+    return ListClanUnreadMsgIndicatorResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListClanUnreadMsgIndicatorResponse>, I>>(
+    object: I,
+  ): ListClanUnreadMsgIndicatorResponse {
+    const message = createBaseListClanUnreadMsgIndicatorResponse();
+    message.has_unread_message = object.has_unread_message ?? false;
     return message;
   },
 };
@@ -13633,7 +12935,7 @@ export const LinkInviteUser = {
 };
 
 function createBaseClanProfile(): ClanProfile {
-  return { user_id: "", nick_name: "", avatar: "", clan_id: "" };
+  return { user_id: "", nick_name: "", avatar: "", clan_id: "", about: "" };
 }
 
 export const ClanProfile = {
@@ -13649,6 +12951,9 @@ export const ClanProfile = {
     }
     if (message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
+    }
+    if (message.about !== "") {
+      writer.uint32(42).string(message.about);
     }
     return writer;
   },
@@ -13688,6 +12993,13 @@ export const ClanProfile = {
 
           message.clan_id = reader.string();
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.about = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -13703,6 +13015,7 @@ export const ClanProfile = {
       nick_name: isSet(object.nick_name) ? globalThis.String(object.nick_name) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      about: isSet(object.about) ? globalThis.String(object.about) : "",
     };
   },
 
@@ -13720,6 +13033,9 @@ export const ClanProfile = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
+    if (message.about !== "") {
+      obj.about = message.about;
+    }
     return obj;
   },
 
@@ -13732,6 +13048,7 @@ export const ClanProfile = {
     message.nick_name = object.nick_name ?? "";
     message.avatar = object.avatar ?? "";
     message.clan_id = object.clan_id ?? "";
+    message.about = object.about ?? "";
     return message;
   },
 };
@@ -14951,11 +14268,11 @@ function createBaseChannelDescription(): ChannelDescription {
     creator_id: "",
     channel_label: "",
     channel_private: 0,
-    channel_avatar: [],
-    user_id: [],
+    avatars: [],
+    user_ids: [],
     last_sent_message: undefined,
     last_seen_message: undefined,
-    is_online: [],
+    onlines: [],
     meeting_code: "",
     count_mess_unread: 0,
     active: 0,
@@ -14964,15 +14281,15 @@ function createBaseChannelDescription(): ChannelDescription {
     creator_name: "",
     create_time_seconds: 0,
     update_time_seconds: 0,
-    metadata: [],
-    about_me: [],
+    display_names: [],
+    channel_avatar: "",
     clan_name: "",
     app_id: "",
     is_mute: false,
     age_restricted: 0,
     topic: "",
     e2ee: 0,
-    display_names: [],
+    member_count: 0,
   };
 }
 
@@ -15005,10 +14322,10 @@ export const ChannelDescription = {
     if (message.channel_private !== 0) {
       writer.uint32(72).int32(message.channel_private);
     }
-    for (const v of message.channel_avatar) {
+    for (const v of message.avatars) {
       writer.uint32(82).string(v!);
     }
-    for (const v of message.user_id) {
+    for (const v of message.user_ids) {
       writer.uint32(90).string(v!);
     }
     if (message.last_sent_message !== undefined) {
@@ -15018,7 +14335,7 @@ export const ChannelDescription = {
       ChannelMessageHeader.encode(message.last_seen_message, writer.uint32(106).fork()).ldelim();
     }
     writer.uint32(114).fork();
-    for (const v of message.is_online) {
+    for (const v of message.onlines) {
       writer.bool(v);
     }
     writer.ldelim();
@@ -15046,11 +14363,11 @@ export const ChannelDescription = {
     if (message.update_time_seconds !== 0) {
       writer.uint32(176).uint32(message.update_time_seconds);
     }
-    for (const v of message.metadata) {
+    for (const v of message.display_names) {
       writer.uint32(186).string(v!);
     }
-    for (const v of message.about_me) {
-      writer.uint32(194).string(v!);
+    if (message.channel_avatar !== "") {
+      writer.uint32(194).string(message.channel_avatar);
     }
     if (message.clan_name !== "") {
       writer.uint32(202).string(message.clan_name);
@@ -15070,8 +14387,8 @@ export const ChannelDescription = {
     if (message.e2ee !== 0) {
       writer.uint32(240).int32(message.e2ee);
     }
-    for (const v of message.display_names) {
-      writer.uint32(250).string(v!);
+    if (message.member_count !== 0) {
+      writer.uint32(248).int32(message.member_count);
     }
     return writer;
   },
@@ -15151,14 +14468,14 @@ export const ChannelDescription = {
             break;
           }
 
-          message.channel_avatar.push(reader.string());
+          message.avatars.push(reader.string());
           continue;
         case 11:
           if (tag !== 90) {
             break;
           }
 
-          message.user_id.push(reader.string());
+          message.user_ids.push(reader.string());
           continue;
         case 12:
           if (tag !== 98) {
@@ -15176,7 +14493,7 @@ export const ChannelDescription = {
           continue;
         case 14:
           if (tag === 112) {
-            message.is_online.push(reader.bool());
+            message.onlines.push(reader.bool());
 
             continue;
           }
@@ -15184,7 +14501,7 @@ export const ChannelDescription = {
           if (tag === 114) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.is_online.push(reader.bool());
+              message.onlines.push(reader.bool());
             }
 
             continue;
@@ -15252,14 +14569,14 @@ export const ChannelDescription = {
             break;
           }
 
-          message.metadata.push(reader.string());
+          message.display_names.push(reader.string());
           continue;
         case 24:
           if (tag !== 194) {
             break;
           }
 
-          message.about_me.push(reader.string());
+          message.channel_avatar = reader.string();
           continue;
         case 25:
           if (tag !== 202) {
@@ -15304,11 +14621,11 @@ export const ChannelDescription = {
           message.e2ee = reader.int32();
           continue;
         case 31:
-          if (tag !== 250) {
+          if (tag !== 248) {
             break;
           }
 
-          message.display_names.push(reader.string());
+          message.member_count = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -15330,19 +14647,15 @@ export const ChannelDescription = {
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
-      channel_avatar: globalThis.Array.isArray(object?.channel_avatar)
-        ? object.channel_avatar.map((e: any) => globalThis.String(e))
-        : [],
-      user_id: globalThis.Array.isArray(object?.user_id) ? object.user_id.map((e: any) => globalThis.String(e)) : [],
+      avatars: globalThis.Array.isArray(object?.avatars) ? object.avatars.map((e: any) => globalThis.String(e)) : [],
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
       last_sent_message: isSet(object.last_sent_message)
         ? ChannelMessageHeader.fromJSON(object.last_sent_message)
         : undefined,
       last_seen_message: isSet(object.last_seen_message)
         ? ChannelMessageHeader.fromJSON(object.last_seen_message)
         : undefined,
-      is_online: globalThis.Array.isArray(object?.is_online)
-        ? object.is_online.map((e: any) => globalThis.Boolean(e))
-        : [],
+      onlines: globalThis.Array.isArray(object?.onlines) ? object.onlines.map((e: any) => globalThis.Boolean(e)) : [],
       meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
       count_mess_unread: isSet(object.count_mess_unread) ? globalThis.Number(object.count_mess_unread) : 0,
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
@@ -15353,19 +14666,17 @@ export const ChannelDescription = {
       creator_name: isSet(object.creator_name) ? globalThis.String(object.creator_name) : "",
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
-      metadata: globalThis.Array.isArray(object?.metadata)
-        ? object.metadata.map((e: any) => globalThis.String(e))
+      display_names: globalThis.Array.isArray(object?.display_names)
+        ? object.display_names.map((e: any) => globalThis.String(e))
         : [],
-      about_me: globalThis.Array.isArray(object?.about_me) ? object.about_me.map((e: any) => globalThis.String(e)) : [],
+      channel_avatar: isSet(object.channel_avatar) ? globalThis.String(object.channel_avatar) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
       is_mute: isSet(object.is_mute) ? globalThis.Boolean(object.is_mute) : false,
       age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
       topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
       e2ee: isSet(object.e2ee) ? globalThis.Number(object.e2ee) : 0,
-      display_names: globalThis.Array.isArray(object?.display_names)
-        ? object.display_names.map((e: any) => globalThis.String(e))
-        : [],
+      member_count: isSet(object.member_count) ? globalThis.Number(object.member_count) : 0,
     };
   },
 
@@ -15398,11 +14709,11 @@ export const ChannelDescription = {
     if (message.channel_private !== 0) {
       obj.channel_private = Math.round(message.channel_private);
     }
-    if (message.channel_avatar?.length) {
-      obj.channel_avatar = message.channel_avatar;
+    if (message.avatars?.length) {
+      obj.avatars = message.avatars;
     }
-    if (message.user_id?.length) {
-      obj.user_id = message.user_id;
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
     }
     if (message.last_sent_message !== undefined) {
       obj.last_sent_message = ChannelMessageHeader.toJSON(message.last_sent_message);
@@ -15410,8 +14721,8 @@ export const ChannelDescription = {
     if (message.last_seen_message !== undefined) {
       obj.last_seen_message = ChannelMessageHeader.toJSON(message.last_seen_message);
     }
-    if (message.is_online?.length) {
-      obj.is_online = message.is_online;
+    if (message.onlines?.length) {
+      obj.onlines = message.onlines;
     }
     if (message.meeting_code !== "") {
       obj.meeting_code = message.meeting_code;
@@ -15437,11 +14748,11 @@ export const ChannelDescription = {
     if (message.update_time_seconds !== 0) {
       obj.update_time_seconds = Math.round(message.update_time_seconds);
     }
-    if (message.metadata?.length) {
-      obj.metadata = message.metadata;
+    if (message.display_names?.length) {
+      obj.display_names = message.display_names;
     }
-    if (message.about_me?.length) {
-      obj.about_me = message.about_me;
+    if (message.channel_avatar !== "") {
+      obj.channel_avatar = message.channel_avatar;
     }
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
@@ -15461,8 +14772,8 @@ export const ChannelDescription = {
     if (message.e2ee !== 0) {
       obj.e2ee = Math.round(message.e2ee);
     }
-    if (message.display_names?.length) {
-      obj.display_names = message.display_names;
+    if (message.member_count !== 0) {
+      obj.member_count = Math.round(message.member_count);
     }
     return obj;
   },
@@ -15481,15 +14792,15 @@ export const ChannelDescription = {
     message.creator_id = object.creator_id ?? "";
     message.channel_label = object.channel_label ?? "";
     message.channel_private = object.channel_private ?? 0;
-    message.channel_avatar = object.channel_avatar?.map((e) => e) || [];
-    message.user_id = object.user_id?.map((e) => e) || [];
+    message.avatars = object.avatars?.map((e) => e) || [];
+    message.user_ids = object.user_ids?.map((e) => e) || [];
     message.last_sent_message = (object.last_sent_message !== undefined && object.last_sent_message !== null)
       ? ChannelMessageHeader.fromPartial(object.last_sent_message)
       : undefined;
     message.last_seen_message = (object.last_seen_message !== undefined && object.last_seen_message !== null)
       ? ChannelMessageHeader.fromPartial(object.last_seen_message)
       : undefined;
-    message.is_online = object.is_online?.map((e) => e) || [];
+    message.onlines = object.onlines?.map((e) => e) || [];
     message.meeting_code = object.meeting_code ?? "";
     message.count_mess_unread = object.count_mess_unread ?? 0;
     message.active = object.active ?? 0;
@@ -15498,15 +14809,15 @@ export const ChannelDescription = {
     message.creator_name = object.creator_name ?? "";
     message.create_time_seconds = object.create_time_seconds ?? 0;
     message.update_time_seconds = object.update_time_seconds ?? 0;
-    message.metadata = object.metadata?.map((e) => e) || [];
-    message.about_me = object.about_me?.map((e) => e) || [];
+    message.display_names = object.display_names?.map((e) => e) || [];
+    message.channel_avatar = object.channel_avatar ?? "";
     message.clan_name = object.clan_name ?? "";
     message.app_id = object.app_id ?? "";
     message.is_mute = object.is_mute ?? false;
     message.age_restricted = object.age_restricted ?? 0;
     message.topic = object.topic ?? "";
     message.e2ee = object.e2ee ?? 0;
-    message.display_names = object.display_names?.map((e) => e) || [];
+    message.member_count = object.member_count ?? 0;
     return message;
   },
 };
@@ -15767,7 +15078,7 @@ export const ListThreadRequest = {
 };
 
 function createBaseListChannelDescsRequest(): ListChannelDescsRequest {
-  return { limit: undefined, state: undefined, cursor: "", clan_id: "", channel_type: 0 };
+  return { limit: undefined, state: undefined, cursor: "", clan_id: "", channel_type: 0, is_mobile: false };
 }
 
 export const ListChannelDescsRequest = {
@@ -15786,6 +15097,9 @@ export const ListChannelDescsRequest = {
     }
     if (message.channel_type !== 0) {
       writer.uint32(40).int32(message.channel_type);
+    }
+    if (message.is_mobile !== false) {
+      writer.uint32(48).bool(message.is_mobile);
     }
     return writer;
   },
@@ -15832,6 +15146,13 @@ export const ListChannelDescsRequest = {
 
           message.channel_type = reader.int32();
           continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.is_mobile = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -15848,6 +15169,7 @@ export const ListChannelDescsRequest = {
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
+      is_mobile: isSet(object.is_mobile) ? globalThis.Boolean(object.is_mobile) : false,
     };
   },
 
@@ -15868,6 +15190,9 @@ export const ListChannelDescsRequest = {
     if (message.channel_type !== 0) {
       obj.channel_type = Math.round(message.channel_type);
     }
+    if (message.is_mobile !== false) {
+      obj.is_mobile = message.is_mobile;
+    }
     return obj;
   },
 
@@ -15881,6 +15206,7 @@ export const ListChannelDescsRequest = {
     message.cursor = object.cursor ?? "";
     message.clan_id = object.clan_id ?? "";
     message.channel_type = object.channel_type ?? 0;
+    message.is_mobile = object.is_mobile ?? false;
     return message;
   },
 };
@@ -16206,13 +15532,16 @@ export const CreateChannelDescRequest = {
 };
 
 function createBaseDeleteChannelDescRequest(): DeleteChannelDescRequest {
-  return { channel_id: "" };
+  return { clan_id: "", channel_id: "" };
 }
 
 export const DeleteChannelDescRequest = {
   encode(message: DeleteChannelDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+      writer.uint32(18).string(message.channel_id);
     }
     return writer;
   },
@@ -16229,6 +15558,13 @@ export const DeleteChannelDescRequest = {
             break;
           }
 
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.channel_id = reader.string();
           continue;
       }
@@ -16241,11 +15577,17 @@ export const DeleteChannelDescRequest = {
   },
 
   fromJSON(object: any): DeleteChannelDescRequest {
-    return { channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "" };
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+    };
   },
 
   toJSON(message: DeleteChannelDescRequest): unknown {
     const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
@@ -16257,6 +15599,7 @@ export const DeleteChannelDescRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<DeleteChannelDescRequest>, I>>(object: I): DeleteChannelDescRequest {
     const message = createBaseDeleteChannelDescRequest();
+    message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     return message;
   },
@@ -16264,6 +15607,7 @@ export const DeleteChannelDescRequest = {
 
 function createBaseUpdateChannelDescRequest(): UpdateChannelDescRequest {
   return {
+    clan_id: "",
     channel_id: "",
     channel_label: undefined,
     category_id: undefined,
@@ -16271,31 +15615,38 @@ function createBaseUpdateChannelDescRequest(): UpdateChannelDescRequest {
     topic: "",
     age_restricted: 0,
     e2ee: 0,
+    channel_avatar: "",
   };
 }
 
 export const UpdateChannelDescRequest = {
   encode(message: UpdateChannelDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+      writer.uint32(18).string(message.channel_id);
     }
     if (message.channel_label !== undefined) {
-      StringValue.encode({ value: message.channel_label! }, writer.uint32(18).fork()).ldelim();
+      StringValue.encode({ value: message.channel_label! }, writer.uint32(26).fork()).ldelim();
     }
     if (message.category_id !== undefined) {
-      StringValue.encode({ value: message.category_id! }, writer.uint32(26).fork()).ldelim();
+      StringValue.encode({ value: message.category_id! }, writer.uint32(34).fork()).ldelim();
     }
     if (message.app_id !== "") {
-      writer.uint32(34).string(message.app_id);
+      writer.uint32(42).string(message.app_id);
     }
     if (message.topic !== "") {
-      writer.uint32(42).string(message.topic);
+      writer.uint32(50).string(message.topic);
     }
     if (message.age_restricted !== 0) {
-      writer.uint32(48).int32(message.age_restricted);
+      writer.uint32(56).int32(message.age_restricted);
     }
     if (message.e2ee !== 0) {
-      writer.uint32(56).int32(message.e2ee);
+      writer.uint32(64).int32(message.e2ee);
+    }
+    if (message.channel_avatar !== "") {
+      writer.uint32(74).string(message.channel_avatar);
     }
     return writer;
   },
@@ -16312,49 +15663,63 @@ export const UpdateChannelDescRequest = {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.channel_label = StringValue.decode(reader, reader.uint32()).value;
+          message.channel_id = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.category_id = StringValue.decode(reader, reader.uint32()).value;
+          message.channel_label = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.app_id = reader.string();
+          message.category_id = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.topic = reader.string();
+          message.app_id = reader.string();
           continue;
         case 6:
-          if (tag !== 48) {
+          if (tag !== 50) {
             break;
           }
 
-          message.age_restricted = reader.int32();
+          message.topic = reader.string();
           continue;
         case 7:
           if (tag !== 56) {
             break;
           }
 
+          message.age_restricted = reader.int32();
+          continue;
+        case 8:
+          if (tag !== 64) {
+            break;
+          }
+
           message.e2ee = reader.int32();
+          continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.channel_avatar = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -16367,6 +15732,7 @@ export const UpdateChannelDescRequest = {
 
   fromJSON(object: any): UpdateChannelDescRequest {
     return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       channel_label: isSet(object.channel_label) ? String(object.channel_label) : undefined,
       category_id: isSet(object.category_id) ? String(object.category_id) : undefined,
@@ -16374,11 +15740,15 @@ export const UpdateChannelDescRequest = {
       topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
       age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
       e2ee: isSet(object.e2ee) ? globalThis.Number(object.e2ee) : 0,
+      channel_avatar: isSet(object.channel_avatar) ? globalThis.String(object.channel_avatar) : "",
     };
   },
 
   toJSON(message: UpdateChannelDescRequest): unknown {
     const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
@@ -16400,6 +15770,9 @@ export const UpdateChannelDescRequest = {
     if (message.e2ee !== 0) {
       obj.e2ee = Math.round(message.e2ee);
     }
+    if (message.channel_avatar !== "") {
+      obj.channel_avatar = message.channel_avatar;
+    }
     return obj;
   },
 
@@ -16408,6 +15781,7 @@ export const UpdateChannelDescRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<UpdateChannelDescRequest>, I>>(object: I): UpdateChannelDescRequest {
     const message = createBaseUpdateChannelDescRequest();
+    message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.channel_label = object.channel_label ?? undefined;
     message.category_id = object.category_id ?? undefined;
@@ -16415,27 +15789,31 @@ export const UpdateChannelDescRequest = {
     message.topic = object.topic ?? "";
     message.age_restricted = object.age_restricted ?? 0;
     message.e2ee = object.e2ee ?? 0;
+    message.channel_avatar = object.channel_avatar ?? "";
     return message;
   },
 };
 
 function createBaseChangeChannelPrivateRequest(): ChangeChannelPrivateRequest {
-  return { channel_id: "", channel_private: 0, user_ids: [], role_ids: [] };
+  return { clan_id: "", channel_id: "", channel_private: 0, user_ids: [], role_ids: [] };
 }
 
 export const ChangeChannelPrivateRequest = {
   encode(message: ChangeChannelPrivateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+      writer.uint32(18).string(message.channel_id);
     }
     if (message.channel_private !== 0) {
-      writer.uint32(16).int32(message.channel_private);
+      writer.uint32(24).int32(message.channel_private);
     }
     for (const v of message.user_ids) {
-      writer.uint32(26).string(v!);
+      writer.uint32(34).string(v!);
     }
     for (const v of message.role_ids) {
-      writer.uint32(34).string(v!);
+      writer.uint32(42).string(v!);
     }
     return writer;
   },
@@ -16452,24 +15830,31 @@ export const ChangeChannelPrivateRequest = {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           continue;
         case 2:
-          if (tag !== 16) {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
             break;
           }
 
           message.channel_private = reader.int32();
           continue;
-        case 3:
-          if (tag !== 26) {
+        case 4:
+          if (tag !== 34) {
             break;
           }
 
           message.user_ids.push(reader.string());
           continue;
-        case 4:
-          if (tag !== 34) {
+        case 5:
+          if (tag !== 42) {
             break;
           }
 
@@ -16486,6 +15871,7 @@ export const ChangeChannelPrivateRequest = {
 
   fromJSON(object: any): ChangeChannelPrivateRequest {
     return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
@@ -16495,6 +15881,9 @@ export const ChangeChannelPrivateRequest = {
 
   toJSON(message: ChangeChannelPrivateRequest): unknown {
     const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
@@ -16515,6 +15904,7 @@ export const ChangeChannelPrivateRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ChangeChannelPrivateRequest>, I>>(object: I): ChangeChannelPrivateRequest {
     const message = createBaseChangeChannelPrivateRequest();
+    message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.channel_private = object.channel_private ?? 0;
     message.user_ids = object.user_ids?.map((e) => e) || [];
@@ -16746,13 +16136,16 @@ export const RemoveClanUsersRequest = {
 };
 
 function createBaseLeaveThreadRequest(): LeaveThreadRequest {
-  return { channel_id: "" };
+  return { clan_id: "", channel_id: "" };
 }
 
 export const LeaveThreadRequest = {
   encode(message: LeaveThreadRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+      writer.uint32(18).string(message.channel_id);
     }
     return writer;
   },
@@ -16769,6 +16162,13 @@ export const LeaveThreadRequest = {
             break;
           }
 
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.channel_id = reader.string();
           continue;
       }
@@ -16781,11 +16181,17 @@ export const LeaveThreadRequest = {
   },
 
   fromJSON(object: any): LeaveThreadRequest {
-    return { channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "" };
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+    };
   },
 
   toJSON(message: LeaveThreadRequest): unknown {
     const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
@@ -16797,6 +16203,7 @@ export const LeaveThreadRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<LeaveThreadRequest>, I>>(object: I): LeaveThreadRequest {
     const message = createBaseLeaveThreadRequest();
+    message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     return message;
   },
@@ -22724,7 +22131,16 @@ export const SearchMessageResponse = {
 };
 
 function createBaseRegistrationEmailRequest(): RegistrationEmailRequest {
-  return { email: "", password: "", username: "", display_name: "", avatar_url: "", dob: "", vars: {} };
+  return {
+    email: "",
+    password: "",
+    old_password: "",
+    username: "",
+    display_name: "",
+    avatar_url: "",
+    dob: "",
+    vars: {},
+  };
 }
 
 export const RegistrationEmailRequest = {
@@ -22735,20 +22151,23 @@ export const RegistrationEmailRequest = {
     if (message.password !== "") {
       writer.uint32(18).string(message.password);
     }
+    if (message.old_password !== "") {
+      writer.uint32(26).string(message.old_password);
+    }
     if (message.username !== "") {
-      writer.uint32(26).string(message.username);
+      writer.uint32(34).string(message.username);
     }
     if (message.display_name !== "") {
-      writer.uint32(34).string(message.display_name);
+      writer.uint32(42).string(message.display_name);
     }
     if (message.avatar_url !== "") {
-      writer.uint32(42).string(message.avatar_url);
+      writer.uint32(50).string(message.avatar_url);
     }
     if (message.dob !== "") {
-      writer.uint32(50).string(message.dob);
+      writer.uint32(58).string(message.dob);
     }
     Object.entries(message.vars).forEach(([key, value]) => {
-      RegistrationEmailRequest_VarsEntry.encode({ key: key as any, value }, writer.uint32(58).fork()).ldelim();
+      RegistrationEmailRequest_VarsEntry.encode({ key: key as any, value }, writer.uint32(66).fork()).ldelim();
     });
     return writer;
   },
@@ -22779,37 +22198,44 @@ export const RegistrationEmailRequest = {
             break;
           }
 
-          message.username = reader.string();
+          message.old_password = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.display_name = reader.string();
+          message.username = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.avatar_url = reader.string();
+          message.display_name = reader.string();
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.dob = reader.string();
+          message.avatar_url = reader.string();
           continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          const entry7 = RegistrationEmailRequest_VarsEntry.decode(reader, reader.uint32());
-          if (entry7.value !== undefined) {
-            message.vars[entry7.key] = entry7.value;
+          message.dob = reader.string();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          const entry8 = RegistrationEmailRequest_VarsEntry.decode(reader, reader.uint32());
+          if (entry8.value !== undefined) {
+            message.vars[entry8.key] = entry8.value;
           }
           continue;
       }
@@ -22825,6 +22251,7 @@ export const RegistrationEmailRequest = {
     return {
       email: isSet(object.email) ? globalThis.String(object.email) : "",
       password: isSet(object.password) ? globalThis.String(object.password) : "",
+      old_password: isSet(object.old_password) ? globalThis.String(object.old_password) : "",
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
       avatar_url: isSet(object.avatar_url) ? globalThis.String(object.avatar_url) : "",
@@ -22845,6 +22272,9 @@ export const RegistrationEmailRequest = {
     }
     if (message.password !== "") {
       obj.password = message.password;
+    }
+    if (message.old_password !== "") {
+      obj.old_password = message.old_password;
     }
     if (message.username !== "") {
       obj.username = message.username;
@@ -22877,6 +22307,7 @@ export const RegistrationEmailRequest = {
     const message = createBaseRegistrationEmailRequest();
     message.email = object.email ?? "";
     message.password = object.password ?? "";
+    message.old_password = object.old_password ?? "";
     message.username = object.username ?? "";
     message.display_name = object.display_name ?? "";
     message.avatar_url = object.avatar_url ?? "";
@@ -23576,7 +23007,7 @@ export const AllUsersAddChannelRequest = {
 };
 
 function createBaseAllUsersAddChannelResponse(): AllUsersAddChannelResponse {
-  return { channel_id: "", user_ids: [], limit: undefined };
+  return { channel_id: "", user_ids: [], limit: undefined, usernames: [], display_names: [], avatars: [], onlines: [] };
 }
 
 export const AllUsersAddChannelResponse = {
@@ -23590,6 +23021,20 @@ export const AllUsersAddChannelResponse = {
     if (message.limit !== undefined) {
       Int32Value.encode({ value: message.limit! }, writer.uint32(26).fork()).ldelim();
     }
+    for (const v of message.usernames) {
+      writer.uint32(34).string(v!);
+    }
+    for (const v of message.display_names) {
+      writer.uint32(42).string(v!);
+    }
+    for (const v of message.avatars) {
+      writer.uint32(50).string(v!);
+    }
+    writer.uint32(58).fork();
+    for (const v of message.onlines) {
+      writer.bool(v);
+    }
+    writer.ldelim();
     return writer;
   },
 
@@ -23621,6 +23066,44 @@ export const AllUsersAddChannelResponse = {
 
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.usernames.push(reader.string());
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.display_names.push(reader.string());
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.avatars.push(reader.string());
+          continue;
+        case 7:
+          if (tag === 56) {
+            message.onlines.push(reader.bool());
+
+            continue;
+          }
+
+          if (tag === 58) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.onlines.push(reader.bool());
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -23635,6 +23118,14 @@ export const AllUsersAddChannelResponse = {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
+      usernames: globalThis.Array.isArray(object?.usernames)
+        ? object.usernames.map((e: any) => globalThis.String(e))
+        : [],
+      display_names: globalThis.Array.isArray(object?.display_names)
+        ? object.display_names.map((e: any) => globalThis.String(e))
+        : [],
+      avatars: globalThis.Array.isArray(object?.avatars) ? object.avatars.map((e: any) => globalThis.String(e)) : [],
+      onlines: globalThis.Array.isArray(object?.onlines) ? object.onlines.map((e: any) => globalThis.Boolean(e)) : [],
     };
   },
 
@@ -23649,6 +23140,18 @@ export const AllUsersAddChannelResponse = {
     if (message.limit !== undefined) {
       obj.limit = message.limit;
     }
+    if (message.usernames?.length) {
+      obj.usernames = message.usernames;
+    }
+    if (message.display_names?.length) {
+      obj.display_names = message.display_names;
+    }
+    if (message.avatars?.length) {
+      obj.avatars = message.avatars;
+    }
+    if (message.onlines?.length) {
+      obj.onlines = message.onlines;
+    }
     return obj;
   },
 
@@ -23660,6 +23163,10 @@ export const AllUsersAddChannelResponse = {
     message.channel_id = object.channel_id ?? "";
     message.user_ids = object.user_ids?.map((e) => e) || [];
     message.limit = object.limit ?? undefined;
+    message.usernames = object.usernames?.map((e) => e) || [];
+    message.display_names = object.display_names?.map((e) => e) || [];
+    message.avatars = object.avatars?.map((e) => e) || [];
+    message.onlines = object.onlines?.map((e) => e) || [];
     return message;
   },
 };
@@ -29940,7 +29447,15 @@ export const ChannelCanvasListRequest = {
 };
 
 function createBaseChannelCanvasItem(): ChannelCanvasItem {
-  return { id: "", title: "", is_default: false, content: "", creator_id: "", update_time: undefined };
+  return {
+    id: "",
+    title: "",
+    is_default: false,
+    content: "",
+    creator_id: "",
+    update_time: undefined,
+    create_time: undefined,
+  };
 }
 
 export const ChannelCanvasItem = {
@@ -29962,6 +29477,9 @@ export const ChannelCanvasItem = {
     }
     if (message.update_time !== undefined) {
       Timestamp.encode(toTimestamp(message.update_time), writer.uint32(50).fork()).ldelim();
+    }
+    if (message.create_time !== undefined) {
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(58).fork()).ldelim();
     }
     return writer;
   },
@@ -30015,6 +29533,13 @@ export const ChannelCanvasItem = {
 
           message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -30032,6 +29557,7 @@ export const ChannelCanvasItem = {
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
+      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
     };
   },
 
@@ -30055,6 +29581,9 @@ export const ChannelCanvasItem = {
     if (message.update_time !== undefined) {
       obj.update_time = message.update_time.toISOString();
     }
+    if (message.create_time !== undefined) {
+      obj.create_time = message.create_time.toISOString();
+    }
     return obj;
   },
 
@@ -30069,6 +29598,7 @@ export const ChannelCanvasItem = {
     message.content = object.content ?? "";
     message.creator_id = object.creator_id ?? "";
     message.update_time = object.update_time ?? undefined;
+    message.create_time = object.create_time ?? undefined;
     return message;
   },
 };
@@ -30477,13 +30007,16 @@ export const AddFavoriteChannelRequest = {
 };
 
 function createBaseRemoveFavoriteChannelRequest(): RemoveFavoriteChannelRequest {
-  return { channel_id: "" };
+  return { clan_id: "", channel_id: "" };
 }
 
 export const RemoveFavoriteChannelRequest = {
   encode(message: RemoveFavoriteChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+      writer.uint32(18).string(message.channel_id);
     }
     return writer;
   },
@@ -30500,6 +30033,13 @@ export const RemoveFavoriteChannelRequest = {
             break;
           }
 
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.channel_id = reader.string();
           continue;
       }
@@ -30512,11 +30052,17 @@ export const RemoveFavoriteChannelRequest = {
   },
 
   fromJSON(object: any): RemoveFavoriteChannelRequest {
-    return { channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "" };
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+    };
   },
 
   toJSON(message: RemoveFavoriteChannelRequest): unknown {
     const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
@@ -30528,6 +30074,7 @@ export const RemoveFavoriteChannelRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<RemoveFavoriteChannelRequest>, I>>(object: I): RemoveFavoriteChannelRequest {
     const message = createBaseRemoveFavoriteChannelRequest();
+    message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     return message;
   },
@@ -34843,551 +34390,6 @@ export const UpdateOnboardingStepRequest = {
   },
 };
 
-function createBaseWalletLedger(): WalletLedger {
-  return { id: "", user_id: "", create_time: undefined, value: 0, transaction_id: "" };
-}
-
-export const WalletLedger = {
-  encode(message: WalletLedger, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
-    }
-    if (message.user_id !== "") {
-      writer.uint32(18).string(message.user_id);
-    }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(26).fork()).ldelim();
-    }
-    if (message.value !== 0) {
-      writer.uint32(32).int32(message.value);
-    }
-    if (message.transaction_id !== "") {
-      writer.uint32(42).string(message.transaction_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): WalletLedger {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseWalletLedger();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.user_id = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-        case 4:
-          if (tag !== 32) {
-            break;
-          }
-
-          message.value = reader.int32();
-          continue;
-        case 5:
-          if (tag !== 42) {
-            break;
-          }
-
-          message.transaction_id = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): WalletLedger {
-    return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
-      value: isSet(object.value) ? globalThis.Number(object.value) : 0,
-      transaction_id: isSet(object.transaction_id) ? globalThis.String(object.transaction_id) : "",
-    };
-  },
-
-  toJSON(message: WalletLedger): unknown {
-    const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
-    }
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
-    }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
-    }
-    if (message.value !== 0) {
-      obj.value = Math.round(message.value);
-    }
-    if (message.transaction_id !== "") {
-      obj.transaction_id = message.transaction_id;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<WalletLedger>, I>>(base?: I): WalletLedger {
-    return WalletLedger.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<WalletLedger>, I>>(object: I): WalletLedger {
-    const message = createBaseWalletLedger();
-    message.id = object.id ?? "";
-    message.user_id = object.user_id ?? "";
-    message.create_time = object.create_time ?? undefined;
-    message.value = object.value ?? 0;
-    message.transaction_id = object.transaction_id ?? "";
-    return message;
-  },
-};
-
-function createBaseWalletLedgerList(): WalletLedgerList {
-  return { wallet_ledger: [], count: 0 };
-}
-
-export const WalletLedgerList = {
-  encode(message: WalletLedgerList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.wallet_ledger) {
-      WalletLedger.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.count !== 0) {
-      writer.uint32(16).int32(message.count);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): WalletLedgerList {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseWalletLedgerList();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.wallet_ledger.push(WalletLedger.decode(reader, reader.uint32()));
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.count = reader.int32();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): WalletLedgerList {
-    return {
-      wallet_ledger: globalThis.Array.isArray(object?.wallet_ledger)
-        ? object.wallet_ledger.map((e: any) => WalletLedger.fromJSON(e))
-        : [],
-      count: isSet(object.count) ? globalThis.Number(object.count) : 0,
-    };
-  },
-
-  toJSON(message: WalletLedgerList): unknown {
-    const obj: any = {};
-    if (message.wallet_ledger?.length) {
-      obj.wallet_ledger = message.wallet_ledger.map((e) => WalletLedger.toJSON(e));
-    }
-    if (message.count !== 0) {
-      obj.count = Math.round(message.count);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<WalletLedgerList>, I>>(base?: I): WalletLedgerList {
-    return WalletLedgerList.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<WalletLedgerList>, I>>(object: I): WalletLedgerList {
-    const message = createBaseWalletLedgerList();
-    message.wallet_ledger = object.wallet_ledger?.map((e) => WalletLedger.fromPartial(e)) || [];
-    message.count = object.count ?? 0;
-    return message;
-  },
-};
-
-function createBaseWalletLedgerListReq(): WalletLedgerListReq {
-  return { limit: undefined, filter: 0, transaction_id: "", page: undefined };
-}
-
-export const WalletLedgerListReq = {
-  encode(message: WalletLedgerListReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.filter !== 0) {
-      writer.uint32(16).int32(message.filter);
-    }
-    if (message.transaction_id !== "") {
-      writer.uint32(26).string(message.transaction_id);
-    }
-    if (message.page !== undefined) {
-      Int32Value.encode({ value: message.page! }, writer.uint32(34).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): WalletLedgerListReq {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseWalletLedgerListReq();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.filter = reader.int32();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.transaction_id = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.page = Int32Value.decode(reader, reader.uint32()).value;
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): WalletLedgerListReq {
-    return {
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      filter: isSet(object.filter) ? globalThis.Number(object.filter) : 0,
-      transaction_id: isSet(object.transaction_id) ? globalThis.String(object.transaction_id) : "",
-      page: isSet(object.page) ? Number(object.page) : undefined,
-    };
-  },
-
-  toJSON(message: WalletLedgerListReq): unknown {
-    const obj: any = {};
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
-    }
-    if (message.filter !== 0) {
-      obj.filter = Math.round(message.filter);
-    }
-    if (message.transaction_id !== "") {
-      obj.transaction_id = message.transaction_id;
-    }
-    if (message.page !== undefined) {
-      obj.page = message.page;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<WalletLedgerListReq>, I>>(base?: I): WalletLedgerListReq {
-    return WalletLedgerListReq.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<WalletLedgerListReq>, I>>(object: I): WalletLedgerListReq {
-    const message = createBaseWalletLedgerListReq();
-    message.limit = object.limit ?? undefined;
-    message.filter = object.filter ?? 0;
-    message.transaction_id = object.transaction_id ?? "";
-    message.page = object.page ?? undefined;
-    return message;
-  },
-};
-
-function createBaseTransactionDetailReq(): TransactionDetailReq {
-  return { trans_id: "" };
-}
-
-export const TransactionDetailReq = {
-  encode(message: TransactionDetailReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.trans_id !== "") {
-      writer.uint32(10).string(message.trans_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): TransactionDetailReq {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseTransactionDetailReq();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.trans_id = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): TransactionDetailReq {
-    return { trans_id: isSet(object.trans_id) ? globalThis.String(object.trans_id) : "" };
-  },
-
-  toJSON(message: TransactionDetailReq): unknown {
-    const obj: any = {};
-    if (message.trans_id !== "") {
-      obj.trans_id = message.trans_id;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<TransactionDetailReq>, I>>(base?: I): TransactionDetailReq {
-    return TransactionDetailReq.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<TransactionDetailReq>, I>>(object: I): TransactionDetailReq {
-    const message = createBaseTransactionDetailReq();
-    message.trans_id = object.trans_id ?? "";
-    return message;
-  },
-};
-
-function createBaseTransactionDetail(): TransactionDetail {
-  return {
-    sender_id: "",
-    sender_username: "",
-    receiver_id: "",
-    receiver_username: "",
-    amount: 0,
-    trans_id: "",
-    metadata: "",
-    create_time: undefined,
-    update_time: undefined,
-  };
-}
-
-export const TransactionDetail = {
-  encode(message: TransactionDetail, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.sender_id !== "") {
-      writer.uint32(10).string(message.sender_id);
-    }
-    if (message.sender_username !== "") {
-      writer.uint32(18).string(message.sender_username);
-    }
-    if (message.receiver_id !== "") {
-      writer.uint32(26).string(message.receiver_id);
-    }
-    if (message.receiver_username !== "") {
-      writer.uint32(34).string(message.receiver_username);
-    }
-    if (message.amount !== 0) {
-      writer.uint32(40).int32(message.amount);
-    }
-    if (message.trans_id !== "") {
-      writer.uint32(50).string(message.trans_id);
-    }
-    if (message.metadata !== "") {
-      writer.uint32(58).string(message.metadata);
-    }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(66).fork()).ldelim();
-    }
-    if (message.update_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(74).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): TransactionDetail {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseTransactionDetail();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.sender_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.sender_username = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.receiver_id = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.receiver_username = reader.string();
-          continue;
-        case 5:
-          if (tag !== 40) {
-            break;
-          }
-
-          message.amount = reader.int32();
-          continue;
-        case 6:
-          if (tag !== 50) {
-            break;
-          }
-
-          message.trans_id = reader.string();
-          continue;
-        case 7:
-          if (tag !== 58) {
-            break;
-          }
-
-          message.metadata = reader.string();
-          continue;
-        case 8:
-          if (tag !== 66) {
-            break;
-          }
-
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-        case 9:
-          if (tag !== 74) {
-            break;
-          }
-
-          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): TransactionDetail {
-    return {
-      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
-      sender_username: isSet(object.sender_username) ? globalThis.String(object.sender_username) : "",
-      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
-      receiver_username: isSet(object.receiver_username) ? globalThis.String(object.receiver_username) : "",
-      amount: isSet(object.amount) ? globalThis.Number(object.amount) : 0,
-      trans_id: isSet(object.trans_id) ? globalThis.String(object.trans_id) : "",
-      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
-      update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
-    };
-  },
-
-  toJSON(message: TransactionDetail): unknown {
-    const obj: any = {};
-    if (message.sender_id !== "") {
-      obj.sender_id = message.sender_id;
-    }
-    if (message.sender_username !== "") {
-      obj.sender_username = message.sender_username;
-    }
-    if (message.receiver_id !== "") {
-      obj.receiver_id = message.receiver_id;
-    }
-    if (message.receiver_username !== "") {
-      obj.receiver_username = message.receiver_username;
-    }
-    if (message.amount !== 0) {
-      obj.amount = Math.round(message.amount);
-    }
-    if (message.trans_id !== "") {
-      obj.trans_id = message.trans_id;
-    }
-    if (message.metadata !== "") {
-      obj.metadata = message.metadata;
-    }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
-    }
-    if (message.update_time !== undefined) {
-      obj.update_time = message.update_time.toISOString();
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<TransactionDetail>, I>>(base?: I): TransactionDetail {
-    return TransactionDetail.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<TransactionDetail>, I>>(object: I): TransactionDetail {
-    const message = createBaseTransactionDetail();
-    message.sender_id = object.sender_id ?? "";
-    message.sender_username = object.sender_username ?? "";
-    message.receiver_id = object.receiver_id ?? "";
-    message.receiver_username = object.receiver_username ?? "";
-    message.amount = object.amount ?? 0;
-    message.trans_id = object.trans_id ?? "";
-    message.metadata = object.metadata ?? "";
-    message.create_time = object.create_time ?? undefined;
-    message.update_time = object.update_time ?? undefined;
-    return message;
-  },
-};
-
 function createBaseSdTopic(): SdTopic {
   return {
     id: "",
@@ -37800,7 +36802,7 @@ export const Message2InboxRequest = {
 };
 
 function createBaseAccountEmail(): AccountEmail {
-  return { email: "", password: "", vars: {} };
+  return { email: "", password: "", prev_email: "", vars: {} };
 }
 
 export const AccountEmail = {
@@ -37811,8 +36813,11 @@ export const AccountEmail = {
     if (message.password !== "") {
       writer.uint32(18).string(message.password);
     }
+    if (message.prev_email !== "") {
+      writer.uint32(26).string(message.prev_email);
+    }
     Object.entries(message.vars).forEach(([key, value]) => {
-      AccountEmail_VarsEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).ldelim();
+      AccountEmail_VarsEntry.encode({ key: key as any, value }, writer.uint32(34).fork()).ldelim();
     });
     return writer;
   },
@@ -37843,9 +36848,16 @@ export const AccountEmail = {
             break;
           }
 
-          const entry3 = AccountEmail_VarsEntry.decode(reader, reader.uint32());
-          if (entry3.value !== undefined) {
-            message.vars[entry3.key] = entry3.value;
+          message.prev_email = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          const entry4 = AccountEmail_VarsEntry.decode(reader, reader.uint32());
+          if (entry4.value !== undefined) {
+            message.vars[entry4.key] = entry4.value;
           }
           continue;
       }
@@ -37861,6 +36873,7 @@ export const AccountEmail = {
     return {
       email: isSet(object.email) ? globalThis.String(object.email) : "",
       password: isSet(object.password) ? globalThis.String(object.password) : "",
+      prev_email: isSet(object.prev_email) ? globalThis.String(object.prev_email) : "",
       vars: isObject(object.vars)
         ? Object.entries(object.vars).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -37877,6 +36890,9 @@ export const AccountEmail = {
     }
     if (message.password !== "") {
       obj.password = message.password;
+    }
+    if (message.prev_email !== "") {
+      obj.prev_email = message.prev_email;
     }
     if (message.vars) {
       const entries = Object.entries(message.vars);
@@ -37897,6 +36913,7 @@ export const AccountEmail = {
     const message = createBaseAccountEmail();
     message.email = object.email ?? "";
     message.password = object.password ?? "";
+    message.prev_email = object.prev_email ?? "";
     message.vars = Object.entries(object.vars ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
       if (value !== undefined) {
         acc[key] = globalThis.String(value);
@@ -37982,13 +36999,13 @@ export const AccountEmail_VarsEntry = {
 };
 
 function createBaseAccountMezon(): AccountMezon {
-  return { token: "", vars: {} };
+  return { phone_number: "", vars: {} };
 }
 
 export const AccountMezon = {
   encode(message: AccountMezon, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.token !== "") {
-      writer.uint32(10).string(message.token);
+    if (message.phone_number !== "") {
+      writer.uint32(10).string(message.phone_number);
     }
     Object.entries(message.vars).forEach(([key, value]) => {
       AccountMezon_VarsEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).ldelim();
@@ -38008,7 +37025,7 @@ export const AccountMezon = {
             break;
           }
 
-          message.token = reader.string();
+          message.phone_number = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -38031,7 +37048,7 @@ export const AccountMezon = {
 
   fromJSON(object: any): AccountMezon {
     return {
-      token: isSet(object.token) ? globalThis.String(object.token) : "",
+      phone_number: isSet(object.phone_number) ? globalThis.String(object.phone_number) : "",
       vars: isObject(object.vars)
         ? Object.entries(object.vars).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -38043,8 +37060,8 @@ export const AccountMezon = {
 
   toJSON(message: AccountMezon): unknown {
     const obj: any = {};
-    if (message.token !== "") {
-      obj.token = message.token;
+    if (message.phone_number !== "") {
+      obj.phone_number = message.phone_number;
     }
     if (message.vars) {
       const entries = Object.entries(message.vars);
@@ -38063,7 +37080,7 @@ export const AccountMezon = {
   },
   fromPartial<I extends Exact<DeepPartial<AccountMezon>, I>>(object: I): AccountMezon {
     const message = createBaseAccountMezon();
-    message.token = object.token ?? "";
+    message.phone_number = object.phone_number ?? "";
     message.vars = Object.entries(object.vars ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
       if (value !== undefined) {
         acc[key] = globalThis.String(value);
@@ -38144,6 +37161,95 @@ export const AccountMezon_VarsEntry = {
     const message = createBaseAccountMezon_VarsEntry();
     message.key = object.key ?? "";
     message.value = object.value ?? "";
+    return message;
+  },
+};
+
+function createBaseLinkAccountConfirmRequest(): LinkAccountConfirmRequest {
+  return { req_id: "", status: 0, otp_code: "" };
+}
+
+export const LinkAccountConfirmRequest = {
+  encode(message: LinkAccountConfirmRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.req_id !== "") {
+      writer.uint32(10).string(message.req_id);
+    }
+    if (message.status !== 0) {
+      writer.uint32(16).int32(message.status);
+    }
+    if (message.otp_code !== "") {
+      writer.uint32(26).string(message.otp_code);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): LinkAccountConfirmRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseLinkAccountConfirmRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.req_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.status = reader.int32();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.otp_code = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): LinkAccountConfirmRequest {
+    return {
+      req_id: isSet(object.req_id) ? globalThis.String(object.req_id) : "",
+      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
+      otp_code: isSet(object.otp_code) ? globalThis.String(object.otp_code) : "",
+    };
+  },
+
+  toJSON(message: LinkAccountConfirmRequest): unknown {
+    const obj: any = {};
+    if (message.req_id !== "") {
+      obj.req_id = message.req_id;
+    }
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
+    }
+    if (message.otp_code !== "") {
+      obj.otp_code = message.otp_code;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<LinkAccountConfirmRequest>, I>>(base?: I): LinkAccountConfirmRequest {
+    return LinkAccountConfirmRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<LinkAccountConfirmRequest>, I>>(object: I): LinkAccountConfirmRequest {
+    const message = createBaseLinkAccountConfirmRequest();
+    message.req_id = object.req_id ?? "";
+    message.status = object.status ?? 0;
+    message.otp_code = object.otp_code ?? "";
     return message;
   },
 };
