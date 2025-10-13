@@ -103,7 +103,7 @@ export class User {
         amount: this.clan.mmnClient.scaleAmountToDecimals(tokenEvent.amount),
         nonce: nonce.nonce + 1,
         textData: tokenEvent.note,
-        extraInfo: tokenEvent.extra_attribute,
+        extraInfo: JSON.stringify(tokenEvent.mmn_extra_info),
         publicKey: this.clan.keyGen.publicKey,
         privateKey: this.clan.keyGen.privateKey,
         zkProof: this.clan.zkProofs.proof,
