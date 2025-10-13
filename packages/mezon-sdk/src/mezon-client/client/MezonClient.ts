@@ -339,7 +339,7 @@ export class MezonClient extends EventEmitter {
 
     const nonce = await this.getCurrentNonce(this.clientId!, "pending");
 
-    return this._mmnClient.sendTransaction({
+    const result = await this._mmnClient.sendTransaction({
       sender: sender_id,
       recipient: receiver_id,
       amount: this._mmnClient.scaleAmountToDecimals(tokenEvent.amount),
@@ -351,6 +351,18 @@ export class MezonClient extends EventEmitter {
       zkProof: this.zkProofs.proof,
       zkPub: this.zkProofs.public_input,
     });
+
+    if (!result.ok) {
+      let errorMsg = result.error;
+      try {
+        const parsed = JSON.parse(result.error);
+        errorMsg = parsed.message || result.error;
+      } catch (_) {}
+
+      throw new Error(`Transaction failed: ${errorMsg}`);
+    }
+
+    return result;
   }
 
   /** Listen to messages user sends on the  channel, thread */
