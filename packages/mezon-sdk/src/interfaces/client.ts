@@ -2,6 +2,10 @@ import { ExtraInfo } from "mmn-client-js";
 import { Events } from "../constants/enum";
 import { ChannelMessageAck } from "./socket";
 
+export interface MMNExtraInfo extends ExtraInfo {
+  ExtraAttribute?: string;
+}
+
 /**  */
 export interface ApiChannelDescription {
   //
@@ -669,7 +673,8 @@ export interface BaseSentTokenRequest {
   sender_id: string;
   amount: number;
   note?: string;
-  extra_attribute?: ExtraInfo;
+  extra_attribute?: string;
+  mmn_extra_info?: MMNExtraInfo;
   timestamp?: number;
 }
 

@@ -321,7 +321,7 @@ export class MezonClient extends EventEmitter {
       amount: this._mmnClient.scaleAmountToDecimals(tokenEvent.amount),
       nonce: nonce.nonce + 1,
       textData: tokenEvent.note,
-      extraInfo: tokenEvent.extra_attribute,
+      extraInfo: JSON.stringify(tokenEvent.mmn_extra_info),
       publicKey: this.keyGen.publicKey,
       privateKey: this.keyGen.privateKey,
       zkProof: this.zkProofs.proof,
