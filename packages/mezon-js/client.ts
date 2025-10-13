@@ -177,6 +177,7 @@ import {
   ApiUser,
   ApiFriend,
   ApiListClanUnreadMsgIndicatorResponse,
+  ApiAddFriendsResponse,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -641,7 +642,7 @@ export class Client {
     session: Session,
     ids?: Array<string>,
     usernames?: Array<string>
-  ): Promise<boolean> {
+  ): Promise<ApiAddFriendsResponse> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -650,11 +651,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .addFriends(session.token, ids, usernames)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    return this.apiClient.addFriends(session.token, ids, usernames);
   }
 
   /** Block one or more users by ID or username. */

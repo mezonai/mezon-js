@@ -1359,6 +1359,11 @@ export interface ApiEmojiRecent {
   update_time?: string;
 }
 
+export interface ApiAddFriendsResponse {
+  ids?: Array<string>;
+  usernames?: Array<string>;
+}
+
 /**  */
 export interface ApiEventList {
   //A list of event.
@@ -6636,7 +6641,7 @@ export class MezonApi {
     ids?: Array<string>,
     usernames?: Array<string>,
     options: any = {}
-  ): Promise<any> {
+  ): Promise<ApiAddFriendsResponse> {
     const urlPath = "/v2/friend";
     const queryParams = new Map<string, any>();
     queryParams.set("ids", ids);
