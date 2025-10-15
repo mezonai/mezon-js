@@ -21,8 +21,12 @@ You'll now see the code in the "node_modules" folder and package listed in your 
 2. Use the connection credentials to build a client object.
 
 ```js
-import { Client } from "mezon-sdk";
-const client = new Client("apiKey");
+import { MezonClient } from "mezon-sdk";
+
+const client = new MezonClient({ botId: BOT_ID, token: BOT_MEZON_TOKEN });
+
+// Login to initialize session
+await client.login();
 ```
 
 ## Usage
@@ -35,16 +39,21 @@ To authenticate with the Mezon server you must provide an identifier for the use
 
 ```js
 const appId = "<AppId>";
+const botId = "<BotId>";
 
-client
-  .authenticate(appId)
-  .then((session) => {
-    _session = session;
-    console.info("Authenticated:", session);
-  })
-  .catch((error) => {
-    console.error("Error:", error);
-  });
+async authenticate(botId, apiKey) {
+    return this.apiClient
+      .mezonAuthenticate(apiKey, "", {
+        account: {
+          appid: botId,
+          token: apiKey,
+        },
+      })
+      .then(async (apiSession: ApiSession) => {
+        this.session = new Session(apiSession);
+        return this.session;
+      });
+  }
 ```
 
 ### Sessions
@@ -128,7 +137,7 @@ const result = await client.sendToken(sendTokenData);
 ```js
 import { MezonClient } from "mezon-sdk";
 
-const client = new MezonClient({botId: BOT_ID, token: BOT_MEZON_TOKEN});
+const client = new MezonClient({ botId: BOT_ID, token: BOT_MEZON_TOKEN });
 
 // Login to initialize session
 await client.login();
