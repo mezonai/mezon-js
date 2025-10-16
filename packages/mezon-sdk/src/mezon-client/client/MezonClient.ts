@@ -45,7 +45,12 @@ import {
   WebrtcSignalingFwd,
 } from "../../rtapi/realtime";
 import { CreateEventRequest } from "../../api/api";
-import { isValidUserId, parseUrlToHostAndSSL, sleep } from "../../utils/helper";
+import {
+  isValidUserId,
+  parseUrlToHostAndSSL,
+  sleep,
+  waitFor2nTimeout,
+} from "../../utils/helper";
 import { ChannelManager } from "../manager/channel_manager";
 import { User, UserInitData } from "../structures/User";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
@@ -59,6 +64,7 @@ import {
   ZkClient,
 } from "mmn-client-js";
 
+const MAX_TIME_RETRY = 10;
 const DEFAULT_HOST = "gw.mezon.ai";
 const DEFAULT_PORT = "443";
 const DEFAULT_API_KEY = "";
@@ -172,58 +178,65 @@ export class MezonClient extends EventEmitter {
     }
   }
 
-  /** Login bot */
-  public async login(): Promise<string> {
+  async handleClientLogin() {
+    const tempApiClient = new MezonApi(
+      this.token,
+      this.loginBasePath!,
+      this.timeout
+    );
+    const tempSessionManager = new SessionManager(tempApiClient);
+    let sessionApi = null;
     try {
-      const tempApiClient = new MezonApi(
-        this.token,
-        this.loginBasePath!,
-        this.timeout
+      sessionApi = await tempSessionManager.authenticate(
+        this.clientId,
+        this.token
       );
-      const tempSessionManager = new SessionManager(tempApiClient);
-      let sessionApi = null;
-      try {
-        sessionApi = await tempSessionManager.authenticate(
-          this.clientId,
-          this.token
-        );
-      } catch (error) {
-        this.socketManager?.closeSocket();
-        throw new Error("Some thing went wrong, please reset bot!");
-      }
+    } catch (error) {
+      this.socketManager?.closeSocket();
+      throw new Error("Some thing went wrong, please reset bot!");
+    }
 
-      if (sessionApi?.api_url) {
-        const { host, port, useSSL } = parseUrlToHostAndSSL(sessionApi.api_url);
-        this.host = host;
-        this.port = port || (useSSL ? "443" : "80");
-        this.useSSL = useSSL;
+    if (sessionApi?.api_url) {
+      const { host, port, useSSL } = parseUrlToHostAndSSL(sessionApi.api_url);
+      this.host = host;
+      this.port = port || (useSSL ? "443" : "80");
+      this.useSSL = useSSL;
 
-        const scheme = this.useSSL ? "https://" : "http://";
-        const basePath = `${scheme}${this.host}:${this.port}`;
-        this.initManager(basePath, sessionApi);
-      }
+      const scheme = this.useSSL ? "https://" : "http://";
+      const basePath = `${scheme}${this.host}:${this.port}`;
+      this.initManager(basePath, sessionApi);
+    }
 
-      // init for MMN
-      if (sessionApi?.user_id) {
-        this.keyGen = await this.getEphemeralKeyPair();
+    // init for MMN
+    if (sessionApi?.user_id) {
+      this.keyGen = await this.getEphemeralKeyPair();
 
-        this.addressMMN = await this.getAddress(sessionApi.user_id);
+      this.addressMMN = await this.getAddress(sessionApi.user_id);
 
-        this.zkProofs = await this.getZkProofs({
-          user_id: sessionApi.user_id!,
-          jwt: sessionApi?.token,
-          address: this.addressMMN,
-          ephemeral_public_key: this.keyGen.publicKey,
-        });
-      }
+      this.zkProofs = await this.getZkProofs({
+        user_id: sessionApi.user_id!,
+        jwt: sessionApi?.token,
+        address: this.addressMMN,
+        ephemeral_public_key: this.keyGen.publicKey,
+      });
+    }
 
-      const sessionConnected = await this.socketManager.connect(sessionApi!);
-      if (sessionConnected?.token) {
-        await this.socketManager.connectSocket(sessionConnected.token);
-        await this.channelManager.initAllDmChannels(sessionConnected.token);
-      }
-      this.emit("ready");
-      return JSON.stringify(sessionApi ?? {});
+    const sessionConnected = await this.socketManager.connect(sessionApi!);
+    if (sessionConnected?.token) {
+      await this.socketManager.connectSocket(sessionConnected.token);
+      await this.channelManager.initAllDmChannels(sessionConnected.token);
+    }
+    this.emit("ready");
+    return JSON.stringify(sessionApi ?? {});
+  }
+
+  /** Login bot */
+  async login(): Promise<string> {
+    try {
+      return await waitFor2nTimeout(
+        () => this.handleClientLogin(),
+        MAX_TIME_RETRY
+      );
     } catch (error) {
       this.socketManager?.closeSocket();
       throw new Error("Some thing went wrong, please reset bot!");

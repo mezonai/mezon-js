@@ -76,3 +76,36 @@ export function generateSnowflakeId(): string {
 
   return snowflakeId.toString();
 }
+
+export async function waitFor2nTimeout<T>(
+  action: () => Promise<T>,
+  maxAttempts = 10
+): Promise<T> {
+  let attempt = 1;
+
+  while (attempt <= maxAttempts) {
+    try {
+      console.log(`Attempt ${attempt}/${maxAttempts}...`);
+      const result = await action();
+      console.log("Action successful!");
+      return result;
+    } catch (error: any) {
+      const isLast = attempt >= maxAttempts;
+
+      if (isLast) {
+        console.error(`Attempt ${attempt} failed. Max attempts reached.`);
+        throw error;
+      }
+
+      const seconds = Math.min(2 ** (attempt - 1), 64);
+      console.warn(
+        `Attempt ${attempt} failed: ${error?.message || error}. ` +
+          `Retrying in ${seconds}s...`
+      );
+      await sleep(seconds * 1000);
+      attempt++;
+    }
+  }
+
+  throw new Error("Unreachable");
+}
