@@ -1027,6 +1027,16 @@ export interface BlockFriend {
 export interface UnblockFriend {
   //
   user_id: string;
+  //
+  username: string;
+  //
+  avatar: string;
+  //
+  display_name: string;
+  //
+  status: string;
+  //
+  user_status: string;
 }
 
 export interface AddUserEmojiUsageEvent {
@@ -1987,7 +1997,7 @@ export class DefaultSocket implements Socket {
         } else if (message.block_friend) {
           this.onblockfriend(<BlockFriend>message.block_friend);
         } else if (message.un_block_friend) {
-          this.onunblockfriend(<BlockFriend>message.un_block_friend);
+          this.onunblockfriend(<UnblockFriend>message.un_block_friend);
         } else if (message.add_friend) {
           this.onaddfriend(<AddFriend>message.add_friend);
         } else if (message.remove_friend) {

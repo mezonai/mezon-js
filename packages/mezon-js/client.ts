@@ -1369,8 +1369,8 @@ export class Client {
     return this.apiClient
       .listChannelAttachment(
         session.token,
-        clanId,
         channelId,
+        clanId,
         fileType,
         limit,
         state,
