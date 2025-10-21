@@ -1445,9 +1445,8 @@ export class Client {
               timezone: gu.user!.timezone,
               update_time: gu.user!.update_time,
               username: gu.user!.username,
-              user_status: gu.user!.user_status
-                ? safeJSONParse(gu.user!.user_status!)
-                : undefined,
+              user_status: gu.user!.user_status,
+              status: gu.user!.status
             },
             role_id: gu!.role_id,
             clan_nick: gu!.clan_nick,
