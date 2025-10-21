@@ -173,8 +173,8 @@ export interface Account {
     | undefined;
   /** The email address of the user. */
   email: string;
-  /** The mezon id in the user's account. */
-  mezon_id: string;
+  /** The qr code in the user's account. */
+  qr_code: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user's email was verified. */
   verify_time:
     | Date
@@ -208,6 +208,14 @@ export interface AccountRefresh_VarsEntry {
 
 /** Add one or more friends to the current user. */
 export interface AddFriendsRequest {
+  /** The account id of a user. */
+  ids: string[];
+  /** The account username of a user. */
+  usernames: string[];
+}
+
+/** Add one or more friends to the current user. */
+export interface AddFriendsResponse {
   /** The account id of a user. */
   ids: string[];
   /** The account username of a user. */
@@ -3709,7 +3717,7 @@ function createBaseAccount(): Account {
   return {
     user: undefined,
     email: "",
-    mezon_id: "",
+    qr_code: "",
     verify_time: undefined,
     disable_time: undefined,
     logo: "",
@@ -3727,8 +3735,8 @@ export const Account = {
     if (message.email !== "") {
       writer.uint32(18).string(message.email);
     }
-    if (message.mezon_id !== "") {
-      writer.uint32(26).string(message.mezon_id);
+    if (message.qr_code !== "") {
+      writer.uint32(26).string(message.qr_code);
     }
     if (message.verify_time !== undefined) {
       Timestamp.encode(toTimestamp(message.verify_time), writer.uint32(34).fork()).ldelim();
@@ -3777,7 +3785,7 @@ export const Account = {
             break;
           }
 
-          message.mezon_id = reader.string();
+          message.qr_code = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
@@ -3834,7 +3842,7 @@ export const Account = {
     return {
       user: isSet(object.user) ? User.fromJSON(object.user) : undefined,
       email: isSet(object.email) ? globalThis.String(object.email) : "",
-      mezon_id: isSet(object.mezon_id) ? globalThis.String(object.mezon_id) : "",
+      qr_code: isSet(object.qr_code) ? globalThis.String(object.qr_code) : "",
       verify_time: isSet(object.verify_time) ? fromJsonTimestamp(object.verify_time) : undefined,
       disable_time: isSet(object.disable_time) ? fromJsonTimestamp(object.disable_time) : undefined,
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
@@ -3852,8 +3860,8 @@ export const Account = {
     if (message.email !== "") {
       obj.email = message.email;
     }
-    if (message.mezon_id !== "") {
-      obj.mezon_id = message.mezon_id;
+    if (message.qr_code !== "") {
+      obj.qr_code = message.qr_code;
     }
     if (message.verify_time !== undefined) {
       obj.verify_time = message.verify_time.toISOString();
@@ -3883,7 +3891,7 @@ export const Account = {
     const message = createBaseAccount();
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
     message.email = object.email ?? "";
-    message.mezon_id = object.mezon_id ?? "";
+    message.qr_code = object.qr_code ?? "";
     message.verify_time = object.verify_time ?? undefined;
     message.disable_time = object.disable_time ?? undefined;
     message.logo = object.logo ?? "";
@@ -4131,6 +4139,82 @@ export const AddFriendsRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<AddFriendsRequest>, I>>(object: I): AddFriendsRequest {
     const message = createBaseAddFriendsRequest();
+    message.ids = object.ids?.map((e) => e) || [];
+    message.usernames = object.usernames?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseAddFriendsResponse(): AddFriendsResponse {
+  return { ids: [], usernames: [] };
+}
+
+export const AddFriendsResponse = {
+  encode(message: AddFriendsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.ids) {
+      writer.uint32(10).string(v!);
+    }
+    for (const v of message.usernames) {
+      writer.uint32(18).string(v!);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AddFriendsResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAddFriendsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.ids.push(reader.string());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.usernames.push(reader.string());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AddFriendsResponse {
+    return {
+      ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => globalThis.String(e)) : [],
+      usernames: globalThis.Array.isArray(object?.usernames)
+        ? object.usernames.map((e: any) => globalThis.String(e))
+        : [],
+    };
+  },
+
+  toJSON(message: AddFriendsResponse): unknown {
+    const obj: any = {};
+    if (message.ids?.length) {
+      obj.ids = message.ids;
+    }
+    if (message.usernames?.length) {
+      obj.usernames = message.usernames;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AddFriendsResponse>, I>>(base?: I): AddFriendsResponse {
+    return AddFriendsResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AddFriendsResponse>, I>>(object: I): AddFriendsResponse {
+    const message = createBaseAddFriendsResponse();
     message.ids = object.ids?.map((e) => e) || [];
     message.usernames = object.usernames?.map((e) => e) || [];
     return message;

@@ -639,10 +639,12 @@ export interface ChannelUpdatedEvent {
   active: number;
   //
   count_mess_unread: number;
-    //
+  //
   role_ids?: Array<string>;
-  //The users to add.
+  // The users to add.
   user_ids?: Array<string>;
+  // channel avatar
+  channel_avatar: string;
 }
 
 export interface DeleteAccountEvent {

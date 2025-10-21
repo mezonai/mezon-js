@@ -908,6 +908,16 @@ export interface BlockFriend {
 export interface UnblockFriend {
   /**  */
   user_id: string;
+  /**  */
+  username: string;
+  /**  */
+  avatar: string;
+  /**  */
+  display_name: string;
+  /**  */
+  status: string;
+  /**  */
+  user_status: string;
 }
 
 /** Application-level heartbeat and connection check. */
@@ -1256,6 +1266,8 @@ export interface ChannelUpdatedEvent {
   user_ids: string[];
   /** This is the role that needs to be added to the channel */
   role_ids: string[];
+  /**  */
+  channel_avatar: string;
 }
 
 /** Stop receiving status updates for some set of users. */
@@ -7064,13 +7076,28 @@ export const BlockFriend = {
 };
 
 function createBaseUnblockFriend(): UnblockFriend {
-  return { user_id: "" };
+  return { user_id: "", username: "", avatar: "", display_name: "", status: "", user_status: "" };
 }
 
 export const UnblockFriend = {
   encode(message: UnblockFriend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
+    }
+    if (message.username !== "") {
+      writer.uint32(18).string(message.username);
+    }
+    if (message.avatar !== "") {
+      writer.uint32(26).string(message.avatar);
+    }
+    if (message.display_name !== "") {
+      writer.uint32(34).string(message.display_name);
+    }
+    if (message.status !== "") {
+      writer.uint32(42).string(message.status);
+    }
+    if (message.user_status !== "") {
+      writer.uint32(50).string(message.user_status);
     }
     return writer;
   },
@@ -7089,6 +7116,41 @@ export const UnblockFriend = {
 
           message.user_id = reader.string();
           continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.username = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.avatar = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.display_name = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.status = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.user_status = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -7099,13 +7161,35 @@ export const UnblockFriend = {
   },
 
   fromJSON(object: any): UnblockFriend {
-    return { user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "" };
+    return {
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
+      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
+      status: isSet(object.status) ? globalThis.String(object.status) : "",
+      user_status: isSet(object.user_status) ? globalThis.String(object.user_status) : "",
+    };
   },
 
   toJSON(message: UnblockFriend): unknown {
     const obj: any = {};
     if (message.user_id !== "") {
       obj.user_id = message.user_id;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.avatar !== "") {
+      obj.avatar = message.avatar;
+    }
+    if (message.display_name !== "") {
+      obj.display_name = message.display_name;
+    }
+    if (message.status !== "") {
+      obj.status = message.status;
+    }
+    if (message.user_status !== "") {
+      obj.user_status = message.user_status;
     }
     return obj;
   },
@@ -7116,6 +7200,11 @@ export const UnblockFriend = {
   fromPartial<I extends Exact<DeepPartial<UnblockFriend>, I>>(object: I): UnblockFriend {
     const message = createBaseUnblockFriend();
     message.user_id = object.user_id ?? "";
+    message.username = object.username ?? "";
+    message.avatar = object.avatar ?? "";
+    message.display_name = object.display_name ?? "";
+    message.status = object.status ?? "";
+    message.user_status = object.user_status ?? "";
     return message;
   },
 };
@@ -9946,6 +10035,7 @@ function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
     count_mess_unread: 0,
     user_ids: [],
     role_ids: [],
+    channel_avatar: "",
   };
 }
 
@@ -10007,6 +10097,9 @@ export const ChannelUpdatedEvent = {
     }
     for (const v of message.role_ids) {
       writer.uint32(154).string(v!);
+    }
+    if (message.channel_avatar !== "") {
+      writer.uint32(162).string(message.channel_avatar);
     }
     return writer;
   },
@@ -10151,6 +10244,13 @@ export const ChannelUpdatedEvent = {
 
           message.role_ids.push(reader.string());
           continue;
+        case 20:
+          if (tag !== 162) {
+            break;
+          }
+
+          message.channel_avatar = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10181,6 +10281,7 @@ export const ChannelUpdatedEvent = {
       count_mess_unread: isSet(object.count_mess_unread) ? globalThis.Number(object.count_mess_unread) : 0,
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
       role_ids: globalThis.Array.isArray(object?.role_ids) ? object.role_ids.map((e: any) => globalThis.String(e)) : [],
+      channel_avatar: isSet(object.channel_avatar) ? globalThis.String(object.channel_avatar) : "",
     };
   },
 
@@ -10243,6 +10344,9 @@ export const ChannelUpdatedEvent = {
     if (message.role_ids?.length) {
       obj.role_ids = message.role_ids;
     }
+    if (message.channel_avatar !== "") {
+      obj.channel_avatar = message.channel_avatar;
+    }
     return obj;
   },
 
@@ -10270,6 +10374,7 @@ export const ChannelUpdatedEvent = {
     message.count_mess_unread = object.count_mess_unread ?? 0;
     message.user_ids = object.user_ids?.map((e) => e) || [];
     message.role_ids = object.role_ids?.map((e) => e) || [];
+    message.channel_avatar = object.channel_avatar ?? "";
     return message;
   },
 };
