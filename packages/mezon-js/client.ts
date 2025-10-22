@@ -1457,6 +1457,28 @@ export class Client {
       });
   }
 
+  async listChannelDetail(
+    session: Session,
+    channelId: string
+  ): Promise<ApiChannelDescription> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listChannelDetail(
+        session.token,
+        channelId
+      )
+      .then((response: ApiChannelDescription) => {
+        return Promise.resolve(response);
+      });
+  }
+
   /** List channels. */
   async listChannelDescs(
     session: Session,
