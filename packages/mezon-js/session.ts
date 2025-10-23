@@ -72,11 +72,11 @@ export class Session implements ISession {
   }
 
   isexpired(currenttime: number): boolean {
-    return (this.expires_at! - currenttime) <= 1;
+    return (this.expires_at! - currenttime) <= 5; // expire 5s before server expired
   }
 
   isrefreshexpired(currenttime: number): boolean {
-      return (this.refresh_expires_at! - currenttime) <= 1;
+      return (this.refresh_expires_at! - currenttime) <= 5;
   }
 
   update(token: string, refreshToken: string, isRemember: boolean) {
