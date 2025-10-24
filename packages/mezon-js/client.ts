@@ -178,6 +178,7 @@ import {
   ApiFriend,
   ApiListClanUnreadMsgIndicatorResponse,
   ApiAddFriendsResponse,
+  ApiUpdateUsernameRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -2097,6 +2098,26 @@ export class Client {
       .unlinkEmail(session.token, request)
       .then((response: any) => {
         return response !== undefined;
+      });
+  }
+
+  /** Update fields in the current user's account. */
+  async updateUsername(
+    session: Session,
+    request: ApiUpdateUsernameRequest
+  ): Promise<ApiSession> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .updateUsername(session.token, request)
+      .then((response: ApiSession) => {
+        return Promise.resolve(response);
       });
   }
 
