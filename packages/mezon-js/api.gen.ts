@@ -570,6 +570,12 @@ export interface ApiCategoryDescList {
 }
 
 /**  */
+export interface ApiUpdateUsernameRequest {
+  //
+  username?: string;
+}
+
+/**  */
 export interface ApiCategoryOrderUpdate {
   //
   category_id?: string;
@@ -2604,10 +2610,12 @@ export interface ApiUpdateAccountRequest {
   about_me?: string;
   //A URL for an avatar image.
   avatar_url?: string;
-  //
-  dob?: string;
   //The display name of the user.
   display_name?: string;
+  //
+  dob?: string;
+  //The email of the user's account.
+  email?: string;
   //
   encrypt_private_key?: string;
   //The language expected to be a tag which follows the BCP-47 spec.
@@ -2620,10 +2628,6 @@ export interface ApiUpdateAccountRequest {
   splash_screen?: string;
   //The timezone set by the user.
   timezone?: string;
-  //The username of the user's account.
-  username?: string;
-  //The email of the user's account.
-  email?: string;
 }
 
 /**  */
@@ -11523,4 +11527,39 @@ export class MezonApi {
       ]);
   }
 
+  /** Update username */
+  updateUsername(bearerToken: string,
+      body:ApiUpdateUsernameRequest,
+      options: any = {}): Promise<ApiSession> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/username";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
 }

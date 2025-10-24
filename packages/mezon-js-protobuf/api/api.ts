@@ -1004,12 +1004,13 @@ export interface Session {
   is_remember: boolean;
 }
 
+/** Update username */
+export interface UpdateUsernameRequest {
+  username: string;
+}
+
 /** Update a user's account details. */
 export interface UpdateAccountRequest {
-  /** The username of the user's account. */
-  username:
-    | string
-    | undefined;
   /** The display name of the user. */
   display_name:
     | string
@@ -1687,7 +1688,7 @@ export interface UpdateChannelDescRequest {
   /**  */
   e2ee: number;
   /** channel avatar */
-  channel_avatar: string;
+  channel_avatar: string | undefined;
 }
 
 /** Update fields in a given channel. */
@@ -10229,9 +10230,65 @@ export const Session = {
   },
 };
 
+function createBaseUpdateUsernameRequest(): UpdateUsernameRequest {
+  return { username: "" };
+}
+
+export const UpdateUsernameRequest = {
+  encode(message: UpdateUsernameRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.username !== "") {
+      writer.uint32(10).string(message.username);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateUsernameRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdateUsernameRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.username = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpdateUsernameRequest {
+    return { username: isSet(object.username) ? globalThis.String(object.username) : "" };
+  },
+
+  toJSON(message: UpdateUsernameRequest): unknown {
+    const obj: any = {};
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdateUsernameRequest>, I>>(base?: I): UpdateUsernameRequest {
+    return UpdateUsernameRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UpdateUsernameRequest>, I>>(object: I): UpdateUsernameRequest {
+    const message = createBaseUpdateUsernameRequest();
+    message.username = object.username ?? "";
+    return message;
+  },
+};
+
 function createBaseUpdateAccountRequest(): UpdateAccountRequest {
   return {
-    username: undefined,
     display_name: undefined,
     avatar_url: undefined,
     lang_tag: undefined,
@@ -10248,41 +10305,38 @@ function createBaseUpdateAccountRequest(): UpdateAccountRequest {
 
 export const UpdateAccountRequest = {
   encode(message: UpdateAccountRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.username !== undefined) {
-      StringValue.encode({ value: message.username! }, writer.uint32(10).fork()).ldelim();
-    }
     if (message.display_name !== undefined) {
-      StringValue.encode({ value: message.display_name! }, writer.uint32(18).fork()).ldelim();
+      StringValue.encode({ value: message.display_name! }, writer.uint32(10).fork()).ldelim();
     }
     if (message.avatar_url !== undefined) {
-      StringValue.encode({ value: message.avatar_url! }, writer.uint32(26).fork()).ldelim();
+      StringValue.encode({ value: message.avatar_url! }, writer.uint32(18).fork()).ldelim();
     }
     if (message.lang_tag !== undefined) {
-      StringValue.encode({ value: message.lang_tag! }, writer.uint32(34).fork()).ldelim();
+      StringValue.encode({ value: message.lang_tag! }, writer.uint32(26).fork()).ldelim();
     }
     if (message.location !== undefined) {
-      StringValue.encode({ value: message.location! }, writer.uint32(42).fork()).ldelim();
+      StringValue.encode({ value: message.location! }, writer.uint32(34).fork()).ldelim();
     }
     if (message.timezone !== undefined) {
-      StringValue.encode({ value: message.timezone! }, writer.uint32(50).fork()).ldelim();
+      StringValue.encode({ value: message.timezone! }, writer.uint32(42).fork()).ldelim();
     }
     if (message.about_me !== undefined) {
-      StringValue.encode({ value: message.about_me! }, writer.uint32(58).fork()).ldelim();
+      StringValue.encode({ value: message.about_me! }, writer.uint32(50).fork()).ldelim();
     }
     if (message.dob !== undefined) {
-      Timestamp.encode(toTimestamp(message.dob), writer.uint32(66).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.dob), writer.uint32(58).fork()).ldelim();
     }
     if (message.logo !== undefined) {
-      StringValue.encode({ value: message.logo! }, writer.uint32(74).fork()).ldelim();
+      StringValue.encode({ value: message.logo! }, writer.uint32(66).fork()).ldelim();
     }
     if (message.splash_screen !== undefined) {
-      StringValue.encode({ value: message.splash_screen! }, writer.uint32(82).fork()).ldelim();
+      StringValue.encode({ value: message.splash_screen! }, writer.uint32(74).fork()).ldelim();
     }
     if (message.encrypt_private_key !== "") {
-      writer.uint32(90).string(message.encrypt_private_key);
+      writer.uint32(82).string(message.encrypt_private_key);
     }
     if (message.email !== undefined) {
-      StringValue.encode({ value: message.email! }, writer.uint32(98).fork()).ldelim();
+      StringValue.encode({ value: message.email! }, writer.uint32(90).fork()).ldelim();
     }
     return writer;
   },
@@ -10299,80 +10353,73 @@ export const UpdateAccountRequest = {
             break;
           }
 
-          message.username = StringValue.decode(reader, reader.uint32()).value;
+          message.display_name = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.display_name = StringValue.decode(reader, reader.uint32()).value;
+          message.avatar_url = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.avatar_url = StringValue.decode(reader, reader.uint32()).value;
+          message.lang_tag = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.lang_tag = StringValue.decode(reader, reader.uint32()).value;
+          message.location = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.location = StringValue.decode(reader, reader.uint32()).value;
+          message.timezone = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.timezone = StringValue.decode(reader, reader.uint32()).value;
+          message.about_me = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          message.about_me = StringValue.decode(reader, reader.uint32()).value;
+          message.dob = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 8:
           if (tag !== 66) {
             break;
           }
 
-          message.dob = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.logo = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 9:
           if (tag !== 74) {
             break;
           }
 
-          message.logo = StringValue.decode(reader, reader.uint32()).value;
+          message.splash_screen = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 10:
           if (tag !== 82) {
             break;
           }
 
-          message.splash_screen = StringValue.decode(reader, reader.uint32()).value;
+          message.encrypt_private_key = reader.string();
           continue;
         case 11:
           if (tag !== 90) {
-            break;
-          }
-
-          message.encrypt_private_key = reader.string();
-          continue;
-        case 12:
-          if (tag !== 98) {
             break;
           }
 
@@ -10389,7 +10436,6 @@ export const UpdateAccountRequest = {
 
   fromJSON(object: any): UpdateAccountRequest {
     return {
-      username: isSet(object.username) ? String(object.username) : undefined,
       display_name: isSet(object.display_name) ? String(object.display_name) : undefined,
       avatar_url: isSet(object.avatar_url) ? String(object.avatar_url) : undefined,
       lang_tag: isSet(object.lang_tag) ? String(object.lang_tag) : undefined,
@@ -10406,9 +10452,6 @@ export const UpdateAccountRequest = {
 
   toJSON(message: UpdateAccountRequest): unknown {
     const obj: any = {};
-    if (message.username !== undefined) {
-      obj.username = message.username;
-    }
     if (message.display_name !== undefined) {
       obj.display_name = message.display_name;
     }
@@ -10450,7 +10493,6 @@ export const UpdateAccountRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<UpdateAccountRequest>, I>>(object: I): UpdateAccountRequest {
     const message = createBaseUpdateAccountRequest();
-    message.username = object.username ?? undefined;
     message.display_name = object.display_name ?? undefined;
     message.avatar_url = object.avatar_url ?? undefined;
     message.lang_tag = object.lang_tag ?? undefined;
@@ -15699,7 +15741,7 @@ function createBaseUpdateChannelDescRequest(): UpdateChannelDescRequest {
     topic: "",
     age_restricted: 0,
     e2ee: 0,
-    channel_avatar: "",
+    channel_avatar: undefined,
   };
 }
 
@@ -15729,8 +15771,8 @@ export const UpdateChannelDescRequest = {
     if (message.e2ee !== 0) {
       writer.uint32(64).int32(message.e2ee);
     }
-    if (message.channel_avatar !== "") {
-      writer.uint32(74).string(message.channel_avatar);
+    if (message.channel_avatar !== undefined) {
+      StringValue.encode({ value: message.channel_avatar! }, writer.uint32(74).fork()).ldelim();
     }
     return writer;
   },
@@ -15803,7 +15845,7 @@ export const UpdateChannelDescRequest = {
             break;
           }
 
-          message.channel_avatar = reader.string();
+          message.channel_avatar = StringValue.decode(reader, reader.uint32()).value;
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -15824,7 +15866,7 @@ export const UpdateChannelDescRequest = {
       topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
       age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
       e2ee: isSet(object.e2ee) ? globalThis.Number(object.e2ee) : 0,
-      channel_avatar: isSet(object.channel_avatar) ? globalThis.String(object.channel_avatar) : "",
+      channel_avatar: isSet(object.channel_avatar) ? String(object.channel_avatar) : undefined,
     };
   },
 
@@ -15854,7 +15896,7 @@ export const UpdateChannelDescRequest = {
     if (message.e2ee !== 0) {
       obj.e2ee = Math.round(message.e2ee);
     }
-    if (message.channel_avatar !== "") {
+    if (message.channel_avatar !== undefined) {
       obj.channel_avatar = message.channel_avatar;
     }
     return obj;
@@ -15873,7 +15915,7 @@ export const UpdateChannelDescRequest = {
     message.topic = object.topic ?? "";
     message.age_restricted = object.age_restricted ?? 0;
     message.e2ee = object.e2ee ?? 0;
-    message.channel_avatar = object.channel_avatar ?? "";
+    message.channel_avatar = object.channel_avatar ?? undefined;
     return message;
   },
 };
