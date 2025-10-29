@@ -1330,8 +1330,6 @@ export interface UserPresence {
   session_id: string;
   /** The username for display purposes. */
   username: string;
-  /** Whether this presence generates persistent data/messages, if applicable for the stream type. */
-  persistence: boolean;
   /** A user-set status message for this stream, if applicable. */
   status:
     | string
@@ -10799,15 +10797,7 @@ export const StreamPresenceEvent = {
 };
 
 function createBaseUserPresence(): UserPresence {
-  return {
-    user_id: "",
-    session_id: "",
-    username: "",
-    persistence: false,
-    status: undefined,
-    is_mobile: false,
-    user_status: "",
-  };
+  return { user_id: "", session_id: "", username: "", status: undefined, is_mobile: false, user_status: "" };
 }
 
 export const UserPresence = {
@@ -10821,17 +10811,14 @@ export const UserPresence = {
     if (message.username !== "") {
       writer.uint32(26).string(message.username);
     }
-    if (message.persistence !== false) {
-      writer.uint32(32).bool(message.persistence);
-    }
     if (message.status !== undefined) {
-      StringValue.encode({ value: message.status! }, writer.uint32(42).fork()).ldelim();
+      StringValue.encode({ value: message.status! }, writer.uint32(34).fork()).ldelim();
     }
     if (message.is_mobile !== false) {
-      writer.uint32(48).bool(message.is_mobile);
+      writer.uint32(40).bool(message.is_mobile);
     }
     if (message.user_status !== "") {
-      writer.uint32(58).string(message.user_status);
+      writer.uint32(50).string(message.user_status);
     }
     return writer;
   },
@@ -10865,28 +10852,21 @@ export const UserPresence = {
           message.username = reader.string();
           continue;
         case 4:
-          if (tag !== 32) {
-            break;
-          }
-
-          message.persistence = reader.bool();
-          continue;
-        case 5:
-          if (tag !== 42) {
+          if (tag !== 34) {
             break;
           }
 
           message.status = StringValue.decode(reader, reader.uint32()).value;
           continue;
-        case 6:
-          if (tag !== 48) {
+        case 5:
+          if (tag !== 40) {
             break;
           }
 
           message.is_mobile = reader.bool();
           continue;
-        case 7:
-          if (tag !== 58) {
+        case 6:
+          if (tag !== 50) {
             break;
           }
 
@@ -10906,7 +10886,6 @@ export const UserPresence = {
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
       session_id: isSet(object.session_id) ? globalThis.String(object.session_id) : "",
       username: isSet(object.username) ? globalThis.String(object.username) : "",
-      persistence: isSet(object.persistence) ? globalThis.Boolean(object.persistence) : false,
       status: isSet(object.status) ? String(object.status) : undefined,
       is_mobile: isSet(object.is_mobile) ? globalThis.Boolean(object.is_mobile) : false,
       user_status: isSet(object.user_status) ? globalThis.String(object.user_status) : "",
@@ -10923,9 +10902,6 @@ export const UserPresence = {
     }
     if (message.username !== "") {
       obj.username = message.username;
-    }
-    if (message.persistence !== false) {
-      obj.persistence = message.persistence;
     }
     if (message.status !== undefined) {
       obj.status = message.status;
@@ -10947,7 +10923,6 @@ export const UserPresence = {
     message.user_id = object.user_id ?? "";
     message.session_id = object.session_id ?? "";
     message.username = object.username ?? "";
-    message.persistence = object.persistence ?? false;
     message.status = object.status ?? undefined;
     message.is_mobile = object.is_mobile ?? false;
     message.user_status = object.user_status ?? "";

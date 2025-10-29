@@ -5761,6 +5761,90 @@ export class MezonApi {
     ]);
   }
 
+  /** Ban a set of users from a channel. */
+  unbanClanUsers(bearerToken: string,
+      clanId:string,
+      channelId?:string,
+      userIds?:Array<string>,
+      banTime?:number,
+      options: any = {}): Promise<any> {
+    
+    if (clanId === null || clanId === undefined) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/clandesc/{clanId}/unban"
+        .replace("{clanId}", encodeURIComponent(String(clanId)));
+    const queryParams = new Map<string, any>();
+    queryParams.set("channel_id", channelId);
+    queryParams.set("user_ids", userIds);
+    queryParams.set("ban_time", banTime);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** Ban a set of users from a channel. */
+  banClanUsers(bearerToken: string,
+      clanId:string,
+      channelId?:string,
+      userIds?:Array<string>,
+      banTime?:number,
+      options: any = {}): Promise<any> {
+    
+    if (clanId === null || clanId === undefined) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/clandesc/{clanId}/ban"
+        .replace("{clanId}", encodeURIComponent(String(clanId)));
+    const queryParams = new Map<string, any>();
+    queryParams.set("channel_id", channelId);
+    queryParams.set("user_ids", userIds);
+    queryParams.set("ban_time", banTime);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
   /** List all users that are part of a clan. */
   listClanUsers(
     bearerToken: string,

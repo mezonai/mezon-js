@@ -1729,6 +1729,18 @@ export interface RemoveClanUsersRequest {
   user_ids: string[];
 }
 
+/** Ban a set of users from a channel. */
+export interface BanClanUsersRequest {
+  /** The clan ID to kick from. */
+  clan_id: string;
+  /** The channel ID to ban */
+  channel_id: string;
+  /** The users to kick. */
+  user_ids: string[];
+  /** ban time */
+  ban_time: number;
+}
+
 /** Leave a channel. */
 export interface LeaveThreadRequest {
   clan_id: string;
@@ -16257,6 +16269,110 @@ export const RemoveClanUsersRequest = {
     const message = createBaseRemoveClanUsersRequest();
     message.clan_id = object.clan_id ?? "";
     message.user_ids = object.user_ids?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseBanClanUsersRequest(): BanClanUsersRequest {
+  return { clan_id: "", channel_id: "", user_ids: [], ban_time: 0 };
+}
+
+export const BanClanUsersRequest = {
+  encode(message: BanClanUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    for (const v of message.user_ids) {
+      writer.uint32(26).string(v!);
+    }
+    if (message.ban_time !== 0) {
+      writer.uint32(32).int32(message.ban_time);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BanClanUsersRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBanClanUsersRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.user_ids.push(reader.string());
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.ban_time = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): BanClanUsersRequest {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      ban_time: isSet(object.ban_time) ? globalThis.Number(object.ban_time) : 0,
+    };
+  },
+
+  toJSON(message: BanClanUsersRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
+    }
+    if (message.ban_time !== 0) {
+      obj.ban_time = Math.round(message.ban_time);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<BanClanUsersRequest>, I>>(base?: I): BanClanUsersRequest {
+    return BanClanUsersRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<BanClanUsersRequest>, I>>(object: I): BanClanUsersRequest {
+    const message = createBaseBanClanUsersRequest();
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.user_ids = object.user_ids?.map((e) => e) || [];
+    message.ban_time = object.ban_time ?? 0;
     return message;
   },
 };
