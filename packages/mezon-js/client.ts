@@ -1128,6 +1128,51 @@ export class Client {
       });
   }
 
+  /** Ban a set of users from a clan. */
+  async unbanClanUsers(
+    session: Session,
+    clanId:string,
+    channelId?:string,
+    userIds?:Array<string>
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .unbanClanUsers(session.token, clanId, channelId, userIds)
+      .then((response: any) => {
+        return Promise.resolve(response != undefined);
+      });
+  }
+
+  /** Ban a set of users from a clan. */
+  async banClanUsers(
+    session: Session,
+    clanId:string,
+    channelId?:string,
+    userIds?:Array<string>,
+    banTime?:number
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .banClanUsers(session.token, clanId, channelId, userIds, banTime)
+      .then((response: any) => {
+        return Promise.resolve(response != undefined);
+      });
+  }
+
   /** Kick users from a channel, or decline their join requests. */
   async removeChannelUsers(
     session: Session,
