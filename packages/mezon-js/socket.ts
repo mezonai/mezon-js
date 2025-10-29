@@ -178,6 +178,12 @@ export interface AddClanUserEvent {
   invitor: string;
 }
 
+export interface BannedUserEvent {
+  user_ids: Array<string>;
+  action: number;
+  banner_id: string;
+}
+
 export interface UserProfileRedis {
   /** User IDs to follow. */
   user_id: string;
@@ -1825,6 +1831,8 @@ export interface Socket {
   onquickmenuevent: (event: QuickMenuEvent) => void;
 
   ontransferownership: (event: TransferOwnershipEvent) => void;
+
+  onbanneduser: (event: BannedUserEvent) => void;
 }
 
 /** Reports an error received from a socket message. */
@@ -2078,6 +2086,8 @@ export class DefaultSocket implements Socket {
           this.onmeetparticipantevent(<MeetParticipantEvent>message.meet_participant_event);
         } else if (message.transfer_ownership_event) {
           this.ontransferownership(<TransferOwnershipEvent>message.transfer_ownership_event);
+        } else if (message.ban_user_event) {
+          this.onbanneduser(<BannedUserEvent>message.ban_user_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -2538,6 +2548,12 @@ export class DefaultSocket implements Socket {
   ontransferownership(event: TransferOwnershipEvent) {
     if (this.verbose && window && window.console) {
       console.log(event);
+    }
+  }
+
+  onbanneduser(event: BannedUserEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event)
     }
   }
 

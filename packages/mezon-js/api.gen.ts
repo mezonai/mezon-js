@@ -22,6 +22,8 @@ export interface ChannelUserListChannelUser {
   user_id?: string;
   //Added by
   added_by?: string;
+  // is banned
+  is_banned?: boolean;
 }
 
 /** A single user-role pair. */

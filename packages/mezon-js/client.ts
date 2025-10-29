@@ -1386,7 +1386,8 @@ export class Client {
             clan_nick: gu.clan_nick,
             id: gu.id,
             clan_id: gu.clan_id,
-            added_by: gu.added_by
+            added_by: gu.added_by,
+            is_banned: gu.is_banned
           });
         });
         return Promise.resolve(result);
