@@ -440,10 +440,20 @@ export interface Envelope {
     | TransferOwnershipEvent
     | undefined;
   /** Add friend event */
-  add_friend?: AddFriend | undefined;
+  add_friend?:
+    | AddFriend
+    | undefined;
+  /** Ban channel user */
+  ban_user_event?: BannedUserEvent | undefined;
 }
 
 export interface FollowEvent {
+}
+
+export interface BannedUserEvent {
+  user_ids: string[];
+  action: number;
+  banner_id: string;
 }
 
 export interface ChannelCanvas {
@@ -1818,6 +1828,7 @@ function createBaseEnvelope(): Envelope {
     meet_participant_event: undefined,
     transfer_ownership_event: undefined,
     add_friend: undefined,
+    ban_user_event: undefined,
   };
 }
 
@@ -2087,6 +2098,9 @@ export const Envelope = {
     }
     if (message.add_friend !== undefined) {
       AddFriend.encode(message.add_friend, writer.uint32(706).fork()).ldelim();
+    }
+    if (message.ban_user_event !== undefined) {
+      BannedUserEvent.encode(message.ban_user_event, writer.uint32(714).fork()).ldelim();
     }
     return writer;
   },
@@ -2714,6 +2728,13 @@ export const Envelope = {
 
           message.add_friend = AddFriend.decode(reader, reader.uint32());
           continue;
+        case 89:
+          if (tag !== 714) {
+            break;
+          }
+
+          message.ban_user_event = BannedUserEvent.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2925,6 +2946,7 @@ export const Envelope = {
         ? TransferOwnershipEvent.fromJSON(object.transfer_ownership_event)
         : undefined,
       add_friend: isSet(object.add_friend) ? AddFriend.fromJSON(object.add_friend) : undefined,
+      ban_user_event: isSet(object.ban_user_event) ? BannedUserEvent.fromJSON(object.ban_user_event) : undefined,
     };
   },
 
@@ -3195,6 +3217,9 @@ export const Envelope = {
     }
     if (message.add_friend !== undefined) {
       obj.add_friend = AddFriend.toJSON(message.add_friend);
+    }
+    if (message.ban_user_event !== undefined) {
+      obj.ban_user_event = BannedUserEvent.toJSON(message.ban_user_event);
     }
     return obj;
   },
@@ -3487,6 +3512,9 @@ export const Envelope = {
     message.add_friend = (object.add_friend !== undefined && object.add_friend !== null)
       ? AddFriend.fromPartial(object.add_friend)
       : undefined;
+    message.ban_user_event = (object.ban_user_event !== undefined && object.ban_user_event !== null)
+      ? BannedUserEvent.fromPartial(object.ban_user_event)
+      : undefined;
     return message;
   },
 };
@@ -3530,6 +3558,95 @@ export const FollowEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<FollowEvent>, I>>(_: I): FollowEvent {
     const message = createBaseFollowEvent();
+    return message;
+  },
+};
+
+function createBaseBannedUserEvent(): BannedUserEvent {
+  return { user_ids: [], action: 0, banner_id: "" };
+}
+
+export const BannedUserEvent = {
+  encode(message: BannedUserEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.user_ids) {
+      writer.uint32(10).string(v!);
+    }
+    if (message.action !== 0) {
+      writer.uint32(16).int32(message.action);
+    }
+    if (message.banner_id !== "") {
+      writer.uint32(26).string(message.banner_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BannedUserEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBannedUserEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user_ids.push(reader.string());
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.action = reader.int32();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.banner_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): BannedUserEvent {
+    return {
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      action: isSet(object.action) ? globalThis.Number(object.action) : 0,
+      banner_id: isSet(object.banner_id) ? globalThis.String(object.banner_id) : "",
+    };
+  },
+
+  toJSON(message: BannedUserEvent): unknown {
+    const obj: any = {};
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
+    }
+    if (message.action !== 0) {
+      obj.action = Math.round(message.action);
+    }
+    if (message.banner_id !== "") {
+      obj.banner_id = message.banner_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<BannedUserEvent>, I>>(base?: I): BannedUserEvent {
+    return BannedUserEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<BannedUserEvent>, I>>(object: I): BannedUserEvent {
+    const message = createBaseBannedUserEvent();
+    message.user_ids = object.user_ids?.map((e) => e) || [];
+    message.action = object.action ?? 0;
+    message.banner_id = object.banner_id ?? "";
     return message;
   },
 };

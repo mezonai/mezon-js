@@ -654,6 +654,8 @@ export interface ChannelUserList_ChannelUser {
   clan_id: string;
   /** added by */
   added_by: string;
+  /** is banned */
+  is_banned: boolean;
 }
 
 /** A list of users belonging to a channel, along with their role. */
@@ -7344,7 +7346,17 @@ export const ChannelUserList = {
 };
 
 function createBaseChannelUserList_ChannelUser(): ChannelUserList_ChannelUser {
-  return { user_id: "", role_id: [], id: "", thread_id: "", clan_nick: "", clan_avatar: "", clan_id: "", added_by: "" };
+  return {
+    user_id: "",
+    role_id: [],
+    id: "",
+    thread_id: "",
+    clan_nick: "",
+    clan_avatar: "",
+    clan_id: "",
+    added_by: "",
+    is_banned: false,
+  };
 }
 
 export const ChannelUserList_ChannelUser = {
@@ -7372,6 +7384,9 @@ export const ChannelUserList_ChannelUser = {
     }
     if (message.added_by !== "") {
       writer.uint32(66).string(message.added_by);
+    }
+    if (message.is_banned !== false) {
+      writer.uint32(72).bool(message.is_banned);
     }
     return writer;
   },
@@ -7439,6 +7454,13 @@ export const ChannelUserList_ChannelUser = {
 
           message.added_by = reader.string();
           continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.is_banned = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -7458,6 +7480,7 @@ export const ChannelUserList_ChannelUser = {
       clan_avatar: isSet(object.clan_avatar) ? globalThis.String(object.clan_avatar) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       added_by: isSet(object.added_by) ? globalThis.String(object.added_by) : "",
+      is_banned: isSet(object.is_banned) ? globalThis.Boolean(object.is_banned) : false,
     };
   },
 
@@ -7487,6 +7510,9 @@ export const ChannelUserList_ChannelUser = {
     if (message.added_by !== "") {
       obj.added_by = message.added_by;
     }
+    if (message.is_banned !== false) {
+      obj.is_banned = message.is_banned;
+    }
     return obj;
   },
 
@@ -7503,6 +7529,7 @@ export const ChannelUserList_ChannelUser = {
     message.clan_avatar = object.clan_avatar ?? "";
     message.clan_id = object.clan_id ?? "";
     message.added_by = object.added_by ?? "";
+    message.is_banned = object.is_banned ?? false;
     return message;
   },
 };
