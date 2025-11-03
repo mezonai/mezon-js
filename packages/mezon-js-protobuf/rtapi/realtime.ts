@@ -454,6 +454,7 @@ export interface BannedUserEvent {
   user_ids: string[];
   action: number;
   banner_id: string;
+  channel_id: string;
 }
 
 export interface ChannelCanvas {
@@ -3563,7 +3564,7 @@ export const FollowEvent = {
 };
 
 function createBaseBannedUserEvent(): BannedUserEvent {
-  return { user_ids: [], action: 0, banner_id: "" };
+  return { user_ids: [], action: 0, banner_id: "", channel_id: "" };
 }
 
 export const BannedUserEvent = {
@@ -3576,6 +3577,9 @@ export const BannedUserEvent = {
     }
     if (message.banner_id !== "") {
       writer.uint32(26).string(message.banner_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(34).string(message.channel_id);
     }
     return writer;
   },
@@ -3608,6 +3612,13 @@ export const BannedUserEvent = {
 
           message.banner_id = reader.string();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3622,6 +3633,7 @@ export const BannedUserEvent = {
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
       action: isSet(object.action) ? globalThis.Number(object.action) : 0,
       banner_id: isSet(object.banner_id) ? globalThis.String(object.banner_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
     };
   },
 
@@ -3636,6 +3648,9 @@ export const BannedUserEvent = {
     if (message.banner_id !== "") {
       obj.banner_id = message.banner_id;
     }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
     return obj;
   },
 
@@ -3647,6 +3662,7 @@ export const BannedUserEvent = {
     message.user_ids = object.user_ids?.map((e) => e) || [];
     message.action = object.action ?? 0;
     message.banner_id = object.banner_id ?? "";
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };
