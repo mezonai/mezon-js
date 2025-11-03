@@ -182,6 +182,7 @@ export interface BannedUserEvent {
   user_ids: Array<string>;
   action: number;
   banner_id: string;
+  channel_id: string;
 }
 
 export interface UserProfileRedis {
