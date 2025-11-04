@@ -26,6 +26,28 @@ export interface ChannelUserListChannelUser {
   is_banned?: boolean;
 }
 
+/**  */
+export interface ApiBannedUser {
+  //
+  ban_time?: number;
+  //
+  banned_avatar?: string;
+  //The banned user.
+  banned_id?: string;
+  //
+  banned_name?: string;
+  //
+  channel_id?: string;
+  //
+  reason?: string;
+}
+
+/**  */
+export interface ApibannedUserList {
+  //
+  banned_users?: Array<ApiBannedUser>;
+}
+
 /** A single user-role pair. */
 export interface ClanUserListClanUser {
   //from the `avatar_url` field in the `clan_desc_profile` table.
@@ -5745,6 +5767,37 @@ export class MezonApi {
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** List banned user */
+  listBannedUsers(bearerToken: string,
+      options: any = {}): Promise<ApibannedUserList> {
+    
+    const urlPath = "/v2/banned";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([

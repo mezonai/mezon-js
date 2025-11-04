@@ -682,6 +682,8 @@ export interface ChannelCreatedEvent {
   app_id: string;
   // clan_name
   clan_name: string;
+  // channel avatar
+  channel_avatar: string;
 }
 
 export interface CategoryEvent {
