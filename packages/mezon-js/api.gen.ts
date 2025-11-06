@@ -7439,7 +7439,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/mutecategory/set";
+    const urlPath = "/v2/mutenotificationcategory/set";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -7478,7 +7478,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/mutechannel/set";
+    const urlPath = "/v2/mutenotificationchannel/set";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
