@@ -63,7 +63,7 @@ import {
   ApiDeleteEventRequest,
   ApiSetDefaultNotificationRequest,
   ApiSetNotificationRequest,
-  ApiSetMuteNotificationRequest,
+  ApiSetMuteRequest,
   ApiSearchMessageRequest,
   ApiSearchMessageResponse,
   ApiPinMessageRequest,
@@ -2466,9 +2466,9 @@ export class Client {
   }
 
   /** Set notification category*/
-  async setMuteNotificationCategory(
+  async setMuteCategory(
     session: Session,
-    request: ApiSetMuteNotificationRequest
+    request: ApiSetMuteRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -2479,16 +2479,16 @@ export class Client {
     }
 
     return this.apiClient
-      .setMuteNotificationCategory(session.token, request)
+      .setMuteCategory(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
   }
 
   /** Set notification channel*/
-  async setMuteNotificationChannel(
+  async setMuteChannel(
     session: Session,
-    request: ApiSetMuteNotificationRequest
+    request: ApiSetMuteRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -2499,7 +2499,7 @@ export class Client {
     }
 
     return this.apiClient
-      .setMuteNotificationChannel(session.token, request)
+      .setMuteChannel(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });

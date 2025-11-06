@@ -2479,13 +2479,15 @@ export interface ApiSetDefaultNotificationRequest {
 }
 
 /**  */
-export interface ApiSetMuteNotificationRequest {
+export interface ApiSetMuteRequest {
   //
   active?: number;
   //
   id?: string;
   //
-  notification_type?: number;
+  mute_time?: number;
+  //
+  clan_id?: string;
 }
 
 /**  */
@@ -2494,8 +2496,6 @@ export interface ApiSetNotificationRequest {
   channel_category_id?: string;
   //
   notification_type?: number;
-  //
-  time_mute?: string;
   // clan_id
   clan_id?: string;
 }
@@ -7429,9 +7429,9 @@ export class MezonApi {
   }
   
   /** set mute notification user channel. */
-  setMuteNotificationCategory(
+  setMuteCategory(
     bearerToken: string,
-    body: ApiSetMuteNotificationRequest,
+    body: ApiSetMuteRequest,
     options: any = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
@@ -7439,7 +7439,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/mutenotificationcategory/set";
+    const urlPath = "/v2/mutecategory/set";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -7468,9 +7468,9 @@ export class MezonApi {
   }
 
   /** set mute notification user channel. */
-  setMuteNotificationChannel(
+  setMuteChannel(
     bearerToken: string,
-    body: ApiSetMuteNotificationRequest,
+    body: ApiSetMuteRequest,
     options: any = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
@@ -7478,7 +7478,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/mutenotificationchannel/set";
+    const urlPath = "/v2/mutechannel/set";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
