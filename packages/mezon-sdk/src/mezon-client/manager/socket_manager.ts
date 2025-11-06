@@ -18,6 +18,7 @@ import {
 } from "../../interfaces";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 import { MessageDatabase } from "../../sqlite/MessageDatabase";
+import { sleep } from "../../utils/helper";
 
 export class SocketManager {
   [key: string]: any;
@@ -98,14 +99,16 @@ export class SocketManager {
       const clans = await this.apiClient.listClanDescs(sessionToken);
       const clanList = clans?.clandesc ?? [];
       clanList.push({ clan_id: "0", clan_name: "" });
-      clanList.forEach(async (clan) => {
+      for (const clan of clanList) {
         await this.socket.joinClanChat(clan.clan_id || "");
+        await sleep(50);
         if (!this.client.clans.get(clan.clan_id!)) {
           const clanObj = new Clan(
             {
               id: clan.clan_id!,
               name: clan?.clan_name ?? "unknown",
               welcome_channel_id: clan?.welcome_channel_id ?? "",
+              clan_name: clan.clan_name ?? "",
             },
             this.client,
             this.apiClient,
@@ -116,7 +119,7 @@ export class SocketManager {
           );
           this.client.clans.set(clan.clan_id!, clanObj);
         }
-      });
+      }
 
       // join direct message
       await this.socket.joinClanChat("0");
@@ -131,7 +134,7 @@ export class SocketManager {
         });
       }
     } catch (error) {
-      this.closeSocket()
+      this.closeSocket();
     }
   }
 

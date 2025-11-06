@@ -1,10 +1,8 @@
-import { ETransferType } from "mmn-client-js";
 import { ChannelStreamMode } from "../../constants";
 import {
   ApiGetZkProofRequest,
-  APISentTokenRequestUser,
+  ApiMessageAttachment,
   ChannelMessageContent,
-  MMNExtraInfo,
 } from "../../interfaces";
 import { ChannelManager } from "../manager/channel_manager";
 import { SocketManager } from "../manager/socket_manager";
@@ -91,50 +89,11 @@ export class User {
     return this.clan.mmnClient.getCurrentNonce(user_id, tag || "pending");
   }
 
-  async sendToken(tokenEvent: APISentTokenRequestUser) {
-    if (!this.clan.mmnClient) {
-      throw new Error("MmnClient not initialized");
-    }
-
-    const sender_id = tokenEvent?.sender_id ?? this.clan.clientId;
-    const receiver_id = this.id;
-    const mmn_extra_info: MMNExtraInfo = {
-      ExtraAttribute: tokenEvent?.extra_attribute ?? "",
-      UserSenderUsername: tokenEvent?.sender_name ?? "",
-      type: ETransferType.TransferToken,
-      ...(tokenEvent?.mmn_extra_info ?? {}),
-      UserSenderId: sender_id,
-      UserReceiverId: receiver_id,
-    };
-
-    const nonce = await this.getCurrentNonce(this.clan.clientId!, "pending");
-
-    const result = await this.clan.mmnClient.sendTransaction({
-      sender: sender_id,
-      recipient: receiver_id,
-      amount: this.clan.mmnClient.scaleAmountToDecimals(tokenEvent.amount),
-      nonce: nonce.nonce + 1,
-      textData: tokenEvent?.note || "No note",
-      extraInfo: mmn_extra_info,
-      publicKey: this.clan.keyGen.publicKey,
-      privateKey: this.clan.keyGen.privateKey,
-      zkProof: this.clan.zkProofs.proof,
-      zkPub: this.clan.zkProofs.public_input,
-    });
-
-    if (!result.ok) {
-      let errorMsg = result.error;
-      try {
-        const parsed = JSON.parse(result.error);
-        errorMsg = parsed.message || result.error;
-      } catch (_) {}
-      throw new Error(`Transaction failed: ${errorMsg}`);
-    }
-
-    return result;
-  }
-
-  async sendDM(content: ChannelMessageContent, code?: number) {
+  async sendDM(
+    content: ChannelMessageContent,
+    code?: number,
+    attachments?: Array<ApiMessageAttachment>
+  ) {
     return this.messageQueue.enqueue(async () => {
       if (!this.dmChannelId) {
         const dmChannel = await this.createDmChannel();
@@ -148,6 +107,7 @@ export class User {
         mode: ChannelStreamMode.STREAM_MODE_DM,
         is_public: false,
         content,
+        attachments,
         code,
       };
       return await this.socketManager.writeChatMessage(dataSendDm);
