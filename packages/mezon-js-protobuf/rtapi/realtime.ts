@@ -1156,6 +1156,8 @@ export interface ChannelCreatedEvent {
   app_id: string;
   /** clan_name */
   clan_name: string;
+  /** channel avatar */
+  channel_avatar: string;
 }
 
 export interface CategoryEvent {
@@ -1387,6 +1389,8 @@ export interface UserChannelAdded {
   create_time_second: number;
   /**  */
   active: number;
+  /** member count for GROUP */
+  member_count: number;
 }
 
 /**  */
@@ -9124,6 +9128,7 @@ function createBaseChannelCreatedEvent(): ChannelCreatedEvent {
     status: 0,
     app_id: "",
     clan_name: "",
+    channel_avatar: "",
   };
 }
 
@@ -9161,6 +9166,9 @@ export const ChannelCreatedEvent = {
     }
     if (message.clan_name !== "") {
       writer.uint32(90).string(message.clan_name);
+    }
+    if (message.channel_avatar !== "") {
+      writer.uint32(98).string(message.channel_avatar);
     }
     return writer;
   },
@@ -9249,6 +9257,13 @@ export const ChannelCreatedEvent = {
 
           message.clan_name = reader.string();
           continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.channel_avatar = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -9271,6 +9286,7 @@ export const ChannelCreatedEvent = {
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
+      channel_avatar: isSet(object.channel_avatar) ? globalThis.String(object.channel_avatar) : "",
     };
   },
 
@@ -9309,6 +9325,9 @@ export const ChannelCreatedEvent = {
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
+    if (message.channel_avatar !== "") {
+      obj.channel_avatar = message.channel_avatar;
+    }
     return obj;
   },
 
@@ -9328,6 +9347,7 @@ export const ChannelCreatedEvent = {
     message.status = object.status ?? 0;
     message.app_id = object.app_id ?? "";
     message.clan_name = object.clan_name ?? "";
+    message.channel_avatar = object.channel_avatar ?? "";
     return message;
   },
 };
@@ -11206,6 +11226,7 @@ function createBaseUserChannelAdded(): UserChannelAdded {
     caller: undefined,
     create_time_second: 0,
     active: 0,
+    member_count: 0,
   };
 }
 
@@ -11231,6 +11252,9 @@ export const UserChannelAdded = {
     }
     if (message.active !== 0) {
       writer.uint32(56).int32(message.active);
+    }
+    if (message.member_count !== 0) {
+      writer.uint32(64).int32(message.member_count);
     }
     return writer;
   },
@@ -11291,6 +11315,13 @@ export const UserChannelAdded = {
 
           message.active = reader.int32();
           continue;
+        case 8:
+          if (tag !== 64) {
+            break;
+          }
+
+          message.member_count = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -11309,6 +11340,7 @@ export const UserChannelAdded = {
       caller: isSet(object.caller) ? UserProfileRedis.fromJSON(object.caller) : undefined,
       create_time_second: isSet(object.create_time_second) ? globalThis.Number(object.create_time_second) : 0,
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
+      member_count: isSet(object.member_count) ? globalThis.Number(object.member_count) : 0,
     };
   },
 
@@ -11335,6 +11367,9 @@ export const UserChannelAdded = {
     if (message.active !== 0) {
       obj.active = Math.round(message.active);
     }
+    if (message.member_count !== 0) {
+      obj.member_count = Math.round(message.member_count);
+    }
     return obj;
   },
 
@@ -11354,6 +11389,7 @@ export const UserChannelAdded = {
       : undefined;
     message.create_time_second = object.create_time_second ?? 0;
     message.active = object.active ?? 0;
+    message.member_count = object.member_count ?? 0;
     return message;
   },
 };
