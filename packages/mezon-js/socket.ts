@@ -230,6 +230,8 @@ export interface UserChannelAddedEvent {
   create_time_second: number;
   //
   active: number;
+  // member count for group channel
+  member_count: number;
 }
 
 export interface UserChannelRemovedEvent {
