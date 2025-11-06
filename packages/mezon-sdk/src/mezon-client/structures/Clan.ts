@@ -23,12 +23,14 @@ interface ClanInitData {
   id: string;
   name: string;
   welcome_channel_id: string;
+  clan_name: string;
 }
 
 export class Clan {
   public id: string;
   public name: string;
   public welcome_channel_id: string;
+  public clan_name: string;
   public channels: CacheManager<string, TextChannel>;
   public users: CacheManager<string, User>;
   public sessionToken: string;
@@ -62,6 +64,7 @@ export class Clan {
     this.id = initClanData.id;
     this.name = initClanData.name;
     this.welcome_channel_id = initClanData.welcome_channel_id;
+    this.clan_name = initClanData.clan_name;
     this.client = client;
     this.clientId = client.clientId!;
     this.keyGen = client.keyGen;

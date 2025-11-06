@@ -561,6 +561,7 @@ export class MezonClient extends EventEmitter {
               id: e.clan_id!,
               name: "unknown",
               welcome_channel_id: "",
+              clan_name: "",
             },
             this,
             this.apiClient,
