@@ -14,6 +14,8 @@ import {
   AddClanUserEvent,
   ApiCreateChannelDescRequest,
   ApiGetZkProofRequest,
+  ApiQuickMenuAccessPayload,
+  ApiQuickMenuAccessRequest,
   APISentTokenRequest,
   ChannelCreatedEvent,
   ChannelDeletedEvent,
@@ -46,6 +48,7 @@ import {
 } from "../../rtapi/realtime";
 import { CreateEventRequest } from "../../api/api";
 import {
+  generateSnowflakeId,
   isValidUserId,
   parseUrlToHostAndSSL,
   sleep,
@@ -376,6 +379,45 @@ export class MezonClient extends EventEmitter {
     }
 
     return result;
+  }
+
+  async addQuickMenuAccess(body: ApiQuickMenuAccessPayload) {
+    const id = generateSnowflakeId();
+    const sessionToken = this.sessionManager.getSession();
+    if (!sessionToken) return;
+    const bot_id = this.clientId;
+    const payload: ApiQuickMenuAccessRequest = {
+      channel_id: "0",
+      clan_id: body?.clan_id ?? "0",
+      menu_type: body?.menu_type ?? 1,
+      action_msg: body.action_msg,
+      background: body?.background ?? "",
+      menu_name: body.menu_name,
+      id,
+      bot_id,
+    };
+    try {
+      return await this.apiClient.addQuickMenuAccess(
+        sessionToken.token,
+        payload
+      );
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteQuickMenuAccess(botId?: string) {
+    const sessionToken = this.sessionManager.getSession();
+    if (!sessionToken) return;
+    const botIdPayload = botId ?? this.clientId;
+    try {
+      return await this.apiClient.deleteQuickMenuAccess(
+        sessionToken.token,
+        botIdPayload
+      );
+    } catch (error) {
+      throw error;
+    }
   }
 
   /** Listen to messages user sends on the  channel, thread */
@@ -741,6 +783,7 @@ export class MezonClient extends EventEmitter {
       attachments,
       references,
       create_time_seconds,
+      topic_id
     } = e;
     try {
       if (clan_id && clan_id !== "0") {
@@ -771,6 +814,7 @@ export class MezonClient extends EventEmitter {
         attachments,
         references,
         create_time_seconds,
+        topic_id
       };
       const message = new Message(
         messageRaw,

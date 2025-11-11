@@ -4,17 +4,12 @@ import {
   ApiMessageAttachment,
   ApiMessageMention,
   ApiMessageRef,
-  ApiQuickMenuAccessPayload,
-  ApiQuickMenuAccessRequest,
   ChannelMessageContent,
   EphemeralMessageData,
   ReplyMessageData,
 } from "../../interfaces";
 import { MessageDatabase } from "../../sqlite/MessageDatabase";
-import {
-  convertChanneltypeToChannelMode,
-  generateSnowflakeId,
-} from "../../utils/helper";
+import { convertChanneltypeToChannelMode } from "../../utils/helper";
 import { SocketManager } from "../manager/socket_manager";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 import { CacheManager } from "../utils/CacheManager";
@@ -111,8 +106,9 @@ export class TextChannel {
   ) {
     return this.messageQueue.enqueue(async () => {
       let references: ApiMessageRef[] = [];
+      let messageRef: Message | null = null;
       if (reference_message_id) {
-        let messageRef = await this.messages.fetch(reference_message_id);
+        messageRef = await this.messages.fetch(reference_message_id);
         const user = await this.clan.users.fetch(messageRef.sender_id);
         references = [
           {
@@ -138,48 +134,18 @@ export class TextChannel {
         anonymous_message,
         mention_everyone,
         code,
-        topic_id,
+        topic_id: messageRef?.topic_id || topic_id,
       };
       return await this.socketManager.writeEphemeralMessage(dataSend);
     });
   }
 
-  async addQuickMenuAccess(body: ApiQuickMenuAccessPayload) {
-    const id = generateSnowflakeId();
-    const bot_id = this.clan.getClientId();
-    const payload: ApiQuickMenuAccessRequest = {
-      channel_id: "0",
-      clan_id: body?.clan_id ?? "0",
-      menu_type: body?.menu_type ?? 1,
-      action_msg: body.action_msg,
-      background: body?.background ?? "",
-      menu_name: body.menu_name,
-      id,
-      bot_id,
-    };
-    try {
-      return await this.clan.apiClient.addQuickMenuAccess(
-        this.clan.sessionToken,
-        payload
-      );
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async deleteQuickMenuAccess(botId?: string) {
-    const botIdPayload = botId ?? this.clan.getClientId();
-    try {
-      return await this.clan.apiClient.deleteQuickMenuAccess(
-        this.clan.sessionToken,
-        botIdPayload
-      );
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async playMedia(url: string, participantIdentity: string, participantName: string, name: string) {
+  async playMedia(
+    url: string,
+    participantIdentity: string,
+    participantName: string,
+    name: string
+  ) {
     const meetingCode = this.meeting_code;
     if (!meetingCode) {
       return { error: "Channel not voice channel." };
