@@ -43,7 +43,7 @@ export interface ApiBannedUser {
 }
 
 /**  */
-export interface ApibannedUserList {
+export interface ApiBannedUserList {
   //
   banned_users?: Array<ApiBannedUser>;
 }
@@ -5787,10 +5787,14 @@ export class MezonApi {
 
   /** List banned user */
   listBannedUsers(bearerToken: string,
-      options: any = {}): Promise<ApibannedUserList> {
+      clanId?:string,
+      channelId?:string,
+      options: any = {}): Promise<ApiBannedUserList> {
     
     const urlPath = "/v2/banned";
     const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
+    queryParams.set("channel_id", channelId);
 
     let bodyJson : string = "";
 
