@@ -107,8 +107,7 @@ export class Message {
   async update(
     content: ChannelMessageContent,
     mentions?: Array<ApiMessageMention>,
-    attachments?: Array<ApiMessageAttachment>,
-    topic_id?: string
+    attachments?: Array<ApiMessageAttachment>
   ) {
     return await this.messageQueue.enqueue(() => {
       const dataUpdate: UpdateMessageData = {
@@ -120,7 +119,8 @@ export class Message {
         content,
         mentions,
         attachments,
-        topic_id: topic_id || this.topic_id,
+        topic_id: this.topic_id,
+        is_update_msg_topic: !!this.topic_id,
       };
       return this.socketManager.updateChatMessage(dataUpdate);
     });
@@ -153,6 +153,7 @@ export class Message {
         mode: convertChanneltypeToChannelMode(this.channel.channel_type!),
         is_public: !this.channel.is_private,
         message_id: this.id,
+        topic_id: this.topic_id,
       };
       return this.socketManager.removeChatMessage(dataRemove);
     });
