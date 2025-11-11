@@ -179,7 +179,7 @@ import {
   ApiListClanUnreadMsgIndicatorResponse,
   ApiAddFriendsResponse,
   ApiUpdateUsernameRequest,
-  ApibannedUserList,
+  ApiBannedUserList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -1130,8 +1130,10 @@ export class Client {
   }
 
   async listBannedUsers(
-    session: Session
-  ): Promise<ApibannedUserList> {
+    session: Session,
+    clanId?:string,
+    channelId?:string,
+  ): Promise<ApiBannedUserList> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -1142,9 +1144,11 @@ export class Client {
 
     return this.apiClient
       .listBannedUsers(
-        session.token
+        session.token,
+        clanId,
+        channelId,
       )
-      .then((response: ApibannedUserList) => {
+      .then((response: ApiBannedUserList) => {
         return Promise.resolve(response);
       });
   }
