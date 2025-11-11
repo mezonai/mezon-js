@@ -805,7 +805,7 @@ export class MezonApi {
     const urlPath = "/v2/quickmenuaccess";
     const queryParams = new Map<string, any>();
 
-    queryParams.set("botId", botId);
+    queryParams.set("bot_id", botId);
 
     let bodyJson: string = "";
 
