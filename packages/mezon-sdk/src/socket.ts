@@ -253,7 +253,7 @@ export class DefaultSocket implements Socket {
     return this.send({channel_leave: {clan_id: clan_id, channel_id: channel_id, channel_type: channel_type, is_public: is_public}});
   }
 
-  async removeChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string): Promise<ChannelMessageAck> {
+  async removeChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, topic_id?: string): Promise<ChannelMessageAck> {
     const response = await this.send(
       {
         channel_message_remove: {
@@ -261,7 +261,8 @@ export class DefaultSocket implements Socket {
           channel_id: channel_id,
           mode: mode,
           message_id: message_id,
-          is_public: is_public
+          is_public: is_public,
+          topic_id: topic_id
         }
       }
     );
@@ -269,8 +270,8 @@ export class DefaultSocket implements Socket {
     return response.channel_message_ack;
   }
 
-  async updateChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, hideEditted?: boolean): Promise<ChannelMessageAck> {
-    const response = await this.send({channel_message_update: {clan_id: clan_id, channel_id: channel_id, message_id: message_id, content: content, mentions: mentions, attachments: attachments, mode: mode, is_public: is_public, hide_editted: hideEditted}});
+  async updateChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, hideEditted?: boolean, topic_id?: string, is_update_msg_topic?: boolean): Promise<ChannelMessageAck> {
+    const response = await this.send({channel_message_update: {clan_id: clan_id, channel_id: channel_id, message_id: message_id, content: content, mentions: mentions, attachments: attachments, mode: mode, is_public: is_public, hide_editted: hideEditted, topic_id: topic_id, is_update_msg_topic: is_update_msg_topic}});
     return response.channel_message_ack;
   }
 

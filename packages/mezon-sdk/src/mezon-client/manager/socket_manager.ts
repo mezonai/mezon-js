@@ -224,7 +224,8 @@ export class SocketManager {
         dataUpdateMessage?.mentions ?? [],
         dataUpdateMessage?.attachments ?? [],
         dataUpdateMessage?.hideEditted ?? false,
-        dataUpdateMessage?.topic_id
+        dataUpdateMessage?.topic_id,
+        dataUpdateMessage?.is_update_msg_topic
       );
       return msgACK;
     } catch (error) {
@@ -260,7 +261,8 @@ export class SocketManager {
         dataRemoveMessage.channel_id,
         dataRemoveMessage.mode,
         dataRemoveMessage.is_public,
-        dataRemoveMessage.message_id
+        dataRemoveMessage.message_id,
+        dataRemoveMessage.topic_id
       );
       return msgACK;
     } catch (error) {

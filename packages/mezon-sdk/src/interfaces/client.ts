@@ -142,6 +142,7 @@ export interface RemoveMessageData {
   mode: number;
   is_public: boolean;
   message_id: string;
+  topic_id?: string;
 }
 
 export interface SendTokenData {

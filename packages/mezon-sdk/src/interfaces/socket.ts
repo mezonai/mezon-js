@@ -908,7 +908,8 @@ export interface Socket {
     channel_id: string,
     mode: number,
     is_public: boolean,    
-    message_id: string
+    message_id: string,
+    topic_id?: string,
   ): Promise<ChannelMessageAck>;
 
   /** Update a chat message on a chat channel in the server. */
