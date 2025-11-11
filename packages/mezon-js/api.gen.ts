@@ -2291,12 +2291,7 @@ export interface ApiRole {
 
 /** A list of role description, usually a result of a list operation. */
 export interface ApiRoleList {
-  //Cacheable cursor to list newer role description. Durable and designed to be stored, unlike next/prev cursors.
-  cacheable_cursor?: string;
-  //The cursor to send when retrieving the next page, if any.
-  next_cursor?: string;
-  //The cursor to send when retrieving the previous page, if any.
-  prev_cursor?: string;
+  max_level_permission?: number;
   //A list of role.
   roles?: Array<ApiRole>;
 }
