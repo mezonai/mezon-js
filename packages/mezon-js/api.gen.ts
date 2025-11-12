@@ -30,12 +30,10 @@ export interface ChannelUserListChannelUser {
 export interface ApiBannedUser {
   //
   ban_time?: number;
-  //
-  banned_avatar?: string;
   //The banned user.
   banned_id?: string;
   //
-  banned_name?: string;
+  banner_id?: string;
   //
   channel_id?: string;
   //
