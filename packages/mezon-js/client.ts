@@ -171,7 +171,6 @@ import {
   ApiIsFollowerRequest,
   ApiTransferOwnershipRequest,
   ApiMeetParticipantRequest,
-  ApiStoreWalletKeyRequest,
   ApiLinkAccountConfirmRequest,
   ApiLinkAccountMezon,
   ApiUser,
@@ -180,6 +179,7 @@ import {
   ApiAddFriendsResponse,
   ApiUpdateUsernameRequest,
   ApiBannedUserList,
+  ApiIsBannedResponse,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4964,8 +4964,8 @@ export class Client {
       });
   }
 
-  async createMmnWallet(session: Session, 
-    req: ApiStoreWalletKeyRequest): Promise<any> {
+  async isBanned(session: Session, 
+    channelId: string): Promise<ApiIsBannedResponse> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4975,9 +4975,9 @@ export class Client {
     }
 
     return this.apiClient
-      .storeWalletKey(session.token, req)
-      .then((response: any) => {
-        return response !== undefined;
+      .isBanned(session.token, channelId)
+      .then((response: ApiIsBannedResponse) => {
+        return Promise.resolve(response);
       });
   }
 
