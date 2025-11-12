@@ -2289,14 +2289,15 @@ export interface ApiRole {
   order_role?: number;
 }
 
+/**  */
+export interface ApiIsBannedResponse {
+  //
+  is_banned?: boolean;
+}
+
 /** A list of role description, usually a result of a list operation. */
 export interface ApiRoleList {
-  //Cacheable cursor to list newer role description. Durable and designed to be stored, unlike next/prev cursors.
-  cacheable_cursor?: string;
-  //The cursor to send when retrieving the next page, if any.
-  next_cursor?: string;
-  //The cursor to send when retrieving the previous page, if any.
-  prev_cursor?: string;
+  max_level_permission?: number;
   //A list of role.
   roles?: Array<ApiRole>;
 }
@@ -11705,4 +11706,41 @@ export class MezonApi {
       ),
     ]);
   }
+
+  /** Ban a set of users from a channel. */
+  isBanned(bearerToken: string,
+      channelId:string,
+      options: any = {}): Promise<ApiIsBannedResponse> {
+    
+    if (channelId === null || channelId === undefined) {
+      throw new Error("'channelId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/channel/{channelId}/isban"
+        .replace("{channelId}", encodeURIComponent(String(channelId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
 }
+

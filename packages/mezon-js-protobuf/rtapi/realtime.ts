@@ -1389,8 +1389,6 @@ export interface UserChannelAdded {
   create_time_second: number;
   /**  */
   active: number;
-  /** member count for GROUP */
-  member_count: number;
 }
 
 /**  */
@@ -11226,7 +11224,6 @@ function createBaseUserChannelAdded(): UserChannelAdded {
     caller: undefined,
     create_time_second: 0,
     active: 0,
-    member_count: 0,
   };
 }
 
@@ -11252,9 +11249,6 @@ export const UserChannelAdded = {
     }
     if (message.active !== 0) {
       writer.uint32(56).int32(message.active);
-    }
-    if (message.member_count !== 0) {
-      writer.uint32(64).int32(message.member_count);
     }
     return writer;
   },
@@ -11315,13 +11309,6 @@ export const UserChannelAdded = {
 
           message.active = reader.int32();
           continue;
-        case 8:
-          if (tag !== 64) {
-            break;
-          }
-
-          message.member_count = reader.int32();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -11340,7 +11327,6 @@ export const UserChannelAdded = {
       caller: isSet(object.caller) ? UserProfileRedis.fromJSON(object.caller) : undefined,
       create_time_second: isSet(object.create_time_second) ? globalThis.Number(object.create_time_second) : 0,
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
-      member_count: isSet(object.member_count) ? globalThis.Number(object.member_count) : 0,
     };
   },
 
@@ -11367,9 +11353,6 @@ export const UserChannelAdded = {
     if (message.active !== 0) {
       obj.active = Math.round(message.active);
     }
-    if (message.member_count !== 0) {
-      obj.member_count = Math.round(message.member_count);
-    }
     return obj;
   },
 
@@ -11389,7 +11372,6 @@ export const UserChannelAdded = {
       : undefined;
     message.create_time_second = object.create_time_second ?? 0;
     message.active = object.active ?? 0;
-    message.member_count = object.member_count ?? 0;
     return message;
   },
 };
