@@ -455,6 +455,7 @@ export interface BannedUserEvent {
   action: number;
   banner_id: string;
   channel_id: string;
+  clan_id: string;
 }
 
 export interface ChannelCanvas {
@@ -3566,7 +3567,7 @@ export const FollowEvent = {
 };
 
 function createBaseBannedUserEvent(): BannedUserEvent {
-  return { user_ids: [], action: 0, banner_id: "", channel_id: "" };
+  return { user_ids: [], action: 0, banner_id: "", channel_id: "", clan_id: "" };
 }
 
 export const BannedUserEvent = {
@@ -3582,6 +3583,9 @@ export const BannedUserEvent = {
     }
     if (message.channel_id !== "") {
       writer.uint32(34).string(message.channel_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(42).string(message.clan_id);
     }
     return writer;
   },
@@ -3621,6 +3625,13 @@ export const BannedUserEvent = {
 
           message.channel_id = reader.string();
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3636,6 +3647,7 @@ export const BannedUserEvent = {
       action: isSet(object.action) ? globalThis.Number(object.action) : 0,
       banner_id: isSet(object.banner_id) ? globalThis.String(object.banner_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
 
@@ -3653,6 +3665,9 @@ export const BannedUserEvent = {
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     return obj;
   },
 
@@ -3665,6 +3680,7 @@ export const BannedUserEvent = {
     message.action = object.action ?? 0;
     message.banner_id = object.banner_id ?? "";
     message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
