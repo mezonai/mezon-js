@@ -4842,7 +4842,8 @@ export class Client {
 
   async deleteQuickMenuAccess(
     session: Session,
-    id: string
+    id: string,
+    clanId: string
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
@@ -4853,7 +4854,7 @@ export class Client {
     }
 
     return this.apiClient
-      .deleteQuickMenuAccess(session.token, id)
+      .deleteQuickMenuAccess(session.token, id, clanId)
       .then((response: any) => {
         return response !== undefined;
       });

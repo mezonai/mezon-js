@@ -11381,6 +11381,7 @@ export class MezonApi {
   /**  */
   deleteQuickMenuAccess(bearerToken: string,
       id?:string,
+      clanId?: string,
       botId?:string,
       menuName?:string,
       background?:string,
@@ -11390,6 +11391,7 @@ export class MezonApi {
     const urlPath = "/v2/quickmenuaccess";
     const queryParams = new Map<string, any>();
     queryParams.set("id", id);
+    queryParams.set("clan_id", clanId);
     queryParams.set("bot_id", botId);
     queryParams.set("menu_name", menuName);
     queryParams.set("background", background);
