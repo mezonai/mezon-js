@@ -259,6 +259,14 @@ export interface SessionLogoutRequest {
   platform: string;
 }
 
+export interface IsBannedResponse {
+  is_banned: boolean;
+}
+
+export interface IsBannedRequest {
+  channel_id: string;
+}
+
 /** Ban users from a group. */
 export interface BanGroupUsersRequest {
   /** The group to ban users from. */
@@ -1754,9 +1762,7 @@ export interface BannedUser {
   /** The banned user. */
   banned_id: string;
   /** The avatar */
-  banned_avatar: string;
-  /** The name */
-  banned_name: string;
+  banner_id: string;
   /** ban time */
   ban_time: number;
   /** The reason */
@@ -4631,6 +4637,120 @@ export const SessionLogoutRequest = {
     message.device_id = object.device_id ?? "";
     message.fcm_token = object.fcm_token ?? "";
     message.platform = object.platform ?? "";
+    return message;
+  },
+};
+
+function createBaseIsBannedResponse(): IsBannedResponse {
+  return { is_banned: false };
+}
+
+export const IsBannedResponse = {
+  encode(message: IsBannedResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.is_banned !== false) {
+      writer.uint32(8).bool(message.is_banned);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): IsBannedResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseIsBannedResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.is_banned = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): IsBannedResponse {
+    return { is_banned: isSet(object.is_banned) ? globalThis.Boolean(object.is_banned) : false };
+  },
+
+  toJSON(message: IsBannedResponse): unknown {
+    const obj: any = {};
+    if (message.is_banned !== false) {
+      obj.is_banned = message.is_banned;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<IsBannedResponse>, I>>(base?: I): IsBannedResponse {
+    return IsBannedResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<IsBannedResponse>, I>>(object: I): IsBannedResponse {
+    const message = createBaseIsBannedResponse();
+    message.is_banned = object.is_banned ?? false;
+    return message;
+  },
+};
+
+function createBaseIsBannedRequest(): IsBannedRequest {
+  return { channel_id: "" };
+}
+
+export const IsBannedRequest = {
+  encode(message: IsBannedRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): IsBannedRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseIsBannedRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): IsBannedRequest {
+    return { channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "" };
+  },
+
+  toJSON(message: IsBannedRequest): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<IsBannedRequest>, I>>(base?: I): IsBannedRequest {
+    return IsBannedRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<IsBannedRequest>, I>>(object: I): IsBannedRequest {
+    const message = createBaseIsBannedRequest();
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };
@@ -16442,7 +16562,7 @@ export const BanClanUsersRequest = {
 };
 
 function createBaseBannedUser(): BannedUser {
-  return { channel_id: "", banned_id: "", banned_avatar: "", banned_name: "", ban_time: 0, reason: "" };
+  return { channel_id: "", banned_id: "", banner_id: "", ban_time: 0, reason: "" };
 }
 
 export const BannedUser = {
@@ -16453,17 +16573,14 @@ export const BannedUser = {
     if (message.banned_id !== "") {
       writer.uint32(18).string(message.banned_id);
     }
-    if (message.banned_avatar !== "") {
-      writer.uint32(26).string(message.banned_avatar);
-    }
-    if (message.banned_name !== "") {
-      writer.uint32(34).string(message.banned_name);
+    if (message.banner_id !== "") {
+      writer.uint32(26).string(message.banner_id);
     }
     if (message.ban_time !== 0) {
-      writer.uint32(40).int32(message.ban_time);
+      writer.uint32(32).int32(message.ban_time);
     }
     if (message.reason !== "") {
-      writer.uint32(50).string(message.reason);
+      writer.uint32(42).string(message.reason);
     }
     return writer;
   },
@@ -16494,24 +16611,17 @@ export const BannedUser = {
             break;
           }
 
-          message.banned_avatar = reader.string();
+          message.banner_id = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.banned_name = reader.string();
-          continue;
-        case 5:
-          if (tag !== 40) {
+          if (tag !== 32) {
             break;
           }
 
           message.ban_time = reader.int32();
           continue;
-        case 6:
-          if (tag !== 50) {
+        case 5:
+          if (tag !== 42) {
             break;
           }
 
@@ -16530,8 +16640,7 @@ export const BannedUser = {
     return {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       banned_id: isSet(object.banned_id) ? globalThis.String(object.banned_id) : "",
-      banned_avatar: isSet(object.banned_avatar) ? globalThis.String(object.banned_avatar) : "",
-      banned_name: isSet(object.banned_name) ? globalThis.String(object.banned_name) : "",
+      banner_id: isSet(object.banner_id) ? globalThis.String(object.banner_id) : "",
       ban_time: isSet(object.ban_time) ? globalThis.Number(object.ban_time) : 0,
       reason: isSet(object.reason) ? globalThis.String(object.reason) : "",
     };
@@ -16545,11 +16654,8 @@ export const BannedUser = {
     if (message.banned_id !== "") {
       obj.banned_id = message.banned_id;
     }
-    if (message.banned_avatar !== "") {
-      obj.banned_avatar = message.banned_avatar;
-    }
-    if (message.banned_name !== "") {
-      obj.banned_name = message.banned_name;
+    if (message.banner_id !== "") {
+      obj.banner_id = message.banner_id;
     }
     if (message.ban_time !== 0) {
       obj.ban_time = Math.round(message.ban_time);
@@ -16567,8 +16673,7 @@ export const BannedUser = {
     const message = createBaseBannedUser();
     message.channel_id = object.channel_id ?? "";
     message.banned_id = object.banned_id ?? "";
-    message.banned_avatar = object.banned_avatar ?? "";
-    message.banned_name = object.banned_name ?? "";
+    message.banner_id = object.banner_id ?? "";
     message.ban_time = object.ban_time ?? 0;
     message.reason = object.reason ?? "";
     return message;
