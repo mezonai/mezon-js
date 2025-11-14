@@ -512,6 +512,7 @@ export class Client {
         return new Session(
           apiSession.token || "",
           apiSession.refresh_token || "",
+          apiSession.user_id || "",
           apiSession.created || false,
           apiSession.api_url || "",
           false
@@ -570,6 +571,7 @@ export class Client {
         return new Session(
           apiSession.token || "",
           apiSession.refresh_token || "",
+          apiSession.user_id || "",
           apiSession.created || false,          
           apiSession.api_url || "",
           false,
@@ -599,6 +601,7 @@ export class Client {
         return new Session(
           apiSession.token || "",
           apiSession.refresh_token || "",
+          apiSession.user_id || "",
           apiSession.created || false,          
           apiSession.api_url || "",
           false,
@@ -2118,7 +2121,7 @@ export class Client {
             is_remember:session.is_remember
           }
         );
-        session.update(apiSession.token!, apiSession.refresh_token!, apiSession.is_remember || false);
+        session.update(apiSession.token!, apiSession.refresh_token!, apiSession.api_url!, apiSession.is_remember || false);
         this.onRefreshSession(apiSession);
         resolve(session);
       } catch (error) {
@@ -3974,6 +3977,7 @@ export class Client {
     return new Session(
       apiSession.token || "",
       apiSession.refresh_token || "",
+      apiSession.user_id || "",
       apiSession.created || false,
       apiSession.api_url || "",
       apiSession.is_remember || false
