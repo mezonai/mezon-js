@@ -2440,6 +2440,8 @@ export interface ApiSession {
   refresh_token?: string;
   //Authentication credentials.
   token?: string;
+  // user id
+  user_id?: string;
   // Whether to enable "Remember Me" for extended session duration.
   is_remember?: boolean;
   api_url?: string;
