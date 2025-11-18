@@ -24,6 +24,8 @@ export interface ChannelUserListChannelUser {
   added_by?: string;
   // is banned
   is_banned?: boolean;
+  // expired time
+  expired_ban_time?: number;
 }
 
 /**  */
@@ -2291,6 +2293,7 @@ export interface ApiRole {
 export interface ApiIsBannedResponse {
   //
   is_banned?: boolean;
+  expired_ban_time?: number;
 }
 
 /** A list of role description, usually a result of a list operation. */
@@ -2440,8 +2443,6 @@ export interface ApiSession {
   refresh_token?: string;
   //Authentication credentials.
   token?: string;
-  // user id
-  user_id?: string;
   // Whether to enable "Remember Me" for extended session duration.
   is_remember?: boolean;
   api_url?: string;
