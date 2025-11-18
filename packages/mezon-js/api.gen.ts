@@ -24,6 +24,7 @@ export interface ChannelUserListChannelUser {
   added_by?: string;
   // is banned
   is_banned?: boolean;
+  // expired time
   expired_ban_time?: number;
 }
 
