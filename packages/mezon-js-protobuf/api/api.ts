@@ -261,6 +261,7 @@ export interface SessionLogoutRequest {
 
 export interface IsBannedResponse {
   is_banned: boolean;
+  expired_ban_time: number;
 }
 
 export interface IsBannedRequest {
@@ -664,6 +665,8 @@ export interface ChannelUserList_ChannelUser {
   added_by: string;
   /** is banned */
   is_banned: boolean;
+  /** expired time */
+  expired_ban_time: number;
 }
 
 /** A list of users belonging to a channel, along with their role. */
@@ -1244,7 +1247,9 @@ export interface UpdateClanDescRequest {
   /** Clan name */
   clan_name: string;
   /** Clan logo */
-  logo: string;
+  logo:
+    | string
+    | undefined;
   /** Clan banner */
   banner:
     | string
@@ -1270,9 +1275,13 @@ export interface UpdateClanDescRequest {
     | string
     | undefined;
   /** string description */
-  description: string;
+  description:
+    | string
+    | undefined;
   /** About */
-  about: string;
+  about:
+    | string
+    | undefined;
   /** Short url for community */
   short_url:
     | string
@@ -4642,13 +4651,16 @@ export const SessionLogoutRequest = {
 };
 
 function createBaseIsBannedResponse(): IsBannedResponse {
-  return { is_banned: false };
+  return { is_banned: false, expired_ban_time: 0 };
 }
 
 export const IsBannedResponse = {
   encode(message: IsBannedResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.is_banned !== false) {
       writer.uint32(8).bool(message.is_banned);
+    }
+    if (message.expired_ban_time !== 0) {
+      writer.uint32(16).int32(message.expired_ban_time);
     }
     return writer;
   },
@@ -4667,6 +4679,13 @@ export const IsBannedResponse = {
 
           message.is_banned = reader.bool();
           continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.expired_ban_time = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -4677,13 +4696,19 @@ export const IsBannedResponse = {
   },
 
   fromJSON(object: any): IsBannedResponse {
-    return { is_banned: isSet(object.is_banned) ? globalThis.Boolean(object.is_banned) : false };
+    return {
+      is_banned: isSet(object.is_banned) ? globalThis.Boolean(object.is_banned) : false,
+      expired_ban_time: isSet(object.expired_ban_time) ? globalThis.Number(object.expired_ban_time) : 0,
+    };
   },
 
   toJSON(message: IsBannedResponse): unknown {
     const obj: any = {};
     if (message.is_banned !== false) {
       obj.is_banned = message.is_banned;
+    }
+    if (message.expired_ban_time !== 0) {
+      obj.expired_ban_time = Math.round(message.expired_ban_time);
     }
     return obj;
   },
@@ -4694,6 +4719,7 @@ export const IsBannedResponse = {
   fromPartial<I extends Exact<DeepPartial<IsBannedResponse>, I>>(object: I): IsBannedResponse {
     const message = createBaseIsBannedResponse();
     message.is_banned = object.is_banned ?? false;
+    message.expired_ban_time = object.expired_ban_time ?? 0;
     return message;
   },
 };
@@ -7498,6 +7524,7 @@ function createBaseChannelUserList_ChannelUser(): ChannelUserList_ChannelUser {
     clan_id: "",
     added_by: "",
     is_banned: false,
+    expired_ban_time: 0,
   };
 }
 
@@ -7529,6 +7556,9 @@ export const ChannelUserList_ChannelUser = {
     }
     if (message.is_banned !== false) {
       writer.uint32(72).bool(message.is_banned);
+    }
+    if (message.expired_ban_time !== 0) {
+      writer.uint32(80).int32(message.expired_ban_time);
     }
     return writer;
   },
@@ -7603,6 +7633,13 @@ export const ChannelUserList_ChannelUser = {
 
           message.is_banned = reader.bool();
           continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.expired_ban_time = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -7623,6 +7660,7 @@ export const ChannelUserList_ChannelUser = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       added_by: isSet(object.added_by) ? globalThis.String(object.added_by) : "",
       is_banned: isSet(object.is_banned) ? globalThis.Boolean(object.is_banned) : false,
+      expired_ban_time: isSet(object.expired_ban_time) ? globalThis.Number(object.expired_ban_time) : 0,
     };
   },
 
@@ -7655,6 +7693,9 @@ export const ChannelUserList_ChannelUser = {
     if (message.is_banned !== false) {
       obj.is_banned = message.is_banned;
     }
+    if (message.expired_ban_time !== 0) {
+      obj.expired_ban_time = Math.round(message.expired_ban_time);
+    }
     return obj;
   },
 
@@ -7672,6 +7713,7 @@ export const ChannelUserList_ChannelUser = {
     message.clan_id = object.clan_id ?? "";
     message.added_by = object.added_by ?? "";
     message.is_banned = object.is_banned ?? false;
+    message.expired_ban_time = object.expired_ban_time ?? 0;
     return message;
   },
 };
@@ -12079,7 +12121,7 @@ function createBaseUpdateClanDescRequest(): UpdateClanDescRequest {
   return {
     clan_id: "",
     clan_name: "",
-    logo: "",
+    logo: undefined,
     banner: undefined,
     status: 0,
     is_onboarding: undefined,
@@ -12087,8 +12129,8 @@ function createBaseUpdateClanDescRequest(): UpdateClanDescRequest {
     onboarding_banner: undefined,
     is_community: undefined,
     community_banner: undefined,
-    description: "",
-    about: "",
+    description: undefined,
+    about: undefined,
     short_url: undefined,
     prevent_anonymous: false,
   };
@@ -12102,8 +12144,8 @@ export const UpdateClanDescRequest = {
     if (message.clan_name !== "") {
       writer.uint32(18).string(message.clan_name);
     }
-    if (message.logo !== "") {
-      writer.uint32(26).string(message.logo);
+    if (message.logo !== undefined) {
+      StringValue.encode({ value: message.logo! }, writer.uint32(26).fork()).ldelim();
     }
     if (message.banner !== undefined) {
       StringValue.encode({ value: message.banner! }, writer.uint32(34).fork()).ldelim();
@@ -12126,11 +12168,11 @@ export const UpdateClanDescRequest = {
     if (message.community_banner !== undefined) {
       StringValue.encode({ value: message.community_banner! }, writer.uint32(82).fork()).ldelim();
     }
-    if (message.description !== "") {
-      writer.uint32(90).string(message.description);
+    if (message.description !== undefined) {
+      StringValue.encode({ value: message.description! }, writer.uint32(90).fork()).ldelim();
     }
-    if (message.about !== "") {
-      writer.uint32(98).string(message.about);
+    if (message.about !== undefined) {
+      StringValue.encode({ value: message.about! }, writer.uint32(98).fork()).ldelim();
     }
     if (message.short_url !== undefined) {
       StringValue.encode({ value: message.short_url! }, writer.uint32(106).fork()).ldelim();
@@ -12167,7 +12209,7 @@ export const UpdateClanDescRequest = {
             break;
           }
 
-          message.logo = reader.string();
+          message.logo = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 4:
           if (tag !== 34) {
@@ -12223,14 +12265,14 @@ export const UpdateClanDescRequest = {
             break;
           }
 
-          message.description = reader.string();
+          message.description = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 12:
           if (tag !== 98) {
             break;
           }
 
-          message.about = reader.string();
+          message.about = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 13:
           if (tag !== 106) {
@@ -12259,7 +12301,7 @@ export const UpdateClanDescRequest = {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
-      logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
+      logo: isSet(object.logo) ? String(object.logo) : undefined,
       banner: isSet(object.banner) ? String(object.banner) : undefined,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       is_onboarding: isSet(object.is_onboarding) ? Boolean(object.is_onboarding) : undefined,
@@ -12267,8 +12309,8 @@ export const UpdateClanDescRequest = {
       onboarding_banner: isSet(object.onboarding_banner) ? String(object.onboarding_banner) : undefined,
       is_community: isSet(object.is_community) ? Boolean(object.is_community) : undefined,
       community_banner: isSet(object.community_banner) ? String(object.community_banner) : undefined,
-      description: isSet(object.description) ? globalThis.String(object.description) : "",
-      about: isSet(object.about) ? globalThis.String(object.about) : "",
+      description: isSet(object.description) ? String(object.description) : undefined,
+      about: isSet(object.about) ? String(object.about) : undefined,
       short_url: isSet(object.short_url) ? String(object.short_url) : undefined,
       prevent_anonymous: isSet(object.prevent_anonymous) ? globalThis.Boolean(object.prevent_anonymous) : false,
     };
@@ -12282,7 +12324,7 @@ export const UpdateClanDescRequest = {
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.logo !== "") {
+    if (message.logo !== undefined) {
       obj.logo = message.logo;
     }
     if (message.banner !== undefined) {
@@ -12306,10 +12348,10 @@ export const UpdateClanDescRequest = {
     if (message.community_banner !== undefined) {
       obj.community_banner = message.community_banner;
     }
-    if (message.description !== "") {
+    if (message.description !== undefined) {
       obj.description = message.description;
     }
-    if (message.about !== "") {
+    if (message.about !== undefined) {
       obj.about = message.about;
     }
     if (message.short_url !== undefined) {
@@ -12328,7 +12370,7 @@ export const UpdateClanDescRequest = {
     const message = createBaseUpdateClanDescRequest();
     message.clan_id = object.clan_id ?? "";
     message.clan_name = object.clan_name ?? "";
-    message.logo = object.logo ?? "";
+    message.logo = object.logo ?? undefined;
     message.banner = object.banner ?? undefined;
     message.status = object.status ?? 0;
     message.is_onboarding = object.is_onboarding ?? undefined;
@@ -12336,8 +12378,8 @@ export const UpdateClanDescRequest = {
     message.onboarding_banner = object.onboarding_banner ?? undefined;
     message.is_community = object.is_community ?? undefined;
     message.community_banner = object.community_banner ?? undefined;
-    message.description = object.description ?? "";
-    message.about = object.about ?? "";
+    message.description = object.description ?? undefined;
+    message.about = object.about ?? undefined;
     message.short_url = object.short_url ?? undefined;
     message.prevent_anonymous = object.prevent_anonymous ?? false;
     return message;
