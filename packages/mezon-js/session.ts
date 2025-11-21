@@ -50,8 +50,6 @@ export class Session implements ISession {
 
   token : string;
   readonly created_at: number;
-  readonly api_url: string;
-  readonly id_token: string;
   expires_at?: number;
   refresh_expires_at?: number;
   refresh_token: string;
@@ -64,13 +62,13 @@ export class Session implements ISession {
     token: string,
     refresh_token: string,
     readonly created: boolean,
-    readonly apiurl: string,
-    readonly idtoken: string,
+    readonly api_url: string,
+    readonly id_token: string,
     is_remember: boolean) {
     this.token = token;
     this.refresh_token = refresh_token;
-    this.id_token = idtoken;
-    this.api_url = apiurl;
+    this.id_token = id_token;
+    this.api_url = api_url;
     this.created_at = Math.floor(new Date().getTime() / 1000);
     this.is_remember = is_remember;
     this.update(token, refresh_token, is_remember);
