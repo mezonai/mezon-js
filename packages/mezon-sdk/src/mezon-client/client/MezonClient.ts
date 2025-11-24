@@ -210,20 +210,6 @@ export class MezonClient extends EventEmitter {
       this.initManager(basePath, sessionApi);
     }
 
-    // init for MMN
-    if (sessionApi?.user_id) {
-      this.keyGen = await this.getEphemeralKeyPair();
-
-      this.addressMMN = await this.getAddress(sessionApi.user_id);
-
-      this.zkProofs = await this.getZkProofs({
-        user_id: sessionApi.user_id!,
-        jwt: sessionApi?.token,
-        address: this.addressMMN,
-        ephemeral_public_key: this.keyGen.publicKey,
-      });
-    }
-
     const sessionConnected = await this.socketManager.connect(sessionApi!);
     if (sessionConnected?.token) {
       await this.socketManager.connectSocket(sessionConnected.token);
@@ -242,7 +228,7 @@ export class MezonClient extends EventEmitter {
       );
     } catch (error) {
       this.socketManager?.closeSocket();
-      throw new Error("Some thing went wrong, please reset bot!");
+      throw new Error(`Some thing went wrong, please reset bot!. ${error}`);
     }
   }
 
@@ -340,6 +326,23 @@ export class MezonClient extends EventEmitter {
   async sendToken(tokenEvent: APISentTokenRequest) {
     if (!this._mmnClient) {
       throw new Error("MmnClient not initialized");
+    }
+
+    if (!this.keyGen) {
+      this.keyGen = await this.getEphemeralKeyPair();
+    }
+
+    if (!this.addressMMN) {
+      this.addressMMN = await this.getAddress(this.clientId);
+    }
+
+    if (!this.zkProofs) {
+      this.zkProofs = await this.getZkProofs({
+        user_id: this.clientId,
+        jwt: this.sessionManager.getSession()?.id_token!,
+        address: this.addressMMN,
+        ephemeral_public_key: this.keyGen.publicKey,
+      });
     }
 
     const sender_id = tokenEvent?.sender_id ?? this.clientId;
@@ -783,7 +786,7 @@ export class MezonClient extends EventEmitter {
       attachments,
       references,
       create_time_seconds,
-      topic_id
+      topic_id,
     } = e;
     try {
       if (clan_id && clan_id !== "0") {
@@ -814,7 +817,7 @@ export class MezonClient extends EventEmitter {
         attachments,
         references,
         create_time_seconds,
-        topic_id
+        topic_id,
       };
       const message = new Message(
         messageRaw,
