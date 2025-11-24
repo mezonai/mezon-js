@@ -1494,7 +1494,8 @@ export interface Socket {
     mention_everyone?: boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string
+    topic_id?: string,
+    id?: string
   ): Promise<ChannelMessageAck>;
 
   /** Send a chat message to a chat channel on the server. */
@@ -1530,7 +1531,8 @@ export interface Socket {
     mention_everyone?: boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string
+    topic_id?: string,
+    id?: string
   ): Promise<QuickMenuEvent>;
 
   /** Send message typing */
@@ -2841,7 +2843,8 @@ export class DefaultSocket implements Socket {
     mention_everyone?: Boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string
+    topic_id?: string,
+    id?: string
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       ephemeral_message_send: {
@@ -2860,6 +2863,7 @@ export class DefaultSocket implements Socket {
           avatar: avatar,
           code: code,
           topic_id: topic_id,
+          id: id,
         }
       }
     });
