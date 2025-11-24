@@ -727,8 +727,10 @@ export interface ChannelMessageSend {
   is_public: boolean;
   /** code */
   code: number;
-  /**  */
+  /** topic id */
   topic_id: string;
+  /** message id */
+  id: string;
 }
 
 /** Update a message previously sent to a realtime channel. */
@@ -5955,6 +5957,7 @@ function createBaseChannelMessageSend(): ChannelMessageSend {
     is_public: false,
     code: 0,
     topic_id: "",
+    id: "",
   };
 }
 
@@ -5998,6 +6001,9 @@ export const ChannelMessageSend = {
     }
     if (message.topic_id !== "") {
       writer.uint32(106).string(message.topic_id);
+    }
+    if (message.id !== "") {
+      writer.uint32(114).string(message.id);
     }
     return writer;
   },
@@ -6100,6 +6106,13 @@ export const ChannelMessageSend = {
 
           message.topic_id = reader.string();
           continue;
+        case 14:
+          if (tag !== 114) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -6130,6 +6143,7 @@ export const ChannelMessageSend = {
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
       code: isSet(object.code) ? globalThis.Number(object.code) : 0,
       topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
     };
   },
 
@@ -6174,6 +6188,9 @@ export const ChannelMessageSend = {
     if (message.topic_id !== "") {
       obj.topic_id = message.topic_id;
     }
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
     return obj;
   },
 
@@ -6195,6 +6212,7 @@ export const ChannelMessageSend = {
     message.is_public = object.is_public ?? false;
     message.code = object.code ?? 0;
     message.topic_id = object.topic_id ?? "";
+    message.id = object.id ?? "";
     return message;
   },
 };
