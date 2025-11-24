@@ -515,7 +515,7 @@ export class Client {
           apiSession.created || false,
           apiSession.api_url || "",
           apiSession.id_token || "",
-          false,
+          apiSession.is_remember || false,
         );
       });
   }
@@ -562,7 +562,7 @@ export class Client {
       });
   }
 
-  async confirmEmailOTP(
+  async confirmAuthenticateOTP(
     request:  ApiLinkAccountConfirmRequest,
   ): Promise<Session> {    
     return this.apiClient
@@ -574,7 +574,7 @@ export class Client {
           apiSession.created || false,          
           apiSession.api_url || "",
           apiSession.id_token || "",
-          false,
+          apiSession.is_remember || false,
         );
       });
   }
@@ -604,7 +604,7 @@ export class Client {
           apiSession.created || false,          
           apiSession.api_url || "",
           apiSession.id_token || "",
-          false,
+          apiSession.is_remember || false,
         );
       });
   }
