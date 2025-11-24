@@ -63,9 +63,12 @@ export class Session implements ISession {
     refresh_token: string,
     readonly created: boolean,
     readonly api_url: string,
+    readonly id_token: string,
     is_remember: boolean) {
     this.token = token;
     this.refresh_token = refresh_token;
+    this.id_token = id_token;
+    this.api_url = api_url;
     this.created_at = Math.floor(new Date().getTime() / 1000);
     this.is_remember = is_remember;
     this.update(token, refresh_token, is_remember);
@@ -114,6 +117,6 @@ export class Session implements ISession {
   }
 
   static restore(token: string, refreshToken: string, api_url: string, isRemember: boolean): Session {
-    return new Session(token, refreshToken, false, api_url, isRemember);
+    return new Session(token, refreshToken, false, api_url, "", isRemember);
   }
 }

@@ -2445,7 +2445,10 @@ export interface ApiSession {
   token?: string;
   // Whether to enable "Remember Me" for extended session duration.
   is_remember?: boolean;
+  // endpoint url that belong to user
   api_url?: string;
+  // id token for zklogin
+  id_token?: string;
 }
 
 /** Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user. */
