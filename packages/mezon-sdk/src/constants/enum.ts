@@ -37,7 +37,7 @@ export enum InternalEventsSocket {
   DropdownBoxSelected = "dropdown_box_selected",
   WebrtcSignalingFwd = "webrtc_signaling_fwd",
   Notifications = "notifications",
-  QuickMenu = "quick_menu_event"
+  QuickMenu = "quick_menu_event",
 }
 
 export enum Events {
@@ -114,7 +114,7 @@ export enum Events {
   Notifications = InternalEventsSocket.Notifications,
 
   /** Listen to add quick menu */
-  QuickMenu = InternalEventsSocket.QuickMenu
+  QuickMenu = InternalEventsSocket.QuickMenu,
 }
 
 export enum ChannelType {
@@ -127,7 +127,7 @@ export enum ChannelType {
   CHANNEL_TYPE_THREAD = 7,
   CHANNEL_TYPE_APP = 8,
   CHANNEL_TYPE_ANNOUNCEMENT = 9,
-  CHANNEL_TYPE_MEZON_VOICE = 10
+  CHANNEL_TYPE_MEZON_VOICE = 10,
 }
 
 export enum ChannelStreamMode {
@@ -139,17 +139,20 @@ export enum ChannelStreamMode {
 }
 
 export enum TypeMessage {
-	Chat = 0,
-	ChatUpdate = 1,
-	ChatRemove = 2,
-	Typing = 3,
-	Indicator = 4,
-	Welcome = 5,
-	CreateThread = 6,
-	CreatePin = 7,
-	MessageBuzz = 8,
-	Topic = 9,
-	AuditLog = 10,
-	SendToken = 11,
-  Ephemeral = 12
+  Chat = 0,
+  ChatUpdate = 1,
+  ChatRemove = 2,
+  Typing = 3,
+  Indicator = 4,
+  Welcome = 5,
+  CreateThread = 6,
+  CreatePin = 7,
+  MessageBuzz = 8,
+  Topic = 9,
+  AuditLog = 10,
+  SendToken = 11,
+  Ephemeral = 12,
+  UpcomingEvent = 13,
+  UpdateEphemeralMsg = 14,
+  DeleteEphemeralMsg = 15,
 }

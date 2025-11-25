@@ -93,6 +93,37 @@ export class TextChannel {
     });
   }
 
+  private async _buildEphemeralReferences(
+    reference_message_id?: string
+  ): Promise<{ references: ApiMessageRef[]; topic_id_from_ref?: string }> {
+    if (!reference_message_id) {
+      return { references: [], topic_id_from_ref: undefined };
+    }
+    const messageRef = await this.messages.fetch(reference_message_id);
+    const user = await this.clan.users.fetch(messageRef.sender_id);
+    const references: ApiMessageRef[] = [
+      {
+        message_ref_id: messageRef.id,
+        message_sender_id: messageRef.sender_id,
+        message_sender_username:
+          user.clan_nick || user.display_name || user.username,
+        mesages_sender_avatar: user.clan_avatar || user.avartar,
+        content: JSON.stringify(messageRef.content),
+      },
+    ];
+    return { references, topic_id_from_ref: messageRef.topic_id };
+  }
+
+  private _buildEphemeralBase(receiver_id: string) {
+    return {
+      receiver_id,
+      clan_id: this.clan.id,
+      channel_id: this.id!,
+      mode: convertChanneltypeToChannelMode(this.channel_type!),
+      is_public: !this.is_private,
+    };
+  }
+
   async sendEphemeral(
     receiver_id: string,
     content: any,
@@ -101,42 +132,83 @@ export class TextChannel {
     attachments?: Array<ApiMessageAttachment>,
     mention_everyone?: boolean,
     anonymous_message?: boolean,
-    topic_id?: string,
-    code: number = TypeMessage.Ephemeral
+    topic_id?: string
   ) {
     return this.messageQueue.enqueue(async () => {
-      let references: ApiMessageRef[] = [];
-      let messageRef: Message | null = null;
-      if (reference_message_id) {
-        messageRef = await this.messages.fetch(reference_message_id);
-        const user = await this.clan.users.fetch(messageRef.sender_id);
-        references = [
-          {
-            message_ref_id: messageRef.id,
-            message_sender_id: messageRef.sender_id,
-            message_sender_username:
-              user.clan_nick || user.display_name || user.username,
-            mesages_sender_avatar: user.clan_avatar || user.avartar,
-            content: JSON.stringify(messageRef.content),
-          },
-        ];
-      }
+      const base = this._buildEphemeralBase(receiver_id);
+      const { references, topic_id_from_ref } =
+        await this._buildEphemeralReferences(reference_message_id);
       const dataSend: EphemeralMessageData = {
-        receiver_id,
-        clan_id: this.clan.id,
-        channel_id: this.id!,
-        mode: convertChanneltypeToChannelMode(this.channel_type!),
-        is_public: !this.is_private,
+        ...base,
         content,
-        mentions,
-        attachments,
-        references: references ?? [],
-        anonymous_message,
-        mention_everyone,
-        code,
-        topic_id: messageRef?.topic_id || topic_id,
+        mentions: mentions ?? [],
+        attachments: attachments ?? [],
+        references,
+        anonymous_message: !!anonymous_message,
+        mention_everyone: !!mention_everyone,
+        code: TypeMessage.Ephemeral,
+        topic_id: topic_id_from_ref ?? topic_id,
       };
-      return await this.socketManager.writeEphemeralMessage(dataSend);
+
+      return this.socketManager.writeEphemeralMessage(dataSend);
+    });
+  }
+
+  async updateEphemeral(
+    receiver_id: string,
+    content: any,
+    message_id: string,
+    topic_id?: string,
+    reference_message_id?: string,
+    attachments?: Array<ApiMessageAttachment>,
+    mentions?: Array<ApiMessageMention>,
+    mention_everyone?: boolean,
+    anonymous_message?: boolean
+  ) {
+    return this.messageQueue.enqueue(async () => {
+      const base = this._buildEphemeralBase(receiver_id);
+      const { references, topic_id_from_ref } =
+        await this._buildEphemeralReferences(reference_message_id);
+
+      const dataSend: EphemeralMessageData = {
+        ...base,
+        content,
+        mentions: mentions ?? [],
+        attachments: attachments ?? [],
+        references,
+        anonymous_message: !!anonymous_message,
+        mention_everyone: !!mention_everyone,
+        code: TypeMessage.UpdateEphemeralMsg,
+        topic_id: topic_id_from_ref ?? topic_id,
+        message_id,
+      };
+
+      return this.socketManager.writeEphemeralMessage(dataSend);
+    });
+  }
+
+  async deleteEphemeral(
+    receiver_id: string,
+    message_id: string,
+    topic_id?: string
+  ) {
+    return this.messageQueue.enqueue(async () => {
+      const base = this._buildEphemeralBase(receiver_id);
+
+      const dataSend: EphemeralMessageData = {
+        ...base,
+        content: { t: "deleteEphemeral" },
+        mentions: [],
+        attachments: [],
+        references: [],
+        anonymous_message: false,
+        mention_everyone: false,
+        code: TypeMessage.DeleteEphemeralMsg,
+        topic_id: topic_id ?? "",
+        message_id,
+      };
+
+      return this.socketManager.writeEphemeralMessage(dataSend);
     });
   }
 

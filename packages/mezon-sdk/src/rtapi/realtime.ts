@@ -440,10 +440,22 @@ export interface Envelope {
     | TransferOwnershipEvent
     | undefined;
   /** Add friend event */
-  add_friend?: AddFriend | undefined;
+  add_friend?:
+    | AddFriend
+    | undefined;
+  /** Ban channel user */
+  ban_user_event?: BannedUserEvent | undefined;
 }
 
 export interface FollowEvent {
+}
+
+export interface BannedUserEvent {
+  user_ids: string[];
+  action: number;
+  banner_id: string;
+  channel_id: string;
+  clan_id: string;
 }
 
 export interface ChannelCanvas {
@@ -715,8 +727,10 @@ export interface ChannelMessageSend {
   is_public: boolean;
   /** code */
   code: number;
-  /**  */
+  /** topic id */
   topic_id: string;
+  /** message id */
+  id: string;
 }
 
 /** Update a message previously sent to a realtime channel. */
@@ -908,6 +922,16 @@ export interface BlockFriend {
 export interface UnblockFriend {
   /**  */
   user_id: string;
+  /**  */
+  username: string;
+  /**  */
+  avatar: string;
+  /**  */
+  display_name: string;
+  /**  */
+  status: string;
+  /**  */
+  user_status: string;
 }
 
 /** Application-level heartbeat and connection check. */
@@ -1135,6 +1159,8 @@ export interface ChannelCreatedEvent {
   app_id: string;
   /** clan_name */
   clan_name: string;
+  /** channel avatar */
+  channel_avatar: string;
 }
 
 export interface CategoryEvent {
@@ -1256,6 +1282,8 @@ export interface ChannelUpdatedEvent {
   user_ids: string[];
   /** This is the role that needs to be added to the channel */
   role_ids: string[];
+  /**  */
+  channel_avatar: string;
 }
 
 /** Stop receiving status updates for some set of users. */
@@ -1318,8 +1346,6 @@ export interface UserPresence {
   session_id: string;
   /** The username for display purposes. */
   username: string;
-  /** Whether this presence generates persistent data/messages, if applicable for the stream type. */
-  persistence: boolean;
   /** A user-set status message for this stream, if applicable. */
   status:
     | string
@@ -1808,6 +1834,7 @@ function createBaseEnvelope(): Envelope {
     meet_participant_event: undefined,
     transfer_ownership_event: undefined,
     add_friend: undefined,
+    ban_user_event: undefined,
   };
 }
 
@@ -2077,6 +2104,9 @@ export const Envelope = {
     }
     if (message.add_friend !== undefined) {
       AddFriend.encode(message.add_friend, writer.uint32(706).fork()).ldelim();
+    }
+    if (message.ban_user_event !== undefined) {
+      BannedUserEvent.encode(message.ban_user_event, writer.uint32(714).fork()).ldelim();
     }
     return writer;
   },
@@ -2704,6 +2734,13 @@ export const Envelope = {
 
           message.add_friend = AddFriend.decode(reader, reader.uint32());
           continue;
+        case 89:
+          if (tag !== 714) {
+            break;
+          }
+
+          message.ban_user_event = BannedUserEvent.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2915,6 +2952,7 @@ export const Envelope = {
         ? TransferOwnershipEvent.fromJSON(object.transfer_ownership_event)
         : undefined,
       add_friend: isSet(object.add_friend) ? AddFriend.fromJSON(object.add_friend) : undefined,
+      ban_user_event: isSet(object.ban_user_event) ? BannedUserEvent.fromJSON(object.ban_user_event) : undefined,
     };
   },
 
@@ -3185,6 +3223,9 @@ export const Envelope = {
     }
     if (message.add_friend !== undefined) {
       obj.add_friend = AddFriend.toJSON(message.add_friend);
+    }
+    if (message.ban_user_event !== undefined) {
+      obj.ban_user_event = BannedUserEvent.toJSON(message.ban_user_event);
     }
     return obj;
   },
@@ -3477,6 +3518,9 @@ export const Envelope = {
     message.add_friend = (object.add_friend !== undefined && object.add_friend !== null)
       ? AddFriend.fromPartial(object.add_friend)
       : undefined;
+    message.ban_user_event = (object.ban_user_event !== undefined && object.ban_user_event !== null)
+      ? BannedUserEvent.fromPartial(object.ban_user_event)
+      : undefined;
     return message;
   },
 };
@@ -3520,6 +3564,125 @@ export const FollowEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<FollowEvent>, I>>(_: I): FollowEvent {
     const message = createBaseFollowEvent();
+    return message;
+  },
+};
+
+function createBaseBannedUserEvent(): BannedUserEvent {
+  return { user_ids: [], action: 0, banner_id: "", channel_id: "", clan_id: "" };
+}
+
+export const BannedUserEvent = {
+  encode(message: BannedUserEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.user_ids) {
+      writer.uint32(10).string(v!);
+    }
+    if (message.action !== 0) {
+      writer.uint32(16).int32(message.action);
+    }
+    if (message.banner_id !== "") {
+      writer.uint32(26).string(message.banner_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(34).string(message.channel_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(42).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BannedUserEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBannedUserEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user_ids.push(reader.string());
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.action = reader.int32();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.banner_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): BannedUserEvent {
+    return {
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      action: isSet(object.action) ? globalThis.Number(object.action) : 0,
+      banner_id: isSet(object.banner_id) ? globalThis.String(object.banner_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+    };
+  },
+
+  toJSON(message: BannedUserEvent): unknown {
+    const obj: any = {};
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
+    }
+    if (message.action !== 0) {
+      obj.action = Math.round(message.action);
+    }
+    if (message.banner_id !== "") {
+      obj.banner_id = message.banner_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<BannedUserEvent>, I>>(base?: I): BannedUserEvent {
+    return BannedUserEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<BannedUserEvent>, I>>(object: I): BannedUserEvent {
+    const message = createBaseBannedUserEvent();
+    message.user_ids = object.user_ids?.map((e) => e) || [];
+    message.action = object.action ?? 0;
+    message.banner_id = object.banner_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
@@ -5794,6 +5957,7 @@ function createBaseChannelMessageSend(): ChannelMessageSend {
     is_public: false,
     code: 0,
     topic_id: "",
+    id: "",
   };
 }
 
@@ -5837,6 +6001,9 @@ export const ChannelMessageSend = {
     }
     if (message.topic_id !== "") {
       writer.uint32(106).string(message.topic_id);
+    }
+    if (message.id !== "") {
+      writer.uint32(114).string(message.id);
     }
     return writer;
   },
@@ -5939,6 +6106,13 @@ export const ChannelMessageSend = {
 
           message.topic_id = reader.string();
           continue;
+        case 14:
+          if (tag !== 114) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -5969,6 +6143,7 @@ export const ChannelMessageSend = {
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
       code: isSet(object.code) ? globalThis.Number(object.code) : 0,
       topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
     };
   },
 
@@ -6013,6 +6188,9 @@ export const ChannelMessageSend = {
     if (message.topic_id !== "") {
       obj.topic_id = message.topic_id;
     }
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
     return obj;
   },
 
@@ -6034,6 +6212,7 @@ export const ChannelMessageSend = {
     message.is_public = object.is_public ?? false;
     message.code = object.code ?? 0;
     message.topic_id = object.topic_id ?? "";
+    message.id = object.id ?? "";
     return message;
   },
 };
@@ -7064,13 +7243,28 @@ export const BlockFriend = {
 };
 
 function createBaseUnblockFriend(): UnblockFriend {
-  return { user_id: "" };
+  return { user_id: "", username: "", avatar: "", display_name: "", status: "", user_status: "" };
 }
 
 export const UnblockFriend = {
   encode(message: UnblockFriend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
+    }
+    if (message.username !== "") {
+      writer.uint32(18).string(message.username);
+    }
+    if (message.avatar !== "") {
+      writer.uint32(26).string(message.avatar);
+    }
+    if (message.display_name !== "") {
+      writer.uint32(34).string(message.display_name);
+    }
+    if (message.status !== "") {
+      writer.uint32(42).string(message.status);
+    }
+    if (message.user_status !== "") {
+      writer.uint32(50).string(message.user_status);
     }
     return writer;
   },
@@ -7089,6 +7283,41 @@ export const UnblockFriend = {
 
           message.user_id = reader.string();
           continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.username = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.avatar = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.display_name = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.status = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.user_status = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -7099,13 +7328,35 @@ export const UnblockFriend = {
   },
 
   fromJSON(object: any): UnblockFriend {
-    return { user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "" };
+    return {
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
+      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
+      status: isSet(object.status) ? globalThis.String(object.status) : "",
+      user_status: isSet(object.user_status) ? globalThis.String(object.user_status) : "",
+    };
   },
 
   toJSON(message: UnblockFriend): unknown {
     const obj: any = {};
     if (message.user_id !== "") {
       obj.user_id = message.user_id;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.avatar !== "") {
+      obj.avatar = message.avatar;
+    }
+    if (message.display_name !== "") {
+      obj.display_name = message.display_name;
+    }
+    if (message.status !== "") {
+      obj.status = message.status;
+    }
+    if (message.user_status !== "") {
+      obj.user_status = message.user_status;
     }
     return obj;
   },
@@ -7116,6 +7367,11 @@ export const UnblockFriend = {
   fromPartial<I extends Exact<DeepPartial<UnblockFriend>, I>>(object: I): UnblockFriend {
     const message = createBaseUnblockFriend();
     message.user_id = object.user_id ?? "";
+    message.username = object.username ?? "";
+    message.avatar = object.avatar ?? "";
+    message.display_name = object.display_name ?? "";
+    message.status = object.status ?? "";
+    message.user_status = object.user_status ?? "";
     return message;
   },
 };
@@ -8904,6 +9160,7 @@ function createBaseChannelCreatedEvent(): ChannelCreatedEvent {
     status: 0,
     app_id: "",
     clan_name: "",
+    channel_avatar: "",
   };
 }
 
@@ -8941,6 +9198,9 @@ export const ChannelCreatedEvent = {
     }
     if (message.clan_name !== "") {
       writer.uint32(90).string(message.clan_name);
+    }
+    if (message.channel_avatar !== "") {
+      writer.uint32(98).string(message.channel_avatar);
     }
     return writer;
   },
@@ -9029,6 +9289,13 @@ export const ChannelCreatedEvent = {
 
           message.clan_name = reader.string();
           continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.channel_avatar = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -9051,6 +9318,7 @@ export const ChannelCreatedEvent = {
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
+      channel_avatar: isSet(object.channel_avatar) ? globalThis.String(object.channel_avatar) : "",
     };
   },
 
@@ -9089,6 +9357,9 @@ export const ChannelCreatedEvent = {
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
+    if (message.channel_avatar !== "") {
+      obj.channel_avatar = message.channel_avatar;
+    }
     return obj;
   },
 
@@ -9108,6 +9379,7 @@ export const ChannelCreatedEvent = {
     message.status = object.status ?? 0;
     message.app_id = object.app_id ?? "";
     message.clan_name = object.clan_name ?? "";
+    message.channel_avatar = object.channel_avatar ?? "";
     return message;
   },
 };
@@ -9946,6 +10218,7 @@ function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
     count_mess_unread: 0,
     user_ids: [],
     role_ids: [],
+    channel_avatar: "",
   };
 }
 
@@ -10007,6 +10280,9 @@ export const ChannelUpdatedEvent = {
     }
     for (const v of message.role_ids) {
       writer.uint32(154).string(v!);
+    }
+    if (message.channel_avatar !== "") {
+      writer.uint32(162).string(message.channel_avatar);
     }
     return writer;
   },
@@ -10151,6 +10427,13 @@ export const ChannelUpdatedEvent = {
 
           message.role_ids.push(reader.string());
           continue;
+        case 20:
+          if (tag !== 162) {
+            break;
+          }
+
+          message.channel_avatar = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10181,6 +10464,7 @@ export const ChannelUpdatedEvent = {
       count_mess_unread: isSet(object.count_mess_unread) ? globalThis.Number(object.count_mess_unread) : 0,
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
       role_ids: globalThis.Array.isArray(object?.role_ids) ? object.role_ids.map((e: any) => globalThis.String(e)) : [],
+      channel_avatar: isSet(object.channel_avatar) ? globalThis.String(object.channel_avatar) : "",
     };
   },
 
@@ -10243,6 +10527,9 @@ export const ChannelUpdatedEvent = {
     if (message.role_ids?.length) {
       obj.role_ids = message.role_ids;
     }
+    if (message.channel_avatar !== "") {
+      obj.channel_avatar = message.channel_avatar;
+    }
     return obj;
   },
 
@@ -10270,6 +10557,7 @@ export const ChannelUpdatedEvent = {
     message.count_mess_unread = object.count_mess_unread ?? 0;
     message.user_ids = object.user_ids?.map((e) => e) || [];
     message.role_ids = object.role_ids?.map((e) => e) || [];
+    message.channel_avatar = object.channel_avatar ?? "";
     return message;
   },
 };
@@ -10694,15 +10982,7 @@ export const StreamPresenceEvent = {
 };
 
 function createBaseUserPresence(): UserPresence {
-  return {
-    user_id: "",
-    session_id: "",
-    username: "",
-    persistence: false,
-    status: undefined,
-    is_mobile: false,
-    user_status: "",
-  };
+  return { user_id: "", session_id: "", username: "", status: undefined, is_mobile: false, user_status: "" };
 }
 
 export const UserPresence = {
@@ -10716,17 +10996,14 @@ export const UserPresence = {
     if (message.username !== "") {
       writer.uint32(26).string(message.username);
     }
-    if (message.persistence !== false) {
-      writer.uint32(32).bool(message.persistence);
-    }
     if (message.status !== undefined) {
-      StringValue.encode({ value: message.status! }, writer.uint32(42).fork()).ldelim();
+      StringValue.encode({ value: message.status! }, writer.uint32(34).fork()).ldelim();
     }
     if (message.is_mobile !== false) {
-      writer.uint32(48).bool(message.is_mobile);
+      writer.uint32(40).bool(message.is_mobile);
     }
     if (message.user_status !== "") {
-      writer.uint32(58).string(message.user_status);
+      writer.uint32(50).string(message.user_status);
     }
     return writer;
   },
@@ -10760,28 +11037,21 @@ export const UserPresence = {
           message.username = reader.string();
           continue;
         case 4:
-          if (tag !== 32) {
-            break;
-          }
-
-          message.persistence = reader.bool();
-          continue;
-        case 5:
-          if (tag !== 42) {
+          if (tag !== 34) {
             break;
           }
 
           message.status = StringValue.decode(reader, reader.uint32()).value;
           continue;
-        case 6:
-          if (tag !== 48) {
+        case 5:
+          if (tag !== 40) {
             break;
           }
 
           message.is_mobile = reader.bool();
           continue;
-        case 7:
-          if (tag !== 58) {
+        case 6:
+          if (tag !== 50) {
             break;
           }
 
@@ -10801,7 +11071,6 @@ export const UserPresence = {
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
       session_id: isSet(object.session_id) ? globalThis.String(object.session_id) : "",
       username: isSet(object.username) ? globalThis.String(object.username) : "",
-      persistence: isSet(object.persistence) ? globalThis.Boolean(object.persistence) : false,
       status: isSet(object.status) ? String(object.status) : undefined,
       is_mobile: isSet(object.is_mobile) ? globalThis.Boolean(object.is_mobile) : false,
       user_status: isSet(object.user_status) ? globalThis.String(object.user_status) : "",
@@ -10818,9 +11087,6 @@ export const UserPresence = {
     }
     if (message.username !== "") {
       obj.username = message.username;
-    }
-    if (message.persistence !== false) {
-      obj.persistence = message.persistence;
     }
     if (message.status !== undefined) {
       obj.status = message.status;
@@ -10842,7 +11108,6 @@ export const UserPresence = {
     message.user_id = object.user_id ?? "";
     message.session_id = object.session_id ?? "";
     message.username = object.username ?? "";
-    message.persistence = object.persistence ?? false;
     message.status = object.status ?? undefined;
     message.is_mobile = object.is_mobile ?? false;
     message.user_status = object.user_status ?? "";
