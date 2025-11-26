@@ -204,7 +204,8 @@ export class SocketManager {
         dataWriteMessage?.mention_everyone,
         dataWriteMessage?.avatar,
         dataWriteMessage?.code,
-        dataWriteMessage?.topic_id
+        dataWriteMessage?.topic_id,
+        dataWriteMessage?.message_id
       );
       return msgACK;
     } catch (error) {

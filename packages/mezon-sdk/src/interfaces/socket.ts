@@ -945,7 +945,8 @@ export interface Socket {
     mention_everyone?: boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string
+    topic_id?: string,
+    message_id?: string
   ): Promise<ChannelMessageAck>;
 
   /** Send a chat message to a chat channel on the server. */

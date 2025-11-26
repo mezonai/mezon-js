@@ -82,6 +82,7 @@ export interface EphemeralMessageData {
   avatar?: string;
   code?: number;
   topic_id?: string;
+  message_id?: string
 }
 
 export interface ReplyMessageData {

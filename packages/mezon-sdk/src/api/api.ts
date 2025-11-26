@@ -173,8 +173,8 @@ export interface Account {
     | undefined;
   /** The email address of the user. */
   email: string;
-  /** The mezon id in the user's account. */
-  mezon_id: string;
+  /** The qr code in the user's account. */
+  qr_code: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user's email was verified. */
   verify_time:
     | Date
@@ -208,6 +208,14 @@ export interface AccountRefresh_VarsEntry {
 
 /** Add one or more friends to the current user. */
 export interface AddFriendsRequest {
+  /** The account id of a user. */
+  ids: string[];
+  /** The account username of a user. */
+  usernames: string[];
+}
+
+/** Add one or more friends to the current user. */
+export interface AddFriendsResponse {
   /** The account id of a user. */
   ids: string[];
   /** The account username of a user. */
@@ -249,6 +257,15 @@ export interface SessionLogoutRequest {
   fcm_token: string;
   /** platform */
   platform: string;
+}
+
+export interface IsBannedResponse {
+  is_banned: boolean;
+  expired_ban_time: number;
+}
+
+export interface IsBannedRequest {
+  channel_id: string;
 }
 
 /** Ban users from a group. */
@@ -646,6 +663,10 @@ export interface ChannelUserList_ChannelUser {
   clan_id: string;
   /** added by */
   added_by: string;
+  /** is banned */
+  is_banned: boolean;
+  /** expired time */
+  expired_ban_time: number;
 }
 
 /** A list of users belonging to a channel, along with their role. */
@@ -996,12 +1017,13 @@ export interface Session {
   is_remember: boolean;
 }
 
+/** Update username */
+export interface UpdateUsernameRequest {
+  username: string;
+}
+
 /** Update a user's account details. */
 export interface UpdateAccountRequest {
-  /** The username of the user's account. */
-  username:
-    | string
-    | undefined;
   /** The display name of the user. */
   display_name:
     | string
@@ -1225,7 +1247,9 @@ export interface UpdateClanDescRequest {
   /** Clan name */
   clan_name: string;
   /** Clan logo */
-  logo: string;
+  logo:
+    | string
+    | undefined;
   /** Clan banner */
   banner:
     | string
@@ -1251,9 +1275,13 @@ export interface UpdateClanDescRequest {
     | string
     | undefined;
   /** string description */
-  description: string;
+  description:
+    | string
+    | undefined;
   /** About */
-  about: string;
+  about:
+    | string
+    | undefined;
   /** Short url for community */
   short_url:
     | string
@@ -1386,9 +1414,11 @@ export interface UpdateClanProfileRequest {
   /** id clanc */
   clan_id: string;
   /** nick_name new */
-  nick_name: string;
+  nick_name:
+    | string
+    | undefined;
   /** avatar */
-  avatar: string;
+  avatar: string | undefined;
 }
 
 /** Update Clan Order Request */
@@ -1679,7 +1709,7 @@ export interface UpdateChannelDescRequest {
   /**  */
   e2ee: number;
   /** channel avatar */
-  channel_avatar: string;
+  channel_avatar: string | undefined;
 }
 
 /** Update fields in a given channel. */
@@ -1718,6 +1748,43 @@ export interface RemoveClanUsersRequest {
   clan_id: string;
   /** The users to kick. */
   user_ids: string[];
+}
+
+/** Ban a set of users from a channel. */
+export interface BanClanUsersRequest {
+  /** The clan ID to kick from. */
+  clan_id: string;
+  /** The channel ID to ban */
+  channel_id: string;
+  /** The users to kick. */
+  user_ids: string[];
+  /** ban time */
+  ban_time: number;
+  /** The reason */
+  reason: string;
+}
+
+/** list banned user */
+export interface BannedUser {
+  /** The channel ID to ban */
+  channel_id: string;
+  /** The banned user. */
+  banned_id: string;
+  /** The avatar */
+  banner_id: string;
+  /** ban time */
+  ban_time: number;
+  /** The reason */
+  reason: string;
+}
+
+export interface BannedUserListRequest {
+  clan_id: string;
+  channel_id: string;
+}
+
+export interface BannedUserList {
+  banned_users: BannedUser[];
 }
 
 /** Leave a channel. */
@@ -1897,10 +1964,6 @@ export interface SetNotificationRequest {
   channel_category_id: string;
   /** notification_type */
   notification_type: number;
-  /** time mute channel category */
-  time_mute:
-    | Date
-    | undefined;
   /**  */
   clan_id: string;
 }
@@ -1913,11 +1976,12 @@ export interface PinMessageRequest {
 }
 
 /** set notification */
-export interface SetMuteNotificationRequest {
+export interface SetMuteRequest {
   /** channel_id and category_id */
   id: string;
-  notification_type: number;
+  mute_time: number;
   active: number;
+  clan_id: string;
 }
 
 export interface HashtagDmListRequest {
@@ -1979,12 +2043,8 @@ export interface SetDefaultNotificationRequest {
 export interface RoleList {
   /** A list of role. */
   roles: Role[];
-  /** The cursor to send when retrieving the next page, if any. */
-  next_cursor: string;
-  /** The cursor to send when retrieving the previous page, if any. */
-  prev_cursor: string;
-  /** Cacheable cursor to list newer role description. Durable and designed to be stored, unlike next/prev cursors. */
-  cacheable_cursor: string;
+  /** level permission max */
+  max_level_permission: number;
 }
 
 export interface EventList {
@@ -3709,7 +3769,7 @@ function createBaseAccount(): Account {
   return {
     user: undefined,
     email: "",
-    mezon_id: "",
+    qr_code: "",
     verify_time: undefined,
     disable_time: undefined,
     logo: "",
@@ -3727,8 +3787,8 @@ export const Account = {
     if (message.email !== "") {
       writer.uint32(18).string(message.email);
     }
-    if (message.mezon_id !== "") {
-      writer.uint32(26).string(message.mezon_id);
+    if (message.qr_code !== "") {
+      writer.uint32(26).string(message.qr_code);
     }
     if (message.verify_time !== undefined) {
       Timestamp.encode(toTimestamp(message.verify_time), writer.uint32(34).fork()).ldelim();
@@ -3777,7 +3837,7 @@ export const Account = {
             break;
           }
 
-          message.mezon_id = reader.string();
+          message.qr_code = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
@@ -3834,7 +3894,7 @@ export const Account = {
     return {
       user: isSet(object.user) ? User.fromJSON(object.user) : undefined,
       email: isSet(object.email) ? globalThis.String(object.email) : "",
-      mezon_id: isSet(object.mezon_id) ? globalThis.String(object.mezon_id) : "",
+      qr_code: isSet(object.qr_code) ? globalThis.String(object.qr_code) : "",
       verify_time: isSet(object.verify_time) ? fromJsonTimestamp(object.verify_time) : undefined,
       disable_time: isSet(object.disable_time) ? fromJsonTimestamp(object.disable_time) : undefined,
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
@@ -3852,8 +3912,8 @@ export const Account = {
     if (message.email !== "") {
       obj.email = message.email;
     }
-    if (message.mezon_id !== "") {
-      obj.mezon_id = message.mezon_id;
+    if (message.qr_code !== "") {
+      obj.qr_code = message.qr_code;
     }
     if (message.verify_time !== undefined) {
       obj.verify_time = message.verify_time.toISOString();
@@ -3883,7 +3943,7 @@ export const Account = {
     const message = createBaseAccount();
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
     message.email = object.email ?? "";
-    message.mezon_id = object.mezon_id ?? "";
+    message.qr_code = object.qr_code ?? "";
     message.verify_time = object.verify_time ?? undefined;
     message.disable_time = object.disable_time ?? undefined;
     message.logo = object.logo ?? "";
@@ -4131,6 +4191,82 @@ export const AddFriendsRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<AddFriendsRequest>, I>>(object: I): AddFriendsRequest {
     const message = createBaseAddFriendsRequest();
+    message.ids = object.ids?.map((e) => e) || [];
+    message.usernames = object.usernames?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseAddFriendsResponse(): AddFriendsResponse {
+  return { ids: [], usernames: [] };
+}
+
+export const AddFriendsResponse = {
+  encode(message: AddFriendsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.ids) {
+      writer.uint32(10).string(v!);
+    }
+    for (const v of message.usernames) {
+      writer.uint32(18).string(v!);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AddFriendsResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAddFriendsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.ids.push(reader.string());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.usernames.push(reader.string());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AddFriendsResponse {
+    return {
+      ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => globalThis.String(e)) : [],
+      usernames: globalThis.Array.isArray(object?.usernames)
+        ? object.usernames.map((e: any) => globalThis.String(e))
+        : [],
+    };
+  },
+
+  toJSON(message: AddFriendsResponse): unknown {
+    const obj: any = {};
+    if (message.ids?.length) {
+      obj.ids = message.ids;
+    }
+    if (message.usernames?.length) {
+      obj.usernames = message.usernames;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AddFriendsResponse>, I>>(base?: I): AddFriendsResponse {
+    return AddFriendsResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AddFriendsResponse>, I>>(object: I): AddFriendsResponse {
+    const message = createBaseAddFriendsResponse();
     message.ids = object.ids?.map((e) => e) || [];
     message.usernames = object.usernames?.map((e) => e) || [];
     return message;
@@ -4510,6 +4646,137 @@ export const SessionLogoutRequest = {
     message.device_id = object.device_id ?? "";
     message.fcm_token = object.fcm_token ?? "";
     message.platform = object.platform ?? "";
+    return message;
+  },
+};
+
+function createBaseIsBannedResponse(): IsBannedResponse {
+  return { is_banned: false, expired_ban_time: 0 };
+}
+
+export const IsBannedResponse = {
+  encode(message: IsBannedResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.is_banned !== false) {
+      writer.uint32(8).bool(message.is_banned);
+    }
+    if (message.expired_ban_time !== 0) {
+      writer.uint32(16).int32(message.expired_ban_time);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): IsBannedResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseIsBannedResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.is_banned = reader.bool();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.expired_ban_time = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): IsBannedResponse {
+    return {
+      is_banned: isSet(object.is_banned) ? globalThis.Boolean(object.is_banned) : false,
+      expired_ban_time: isSet(object.expired_ban_time) ? globalThis.Number(object.expired_ban_time) : 0,
+    };
+  },
+
+  toJSON(message: IsBannedResponse): unknown {
+    const obj: any = {};
+    if (message.is_banned !== false) {
+      obj.is_banned = message.is_banned;
+    }
+    if (message.expired_ban_time !== 0) {
+      obj.expired_ban_time = Math.round(message.expired_ban_time);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<IsBannedResponse>, I>>(base?: I): IsBannedResponse {
+    return IsBannedResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<IsBannedResponse>, I>>(object: I): IsBannedResponse {
+    const message = createBaseIsBannedResponse();
+    message.is_banned = object.is_banned ?? false;
+    message.expired_ban_time = object.expired_ban_time ?? 0;
+    return message;
+  },
+};
+
+function createBaseIsBannedRequest(): IsBannedRequest {
+  return { channel_id: "" };
+}
+
+export const IsBannedRequest = {
+  encode(message: IsBannedRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): IsBannedRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseIsBannedRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): IsBannedRequest {
+    return { channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "" };
+  },
+
+  toJSON(message: IsBannedRequest): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<IsBannedRequest>, I>>(base?: I): IsBannedRequest {
+    return IsBannedRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<IsBannedRequest>, I>>(object: I): IsBannedRequest {
+    const message = createBaseIsBannedRequest();
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };
@@ -7247,7 +7514,18 @@ export const ChannelUserList = {
 };
 
 function createBaseChannelUserList_ChannelUser(): ChannelUserList_ChannelUser {
-  return { user_id: "", role_id: [], id: "", thread_id: "", clan_nick: "", clan_avatar: "", clan_id: "", added_by: "" };
+  return {
+    user_id: "",
+    role_id: [],
+    id: "",
+    thread_id: "",
+    clan_nick: "",
+    clan_avatar: "",
+    clan_id: "",
+    added_by: "",
+    is_banned: false,
+    expired_ban_time: 0,
+  };
 }
 
 export const ChannelUserList_ChannelUser = {
@@ -7275,6 +7553,12 @@ export const ChannelUserList_ChannelUser = {
     }
     if (message.added_by !== "") {
       writer.uint32(66).string(message.added_by);
+    }
+    if (message.is_banned !== false) {
+      writer.uint32(72).bool(message.is_banned);
+    }
+    if (message.expired_ban_time !== 0) {
+      writer.uint32(80).int32(message.expired_ban_time);
     }
     return writer;
   },
@@ -7342,6 +7626,20 @@ export const ChannelUserList_ChannelUser = {
 
           message.added_by = reader.string();
           continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.is_banned = reader.bool();
+          continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.expired_ban_time = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -7361,6 +7659,8 @@ export const ChannelUserList_ChannelUser = {
       clan_avatar: isSet(object.clan_avatar) ? globalThis.String(object.clan_avatar) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       added_by: isSet(object.added_by) ? globalThis.String(object.added_by) : "",
+      is_banned: isSet(object.is_banned) ? globalThis.Boolean(object.is_banned) : false,
+      expired_ban_time: isSet(object.expired_ban_time) ? globalThis.Number(object.expired_ban_time) : 0,
     };
   },
 
@@ -7390,6 +7690,12 @@ export const ChannelUserList_ChannelUser = {
     if (message.added_by !== "") {
       obj.added_by = message.added_by;
     }
+    if (message.is_banned !== false) {
+      obj.is_banned = message.is_banned;
+    }
+    if (message.expired_ban_time !== 0) {
+      obj.expired_ban_time = Math.round(message.expired_ban_time);
+    }
     return obj;
   },
 
@@ -7406,6 +7712,8 @@ export const ChannelUserList_ChannelUser = {
     message.clan_avatar = object.clan_avatar ?? "";
     message.clan_id = object.clan_id ?? "";
     message.added_by = object.added_by ?? "";
+    message.is_banned = object.is_banned ?? false;
+    message.expired_ban_time = object.expired_ban_time ?? 0;
     return message;
   },
 };
@@ -10145,9 +10453,65 @@ export const Session = {
   },
 };
 
+function createBaseUpdateUsernameRequest(): UpdateUsernameRequest {
+  return { username: "" };
+}
+
+export const UpdateUsernameRequest = {
+  encode(message: UpdateUsernameRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.username !== "") {
+      writer.uint32(10).string(message.username);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateUsernameRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdateUsernameRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.username = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpdateUsernameRequest {
+    return { username: isSet(object.username) ? globalThis.String(object.username) : "" };
+  },
+
+  toJSON(message: UpdateUsernameRequest): unknown {
+    const obj: any = {};
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdateUsernameRequest>, I>>(base?: I): UpdateUsernameRequest {
+    return UpdateUsernameRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UpdateUsernameRequest>, I>>(object: I): UpdateUsernameRequest {
+    const message = createBaseUpdateUsernameRequest();
+    message.username = object.username ?? "";
+    return message;
+  },
+};
+
 function createBaseUpdateAccountRequest(): UpdateAccountRequest {
   return {
-    username: undefined,
     display_name: undefined,
     avatar_url: undefined,
     lang_tag: undefined,
@@ -10164,41 +10528,38 @@ function createBaseUpdateAccountRequest(): UpdateAccountRequest {
 
 export const UpdateAccountRequest = {
   encode(message: UpdateAccountRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.username !== undefined) {
-      StringValue.encode({ value: message.username! }, writer.uint32(10).fork()).ldelim();
-    }
     if (message.display_name !== undefined) {
-      StringValue.encode({ value: message.display_name! }, writer.uint32(18).fork()).ldelim();
+      StringValue.encode({ value: message.display_name! }, writer.uint32(10).fork()).ldelim();
     }
     if (message.avatar_url !== undefined) {
-      StringValue.encode({ value: message.avatar_url! }, writer.uint32(26).fork()).ldelim();
+      StringValue.encode({ value: message.avatar_url! }, writer.uint32(18).fork()).ldelim();
     }
     if (message.lang_tag !== undefined) {
-      StringValue.encode({ value: message.lang_tag! }, writer.uint32(34).fork()).ldelim();
+      StringValue.encode({ value: message.lang_tag! }, writer.uint32(26).fork()).ldelim();
     }
     if (message.location !== undefined) {
-      StringValue.encode({ value: message.location! }, writer.uint32(42).fork()).ldelim();
+      StringValue.encode({ value: message.location! }, writer.uint32(34).fork()).ldelim();
     }
     if (message.timezone !== undefined) {
-      StringValue.encode({ value: message.timezone! }, writer.uint32(50).fork()).ldelim();
+      StringValue.encode({ value: message.timezone! }, writer.uint32(42).fork()).ldelim();
     }
     if (message.about_me !== undefined) {
-      StringValue.encode({ value: message.about_me! }, writer.uint32(58).fork()).ldelim();
+      StringValue.encode({ value: message.about_me! }, writer.uint32(50).fork()).ldelim();
     }
     if (message.dob !== undefined) {
-      Timestamp.encode(toTimestamp(message.dob), writer.uint32(66).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.dob), writer.uint32(58).fork()).ldelim();
     }
     if (message.logo !== undefined) {
-      StringValue.encode({ value: message.logo! }, writer.uint32(74).fork()).ldelim();
+      StringValue.encode({ value: message.logo! }, writer.uint32(66).fork()).ldelim();
     }
     if (message.splash_screen !== undefined) {
-      StringValue.encode({ value: message.splash_screen! }, writer.uint32(82).fork()).ldelim();
+      StringValue.encode({ value: message.splash_screen! }, writer.uint32(74).fork()).ldelim();
     }
     if (message.encrypt_private_key !== "") {
-      writer.uint32(90).string(message.encrypt_private_key);
+      writer.uint32(82).string(message.encrypt_private_key);
     }
     if (message.email !== undefined) {
-      StringValue.encode({ value: message.email! }, writer.uint32(98).fork()).ldelim();
+      StringValue.encode({ value: message.email! }, writer.uint32(90).fork()).ldelim();
     }
     return writer;
   },
@@ -10215,80 +10576,73 @@ export const UpdateAccountRequest = {
             break;
           }
 
-          message.username = StringValue.decode(reader, reader.uint32()).value;
+          message.display_name = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.display_name = StringValue.decode(reader, reader.uint32()).value;
+          message.avatar_url = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.avatar_url = StringValue.decode(reader, reader.uint32()).value;
+          message.lang_tag = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.lang_tag = StringValue.decode(reader, reader.uint32()).value;
+          message.location = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.location = StringValue.decode(reader, reader.uint32()).value;
+          message.timezone = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.timezone = StringValue.decode(reader, reader.uint32()).value;
+          message.about_me = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          message.about_me = StringValue.decode(reader, reader.uint32()).value;
+          message.dob = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 8:
           if (tag !== 66) {
             break;
           }
 
-          message.dob = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.logo = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 9:
           if (tag !== 74) {
             break;
           }
 
-          message.logo = StringValue.decode(reader, reader.uint32()).value;
+          message.splash_screen = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 10:
           if (tag !== 82) {
             break;
           }
 
-          message.splash_screen = StringValue.decode(reader, reader.uint32()).value;
+          message.encrypt_private_key = reader.string();
           continue;
         case 11:
           if (tag !== 90) {
-            break;
-          }
-
-          message.encrypt_private_key = reader.string();
-          continue;
-        case 12:
-          if (tag !== 98) {
             break;
           }
 
@@ -10305,7 +10659,6 @@ export const UpdateAccountRequest = {
 
   fromJSON(object: any): UpdateAccountRequest {
     return {
-      username: isSet(object.username) ? String(object.username) : undefined,
       display_name: isSet(object.display_name) ? String(object.display_name) : undefined,
       avatar_url: isSet(object.avatar_url) ? String(object.avatar_url) : undefined,
       lang_tag: isSet(object.lang_tag) ? String(object.lang_tag) : undefined,
@@ -10322,9 +10675,6 @@ export const UpdateAccountRequest = {
 
   toJSON(message: UpdateAccountRequest): unknown {
     const obj: any = {};
-    if (message.username !== undefined) {
-      obj.username = message.username;
-    }
     if (message.display_name !== undefined) {
       obj.display_name = message.display_name;
     }
@@ -10366,7 +10716,6 @@ export const UpdateAccountRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<UpdateAccountRequest>, I>>(object: I): UpdateAccountRequest {
     const message = createBaseUpdateAccountRequest();
-    message.username = object.username ?? undefined;
     message.display_name = object.display_name ?? undefined;
     message.avatar_url = object.avatar_url ?? undefined;
     message.lang_tag = object.lang_tag ?? undefined;
@@ -11772,7 +12121,7 @@ function createBaseUpdateClanDescRequest(): UpdateClanDescRequest {
   return {
     clan_id: "",
     clan_name: "",
-    logo: "",
+    logo: undefined,
     banner: undefined,
     status: 0,
     is_onboarding: undefined,
@@ -11780,8 +12129,8 @@ function createBaseUpdateClanDescRequest(): UpdateClanDescRequest {
     onboarding_banner: undefined,
     is_community: undefined,
     community_banner: undefined,
-    description: "",
-    about: "",
+    description: undefined,
+    about: undefined,
     short_url: undefined,
     prevent_anonymous: false,
   };
@@ -11795,8 +12144,8 @@ export const UpdateClanDescRequest = {
     if (message.clan_name !== "") {
       writer.uint32(18).string(message.clan_name);
     }
-    if (message.logo !== "") {
-      writer.uint32(26).string(message.logo);
+    if (message.logo !== undefined) {
+      StringValue.encode({ value: message.logo! }, writer.uint32(26).fork()).ldelim();
     }
     if (message.banner !== undefined) {
       StringValue.encode({ value: message.banner! }, writer.uint32(34).fork()).ldelim();
@@ -11819,11 +12168,11 @@ export const UpdateClanDescRequest = {
     if (message.community_banner !== undefined) {
       StringValue.encode({ value: message.community_banner! }, writer.uint32(82).fork()).ldelim();
     }
-    if (message.description !== "") {
-      writer.uint32(90).string(message.description);
+    if (message.description !== undefined) {
+      StringValue.encode({ value: message.description! }, writer.uint32(90).fork()).ldelim();
     }
-    if (message.about !== "") {
-      writer.uint32(98).string(message.about);
+    if (message.about !== undefined) {
+      StringValue.encode({ value: message.about! }, writer.uint32(98).fork()).ldelim();
     }
     if (message.short_url !== undefined) {
       StringValue.encode({ value: message.short_url! }, writer.uint32(106).fork()).ldelim();
@@ -11860,7 +12209,7 @@ export const UpdateClanDescRequest = {
             break;
           }
 
-          message.logo = reader.string();
+          message.logo = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 4:
           if (tag !== 34) {
@@ -11916,14 +12265,14 @@ export const UpdateClanDescRequest = {
             break;
           }
 
-          message.description = reader.string();
+          message.description = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 12:
           if (tag !== 98) {
             break;
           }
 
-          message.about = reader.string();
+          message.about = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 13:
           if (tag !== 106) {
@@ -11952,7 +12301,7 @@ export const UpdateClanDescRequest = {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
-      logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
+      logo: isSet(object.logo) ? String(object.logo) : undefined,
       banner: isSet(object.banner) ? String(object.banner) : undefined,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       is_onboarding: isSet(object.is_onboarding) ? Boolean(object.is_onboarding) : undefined,
@@ -11960,8 +12309,8 @@ export const UpdateClanDescRequest = {
       onboarding_banner: isSet(object.onboarding_banner) ? String(object.onboarding_banner) : undefined,
       is_community: isSet(object.is_community) ? Boolean(object.is_community) : undefined,
       community_banner: isSet(object.community_banner) ? String(object.community_banner) : undefined,
-      description: isSet(object.description) ? globalThis.String(object.description) : "",
-      about: isSet(object.about) ? globalThis.String(object.about) : "",
+      description: isSet(object.description) ? String(object.description) : undefined,
+      about: isSet(object.about) ? String(object.about) : undefined,
       short_url: isSet(object.short_url) ? String(object.short_url) : undefined,
       prevent_anonymous: isSet(object.prevent_anonymous) ? globalThis.Boolean(object.prevent_anonymous) : false,
     };
@@ -11975,7 +12324,7 @@ export const UpdateClanDescRequest = {
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.logo !== "") {
+    if (message.logo !== undefined) {
       obj.logo = message.logo;
     }
     if (message.banner !== undefined) {
@@ -11999,10 +12348,10 @@ export const UpdateClanDescRequest = {
     if (message.community_banner !== undefined) {
       obj.community_banner = message.community_banner;
     }
-    if (message.description !== "") {
+    if (message.description !== undefined) {
       obj.description = message.description;
     }
-    if (message.about !== "") {
+    if (message.about !== undefined) {
       obj.about = message.about;
     }
     if (message.short_url !== undefined) {
@@ -12021,7 +12370,7 @@ export const UpdateClanDescRequest = {
     const message = createBaseUpdateClanDescRequest();
     message.clan_id = object.clan_id ?? "";
     message.clan_name = object.clan_name ?? "";
-    message.logo = object.logo ?? "";
+    message.logo = object.logo ?? undefined;
     message.banner = object.banner ?? undefined;
     message.status = object.status ?? 0;
     message.is_onboarding = object.is_onboarding ?? undefined;
@@ -12029,8 +12378,8 @@ export const UpdateClanDescRequest = {
     message.onboarding_banner = object.onboarding_banner ?? undefined;
     message.is_community = object.is_community ?? undefined;
     message.community_banner = object.community_banner ?? undefined;
-    message.description = object.description ?? "";
-    message.about = object.about ?? "";
+    message.description = object.description ?? undefined;
+    message.about = object.about ?? undefined;
     message.short_url = object.short_url ?? undefined;
     message.prevent_anonymous = object.prevent_anonymous ?? false;
     return message;
@@ -13111,7 +13460,7 @@ export const ClanProfileRequest = {
 };
 
 function createBaseUpdateClanProfileRequest(): UpdateClanProfileRequest {
-  return { clan_id: "", nick_name: "", avatar: "" };
+  return { clan_id: "", nick_name: undefined, avatar: undefined };
 }
 
 export const UpdateClanProfileRequest = {
@@ -13119,11 +13468,11 @@ export const UpdateClanProfileRequest = {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.nick_name !== "") {
-      writer.uint32(18).string(message.nick_name);
+    if (message.nick_name !== undefined) {
+      StringValue.encode({ value: message.nick_name! }, writer.uint32(18).fork()).ldelim();
     }
-    if (message.avatar !== "") {
-      writer.uint32(26).string(message.avatar);
+    if (message.avatar !== undefined) {
+      StringValue.encode({ value: message.avatar! }, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -13147,14 +13496,14 @@ export const UpdateClanProfileRequest = {
             break;
           }
 
-          message.nick_name = reader.string();
+          message.nick_name = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.avatar = reader.string();
+          message.avatar = StringValue.decode(reader, reader.uint32()).value;
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -13168,8 +13517,8 @@ export const UpdateClanProfileRequest = {
   fromJSON(object: any): UpdateClanProfileRequest {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      nick_name: isSet(object.nick_name) ? globalThis.String(object.nick_name) : "",
-      avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
+      nick_name: isSet(object.nick_name) ? String(object.nick_name) : undefined,
+      avatar: isSet(object.avatar) ? String(object.avatar) : undefined,
     };
   },
 
@@ -13178,10 +13527,10 @@ export const UpdateClanProfileRequest = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.nick_name !== "") {
+    if (message.nick_name !== undefined) {
       obj.nick_name = message.nick_name;
     }
-    if (message.avatar !== "") {
+    if (message.avatar !== undefined) {
       obj.avatar = message.avatar;
     }
     return obj;
@@ -13193,8 +13542,8 @@ export const UpdateClanProfileRequest = {
   fromPartial<I extends Exact<DeepPartial<UpdateClanProfileRequest>, I>>(object: I): UpdateClanProfileRequest {
     const message = createBaseUpdateClanProfileRequest();
     message.clan_id = object.clan_id ?? "";
-    message.nick_name = object.nick_name ?? "";
-    message.avatar = object.avatar ?? "";
+    message.nick_name = object.nick_name ?? undefined;
+    message.avatar = object.avatar ?? undefined;
     return message;
   },
 };
@@ -15615,7 +15964,7 @@ function createBaseUpdateChannelDescRequest(): UpdateChannelDescRequest {
     topic: "",
     age_restricted: 0,
     e2ee: 0,
-    channel_avatar: "",
+    channel_avatar: undefined,
   };
 }
 
@@ -15645,8 +15994,8 @@ export const UpdateChannelDescRequest = {
     if (message.e2ee !== 0) {
       writer.uint32(64).int32(message.e2ee);
     }
-    if (message.channel_avatar !== "") {
-      writer.uint32(74).string(message.channel_avatar);
+    if (message.channel_avatar !== undefined) {
+      StringValue.encode({ value: message.channel_avatar! }, writer.uint32(74).fork()).ldelim();
     }
     return writer;
   },
@@ -15719,7 +16068,7 @@ export const UpdateChannelDescRequest = {
             break;
           }
 
-          message.channel_avatar = reader.string();
+          message.channel_avatar = StringValue.decode(reader, reader.uint32()).value;
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -15740,7 +16089,7 @@ export const UpdateChannelDescRequest = {
       topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
       age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
       e2ee: isSet(object.e2ee) ? globalThis.Number(object.e2ee) : 0,
-      channel_avatar: isSet(object.channel_avatar) ? globalThis.String(object.channel_avatar) : "",
+      channel_avatar: isSet(object.channel_avatar) ? String(object.channel_avatar) : undefined,
     };
   },
 
@@ -15770,7 +16119,7 @@ export const UpdateChannelDescRequest = {
     if (message.e2ee !== 0) {
       obj.e2ee = Math.round(message.e2ee);
     }
-    if (message.channel_avatar !== "") {
+    if (message.channel_avatar !== undefined) {
       obj.channel_avatar = message.channel_avatar;
     }
     return obj;
@@ -15789,7 +16138,7 @@ export const UpdateChannelDescRequest = {
     message.topic = object.topic ?? "";
     message.age_restricted = object.age_restricted ?? 0;
     message.e2ee = object.e2ee ?? 0;
-    message.channel_avatar = object.channel_avatar ?? "";
+    message.channel_avatar = object.channel_avatar ?? undefined;
     return message;
   },
 };
@@ -16131,6 +16480,379 @@ export const RemoveClanUsersRequest = {
     const message = createBaseRemoveClanUsersRequest();
     message.clan_id = object.clan_id ?? "";
     message.user_ids = object.user_ids?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseBanClanUsersRequest(): BanClanUsersRequest {
+  return { clan_id: "", channel_id: "", user_ids: [], ban_time: 0, reason: "" };
+}
+
+export const BanClanUsersRequest = {
+  encode(message: BanClanUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    for (const v of message.user_ids) {
+      writer.uint32(26).string(v!);
+    }
+    if (message.ban_time !== 0) {
+      writer.uint32(32).int32(message.ban_time);
+    }
+    if (message.reason !== "") {
+      writer.uint32(42).string(message.reason);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BanClanUsersRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBanClanUsersRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.user_ids.push(reader.string());
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.ban_time = reader.int32();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.reason = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): BanClanUsersRequest {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      ban_time: isSet(object.ban_time) ? globalThis.Number(object.ban_time) : 0,
+      reason: isSet(object.reason) ? globalThis.String(object.reason) : "",
+    };
+  },
+
+  toJSON(message: BanClanUsersRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
+    }
+    if (message.ban_time !== 0) {
+      obj.ban_time = Math.round(message.ban_time);
+    }
+    if (message.reason !== "") {
+      obj.reason = message.reason;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<BanClanUsersRequest>, I>>(base?: I): BanClanUsersRequest {
+    return BanClanUsersRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<BanClanUsersRequest>, I>>(object: I): BanClanUsersRequest {
+    const message = createBaseBanClanUsersRequest();
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.user_ids = object.user_ids?.map((e) => e) || [];
+    message.ban_time = object.ban_time ?? 0;
+    message.reason = object.reason ?? "";
+    return message;
+  },
+};
+
+function createBaseBannedUser(): BannedUser {
+  return { channel_id: "", banned_id: "", banner_id: "", ban_time: 0, reason: "" };
+}
+
+export const BannedUser = {
+  encode(message: BannedUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.banned_id !== "") {
+      writer.uint32(18).string(message.banned_id);
+    }
+    if (message.banner_id !== "") {
+      writer.uint32(26).string(message.banner_id);
+    }
+    if (message.ban_time !== 0) {
+      writer.uint32(32).int32(message.ban_time);
+    }
+    if (message.reason !== "") {
+      writer.uint32(42).string(message.reason);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BannedUser {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBannedUser();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.banned_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.banner_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.ban_time = reader.int32();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.reason = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): BannedUser {
+    return {
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      banned_id: isSet(object.banned_id) ? globalThis.String(object.banned_id) : "",
+      banner_id: isSet(object.banner_id) ? globalThis.String(object.banner_id) : "",
+      ban_time: isSet(object.ban_time) ? globalThis.Number(object.ban_time) : 0,
+      reason: isSet(object.reason) ? globalThis.String(object.reason) : "",
+    };
+  },
+
+  toJSON(message: BannedUser): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.banned_id !== "") {
+      obj.banned_id = message.banned_id;
+    }
+    if (message.banner_id !== "") {
+      obj.banner_id = message.banner_id;
+    }
+    if (message.ban_time !== 0) {
+      obj.ban_time = Math.round(message.ban_time);
+    }
+    if (message.reason !== "") {
+      obj.reason = message.reason;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<BannedUser>, I>>(base?: I): BannedUser {
+    return BannedUser.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<BannedUser>, I>>(object: I): BannedUser {
+    const message = createBaseBannedUser();
+    message.channel_id = object.channel_id ?? "";
+    message.banned_id = object.banned_id ?? "";
+    message.banner_id = object.banner_id ?? "";
+    message.ban_time = object.ban_time ?? 0;
+    message.reason = object.reason ?? "";
+    return message;
+  },
+};
+
+function createBaseBannedUserListRequest(): BannedUserListRequest {
+  return { clan_id: "", channel_id: "" };
+}
+
+export const BannedUserListRequest = {
+  encode(message: BannedUserListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BannedUserListRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBannedUserListRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): BannedUserListRequest {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+    };
+  },
+
+  toJSON(message: BannedUserListRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<BannedUserListRequest>, I>>(base?: I): BannedUserListRequest {
+    return BannedUserListRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<BannedUserListRequest>, I>>(object: I): BannedUserListRequest {
+    const message = createBaseBannedUserListRequest();
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    return message;
+  },
+};
+
+function createBaseBannedUserList(): BannedUserList {
+  return { banned_users: [] };
+}
+
+export const BannedUserList = {
+  encode(message: BannedUserList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.banned_users) {
+      BannedUser.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BannedUserList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBannedUserList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.banned_users.push(BannedUser.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): BannedUserList {
+    return {
+      banned_users: globalThis.Array.isArray(object?.banned_users)
+        ? object.banned_users.map((e: any) => BannedUser.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: BannedUserList): unknown {
+    const obj: any = {};
+    if (message.banned_users?.length) {
+      obj.banned_users = message.banned_users.map((e) => BannedUser.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<BannedUserList>, I>>(base?: I): BannedUserList {
+    return BannedUserList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<BannedUserList>, I>>(object: I): BannedUserList {
+    const message = createBaseBannedUserList();
+    message.banned_users = object.banned_users?.map((e) => BannedUser.fromPartial(e)) || [];
     return message;
   },
 };
@@ -17994,7 +18716,7 @@ export const NotificationSettingList = {
 };
 
 function createBaseSetNotificationRequest(): SetNotificationRequest {
-  return { channel_category_id: "", notification_type: 0, time_mute: undefined, clan_id: "" };
+  return { channel_category_id: "", notification_type: 0, clan_id: "" };
 }
 
 export const SetNotificationRequest = {
@@ -18005,11 +18727,8 @@ export const SetNotificationRequest = {
     if (message.notification_type !== 0) {
       writer.uint32(16).int32(message.notification_type);
     }
-    if (message.time_mute !== undefined) {
-      Timestamp.encode(toTimestamp(message.time_mute), writer.uint32(26).fork()).ldelim();
-    }
     if (message.clan_id !== "") {
-      writer.uint32(34).string(message.clan_id);
+      writer.uint32(26).string(message.clan_id);
     }
     return writer;
   },
@@ -18040,13 +18759,6 @@ export const SetNotificationRequest = {
             break;
           }
 
-          message.time_mute = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
           message.clan_id = reader.string();
           continue;
       }
@@ -18062,7 +18774,6 @@ export const SetNotificationRequest = {
     return {
       channel_category_id: isSet(object.channel_category_id) ? globalThis.String(object.channel_category_id) : "",
       notification_type: isSet(object.notification_type) ? globalThis.Number(object.notification_type) : 0,
-      time_mute: isSet(object.time_mute) ? fromJsonTimestamp(object.time_mute) : undefined,
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
@@ -18074,9 +18785,6 @@ export const SetNotificationRequest = {
     }
     if (message.notification_type !== 0) {
       obj.notification_type = Math.round(message.notification_type);
-    }
-    if (message.time_mute !== undefined) {
-      obj.time_mute = message.time_mute.toISOString();
     }
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
@@ -18091,7 +18799,6 @@ export const SetNotificationRequest = {
     const message = createBaseSetNotificationRequest();
     message.channel_category_id = object.channel_category_id ?? "";
     message.notification_type = object.notification_type ?? 0;
-    message.time_mute = object.time_mute ?? undefined;
     message.clan_id = object.clan_id ?? "";
     return message;
   },
@@ -18186,28 +18893,31 @@ export const PinMessageRequest = {
   },
 };
 
-function createBaseSetMuteNotificationRequest(): SetMuteNotificationRequest {
-  return { id: "", notification_type: 0, active: 0 };
+function createBaseSetMuteRequest(): SetMuteRequest {
+  return { id: "", mute_time: 0, active: 0, clan_id: "" };
 }
 
-export const SetMuteNotificationRequest = {
-  encode(message: SetMuteNotificationRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const SetMuteRequest = {
+  encode(message: SetMuteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.notification_type !== 0) {
-      writer.uint32(16).int32(message.notification_type);
+    if (message.mute_time !== 0) {
+      writer.uint32(16).int32(message.mute_time);
     }
     if (message.active !== 0) {
       writer.uint32(24).int32(message.active);
     }
+    if (message.clan_id !== "") {
+      writer.uint32(34).string(message.clan_id);
+    }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SetMuteNotificationRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SetMuteRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSetMuteNotificationRequest();
+    const message = createBaseSetMuteRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -18223,7 +18933,7 @@ export const SetMuteNotificationRequest = {
             break;
           }
 
-          message.notification_type = reader.int32();
+          message.mute_time = reader.int32();
           continue;
         case 3:
           if (tag !== 24) {
@@ -18231,6 +18941,13 @@ export const SetMuteNotificationRequest = {
           }
 
           message.active = reader.int32();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.clan_id = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -18241,36 +18958,41 @@ export const SetMuteNotificationRequest = {
     return message;
   },
 
-  fromJSON(object: any): SetMuteNotificationRequest {
+  fromJSON(object: any): SetMuteRequest {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
-      notification_type: isSet(object.notification_type) ? globalThis.Number(object.notification_type) : 0,
+      mute_time: isSet(object.mute_time) ? globalThis.Number(object.mute_time) : 0,
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
 
-  toJSON(message: SetMuteNotificationRequest): unknown {
+  toJSON(message: SetMuteRequest): unknown {
     const obj: any = {};
     if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.notification_type !== 0) {
-      obj.notification_type = Math.round(message.notification_type);
+    if (message.mute_time !== 0) {
+      obj.mute_time = Math.round(message.mute_time);
     }
     if (message.active !== 0) {
       obj.active = Math.round(message.active);
     }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<SetMuteNotificationRequest>, I>>(base?: I): SetMuteNotificationRequest {
-    return SetMuteNotificationRequest.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<SetMuteRequest>, I>>(base?: I): SetMuteRequest {
+    return SetMuteRequest.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<SetMuteNotificationRequest>, I>>(object: I): SetMuteNotificationRequest {
-    const message = createBaseSetMuteNotificationRequest();
+  fromPartial<I extends Exact<DeepPartial<SetMuteRequest>, I>>(object: I): SetMuteRequest {
+    const message = createBaseSetMuteRequest();
     message.id = object.id ?? "";
-    message.notification_type = object.notification_type ?? 0;
+    message.mute_time = object.mute_time ?? 0;
     message.active = object.active ?? 0;
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
@@ -18879,7 +19601,7 @@ export const SetDefaultNotificationRequest = {
 };
 
 function createBaseRoleList(): RoleList {
-  return { roles: [], next_cursor: "", prev_cursor: "", cacheable_cursor: "" };
+  return { roles: [], max_level_permission: 0 };
 }
 
 export const RoleList = {
@@ -18887,14 +19609,8 @@ export const RoleList = {
     for (const v of message.roles) {
       Role.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if (message.next_cursor !== "") {
-      writer.uint32(18).string(message.next_cursor);
-    }
-    if (message.prev_cursor !== "") {
-      writer.uint32(26).string(message.prev_cursor);
-    }
-    if (message.cacheable_cursor !== "") {
-      writer.uint32(34).string(message.cacheable_cursor);
+    if (message.max_level_permission !== 0) {
+      writer.uint32(16).int32(message.max_level_permission);
     }
     return writer;
   },
@@ -18914,25 +19630,11 @@ export const RoleList = {
           message.roles.push(Role.decode(reader, reader.uint32()));
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.next_cursor = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.prev_cursor = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.cacheable_cursor = reader.string();
+          message.max_level_permission = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -18946,9 +19648,7 @@ export const RoleList = {
   fromJSON(object: any): RoleList {
     return {
       roles: globalThis.Array.isArray(object?.roles) ? object.roles.map((e: any) => Role.fromJSON(e)) : [],
-      next_cursor: isSet(object.next_cursor) ? globalThis.String(object.next_cursor) : "",
-      prev_cursor: isSet(object.prev_cursor) ? globalThis.String(object.prev_cursor) : "",
-      cacheable_cursor: isSet(object.cacheable_cursor) ? globalThis.String(object.cacheable_cursor) : "",
+      max_level_permission: isSet(object.max_level_permission) ? globalThis.Number(object.max_level_permission) : 0,
     };
   },
 
@@ -18957,14 +19657,8 @@ export const RoleList = {
     if (message.roles?.length) {
       obj.roles = message.roles.map((e) => Role.toJSON(e));
     }
-    if (message.next_cursor !== "") {
-      obj.next_cursor = message.next_cursor;
-    }
-    if (message.prev_cursor !== "") {
-      obj.prev_cursor = message.prev_cursor;
-    }
-    if (message.cacheable_cursor !== "") {
-      obj.cacheable_cursor = message.cacheable_cursor;
+    if (message.max_level_permission !== 0) {
+      obj.max_level_permission = Math.round(message.max_level_permission);
     }
     return obj;
   },
@@ -18975,9 +19669,7 @@ export const RoleList = {
   fromPartial<I extends Exact<DeepPartial<RoleList>, I>>(object: I): RoleList {
     const message = createBaseRoleList();
     message.roles = object.roles?.map((e) => Role.fromPartial(e)) || [];
-    message.next_cursor = object.next_cursor ?? "";
-    message.prev_cursor = object.prev_cursor ?? "";
-    message.cacheable_cursor = object.cacheable_cursor ?? "";
+    message.max_level_permission = object.max_level_permission ?? 0;
     return message;
   },
 };

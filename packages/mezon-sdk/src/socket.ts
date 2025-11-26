@@ -293,7 +293,8 @@ export class DefaultSocket implements Socket {
     mention_everyone?: Boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string
+    topic_id?: string,
+    message_id?: string
   ): Promise<ChannelMessageAck> {
     try {
       const response = await this.send({
@@ -313,6 +314,7 @@ export class DefaultSocket implements Socket {
           avatar: avatar,
           code: code,
           topic_id: topic_id,
+          id: message_id
         }
       }
     });
