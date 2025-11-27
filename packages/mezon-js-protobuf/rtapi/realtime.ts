@@ -447,8 +447,8 @@ export interface Envelope {
   ban_user_event?:
     | BannedUserEvent
     | undefined;
-  /** Active archive thread and DM */
-  active_archived_thread_dm?: ActiveArchivedThreadDM | undefined;
+  /** Active archive thread */
+  active_archived_thread?: ActiveArchivedThread | undefined;
 }
 
 export interface FollowEvent {
@@ -1491,12 +1491,16 @@ export interface UserProfileRedis {
   user_status: string;
   /** status online, offline, invisible, idle, do not disturb */
   status: string;
+  /** isOnline */
+  online: boolean;
   /** FCM token */
   fcm_tokens: FCMTokens[];
   /** clans */
   joined_clans: string[];
   /** app token */
   app_token: string;
+  /** create time */
+  create_time_second: number;
   /** app url */
   app_url: string;
   /** is bot */
@@ -1736,7 +1740,7 @@ export interface TransferOwnershipEvent {
   curr_owner: string;
 }
 
-export interface ActiveArchivedThreadDM {
+export interface ActiveArchivedThread {
   clan_id: string;
   channel_id: string;
 }
@@ -1832,7 +1836,7 @@ function createBaseEnvelope(): Envelope {
     transfer_ownership_event: undefined,
     add_friend: undefined,
     ban_user_event: undefined,
-    active_archived_thread_dm: undefined,
+    active_archived_thread: undefined,
   };
 }
 
@@ -2106,8 +2110,8 @@ export const Envelope = {
     if (message.ban_user_event !== undefined) {
       BannedUserEvent.encode(message.ban_user_event, writer.uint32(714).fork()).ldelim();
     }
-    if (message.active_archived_thread_dm !== undefined) {
-      ActiveArchivedThreadDM.encode(message.active_archived_thread_dm, writer.uint32(722).fork()).ldelim();
+    if (message.active_archived_thread !== undefined) {
+      ActiveArchivedThread.encode(message.active_archived_thread, writer.uint32(722).fork()).ldelim();
     }
     return writer;
   },
@@ -2747,7 +2751,7 @@ export const Envelope = {
             break;
           }
 
-          message.active_archived_thread_dm = ActiveArchivedThreadDM.decode(reader, reader.uint32());
+          message.active_archived_thread = ActiveArchivedThread.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -2961,8 +2965,8 @@ export const Envelope = {
         : undefined,
       add_friend: isSet(object.add_friend) ? AddFriend.fromJSON(object.add_friend) : undefined,
       ban_user_event: isSet(object.ban_user_event) ? BannedUserEvent.fromJSON(object.ban_user_event) : undefined,
-      active_archived_thread_dm: isSet(object.active_archived_thread_dm)
-        ? ActiveArchivedThreadDM.fromJSON(object.active_archived_thread_dm)
+      active_archived_thread: isSet(object.active_archived_thread)
+        ? ActiveArchivedThread.fromJSON(object.active_archived_thread)
         : undefined,
     };
   },
@@ -3238,8 +3242,8 @@ export const Envelope = {
     if (message.ban_user_event !== undefined) {
       obj.ban_user_event = BannedUserEvent.toJSON(message.ban_user_event);
     }
-    if (message.active_archived_thread_dm !== undefined) {
-      obj.active_archived_thread_dm = ActiveArchivedThreadDM.toJSON(message.active_archived_thread_dm);
+    if (message.active_archived_thread !== undefined) {
+      obj.active_archived_thread = ActiveArchivedThread.toJSON(message.active_archived_thread);
     }
     return obj;
   },
@@ -3535,9 +3539,9 @@ export const Envelope = {
     message.ban_user_event = (object.ban_user_event !== undefined && object.ban_user_event !== null)
       ? BannedUserEvent.fromPartial(object.ban_user_event)
       : undefined;
-    message.active_archived_thread_dm =
-      (object.active_archived_thread_dm !== undefined && object.active_archived_thread_dm !== null)
-        ? ActiveArchivedThreadDM.fromPartial(object.active_archived_thread_dm)
+    message.active_archived_thread =
+      (object.active_archived_thread !== undefined && object.active_archived_thread !== null)
+        ? ActiveArchivedThread.fromPartial(object.active_archived_thread)
         : undefined;
     return message;
   },
@@ -12141,9 +12145,11 @@ function createBaseUserProfileRedis(): UserProfileRedis {
     display_name: "",
     user_status: "",
     status: "",
+    online: false,
     fcm_tokens: [],
     joined_clans: [],
     app_token: "",
+    create_time_second: 0,
     app_url: "",
     is_bot: false,
     voip_token: "",
@@ -12170,23 +12176,29 @@ export const UserProfileRedis = {
     if (message.status !== "") {
       writer.uint32(50).string(message.status);
     }
+    if (message.online !== false) {
+      writer.uint32(56).bool(message.online);
+    }
     for (const v of message.fcm_tokens) {
-      FCMTokens.encode(v!, writer.uint32(58).fork()).ldelim();
+      FCMTokens.encode(v!, writer.uint32(66).fork()).ldelim();
     }
     for (const v of message.joined_clans) {
-      writer.uint32(66).string(v!);
+      writer.uint32(74).string(v!);
     }
     if (message.app_token !== "") {
-      writer.uint32(74).string(message.app_token);
+      writer.uint32(82).string(message.app_token);
+    }
+    if (message.create_time_second !== 0) {
+      writer.uint32(88).uint32(message.create_time_second);
     }
     if (message.app_url !== "") {
-      writer.uint32(82).string(message.app_url);
+      writer.uint32(98).string(message.app_url);
     }
     if (message.is_bot !== false) {
-      writer.uint32(88).bool(message.is_bot);
+      writer.uint32(104).bool(message.is_bot);
     }
     if (message.voip_token !== "") {
-      writer.uint32(98).string(message.voip_token);
+      writer.uint32(114).string(message.voip_token);
     }
     return writer;
   },
@@ -12241,42 +12253,56 @@ export const UserProfileRedis = {
           message.status = reader.string();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.fcm_tokens.push(FCMTokens.decode(reader, reader.uint32()));
+          message.online = reader.bool();
           continue;
         case 8:
           if (tag !== 66) {
             break;
           }
 
-          message.joined_clans.push(reader.string());
+          message.fcm_tokens.push(FCMTokens.decode(reader, reader.uint32()));
           continue;
         case 9:
           if (tag !== 74) {
             break;
           }
 
-          message.app_token = reader.string();
+          message.joined_clans.push(reader.string());
           continue;
         case 10:
           if (tag !== 82) {
             break;
           }
 
-          message.app_url = reader.string();
+          message.app_token = reader.string();
           continue;
         case 11:
           if (tag !== 88) {
             break;
           }
 
-          message.is_bot = reader.bool();
+          message.create_time_second = reader.uint32();
           continue;
         case 12:
           if (tag !== 98) {
+            break;
+          }
+
+          message.app_url = reader.string();
+          continue;
+        case 13:
+          if (tag !== 104) {
+            break;
+          }
+
+          message.is_bot = reader.bool();
+          continue;
+        case 14:
+          if (tag !== 114) {
             break;
           }
 
@@ -12299,6 +12325,7 @@ export const UserProfileRedis = {
       display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
       user_status: isSet(object.user_status) ? globalThis.String(object.user_status) : "",
       status: isSet(object.status) ? globalThis.String(object.status) : "",
+      online: isSet(object.online) ? globalThis.Boolean(object.online) : false,
       fcm_tokens: globalThis.Array.isArray(object?.fcm_tokens)
         ? object.fcm_tokens.map((e: any) => FCMTokens.fromJSON(e))
         : [],
@@ -12306,6 +12333,7 @@ export const UserProfileRedis = {
         ? object.joined_clans.map((e: any) => globalThis.String(e))
         : [],
       app_token: isSet(object.app_token) ? globalThis.String(object.app_token) : "",
+      create_time_second: isSet(object.create_time_second) ? globalThis.Number(object.create_time_second) : 0,
       app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
       is_bot: isSet(object.is_bot) ? globalThis.Boolean(object.is_bot) : false,
       voip_token: isSet(object.voip_token) ? globalThis.String(object.voip_token) : "",
@@ -12332,6 +12360,9 @@ export const UserProfileRedis = {
     if (message.status !== "") {
       obj.status = message.status;
     }
+    if (message.online !== false) {
+      obj.online = message.online;
+    }
     if (message.fcm_tokens?.length) {
       obj.fcm_tokens = message.fcm_tokens.map((e) => FCMTokens.toJSON(e));
     }
@@ -12340,6 +12371,9 @@ export const UserProfileRedis = {
     }
     if (message.app_token !== "") {
       obj.app_token = message.app_token;
+    }
+    if (message.create_time_second !== 0) {
+      obj.create_time_second = Math.round(message.create_time_second);
     }
     if (message.app_url !== "") {
       obj.app_url = message.app_url;
@@ -12364,9 +12398,11 @@ export const UserProfileRedis = {
     message.display_name = object.display_name ?? "";
     message.user_status = object.user_status ?? "";
     message.status = object.status ?? "";
+    message.online = object.online ?? false;
     message.fcm_tokens = object.fcm_tokens?.map((e) => FCMTokens.fromPartial(e)) || [];
     message.joined_clans = object.joined_clans?.map((e) => e) || [];
     message.app_token = object.app_token ?? "";
+    message.create_time_second = object.create_time_second ?? 0;
     message.app_url = object.app_url ?? "";
     message.is_bot = object.is_bot ?? false;
     message.voip_token = object.voip_token ?? "";
@@ -15839,12 +15875,12 @@ export const TransferOwnershipEvent = {
   },
 };
 
-function createBaseActiveArchivedThreadDM(): ActiveArchivedThreadDM {
+function createBaseActiveArchivedThread(): ActiveArchivedThread {
   return { clan_id: "", channel_id: "" };
 }
 
-export const ActiveArchivedThreadDM = {
-  encode(message: ActiveArchivedThreadDM, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const ActiveArchivedThread = {
+  encode(message: ActiveArchivedThread, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -15854,10 +15890,10 @@ export const ActiveArchivedThreadDM = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ActiveArchivedThreadDM {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ActiveArchivedThread {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseActiveArchivedThreadDM();
+    const message = createBaseActiveArchivedThread();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -15884,14 +15920,14 @@ export const ActiveArchivedThreadDM = {
     return message;
   },
 
-  fromJSON(object: any): ActiveArchivedThreadDM {
+  fromJSON(object: any): ActiveArchivedThread {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
     };
   },
 
-  toJSON(message: ActiveArchivedThreadDM): unknown {
+  toJSON(message: ActiveArchivedThread): unknown {
     const obj: any = {};
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
@@ -15902,11 +15938,11 @@ export const ActiveArchivedThreadDM = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ActiveArchivedThreadDM>, I>>(base?: I): ActiveArchivedThreadDM {
-    return ActiveArchivedThreadDM.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<ActiveArchivedThread>, I>>(base?: I): ActiveArchivedThread {
+    return ActiveArchivedThread.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ActiveArchivedThreadDM>, I>>(object: I): ActiveArchivedThreadDM {
-    const message = createBaseActiveArchivedThreadDM();
+  fromPartial<I extends Exact<DeepPartial<ActiveArchivedThread>, I>>(object: I): ActiveArchivedThread {
+    const message = createBaseActiveArchivedThread();
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     return message;

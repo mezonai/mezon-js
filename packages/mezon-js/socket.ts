@@ -195,20 +195,14 @@ export interface UserProfileRedis {
   avatar: string;
   /** Display name */
   display_name: string;
-  /** about me */
-  about_me: string;
   /** custom status */
   custom_status: string;
-  /** create time */
-  create_time_second: number;
   /** online */
   online: boolean;
+  // create time
+  create_time_second: number;
   /** clans */
   joined_clans: number[];
-  // public key
-  pubkey: string;
-  // mezon id
-  mezon_id: string;
   // app url
   app_url: string;
   // is bot
@@ -1598,7 +1592,7 @@ export interface Socket {
     no_clear: boolean
   ): Promise<CustomStatusEvent>;
 
-  writeActiveArchivedThreadDM(
+  writeActiveArchivedThread(
     clan_id: string,
     channel_id: string
   ): Promise<void>;
@@ -3041,17 +3035,17 @@ export class DefaultSocket implements Socket {
     return response.custom_status_event;
   }
 
-  async writeActiveArchivedThreadDM(
+  async writeActiveArchivedThread(
     clan_id: string,
     channel_id: string
   ): Promise<void> {
     const response = await this.send({
-      active_archived_thread_dm: {
+      active_archived_thread: {
         clan_id: clan_id,
         channel_id: channel_id
       },
     });
-    return response.active_archived_thread_dm;
+    return response.active_archived_thread;
   }
 
   async checkDuplicateName(
