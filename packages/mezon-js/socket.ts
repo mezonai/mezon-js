@@ -1598,6 +1598,11 @@ export interface Socket {
     no_clear: boolean
   ): Promise<CustomStatusEvent>;
 
+  writeActiveArchivedThreadDM(
+    clan_id: string,
+    channel_id: string
+  ): Promise<void>;
+
   /* Set the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   setHeartbeatTimeoutMs(ms: number): void;
 
@@ -3034,6 +3039,19 @@ export class DefaultSocket implements Socket {
       },
     });
     return response.custom_status_event;
+  }
+
+  async writeActiveArchivedThreadDM(
+    clan_id: string,
+    channel_id: string
+  ): Promise<void> {
+    const response = await this.send({
+      active_archived_thread_dm: {
+        clan_id: clan_id,
+        channel_id: channel_id
+      },
+    });
+    return response.active_archived_thread_dm;
   }
 
   async checkDuplicateName(
