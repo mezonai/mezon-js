@@ -1,9 +1,3 @@
-import {
-  IEphemeralKeyPair,
-  IZkProof,
-  MmnClient,
-  ZkClient,
-} from "mmn-client-js";
 import { MezonApi } from "../../api";
 import { ChannelType } from "../../constants";
 import {
@@ -12,12 +6,12 @@ import {
   MezonUpdateRoleBody,
 } from "../../interfaces";
 import { MessageDatabase } from "../../sqlite/MessageDatabase";
-import { MezonClient } from "../client/MezonClient";
 import { SocketManager } from "../manager/socket_manager";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 import { CacheManager } from "../utils/CacheManager";
 import { TextChannel } from "./TextChannel";
 import { User, UserInitData } from "./User";
+import { MezonClientCore } from "../client/MezonClientCore";
 
 interface ClanInitData {
   id: string;
@@ -36,25 +30,20 @@ export class Clan {
   public sessionToken: string;
   public apiClient: MezonApi;
   public clientId!: string;
-  public keyGen!: IEphemeralKeyPair;
-  public addressMMN!: string;
-  public zkProofs!: IZkProof;
-  public mmnClient!: MmnClient;
-  public zkClient!: ZkClient;
 
   // cache status load channel
   private _channelsLoaded = false;
 
   // cache status load channel call api
   private _loadingPromise: Promise<void> | null = null;
-  private readonly client: MezonClient;
+  private readonly client: MezonClientCore;
   private readonly socketManager: SocketManager;
   private readonly messageQueue: AsyncThrottleQueue;
   private readonly messageDB: MessageDatabase;
 
   constructor(
     initClanData: ClanInitData,
-    client: MezonClient,
+    client: MezonClientCore,
     apiClient: MezonApi,
     socketManager: SocketManager,
     sessionToken: string,
@@ -67,11 +56,6 @@ export class Clan {
     this.clan_name = initClanData.clan_name;
     this.client = client;
     this.clientId = client.clientId!;
-    this.keyGen = client.keyGen;
-    this.addressMMN = client.addressMMN;
-    this.zkProofs = client.zkProofs;
-    this.mmnClient = client.mmnClient;
-    this.zkClient = client.zkClient;
     this.apiClient = apiClient;
     this.socketManager = socketManager;
     this.messageQueue = messageQueue;
@@ -102,7 +86,7 @@ export class Clan {
   }
 
   getClientId() {
-    return this.client.clientId;
+    return this.clientId;
   }
 
   async loadChannels(): Promise<void> {

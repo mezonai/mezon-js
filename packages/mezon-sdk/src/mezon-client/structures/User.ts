@@ -1,9 +1,5 @@
 import { ChannelStreamMode } from "../../constants";
-import {
-  ApiGetZkProofRequest,
-  ApiMessageAttachment,
-  ChannelMessageContent,
-} from "../../interfaces";
+import { ApiMessageAttachment, ChannelMessageContent } from "../../interfaces";
 import { ChannelManager } from "../manager/channel_manager";
 import { SocketManager } from "../manager/socket_manager";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
@@ -49,44 +45,6 @@ export class User {
     this.channelManager = channelManager;
     this.messageQueue = messageQueue;
     this.socketManager = socketManager;
-  }
-
-  async getEphemeralKeyPair() {
-    if (!this.clan.mmnClient) {
-      throw new Error("MmnClient not initialized");
-    }
-
-    return this.clan.mmnClient.generateEphemeralKeyPair();
-  }
-
-  async getAddress(user_id: string) {
-    if (!this.clan.mmnClient) {
-      throw new Error("MmnClient not initialized");
-    }
-
-    return this.clan.mmnClient.getAddressFromUserId(user_id);
-  }
-
-  async getZkProofs(data: ApiGetZkProofRequest) {
-    if (!this.clan.zkClient) {
-      throw new Error("ZkClient not initialized");
-    }
-    const req = {
-      userId: data.user_id,
-      jwt: data.jwt,
-      address: data.address,
-      ephemeralPublicKey: data.ephemeral_public_key,
-    };
-
-    return this.clan.zkClient.getZkProofs(req);
-  }
-
-  async getCurrentNonce(user_id: string, tag?: "latest" | "pending") {
-    if (!this.clan.mmnClient) {
-      throw new Error("MmnClient not initialized");
-    }
-
-    return this.clan.mmnClient.getCurrentNonce(user_id, tag || "pending");
   }
 
   async sendDM(
