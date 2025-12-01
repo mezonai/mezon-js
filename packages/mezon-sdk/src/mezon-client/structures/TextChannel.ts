@@ -48,6 +48,9 @@ export class TextChannel {
     this.parent_id = initChannelData?.parent_id ?? "";
     this.meeting_code = initChannelData?.meeting_code ?? "";
     this.clan = clan;
+    this.socketManager = socketManager;
+    this.messageQueue = messageQueue;
+    this.messageDB = messageDB;
     this.messages = new CacheManager<string, Message>(async (message_id) => {
       const messageDb = this.messageDB.getMessageById(message_id, this.id!, this.clan.id!);
       if (!messageDb) {
@@ -61,9 +64,6 @@ export class TextChannel {
       );
       return newMessage;
     }, 200);
-    this.socketManager = socketManager;
-    this.messageQueue = messageQueue;
-    this.messageDB = messageDB;
   }
 
   async send(
