@@ -8,7 +8,6 @@ import { Socket } from "../../interfaces/socket";
 import { Session } from "../../session";
 import { EventManager } from "./event_manager";
 import { Clan } from "../structures/Clan";
-import { MezonClient } from "../client/MezonClient";
 import {
   EphemeralMessageData,
   ReactMessageData,
@@ -19,6 +18,7 @@ import {
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 import { MessageDatabase } from "../../sqlite/MessageDatabase";
 import { sleep } from "../../utils/helper";
+import { MezonClientCore } from "../client/MezonClientCore";
 
 export class SocketManager {
   [key: string]: any;
@@ -33,7 +33,7 @@ export class SocketManager {
     private apiClient: MezonApi,
     private eventManager: EventManager,
     private messageQueue: AsyncThrottleQueue,
-    private client: MezonClient,
+    private client: MezonClientCore,
     private messageDB: MessageDatabase
   ) {
     this.socket = new DefaultSocket(
@@ -166,72 +166,78 @@ export class SocketManager {
   }
 
   async writeChatMessage(dataWriteMessage: ReplyMessageData) {
-    try {
-      const msgACK = await this.socket.writeChatMessage(
-        dataWriteMessage.clan_id,
-        dataWriteMessage.channel_id,
-        dataWriteMessage.mode,
-        dataWriteMessage.is_public,
-        dataWriteMessage.content,
-        dataWriteMessage?.mentions ?? [],
-        dataWriteMessage?.attachments ?? [],
-        dataWriteMessage?.references ?? [],
-        dataWriteMessage?.anonymous_message,
-        dataWriteMessage?.mention_everyone,
-        dataWriteMessage?.avatar,
-        dataWriteMessage?.code,
-        dataWriteMessage?.topic_id
+    const currentContentLength = JSON.stringify(dataWriteMessage.content ?? {}).length
+    if (currentContentLength > 8000)
+      throw new Error(
+        `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`
       );
-      return msgACK;
-    } catch (error) {
-      throw error;
-    }
+
+    const msgACK = await this.socket.writeChatMessage(
+      dataWriteMessage.clan_id,
+      dataWriteMessage.channel_id,
+      dataWriteMessage.mode,
+      dataWriteMessage.is_public,
+      dataWriteMessage.content,
+      dataWriteMessage?.mentions ?? [],
+      dataWriteMessage?.attachments ?? [],
+      dataWriteMessage?.references ?? [],
+      dataWriteMessage?.anonymous_message,
+      dataWriteMessage?.mention_everyone,
+      dataWriteMessage?.avatar,
+      dataWriteMessage?.code,
+      dataWriteMessage?.topic_id
+    );
+    return msgACK;
   }
 
   async writeEphemeralMessage(dataWriteMessage: EphemeralMessageData) {
-    try {
-      const msgACK = await this.socket.writeEphemeralMessage(
-        dataWriteMessage.receiver_id,
-        dataWriteMessage.clan_id,
-        dataWriteMessage.channel_id,
-        dataWriteMessage.mode,
-        dataWriteMessage.is_public,
-        dataWriteMessage.content,
-        dataWriteMessage?.mentions ?? [],
-        dataWriteMessage?.attachments ?? [],
-        dataWriteMessage?.references ?? [],
-        dataWriteMessage?.anonymous_message,
-        dataWriteMessage?.mention_everyone,
-        dataWriteMessage?.avatar,
-        dataWriteMessage?.code,
-        dataWriteMessage?.topic_id,
-        dataWriteMessage?.message_id
+    const currentContentLength = JSON.stringify(dataWriteMessage.content ?? {}).length
+    if (currentContentLength > 8000)
+      throw new Error(
+        `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`
       );
-      return msgACK;
-    } catch (error) {
-      throw error;
-    }
+
+    const msgACK = await this.socket.writeEphemeralMessage(
+      dataWriteMessage.receiver_id,
+      dataWriteMessage.clan_id,
+      dataWriteMessage.channel_id,
+      dataWriteMessage.mode,
+      dataWriteMessage.is_public,
+      dataWriteMessage.content,
+      dataWriteMessage?.mentions ?? [],
+      dataWriteMessage?.attachments ?? [],
+      dataWriteMessage?.references ?? [],
+      dataWriteMessage?.anonymous_message,
+      dataWriteMessage?.mention_everyone,
+      dataWriteMessage?.avatar,
+      dataWriteMessage?.code,
+      dataWriteMessage?.topic_id,
+      dataWriteMessage?.message_id
+    );
+    return msgACK;
   }
 
   async updateChatMessage(dataUpdateMessage: UpdateMessageData) {
-    try {
-      const msgACK = await this.socket.updateChatMessage(
-        dataUpdateMessage.clan_id,
-        dataUpdateMessage.channel_id,
-        dataUpdateMessage.mode,
-        dataUpdateMessage.is_public,
-        dataUpdateMessage.message_id,
-        dataUpdateMessage.content,
-        dataUpdateMessage?.mentions ?? [],
-        dataUpdateMessage?.attachments ?? [],
-        dataUpdateMessage?.hideEditted ?? false,
-        dataUpdateMessage?.topic_id,
-        dataUpdateMessage?.is_update_msg_topic
+    const currentContentLength = JSON.stringify(dataUpdateMessage.content ?? {}).length
+    if (currentContentLength > 8000)
+      throw new Error(
+        `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`
       );
-      return msgACK;
-    } catch (error) {
-      throw error;
-    }
+
+    const msgACK = await this.socket.updateChatMessage(
+      dataUpdateMessage.clan_id,
+      dataUpdateMessage.channel_id,
+      dataUpdateMessage.mode,
+      dataUpdateMessage.is_public,
+      dataUpdateMessage.message_id,
+      dataUpdateMessage.content,
+      dataUpdateMessage?.mentions ?? [],
+      dataUpdateMessage?.attachments ?? [],
+      dataUpdateMessage?.hideEditted ?? false,
+      dataUpdateMessage?.topic_id,
+      dataUpdateMessage?.is_update_msg_topic
+    );
+    return msgACK;
   }
 
   async writeMessageReaction(dataReactionMessage: ReactMessageData) {
