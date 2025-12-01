@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 
 export class MessageDatabase {
-  private db;
+  private db: Database.Database;
 
   constructor(dbPath = "./mezon-cache/mezon-messages-cache.db") {
     const dir = path.dirname(dbPath);
@@ -42,33 +42,34 @@ export class MessageDatabase {
   private init() {
     this.db
       .prepare(
-        `CREATE TABLE IF NOT EXISTS messages (
-        id TEXT NOT NULL,
-        channel_id TEXT NOT NULL,
-        clan_id TEXT,
-        sender_id TEXT,
-        content TEXT,
-        mentions TEXT,
-        attachments TEXT,
-        reactions TEXT,
-        msg_references TEXT,
-        topic_id TEXT,
-        create_time_seconds INTEGER,
-        PRIMARY KEY (id, channel_id)
-          )`
+        `CREATE TABLE IF NOT EXISTS messages_v2 (
+          id TEXT NOT NULL,
+          channel_id TEXT NOT NULL,
+          clan_id TEXT NOT NULL,
+          sender_id TEXT,
+          content TEXT,
+          mentions TEXT,
+          attachments TEXT,
+          reactions TEXT,
+          msg_references TEXT,
+          topic_id TEXT,
+          create_time_seconds INTEGER,
+          PRIMARY KEY (id, channel_id, clan_id)
+        )`
       )
       .run();
     this.db
       .prepare(
-        `CREATE INDEX IF NOT EXISTS idx_messages_channel_id ON messages(channel_id)`
+        `CREATE INDEX IF NOT EXISTS idx_messages_v2_channel 
+         ON messages_v2(channel_id)`
       )
       .run();
   }
 
   saveMessage(message: ChannelMessage) {
     const stmt = this.db.prepare(
-      `INSERT OR REPLACE INTO messages (
-        id, clan_id, channel_id, sender_id,
+      `INSERT OR REPLACE INTO messages_v2 (
+        id, channel_id, clan_id, sender_id,
         content, mentions, attachments, reactions,
         msg_references, topic_id, create_time_seconds
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
@@ -76,9 +77,9 @@ export class MessageDatabase {
 
     stmt.run(
       message.message_id,
-      message.clan_id,
       message.channel_id,
-      message.sender_id,
+      message.clan_id ?? "",
+      message.sender_id ?? "",
       JSON.stringify(message.content ?? {}),
       JSON.stringify(message.mentions ?? []),
       JSON.stringify(message.attachments ?? []),
@@ -89,12 +90,13 @@ export class MessageDatabase {
     );
   }
 
-  getMessageById(messageId: string, channelId: string) {
+  getMessageById(messageId: string, channelId: string, clanId: string) {
     const stmt = this.db.prepare(
-      `SELECT * FROM messages WHERE channel_id = ? AND id = ? LIMIT 1`
+      `SELECT * FROM messages_v2 
+       WHERE id = ? AND channel_id = ? AND clan_id = ?
+       LIMIT 1`
     );
-    const row = stmt.get(channelId, messageId) as any;
-
+    const row = stmt.get(messageId, channelId, clanId) as any;
     if (!row) return null;
 
     return {
