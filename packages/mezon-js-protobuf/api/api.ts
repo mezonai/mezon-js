@@ -448,6 +448,8 @@ export interface MessageAttachment {
   height: number;
   /** thumbnail */
   thumbnail: string;
+  /** duration for video */
+  duration: number;
 }
 
 /** Message reference */
@@ -6097,7 +6099,7 @@ export const MessageReaction = {
 };
 
 function createBaseMessageAttachment(): MessageAttachment {
-  return { filename: "", size: 0, url: "", filetype: "", width: 0, height: 0, thumbnail: "" };
+  return { filename: "", size: 0, url: "", filetype: "", width: 0, height: 0, thumbnail: "", duration: 0 };
 }
 
 export const MessageAttachment = {
@@ -6122,6 +6124,9 @@ export const MessageAttachment = {
     }
     if (message.thumbnail !== "") {
       writer.uint32(58).string(message.thumbnail);
+    }
+    if (message.duration !== 0) {
+      writer.uint32(64).int32(message.duration);
     }
     return writer;
   },
@@ -6182,6 +6187,13 @@ export const MessageAttachment = {
 
           message.thumbnail = reader.string();
           continue;
+        case 8:
+          if (tag !== 64) {
+            break;
+          }
+
+          message.duration = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -6200,6 +6212,7 @@ export const MessageAttachment = {
       width: isSet(object.width) ? globalThis.Number(object.width) : 0,
       height: isSet(object.height) ? globalThis.Number(object.height) : 0,
       thumbnail: isSet(object.thumbnail) ? globalThis.String(object.thumbnail) : "",
+      duration: isSet(object.duration) ? globalThis.Number(object.duration) : 0,
     };
   },
 
@@ -6226,6 +6239,9 @@ export const MessageAttachment = {
     if (message.thumbnail !== "") {
       obj.thumbnail = message.thumbnail;
     }
+    if (message.duration !== 0) {
+      obj.duration = Math.round(message.duration);
+    }
     return obj;
   },
 
@@ -6241,6 +6257,7 @@ export const MessageAttachment = {
     message.width = object.width ?? 0;
     message.height = object.height ?? 0;
     message.thumbnail = object.thumbnail ?? "";
+    message.duration = object.duration ?? 0;
     return message;
   },
 };
