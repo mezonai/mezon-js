@@ -4,10 +4,6 @@
 import { ApiAuthenticateLogoutRequest, ApiAuthenticateRefreshRequest, ApiAuthenticateRequest, ApiChannelDescription, ApiClanDescList, ApiCreateChannelDescRequest, ApiQuickMenuAccessRequest, ApiRegisterStreamingChannelRequest, ApiSession, ApiUpdateMessageRequest, MezonUpdateRoleBody, TokenSentEvent } from "./interfaces";
 import { buildFetchOptions } from './utils';
 import { encode } from 'js-base64';
-import { sleep } from "./utils/helper";
-
-
-
 export class MezonApi {
 
   constructor(readonly apiKey: string, readonly basePath: string, readonly timeoutMs: number) {}
@@ -527,7 +523,6 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    await sleep(200)
     const urlPath = "/v2/sendtoken";
     const queryParams = new Map<string, any>();
 

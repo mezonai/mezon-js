@@ -57,7 +57,6 @@ export class ChannelManager {
       );
 
       if (channelDM) {
-        await this.sleep(100);
         await socket.joinChat(
           channelDM.clan_id!,
           channelDM.channel_id!,
@@ -70,9 +69,5 @@ export class ChannelManager {
     } catch (e) {
       return null;
     }
-  }
-
-  private sleep(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

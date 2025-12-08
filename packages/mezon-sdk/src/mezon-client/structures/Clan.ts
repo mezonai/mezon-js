@@ -10,7 +10,6 @@ import { SocketManager } from "../manager/socket_manager";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 import { CacheManager } from "../utils/CacheManager";
 import { TextChannel } from "./TextChannel";
-import { User, UserInitData } from "./User";
 import { MezonClientCore } from "../client/MezonClientCore";
 
 interface ClanInitData {
@@ -26,7 +25,6 @@ export class Clan {
   public welcome_channel_id: string;
   public clan_name: string;
   public channels: CacheManager<string, TextChannel>;
-  public users: CacheManager<string, User>;
   public sessionToken: string;
   public apiClient: MezonApi;
   public clientId!: string;
@@ -64,29 +62,10 @@ export class Clan {
     this.channels = new CacheManager<string, TextChannel>(async (channelId) => {
       return this.client.channels.fetch(channelId);
     });
-
-    this.users = new CacheManager<string, User>(async (user_id) => {
-      const dmChannel = await this.client.createDMchannel(user_id);
-      if (!dmChannel || !dmChannel?.channel_id) {
-        throw Error(`User ${user_id} not found in this clan ${this.id}!`);
-      }
-      const userRaw: UserInitData = {
-        id: user_id,
-        dmChannelId: dmChannel.channel_id,
-      };
-      const user = new User(
-        userRaw,
-        this,
-        this.messageQueue,
-        this.socketManager
-      );
-      this.users.set(user_id, user);
-      return user;
-    });
   }
 
-  getClientId() {
-    return this.clientId;
+  getClient() {
+    return this.client;
   }
 
   async loadChannels(): Promise<void> {

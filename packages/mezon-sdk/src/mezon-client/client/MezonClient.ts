@@ -241,10 +241,8 @@ export class MezonClient extends MezonClientCore {
   }
 
   private async _onUserClanRemovedInternal(e: UserClanRemovedEvent) {
-    const clan = this.clans.get(e.clan_id);
-    if (!clan) return;
     e.user_ids.forEach((user_id: string) => {
-      clan.users.delete(user_id);
+      this.users.delete(user_id);
     });
   }
 
@@ -252,6 +250,7 @@ export class MezonClient extends MezonClientCore {
     if (e.user.user_id === this.clientId) {
       this.socketManager.getSocket().joinClanChat(e.clan_id);
       const clan = this.clans.get(e.clan_id);
+
       if (!clan) {
         const clanObj = new Clan(
           {
@@ -280,27 +279,25 @@ export class MezonClient extends MezonClientCore {
         display_name: e.user.display_name,
         dmChannelId: "",
       };
-      const clan = this.clans.get(e.clan_id);
-      if (clan) {
-        const user = new User(
-          userRaw,
-          clan,
-          this.messageQueue,
-          this.socketManager,
-          this.channelManager
-        );
-        clan.users.set(e.user.user_id!, user);
-      }
-      const clanDm = this.clans.get("0");
-      if (clanDm) {
-        const user = new User(
-          userRaw,
-          clanDm,
-          this.messageQueue,
-          this.socketManager,
-          this.channelManager
-        );
-        clanDm.users.set(e.user.user_id!, user);
+
+      let user = this.users.get(e.user.user_id!);
+
+      if (!user) {
+        user = new User(userRaw, {
+          socketManager: this.socketManager,
+          messageQueue: this.messageQueue,
+          channelManager: this.channelManager,
+        });
+        this.users.set(e.user.user_id!, user);
+      } else {
+        user.username = userRaw.username ?? user.username;
+        user.clan_nick = userRaw.clan_nick ?? user.clan_nick;
+        user.clan_avatar = userRaw.clan_avatar ?? user.clan_avatar;
+        user.display_name = userRaw.display_name ?? user.display_name;
+        user.avartar = userRaw.avartar ?? user.avartar;
+        if (userRaw.dmChannelId) {
+          user.dmChannelId = userRaw.dmChannelId;
+        }
       }
     }
   }
@@ -319,8 +316,7 @@ export class MezonClient extends MezonClientCore {
 
   private async _onTokenSendInternal(e: TokenSentEvent) {
     if (e.sender_id === this.clientId) {
-      const clan = this.clans.get("0");
-      const receiver = await clan?.users.fetch(e.receiver_id);
+      const receiver = await this.users.fetch(e.receiver_id);
       await receiver?.sendDM(
         {
           t: `Funds Transferred: ${(+e.amount).toLocaleString()}₫ | ${

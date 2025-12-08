@@ -100,7 +100,8 @@ export class TextChannel {
       return { references: [], topic_id_from_ref: undefined };
     }
     const messageRef = await this.messages.fetch(reference_message_id);
-    const user = await this.clan.users.fetch(messageRef.sender_id);
+    const client = this.clan.getClient();
+    const user = await client.users.fetch(messageRef.sender_id);
     const references: ApiMessageRef[] = [
       {
         message_ref_id: messageRef.id,
