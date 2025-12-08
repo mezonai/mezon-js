@@ -1665,16 +1665,18 @@ export interface ApiMessageAttachment {
   width?: number;
   //
   thumbnail?: string;
-  /** The channel this message belongs to. */
+  // The channel this message belongs to.
   channel_id?: string;
   // The mode
   mode?: number;
   // The channel label
   channel_label?: string;
-  /** The message that user react */
+  // The message that user react
   message_id?: string;
-  /** Message sender, usually a user ID. */
+  // Message sender, usually a user ID.
   sender_id?: string;
+  // duration for video in seconds
+  duration?: number;
 }
 
 /**  */
