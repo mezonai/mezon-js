@@ -646,6 +646,10 @@ export interface ApiChannelAppResponse {
   id?: string;
   //
   app_url?: string;
+  //
+  app_name?: string;
+  //
+  app_logo?: string;
 }
 
 /**  */
