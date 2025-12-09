@@ -9,7 +9,6 @@ import { SessionManager } from "../manager/session_manager";
 import { EventManager } from "../manager/event_manager";
 import { WebSocketAdapterPb } from "../../web_socket_adapter_pb";
 import {
-  ApiCreateChannelDescRequest,
   ApiGetZkProofRequest,
   ApiQuickMenuAccessPayload,
   ApiQuickMenuAccessRequest,
@@ -20,9 +19,7 @@ import {
 } from "../../interfaces";
 import {
   generateSnowflakeId,
-  isValidUserId,
   parseUrlToHostAndSSL,
-  sleep,
   waitFor2nTimeout,
 } from "../../utils/helper";
 import { ChannelManager } from "../manager/channel_manager";
@@ -37,7 +34,6 @@ import {
   MmnClient,
   ZkClient,
 } from "mmn-client-js";
-import { ChannelType } from "../../constants";
 
 const MAX_TIME_RETRY = 10;
 const DEFAULT_HOST = "gw.mezon.ai";
@@ -74,6 +70,7 @@ export class MezonClientCore extends EventEmitter {
 
   public clans!: CacheManager<string, Clan>;
   public channels!: CacheManager<string, TextChannel>;
+  public users!: CacheManager<string, User>;
   protected messageDB: MessageDatabase;
 
   constructor(config: ClientConfigDto) {
@@ -124,6 +121,8 @@ export class MezonClientCore extends EventEmitter {
     this.eventManager = new EventManager();
     this.clans = new CacheManager(this._fetchClanFromAPI.bind(this));
     this.channels = new CacheManager(this._fetchChannelFromAPI.bind(this));
+    this.users = new CacheManager(this._fetchUserFromAPI.bind(this));
+
     this.apiClient = new MezonApi(this.token, basePath, this.timeout);
     this.sessionManager = new SessionManager(this.apiClient, sessionApi);
     this.socketManager = new SocketManager(
@@ -185,6 +184,15 @@ export class MezonClientCore extends EventEmitter {
       this.initManager(basePath, sessionApi);
     }
 
+    if (sessionApi?.id_token) {
+      try {
+        await this.mmnInitialized(sessionApi.id_token);
+        console.log('Init MMN success!')
+      } catch (error) {
+        console.error("Failed to init MMN:", error);
+      }
+    }
+
     const sessionConnected = await this.socketManager.connect(sessionApi!);
     if (sessionConnected?.token) {
       await this.socketManager.connectSocket(sessionConnected.token);
@@ -204,58 +212,6 @@ export class MezonClientCore extends EventEmitter {
       this.socketManager?.closeSocket();
       console.log("HandleClientLogin Error", error);
       throw new Error("Some thing went wrong, please restart bot!");
-    }
-  }
-
-  async createDMchannel(userId: string) {
-    try {
-      if (!isValidUserId(userId)) return null;
-      const socket = this.socketManager.getSocket();
-      const request: ApiCreateChannelDescRequest = {
-        clan_id: "",
-        channel_id: "0",
-        category_id: "0",
-        type: ChannelType.CHANNEL_TYPE_DM,
-        user_ids: [userId],
-        channel_private: 1,
-      };
-      try {
-        const channelDM = await this.apiClient.createChannelDesc(
-          this.sessionManager.getSession()!.token,
-          request
-        );
-        if (channelDM) {
-          await sleep(100);
-          await socket.joinChat(
-            channelDM.clan_id!,
-            channelDM.channel_id!,
-            channelDM.type!,
-            false
-          );
-          const clanDm = this.clans.get("0");
-          if (clanDm) {
-            const userRaw: UserInitData = {
-              id: userId,
-              dmChannelId: channelDM.channel_id,
-            };
-            const user = new User(
-              userRaw,
-              clanDm,
-              this.messageQueue,
-              this.socketManager,
-              this.channelManager
-            );
-            clanDm.users.set(userId, user);
-          }
-          return channelDM;
-        }
-      } catch (error: any) {
-        console.log("error createDMchannel", userId, error?.status);
-      }
-
-      return null;
-    } catch (e) {
-      return null;
     }
   }
 
@@ -294,7 +250,7 @@ export class MezonClientCore extends EventEmitter {
     return this._mmnClient.getCurrentNonce(user_id, tag || "pending");
   }
 
-  private async ensureMmnInitialized() {
+  private async mmnInitialized(id_token: string) {
     if (!this._mmnClient) {
       throw new Error("MmnClient not initialized");
     }
@@ -315,16 +271,9 @@ export class MezonClientCore extends EventEmitter {
       }
 
       if (!this.zkProofs) {
-        const session = this.sessionManager.getSession();
-        if (!session?.id_token) {
-          throw new Error(
-            "Session not initialized. Please login before sendToken"
-          );
-        }
-
         this.zkProofs = await this.getZkProofs({
           user_id: this.clientId,
-          jwt: session.id_token,
+          jwt: id_token,
           address: this.addressMMN,
           ephemeral_public_key: this.keyGen.publicKey,
         });
@@ -341,7 +290,6 @@ export class MezonClientCore extends EventEmitter {
   }
 
   async sendToken(tokenEvent: APISentTokenRequest) {
-    await this.ensureMmnInitialized();
     const sender_id = tokenEvent?.sender_id ?? this.clientId;
     const receiver_id = tokenEvent.receiver_id;
     const mmn_extra_info: MMNExtraInfo = {
@@ -440,6 +388,11 @@ export class MezonClientCore extends EventEmitter {
     return this.apiClient.requestFriend(session.token, username);
   }
 
+  public async listTransactionDetail(transactionId: string): Promise<any> {
+    const session = this.sessionManager.getSession()!;
+    return this.apiClient.listTransactionDetail(session.token, transactionId);
+  }
+
   protected async _fetchClanFromAPI(id: string): Promise<Clan> {
     throw Error(`Can not find clan ${id}!`);
   }
@@ -467,6 +420,31 @@ export class MezonClientCore extends EventEmitter {
     } catch (error) {
       throw Error(`Can not find channel ${id}!`);
     }
+  }
+
+  protected async _fetchUserFromAPI(id: string): Promise<User> {
+    const session = this.sessionManager.getSession();
+    if (!session) {
+      throw new Error("Session not initialized when fetching user");
+    }
+    const dmChannel = await this.channelManager.createDMchannel(id);
+    if (!dmChannel || !dmChannel.channel_id) {
+      throw Error(`User ${id} not found or can not create DM channel!`);
+    }
+
+    const userRaw: UserInitData = {
+      id,
+      dmChannelId: dmChannel.channel_id,
+    };
+
+    const user = new User(userRaw, {
+      socketManager: this.socketManager,
+      messageQueue: this.messageQueue,
+      channelManager: this.channelManager,
+    });
+
+    this.users.set(id, user);
+    return user;
   }
 
   protected async _initChannelMessageCache(e: ChannelMessage) {
@@ -534,7 +512,6 @@ export class MezonClientCore extends EventEmitter {
 
   protected async _initUserClanCache(e: ChannelMessage) {
     const {
-      clan_id,
       sender_id,
       username,
       clan_nick,
@@ -542,52 +519,56 @@ export class MezonClientCore extends EventEmitter {
       avatar,
       display_name,
     } = e;
-    const clan = this.clans.get(clan_id ?? "0");
-    if (clan) {
-      const userCache = clan.users.get(sender_id!);
-      const clanDm = this.clans.get("0");
-      const allDmChannels = this.channelManager.getAllDmChannels();
-      if (!userCache && sender_id !== this.clientId && allDmChannels) {
-        const userIds = Object.keys(allDmChannels ?? {}) || [];
-        userIds.forEach((id) => {
-          if (!id) return;
-          const user = new User(
-            { id, dmChannelId: allDmChannels?.[id] ?? "" },
-            clan,
-            this.messageQueue,
-            this.socketManager,
-            this.channelManager
-          );
-          const userDM = clanDm?.users?.get(id);
-          if (!userDM) {
-            clanDm?.users?.set(id, user);
+    const allDmChannels = this.channelManager.getAllDmChannels();
+    const userCache = this.users.get(sender_id!);
+    if (!userCache && allDmChannels) {
+      const userIds = Object.keys(allDmChannels ?? {}) || [];
+
+      userIds.forEach((id) => {
+        if (!id) return;
+        if (this.users.get(id)) return;
+
+        const user = new User(
+          { id, dmChannelId: allDmChannels?.[id] ?? "" },
+          {
+            socketManager: this.socketManager,
+            messageQueue: this.messageQueue,
+            channelManager: this.channelManager,
           }
-          const userClan = clan.users.get(id);
-          if (!userClan) {
-            clan.users.set(id, user);
-          }
-        });
+        );
+
+        this.users.set(id, user);
+      });
+    }
+
+    const userRaw: UserInitData = {
+      id: sender_id,
+      username,
+      clan_nick,
+      clan_avatar,
+      avartar: avatar,
+      display_name,
+      dmChannelId: allDmChannels?.[sender_id] ?? "",
+    };
+
+    let user = this.users.get(sender_id!);
+
+    if (!user) {
+      user = new User(userRaw, {
+        socketManager: this.socketManager,
+        messageQueue: this.messageQueue,
+        channelManager: this.channelManager,
+      });
+      this.users.set(sender_id!, user);
+    } else {
+      user.username = userRaw.username ?? user.username;
+      user.clan_nick = userRaw.clan_nick ?? user.clan_nick;
+      user.clan_avatar = userRaw.clan_avatar ?? user.clan_avatar;
+      user.display_name = userRaw.display_name ?? user.display_name;
+      user.avartar = userRaw.avartar ?? user.avartar;
+      if (userRaw.dmChannelId) {
+        user.dmChannelId = userRaw.dmChannelId;
       }
-
-      const userRaw: UserInitData = {
-        id: sender_id,
-        username: username,
-        clan_nick: clan_nick,
-        clan_avatar: clan_avatar,
-        avartar: avatar,
-        display_name: display_name,
-        dmChannelId: allDmChannels?.[sender_id] ?? "",
-      };
-
-      const user = new User(
-        userRaw,
-        clan,
-        this.messageQueue,
-        this.socketManager,
-        this.channelManager
-      );
-      clan.users.set(sender_id, user);
-      clanDm?.users.set(sender_id, user);
     }
   }
 

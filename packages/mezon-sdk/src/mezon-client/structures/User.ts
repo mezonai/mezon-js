@@ -3,7 +3,7 @@ import { ApiMessageAttachment, ChannelMessageContent } from "../../interfaces";
 import { ChannelManager } from "../manager/channel_manager";
 import { SocketManager } from "../manager/socket_manager";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
-import { Clan } from "./Clan";
+
 export interface UserInitData {
   id: string;
   username?: string;
@@ -14,6 +14,12 @@ export interface UserInitData {
   dmChannelId?: string;
 }
 
+type UserDeps = {
+  socketManager: SocketManager;
+  messageQueue: AsyncThrottleQueue;
+  channelManager: ChannelManager;
+};
+
 export class User {
   public id: string;
   public username: string;
@@ -22,18 +28,12 @@ export class User {
   public display_name: string;
   public avartar: string;
   public dmChannelId: string;
-  private clan: Clan;
-  private readonly channelManager: ChannelManager | undefined;
-  private readonly messageQueue: AsyncThrottleQueue;
-  private readonly socketManager: SocketManager;
 
-  constructor(
-    initUserData: UserInitData,
-    clan: Clan,
-    messageQueue: AsyncThrottleQueue,
-    socketManager: SocketManager,
-    channelManager?: ChannelManager
-  ) {
+  private readonly socketManager: SocketManager;
+  private readonly messageQueue: AsyncThrottleQueue;
+  private readonly channelManager: ChannelManager;
+
+  constructor(initUserData: UserInitData, deps: UserDeps) {
     this.id = initUserData.id;
     this.avartar = initUserData.avartar ?? "";
     this.dmChannelId = initUserData?.dmChannelId ?? "";
@@ -41,10 +41,20 @@ export class User {
     this.clan_nick = initUserData?.clan_nick ?? "";
     this.clan_avatar = initUserData?.clan_avatar ?? "";
     this.display_name = initUserData?.display_name ?? "";
-    this.clan = clan;
-    this.channelManager = channelManager;
-    this.messageQueue = messageQueue;
-    this.socketManager = socketManager;
+
+    this.socketManager = deps.socketManager;
+    this.messageQueue = deps.messageQueue;
+    this.channelManager = deps.channelManager;
+  }
+
+  private async createDmChannel() {
+    try {
+      const dmChannel = await this.channelManager.createDMchannel(this.id);
+      return dmChannel ?? {};
+    } catch (error) {
+      console.log("Error createDmChannel User", error);
+      return null;
+    }
   }
 
   async sendDM(
@@ -57,8 +67,11 @@ export class User {
         const dmChannel = await this.createDmChannel();
         this.dmChannelId = dmChannel?.channel_id ?? "";
       }
-      if (!this.dmChannelId)
+
+      if (!this.dmChannelId) {
         throw Error(`Can not get dmChannelId for this user ${this.id}!`);
+      }
+
       const dataSendDm = {
         clan_id: "0",
         channel_id: this.dmChannelId,
@@ -68,22 +81,8 @@ export class User {
         attachments,
         code,
       };
-      return await this.socketManager.writeChatMessage(dataSendDm);
+
+      return this.socketManager.writeChatMessage(dataSendDm);
     });
-  }
-
-  async createDmChannel() {
-    try {
-      const dmChannel = await this.channelManager?.createDMchannel(this.id);
-      return dmChannel ?? {};
-    } catch (error) {
-      console.log("Error createDmChannel User");
-      return null;
-    }
-  }
-
-  async listTransactionDetail(transactionId: string): Promise<any> {
-    const session = this.clan.sessionToken;
-    return this.clan.apiClient.listTransactionDetail(session, transactionId);
   }
 }
