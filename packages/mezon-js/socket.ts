@@ -790,6 +790,11 @@ export interface MeetParticipantEvent {
   action: number;
 }
 
+export interface AllowAnonymousEvent {
+  clan_id: string;
+  allow: boolean;
+}
+
 /** Stream identifier */
 export interface StreamId {
   /** The type of stream (e.g. chat). */
@@ -1797,6 +1802,8 @@ export interface Socket {
 
   onmeetparticipantevent: (event: MeetParticipantEvent) => void;
 
+  onallowanonymousevent: (event: AllowAnonymousEvent) => void;
+
   onstreamingchannelstarted: (
     streaming_started_event: StreamingStartedEvent
   ) => void;
@@ -2093,6 +2100,8 @@ export class DefaultSocket implements Socket {
           this.ontransferownership(<TransferOwnershipEvent>message.transfer_ownership_event);
         } else if (message.ban_user_event) {
           this.onbanneduser(<BannedUserEvent>message.ban_user_event);
+        } else if (message.allow_anonymous_event) {
+          this.onallowanonymousevent(<AllowAnonymousEvent>message.allow_anonymous_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -2563,6 +2572,12 @@ export class DefaultSocket implements Socket {
   }
 
   onmeetparticipantevent(event: MeetParticipantEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onallowanonymousevent(event: AllowAnonymousEvent) {
     if (this.verbose && window && window.console) {
       console.log(event);
     }

@@ -180,6 +180,7 @@ import {
   ApiUpdateUsernameRequest,
   ApiBannedUserList,
   ApiIsBannedResponse,
+  ApiConfigAllowAnonymousRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4986,4 +4987,22 @@ export class Client {
       });
   }
 
+  async configAllowAnonymous(
+    session: Session,
+    req: ApiConfigAllowAnonymousRequest,
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .configAllowAnonymous(session.token, req)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
 }

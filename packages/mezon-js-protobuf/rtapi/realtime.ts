@@ -448,7 +448,11 @@ export interface Envelope {
     | BannedUserEvent
     | undefined;
   /** Active archive thread */
-  active_archived_thread?: ActiveArchivedThread | undefined;
+  active_archived_thread?:
+    | ActiveArchivedThread
+    | undefined;
+  /** Config Allow Anonymous */
+  allow_anonymous_event?: AllowAnonymousEvent | undefined;
 }
 
 export interface FollowEvent {
@@ -1745,6 +1749,11 @@ export interface ActiveArchivedThread {
   channel_id: string;
 }
 
+export interface AllowAnonymousEvent {
+  clan_id: string;
+  allow: boolean;
+}
+
 function createBaseEnvelope(): Envelope {
   return {
     cid: "",
@@ -1837,6 +1846,7 @@ function createBaseEnvelope(): Envelope {
     add_friend: undefined,
     ban_user_event: undefined,
     active_archived_thread: undefined,
+    allow_anonymous_event: undefined,
   };
 }
 
@@ -2112,6 +2122,9 @@ export const Envelope = {
     }
     if (message.active_archived_thread !== undefined) {
       ActiveArchivedThread.encode(message.active_archived_thread, writer.uint32(722).fork()).ldelim();
+    }
+    if (message.allow_anonymous_event !== undefined) {
+      AllowAnonymousEvent.encode(message.allow_anonymous_event, writer.uint32(730).fork()).ldelim();
     }
     return writer;
   },
@@ -2753,6 +2766,13 @@ export const Envelope = {
 
           message.active_archived_thread = ActiveArchivedThread.decode(reader, reader.uint32());
           continue;
+        case 91:
+          if (tag !== 730) {
+            break;
+          }
+
+          message.allow_anonymous_event = AllowAnonymousEvent.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2967,6 +2987,9 @@ export const Envelope = {
       ban_user_event: isSet(object.ban_user_event) ? BannedUserEvent.fromJSON(object.ban_user_event) : undefined,
       active_archived_thread: isSet(object.active_archived_thread)
         ? ActiveArchivedThread.fromJSON(object.active_archived_thread)
+        : undefined,
+      allow_anonymous_event: isSet(object.allow_anonymous_event)
+        ? AllowAnonymousEvent.fromJSON(object.allow_anonymous_event)
         : undefined,
     };
   },
@@ -3244,6 +3267,9 @@ export const Envelope = {
     }
     if (message.active_archived_thread !== undefined) {
       obj.active_archived_thread = ActiveArchivedThread.toJSON(message.active_archived_thread);
+    }
+    if (message.allow_anonymous_event !== undefined) {
+      obj.allow_anonymous_event = AllowAnonymousEvent.toJSON(message.allow_anonymous_event);
     }
     return obj;
   },
@@ -3542,6 +3568,10 @@ export const Envelope = {
     message.active_archived_thread =
       (object.active_archived_thread !== undefined && object.active_archived_thread !== null)
         ? ActiveArchivedThread.fromPartial(object.active_archived_thread)
+        : undefined;
+    message.allow_anonymous_event =
+      (object.allow_anonymous_event !== undefined && object.allow_anonymous_event !== null)
+        ? AllowAnonymousEvent.fromPartial(object.allow_anonymous_event)
         : undefined;
     return message;
   },
@@ -15945,6 +15975,80 @@ export const ActiveArchivedThread = {
     const message = createBaseActiveArchivedThread();
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
+    return message;
+  },
+};
+
+function createBaseAllowAnonymousEvent(): AllowAnonymousEvent {
+  return { clan_id: "", allow: false };
+}
+
+export const AllowAnonymousEvent = {
+  encode(message: AllowAnonymousEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.allow !== false) {
+      writer.uint32(16).bool(message.allow);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AllowAnonymousEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAllowAnonymousEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.allow = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AllowAnonymousEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      allow: isSet(object.allow) ? globalThis.Boolean(object.allow) : false,
+    };
+  },
+
+  toJSON(message: AllowAnonymousEvent): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.allow !== false) {
+      obj.allow = message.allow;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AllowAnonymousEvent>, I>>(base?: I): AllowAnonymousEvent {
+    return AllowAnonymousEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AllowAnonymousEvent>, I>>(object: I): AllowAnonymousEvent {
+    const message = createBaseAllowAnonymousEvent();
+    message.clan_id = object.clan_id ?? "";
+    message.allow = object.allow ?? false;
     return message;
   },
 };

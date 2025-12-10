@@ -2441,6 +2441,14 @@ export interface ApiSearchMessageResponse {
   total?: number;
 }
 
+/**  */
+export interface ApiConfigAllowAnonymousRequest {
+  //
+  allow?: boolean;
+  //
+  clan_id?: string;
+}
+
 /** A user's session used to authenticate messages. */
 export interface ApiSession {
   //True if the corresponding account was just created, false otherwise.
@@ -11754,5 +11762,42 @@ export class MezonApi {
       ),
     ]);
   }
+
+  /**  */
+  configAllowAnonymous(bearerToken: string,
+      body:ApiConfigAllowAnonymousRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/anonymous/config";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
 }
 
