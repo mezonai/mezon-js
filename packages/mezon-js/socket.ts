@@ -184,6 +184,7 @@ export interface BannedUserEvent {
   banner_id: string;
   channel_id: string;
   clan_id: string;
+  ban_time: number
 }
 
 export interface UserProfileRedis {

@@ -464,6 +464,7 @@ export interface BannedUserEvent {
   banner_id: string;
   channel_id: string;
   clan_id: string;
+  ban_time: number;
 }
 
 export interface ChannelCanvas {
@@ -3621,7 +3622,7 @@ export const FollowEvent = {
 };
 
 function createBaseBannedUserEvent(): BannedUserEvent {
-  return { user_ids: [], action: 0, banner_id: "", channel_id: "", clan_id: "" };
+  return { user_ids: [], action: 0, banner_id: "", channel_id: "", clan_id: "", ban_time: 0 };
 }
 
 export const BannedUserEvent = {
@@ -3640,6 +3641,9 @@ export const BannedUserEvent = {
     }
     if (message.clan_id !== "") {
       writer.uint32(42).string(message.clan_id);
+    }
+    if (message.ban_time !== 0) {
+      writer.uint32(48).int32(message.ban_time);
     }
     return writer;
   },
@@ -3686,6 +3690,13 @@ export const BannedUserEvent = {
 
           message.clan_id = reader.string();
           continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.ban_time = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3702,6 +3713,7 @@ export const BannedUserEvent = {
       banner_id: isSet(object.banner_id) ? globalThis.String(object.banner_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      ban_time: isSet(object.ban_time) ? globalThis.Number(object.ban_time) : 0,
     };
   },
 
@@ -3722,6 +3734,9 @@ export const BannedUserEvent = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
+    if (message.ban_time !== 0) {
+      obj.ban_time = Math.round(message.ban_time);
+    }
     return obj;
   },
 
@@ -3735,6 +3750,7 @@ export const BannedUserEvent = {
     message.banner_id = object.banner_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.clan_id = object.clan_id ?? "";
+    message.ban_time = object.ban_time ?? 0;
     return message;
   },
 };
