@@ -2864,6 +2864,10 @@ export interface ChannelAppResponse {
   app_id: string;
   /** app url */
   app_url: string;
+  /** app name */
+  app_name: string;
+  /** app logo */
+  app_logo: string;
 }
 
 export interface AllUserClans {
@@ -3765,6 +3769,11 @@ export interface IsFollowerResponse {
 export interface TransferOwnershipRequest {
   clan_id: string;
   new_owner_id: string;
+}
+
+export interface ConfigAllowAnonymousRequest {
+  clan_id: string;
+  allow: boolean;
 }
 
 function createBaseAccount(): Account {
@@ -28249,7 +28258,7 @@ export const ListChannelAppsResponse = {
 };
 
 function createBaseChannelAppResponse(): ChannelAppResponse {
-  return { id: "", clan_id: "", channel_id: "", app_id: "", app_url: "" };
+  return { id: "", clan_id: "", channel_id: "", app_id: "", app_url: "", app_name: "", app_logo: "" };
 }
 
 export const ChannelAppResponse = {
@@ -28268,6 +28277,12 @@ export const ChannelAppResponse = {
     }
     if (message.app_url !== "") {
       writer.uint32(42).string(message.app_url);
+    }
+    if (message.app_name !== "") {
+      writer.uint32(50).string(message.app_name);
+    }
+    if (message.app_logo !== "") {
+      writer.uint32(58).string(message.app_logo);
     }
     return writer;
   },
@@ -28314,6 +28329,20 @@ export const ChannelAppResponse = {
 
           message.app_url = reader.string();
           continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.app_name = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.app_logo = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -28330,6 +28359,8 @@ export const ChannelAppResponse = {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
       app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
+      app_name: isSet(object.app_name) ? globalThis.String(object.app_name) : "",
+      app_logo: isSet(object.app_logo) ? globalThis.String(object.app_logo) : "",
     };
   },
 
@@ -28350,6 +28381,12 @@ export const ChannelAppResponse = {
     if (message.app_url !== "") {
       obj.app_url = message.app_url;
     }
+    if (message.app_name !== "") {
+      obj.app_name = message.app_name;
+    }
+    if (message.app_logo !== "") {
+      obj.app_logo = message.app_logo;
+    }
     return obj;
   },
 
@@ -28363,6 +28400,8 @@ export const ChannelAppResponse = {
     message.channel_id = object.channel_id ?? "";
     message.app_id = object.app_id ?? "";
     message.app_url = object.app_url ?? "";
+    message.app_name = object.app_name ?? "";
+    message.app_logo = object.app_logo ?? "";
     return message;
   },
 };
@@ -38679,6 +38718,80 @@ export const TransferOwnershipRequest = {
     const message = createBaseTransferOwnershipRequest();
     message.clan_id = object.clan_id ?? "";
     message.new_owner_id = object.new_owner_id ?? "";
+    return message;
+  },
+};
+
+function createBaseConfigAllowAnonymousRequest(): ConfigAllowAnonymousRequest {
+  return { clan_id: "", allow: false };
+}
+
+export const ConfigAllowAnonymousRequest = {
+  encode(message: ConfigAllowAnonymousRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.allow !== false) {
+      writer.uint32(16).bool(message.allow);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ConfigAllowAnonymousRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseConfigAllowAnonymousRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.allow = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ConfigAllowAnonymousRequest {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      allow: isSet(object.allow) ? globalThis.Boolean(object.allow) : false,
+    };
+  },
+
+  toJSON(message: ConfigAllowAnonymousRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.allow !== false) {
+      obj.allow = message.allow;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ConfigAllowAnonymousRequest>, I>>(base?: I): ConfigAllowAnonymousRequest {
+    return ConfigAllowAnonymousRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ConfigAllowAnonymousRequest>, I>>(object: I): ConfigAllowAnonymousRequest {
+    const message = createBaseConfigAllowAnonymousRequest();
+    message.clan_id = object.clan_id ?? "";
+    message.allow = object.allow ?? false;
     return message;
   },
 };

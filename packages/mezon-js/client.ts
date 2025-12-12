@@ -180,6 +180,7 @@ import {
   ApiUpdateUsernameRequest,
   ApiBannedUserList,
   ApiIsBannedResponse,
+  ApiConfigAllowAnonymousRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -3337,6 +3338,8 @@ export class Client {
             app_id: gu.app_id,
             clan_id: gu.clan_id,
             app_url: gu.app_url,
+            app_name: gu.app_name,
+            app_logo: gu.app_logo,
           });
         });
         return Promise.resolve(result);
@@ -4986,4 +4989,22 @@ export class Client {
       });
   }
 
+  async configAllowAnonymous(
+    session: Session,
+    req: ApiConfigAllowAnonymousRequest,
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .configAllowAnonymous(session.token, req)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
 }
