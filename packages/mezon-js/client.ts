@@ -3338,6 +3338,8 @@ export class Client {
             app_id: gu.app_id,
             clan_id: gu.clan_id,
             app_url: gu.app_url,
+            app_name: gu.app_name,
+            app_logo: gu.app_logo,
           });
         });
         return Promise.resolve(result);
