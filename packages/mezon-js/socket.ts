@@ -1609,6 +1609,8 @@ export interface Socket {
   /* Get the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   getHeartbeatTimeoutMs(): number;
 
+  onreconnect: (evt: Event) => void;
+
   checkDuplicateName(
     name: string,
     condition_id: string,
@@ -1865,6 +1867,7 @@ export class DefaultSocket implements Socket {
   private readonly cIds: { [key: string]: PromiseExecutor };
   private nextCid: number;
   private _heartbeatTimeoutMs: number;
+  private hasConnectedBefore: boolean;
 
   constructor(
     readonly host: string,
@@ -1877,6 +1880,7 @@ export class DefaultSocket implements Socket {
     this.cIds = {};
     this.nextCid = 1;
     this._heartbeatTimeoutMs = DefaultSocket.DefaultHeartbeatTimeoutMs;
+    this.hasConnectedBefore = false;
   }
 
   generatecid(): string {
@@ -2132,8 +2136,15 @@ export class DefaultSocket implements Socket {
           console.log(evt);
         }
 
+        const isReconnect = this.hasConnectedBefore;
+        this.hasConnectedBefore = true;
+
         this.pingPong();
         resolve(session);
+
+        if (isReconnect) {
+          this.onreconnect(evt);
+        }
       };
       this.adapter.onError = (evt: Event) => {
         reject(evt);
@@ -2162,6 +2173,12 @@ export class DefaultSocket implements Socket {
 
   getHeartbeatTimeoutMs(): number {
     return this._heartbeatTimeoutMs;
+  }
+
+  onreconnect(evt: Event) {
+    if (this.verbose && window && window.console) {
+      console.log(evt);
+    }
   }
 
   ondisconnect(evt: Event) {
