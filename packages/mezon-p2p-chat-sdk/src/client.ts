@@ -31,7 +31,7 @@ export class P2PClient {
         data.token,
         data.refresh_token,
         data.api_url,
-        data.api_url.startsWith('https://')
+        true
       );
       const url = new URL(data.api_url);
       const client = new Client(
@@ -52,35 +52,16 @@ export class P2PClient {
     return channel;
   }
 
-  async refreshSession(refresh_token: string, serverkey?: string): Promise<void> {
-    const res = await fetch(MEZON_API_URL + '/v2/account/session/refresh?', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + base64.encode(serverkey || 'DefaultServerKey'),
-        'accept': 'application/json',
-      },
-      body: JSON.stringify({
-        token: refresh_token,
-        is_remember: false,
-        vars: {}
-      })
-    });
-    if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      throw new Error(errData.message || 'Error during session refresh');
-    }
-    const data = await res.json();
-    if (data && data.token && data.refresh_token) {
-      this.session = Session.restore(
-        data.token,
-        data.refresh_token,
-        MEZON_API_URL,
-        MEZON_API_URL.startsWith('https://')
-      );
-    } else {
-      throw new Error('Error during session refresh or missing data fields!');
-    }
+  async refreshSession(): Promise<void> {
+     await this.client.sessionRefresh(this.session);
+  }
+
+  async isSessionExpired(): Promise<boolean> {
+    return this.session.isexpired(Date.now() / 1000);
+  }
+
+  async isRefreshSessionExpired(): Promise<boolean> {
+    return this.session.isrefreshexpired(Date.now() / 1000);
   }
 
   getSession(): Session {
