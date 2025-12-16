@@ -50,12 +50,16 @@ export function b64DecodeUnicode(str: string) {
 
 export function safeJSONParse(jsonStr: string) {
     try {        
-      const parsedData = JSON.parse(jsonStr);
-      return parsedData;
+      return JSON.parse(jsonStr);
     } catch (error) {
         if (jsonStr !== "") {
-            console.error('Error parsing JSON:', jsonStr, error);
+            const fixedJsonStr = jsonStr.replace(/\n/g, "\\n");
+            try {
+                return JSON.parse(fixedJsonStr);
+            } catch (e) {
+                console.error('Error parsing JSON:', jsonStr, error);
+            }
         }
-        return null; // Handle the error gracefully or throw an exception if necessary
+        return {t: jsonStr}; // Handle the error gracefully or throw an exception if necessary
     }
 }
