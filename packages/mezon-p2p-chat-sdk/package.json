@@ -11,14 +11,13 @@
     "build": "tsc"
   },
   "dependencies": {
+    "js-base64": "^3.7.8",
     "mezon-js": "^2.13.58",
-    "mezon-js-protobuf": "^1.8.66",
-    "mezon-p2p-chat-sdk": "file:"
+    "mezon-js-protobuf": "^1.8.66"
   },
   "author": "mezonai",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^25.0.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.4.3"
   }
 }

@@ -1,6 +1,6 @@
 import { Session, Client, ChannelType } from 'mezon-js';
-import { MEZON_SERVER_KEY, MEZON_SERVER_KEY_BASE64, MEZON_AUTH_ENDPOINT } from './constants';
-
+import {MEZON_AUTH_ENDPOINT } from './constants';
+import * as base64 from "js-base64"
 export class P2PClient {
   private session: any;
   private client: any;
@@ -12,12 +12,12 @@ export class P2PClient {
     this.user_id = user_id;
   }
 
-  static async authenticate({ id_token, user_id, username }: { id_token: string, user_id: string, username: string }): Promise<P2PClient> {
+  static async authenticate({ id_token, user_id, username, serverkey }: { id_token: string, user_id: string, username: string, serverkey: string }): Promise<P2PClient> {
     const res = await fetch(MEZON_AUTH_ENDPOINT, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + MEZON_SERVER_KEY_BASE64
+        'Authorization': 'Basic ' + base64.encode(serverkey ||'DefaultServerKey')
       },
       body: JSON.stringify({ id_token, user_id, username })
     });
@@ -35,7 +35,7 @@ export class P2PClient {
       );
       const url = new URL(data.api_url);
       const client = new Client(
-        MEZON_SERVER_KEY,
+        serverkey || 'DefaultServerKey',
         url.hostname,
         url.port || '',
         url.protocol === 'https:'
