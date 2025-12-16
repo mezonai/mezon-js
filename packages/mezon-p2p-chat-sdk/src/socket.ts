@@ -1,5 +1,5 @@
 import { WebSocketAdapterPb } from 'mezon-js-protobuf';
-import { ChannelStreamMode, ChannelType } from 'mezon-js';
+import { Client, Session, ChannelStreamMode, ChannelType } from 'mezon-js';
 import { P2PMessage } from './message';
 import { SOCKET_READY_MAX_RETRY, SOCKET_READY_RETRY_DELAY, CLAN_DM } from './constants';
 
@@ -8,7 +8,7 @@ export class P2PSocket {
   public onChannelMessage?: (msg: P2PMessage) => void;
   public onError?: (err: any) => void;
 
-  constructor(private client: any, private session: any) {}
+  constructor(private client: Client, private session: Session) {}
 
   async connect(onError?: (err: any) => void) {
     this.socket = this.client.createSocket(this.client.useSSL, false, new WebSocketAdapterPb());

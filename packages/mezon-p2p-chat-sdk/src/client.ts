@@ -1,19 +1,19 @@
 import { Session, Client, ChannelType } from 'mezon-js';
-import {MEZON_AUTH_ENDPOINT } from './constants';
+import {MEZON_API_URL, MEZON_GW_URL } from './constants';
 import * as base64 from "js-base64"
 export class P2PClient {
-  private session: any;
-  private client: any;
+  private session: Session;
+  private client: Client;
   public user_id: string;
 
-  private constructor(session: any, client: any, user_id: string) {
+  private constructor(session: Session, client: Client, user_id: string) {
     this.session = session;
     this.client = client;
     this.user_id = user_id;
   }
 
   static async authenticate({ id_token, user_id, username, serverkey }: { id_token: string, user_id: string, username: string, serverkey: string }): Promise<P2PClient> {
-    const res = await fetch(MEZON_AUTH_ENDPOINT, {
+    const res = await fetch(MEZON_GW_URL + '/v2/account/authenticate/idtoken', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -52,11 +52,42 @@ export class P2PClient {
     return channel;
   }
 
-  getSession() {
+  async refreshSession(refresh_token: string, serverkey?: string): Promise<void> {
+    const res = await fetch(MEZON_API_URL + '/v2/account/session/refresh?', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic ' + base64.encode(serverkey || 'DefaultServerKey'),
+        'accept': 'application/json',
+      },
+      body: JSON.stringify({
+        token: refresh_token,
+        is_remember: false,
+        vars: {}
+      })
+    });
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.message || 'Error during session refresh');
+    }
+    const data = await res.json();
+    if (data && data.token && data.refresh_token) {
+      this.session = Session.restore(
+        data.token,
+        data.refresh_token,
+        MEZON_API_URL,
+        MEZON_API_URL.startsWith('https://')
+      );
+    } else {
+      throw new Error('Error during session refresh or missing data fields!');
+    }
+  }
+
+  getSession(): Session {
     return this.session;
   }
 
-  getClient() {
+  getClient(): Client {
     return this.client;
   }
 }
