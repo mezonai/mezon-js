@@ -206,6 +206,8 @@ export interface MezonUpdateClanDescBody {
   about?: string;
   // short url for community
   short_url?: string;
+  // prevent anonymous
+  prevent_anonymous?: boolean;
 }
 
 /**  */
