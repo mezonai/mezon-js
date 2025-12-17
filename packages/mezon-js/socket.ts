@@ -770,6 +770,8 @@ export interface ClanUpdatedEvent {
   onboarding_banner: string;
   // about
   about: string;
+  // prevent anonymous
+  prevent_anonymous: boolean;
 }
 
 export interface ClanProfileUpdatedEvent {
