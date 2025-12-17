@@ -206,6 +206,8 @@ export interface MezonUpdateClanDescBody {
   about?: string;
   // short url for community
   short_url?: string;
+  // prevent anonymous
+  prevent_anonymous?: boolean;
 }
 
 /**  */
@@ -2439,14 +2441,6 @@ export interface ApiSearchMessageResponse {
   messages?: Array<ApiSearchMessageDocument>;
   //The total number of messages.
   total?: number;
-}
-
-/**  */
-export interface ApiConfigAllowAnonymousRequest {
-  //
-  allow?: boolean;
-  //
-  clan_id?: string;
 }
 
 /** A user's session used to authenticate messages. */
@@ -11740,42 +11734,6 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
-
-  /**  */
-  configAllowAnonymous(bearerToken: string,
-      body:ApiConfigAllowAnonymousRequest,
-      options: any = {}): Promise<any> {
-    
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/anonymous/config";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
