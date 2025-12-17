@@ -876,6 +876,7 @@ export interface CheckNameExistedEvent {
   exist: boolean;
   condition_id: string;
   type: number;
+  clan_id: string;
 }
 
 /**  */
@@ -1616,7 +1617,8 @@ export interface Socket {
   checkDuplicateName(
     name: string,
     condition_id: string,
-    type: number
+    type: number,
+    clan_id: string,
   ): Promise<CheckNameExistedEvent>;
 
   handleMessageButtonClick: (
@@ -3127,13 +3129,15 @@ export class DefaultSocket implements Socket {
   async checkDuplicateName(
     name: string,
     condition_id: string,
-    type: number
+    type: number,
+    clan_id: string,
   ): Promise<CheckNameExistedEvent> {
     const response = await this.send({
       check_name_existed_event: {
         name: name,
         condition_id: condition_id,
         type: type,
+        clan_id: clan_id
       },
     });
     return response.check_name_existed_event;

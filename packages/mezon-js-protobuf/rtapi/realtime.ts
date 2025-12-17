@@ -1539,6 +1539,8 @@ export interface CheckNameExistedEvent {
   exist: boolean;
   /** type check */
   type: number;
+  /** clan id */
+  clan_id: string;
 }
 
 /** Notification setting record */
@@ -12643,7 +12645,7 @@ export const FCMTokens = {
 };
 
 function createBaseCheckNameExistedEvent(): CheckNameExistedEvent {
-  return { name: "", condition_id: "", exist: false, type: 0 };
+  return { name: "", condition_id: "", exist: false, type: 0, clan_id: "" };
 }
 
 export const CheckNameExistedEvent = {
@@ -12659,6 +12661,9 @@ export const CheckNameExistedEvent = {
     }
     if (message.type !== 0) {
       writer.uint32(32).int32(message.type);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(42).string(message.clan_id);
     }
     return writer;
   },
@@ -12698,6 +12703,13 @@ export const CheckNameExistedEvent = {
 
           message.type = reader.int32();
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -12713,6 +12725,7 @@ export const CheckNameExistedEvent = {
       condition_id: isSet(object.condition_id) ? globalThis.String(object.condition_id) : "",
       exist: isSet(object.exist) ? globalThis.Boolean(object.exist) : false,
       type: isSet(object.type) ? globalThis.Number(object.type) : 0,
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
 
@@ -12730,6 +12743,9 @@ export const CheckNameExistedEvent = {
     if (message.type !== 0) {
       obj.type = Math.round(message.type);
     }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     return obj;
   },
 
@@ -12742,6 +12758,7 @@ export const CheckNameExistedEvent = {
     message.condition_id = object.condition_id ?? "";
     message.exist = object.exist ?? false;
     message.type = object.type ?? 0;
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
