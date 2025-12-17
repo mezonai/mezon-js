@@ -1593,12 +1593,6 @@ export interface ChannelDescription {
 export interface ChannelDescList {
   /** A list of channel. */
   channeldesc: ChannelDescription[];
-  /** The cursor to send when retrieving the next page, if any. */
-  next_cursor: string;
-  /** The cursor to send when retrieving the previous page, if any. */
-  prev_cursor: string;
-  /** Cacheable cursor to list newer channel description. Durable and designed to be stored, unlike next/prev cursors. */
-  cacheable_cursor: string;
   /** Page thread */
   page: number;
 }
@@ -3771,9 +3765,8 @@ export interface TransferOwnershipRequest {
   new_owner_id: string;
 }
 
-export interface ConfigAllowAnonymousRequest {
-  clan_id: string;
-  allow: boolean;
+export interface UserIds {
+  user_ids: string[];
 }
 
 function createBaseAccount(): Account {
@@ -15198,7 +15191,7 @@ export const ChannelDescription = {
 };
 
 function createBaseChannelDescList(): ChannelDescList {
-  return { channeldesc: [], next_cursor: "", prev_cursor: "", cacheable_cursor: "", page: 0 };
+  return { channeldesc: [], page: 0 };
 }
 
 export const ChannelDescList = {
@@ -15206,17 +15199,8 @@ export const ChannelDescList = {
     for (const v of message.channeldesc) {
       ChannelDescription.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if (message.next_cursor !== "") {
-      writer.uint32(18).string(message.next_cursor);
-    }
-    if (message.prev_cursor !== "") {
-      writer.uint32(26).string(message.prev_cursor);
-    }
-    if (message.cacheable_cursor !== "") {
-      writer.uint32(34).string(message.cacheable_cursor);
-    }
     if (message.page !== 0) {
-      writer.uint32(40).int32(message.page);
+      writer.uint32(16).int32(message.page);
     }
     return writer;
   },
@@ -15236,28 +15220,7 @@ export const ChannelDescList = {
           message.channeldesc.push(ChannelDescription.decode(reader, reader.uint32()));
           continue;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.next_cursor = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.prev_cursor = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.cacheable_cursor = reader.string();
-          continue;
-        case 5:
-          if (tag !== 40) {
+          if (tag !== 16) {
             break;
           }
 
@@ -15277,9 +15240,6 @@ export const ChannelDescList = {
       channeldesc: globalThis.Array.isArray(object?.channeldesc)
         ? object.channeldesc.map((e: any) => ChannelDescription.fromJSON(e))
         : [],
-      next_cursor: isSet(object.next_cursor) ? globalThis.String(object.next_cursor) : "",
-      prev_cursor: isSet(object.prev_cursor) ? globalThis.String(object.prev_cursor) : "",
-      cacheable_cursor: isSet(object.cacheable_cursor) ? globalThis.String(object.cacheable_cursor) : "",
       page: isSet(object.page) ? globalThis.Number(object.page) : 0,
     };
   },
@@ -15288,15 +15248,6 @@ export const ChannelDescList = {
     const obj: any = {};
     if (message.channeldesc?.length) {
       obj.channeldesc = message.channeldesc.map((e) => ChannelDescription.toJSON(e));
-    }
-    if (message.next_cursor !== "") {
-      obj.next_cursor = message.next_cursor;
-    }
-    if (message.prev_cursor !== "") {
-      obj.prev_cursor = message.prev_cursor;
-    }
-    if (message.cacheable_cursor !== "") {
-      obj.cacheable_cursor = message.cacheable_cursor;
     }
     if (message.page !== 0) {
       obj.page = Math.round(message.page);
@@ -15310,9 +15261,6 @@ export const ChannelDescList = {
   fromPartial<I extends Exact<DeepPartial<ChannelDescList>, I>>(object: I): ChannelDescList {
     const message = createBaseChannelDescList();
     message.channeldesc = object.channeldesc?.map((e) => ChannelDescription.fromPartial(e)) || [];
-    message.next_cursor = object.next_cursor ?? "";
-    message.prev_cursor = object.prev_cursor ?? "";
-    message.cacheable_cursor = object.cacheable_cursor ?? "";
     message.page = object.page ?? 0;
     return message;
   },
@@ -38722,25 +38670,22 @@ export const TransferOwnershipRequest = {
   },
 };
 
-function createBaseConfigAllowAnonymousRequest(): ConfigAllowAnonymousRequest {
-  return { clan_id: "", allow: false };
+function createBaseUserIds(): UserIds {
+  return { user_ids: [] };
 }
 
-export const ConfigAllowAnonymousRequest = {
-  encode(message: ConfigAllowAnonymousRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
-    }
-    if (message.allow !== false) {
-      writer.uint32(16).bool(message.allow);
+export const UserIds = {
+  encode(message: UserIds, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.user_ids) {
+      writer.uint32(10).string(v!);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ConfigAllowAnonymousRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserIds {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseConfigAllowAnonymousRequest();
+    const message = createBaseUserIds();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -38749,14 +38694,7 @@ export const ConfigAllowAnonymousRequest = {
             break;
           }
 
-          message.clan_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.allow = reader.bool();
+          message.user_ids.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -38767,31 +38705,26 @@ export const ConfigAllowAnonymousRequest = {
     return message;
   },
 
-  fromJSON(object: any): ConfigAllowAnonymousRequest {
+  fromJSON(object: any): UserIds {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      allow: isSet(object.allow) ? globalThis.Boolean(object.allow) : false,
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
     };
   },
 
-  toJSON(message: ConfigAllowAnonymousRequest): unknown {
+  toJSON(message: UserIds): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
-    if (message.allow !== false) {
-      obj.allow = message.allow;
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ConfigAllowAnonymousRequest>, I>>(base?: I): ConfigAllowAnonymousRequest {
-    return ConfigAllowAnonymousRequest.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<UserIds>, I>>(base?: I): UserIds {
+    return UserIds.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ConfigAllowAnonymousRequest>, I>>(object: I): ConfigAllowAnonymousRequest {
-    const message = createBaseConfigAllowAnonymousRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.allow = object.allow ?? false;
+  fromPartial<I extends Exact<DeepPartial<UserIds>, I>>(object: I): UserIds {
+    const message = createBaseUserIds();
+    message.user_ids = object.user_ids?.map((e) => e) || [];
     return message;
   },
 };

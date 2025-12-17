@@ -1450,6 +1450,8 @@ export interface ClanUpdatedEvent {
   about: string;
   /** description */
   description: string;
+  /** prevent anonymous */
+  prevent_anonymous: boolean;
 }
 
 /** clan profile updated event */
@@ -1480,6 +1482,11 @@ export interface UserProfileUpdatedEvent {
   clan_id: string;
   /** the encrypt_private_key */
   encrypt_private_key: string;
+}
+
+export interface ConfirmLinkMezonOTPData {
+  type: number;
+  value: string;
 }
 
 /** A event when user is added to channel */
@@ -1532,6 +1539,8 @@ export interface CheckNameExistedEvent {
   exist: boolean;
   /** type check */
   type: number;
+  /** clan id */
+  clan_id: string;
 }
 
 /** Notification setting record */
@@ -11699,6 +11708,7 @@ function createBaseClanUpdatedEvent(): ClanUpdatedEvent {
     is_community: false,
     about: "",
     description: "",
+    prevent_anonymous: false,
   };
 }
 
@@ -11739,6 +11749,9 @@ export const ClanUpdatedEvent = {
     }
     if (message.description !== "") {
       writer.uint32(98).string(message.description);
+    }
+    if (message.prevent_anonymous !== false) {
+      writer.uint32(104).bool(message.prevent_anonymous);
     }
     return writer;
   },
@@ -11834,6 +11847,13 @@ export const ClanUpdatedEvent = {
 
           message.description = reader.string();
           continue;
+        case 13:
+          if (tag !== 104) {
+            break;
+          }
+
+          message.prevent_anonymous = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -11857,6 +11877,7 @@ export const ClanUpdatedEvent = {
       is_community: isSet(object.is_community) ? globalThis.Boolean(object.is_community) : false,
       about: isSet(object.about) ? globalThis.String(object.about) : "",
       description: isSet(object.description) ? globalThis.String(object.description) : "",
+      prevent_anonymous: isSet(object.prevent_anonymous) ? globalThis.Boolean(object.prevent_anonymous) : false,
     };
   },
 
@@ -11898,6 +11919,9 @@ export const ClanUpdatedEvent = {
     if (message.description !== "") {
       obj.description = message.description;
     }
+    if (message.prevent_anonymous !== false) {
+      obj.prevent_anonymous = message.prevent_anonymous;
+    }
     return obj;
   },
 
@@ -11918,6 +11942,7 @@ export const ClanUpdatedEvent = {
     message.is_community = object.is_community ?? false;
     message.about = object.about ?? "";
     message.description = object.description ?? "";
+    message.prevent_anonymous = object.prevent_anonymous ?? false;
     return message;
   },
 };
@@ -12179,6 +12204,80 @@ export const UserProfileUpdatedEvent = {
     message.channel_id = object.channel_id ?? "";
     message.clan_id = object.clan_id ?? "";
     message.encrypt_private_key = object.encrypt_private_key ?? "";
+    return message;
+  },
+};
+
+function createBaseConfirmLinkMezonOTPData(): ConfirmLinkMezonOTPData {
+  return { type: 0, value: "" };
+}
+
+export const ConfirmLinkMezonOTPData = {
+  encode(message: ConfirmLinkMezonOTPData, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.type !== 0) {
+      writer.uint32(8).int32(message.type);
+    }
+    if (message.value !== "") {
+      writer.uint32(18).string(message.value);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ConfirmLinkMezonOTPData {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseConfirmLinkMezonOTPData();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.type = reader.int32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.value = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ConfirmLinkMezonOTPData {
+    return {
+      type: isSet(object.type) ? globalThis.Number(object.type) : 0,
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+    };
+  },
+
+  toJSON(message: ConfirmLinkMezonOTPData): unknown {
+    const obj: any = {};
+    if (message.type !== 0) {
+      obj.type = Math.round(message.type);
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ConfirmLinkMezonOTPData>, I>>(base?: I): ConfirmLinkMezonOTPData {
+    return ConfirmLinkMezonOTPData.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ConfirmLinkMezonOTPData>, I>>(object: I): ConfirmLinkMezonOTPData {
+    const message = createBaseConfirmLinkMezonOTPData();
+    message.type = object.type ?? 0;
+    message.value = object.value ?? "";
     return message;
   },
 };
@@ -12546,7 +12645,7 @@ export const FCMTokens = {
 };
 
 function createBaseCheckNameExistedEvent(): CheckNameExistedEvent {
-  return { name: "", condition_id: "", exist: false, type: 0 };
+  return { name: "", condition_id: "", exist: false, type: 0, clan_id: "" };
 }
 
 export const CheckNameExistedEvent = {
@@ -12562,6 +12661,9 @@ export const CheckNameExistedEvent = {
     }
     if (message.type !== 0) {
       writer.uint32(32).int32(message.type);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(42).string(message.clan_id);
     }
     return writer;
   },
@@ -12601,6 +12703,13 @@ export const CheckNameExistedEvent = {
 
           message.type = reader.int32();
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -12616,6 +12725,7 @@ export const CheckNameExistedEvent = {
       condition_id: isSet(object.condition_id) ? globalThis.String(object.condition_id) : "",
       exist: isSet(object.exist) ? globalThis.Boolean(object.exist) : false,
       type: isSet(object.type) ? globalThis.Number(object.type) : 0,
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
 
@@ -12633,6 +12743,9 @@ export const CheckNameExistedEvent = {
     if (message.type !== 0) {
       obj.type = Math.round(message.type);
     }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     return obj;
   },
 
@@ -12645,6 +12758,7 @@ export const CheckNameExistedEvent = {
     message.condition_id = object.condition_id ?? "";
     message.exist = object.exist ?? false;
     message.type = object.type ?? 0;
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
