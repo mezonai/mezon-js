@@ -40,13 +40,13 @@ if(isExpried) {
 ```
 After that, the raw data of object light_client is stored in localStorage.
 
-## 3: Connect Socket:
+## 5: Connect Socket:
 ```
   const light_socket = new LightSocket(light_client.getClient(), light_client.getSession());
   await light_socket.connect();
 ```
 
-## 4: Listen Message:
+## 6: Listen Message:
 ```
 light_socket.setChannelMessageHandler((msg: ChannelMessage) => {
 console.log('New message:', msg);
@@ -54,7 +54,7 @@ console.log('New message:', msg);
 
 ```
 
-## 5: Start DM
+## 7: Start DM
 
 ```
 const channel = await light_client.createDM(peerId);
@@ -62,7 +62,7 @@ await light_socket.joinDMChannel(channel.channel_id);
 
 ```
 
-## 6: Send Message:
+## 8: Send Message:
 
 ```
 await light_socket.sendDM(channelId, { t: inputMsg }, attachments);
