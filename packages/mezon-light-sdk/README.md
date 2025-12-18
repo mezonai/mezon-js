@@ -1,46 +1,84 @@
-# mezon-p2p-chat-sdk
+# Mezon-Light-SDK
 
-SDK chat P2P cho mezon-js.
+Lightweight SDK for mezon chat.
 
 # Version SDK Example using to demo 
-` pip install p2p-chat-sdk `
+`npm install mezon-light-sdk`
+
 # Frontend (Client) use SDK
 
 ## 1: Import
 
 ``` 
-import { P2PClient, P2PSocket, P2PMessage } from 'p2p-chat-sdk';
+import { LightClient, LightSocket, ChannelMessage } from 'mezon-light-sdk';
 ```
 
-## 2: Create P2PClient:
+## 2: Create LightClient:
 ```
-const p2p_client = await P2PClient.authenticate({ id_token, user_id, username, serverkey });
+const light_client = await LightClient.authenticate({ id_token, user_id, username, serverkey });
 ```
-## 3: Connect Socket:
+
+## 3: After login, the LightClient object loses its state due to page reloads or tab closures; only its raw data can be persisted, so a mechanism is required to reconstruct the object when chat functionality is needed.
+
 ```
-  const p2p_socket = new P2PSocket(p2p_client.getClient(), p2p_client.getSession());
-  await p2p_socket.connect();
+const light_client =  LightClient.initClient({
+  token: '',
+  refresh_token: '',
+  api_url: '',
+  user_id: '',
+  serverkey: ''
+});
 ```
-## 4: Listen Message:
+The input is retrieved from localStorage.
+
+## 4. Before establishing the socket connection, always check whether the token has expired and refresh it if necessary.
 ```
-p2p_socket.setChannelMessageHandler((msg: P2PMessage) => {
+const isExpired = await light_client.isSessionExpired()
+if(isExpried) {
+   await light_client.refreshSession()
+}
+```
+After that, the raw data of object light_client is stored in localStorage.
+
+## 5: Connect Socket:
+```
+  const light_socket = new LightSocket(light_client.getClient(), light_client.getSession());
+  await light_socket.connect();
+```
+
+## 6: Listen Message:
+```
+light_socket.setChannelMessageHandler((msg: ChannelMessage) => {
 console.log('New message:', msg);
 });
 
 ```
 
-## 5: Start DM
+## 7: Start DM
 
 ```
-const channel = await p2p_client.createDM(peerId);
-await p2p_socket.joinDMChannel(channel.channel_id);
+const channel = await light_client.createDM(peerId);
+await light_socket.joinDMChannel(channel.channel_id);
 
 ```
 
-## 6: Send Message:
+## 8: Send Message:
 
 ```
-await p2p_socket.sendDM(channelId, { t: inputMsg });
+await light_socket.sendDM(channelId, { t: inputMsg }, attachments);
+```
+```
+"attachments": [
+  {
+    "filename": "image.png",
+    "size": 42439,
+    "url": "https://cdn.mezon.ai/1940048388468772864/2001579269796401152.png",
+    "filetype": "image/png",
+    "width": 716,
+    "height": 522,
+    "thumbnail": "L56kYZxcRKW9sxabokoho,WGW7oa"
+  }
+]
 ```
 <img width="767" height="775" alt="Screenshot 2025-12-15 132741" src="https://github.com/user-attachments/assets/3019ca86-de5f-49b7-a05a-3895c754029d" />
 
