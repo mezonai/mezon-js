@@ -70,8 +70,7 @@ export class LightSocket {
   async sendDM(
     channelId: string,
     content: any,
-    attachments: any[] = [],
-    references: any[] = []
+    attachments: any[] = []
   ) {
     this.socket.writeChatMessage(
       CLAN_DM,
@@ -80,7 +79,7 @@ export class LightSocket {
       false,
       content,
       attachments,
-      references,
+      [],
       [],
       false,
       false,
