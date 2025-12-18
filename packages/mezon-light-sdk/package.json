@@ -1,0 +1,24 @@
+{
+  "name": "mezon-p2p-chat-sdk",
+  "version": "1.0.1",
+  "description": "SDK chat P2P cho mezon.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "js-base64": "^3.7.8",
+    "mezon-js": "^2.13.58",
+    "mezon-js-protobuf": "^1.8.66",
+    "mezon-p2p-chat-sdk": "file:"
+  },
+  "author": "mezonai",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.4.3"
+  }
+}
