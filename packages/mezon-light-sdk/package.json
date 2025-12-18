@@ -1,7 +1,7 @@
 {
   "name": "mezon-light-sdk",
   "version": "1.0.2",
-  "description": "Lightweigth SDK for mezon chat.",
+  "description": "lightweight SDK for mezon chat.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
