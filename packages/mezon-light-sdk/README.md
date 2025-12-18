@@ -1,22 +1,24 @@
-# mezon-p2p-chat-sdk
+# Mezon-Light-SDK
 
-SDK chat P2P cho mezon-js.
+Lightweight SDK for mezon chat.
 
 # Version SDK Example using to demo 
-` pip install p2p-chat-sdk `
+`npm install mezon-light-sdk`
+
 # Frontend (Client) use SDK
 
 ## 1: Import
 
 ``` 
-import { LightClient, LightSocket, LightMessage } from 'p2p-chat-sdk';
+import { LightClient, LightSocket, ChannelMessage } from 'mezon-light-sdk';
 ```
 
 ## 2: Create LightClient:
 ```
 const light_client = await LightClient.authenticate({ id_token, user_id, username, serverkey });
 ```
-## 3.0 Sau phát login , object LightClient sẽ bị mất state bởi việc reload, tắt tab, chỉ có thể lưu raw data của nó, vậy cần 1 phương thức để tái tạo lại object lúc cần thực hiện chat.
+
+## 3: After login, the LightClient object loses its state due to page reloads or tab closures; only its raw data can be persisted, so a mechanism is required to reconstruct the object when chat functionality is needed.
 
 ```
 const light_client =  LightClient.initClient({
@@ -27,17 +29,26 @@ const light_client =  LightClient.initClient({
   serverkey: ''
 });
 ```
+The input is retrieved from localStorage.
 
-Input lấy từ localstorage mà ra.
+## 4. Before establishing the socket connection, always check whether the token has expired and refresh it if necessary.
+```
+const isExpired = await light_client.isSessionExpired()
+if(isExpried) {
+   await light_client.refreshSession()
+}
+```
+After that, the raw data of object light_client is stored in localStorage.
 
 ## 3: Connect Socket:
 ```
   const light_socket = new LightSocket(light_client.getClient(), light_client.getSession());
   await light_socket.connect();
 ```
+
 ## 4: Listen Message:
 ```
-light_socket.setChannelMessageHandler((msg: LightMessage) => {
+light_socket.setChannelMessageHandler((msg: ChannelMessage) => {
 console.log('New message:', msg);
 });
 
