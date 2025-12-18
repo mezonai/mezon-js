@@ -14,7 +14,7 @@ import { P2PClient, P2PSocket, P2PMessage } from 'p2p-chat-sdk';
 
 ## 2: Create P2PClient:
 ```
-const p2p_client = await P2PClient.authenticate({ id_token: idToken, user_id: userId, username });
+const p2p_client = await P2PClient.authenticate({ id_token, user_id, username, serverkey });
 ```
 ## 3: Connect Socket:
 ```

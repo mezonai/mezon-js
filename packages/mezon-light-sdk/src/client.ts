@@ -1,7 +1,7 @@
 import { Session, Client, ChannelType } from 'mezon-js';
-import {MEZON_API_URL, MEZON_GW_URL } from './constants';
+import { MEZON_GW_URL } from './constants';
 import * as base64 from "js-base64"
-export class P2PClient {
+export class LightClient {
   private session: Session;
   private client: Client;
   public user_id: string;
@@ -12,7 +12,27 @@ export class P2PClient {
     this.user_id = user_id;
   }
 
-  static async authenticate({ id_token, user_id, username, serverkey }: { id_token: string, user_id: string, username: string, serverkey: string }): Promise<P2PClient> {
+  static initClient({ token, refresh_token, api_url, user_id, serverkey }: { token: string, refresh_token: string, api_url: string, user_id: string, serverkey: string }): LightClient {
+    if (!token || !refresh_token || !api_url || !user_id) {
+      throw new Error('Missing required fields to restore session from storage');
+    }
+    const session = Session.restore(
+      token,
+      refresh_token,
+      api_url,
+      true
+    );
+    const url = new URL(api_url);
+    const client = new Client(
+      serverkey || 'DefaultServerKey',
+      url.hostname,
+      url.port || '',
+      url.protocol === 'https:'
+    );
+    return new LightClient(session, client, user_id);
+  }
+
+  static async authenticate({ id_token, user_id, username, serverkey }: { id_token: string, user_id: string, username: string, serverkey: string }): Promise<LightClient> {
     const res = await fetch(MEZON_GW_URL + '/v2/account/authenticate/idtoken', {
       method: 'POST',
       headers: {
@@ -40,7 +60,7 @@ export class P2PClient {
         url.port || '',
         url.protocol === 'https:'
       );
-      return new P2PClient(session, client, data.user_id);
+      return new LightClient(session, client, data.user_id);
     } else {
       throw new Error('Error during authentication or missing data fields!');
     }
