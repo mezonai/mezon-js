@@ -4,9 +4,34 @@
 import { ApiAuthenticateLogoutRequest, ApiAuthenticateRefreshRequest, ApiAuthenticateRequest, ApiChannelDescription, ApiClanDescList, ApiCreateChannelDescRequest, ApiQuickMenuAccessRequest, ApiRegisterStreamingChannelRequest, ApiSession, ApiUpdateMessageRequest, MezonUpdateRoleBody, TokenSentEvent } from "./interfaces";
 import { buildFetchOptions } from './utils';
 import { encode } from 'js-base64';
+import { RateLimiter } from "./mezon-client/manager/rate-limit_manager"
+
+const GLOBAL_LIMITER = new RateLimiter(1000);
 export class MezonApi {
 
   constructor(readonly apiKey: string, readonly basePath: string, readonly timeoutMs: number) {}
+
+  private rateLimitFetch(fullUrl: string, fetchOptions: RequestInit): Promise<Response> {
+    return GLOBAL_LIMITER.schedule(() =>
+      Promise.race([
+        fetch(fullUrl, fetchOptions),
+        new Promise<Response>((_, reject) =>
+          setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+        ),
+      ]) as Promise<Response>
+    );
+  }
+
+  private async handleResponse<T = any>(response: Response): Promise<T> {
+  if (response.status === 204) {
+    return response as unknown as T;
+  }
+
+  if (response.status >= 200 && response.status < 300) {
+    return response.json() as Promise<T>;
+  }
+  throw response;
+}
 
   /** A healthcheck which load balancers can use to check the service. */
   mezonHealthcheck(bearerToken: string,
@@ -23,20 +48,9 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+    return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
+      this.handleResponse(res)
+    );
   }
 
   /** A readycheck which load balancers can use to check the service. */
@@ -54,20 +68,9 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+    return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
+      this.handleResponse(res)
+    );
   }
 
   /** Authenticate a app with a token against the server. */
@@ -91,20 +94,9 @@ export class MezonApi {
 			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
 		}
 
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json() as Promise<any>;
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+    return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
+      this.handleResponse<ApiSession>(res)
+    );
   }
 
   /** Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user. */
@@ -127,20 +119,9 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+    return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
+      this.handleResponse(res)
+    );
   }
 
     /** Create a new channel with the current user as the owner. */
@@ -163,20 +144,9 @@ export class MezonApi {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
     
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+    return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
+      this.handleResponse(res)
+    );
 }
 
   /** Refresh a user's session using a refresh token retrieved from a previous authentication request. */
@@ -200,20 +170,9 @@ export class MezonApi {
 			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
 		}
 
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json() as Promise<any>;
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+    return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
+      this.handleResponse(res)
+    );
   }
 
   /** Deletes a message for an identity. */
@@ -236,20 +195,9 @@ export class MezonApi {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+    return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
+      this.handleResponse(res)
+    );
   }
 
   /** Updates a message for an identity. */
@@ -277,20 +225,9 @@ export class MezonApi {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+    return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
+      this.handleResponse(res)
+    );
   }
 
   /** List clans */
@@ -314,20 +251,9 @@ export class MezonApi {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json() as Promise<any>;
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+    return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
+      this.handleResponse(res)
+    );
   }
 
   /** List channels detail */
@@ -355,20 +281,9 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json() as Promise<any>;
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+    return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
+      this.handleResponse(res)
+    );
   }
 
   buildFullUrl(basePath: string, fragment: string, queryParams: Map<string, any>) {
@@ -417,20 +332,9 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json() as Promise<any>;
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+    return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
+      this.handleResponse(res)
+    );
   }
 
     /** List all users that are part of a channel. */
@@ -497,20 +401,9 @@ export class MezonApi {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+    return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
+      this.handleResponse(res)
+    );
   }
 
   async sendToken(
@@ -535,20 +428,9 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+    return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
+      this.handleResponse(res)
+    );
   }
 
   updateRole(
@@ -582,20 +464,9 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+    return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
+      this.handleResponse(res)
+    );
   }
 
   listRoles(
@@ -621,20 +492,9 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+    return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
+      this.handleResponse(res)
+    );
   }
 
   getListFriends(
@@ -658,20 +518,9 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+    return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
+      this.handleResponse(res)
+    );
   }
 
   requestFriend(
@@ -695,20 +544,9 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+    return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
+      this.handleResponse(res)
+    );
   }
 
   /** list transaction detail */
@@ -736,20 +574,9 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+    return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
+      this.handleResponse(res)
+    );
   }
 
   /**  */
@@ -775,20 +602,9 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+    return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
+      this.handleResponse(res)
+    );
   }
 
   /** deleteQuickMenuAccess */
@@ -810,20 +626,9 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+    return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
+      this.handleResponse(res)
+    );
   }
 
   playMedia(
