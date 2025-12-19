@@ -101,7 +101,7 @@ export async function waitFor2nTimeout<T>(
 
       const seconds = Math.min(2 ** (attempt - 1), 64);
       console.warn(
-        `Attempt ${attempt} failed: ${error?.message || error}. ` +
+        `Attempt ${attempt} failed: ${JSON.stringify(error)}. ` +
           `Retrying in ${seconds}s...`
       );
       await sleep(seconds * 1000);
