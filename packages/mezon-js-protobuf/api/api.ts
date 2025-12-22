@@ -3769,6 +3769,11 @@ export interface UserIds {
   user_ids: string[];
 }
 
+export interface ReportMessageAbuseReqest {
+  message_id: string;
+  abuse_type: string;
+}
+
 function createBaseAccount(): Account {
   return {
     user: undefined,
@@ -38725,6 +38730,80 @@ export const UserIds = {
   fromPartial<I extends Exact<DeepPartial<UserIds>, I>>(object: I): UserIds {
     const message = createBaseUserIds();
     message.user_ids = object.user_ids?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseReportMessageAbuseReqest(): ReportMessageAbuseReqest {
+  return { message_id: "", abuse_type: "" };
+}
+
+export const ReportMessageAbuseReqest = {
+  encode(message: ReportMessageAbuseReqest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.message_id !== "") {
+      writer.uint32(10).string(message.message_id);
+    }
+    if (message.abuse_type !== "") {
+      writer.uint32(18).string(message.abuse_type);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ReportMessageAbuseReqest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseReportMessageAbuseReqest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.message_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.abuse_type = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ReportMessageAbuseReqest {
+    return {
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      abuse_type: isSet(object.abuse_type) ? globalThis.String(object.abuse_type) : "",
+    };
+  },
+
+  toJSON(message: ReportMessageAbuseReqest): unknown {
+    const obj: any = {};
+    if (message.message_id !== "") {
+      obj.message_id = message.message_id;
+    }
+    if (message.abuse_type !== "") {
+      obj.abuse_type = message.abuse_type;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ReportMessageAbuseReqest>, I>>(base?: I): ReportMessageAbuseReqest {
+    return ReportMessageAbuseReqest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ReportMessageAbuseReqest>, I>>(object: I): ReportMessageAbuseReqest {
+    const message = createBaseReportMessageAbuseReqest();
+    message.message_id = object.message_id ?? "";
+    message.abuse_type = object.abuse_type ?? "";
     return message;
   },
 };
