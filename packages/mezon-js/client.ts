@@ -4987,4 +4987,23 @@ export class Client {
         return Promise.resolve(response);
       });
   }
+
+  async reportMessageAbuse(session: Session,
+    messageId?:string,
+    abuseType?:string
+  ) : Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .reportMessageAbuse(session.token, messageId, abuseType)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
 }
