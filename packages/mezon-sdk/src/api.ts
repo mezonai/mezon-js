@@ -6,32 +6,37 @@ import { buildFetchOptions } from './utils';
 import { encode } from 'js-base64';
 import { RateLimiter } from "./mezon-client/manager/rate-limit_manager"
 
-const GLOBAL_LIMITER = new RateLimiter(1000);
+const GLOBAL_LIMITER = new RateLimiter(1024);
 export class MezonApi {
 
   constructor(readonly apiKey: string, readonly basePath: string, readonly timeoutMs: number) {}
 
   private rateLimitFetch(fullUrl: string, fetchOptions: RequestInit): Promise<Response> {
-    return GLOBAL_LIMITER.schedule(() =>
-      Promise.race([
-        fetch(fullUrl, fetchOptions),
-        new Promise<Response>((_, reject) =>
-          setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
-        ),
-      ]) as Promise<Response>
-    );
+    return GLOBAL_LIMITER.schedule(async () => {
+      const controller = new AbortController();
+      const t = setTimeout(() => controller.abort(), this.timeoutMs);
+
+      try {
+        return await fetch(fullUrl, { ...fetchOptions, signal: controller.signal });
+      } catch (e: any) {
+        if (e?.name === "AbortError") throw new Error("Request timed out.");
+        throw e;
+      } finally {
+        clearTimeout(t);
+      }
+    });
   }
 
   private async handleResponse<T = any>(response: Response): Promise<T> {
-  if (response.status === 204) {
-    return response as unknown as T;
-  }
+    if (response.status === 204) {
+      return response as unknown as T;
+    }
 
-  if (response.status >= 200 && response.status < 300) {
-    return response.json() as Promise<T>;
+    if (response.status >= 200 && response.status < 300) {
+      return response.json() as Promise<T>;
+    }
+    throw response;
   }
-  throw response;
-}
 
   /** A healthcheck which load balancers can use to check the service. */
   mezonHealthcheck(bearerToken: string,

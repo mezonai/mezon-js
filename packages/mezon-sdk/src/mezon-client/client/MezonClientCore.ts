@@ -131,7 +131,6 @@ export class MezonClientCore extends EventEmitter {
       this.useSSL,
       new WebSocketAdapterPb(),
       this.apiClient,
-      this.eventManager,
       this.messageQueue,
       this,
       this.messageDB
@@ -170,7 +169,7 @@ export class MezonClientCore extends EventEmitter {
       );
     } catch (error) {
       this.socketManager?.closeSocket();
-      throw new Error(`Some thing went wrong, please reset bot! ${error}`);
+      throw error;
     }
 
     if (sessionApi?.api_url) {
@@ -187,7 +186,6 @@ export class MezonClientCore extends EventEmitter {
     if (sessionApi?.id_token) {
       try {
         await this.mmnInitialized(sessionApi.id_token);
-        console.log('Init MMN success!')
       } catch (error) {
         console.error("Failed to init MMN:", error);
       }
@@ -210,8 +208,7 @@ export class MezonClientCore extends EventEmitter {
       );
     } catch (error) {
       this.socketManager?.closeSocket();
-      console.log("HandleClientLogin Error", error);
-      throw new Error("Some thing went wrong, please restart bot!");
+      throw new Error(JSON.stringify(error ?? {}));
     }
   }
 
