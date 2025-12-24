@@ -84,27 +84,27 @@ export async function waitFor2nTimeout<T>(
   maxAttempts = 10
 ): Promise<T> {
   let attempt = 1;
+  let delay = 5000;
+  const maxDelay = 60000;
 
   while (attempt <= maxAttempts) {
     try {
-      console.log(`Attempt ${attempt}/${maxAttempts}...`);
+      if (attempt > 1) {
+        await sleep(delay);
+      }
+
       const result = await action();
       console.log("Action successful!");
       return result;
     } catch (error: any) {
-      const isLast = attempt >= maxAttempts;
-
-      if (isLast) {
-        console.error(`Attempt ${attempt} failed. Max attempts reached.`);
+      if (attempt >= maxAttempts) {
+        console.error("Max attempts reached.");
         throw error;
       }
 
-      const seconds = Math.min(2 ** (attempt - 1), 64);
-      console.warn(
-        `Attempt ${attempt} failed: ${JSON.stringify(error)}. ` +
-          `Retrying in ${seconds}s...`
-      );
-      await sleep(seconds * 1000);
+      console.warn(`Attempt ${attempt} failed at ${new Date().toLocaleString()}: ${JSON.stringify(error??{})}\nAttempt ${attempt+1} is running...`);
+
+      delay = Math.min(delay * 2, maxDelay);
       attempt++;
     }
   }

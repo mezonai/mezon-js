@@ -6,7 +6,6 @@ import { WebSocketAdapter } from "../../web_socket_adapter";
 import { WebSocketAdapterPb } from "../../web_socket_adapter_pb";
 import { Socket } from "../../interfaces/socket";
 import { Session } from "../../session";
-import { EventManager } from "./event_manager";
 import { Clan } from "../structures/Clan";
 import {
   EphemeralMessageData,
@@ -17,8 +16,8 @@ import {
 } from "../../interfaces";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 import { MessageDatabase } from "../../sqlite/MessageDatabase";
-import { sleep } from "../../utils/helper";
 import { MezonClientCore } from "../client/MezonClientCore";
+import { sleep } from "../../utils/helper";
 
 export class SocketManager {
   [key: string]: any;
@@ -31,7 +30,6 @@ export class SocketManager {
     private useSSL: boolean,
     private adapter: WebSocketAdapter,
     private apiClient: MezonApi,
-    private eventManager: EventManager,
     private messageQueue: AsyncThrottleQueue,
     private client: MezonClientCore,
     private messageDB: MessageDatabase
@@ -69,7 +67,6 @@ export class SocketManager {
   closeSocket() {
     this.isHardDisconnect = true;
     this.socket.close();
-    console.log("eventManager", this.eventManager);
   }
 
   isOpen(): boolean {
@@ -121,8 +118,6 @@ export class SocketManager {
         }
       }
 
-      // join direct message
-      await this.socket.joinClanChat("0");
       ["ondisconnect", "onerror", "onheartbeattimeout"].forEach((event) => {
         this.socket[event] = (this[event as keyof this] as Function).bind(this);
       });
@@ -134,7 +129,7 @@ export class SocketManager {
         });
       }
     } catch (error) {
-      this.closeSocket();
+      throw error;
     }
   }
 
@@ -152,9 +147,11 @@ export class SocketManager {
         await this.client.login();
 
         this.isRetrying = false;
+        retryInterval = 5000;
         console.log("Connected successfully!");
       } catch (e) {
         console.log("Connection failed!", e);
+        this.isRetrying = false;
         retryInterval = Math.min(retryInterval * 2, maxRetryInterval);
         console.log(`Retrying in ${retryInterval / 1000} seconds...`);
 
@@ -162,11 +159,13 @@ export class SocketManager {
       }
     };
 
-    retry();
+    setTimeout(retry, retryInterval);
   }
 
   async writeChatMessage(dataWriteMessage: ReplyMessageData) {
-    const currentContentLength = JSON.stringify(dataWriteMessage.content ?? {}).length
+    const currentContentLength = JSON.stringify(
+      dataWriteMessage.content ?? {}
+    ).length;
     if (currentContentLength > 8000)
       throw new Error(
         `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`
@@ -191,7 +190,9 @@ export class SocketManager {
   }
 
   async writeEphemeralMessage(dataWriteMessage: EphemeralMessageData) {
-    const currentContentLength = JSON.stringify(dataWriteMessage.content ?? {}).length
+    const currentContentLength = JSON.stringify(
+      dataWriteMessage.content ?? {}
+    ).length;
     if (currentContentLength > 8000)
       throw new Error(
         `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`
@@ -218,7 +219,9 @@ export class SocketManager {
   }
 
   async updateChatMessage(dataUpdateMessage: UpdateMessageData) {
-    const currentContentLength = JSON.stringify(dataUpdateMessage.content ?? {}).length
+    const currentContentLength = JSON.stringify(
+      dataUpdateMessage.content ?? {}
+    ).length;
     if (currentContentLength > 8000)
       throw new Error(
         `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`
