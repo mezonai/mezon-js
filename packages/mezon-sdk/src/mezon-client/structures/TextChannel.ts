@@ -52,7 +52,11 @@ export class TextChannel {
     this.messageQueue = messageQueue;
     this.messageDB = messageDB;
     this.messages = new CacheManager<string, Message>(async (message_id) => {
-      const messageDb = this.messageDB.getMessageById(message_id, this.id!, this.clan.id!);
+      const messageDb = this.messageDB.getMessageById(
+        message_id,
+        this.id!,
+        this.clan.id!
+      );
       if (!messageDb) {
         throw Error(`Message ${message_id} not found on channel ${this.id}!`);
       }
@@ -139,6 +143,8 @@ export class TextChannel {
       const base = this._buildEphemeralBase(receiver_id);
       const { references, topic_id_from_ref } =
         await this._buildEphemeralReferences(reference_message_id);
+      const client = this.clan.getClient();
+      const currentClient = client.users.get(client.clientId);
       const dataSend: EphemeralMessageData = {
         ...base,
         content,
@@ -149,6 +155,7 @@ export class TextChannel {
         mention_everyone: !!mention_everyone,
         code: TypeMessage.Ephemeral,
         topic_id: topic_id_from_ref ?? topic_id,
+        avatar: currentClient?.avartar ?? "",
       };
 
       return this.socketManager.writeEphemeralMessage(dataSend);
