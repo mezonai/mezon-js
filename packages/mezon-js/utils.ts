@@ -1,4 +1,5 @@
 import {encode, decode} from "js-base64"
+import * as tsproto from "./rtapi/realtime"
 
 export function buildFetchOptions(method: string, options: any, bodyJson: string) {
     const fetchOptions = {...{ method: method }, ...options};
@@ -61,5 +62,16 @@ export function safeJSONParse(jsonStr: string) {
             }
         }
         return {t: jsonStr}; // Handle the error gracefully or throw an exception if necessary
+    }
+}
+
+export function safePbParse(data: string | Buffer | ArrayBuffer | Buffer[]) {
+    try {
+        const buffer: ArrayBuffer = data as ArrayBuffer;
+        const uintBuffer: Uint8Array = new Uint8Array(buffer);
+        const message = tsproto.decode(uintBuffer);
+        return message
+    } catch (e) {
+        console.log(e);
     }
 }
