@@ -1764,6 +1764,22 @@ export interface AllowAnonymousEvent {
   allow: boolean;
 }
 
+export interface FcmDataPayload {
+  command_type: number;
+  receiver_id: string;
+  title: string;
+  body: string;
+  user_role_ids: string[];
+  user_sent_ids: string[];
+  priority: number;
+  info_message: ChannelMessage | undefined;
+  is_e2ee: boolean;
+  is_dm: boolean;
+  mention_here: boolean;
+  mentions: MessageMention[];
+  references: MessageRef[];
+}
+
 function createBaseEnvelope(): Envelope {
   return {
     cid: "",
@@ -16179,6 +16195,269 @@ export const AllowAnonymousEvent = {
     const message = createBaseAllowAnonymousEvent();
     message.clan_id = object.clan_id ?? "";
     message.allow = object.allow ?? false;
+    return message;
+  },
+};
+
+function createBaseFcmDataPayload(): FcmDataPayload {
+  return {
+    command_type: 0,
+    receiver_id: "",
+    title: "",
+    body: "",
+    user_role_ids: [],
+    user_sent_ids: [],
+    priority: 0,
+    info_message: undefined,
+    is_e2ee: false,
+    is_dm: false,
+    mention_here: false,
+    mentions: [],
+    references: [],
+  };
+}
+
+export const FcmDataPayload = {
+  encode(message: FcmDataPayload, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.command_type !== 0) {
+      writer.uint32(8).int32(message.command_type);
+    }
+    if (message.receiver_id !== "") {
+      writer.uint32(18).string(message.receiver_id);
+    }
+    if (message.title !== "") {
+      writer.uint32(26).string(message.title);
+    }
+    if (message.body !== "") {
+      writer.uint32(34).string(message.body);
+    }
+    for (const v of message.user_role_ids) {
+      writer.uint32(42).string(v!);
+    }
+    for (const v of message.user_sent_ids) {
+      writer.uint32(50).string(v!);
+    }
+    if (message.priority !== 0) {
+      writer.uint32(56).int32(message.priority);
+    }
+    if (message.info_message !== undefined) {
+      ChannelMessage.encode(message.info_message, writer.uint32(66).fork()).ldelim();
+    }
+    if (message.is_e2ee !== false) {
+      writer.uint32(72).bool(message.is_e2ee);
+    }
+    if (message.is_dm !== false) {
+      writer.uint32(80).bool(message.is_dm);
+    }
+    if (message.mention_here !== false) {
+      writer.uint32(88).bool(message.mention_here);
+    }
+    for (const v of message.mentions) {
+      MessageMention.encode(v!, writer.uint32(98).fork()).ldelim();
+    }
+    for (const v of message.references) {
+      MessageRef.encode(v!, writer.uint32(106).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): FcmDataPayload {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFcmDataPayload();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.command_type = reader.int32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.receiver_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.title = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.body = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.user_role_ids.push(reader.string());
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.user_sent_ids.push(reader.string());
+          continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.priority = reader.int32();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.info_message = ChannelMessage.decode(reader, reader.uint32());
+          continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.is_e2ee = reader.bool();
+          continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.is_dm = reader.bool();
+          continue;
+        case 11:
+          if (tag !== 88) {
+            break;
+          }
+
+          message.mention_here = reader.bool();
+          continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.mentions.push(MessageMention.decode(reader, reader.uint32()));
+          continue;
+        case 13:
+          if (tag !== 106) {
+            break;
+          }
+
+          message.references.push(MessageRef.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): FcmDataPayload {
+    return {
+      command_type: isSet(object.command_type) ? globalThis.Number(object.command_type) : 0,
+      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
+      title: isSet(object.title) ? globalThis.String(object.title) : "",
+      body: isSet(object.body) ? globalThis.String(object.body) : "",
+      user_role_ids: globalThis.Array.isArray(object?.user_role_ids)
+        ? object.user_role_ids.map((e: any) => globalThis.String(e))
+        : [],
+      user_sent_ids: globalThis.Array.isArray(object?.user_sent_ids)
+        ? object.user_sent_ids.map((e: any) => globalThis.String(e))
+        : [],
+      priority: isSet(object.priority) ? globalThis.Number(object.priority) : 0,
+      info_message: isSet(object.info_message) ? ChannelMessage.fromJSON(object.info_message) : undefined,
+      is_e2ee: isSet(object.is_e2ee) ? globalThis.Boolean(object.is_e2ee) : false,
+      is_dm: isSet(object.is_dm) ? globalThis.Boolean(object.is_dm) : false,
+      mention_here: isSet(object.mention_here) ? globalThis.Boolean(object.mention_here) : false,
+      mentions: globalThis.Array.isArray(object?.mentions)
+        ? object.mentions.map((e: any) => MessageMention.fromJSON(e))
+        : [],
+      references: globalThis.Array.isArray(object?.references)
+        ? object.references.map((e: any) => MessageRef.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: FcmDataPayload): unknown {
+    const obj: any = {};
+    if (message.command_type !== 0) {
+      obj.command_type = Math.round(message.command_type);
+    }
+    if (message.receiver_id !== "") {
+      obj.receiver_id = message.receiver_id;
+    }
+    if (message.title !== "") {
+      obj.title = message.title;
+    }
+    if (message.body !== "") {
+      obj.body = message.body;
+    }
+    if (message.user_role_ids?.length) {
+      obj.user_role_ids = message.user_role_ids;
+    }
+    if (message.user_sent_ids?.length) {
+      obj.user_sent_ids = message.user_sent_ids;
+    }
+    if (message.priority !== 0) {
+      obj.priority = Math.round(message.priority);
+    }
+    if (message.info_message !== undefined) {
+      obj.info_message = ChannelMessage.toJSON(message.info_message);
+    }
+    if (message.is_e2ee !== false) {
+      obj.is_e2ee = message.is_e2ee;
+    }
+    if (message.is_dm !== false) {
+      obj.is_dm = message.is_dm;
+    }
+    if (message.mention_here !== false) {
+      obj.mention_here = message.mention_here;
+    }
+    if (message.mentions?.length) {
+      obj.mentions = message.mentions.map((e) => MessageMention.toJSON(e));
+    }
+    if (message.references?.length) {
+      obj.references = message.references.map((e) => MessageRef.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<FcmDataPayload>, I>>(base?: I): FcmDataPayload {
+    return FcmDataPayload.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<FcmDataPayload>, I>>(object: I): FcmDataPayload {
+    const message = createBaseFcmDataPayload();
+    message.command_type = object.command_type ?? 0;
+    message.receiver_id = object.receiver_id ?? "";
+    message.title = object.title ?? "";
+    message.body = object.body ?? "";
+    message.user_role_ids = object.user_role_ids?.map((e) => e) || [];
+    message.user_sent_ids = object.user_sent_ids?.map((e) => e) || [];
+    message.priority = object.priority ?? 0;
+    message.info_message = (object.info_message !== undefined && object.info_message !== null)
+      ? ChannelMessage.fromPartial(object.info_message)
+      : undefined;
+    message.is_e2ee = object.is_e2ee ?? false;
+    message.is_dm = object.is_dm ?? false;
+    message.mention_here = object.mention_here ?? false;
+    message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
+    message.references = object.references?.map((e) => MessageRef.fromPartial(e)) || [];
     return message;
   },
 };

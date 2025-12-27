@@ -1521,7 +1521,8 @@ export class Client {
               update_time: gu.user!.update_time,
               username: gu.user!.username,
               user_status: gu.user!.user_status,
-              status: gu.user!.status
+              status: gu.user!.status,
+              about_me: gu.user!.about_me
             },
             role_id: gu!.role_id,
             clan_nick: gu!.clan_nick,
