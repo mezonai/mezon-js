@@ -89,7 +89,7 @@ import {
   WebhookListResponse,
 } from "../api/api";
 import { Timestamp } from "../google/protobuf/timestamp";
-import { Int32Value, StringValue } from "../google/protobuf/wrappers";
+import { BoolValue, Int32Value, StringValue } from "../google/protobuf/wrappers";
 
 export const protobufPackage = "mezon.realtime";
 
@@ -652,24 +652,16 @@ export interface ChannelLeave {
 
 /** A receipt reply from a channel message send operation. */
 export interface ChannelMessageAck {
-  /** The clan this message belong to. */
-  clan_id: string;
-  /** The channel this message belongs to. */
+  /** The channel the message was sent to. */
   channel_id: string;
-  /** The unique ID of this message. */
+  /** The unique ID assigned to the message. */
   message_id: string;
   /** The code representing a message type or category. */
   code:
     | number
     | undefined;
-  /** Message sender, usually a user ID. */
-  sender_id: string;
-  /** The username of the message sender, if any. */
+  /** Username of the message sender. */
   username: string;
-  /** The avatar of user who send message */
-  avatar: string;
-  /** The content payload. */
-  content: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
   create_time:
     | Date
@@ -678,40 +670,14 @@ export interface ChannelMessageAck {
   update_time:
     | Date
     | undefined;
-  /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-  channel_label: string;
+  /** True if the message was persisted to the channel's history, false otherwise. */
+  persistent:
+    | boolean
+    | undefined;
   /** The clan logo */
   clan_logo: string;
   /** The category name */
   category_name: string;
-  /** The clan nick name */
-  display_name: string;
-  /** The clan nick name */
-  clan_nick: string;
-  /** The clan avatar */
-  clan_avatar: string;
-  /** Emoji reaction */
-  reactions: string;
-  /** Message mention */
-  mentions: string;
-  /** Message attachment */
-  attachments: string;
-  /** Message reference */
-  references: string;
-  /** referenced message */
-  referenced_message: string;
-  /** create time in ms */
-  create_time_seconds: number;
-  /** update time in ms */
-  update_time_seconds: number;
-  /** channel mode */
-  mode: number;
-  /** hide editted */
-  hide_editted: boolean;
-  /** is public */
-  is_public: boolean;
-  /** topic */
-  topic_id: string;
 }
 
 export interface EphemeralMessageSend {
@@ -5537,118 +5503,46 @@ export const ChannelLeave = {
 
 function createBaseChannelMessageAck(): ChannelMessageAck {
   return {
-    clan_id: "",
     channel_id: "",
     message_id: "",
     code: undefined,
-    sender_id: "",
     username: "",
-    avatar: "",
-    content: "",
     create_time: undefined,
     update_time: undefined,
-    channel_label: "",
+    persistent: undefined,
     clan_logo: "",
     category_name: "",
-    display_name: "",
-    clan_nick: "",
-    clan_avatar: "",
-    reactions: "",
-    mentions: "",
-    attachments: "",
-    references: "",
-    referenced_message: "",
-    create_time_seconds: 0,
-    update_time_seconds: 0,
-    mode: 0,
-    hide_editted: false,
-    is_public: false,
-    topic_id: "",
   };
 }
 
 export const ChannelMessageAck = {
   encode(message: ChannelMessageAck, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
-    }
     if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+      writer.uint32(10).string(message.channel_id);
     }
     if (message.message_id !== "") {
-      writer.uint32(26).string(message.message_id);
+      writer.uint32(18).string(message.message_id);
     }
     if (message.code !== undefined) {
-      Int32Value.encode({ value: message.code! }, writer.uint32(34).fork()).ldelim();
-    }
-    if (message.sender_id !== "") {
-      writer.uint32(42).string(message.sender_id);
+      Int32Value.encode({ value: message.code! }, writer.uint32(26).fork()).ldelim();
     }
     if (message.username !== "") {
-      writer.uint32(50).string(message.username);
-    }
-    if (message.avatar !== "") {
-      writer.uint32(58).string(message.avatar);
-    }
-    if (message.content !== "") {
-      writer.uint32(66).string(message.content);
+      writer.uint32(34).string(message.username);
     }
     if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(74).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(42).fork()).ldelim();
     }
     if (message.update_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(82).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(50).fork()).ldelim();
     }
-    if (message.channel_label !== "") {
-      writer.uint32(90).string(message.channel_label);
+    if (message.persistent !== undefined) {
+      BoolValue.encode({ value: message.persistent! }, writer.uint32(58).fork()).ldelim();
     }
     if (message.clan_logo !== "") {
-      writer.uint32(98).string(message.clan_logo);
+      writer.uint32(66).string(message.clan_logo);
     }
     if (message.category_name !== "") {
-      writer.uint32(106).string(message.category_name);
-    }
-    if (message.display_name !== "") {
-      writer.uint32(114).string(message.display_name);
-    }
-    if (message.clan_nick !== "") {
-      writer.uint32(122).string(message.clan_nick);
-    }
-    if (message.clan_avatar !== "") {
-      writer.uint32(130).string(message.clan_avatar);
-    }
-    if (message.reactions !== "") {
-      writer.uint32(138).string(message.reactions);
-    }
-    if (message.mentions !== "") {
-      writer.uint32(146).string(message.mentions);
-    }
-    if (message.attachments !== "") {
-      writer.uint32(154).string(message.attachments);
-    }
-    if (message.references !== "") {
-      writer.uint32(162).string(message.references);
-    }
-    if (message.referenced_message !== "") {
-      writer.uint32(170).string(message.referenced_message);
-    }
-    if (message.create_time_seconds !== 0) {
-      writer.uint32(176).uint32(message.create_time_seconds);
-    }
-    if (message.update_time_seconds !== 0) {
-      writer.uint32(184).uint32(message.update_time_seconds);
-    }
-    if (message.mode !== 0) {
-      writer.uint32(192).int32(message.mode);
-    }
-    if (message.hide_editted !== false) {
-      writer.uint32(200).bool(message.hide_editted);
-    }
-    if (message.is_public !== false) {
-      writer.uint32(208).bool(message.is_public);
-    }
-    if (message.topic_id !== "") {
-      writer.uint32(218).string(message.topic_id);
+      writer.uint32(74).string(message.category_name);
     }
     return writer;
   },
@@ -5665,189 +5559,63 @@ export const ChannelMessageAck = {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.channel_id = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.message_id = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.code = Int32Value.decode(reader, reader.uint32()).value;
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.code = Int32Value.decode(reader, reader.uint32()).value;
+          message.username = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.sender_id = reader.string();
+          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.username = reader.string();
+          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          message.avatar = reader.string();
+          message.persistent = BoolValue.decode(reader, reader.uint32()).value;
           continue;
         case 8:
           if (tag !== 66) {
             break;
           }
 
-          message.content = reader.string();
+          message.clan_logo = reader.string();
           continue;
         case 9:
           if (tag !== 74) {
             break;
           }
 
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-        case 10:
-          if (tag !== 82) {
-            break;
-          }
-
-          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-        case 11:
-          if (tag !== 90) {
-            break;
-          }
-
-          message.channel_label = reader.string();
-          continue;
-        case 12:
-          if (tag !== 98) {
-            break;
-          }
-
-          message.clan_logo = reader.string();
-          continue;
-        case 13:
-          if (tag !== 106) {
-            break;
-          }
-
           message.category_name = reader.string();
-          continue;
-        case 14:
-          if (tag !== 114) {
-            break;
-          }
-
-          message.display_name = reader.string();
-          continue;
-        case 15:
-          if (tag !== 122) {
-            break;
-          }
-
-          message.clan_nick = reader.string();
-          continue;
-        case 16:
-          if (tag !== 130) {
-            break;
-          }
-
-          message.clan_avatar = reader.string();
-          continue;
-        case 17:
-          if (tag !== 138) {
-            break;
-          }
-
-          message.reactions = reader.string();
-          continue;
-        case 18:
-          if (tag !== 146) {
-            break;
-          }
-
-          message.mentions = reader.string();
-          continue;
-        case 19:
-          if (tag !== 154) {
-            break;
-          }
-
-          message.attachments = reader.string();
-          continue;
-        case 20:
-          if (tag !== 162) {
-            break;
-          }
-
-          message.references = reader.string();
-          continue;
-        case 21:
-          if (tag !== 170) {
-            break;
-          }
-
-          message.referenced_message = reader.string();
-          continue;
-        case 22:
-          if (tag !== 176) {
-            break;
-          }
-
-          message.create_time_seconds = reader.uint32();
-          continue;
-        case 23:
-          if (tag !== 184) {
-            break;
-          }
-
-          message.update_time_seconds = reader.uint32();
-          continue;
-        case 24:
-          if (tag !== 192) {
-            break;
-          }
-
-          message.mode = reader.int32();
-          continue;
-        case 25:
-          if (tag !== 200) {
-            break;
-          }
-
-          message.hide_editted = reader.bool();
-          continue;
-        case 26:
-          if (tag !== 208) {
-            break;
-          }
-
-          message.is_public = reader.bool();
-          continue;
-        case 27:
-          if (tag !== 218) {
-            break;
-          }
-
-          message.topic_id = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -5860,41 +5628,20 @@ export const ChannelMessageAck = {
 
   fromJSON(object: any): ChannelMessageAck {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
       code: isSet(object.code) ? Number(object.code) : undefined,
-      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
       username: isSet(object.username) ? globalThis.String(object.username) : "",
-      avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
-      content: isSet(object.content) ? globalThis.String(object.content) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
-      channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
+      persistent: isSet(object.persistent) ? Boolean(object.persistent) : undefined,
       clan_logo: isSet(object.clan_logo) ? globalThis.String(object.clan_logo) : "",
       category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
-      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
-      clan_nick: isSet(object.clan_nick) ? globalThis.String(object.clan_nick) : "",
-      clan_avatar: isSet(object.clan_avatar) ? globalThis.String(object.clan_avatar) : "",
-      reactions: isSet(object.reactions) ? globalThis.String(object.reactions) : "",
-      mentions: isSet(object.mentions) ? globalThis.String(object.mentions) : "",
-      attachments: isSet(object.attachments) ? globalThis.String(object.attachments) : "",
-      references: isSet(object.references) ? globalThis.String(object.references) : "",
-      referenced_message: isSet(object.referenced_message) ? globalThis.String(object.referenced_message) : "",
-      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
-      update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
-      mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
-      hide_editted: isSet(object.hide_editted) ? globalThis.Boolean(object.hide_editted) : false,
-      is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
-      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
     };
   },
 
   toJSON(message: ChannelMessageAck): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
@@ -5904,17 +5651,8 @@ export const ChannelMessageAck = {
     if (message.code !== undefined) {
       obj.code = message.code;
     }
-    if (message.sender_id !== "") {
-      obj.sender_id = message.sender_id;
-    }
     if (message.username !== "") {
       obj.username = message.username;
-    }
-    if (message.avatar !== "") {
-      obj.avatar = message.avatar;
-    }
-    if (message.content !== "") {
-      obj.content = message.content;
     }
     if (message.create_time !== undefined) {
       obj.create_time = message.create_time.toISOString();
@@ -5922,56 +5660,14 @@ export const ChannelMessageAck = {
     if (message.update_time !== undefined) {
       obj.update_time = message.update_time.toISOString();
     }
-    if (message.channel_label !== "") {
-      obj.channel_label = message.channel_label;
+    if (message.persistent !== undefined) {
+      obj.persistent = message.persistent;
     }
     if (message.clan_logo !== "") {
       obj.clan_logo = message.clan_logo;
     }
     if (message.category_name !== "") {
       obj.category_name = message.category_name;
-    }
-    if (message.display_name !== "") {
-      obj.display_name = message.display_name;
-    }
-    if (message.clan_nick !== "") {
-      obj.clan_nick = message.clan_nick;
-    }
-    if (message.clan_avatar !== "") {
-      obj.clan_avatar = message.clan_avatar;
-    }
-    if (message.reactions !== "") {
-      obj.reactions = message.reactions;
-    }
-    if (message.mentions !== "") {
-      obj.mentions = message.mentions;
-    }
-    if (message.attachments !== "") {
-      obj.attachments = message.attachments;
-    }
-    if (message.references !== "") {
-      obj.references = message.references;
-    }
-    if (message.referenced_message !== "") {
-      obj.referenced_message = message.referenced_message;
-    }
-    if (message.create_time_seconds !== 0) {
-      obj.create_time_seconds = Math.round(message.create_time_seconds);
-    }
-    if (message.update_time_seconds !== 0) {
-      obj.update_time_seconds = Math.round(message.update_time_seconds);
-    }
-    if (message.mode !== 0) {
-      obj.mode = Math.round(message.mode);
-    }
-    if (message.hide_editted !== false) {
-      obj.hide_editted = message.hide_editted;
-    }
-    if (message.is_public !== false) {
-      obj.is_public = message.is_public;
-    }
-    if (message.topic_id !== "") {
-      obj.topic_id = message.topic_id;
     }
     return obj;
   },
@@ -5981,33 +5677,15 @@ export const ChannelMessageAck = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelMessageAck>, I>>(object: I): ChannelMessageAck {
     const message = createBaseChannelMessageAck();
-    message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.message_id = object.message_id ?? "";
     message.code = object.code ?? undefined;
-    message.sender_id = object.sender_id ?? "";
     message.username = object.username ?? "";
-    message.avatar = object.avatar ?? "";
-    message.content = object.content ?? "";
     message.create_time = object.create_time ?? undefined;
     message.update_time = object.update_time ?? undefined;
-    message.channel_label = object.channel_label ?? "";
+    message.persistent = object.persistent ?? undefined;
     message.clan_logo = object.clan_logo ?? "";
     message.category_name = object.category_name ?? "";
-    message.display_name = object.display_name ?? "";
-    message.clan_nick = object.clan_nick ?? "";
-    message.clan_avatar = object.clan_avatar ?? "";
-    message.reactions = object.reactions ?? "";
-    message.mentions = object.mentions ?? "";
-    message.attachments = object.attachments ?? "";
-    message.references = object.references ?? "";
-    message.referenced_message = object.referenced_message ?? "";
-    message.create_time_seconds = object.create_time_seconds ?? 0;
-    message.update_time_seconds = object.update_time_seconds ?? 0;
-    message.mode = object.mode ?? 0;
-    message.hide_editted = object.hide_editted ?? false;
-    message.is_public = object.is_public ?? false;
-    message.topic_id = object.topic_id ?? "";
     return message;
   },
 };
