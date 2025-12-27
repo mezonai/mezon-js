@@ -1513,8 +1513,6 @@ export interface ChannelMessageHeader {
   mention: string;
   /** the reactions */
   reaction: string;
-  /**  */
-  repliers: string[];
 }
 
 /** Channel description record */
@@ -14451,7 +14449,6 @@ function createBaseChannelMessageHeader(): ChannelMessageHeader {
     reference: "",
     mention: "",
     reaction: "",
-    repliers: [],
   };
 }
 
@@ -14480,9 +14477,6 @@ export const ChannelMessageHeader = {
     }
     if (message.reaction !== "") {
       writer.uint32(66).string(message.reaction);
-    }
-    for (const v of message.repliers) {
-      writer.uint32(74).string(v!);
     }
     return writer;
   },
@@ -14550,13 +14544,6 @@ export const ChannelMessageHeader = {
 
           message.reaction = reader.string();
           continue;
-        case 9:
-          if (tag !== 74) {
-            break;
-          }
-
-          message.repliers.push(reader.string());
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -14576,7 +14563,6 @@ export const ChannelMessageHeader = {
       reference: isSet(object.reference) ? globalThis.String(object.reference) : "",
       mention: isSet(object.mention) ? globalThis.String(object.mention) : "",
       reaction: isSet(object.reaction) ? globalThis.String(object.reaction) : "",
-      repliers: globalThis.Array.isArray(object?.repliers) ? object.repliers.map((e: any) => globalThis.String(e)) : [],
     };
   },
 
@@ -14606,9 +14592,6 @@ export const ChannelMessageHeader = {
     if (message.reaction !== "") {
       obj.reaction = message.reaction;
     }
-    if (message.repliers?.length) {
-      obj.repliers = message.repliers;
-    }
     return obj;
   },
 
@@ -14625,7 +14608,6 @@ export const ChannelMessageHeader = {
     message.reference = object.reference ?? "";
     message.mention = object.mention ?? "";
     message.reaction = object.reaction ?? "";
-    message.repliers = object.repliers?.map((e) => e) || [];
     return message;
   },
 };
