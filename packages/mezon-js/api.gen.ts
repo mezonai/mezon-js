@@ -4930,7 +4930,7 @@ export class MezonApi {
           return {} as ApiChannelMessageList;
         } else if (response.status >= 200 && response.status < 300) {
            const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiChannelMessageList;
+          return tsproto.ChannelMessageList.decode(new Uint8Array(buffer)) as unknown as ApiChannelMessageList;
         } else {
           throw response;
         }
@@ -5292,7 +5292,7 @@ export class MezonApi {
           return {} as ApiChannelDescList;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiChannelDescList;
+          return tsproto.ChannelDescList.decode(new Uint8Array(buffer)) as unknown as ApiChannelDescList;
         } else {
           throw response;
         }
@@ -5369,7 +5369,7 @@ export class MezonApi {
           return {} as ApiAllUsersAddChannelResponse;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiAllUsersAddChannelResponse;
+          return tsproto.AllUsersAddChannelResponse.decode(new Uint8Array(buffer)) as unknown as ApiAllUsersAddChannelResponse;
         } else {
           throw response;
         }
@@ -5509,7 +5509,7 @@ export class MezonApi {
           return {} as ApiChannelSettingListResponse;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiChannelSettingListResponse;
+          return tsproto.ChannelSettingListResponse.decode(new Uint8Array(buffer)) as unknown as ApiChannelSettingListResponse;
         } else {
           throw response;
         }
@@ -5555,7 +5555,7 @@ export class MezonApi {
           return {} as ApiVoiceChannelUserList;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiVoiceChannelUserList;
+          return tsproto.VoiceChannelUserList.decode(new Uint8Array(buffer)) as unknown as ApiVoiceChannelUserList;
         } else {
           throw response;
         }
@@ -5593,7 +5593,7 @@ export class MezonApi {
           return {} as ApiListClanUnreadMsgIndicatorResponse;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiListClanUnreadMsgIndicatorResponse;
+          return tsproto.ListClanUnreadMsgIndicatorResponse.decode(new Uint8Array(buffer)) as unknown as ApiListClanUnreadMsgIndicatorResponse;
         } else {
           throw response;
         }
@@ -5633,7 +5633,7 @@ export class MezonApi {
           return {} as ApiClanDescList;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiClanDescList;
+          return tsproto.ClanDescList.decode(new Uint8Array(buffer)) as unknown as ApiClanDescList;
         } else {
           throw response;
         }
@@ -5966,7 +5966,7 @@ export class MezonApi {
           return {} as ApiClanUserList;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiClanUserList;
+          return tsproto.ClanUserList.decode(new Uint8Array(buffer)) as unknown as ApiClanUserList;
         } else {
           throw response;
         }
@@ -6416,7 +6416,7 @@ export class MezonApi {
           return {} as ApiEmojiRecentList;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiEmojiRecentList;
+          return tsproto.EmojiRecentList.decode(new Uint8Array(buffer)) as unknown as ApiEmojiRecentList;
         } else {
           throw response;
         }
@@ -6450,7 +6450,7 @@ export class MezonApi {
           return {} as ApiEmojiListedResponse;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiEmojiListedResponse;
+          return tsproto.EmojiListedResponse.decode(new Uint8Array(buffer)) as unknown as ApiEmojiListedResponse;
         } else {
           throw response;
         }
@@ -6560,7 +6560,7 @@ export class MezonApi {
           return {} as ApiEventList;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiEventList;
+          return tsproto.EventList.decode(new Uint8Array(buffer)) as unknown as ApiEventList;
         } else {
           throw response;
         }
@@ -6811,7 +6811,7 @@ export class MezonApi {
           return {} as ApiFriendList;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiFriendList;
+          return tsproto.FriendList.decode(new Uint8Array(buffer)) as unknown as ApiFriendList;
         } else {
           throw response;
         }
@@ -6954,7 +6954,7 @@ export class MezonApi {
           return {} as ApiNotificationChannelCategorySettingList;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiNotificationChannelCategorySettingList;
+          return tsproto.NotificationChannelCategorySettingList.decode(new Uint8Array(buffer)) as unknown as ApiNotificationChannelCategorySettingList;
         } else {
           throw response;
         }
@@ -7031,7 +7031,7 @@ export class MezonApi {
           return {} as ApiNotificationUserChannel;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiNotificationUserChannel;
+          return tsproto.NotificationUserChannel.decode(new Uint8Array(buffer)) as unknown as ApiNotificationUserChannel;
         } else {
           throw response;
         }
@@ -7067,7 +7067,7 @@ export class MezonApi {
           return {} as ApiNotificationUserChannel;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiNotificationUserChannel;
+          return tsproto.NotificationUserChannel.decode(new Uint8Array(buffer)) as unknown as ApiNotificationUserChannel;
         } else {
           throw response;
         }
@@ -7103,7 +7103,7 @@ export class MezonApi {
           return {} as ApiNotificationSetting;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiNotificationSetting;
+          return tsproto.NotificationSetting.decode(new Uint8Array(buffer)) as unknown as ApiNotificationSetting;
         } else {
           throw response;
         }
@@ -7401,7 +7401,7 @@ export class MezonApi {
           return {} as ApiChannelDescList;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiChannelDescList;
+          return tsproto.ChannelDescList.decode(new Uint8Array(buffer)) as unknown as ApiChannelDescList;
         } else {
           throw response;
         }
@@ -7629,7 +7629,7 @@ export class MezonApi {
           return {} as ApiNotificationList;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiNotificationList;
+          return tsproto.NotificationList.decode(new Uint8Array(buffer)) as unknown as ApiNotificationList;
         } else {
           throw response;
         }
@@ -7999,7 +7999,7 @@ export class MezonApi {
           return {} as ApiPermissionList;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiPermissionList;
+          return tsproto.PermissionList.decode(new Uint8Array(buffer)) as unknown as ApiPermissionList;
         } else {
           throw response;
         }
@@ -8039,7 +8039,7 @@ export class MezonApi {
           return {} as ApiPermissionRoleChannelListEventResponse;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiPermissionRoleChannelListEventResponse;
+          return tsproto.PermissionRoleChannelListEventResponse.decode(new Uint8Array(buffer)) as unknown as ApiPermissionRoleChannelListEventResponse;
         } else {
           throw response;
         }
@@ -8119,7 +8119,7 @@ export class MezonApi {
           return {} as ApiPinMessagesList;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiPinMessagesList;
+          return tsproto.PinMessagesList.decode(new Uint8Array(buffer)) as unknown as ApiPinMessagesList;
         } else {
           throw response;
         }
@@ -8435,7 +8435,7 @@ export class MezonApi {
           return {} as ApiRoleListEventResponse;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiRoleListEventResponse;
+          return tsproto.RoleListEventResponse.decode(new Uint8Array(buffer)) as unknown as ApiRoleListEventResponse;
         } else {
           throw response;
         }
@@ -8657,10 +8657,10 @@ export class MezonApi {
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return {};
+          return {} as ApiPermissionList;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiPermissionList;
+          return tsproto.PermissionList.decode(new Uint8Array(buffer)) as unknown as ApiPermissionList;
         } else {
           throw response;
         }
@@ -8707,7 +8707,7 @@ export class MezonApi {
           return {} as ApiRoleUserList;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiRoleUserList;
+          return tsproto.RoleUserList.decode(new Uint8Array(buffer)) as unknown as ApiRoleUserList;
         } else {
           throw response;
         }
@@ -8752,7 +8752,7 @@ export class MezonApi {
           return {} as ApiRoleList;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiRoleList;
+          return tsproto.RoleList.decode(new Uint8Array(buffer)) as unknown as ApiRoleList;
         } else {
           throw response;
         }
@@ -9132,43 +9132,7 @@ export class MezonApi {
           return {} as ApiStickerListedResponse;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiStickerListedResponse;
-        } else {
-          throw response;
-        }
-      }),
-      new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
-      ),
-    ]);
-  }
-
-  /** List streaming channels. */
-  listStreamingChannels(
-    bearerToken: string,
-    clanId?: string,
-    options: any = {}
-  ): Promise<ApiListStreamingChannelsResponse> {
-    const urlPath = "/v2/streaming-channels";
-    const queryParams = new Map<string, any>();
-    queryParams.set("clan_id", clanId);
-
-    let bodyJson: string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    fetchOptions.headers["Accept"] = "application/x-protobuf";
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiListStreamingChannelsResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiListStreamingChannelsResponse;
+          return tsproto.StickerListedResponse.decode(new Uint8Array(buffer)) as unknown as ApiStickerListedResponse;
         } else {
           throw response;
         }
@@ -9253,7 +9217,7 @@ export class MezonApi {
           return {} as ApiStreamingChannelUserList;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiStreamingChannelUserList;
+          return tsproto.StreamingChannelUserList.decode(new Uint8Array(buffer)) as unknown as ApiStreamingChannelUserList;
         } else {
           throw response;
         }
@@ -9287,7 +9251,7 @@ export class MezonApi {
           return {} as ApiSystemMessagesList;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiSystemMessagesList;
+          return tsproto.SystemMessagesList.decode(new Uint8Array(buffer)) as unknown as ApiSystemMessagesList;
         } else {
           throw response;
         }
@@ -9364,7 +9328,7 @@ export class MezonApi {
           return {} as ApiSdTopicList;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiSdTopicList;
+          return tsproto.SdTopicList.decode(new Uint8Array(buffer)) as unknown as ApiSdTopicList;
         } else {
           throw response;
         }
@@ -9586,7 +9550,7 @@ export class MezonApi {
           return {} as ApiChannelDescList;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiChannelDescList;
+          return tsproto.ChannelDescList.decode(new Uint8Array(buffer)) as unknown as ApiChannelDescList;
         } else {
           throw response;
         }
@@ -9868,7 +9832,7 @@ export class MezonApi {
           return {} as ApiAllUserClans;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiAllUserClans;
+          return tsproto.AllUserClans.decode(new Uint8Array(buffer)) as unknown as ApiAllUserClans;
         } else {
           throw response;
         }
@@ -10453,7 +10417,7 @@ export class MezonApi {
           return {} as ApiListOnboardingResponse;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiListOnboardingResponse;
+          return tsproto.ListOnboardingResponse.decode(new Uint8Array(buffer)) as unknown as ApiListOnboardingResponse;
         } else {
           throw response;
         }
@@ -10861,7 +10825,7 @@ export class MezonApi {
           return {} as ApiListOnboardingStepResponse;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiListOnboardingStepResponse;
+          return tsproto.ListOnboardingStepResponse.decode(new Uint8Array(buffer)) as unknown as ApiListOnboardingStepResponse;
         } else {
           throw response;
         }
@@ -11534,7 +11498,7 @@ export class MezonApi {
             return {} as ApiQuickMenuAccessList;
           } else if (response.status >= 200 && response.status < 300) {
             const buffer = await response.arrayBuffer();      
-          return tsproto.Account.decode(new Uint8Array(buffer)) as unknown as ApiQuickMenuAccessList;
+          return tsproto.QuickMenuAccessList.decode(new Uint8Array(buffer)) as unknown as ApiQuickMenuAccessList;
           } else {
             throw response;
           }

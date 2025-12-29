@@ -91,7 +91,6 @@ import {
   MezonUpdateSystemMessageBody,
   ApiUpdateCategoryOrderRequest,
   ApiGiveCoffeeEvent,
-  ApiListStreamingChannelsResponse,
   ApiStreamingChannelUserList,
   ApiRegisterStreamingChannelRequest,
   ApiRegisterStreamingChannelResponse,
@@ -1516,7 +1515,7 @@ export class Client {
               lang_tag: gu.user!.lang_tag,
               location: gu.user!.location,
               online: gu.user!.online,
-              is_mobile: gu.user?.is_mobile || false,
+              is_mobile: gu.user?.is_mobile,
               timezone: gu.user!.timezone,
               update_time: gu.user!.update_time,
               username: gu.user!.username,
@@ -1938,7 +1937,7 @@ export class Client {
               timezone: f.user!.timezone,
               update_time: f.user!.update_time,
               username: f.user!.username,
-              is_mobile: f.user?.is_mobile || false,
+              is_mobile: f.user?.is_mobile,
               user_status: f.user!.user_status,
               status: f.user!.status,
               mezon_id: f.user!.mezon_id,
@@ -3224,25 +3223,6 @@ export class Client {
       .sendToken(session.token, request)
       .then((response: any) => {
         return response !== undefined
-      });
-  }
-
-  async listStreamingChannels(
-    session: Session,
-    clanId: string
-  ): Promise<ApiListStreamingChannelsResponse> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .listStreamingChannels(session.token, clanId)
-      .then((response: ApiListStreamingChannelsResponse) => {
-        return Promise.resolve(response);
       });
   }
 
