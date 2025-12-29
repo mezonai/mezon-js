@@ -97,725 +97,647 @@ export const protobufPackage = "mezon.realtime";
 
 /** An envelope for a realtime message. */
 export interface Envelope {
-  cid: string;
-  /** A response from a channel join operation. */
-  channel?:
-    | Channel
+  cid?: string | undefined;
+  message?:
+    | { $case: "channel"; channel: Channel }
+    | { $case: "clan_join"; clan_join: ClanJoin }
+    | { $case: "channel_join"; channel_join: ChannelJoin }
+    | { $case: "channel_leave"; channel_leave: ChannelLeave }
+    | { $case: "channel_message"; channel_message: ChannelMessage }
+    | { $case: "channel_message_ack"; channel_message_ack: ChannelMessageAck }
+    | { $case: "channel_message_send"; channel_message_send: ChannelMessageSend }
+    | { $case: "channel_message_update"; channel_message_update: ChannelMessageUpdate }
+    | { $case: "channel_message_remove"; channel_message_remove: ChannelMessageRemove }
+    | { $case: "channel_presence_event"; channel_presence_event: ChannelPresenceEvent }
+    | { $case: "error"; error: Error }
+    | { $case: "notifications"; notifications: Notifications }
+    | { $case: "rpc"; rpc: Rpc }
+    | { $case: "status"; status: Status }
+    | { $case: "status_follow"; status_follow: StatusFollow }
+    | { $case: "status_presence_event"; status_presence_event: StatusPresenceEvent }
+    | { $case: "status_unfollow"; status_unfollow: StatusUnfollow }
+    | { $case: "status_update"; status_update: StatusUpdate }
+    | { $case: "stream_data"; stream_data: StreamData }
+    | { $case: "stream_presence_event"; stream_presence_event: StreamPresenceEvent }
+    | { $case: "ping"; ping: Ping }
+    | { $case: "pong"; pong: Pong }
+    | { $case: "message_typing_event"; message_typing_event: MessageTypingEvent }
+    | { $case: "last_seen_message_event"; last_seen_message_event: LastSeenMessageEvent }
+    | { $case: "message_reaction_event"; message_reaction_event: MessageReaction }
+    | { $case: "voice_joined_event"; voice_joined_event: VoiceJoinedEvent }
+    | { $case: "voice_leaved_event"; voice_leaved_event: VoiceLeavedEvent }
+    | { $case: "voice_started_event"; voice_started_event: VoiceStartedEvent }
+    | { $case: "voice_ended_event"; voice_ended_event: VoiceEndedEvent }
+    | { $case: "channel_created_event"; channel_created_event: ChannelCreatedEvent }
+    | { $case: "channel_deleted_event"; channel_deleted_event: ChannelDeletedEvent }
+    | { $case: "channel_updated_event"; channel_updated_event: ChannelUpdatedEvent }
+    | { $case: "last_pin_message_event"; last_pin_message_event: LastPinMessageEvent }
+    | { $case: "custom_status_event"; custom_status_event: CustomStatusEvent }
+    | { $case: "user_channel_added_event"; user_channel_added_event: UserChannelAdded }
+    | { $case: "user_channel_removed_event"; user_channel_removed_event: UserChannelRemoved }
+    | { $case: "user_clan_removed_event"; user_clan_removed_event: UserClanRemoved }
+    | { $case: "clan_updated_event"; clan_updated_event: ClanUpdatedEvent }
+    | { $case: "clan_profile_updated_event"; clan_profile_updated_event: ClanProfileUpdatedEvent }
+    | { $case: "check_name_existed_event"; check_name_existed_event: CheckNameExistedEvent }
+    | { $case: "user_profile_updated_event"; user_profile_updated_event: UserProfileUpdatedEvent }
+    | { $case: "add_clan_user_event"; add_clan_user_event: AddClanUserEvent }
+    | { $case: "clan_event_created"; clan_event_created: CreateEventRequest }
+    | { $case: "role_assign_event"; role_assign_event: RoleAssignedEvent }
+    | { $case: "clan_deleted_event"; clan_deleted_event: ClanDeletedEvent }
+    | { $case: "give_coffee_event"; give_coffee_event: GiveCoffeeEvent }
+    | { $case: "sticker_create_event"; sticker_create_event: StickerCreateEvent }
+    | { $case: "sticker_update_event"; sticker_update_event: StickerUpdateEvent }
+    | { $case: "sticker_delete_event"; sticker_delete_event: StickerDeleteEvent }
+    | { $case: "role_event"; role_event: RoleEvent }
+    | { $case: "event_emoji"; event_emoji: EventEmoji }
+    | { $case: "streaming_joined_event"; streaming_joined_event: StreamingJoinedEvent }
+    | { $case: "streaming_leaved_event"; streaming_leaved_event: StreamingLeavedEvent }
+    | { $case: "streaming_started_event"; streaming_started_event: StreamingStartedEvent }
+    | { $case: "streaming_ended_event"; streaming_ended_event: StreamingEndedEvent }
+    | { $case: "permission_set_event"; permission_set_event: PermissionSetEvent }
+    | { $case: "permission_changed_event"; permission_changed_event: PermissionChangedEvent }
+    | { $case: "token_sent_event"; token_sent_event: TokenSentEvent }
+    | { $case: "message_button_clicked"; message_button_clicked: MessageButtonClicked }
+    | { $case: "unmute_event"; unmute_event: UnmuteEvent }
+    | { $case: "webrtc_signaling_fwd"; webrtc_signaling_fwd: WebrtcSignalingFwd }
+    | { $case: "list_activity"; list_activity: ListActivity }
+    | { $case: "dropdown_box_selected"; dropdown_box_selected: DropdownBoxSelected }
+    | { $case: "incoming_call_push"; incoming_call_push: IncomingCallPush }
+    | { $case: "sd_topic_event"; sd_topic_event: SdTopicEvent }
+    | { $case: "follow_event"; follow_event: FollowEvent }
+    | { $case: "channel_app_event"; channel_app_event: ChannelAppEvent }
+    | { $case: "user_status_event"; user_status_event: UserStatusEvent }
+    | { $case: "remove_friend"; remove_friend: RemoveFriend }
+    | { $case: "webhook_event"; webhook_event: Webhook }
+    | { $case: "noti_user_channel"; noti_user_channel: NotificationUserChannel }
+    | { $case: "join_channel_app_data"; join_channel_app_data: JoinChannelAppData }
+    | { $case: "canvas_event"; canvas_event: ChannelCanvas }
+    | { $case: "unpin_message_event"; unpin_message_event: UnpinMessageEvent }
+    | { $case: "category_event"; category_event: CategoryEvent }
+    | {
+      $case: "handle_participant_meet_state_event";
+      handle_participant_meet_state_event: HandleParticipantMeetStateEvent;
+    }
+    | { $case: "delete_account_event"; delete_account_event: DeleteAccountEvent }
+    | { $case: "ephemeral_message_send"; ephemeral_message_send: EphemeralMessageSend }
+    | { $case: "block_friend"; block_friend: BlockFriend }
+    | { $case: "voice_reaction_send"; voice_reaction_send: VoiceReactionSend }
+    | { $case: "mark_as_read"; mark_as_read: MarkAsRead }
+    | { $case: "list_data_socket"; list_data_socket: ListDataSocket }
+    | { $case: "quick_menu_event"; quick_menu_event: QuickMenuDataEvent }
+    | { $case: "un_block_friend"; un_block_friend: UnblockFriend }
+    | { $case: "meet_participant_event"; meet_participant_event: MeetParticipantEvent }
+    | { $case: "transfer_ownership_event"; transfer_ownership_event: TransferOwnershipEvent }
+    | { $case: "add_friend"; add_friend: AddFriend }
+    | { $case: "ban_user_event"; ban_user_event: BannedUserEvent }
+    | { $case: "active_archived_thread"; active_archived_thread: ActiveArchivedThread }
+    | { $case: "allow_anonymous_event"; allow_anonymous_event: AllowAnonymousEvent }
     | undefined;
-  /** Join a realtime chat clan */
-  clan_join?:
-    | ClanJoin
-    | undefined;
-  /** Join a realtime chat channel. */
-  channel_join?:
-    | ChannelJoin
-    | undefined;
-  /** Leave a realtime chat channel. */
-  channel_leave?:
-    | ChannelLeave
-    | undefined;
-  /** An incoming message on a realtime chat channel. */
-  channel_message?:
-    | ChannelMessage
-    | undefined;
-  /** An acknowledgement received in response to sending a message on a chat channel. */
-  channel_message_ack?:
-    | ChannelMessageAck
-    | undefined;
-  /** Send a message to a realtime chat channel. */
-  channel_message_send?:
-    | ChannelMessageSend
-    | undefined;
-  /** Update a message previously sent to a realtime chat channel. */
-  channel_message_update?:
-    | ChannelMessageUpdate
-    | undefined;
-  /** Remove a message previously sent to a realtime chat channel. */
-  channel_message_remove?:
-    | ChannelMessageRemove
-    | undefined;
-  /** Presence update for a particular realtime chat channel. */
-  channel_presence_event?:
-    | ChannelPresenceEvent
-    | undefined;
-  /** Describes an error which occurred on the server. */
-  error?:
-    | Error
-    | undefined;
-  /** Notifications send by the server. */
-  notifications?:
-    | Notifications
-    | undefined;
-  /** RPC call or response. */
-  rpc?:
-    | Rpc
-    | undefined;
-  /** An incoming status snapshot for some set of users. */
-  status?:
-    | Status
-    | undefined;
-  /** Start following some set of users to receive their status updates. */
-  status_follow?:
-    | StatusFollow
-    | undefined;
-  /** An incoming status update. */
-  status_presence_event?:
-    | StatusPresenceEvent
-    | undefined;
-  /** Stop following some set of users to no longer receive their status updates. */
-  status_unfollow?:
-    | StatusUnfollow
-    | undefined;
-  /** Set the user's own status. */
-  status_update?:
-    | StatusUpdate
-    | undefined;
-  /** A data message delivered over a stream. */
-  stream_data?:
-    | StreamData
-    | undefined;
-  /** Presence update for a particular stream. */
-  stream_presence_event?:
-    | StreamPresenceEvent
-    | undefined;
-  /** Application-level heartbeat and connection check. */
-  ping?:
-    | Ping
-    | undefined;
-  /** Application-level heartbeat and connection check response. */
-  pong?:
-    | Pong
-    | undefined;
-  /** User typing event */
-  message_typing_event?:
-    | MessageTypingEvent
-    | undefined;
-  /** Last seen message event */
-  last_seen_message_event?:
-    | LastSeenMessageEvent
-    | undefined;
-  /** User send reactoin event */
-  message_reaction_event?:
-    | MessageReaction
-    | undefined;
-  /** user join voice channel */
-  voice_joined_event?:
-    | VoiceJoinedEvent
-    | undefined;
-  /** user leave voice channel */
-  voice_leaved_event?:
-    | VoiceLeavedEvent
-    | undefined;
-  /** voice channel start */
-  voice_started_event?:
-    | VoiceStartedEvent
-    | undefined;
-  /** voice channel end */
-  voice_ended_event?:
-    | VoiceEndedEvent
-    | undefined;
-  /** channel created event */
-  channel_created_event?:
-    | ChannelCreatedEvent
-    | undefined;
-  /** channel deleted event */
-  channel_deleted_event?:
-    | ChannelDeletedEvent
-    | undefined;
-  /** channel deleted event */
-  channel_updated_event?:
-    | ChannelUpdatedEvent
-    | undefined;
-  /** Last pin message event */
-  last_pin_message_event?:
-    | LastPinMessageEvent
-    | undefined;
-  /** Update custom status */
-  custom_status_event?:
-    | CustomStatusEvent
-    | undefined;
-  /** User is added to channel event */
-  user_channel_added_event?:
-    | UserChannelAdded
-    | undefined;
-  /** User is removed to channel event */
-  user_channel_removed_event?:
-    | UserChannelRemoved
-    | undefined;
-  /** User is removed to clan event */
-  user_clan_removed_event?:
-    | UserClanRemoved
-    | undefined;
-  /** Clan updated event */
-  clan_updated_event?:
-    | ClanUpdatedEvent
-    | undefined;
-  /** Clan profile updated event */
-  clan_profile_updated_event?:
-    | ClanProfileUpdatedEvent
-    | undefined;
-  /** Check duplicate clan name event */
-  check_name_existed_event?:
-    | CheckNameExistedEvent
-    | undefined;
-  /** User profile update event */
-  user_profile_updated_event?:
-    | UserProfileUpdatedEvent
-    | undefined;
-  /** user join clan */
-  add_clan_user_event?:
-    | AddClanUserEvent
-    | undefined;
-  /** clan event created */
-  clan_event_created?:
-    | CreateEventRequest
-    | undefined;
-  /** role assigned event */
-  role_assign_event?:
-    | RoleAssignedEvent
-    | undefined;
-  /** clan deleted event */
-  clan_deleted_event?:
-    | ClanDeletedEvent
-    | undefined;
-  /** Give a coffe event */
-  give_coffee_event?:
-    | GiveCoffeeEvent
-    | undefined;
-  /** sticker created event */
-  sticker_create_event?:
-    | StickerCreateEvent
-    | undefined;
-  /** sticker updated event */
-  sticker_update_event?:
-    | StickerUpdateEvent
-    | undefined;
-  /** sticker deleted event */
-  sticker_delete_event?:
-    | StickerDeleteEvent
-    | undefined;
-  /** role created event */
-  role_event?:
-    | RoleEvent
-    | undefined;
-  /** Event emoji */
-  event_emoji?:
-    | EventEmoji
-    | undefined;
-  /** user join streaming channel */
-  streaming_joined_event?:
-    | StreamingJoinedEvent
-    | undefined;
-  /** user leave streaming channel */
-  streaming_leaved_event?:
-    | StreamingLeavedEvent
-    | undefined;
-  /** streaming channel start */
-  streaming_started_event?:
-    | StreamingStartedEvent
-    | undefined;
-  /** streaming channel end */
-  streaming_ended_event?:
-    | StreamingEndedEvent
-    | undefined;
-  /** set permission of role/user in channel */
-  permission_set_event?:
-    | PermissionSetEvent
-    | undefined;
-  /** permission changed event */
-  permission_changed_event?:
-    | PermissionChangedEvent
-    | undefined;
-  /** token is sent event */
-  token_sent_event?: TokenSentEvent | undefined;
-  message_button_clicked?:
-    | MessageButtonClicked
-    | undefined;
-  /** unmute channel event */
-  unmute_event?:
-    | UnmuteEvent
-    | undefined;
-  /** voice call */
-  webrtc_signaling_fwd?:
-    | WebrtcSignalingFwd
-    | undefined;
-  /** List activity event for each user */
-  list_activity?:
-    | ListActivity
-    | undefined;
-  /** dropdown box selected */
-  dropdown_box_selected?:
-    | DropdownBoxSelected
-    | undefined;
-  /** IncomingCallPush */
-  incoming_call_push?:
-    | IncomingCallPush
-    | undefined;
-  /** Sd topic event */
-  sd_topic_event?:
-    | SdTopicEvent
-    | undefined;
-  /** follower list */
-  follow_event?:
-    | FollowEvent
-    | undefined;
-  /** channel app event */
-  channel_app_event?:
-    | ChannelAppEvent
-    | undefined;
-  /** User custom status event */
-  user_status_event?:
-    | UserStatusEvent
-    | undefined;
-  /** remove friend */
-  remove_friend?:
-    | RemoveFriend
-    | undefined;
-  /** webhook event */
-  webhook_event?:
-    | Webhook
-    | undefined;
-  /** notification */
-  noti_user_channel?:
-    | NotificationUserChannel
-    | undefined;
-  /** join channel app */
-  join_channel_app_data?:
-    | JoinChannelAppData
-    | undefined;
-  /** channel canvas */
-  canvas_event?:
-    | ChannelCanvas
-    | undefined;
-  /** unpin message */
-  unpin_message_event?:
-    | UnpinMessageEvent
-    | undefined;
-  /** category event */
-  category_event?:
-    | CategoryEvent
-    | undefined;
-  /** handle join/leave channel voice */
-  handle_participant_meet_state_event?:
-    | HandleParticipantMeetStateEvent
-    | undefined;
-  /** delete acc */
-  delete_account_event?:
-    | DeleteAccountEvent
-    | undefined;
-  /** ephemeral message send */
-  ephemeral_message_send?:
-    | EphemeralMessageSend
-    | undefined;
-  /** block friend */
-  block_friend?:
-    | BlockFriend
-    | undefined;
-  /** voice reaction message */
-  voice_reaction_send?:
-    | VoiceReactionSend
-    | undefined;
-  /** Mark As Read */
-  mark_as_read?:
-    | MarkAsRead
-    | undefined;
-  /** list socket data */
-  list_data_socket?:
-    | ListDataSocket
-    | undefined;
-  /** quick menu event */
-  quick_menu_event?:
-    | QuickMenuDataEvent
-    | undefined;
-  /** unblock friend */
-  un_block_friend?:
-    | UnblockFriend
-    | undefined;
-  /** mezon meet participant event */
-  meet_participant_event?:
-    | MeetParticipantEvent
-    | undefined;
-  /** tranfer ownership event */
-  transfer_ownership_event?:
-    | TransferOwnershipEvent
-    | undefined;
-  /** Add friend event */
-  add_friend?:
-    | AddFriend
-    | undefined;
-  /** Ban channel user */
-  ban_user_event?:
-    | BannedUserEvent
-    | undefined;
-  /** Active archive thread */
-  active_archived_thread?:
-    | ActiveArchivedThread
-    | undefined;
-  /** Config Allow Anonymous */
-  allow_anonymous_event?: AllowAnonymousEvent | undefined;
 }
 
 export interface FollowEvent {
 }
 
 export interface BannedUserEvent {
-  user_ids: string[];
-  action: number;
-  banner_id: string;
-  channel_id: string;
-  clan_id: string;
-  ban_time: number;
+  user_ids?: string[] | undefined;
+  action?: number | undefined;
+  banner_id?: string | undefined;
+  channel_id?: string | undefined;
+  clan_id?: string | undefined;
+  ban_time?: number | undefined;
 }
 
 export interface ChannelCanvas {
   /** id */
-  id: string;
+  id?:
+    | string
+    | undefined;
   /** title */
-  title: string;
+  title?:
+    | string
+    | undefined;
   /** content */
-  content: string;
+  content?:
+    | string
+    | undefined;
   /** creator */
-  creator_id: string;
+  creator_id?:
+    | string
+    | undefined;
   /** editor */
-  editor_id: string;
+  editor_id?:
+    | string
+    | undefined;
   /** is default */
-  is_default: boolean;
+  is_default?:
+    | boolean
+    | undefined;
   /** channel_id */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** status */
-  status: number;
+  status?: number | undefined;
 }
 
 export interface IncomingCallPush {
-  receiver_id: string;
-  json_data: string;
-  channel_id: string;
-  caller_id: string;
+  receiver_id?: string | undefined;
+  json_data?: string | undefined;
+  channel_id?: string | undefined;
+  caller_id?: string | undefined;
 }
 
 export interface WebrtcSignalingFwd {
-  receiver_id: string;
-  data_type: number;
-  json_data: string;
-  channel_id: string;
-  caller_id: string;
+  receiver_id?: string | undefined;
+  data_type?: number | undefined;
+  json_data?: string | undefined;
+  channel_id?: string | undefined;
+  caller_id?: string | undefined;
 }
 
 export interface SFUSignalingFwd {
-  clan_id: string;
-  channel_id: string;
-  data_type: number;
-  json_data: string;
-  user_id: string;
+  clan_id?: string | undefined;
+  channel_id?: string | undefined;
+  data_type?: number | undefined;
+  json_data?: string | undefined;
+  user_id?: string | undefined;
 }
 
 export interface AddClanUserEvent {
   /** the clan id */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** the user */
-  user:
+  user?:
     | UserProfileRedis
     | undefined;
   /** inviter */
-  invitor: string;
+  invitor?: string | undefined;
 }
 
 /** On role assign */
 export interface RoleAssignedEvent {
   /** The clan of this role */
-  ClanId: string;
+  ClanId?:
+    | string
+    | undefined;
   /** Role ID */
-  role_id: string;
+  role_id?:
+    | string
+    | undefined;
   /** UserIds Assigned */
-  user_ids_assigned: string[];
+  user_ids_assigned?:
+    | string[]
+    | undefined;
   /** UserIds Removed */
-  user_ids_removed: string[];
+  user_ids_removed?: string[] | undefined;
 }
 
 /** Permission role channel */
 export interface PermissionRoleChannel {
   /** Permission id */
-  permission_id: string;
+  permission_id?:
+    | string
+    | undefined;
   /** active */
-  active: boolean;
+  active?: boolean | undefined;
 }
 
 /** hashtagDM */
 export interface HashtagDm {
   /** The channel id. */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** The channel lable */
-  channel_label: string;
+  channel_label?:
+    | string
+    | undefined;
   /** The clan of this channel */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** The clan name */
-  clan_name: string;
+  clan_name?:
+    | string
+    | undefined;
   /**  */
-  meeting_code: string;
+  meeting_code?:
+    | string
+    | undefined;
   /**  */
-  type: number;
+  type?:
+    | number
+    | undefined;
   /**  */
-  channel_private: number;
+  channel_private?:
+    | number
+    | undefined;
   /**  */
-  parent_id: string;
+  parent_id?: string | undefined;
 }
 
 /** Channel description record */
 export interface ChannelDescription {
   /** The clan of this channel */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** The channel this message belongs to. */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** The channel type. */
-  type:
+  type?:
     | number
     | undefined;
   /** The channel lable */
-  channel_label: string;
+  channel_label?:
+    | string
+    | undefined;
   /** The channel private */
-  channel_private: number;
+  channel_private?:
+    | number
+    | undefined;
   /** meeting code */
-  meeting_code: string;
+  meeting_code?:
+    | string
+    | undefined;
   /**  */
-  clan_name: string;
+  clan_name?:
+    | string
+    | undefined;
   /**  */
-  parent_id: string;
+  parent_id?:
+    | string
+    | undefined;
   /**  */
-  last_sent_message: ChannelMessageHeader | undefined;
+  last_sent_message?: ChannelMessageHeader | undefined;
 }
 
 export interface ClanEmoji {
-  id: string;
+  id?:
+    | string
+    | undefined;
   /** src url */
-  src: string;
+  src?:
+    | string
+    | undefined;
   /** shortname */
-  shortname: string;
+  shortname?:
+    | string
+    | undefined;
   /** category */
-  category: string;
+  category?:
+    | string
+    | undefined;
   /** creator id */
-  creator_id: string;
+  creator_id?:
+    | string
+    | undefined;
   /** clan_id */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** clan logo */
-  logo: string;
+  logo?:
+    | string
+    | undefined;
   /** clan name */
-  clan_name: string;
+  clan_name?: string | undefined;
 }
 
 /** A realtime chat channel. */
 export interface Channel {
   /** The ID of the channel. */
-  id: string;
+  id?:
+    | string
+    | undefined;
   /** The users currently in the channel. */
-  presences: UserPresence[];
+  presences?:
+    | UserPresence[]
+    | undefined;
   /** A reference to the current user's presence in the channel. */
-  self:
+  self?:
     | UserPresence
     | undefined;
   /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-  chanel_label: string;
+  chanel_label?:
+    | string
+    | undefined;
   /** The clan logo */
-  clan_logo: string;
+  clan_logo?:
+    | string
+    | undefined;
   /** The category name */
-  category_name: string;
+  category_name?: string | undefined;
 }
 
 /** Join operation for a realtime chat channel. */
 export interface ClanJoin {
   /** The id of channel or group */
-  clan_id: string;
+  clan_id?: string | undefined;
 }
 
 /** Join operation for a realtime chat channel. */
 export interface ChannelJoin {
   /** The clan id */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** The id of channel or group */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** channel type */
-  channel_type: number;
+  channel_type?:
+    | number
+    | undefined;
   /** is public */
-  is_public: boolean;
+  is_public?: boolean | undefined;
 }
 
 /** Leave a realtime channel. */
 export interface ChannelLeave {
   /** The clan id */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** The ID of the channel to leave. */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** channel type */
-  channel_type: number;
+  channel_type?:
+    | number
+    | undefined;
   /** is public channel */
-  is_public: boolean;
+  is_public?: boolean | undefined;
 }
 
 /** A receipt reply from a channel message send operation. */
 export interface ChannelMessageAck {
   /** The channel the message was sent to. */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** The unique ID assigned to the message. */
-  message_id: string;
+  message_id?:
+    | string
+    | undefined;
   /** The code representing a message type or category. */
-  code:
+  code?:
     | number
     | undefined;
   /** Username of the message sender. */
-  username: string;
+  username?:
+    | string
+    | undefined;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
-  create_time:
+  create_time?:
     | Date
     | undefined;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated. */
-  update_time:
+  update_time?:
     | Date
     | undefined;
   /** True if the message was persisted to the channel's history, false otherwise. */
-  persistent:
+  persistent?:
     | boolean
     | undefined;
   /** The clan logo */
-  clan_logo: string;
+  clan_logo?:
+    | string
+    | undefined;
   /** The category name */
-  category_name: string;
+  category_name?: string | undefined;
 }
 
 export interface EphemeralMessageSend {
-  message: ChannelMessageSend | undefined;
-  receiver_id: string;
+  message?: ChannelMessageSend | undefined;
+  receiver_id?: string | undefined;
 }
 
 export interface QuickMenuDataEvent {
-  menu_name: string;
-  message: ChannelMessageSend | undefined;
+  menu_name?: string | undefined;
+  message?: ChannelMessageSend | undefined;
 }
 
 export interface VoiceReactionSend {
   /** list emoji */
-  emojis: string[];
+  emojis?:
+    | string[]
+    | undefined;
   /** channel_id */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** sender id */
-  sender_id: string;
+  sender_id?:
+    | string
+    | undefined;
   /** type */
-  media_type: number;
+  media_type?: number | undefined;
 }
 
 export interface MarkAsRead {
   /** channel id */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** category_id */
-  category_id: string;
+  category_id?:
+    | string
+    | undefined;
   /** clan id */
-  clan_id: string;
+  clan_id?: string | undefined;
 }
 
 /** Send a message to a realtime channel. */
 export interface ChannelMessageSend {
   /** The clan that channel belong to. */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** The channel to sent to. */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** Message content. */
-  content: string;
+  content?:
+    | string
+    | undefined;
   /** Message mention */
-  mentions: MessageMention[];
+  mentions?:
+    | MessageMention[]
+    | undefined;
   /** Message attachment */
-  attachments: MessageAttachment[];
+  attachments?:
+    | MessageAttachment[]
+    | undefined;
   /** Message reference */
-  references: MessageRef[];
+  references?:
+    | MessageRef[]
+    | undefined;
   /** Mode */
-  mode: number;
+  mode?:
+    | number
+    | undefined;
   /** anonymous message */
-  anonymous_message: boolean;
+  anonymous_message?:
+    | boolean
+    | undefined;
   /** mention everyone */
-  mention_everyone: boolean;
+  mention_everyone?:
+    | boolean
+    | undefined;
   /** clan avatar */
-  avatar: string;
+  avatar?:
+    | string
+    | undefined;
   /** is public */
-  is_public: boolean;
+  is_public?:
+    | boolean
+    | undefined;
   /** code */
-  code: number;
+  code?:
+    | number
+    | undefined;
   /** topic id */
-  topic_id: string;
+  topic_id?:
+    | string
+    | undefined;
   /** message id */
-  id: string;
+  id?: string | undefined;
 }
 
 /** Update a message previously sent to a realtime channel. */
 export interface ChannelMessageUpdate {
   /** The clan that channel belong to. */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** The channel the message was sent to. */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** The ID assigned to the message to update. */
-  message_id: string;
+  message_id?:
+    | string
+    | undefined;
   /** New message content. */
-  content: string;
+  content?:
+    | string
+    | undefined;
   /** The mentions */
-  mentions: MessageMention[];
+  mentions?:
+    | MessageMention[]
+    | undefined;
   /** Message attachment */
-  attachments: MessageAttachment[];
+  attachments?:
+    | MessageAttachment[]
+    | undefined;
   /** The mode */
-  mode: number;
+  mode?:
+    | number
+    | undefined;
   /** is public */
-  is_public: boolean;
+  is_public?:
+    | boolean
+    | undefined;
   /** hide editted */
-  hide_editted: boolean;
+  hide_editted?:
+    | boolean
+    | undefined;
   /** topic id */
-  topic_id: string;
+  topic_id?:
+    | string
+    | undefined;
   /** update message topic */
-  is_update_msg_topic: boolean;
+  is_update_msg_topic?:
+    | boolean
+    | undefined;
   /** old mentions */
-  old_mentions: string;
+  old_mentions?: string | undefined;
 }
 
 /** Remove a message previously sent to a realtime channel. */
 export interface ChannelMessageRemove {
   /** The clan that channel belong to. */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** The channel the message was sent to. */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** The ID assigned to the message to update. */
-  message_id: string;
+  message_id?:
+    | string
+    | undefined;
   /** The mode */
-  mode: number;
+  mode?:
+    | number
+    | undefined;
   /** is public */
-  is_public: boolean;
+  is_public?:
+    | boolean
+    | undefined;
   /** has_attachments. */
-  has_attachment: boolean;
+  has_attachment?:
+    | boolean
+    | undefined;
   /**  */
-  topic_id: string;
+  topic_id?:
+    | string
+    | undefined;
   /** Message mention */
-  mentions: string;
+  mentions?:
+    | string
+    | undefined;
   /** Message reference */
-  references: string;
+  references?: string | undefined;
 }
 
 /** A set of joins and leaves on a particular channel. */
 export interface ChannelPresenceEvent {
   /** The channel identifier this event is for. */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** Presences joining the channel as part of this event, if any. */
-  joins: UserPresence[];
+  joins?:
+    | UserPresence[]
+    | undefined;
   /** Presences leaving the channel as part of this event, if any. */
-  leaves: UserPresence[];
+  leaves?:
+    | UserPresence[]
+    | undefined;
   /** The clan logo */
-  clan_logo: string;
+  clan_logo?:
+    | string
+    | undefined;
   /** The category name */
-  category_name: string;
+  category_name?:
+    | string
+    | undefined;
   /** The mode */
-  mode: number;
+  mode?: number | undefined;
 }
 
 /** A logical error which may occur on the server. */
 export interface Error {
   /** The error code which should be one of "Error.Code" enums. */
-  code: number;
+  code?:
+    | number
+    | undefined;
   /** A message in English to help developers debug the response. */
-  message: string;
+  message?:
+    | string
+    | undefined;
   /** Additional error details which may be different for each response. */
-  context: { [key: string]: string };
+  context?: { [key: string]: string } | undefined;
 }
 
 /** The selection of possible error codes. */
@@ -904,43 +826,59 @@ export interface Error_ContextEntry {
 /** A collection of zero or more notifications. */
 export interface Notifications {
   /** Collection of notifications. */
-  notifications: Notification[];
+  notifications?: Notification[] | undefined;
 }
 
 export interface AddFriend {
   /** user id */
-  user_id: string;
+  user_id?:
+    | string
+    | undefined;
   /** username */
-  username: string;
+  username?:
+    | string
+    | undefined;
   /** display name */
-  display_name: string;
+  display_name?:
+    | string
+    | undefined;
   /** avatar */
-  avatar: string;
+  avatar?: string | undefined;
 }
 
 export interface RemoveFriend {
   /**  */
-  user_id: string;
+  user_id?: string | undefined;
 }
 
 export interface BlockFriend {
   /**  */
-  user_id: string;
+  user_id?: string | undefined;
 }
 
 export interface UnblockFriend {
   /**  */
-  user_id: string;
+  user_id?:
+    | string
+    | undefined;
   /**  */
-  username: string;
+  username?:
+    | string
+    | undefined;
   /**  */
-  avatar: string;
+  avatar?:
+    | string
+    | undefined;
   /**  */
-  display_name: string;
+  display_name?:
+    | string
+    | undefined;
   /**  */
-  status: string;
+  status?:
+    | string
+    | undefined;
   /**  */
-  user_status: string;
+  user_status?: string | undefined;
 }
 
 /** Application-level heartbeat and connection check. */
@@ -954,1203 +892,1462 @@ export interface Pong {
 /** A snapshot of statuses for some set of users. */
 export interface Status {
   /** User statuses. */
-  presences: UserPresence[];
+  presences?: UserPresence[] | undefined;
 }
 
 /** Start receiving status updates for some set of users. */
 export interface StatusFollow {
   /** User IDs to follow. */
-  user_ids: string[];
+  user_ids?:
+    | string[]
+    | undefined;
   /** Usernames to follow. */
-  usernames: string[];
+  usernames?: string[] | undefined;
 }
 
 /** A batch of status updates for a given user. */
 export interface StatusPresenceEvent {
   /** New statuses for the user. */
-  joins: UserPresence[];
+  joins?:
+    | UserPresence[]
+    | undefined;
   /** Previous statuses for the user. */
-  leaves: UserPresence[];
+  leaves?: UserPresence[] | undefined;
 }
 
 /** Last pin message by user */
 export interface LastPinMessageEvent {
   /** The clan id */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** The unique ID of this channel. */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** The unique ID of this message. */
-  message_id: string;
+  message_id?:
+    | string
+    | undefined;
   /** The stream mode */
-  mode: number;
+  mode?:
+    | number
+    | undefined;
   /** The UserID */
-  user_id: string;
+  user_id?:
+    | string
+    | undefined;
   /** The timestamp */
-  timestamp_seconds: number;
+  timestamp_seconds?:
+    | number
+    | undefined;
   /** operation */
-  operation: number;
+  operation?:
+    | number
+    | undefined;
   /** is public */
-  is_public: boolean;
+  is_public?:
+    | boolean
+    | undefined;
   /** avatar */
-  message_sender_avatar: string;
+  message_sender_avatar?:
+    | string
+    | undefined;
   /** message sender id */
-  message_sender_id: string;
+  message_sender_id?:
+    | string
+    | undefined;
   /** message sender username */
-  message_sender_username: string;
+  message_sender_username?:
+    | string
+    | undefined;
   /** message content */
-  message_content: string;
+  message_content?:
+    | string
+    | undefined;
   /** attachment */
-  message_attachment: string;
+  message_attachment?:
+    | string
+    | undefined;
   /** create time */
-  message_created_time: string;
+  message_created_time?: string | undefined;
 }
 
 /** Last seen message by user */
 export interface LastSeenMessageEvent {
   /** The clan id */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** The unique ID of this channel. */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** The unique ID of this message. */
-  message_id: string;
+  message_id?:
+    | string
+    | undefined;
   /** The stream mode */
-  mode: number;
+  mode?:
+    | number
+    | undefined;
   /** The timestamp */
-  timestamp_seconds: number;
+  timestamp_seconds?:
+    | number
+    | undefined;
   /**  */
-  badge_count: number;
+  badge_count?: number | undefined;
 }
 
 /** Message typing event data */
 export interface MessageTypingEvent {
   /** The clan id */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** The channel this message belongs to. */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** Message sender, usually a user ID. */
-  sender_id: string;
+  sender_id?:
+    | string
+    | undefined;
   /** mode */
-  mode: number;
+  mode?:
+    | number
+    | undefined;
   /** is public */
-  is_public: boolean;
+  is_public?:
+    | boolean
+    | undefined;
   /** sender username */
-  sender_username: string;
+  sender_username?:
+    | string
+    | undefined;
   /** sender display name */
-  sender_display_name: string;
+  sender_display_name?:
+    | string
+    | undefined;
   /** topic id */
-  topic_id: string;
+  topic_id?: string | undefined;
 }
 
 /** Voice Joined event */
 export interface VoiceLeavedEvent {
   /** id voice */
-  id: string;
+  id?:
+    | string
+    | undefined;
   /** The unique identifier of the chat clan. */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** voice channel name */
-  voice_channel_id: string;
+  voice_channel_id?:
+    | string
+    | undefined;
   /** voice user_id */
-  voice_user_id: string;
+  voice_user_id?: string | undefined;
 }
 
 /** Voice Joined event */
 export interface VoiceJoinedEvent {
   /** The unique identifier of the chat clan. */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** The channel name */
-  clan_name: string;
+  clan_name?:
+    | string
+    | undefined;
   /** id voice */
-  id: string;
+  id?:
+    | string
+    | undefined;
   /** voice participant */
-  participant: string;
+  participant?:
+    | string
+    | undefined;
   /** user id */
-  user_id: string;
+  user_id?:
+    | string
+    | undefined;
   /** voice channel label */
-  voice_channel_label: string;
+  voice_channel_label?:
+    | string
+    | undefined;
   /** voice channel id */
-  voice_channel_id: string;
+  voice_channel_id?:
+    | string
+    | undefined;
   /** last screenshot */
-  last_screenshot: string;
+  last_screenshot?: string | undefined;
 }
 
 /** Voice start event */
 export interface VoiceStartedEvent {
   /** id voice */
-  id: string;
+  id?:
+    | string
+    | undefined;
   /** The unique identifier of the chat clan. */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** voice channel name */
-  voice_channel_id: string;
+  voice_channel_id?: string | undefined;
 }
 
 /** Voice start event */
 export interface VoiceEndedEvent {
   /** id voice */
-  id: string;
+  id?:
+    | string
+    | undefined;
   /** The unique identifier of the chat clan. */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** voice channel name */
-  voice_channel_id: string;
+  voice_channel_id?: string | undefined;
 }
 
 /** Streaming Joined event */
 export interface StreamingLeavedEvent {
   /** id */
-  id: string;
+  id?:
+    | string
+    | undefined;
   /** The unique identifier of the chat clan. */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** streaming channel name */
-  streaming_channel_id: string;
+  streaming_channel_id?:
+    | string
+    | undefined;
   /** streaming user_id */
-  streaming_user_id: string;
+  streaming_user_id?: string | undefined;
 }
 
 /** Streaming Joined event */
 export interface StreamingJoinedEvent {
   /** The unique identifier of the chat clan. */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** The channel name */
-  clan_name: string;
+  clan_name?:
+    | string
+    | undefined;
   /** id streaming */
-  id: string;
+  id?:
+    | string
+    | undefined;
   /** streaming participant */
-  participant: string;
+  participant?:
+    | string
+    | undefined;
   /** user id */
-  user_id: string;
+  user_id?:
+    | string
+    | undefined;
   /** streaming channel label */
-  streaming_channel_label: string;
+  streaming_channel_label?:
+    | string
+    | undefined;
   /** streaming channel id */
-  streaming_channel_id: string;
+  streaming_channel_id?: string | undefined;
 }
 
 /** Streaming start event */
 export interface StreamingStartedEvent {
   /** clan id */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** channel id */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** stream url */
-  streaming_url: string;
+  streaming_url?:
+    | string
+    | undefined;
   /** status */
-  is_streaming: boolean;
+  is_streaming?: boolean | undefined;
 }
 
 /** Streaming start event */
 export interface StreamingEndedEvent {
   /** clan id */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** channel id */
-  channel_id: string;
+  channel_id?: string | undefined;
 }
 
 export interface ChannelCreatedEvent {
   /** clan id */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** category */
-  category_id: string;
+  category_id?:
+    | string
+    | undefined;
   /** creator */
-  creator_id: string;
+  creator_id?:
+    | string
+    | undefined;
   /** parent id */
-  parent_id: string;
+  parent_id?:
+    | string
+    | undefined;
   /** channel id */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** channel label */
-  channel_label: string;
+  channel_label?:
+    | string
+    | undefined;
   /** channel private */
-  channel_private: number;
+  channel_private?:
+    | number
+    | undefined;
   /** channel type */
-  channel_type:
+  channel_type?:
     | number
     | undefined;
   /** status */
-  status: number;
+  status?:
+    | number
+    | undefined;
   /** app id */
-  app_id: string;
+  app_id?:
+    | string
+    | undefined;
   /** clan_name */
-  clan_name: string;
+  clan_name?:
+    | string
+    | undefined;
   /** channel avatar */
-  channel_avatar: string;
+  channel_avatar?: string | undefined;
 }
 
 export interface CategoryEvent {
   /** Category creator */
-  creator_id: string;
+  creator_id?:
+    | string
+    | undefined;
   /** the Clan that category belong to */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** Category name */
-  category_name: string;
+  category_name?:
+    | string
+    | undefined;
   /**  */
-  id: string;
+  id?:
+    | string
+    | undefined;
   /**  */
-  status: number;
+  status?: number | undefined;
 }
 
 export interface RoleEvent {
-  role: Role | undefined;
-  status: number;
-  user_id: string;
-  user_add_ids: string[];
-  user_remove_ids: string[];
-  active_permission_ids: string[];
-  remove_permission_ids: string[];
+  role?: Role | undefined;
+  status?: number | undefined;
+  user_id?: string | undefined;
+  user_add_ids?: string[] | undefined;
+  user_remove_ids?: string[] | undefined;
+  active_permission_ids?: string[] | undefined;
+  remove_permission_ids?: string[] | undefined;
 }
 
 export interface ChannelDeletedEvent {
   /** clan id */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** category */
-  category_id: string;
+  category_id?:
+    | string
+    | undefined;
   /** parent id */
-  parent_id: string;
+  parent_id?:
+    | string
+    | undefined;
   /** channel id */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** deletor */
-  deletor: string;
+  deletor?: string | undefined;
 }
 
 export interface ClanDeletedEvent {
   /** clan id */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** deletor */
-  deletor: string;
+  deletor?: string | undefined;
 }
 
 export interface StickerCreateEvent {
   /** clan id */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** source */
-  source: string;
+  source?:
+    | string
+    | undefined;
   /** shortname */
-  shortname: string;
+  shortname?:
+    | string
+    | undefined;
   /** category */
-  category: string;
+  category?:
+    | string
+    | undefined;
   /** creator_id */
-  creator_id: string;
+  creator_id?:
+    | string
+    | undefined;
   /** sticker id */
-  sticker_id: string;
+  sticker_id?:
+    | string
+    | undefined;
   /** logo */
-  logo: string;
+  logo?:
+    | string
+    | undefined;
   /** clan name */
-  clan_name: string;
+  clan_name?: string | undefined;
 }
 
 export interface StickerUpdateEvent {
   /** shortname */
-  shortname: string;
+  shortname?:
+    | string
+    | undefined;
   /** sticker id */
-  sticker_id: string;
+  sticker_id?:
+    | string
+    | undefined;
   /** user id update */
-  user_id: string;
+  user_id?: string | undefined;
 }
 
 export interface StickerDeleteEvent {
   /** sticker id */
-  sticker_id: string;
+  sticker_id?:
+    | string
+    | undefined;
   /** user id delete */
-  user_id: string;
+  user_id?: string | undefined;
 }
 
 export interface ChannelUpdatedEvent {
   /** clan id */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** category */
-  category_id: string;
+  category_id?:
+    | string
+    | undefined;
   /** creator */
-  creator_id: string;
+  creator_id?:
+    | string
+    | undefined;
   /** parent id */
-  parent_id: string;
+  parent_id?:
+    | string
+    | undefined;
   /** channel id */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** channel label */
-  channel_label: string;
+  channel_label?:
+    | string
+    | undefined;
   /** channel type */
-  channel_type:
+  channel_type?:
     | number
     | undefined;
   /** status */
-  status: number;
+  status?:
+    | number
+    | undefined;
   /** meeting code */
-  meeting_code: string;
+  meeting_code?:
+    | string
+    | undefined;
   /** error */
-  is_error: boolean;
+  is_error?:
+    | boolean
+    | undefined;
   /** channel private */
-  channel_private: boolean;
+  channel_private?:
+    | boolean
+    | undefined;
   /** app url */
-  app_id: string;
+  app_id?:
+    | string
+    | undefined;
   /** e2ee */
-  e2ee: number;
+  e2ee?:
+    | number
+    | undefined;
   /** topic */
-  topic: string;
+  topic?:
+    | string
+    | undefined;
   /**  */
-  age_restricted: number;
+  age_restricted?:
+    | number
+    | undefined;
   /**  */
-  active: number;
+  active?:
+    | number
+    | undefined;
   /** count message unread */
-  count_mess_unread: number;
+  count_mess_unread?:
+    | number
+    | undefined;
   /** The users to add. */
-  user_ids: string[];
+  user_ids?:
+    | string[]
+    | undefined;
   /** This is the role that needs to be added to the channel */
-  role_ids: string[];
+  role_ids?:
+    | string[]
+    | undefined;
   /**  */
-  channel_avatar: string;
+  channel_avatar?: string | undefined;
 }
 
 /** Stop receiving status updates for some set of users. */
 export interface StatusUnfollow {
   /** Users to unfollow. */
-  user_ids: string[];
+  user_ids?: string[] | undefined;
 }
 
 /** Set the user's own status. */
 export interface StatusUpdate {
   /** Status string to set, if not present the user will appear offline. */
-  status: string | undefined;
+  status?: string | undefined;
 }
 
 /** Represents identifying information for a stream. */
 export interface Stream {
   /** Mode identifies the type of stream. */
-  mode: number;
+  mode?:
+    | number
+    | undefined;
   /** Subject is the primary identifier, if any. */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** Subcontext is a secondary identifier, if any. */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** The label is an arbitrary identifying string, if the stream has one. */
-  label: string;
+  label?: string | undefined;
 }
 
 /** A data message delivered over a stream. */
 export interface StreamData {
   /** The stream this data message relates to. */
-  stream:
+  stream?:
     | Stream
     | undefined;
   /** The sender, if any. */
-  sender:
+  sender?:
     | UserPresence
     | undefined;
   /** Arbitrary contents of the data message. */
-  data: string;
+  data?:
+    | string
+    | undefined;
   /** True if this data was delivered reliably, false otherwise. */
-  reliable: boolean;
+  reliable?: boolean | undefined;
 }
 
 /** A set of joins and leaves on a particular stream. */
 export interface StreamPresenceEvent {
   /** The stream this event relates to. */
-  stream:
+  stream?:
     | Stream
     | undefined;
   /** Presences joining the stream as part of this event, if any. */
-  joins: UserPresence[];
+  joins?:
+    | UserPresence[]
+    | undefined;
   /** Presences leaving the stream as part of this event, if any. */
-  leaves: UserPresence[];
+  leaves?: UserPresence[] | undefined;
 }
 
 /** A user session associated to a stream, usually through a list operation or a join/leave event. */
 export interface UserPresence {
   /** The user this presence belongs to. */
-  user_id: string;
+  user_id?:
+    | string
+    | undefined;
   /** A unique session ID identifying the particular connection, because the user may have many. */
-  session_id: string;
+  session_id?:
+    | string
+    | undefined;
   /** The username for display purposes. */
-  username: string;
+  username?:
+    | string
+    | undefined;
   /** A user-set status message for this stream, if applicable. */
-  status:
+  status?:
     | string
     | undefined;
   /**  */
-  is_mobile: boolean;
+  is_mobile?:
+    | boolean
+    | undefined;
   /** user_status */
-  user_status: string;
+  user_status?: string | undefined;
 }
 
 /** A custom status presence */
 export interface CustomStatusEvent {
   /** the clan id */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** the user id */
-  user_id: string;
+  user_id?:
+    | string
+    | undefined;
   /** username */
-  username: string;
+  username?:
+    | string
+    | undefined;
   /** the status */
-  status: string;
+  status?:
+    | string
+    | undefined;
   /** time reset */
-  time_reset: number;
+  time_reset?:
+    | number
+    | undefined;
   /** no clear */
-  no_clear: boolean;
+  no_clear?: boolean | undefined;
 }
 
 /** A event when user is added to channel */
 export interface UserChannelAdded {
   /** the channel id */
-  channel_desc:
+  channel_desc?:
     | ChannelDescription1
     | undefined;
   /** the user */
-  users: UserProfileRedis[];
+  users?:
+    | UserProfileRedis[]
+    | undefined;
   /** the custom status */
-  status: string;
+  status?:
+    | string
+    | undefined;
   /** the clan id */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /**  */
-  caller:
+  caller?:
     | UserProfileRedis
     | undefined;
   /**  */
-  create_time_second: number;
+  create_time_second?:
+    | number
+    | undefined;
   /**  */
-  active: number;
+  active?: number | undefined;
 }
 
 /**  */
 export interface UserChannelRemoved {
   /** the channel id */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** the user */
-  user_ids: string[];
+  user_ids?:
+    | string[]
+    | undefined;
   /** the channel type */
-  channel_type: number;
+  channel_type?:
+    | number
+    | undefined;
   /** the clan_id */
-  clan_id: string;
-  badge_counts: number[];
+  clan_id?: string | undefined;
+  badge_counts?: number[] | undefined;
 }
 
 /**  */
 export interface UserClanRemoved {
   /** the clan id */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** the user */
-  user_ids: string[];
+  user_ids?: string[] | undefined;
 }
 
 /** clan updated event */
 export interface ClanUpdatedEvent {
   /** clan id */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** clan name */
-  clan_name: string;
+  clan_name?:
+    | string
+    | undefined;
   /** logo */
-  logo: string;
+  logo?:
+    | string
+    | undefined;
   /** banner */
-  banner: string;
+  banner?:
+    | string
+    | undefined;
   /** status */
-  status: number;
+  status?:
+    | number
+    | undefined;
   /** is onboarding */
-  is_onboarding: boolean;
+  is_onboarding?:
+    | boolean
+    | undefined;
   /** welcome channel id */
-  welcome_channel_id: string;
+  welcome_channel_id?:
+    | string
+    | undefined;
   /** onboarding_banner. */
-  onboarding_banner: string;
+  onboarding_banner?:
+    | string
+    | undefined;
   /** community banner */
-  community_banner: string;
+  community_banner?:
+    | string
+    | undefined;
   /** is community */
-  is_community: boolean;
+  is_community?:
+    | boolean
+    | undefined;
   /** about */
-  about: string;
+  about?:
+    | string
+    | undefined;
   /** description */
-  description: string;
+  description?:
+    | string
+    | undefined;
   /** prevent anonymous */
-  prevent_anonymous: boolean;
+  prevent_anonymous?: boolean | undefined;
 }
 
 /** clan profile updated event */
 export interface ClanProfileUpdatedEvent {
   /** the user id */
-  user_id: string;
+  user_id?:
+    | string
+    | undefined;
   /** the clan_nick */
-  clan_nick: string;
+  clan_nick?:
+    | string
+    | undefined;
   /** the avatar */
-  clan_avatar: string;
+  clan_avatar?:
+    | string
+    | undefined;
   /** the clan_id */
-  clan_id: string;
+  clan_id?: string | undefined;
 }
 
 /** user profile updated event */
 export interface UserProfileUpdatedEvent {
   /** the user id */
-  user_id: string;
+  user_id?:
+    | string
+    | undefined;
   /** the display_name */
-  display_name: string;
+  display_name?:
+    | string
+    | undefined;
   /** the avatar */
-  avatar: string;
+  avatar?:
+    | string
+    | undefined;
   /** the about_me */
-  about_me: string;
+  about_me?:
+    | string
+    | undefined;
   /** the channel_id */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** the clan_id */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** the encrypt_private_key */
-  encrypt_private_key: string;
+  encrypt_private_key?: string | undefined;
 }
 
 export interface ConfirmLinkMezonOTPData {
-  type: number;
-  value: string;
+  type?: number | undefined;
+  value?: string | undefined;
 }
 
 /** A event when user is added to channel */
 export interface UserProfileRedis {
   /** User IDs to follow. */
-  user_id: string;
+  user_id?:
+    | string
+    | undefined;
   /** Username to follow. */
-  username: string;
+  username?:
+    | string
+    | undefined;
   /** Avatar to follow. */
-  avatar: string;
+  avatar?:
+    | string
+    | undefined;
   /** Display name */
-  display_name: string;
+  display_name?:
+    | string
+    | undefined;
   /** user status */
-  user_status: string;
+  user_status?:
+    | string
+    | undefined;
   /** status online, offline, invisible, idle, do not disturb */
-  status: string;
+  status?:
+    | string
+    | undefined;
   /** isOnline */
-  online: boolean;
+  online?:
+    | boolean
+    | undefined;
   /** FCM token */
-  fcm_tokens: FCMTokens[];
+  fcm_tokens?:
+    | FCMTokens[]
+    | undefined;
   /** clans */
-  joined_clans: string[];
+  joined_clans?:
+    | string[]
+    | undefined;
   /** app token */
-  app_token: string;
+  app_token?:
+    | string
+    | undefined;
   /** create time */
-  create_time_second: number;
+  create_time_second?:
+    | number
+    | undefined;
   /** app url */
-  app_url: string;
+  app_url?:
+    | string
+    | undefined;
   /** is bot */
-  is_bot: boolean;
+  is_bot?:
+    | boolean
+    | undefined;
   /** for call DM iOS */
-  voip_token: string;
+  voip_token?: string | undefined;
 }
 
 export interface FCMTokens {
   /** deviceID to follow. */
-  device_id: string;
+  device_id?:
+    | string
+    | undefined;
   /** tokenID to follow. */
-  token_id: string;
+  token_id?:
+    | string
+    | undefined;
   /** platform to follow. */
-  platform: string;
+  platform?: string | undefined;
 }
 
 export interface CheckNameExistedEvent {
   /** name */
-  name: string;
+  name?:
+    | string
+    | undefined;
   /** condition_id */
-  condition_id: string;
+  condition_id?:
+    | string
+    | undefined;
   /** is exist */
-  exist: boolean;
+  exist?:
+    | boolean
+    | undefined;
   /** type check */
-  type: number;
+  type?:
+    | number
+    | undefined;
   /** clan id */
-  clan_id: string;
+  clan_id?: string | undefined;
 }
 
 /** Notification setting record */
 export interface NotificationChannelCategorySetting {
   /** Notification id */
-  id: string;
+  id?:
+    | string
+    | undefined;
   /**  */
-  channel_category_label: string;
+  channel_category_label?:
+    | string
+    | undefined;
   /** Notification title */
-  notification_setting_type: number;
+  notification_setting_type?:
+    | number
+    | undefined;
   /**  */
-  channel_category_title: string;
+  channel_category_title?:
+    | string
+    | undefined;
   /**  */
-  action: number;
+  action?: number | undefined;
 }
 
 export interface EventEmoji {
-  id: string;
-  clan_id: string;
-  short_name: string;
-  source: string;
-  category: string;
-  action: number;
-  user_id: string;
-  logo: string;
-  clan_name: string;
-  is_for_sale: boolean;
+  id?: string | undefined;
+  clan_id?: string | undefined;
+  short_name?: string | undefined;
+  source?: string | undefined;
+  category?: string | undefined;
+  action?: number | undefined;
+  user_id?: string | undefined;
+  logo?: string | undefined;
+  clan_name?: string | undefined;
+  is_for_sale?: boolean | undefined;
 }
 
 export interface PermissionSetEvent {
-  caller: string;
-  role_id: string;
-  user_id: string;
-  channel_id: string;
-  permission_updates: PermissionUpdate[];
+  caller?: string | undefined;
+  role_id?: string | undefined;
+  user_id?: string | undefined;
+  channel_id?: string | undefined;
+  permission_updates?: PermissionUpdate[] | undefined;
 }
 
 export interface PermissionChangedEvent {
-  user_id: string;
-  channel_id: string;
-  add_permissions: PermissionUpdate[];
-  remove_permissions: PermissionUpdate[];
-  default_permissions: PermissionUpdate[];
+  user_id?: string | undefined;
+  channel_id?: string | undefined;
+  add_permissions?: PermissionUpdate[] | undefined;
+  remove_permissions?: PermissionUpdate[] | undefined;
+  default_permissions?: PermissionUpdate[] | undefined;
 }
 
 export interface MessageButtonClicked {
-  message_id: string;
-  channel_id: string;
-  button_id: string;
-  sender_id: string;
-  user_id: string;
-  extra_data: string;
+  message_id?: string | undefined;
+  channel_id?: string | undefined;
+  button_id?: string | undefined;
+  sender_id?: string | undefined;
+  user_id?: string | undefined;
+  extra_data?: string | undefined;
 }
 
 export interface UnmuteEvent {
   /** channel id */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** category id */
-  category_id: string;
+  category_id?:
+    | string
+    | undefined;
   /** clan id */
-  clan_id: string;
+  clan_id?: string | undefined;
 }
 
 export interface ListActivity {
-  acts: UserActivity[];
+  acts?: UserActivity[] | undefined;
 }
 
 export interface DropdownBoxSelected {
-  message_id: string;
-  channel_id: string;
-  selectbox_id: string;
-  sender_id: string;
-  user_id: string;
-  values: string[];
+  message_id?: string | undefined;
+  channel_id?: string | undefined;
+  selectbox_id?: string | undefined;
+  sender_id?: string | undefined;
+  user_id?: string | undefined;
+  values?: string[] | undefined;
 }
 
 export interface SdTopicEvent {
-  id: string;
-  clan_id: string;
-  channel_id: string;
-  message_id: string;
-  user_id: string;
-  last_sent_message: ChannelMessageHeader | undefined;
-  message: ChannelMessage | undefined;
+  id?: string | undefined;
+  clan_id?: string | undefined;
+  channel_id?: string | undefined;
+  message_id?: string | undefined;
+  user_id?: string | undefined;
+  last_sent_message?: ChannelMessageHeader | undefined;
+  message?: ChannelMessage | undefined;
 }
 
 export interface ChannelAppEvent {
-  user_id: string;
-  username: string;
-  clan_id: string;
-  channel_id: string;
-  action: number;
+  user_id?: string | undefined;
+  username?: string | undefined;
+  clan_id?: string | undefined;
+  channel_id?: string | undefined;
+  action?: number | undefined;
 }
 
 export interface UserStatusEvent {
-  user_id: string;
-  custom_status: string;
+  user_id?: string | undefined;
+  custom_status?: string | undefined;
 }
 
 export interface JoinChannelAppData {
-  user_id: string;
-  username: string;
-  hash: string;
+  user_id?: string | undefined;
+  username?: string | undefined;
+  hash?: string | undefined;
 }
 
 export interface UnpinMessageEvent {
-  id: string;
-  message_id: string;
-  channel_id: string;
-  clan_id: string;
+  id?: string | undefined;
+  message_id?: string | undefined;
+  channel_id?: string | undefined;
+  clan_id?: string | undefined;
 }
 
 export interface HandleParticipantMeetStateEvent {
   /** clan id */
-  clan_id: string;
+  clan_id?:
+    | string
+    | undefined;
   /** channel id */
-  channel_id: string;
+  channel_id?:
+    | string
+    | undefined;
   /** display name */
-  display_name: string;
+  display_name?:
+    | string
+    | undefined;
   /** state (0: join, 1: leave) */
-  state: number;
+  state?:
+    | number
+    | undefined;
   /** room name */
-  room_name: string;
+  room_name?: string | undefined;
 }
 
 export interface DeleteAccountEvent {
   /** user id */
-  user_id: string;
+  user_id?: string | undefined;
 }
 
 export interface ListDataSocket {
-  api_name: string;
-  list_clan_req: ListClanDescRequest | undefined;
-  clan_desc_list: ClanDescList | undefined;
-  list_thread_req: ListThreadRequest | undefined;
-  channel_desc_list: ChannelDescList | undefined;
-  list_channel_users_uc_req: AllUsersAddChannelRequest | undefined;
-  channel_users_uc_list: AllUsersAddChannelResponse | undefined;
-  list_channel_detail_req: ListChannelDetailRequest | undefined;
-  channel_desc: ChannelDescription1 | undefined;
-  list_channel_req: ListChannelDescsRequest | undefined;
-  list_channel_message_req: ListChannelMessagesRequest | undefined;
-  channel_message_list: ChannelMessageList | undefined;
-  list_channel_users_req: ListChannelUsersRequest | undefined;
-  voice_user_list: VoiceChannelUserList | undefined;
-  channel_user_list: ChannelUserList | undefined;
-  list_channel_attachment_req: ListChannelAttachmentRequest | undefined;
-  channel_attachment_list: ChannelAttachmentList | undefined;
-  hashtag_dm_req: HashtagDmListRequest | undefined;
-  hashtag_dm_list: HashtagDmList | undefined;
-  channel_setting_req: ChannelSettingListRequest | undefined;
-  channel_setting_list: ChannelSettingListResponse | undefined;
-  favorite_channel_req: ListFavoriteChannelRequest | undefined;
-  favorite_channel_list: ListFavoriteChannelResponse | undefined;
-  search_thread_req: SearchThreadRequest | undefined;
-  notification_channel: NotificationChannel | undefined;
-  notificaion_user_channel: NotificationUserChannel | undefined;
-  notification_category: DefaultNotificationCategory | undefined;
-  notification_clan: NotificationClan | undefined;
-  notification_setting: NotificationSetting | undefined;
-  notification_message: NotifiReactMessage | undefined;
-  noti_channel_cat_setting_list: NotificationChannelCategorySettingList | undefined;
-  list_notification_req: ListNotificationsRequest | undefined;
-  notification_list: NotificationList | undefined;
-  sticker_list: StickerListedResponse | undefined;
-  emoji_recent_list: EmojiRecentList | undefined;
-  clan_webhook_req: ListClanWebhookRequest | undefined;
-  clan_webhook_list: ListClanWebhookResponse | undefined;
-  webhook_list_req: WebhookListRequest | undefined;
-  webhook_list: WebhookListResponse | undefined;
-  permission_list_req: ListPermissionsRequest | undefined;
-  permission_list: PermissionList | undefined;
-  role_user_req: ListRoleUsersRequest | undefined;
-  role_user_list: RoleUserList | undefined;
-  permission_user_req: ListPermissionOfUsersRequest | undefined;
-  role_list: RoleList | undefined;
-  role_list_event_req: RoleListEventRequest | undefined;
-  role_event_list: RoleListEventResponse | undefined;
-  user_permission_req: UserPermissionInChannelListRequest | undefined;
-  user_permission_list: UserPermissionInChannelListResponse | undefined;
-  permission_role_req: PermissionRoleChannelListEventRequest | undefined;
-  permission_role_list: PermissionRoleChannelListEventResponse | undefined;
-  emoji_list: EmojiListedResponse | undefined;
-  list_friend_req: ListFriendsRequest | undefined;
-  friend_list: FriendList | undefined;
-  list_apps_req: ListChannelAppsRequest | undefined;
-  channel_apps_list: ListChannelAppsResponse | undefined;
-  user_activity_list: ListUserActivity | undefined;
-  list_clan_user_req: ListClanUsersRequest | undefined;
-  clan_user_list: ClanUserList | undefined;
-  list_event_req: ListEventsRequest | undefined;
-  event_list: EventList | undefined;
-  list_category_req: CategoryDesc | undefined;
-  category_list: CategoryDescList | undefined;
-  stream_user_list: StreamingChannelUserList | undefined;
-  list_unread_msg_indicator_req: ListClanUnreadMsgIndicatorRequest | undefined;
-  unread_msg_indicator: ListClanUnreadMsgIndicatorResponse | undefined;
+  api_name?: string | undefined;
+  list_clan_req?: ListClanDescRequest | undefined;
+  clan_desc_list?: ClanDescList | undefined;
+  list_thread_req?: ListThreadRequest | undefined;
+  channel_desc_list?: ChannelDescList | undefined;
+  list_channel_users_uc_req?: AllUsersAddChannelRequest | undefined;
+  channel_users_uc_list?: AllUsersAddChannelResponse | undefined;
+  list_channel_detail_req?: ListChannelDetailRequest | undefined;
+  channel_desc?: ChannelDescription1 | undefined;
+  list_channel_req?: ListChannelDescsRequest | undefined;
+  list_channel_message_req?: ListChannelMessagesRequest | undefined;
+  channel_message_list?: ChannelMessageList | undefined;
+  list_channel_users_req?: ListChannelUsersRequest | undefined;
+  voice_user_list?: VoiceChannelUserList | undefined;
+  channel_user_list?: ChannelUserList | undefined;
+  list_channel_attachment_req?: ListChannelAttachmentRequest | undefined;
+  channel_attachment_list?: ChannelAttachmentList | undefined;
+  hashtag_dm_req?: HashtagDmListRequest | undefined;
+  hashtag_dm_list?: HashtagDmList | undefined;
+  channel_setting_req?: ChannelSettingListRequest | undefined;
+  channel_setting_list?: ChannelSettingListResponse | undefined;
+  favorite_channel_req?: ListFavoriteChannelRequest | undefined;
+  favorite_channel_list?: ListFavoriteChannelResponse | undefined;
+  search_thread_req?: SearchThreadRequest | undefined;
+  notification_channel?: NotificationChannel | undefined;
+  notificaion_user_channel?: NotificationUserChannel | undefined;
+  notification_category?: DefaultNotificationCategory | undefined;
+  notification_clan?: NotificationClan | undefined;
+  notification_setting?: NotificationSetting | undefined;
+  notification_message?: NotifiReactMessage | undefined;
+  noti_channel_cat_setting_list?: NotificationChannelCategorySettingList | undefined;
+  list_notification_req?: ListNotificationsRequest | undefined;
+  notification_list?: NotificationList | undefined;
+  sticker_list?: StickerListedResponse | undefined;
+  emoji_recent_list?: EmojiRecentList | undefined;
+  clan_webhook_req?: ListClanWebhookRequest | undefined;
+  clan_webhook_list?: ListClanWebhookResponse | undefined;
+  webhook_list_req?: WebhookListRequest | undefined;
+  webhook_list?: WebhookListResponse | undefined;
+  permission_list_req?: ListPermissionsRequest | undefined;
+  permission_list?: PermissionList | undefined;
+  role_user_req?: ListRoleUsersRequest | undefined;
+  role_user_list?: RoleUserList | undefined;
+  permission_user_req?: ListPermissionOfUsersRequest | undefined;
+  role_list?: RoleList | undefined;
+  role_list_event_req?: RoleListEventRequest | undefined;
+  role_event_list?: RoleListEventResponse | undefined;
+  user_permission_req?: UserPermissionInChannelListRequest | undefined;
+  user_permission_list?: UserPermissionInChannelListResponse | undefined;
+  permission_role_req?: PermissionRoleChannelListEventRequest | undefined;
+  permission_role_list?: PermissionRoleChannelListEventResponse | undefined;
+  emoji_list?: EmojiListedResponse | undefined;
+  list_friend_req?: ListFriendsRequest | undefined;
+  friend_list?: FriendList | undefined;
+  list_apps_req?: ListChannelAppsRequest | undefined;
+  channel_apps_list?: ListChannelAppsResponse | undefined;
+  user_activity_list?: ListUserActivity | undefined;
+  list_clan_user_req?: ListClanUsersRequest | undefined;
+  clan_user_list?: ClanUserList | undefined;
+  list_event_req?: ListEventsRequest | undefined;
+  event_list?: EventList | undefined;
+  list_category_req?: CategoryDesc | undefined;
+  category_list?: CategoryDescList | undefined;
+  stream_user_list?: StreamingChannelUserList | undefined;
+  list_unread_msg_indicator_req?: ListClanUnreadMsgIndicatorRequest | undefined;
+  unread_msg_indicator?: ListClanUnreadMsgIndicatorResponse | undefined;
 }
 
 export interface MeetParticipantEvent {
-  username: string;
-  room_name: string;
-  channel_id: string;
-  clan_id: string;
-  action: number;
+  username?: string | undefined;
+  room_name?: string | undefined;
+  channel_id?: string | undefined;
+  clan_id?: string | undefined;
+  action?: number | undefined;
 }
 
 export interface TransferOwnershipEvent {
-  clan_id: string;
-  prev_owner: string;
-  curr_owner: string;
+  clan_id?: string | undefined;
+  prev_owner?: string | undefined;
+  curr_owner?: string | undefined;
 }
 
 export interface ActiveArchivedThread {
-  clan_id: string;
-  channel_id: string;
+  clan_id?: string | undefined;
+  channel_id?: string | undefined;
 }
 
 export interface AllowAnonymousEvent {
-  clan_id: string;
-  allow: boolean;
+  clan_id?: string | undefined;
+  allow?: boolean | undefined;
 }
 
 export interface FcmDataPayload {
-  command_type: number;
-  receiver_id: string;
-  title: string;
-  body: string;
-  user_role_ids: string[];
-  user_sent_ids: string[];
-  priority: number;
-  info_message: ChannelMessage | undefined;
-  is_e2ee: boolean;
-  is_dm: boolean;
-  mention_here: boolean;
-  mentions: MessageMention[];
-  references: MessageRef[];
+  command_type?: number | undefined;
+  receiver_id?: string | undefined;
+  title?: string | undefined;
+  body?: string | undefined;
+  user_role_ids?: string[] | undefined;
+  user_sent_ids?: string[] | undefined;
+  priority?: number | undefined;
+  message?: ChannelMessage | undefined;
+  is_e2ee?: boolean | undefined;
+  is_dm?: boolean | undefined;
+  mention_here?: boolean | undefined;
+  mentions?: MessageMention[] | undefined;
+  references?: MessageRef[] | undefined;
+  attachments?: MessageAttachment[] | undefined;
 }
 
 function createBaseEnvelope(): Envelope {
-  return {
-    cid: "",
-    channel: undefined,
-    clan_join: undefined,
-    channel_join: undefined,
-    channel_leave: undefined,
-    channel_message: undefined,
-    channel_message_ack: undefined,
-    channel_message_send: undefined,
-    channel_message_update: undefined,
-    channel_message_remove: undefined,
-    channel_presence_event: undefined,
-    error: undefined,
-    notifications: undefined,
-    rpc: undefined,
-    status: undefined,
-    status_follow: undefined,
-    status_presence_event: undefined,
-    status_unfollow: undefined,
-    status_update: undefined,
-    stream_data: undefined,
-    stream_presence_event: undefined,
-    ping: undefined,
-    pong: undefined,
-    message_typing_event: undefined,
-    last_seen_message_event: undefined,
-    message_reaction_event: undefined,
-    voice_joined_event: undefined,
-    voice_leaved_event: undefined,
-    voice_started_event: undefined,
-    voice_ended_event: undefined,
-    channel_created_event: undefined,
-    channel_deleted_event: undefined,
-    channel_updated_event: undefined,
-    last_pin_message_event: undefined,
-    custom_status_event: undefined,
-    user_channel_added_event: undefined,
-    user_channel_removed_event: undefined,
-    user_clan_removed_event: undefined,
-    clan_updated_event: undefined,
-    clan_profile_updated_event: undefined,
-    check_name_existed_event: undefined,
-    user_profile_updated_event: undefined,
-    add_clan_user_event: undefined,
-    clan_event_created: undefined,
-    role_assign_event: undefined,
-    clan_deleted_event: undefined,
-    give_coffee_event: undefined,
-    sticker_create_event: undefined,
-    sticker_update_event: undefined,
-    sticker_delete_event: undefined,
-    role_event: undefined,
-    event_emoji: undefined,
-    streaming_joined_event: undefined,
-    streaming_leaved_event: undefined,
-    streaming_started_event: undefined,
-    streaming_ended_event: undefined,
-    permission_set_event: undefined,
-    permission_changed_event: undefined,
-    token_sent_event: undefined,
-    message_button_clicked: undefined,
-    unmute_event: undefined,
-    webrtc_signaling_fwd: undefined,
-    list_activity: undefined,
-    dropdown_box_selected: undefined,
-    incoming_call_push: undefined,
-    sd_topic_event: undefined,
-    follow_event: undefined,
-    channel_app_event: undefined,
-    user_status_event: undefined,
-    remove_friend: undefined,
-    webhook_event: undefined,
-    noti_user_channel: undefined,
-    join_channel_app_data: undefined,
-    canvas_event: undefined,
-    unpin_message_event: undefined,
-    category_event: undefined,
-    handle_participant_meet_state_event: undefined,
-    delete_account_event: undefined,
-    ephemeral_message_send: undefined,
-    block_friend: undefined,
-    voice_reaction_send: undefined,
-    mark_as_read: undefined,
-    list_data_socket: undefined,
-    quick_menu_event: undefined,
-    un_block_friend: undefined,
-    meet_participant_event: undefined,
-    transfer_ownership_event: undefined,
-    add_friend: undefined,
-    ban_user_event: undefined,
-    active_archived_thread: undefined,
-    allow_anonymous_event: undefined,
-  };
+  return { cid: "", message: undefined };
 }
 
 export const Envelope = {
   encode(message: Envelope, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.cid !== "") {
+    if (message.cid !== undefined && message.cid !== "") {
       writer.uint32(10).string(message.cid);
     }
-    if (message.channel !== undefined) {
-      Channel.encode(message.channel, writer.uint32(18).fork()).ldelim();
-    }
-    if (message.clan_join !== undefined) {
-      ClanJoin.encode(message.clan_join, writer.uint32(26).fork()).ldelim();
-    }
-    if (message.channel_join !== undefined) {
-      ChannelJoin.encode(message.channel_join, writer.uint32(34).fork()).ldelim();
-    }
-    if (message.channel_leave !== undefined) {
-      ChannelLeave.encode(message.channel_leave, writer.uint32(42).fork()).ldelim();
-    }
-    if (message.channel_message !== undefined) {
-      ChannelMessage.encode(message.channel_message, writer.uint32(50).fork()).ldelim();
-    }
-    if (message.channel_message_ack !== undefined) {
-      ChannelMessageAck.encode(message.channel_message_ack, writer.uint32(58).fork()).ldelim();
-    }
-    if (message.channel_message_send !== undefined) {
-      ChannelMessageSend.encode(message.channel_message_send, writer.uint32(66).fork()).ldelim();
-    }
-    if (message.channel_message_update !== undefined) {
-      ChannelMessageUpdate.encode(message.channel_message_update, writer.uint32(74).fork()).ldelim();
-    }
-    if (message.channel_message_remove !== undefined) {
-      ChannelMessageRemove.encode(message.channel_message_remove, writer.uint32(82).fork()).ldelim();
-    }
-    if (message.channel_presence_event !== undefined) {
-      ChannelPresenceEvent.encode(message.channel_presence_event, writer.uint32(90).fork()).ldelim();
-    }
-    if (message.error !== undefined) {
-      Error.encode(message.error, writer.uint32(98).fork()).ldelim();
-    }
-    if (message.notifications !== undefined) {
-      Notifications.encode(message.notifications, writer.uint32(106).fork()).ldelim();
-    }
-    if (message.rpc !== undefined) {
-      Rpc.encode(message.rpc, writer.uint32(114).fork()).ldelim();
-    }
-    if (message.status !== undefined) {
-      Status.encode(message.status, writer.uint32(122).fork()).ldelim();
-    }
-    if (message.status_follow !== undefined) {
-      StatusFollow.encode(message.status_follow, writer.uint32(130).fork()).ldelim();
-    }
-    if (message.status_presence_event !== undefined) {
-      StatusPresenceEvent.encode(message.status_presence_event, writer.uint32(138).fork()).ldelim();
-    }
-    if (message.status_unfollow !== undefined) {
-      StatusUnfollow.encode(message.status_unfollow, writer.uint32(146).fork()).ldelim();
-    }
-    if (message.status_update !== undefined) {
-      StatusUpdate.encode(message.status_update, writer.uint32(154).fork()).ldelim();
-    }
-    if (message.stream_data !== undefined) {
-      StreamData.encode(message.stream_data, writer.uint32(162).fork()).ldelim();
-    }
-    if (message.stream_presence_event !== undefined) {
-      StreamPresenceEvent.encode(message.stream_presence_event, writer.uint32(170).fork()).ldelim();
-    }
-    if (message.ping !== undefined) {
-      Ping.encode(message.ping, writer.uint32(178).fork()).ldelim();
-    }
-    if (message.pong !== undefined) {
-      Pong.encode(message.pong, writer.uint32(186).fork()).ldelim();
-    }
-    if (message.message_typing_event !== undefined) {
-      MessageTypingEvent.encode(message.message_typing_event, writer.uint32(194).fork()).ldelim();
-    }
-    if (message.last_seen_message_event !== undefined) {
-      LastSeenMessageEvent.encode(message.last_seen_message_event, writer.uint32(202).fork()).ldelim();
-    }
-    if (message.message_reaction_event !== undefined) {
-      MessageReaction.encode(message.message_reaction_event, writer.uint32(210).fork()).ldelim();
-    }
-    if (message.voice_joined_event !== undefined) {
-      VoiceJoinedEvent.encode(message.voice_joined_event, writer.uint32(218).fork()).ldelim();
-    }
-    if (message.voice_leaved_event !== undefined) {
-      VoiceLeavedEvent.encode(message.voice_leaved_event, writer.uint32(226).fork()).ldelim();
-    }
-    if (message.voice_started_event !== undefined) {
-      VoiceStartedEvent.encode(message.voice_started_event, writer.uint32(234).fork()).ldelim();
-    }
-    if (message.voice_ended_event !== undefined) {
-      VoiceEndedEvent.encode(message.voice_ended_event, writer.uint32(242).fork()).ldelim();
-    }
-    if (message.channel_created_event !== undefined) {
-      ChannelCreatedEvent.encode(message.channel_created_event, writer.uint32(250).fork()).ldelim();
-    }
-    if (message.channel_deleted_event !== undefined) {
-      ChannelDeletedEvent.encode(message.channel_deleted_event, writer.uint32(258).fork()).ldelim();
-    }
-    if (message.channel_updated_event !== undefined) {
-      ChannelUpdatedEvent.encode(message.channel_updated_event, writer.uint32(266).fork()).ldelim();
-    }
-    if (message.last_pin_message_event !== undefined) {
-      LastPinMessageEvent.encode(message.last_pin_message_event, writer.uint32(274).fork()).ldelim();
-    }
-    if (message.custom_status_event !== undefined) {
-      CustomStatusEvent.encode(message.custom_status_event, writer.uint32(282).fork()).ldelim();
-    }
-    if (message.user_channel_added_event !== undefined) {
-      UserChannelAdded.encode(message.user_channel_added_event, writer.uint32(290).fork()).ldelim();
-    }
-    if (message.user_channel_removed_event !== undefined) {
-      UserChannelRemoved.encode(message.user_channel_removed_event, writer.uint32(298).fork()).ldelim();
-    }
-    if (message.user_clan_removed_event !== undefined) {
-      UserClanRemoved.encode(message.user_clan_removed_event, writer.uint32(306).fork()).ldelim();
-    }
-    if (message.clan_updated_event !== undefined) {
-      ClanUpdatedEvent.encode(message.clan_updated_event, writer.uint32(314).fork()).ldelim();
-    }
-    if (message.clan_profile_updated_event !== undefined) {
-      ClanProfileUpdatedEvent.encode(message.clan_profile_updated_event, writer.uint32(322).fork()).ldelim();
-    }
-    if (message.check_name_existed_event !== undefined) {
-      CheckNameExistedEvent.encode(message.check_name_existed_event, writer.uint32(330).fork()).ldelim();
-    }
-    if (message.user_profile_updated_event !== undefined) {
-      UserProfileUpdatedEvent.encode(message.user_profile_updated_event, writer.uint32(338).fork()).ldelim();
-    }
-    if (message.add_clan_user_event !== undefined) {
-      AddClanUserEvent.encode(message.add_clan_user_event, writer.uint32(346).fork()).ldelim();
-    }
-    if (message.clan_event_created !== undefined) {
-      CreateEventRequest.encode(message.clan_event_created, writer.uint32(354).fork()).ldelim();
-    }
-    if (message.role_assign_event !== undefined) {
-      RoleAssignedEvent.encode(message.role_assign_event, writer.uint32(362).fork()).ldelim();
-    }
-    if (message.clan_deleted_event !== undefined) {
-      ClanDeletedEvent.encode(message.clan_deleted_event, writer.uint32(370).fork()).ldelim();
-    }
-    if (message.give_coffee_event !== undefined) {
-      GiveCoffeeEvent.encode(message.give_coffee_event, writer.uint32(378).fork()).ldelim();
-    }
-    if (message.sticker_create_event !== undefined) {
-      StickerCreateEvent.encode(message.sticker_create_event, writer.uint32(386).fork()).ldelim();
-    }
-    if (message.sticker_update_event !== undefined) {
-      StickerUpdateEvent.encode(message.sticker_update_event, writer.uint32(394).fork()).ldelim();
-    }
-    if (message.sticker_delete_event !== undefined) {
-      StickerDeleteEvent.encode(message.sticker_delete_event, writer.uint32(402).fork()).ldelim();
-    }
-    if (message.role_event !== undefined) {
-      RoleEvent.encode(message.role_event, writer.uint32(410).fork()).ldelim();
-    }
-    if (message.event_emoji !== undefined) {
-      EventEmoji.encode(message.event_emoji, writer.uint32(418).fork()).ldelim();
-    }
-    if (message.streaming_joined_event !== undefined) {
-      StreamingJoinedEvent.encode(message.streaming_joined_event, writer.uint32(426).fork()).ldelim();
-    }
-    if (message.streaming_leaved_event !== undefined) {
-      StreamingLeavedEvent.encode(message.streaming_leaved_event, writer.uint32(434).fork()).ldelim();
-    }
-    if (message.streaming_started_event !== undefined) {
-      StreamingStartedEvent.encode(message.streaming_started_event, writer.uint32(442).fork()).ldelim();
-    }
-    if (message.streaming_ended_event !== undefined) {
-      StreamingEndedEvent.encode(message.streaming_ended_event, writer.uint32(450).fork()).ldelim();
-    }
-    if (message.permission_set_event !== undefined) {
-      PermissionSetEvent.encode(message.permission_set_event, writer.uint32(458).fork()).ldelim();
-    }
-    if (message.permission_changed_event !== undefined) {
-      PermissionChangedEvent.encode(message.permission_changed_event, writer.uint32(466).fork()).ldelim();
-    }
-    if (message.token_sent_event !== undefined) {
-      TokenSentEvent.encode(message.token_sent_event, writer.uint32(474).fork()).ldelim();
-    }
-    if (message.message_button_clicked !== undefined) {
-      MessageButtonClicked.encode(message.message_button_clicked, writer.uint32(482).fork()).ldelim();
-    }
-    if (message.unmute_event !== undefined) {
-      UnmuteEvent.encode(message.unmute_event, writer.uint32(490).fork()).ldelim();
-    }
-    if (message.webrtc_signaling_fwd !== undefined) {
-      WebrtcSignalingFwd.encode(message.webrtc_signaling_fwd, writer.uint32(498).fork()).ldelim();
-    }
-    if (message.list_activity !== undefined) {
-      ListActivity.encode(message.list_activity, writer.uint32(506).fork()).ldelim();
-    }
-    if (message.dropdown_box_selected !== undefined) {
-      DropdownBoxSelected.encode(message.dropdown_box_selected, writer.uint32(514).fork()).ldelim();
-    }
-    if (message.incoming_call_push !== undefined) {
-      IncomingCallPush.encode(message.incoming_call_push, writer.uint32(522).fork()).ldelim();
-    }
-    if (message.sd_topic_event !== undefined) {
-      SdTopicEvent.encode(message.sd_topic_event, writer.uint32(530).fork()).ldelim();
-    }
-    if (message.follow_event !== undefined) {
-      FollowEvent.encode(message.follow_event, writer.uint32(538).fork()).ldelim();
-    }
-    if (message.channel_app_event !== undefined) {
-      ChannelAppEvent.encode(message.channel_app_event, writer.uint32(546).fork()).ldelim();
-    }
-    if (message.user_status_event !== undefined) {
-      UserStatusEvent.encode(message.user_status_event, writer.uint32(554).fork()).ldelim();
-    }
-    if (message.remove_friend !== undefined) {
-      RemoveFriend.encode(message.remove_friend, writer.uint32(562).fork()).ldelim();
-    }
-    if (message.webhook_event !== undefined) {
-      Webhook.encode(message.webhook_event, writer.uint32(570).fork()).ldelim();
-    }
-    if (message.noti_user_channel !== undefined) {
-      NotificationUserChannel.encode(message.noti_user_channel, writer.uint32(578).fork()).ldelim();
-    }
-    if (message.join_channel_app_data !== undefined) {
-      JoinChannelAppData.encode(message.join_channel_app_data, writer.uint32(586).fork()).ldelim();
-    }
-    if (message.canvas_event !== undefined) {
-      ChannelCanvas.encode(message.canvas_event, writer.uint32(594).fork()).ldelim();
-    }
-    if (message.unpin_message_event !== undefined) {
-      UnpinMessageEvent.encode(message.unpin_message_event, writer.uint32(602).fork()).ldelim();
-    }
-    if (message.category_event !== undefined) {
-      CategoryEvent.encode(message.category_event, writer.uint32(610).fork()).ldelim();
-    }
-    if (message.handle_participant_meet_state_event !== undefined) {
-      HandleParticipantMeetStateEvent.encode(message.handle_participant_meet_state_event, writer.uint32(618).fork())
-        .ldelim();
-    }
-    if (message.delete_account_event !== undefined) {
-      DeleteAccountEvent.encode(message.delete_account_event, writer.uint32(626).fork()).ldelim();
-    }
-    if (message.ephemeral_message_send !== undefined) {
-      EphemeralMessageSend.encode(message.ephemeral_message_send, writer.uint32(634).fork()).ldelim();
-    }
-    if (message.block_friend !== undefined) {
-      BlockFriend.encode(message.block_friend, writer.uint32(642).fork()).ldelim();
-    }
-    if (message.voice_reaction_send !== undefined) {
-      VoiceReactionSend.encode(message.voice_reaction_send, writer.uint32(650).fork()).ldelim();
-    }
-    if (message.mark_as_read !== undefined) {
-      MarkAsRead.encode(message.mark_as_read, writer.uint32(658).fork()).ldelim();
-    }
-    if (message.list_data_socket !== undefined) {
-      ListDataSocket.encode(message.list_data_socket, writer.uint32(666).fork()).ldelim();
-    }
-    if (message.quick_menu_event !== undefined) {
-      QuickMenuDataEvent.encode(message.quick_menu_event, writer.uint32(674).fork()).ldelim();
-    }
-    if (message.un_block_friend !== undefined) {
-      UnblockFriend.encode(message.un_block_friend, writer.uint32(682).fork()).ldelim();
-    }
-    if (message.meet_participant_event !== undefined) {
-      MeetParticipantEvent.encode(message.meet_participant_event, writer.uint32(690).fork()).ldelim();
-    }
-    if (message.transfer_ownership_event !== undefined) {
-      TransferOwnershipEvent.encode(message.transfer_ownership_event, writer.uint32(698).fork()).ldelim();
-    }
-    if (message.add_friend !== undefined) {
-      AddFriend.encode(message.add_friend, writer.uint32(706).fork()).ldelim();
-    }
-    if (message.ban_user_event !== undefined) {
-      BannedUserEvent.encode(message.ban_user_event, writer.uint32(714).fork()).ldelim();
-    }
-    if (message.active_archived_thread !== undefined) {
-      ActiveArchivedThread.encode(message.active_archived_thread, writer.uint32(722).fork()).ldelim();
-    }
-    if (message.allow_anonymous_event !== undefined) {
-      AllowAnonymousEvent.encode(message.allow_anonymous_event, writer.uint32(730).fork()).ldelim();
+    switch (message.message?.$case) {
+      case "channel":
+        Channel.encode(message.message.channel, writer.uint32(18).fork()).ldelim();
+        break;
+      case "clan_join":
+        ClanJoin.encode(message.message.clan_join, writer.uint32(26).fork()).ldelim();
+        break;
+      case "channel_join":
+        ChannelJoin.encode(message.message.channel_join, writer.uint32(34).fork()).ldelim();
+        break;
+      case "channel_leave":
+        ChannelLeave.encode(message.message.channel_leave, writer.uint32(42).fork()).ldelim();
+        break;
+      case "channel_message":
+        ChannelMessage.encode(message.message.channel_message, writer.uint32(50).fork()).ldelim();
+        break;
+      case "channel_message_ack":
+        ChannelMessageAck.encode(message.message.channel_message_ack, writer.uint32(58).fork()).ldelim();
+        break;
+      case "channel_message_send":
+        ChannelMessageSend.encode(message.message.channel_message_send, writer.uint32(66).fork()).ldelim();
+        break;
+      case "channel_message_update":
+        ChannelMessageUpdate.encode(message.message.channel_message_update, writer.uint32(74).fork()).ldelim();
+        break;
+      case "channel_message_remove":
+        ChannelMessageRemove.encode(message.message.channel_message_remove, writer.uint32(82).fork()).ldelim();
+        break;
+      case "channel_presence_event":
+        ChannelPresenceEvent.encode(message.message.channel_presence_event, writer.uint32(90).fork()).ldelim();
+        break;
+      case "error":
+        Error.encode(message.message.error, writer.uint32(98).fork()).ldelim();
+        break;
+      case "notifications":
+        Notifications.encode(message.message.notifications, writer.uint32(106).fork()).ldelim();
+        break;
+      case "rpc":
+        Rpc.encode(message.message.rpc, writer.uint32(114).fork()).ldelim();
+        break;
+      case "status":
+        Status.encode(message.message.status, writer.uint32(122).fork()).ldelim();
+        break;
+      case "status_follow":
+        StatusFollow.encode(message.message.status_follow, writer.uint32(130).fork()).ldelim();
+        break;
+      case "status_presence_event":
+        StatusPresenceEvent.encode(message.message.status_presence_event, writer.uint32(138).fork()).ldelim();
+        break;
+      case "status_unfollow":
+        StatusUnfollow.encode(message.message.status_unfollow, writer.uint32(146).fork()).ldelim();
+        break;
+      case "status_update":
+        StatusUpdate.encode(message.message.status_update, writer.uint32(154).fork()).ldelim();
+        break;
+      case "stream_data":
+        StreamData.encode(message.message.stream_data, writer.uint32(162).fork()).ldelim();
+        break;
+      case "stream_presence_event":
+        StreamPresenceEvent.encode(message.message.stream_presence_event, writer.uint32(170).fork()).ldelim();
+        break;
+      case "ping":
+        Ping.encode(message.message.ping, writer.uint32(178).fork()).ldelim();
+        break;
+      case "pong":
+        Pong.encode(message.message.pong, writer.uint32(186).fork()).ldelim();
+        break;
+      case "message_typing_event":
+        MessageTypingEvent.encode(message.message.message_typing_event, writer.uint32(194).fork()).ldelim();
+        break;
+      case "last_seen_message_event":
+        LastSeenMessageEvent.encode(message.message.last_seen_message_event, writer.uint32(202).fork()).ldelim();
+        break;
+      case "message_reaction_event":
+        MessageReaction.encode(message.message.message_reaction_event, writer.uint32(210).fork()).ldelim();
+        break;
+      case "voice_joined_event":
+        VoiceJoinedEvent.encode(message.message.voice_joined_event, writer.uint32(218).fork()).ldelim();
+        break;
+      case "voice_leaved_event":
+        VoiceLeavedEvent.encode(message.message.voice_leaved_event, writer.uint32(226).fork()).ldelim();
+        break;
+      case "voice_started_event":
+        VoiceStartedEvent.encode(message.message.voice_started_event, writer.uint32(234).fork()).ldelim();
+        break;
+      case "voice_ended_event":
+        VoiceEndedEvent.encode(message.message.voice_ended_event, writer.uint32(242).fork()).ldelim();
+        break;
+      case "channel_created_event":
+        ChannelCreatedEvent.encode(message.message.channel_created_event, writer.uint32(250).fork()).ldelim();
+        break;
+      case "channel_deleted_event":
+        ChannelDeletedEvent.encode(message.message.channel_deleted_event, writer.uint32(258).fork()).ldelim();
+        break;
+      case "channel_updated_event":
+        ChannelUpdatedEvent.encode(message.message.channel_updated_event, writer.uint32(266).fork()).ldelim();
+        break;
+      case "last_pin_message_event":
+        LastPinMessageEvent.encode(message.message.last_pin_message_event, writer.uint32(274).fork()).ldelim();
+        break;
+      case "custom_status_event":
+        CustomStatusEvent.encode(message.message.custom_status_event, writer.uint32(282).fork()).ldelim();
+        break;
+      case "user_channel_added_event":
+        UserChannelAdded.encode(message.message.user_channel_added_event, writer.uint32(290).fork()).ldelim();
+        break;
+      case "user_channel_removed_event":
+        UserChannelRemoved.encode(message.message.user_channel_removed_event, writer.uint32(298).fork()).ldelim();
+        break;
+      case "user_clan_removed_event":
+        UserClanRemoved.encode(message.message.user_clan_removed_event, writer.uint32(306).fork()).ldelim();
+        break;
+      case "clan_updated_event":
+        ClanUpdatedEvent.encode(message.message.clan_updated_event, writer.uint32(314).fork()).ldelim();
+        break;
+      case "clan_profile_updated_event":
+        ClanProfileUpdatedEvent.encode(message.message.clan_profile_updated_event, writer.uint32(322).fork()).ldelim();
+        break;
+      case "check_name_existed_event":
+        CheckNameExistedEvent.encode(message.message.check_name_existed_event, writer.uint32(330).fork()).ldelim();
+        break;
+      case "user_profile_updated_event":
+        UserProfileUpdatedEvent.encode(message.message.user_profile_updated_event, writer.uint32(338).fork()).ldelim();
+        break;
+      case "add_clan_user_event":
+        AddClanUserEvent.encode(message.message.add_clan_user_event, writer.uint32(346).fork()).ldelim();
+        break;
+      case "clan_event_created":
+        CreateEventRequest.encode(message.message.clan_event_created, writer.uint32(354).fork()).ldelim();
+        break;
+      case "role_assign_event":
+        RoleAssignedEvent.encode(message.message.role_assign_event, writer.uint32(362).fork()).ldelim();
+        break;
+      case "clan_deleted_event":
+        ClanDeletedEvent.encode(message.message.clan_deleted_event, writer.uint32(370).fork()).ldelim();
+        break;
+      case "give_coffee_event":
+        GiveCoffeeEvent.encode(message.message.give_coffee_event, writer.uint32(378).fork()).ldelim();
+        break;
+      case "sticker_create_event":
+        StickerCreateEvent.encode(message.message.sticker_create_event, writer.uint32(386).fork()).ldelim();
+        break;
+      case "sticker_update_event":
+        StickerUpdateEvent.encode(message.message.sticker_update_event, writer.uint32(394).fork()).ldelim();
+        break;
+      case "sticker_delete_event":
+        StickerDeleteEvent.encode(message.message.sticker_delete_event, writer.uint32(402).fork()).ldelim();
+        break;
+      case "role_event":
+        RoleEvent.encode(message.message.role_event, writer.uint32(410).fork()).ldelim();
+        break;
+      case "event_emoji":
+        EventEmoji.encode(message.message.event_emoji, writer.uint32(418).fork()).ldelim();
+        break;
+      case "streaming_joined_event":
+        StreamingJoinedEvent.encode(message.message.streaming_joined_event, writer.uint32(426).fork()).ldelim();
+        break;
+      case "streaming_leaved_event":
+        StreamingLeavedEvent.encode(message.message.streaming_leaved_event, writer.uint32(434).fork()).ldelim();
+        break;
+      case "streaming_started_event":
+        StreamingStartedEvent.encode(message.message.streaming_started_event, writer.uint32(442).fork()).ldelim();
+        break;
+      case "streaming_ended_event":
+        StreamingEndedEvent.encode(message.message.streaming_ended_event, writer.uint32(450).fork()).ldelim();
+        break;
+      case "permission_set_event":
+        PermissionSetEvent.encode(message.message.permission_set_event, writer.uint32(458).fork()).ldelim();
+        break;
+      case "permission_changed_event":
+        PermissionChangedEvent.encode(message.message.permission_changed_event, writer.uint32(466).fork()).ldelim();
+        break;
+      case "token_sent_event":
+        TokenSentEvent.encode(message.message.token_sent_event, writer.uint32(474).fork()).ldelim();
+        break;
+      case "message_button_clicked":
+        MessageButtonClicked.encode(message.message.message_button_clicked, writer.uint32(482).fork()).ldelim();
+        break;
+      case "unmute_event":
+        UnmuteEvent.encode(message.message.unmute_event, writer.uint32(490).fork()).ldelim();
+        break;
+      case "webrtc_signaling_fwd":
+        WebrtcSignalingFwd.encode(message.message.webrtc_signaling_fwd, writer.uint32(498).fork()).ldelim();
+        break;
+      case "list_activity":
+        ListActivity.encode(message.message.list_activity, writer.uint32(506).fork()).ldelim();
+        break;
+      case "dropdown_box_selected":
+        DropdownBoxSelected.encode(message.message.dropdown_box_selected, writer.uint32(514).fork()).ldelim();
+        break;
+      case "incoming_call_push":
+        IncomingCallPush.encode(message.message.incoming_call_push, writer.uint32(522).fork()).ldelim();
+        break;
+      case "sd_topic_event":
+        SdTopicEvent.encode(message.message.sd_topic_event, writer.uint32(530).fork()).ldelim();
+        break;
+      case "follow_event":
+        FollowEvent.encode(message.message.follow_event, writer.uint32(538).fork()).ldelim();
+        break;
+      case "channel_app_event":
+        ChannelAppEvent.encode(message.message.channel_app_event, writer.uint32(546).fork()).ldelim();
+        break;
+      case "user_status_event":
+        UserStatusEvent.encode(message.message.user_status_event, writer.uint32(554).fork()).ldelim();
+        break;
+      case "remove_friend":
+        RemoveFriend.encode(message.message.remove_friend, writer.uint32(562).fork()).ldelim();
+        break;
+      case "webhook_event":
+        Webhook.encode(message.message.webhook_event, writer.uint32(570).fork()).ldelim();
+        break;
+      case "noti_user_channel":
+        NotificationUserChannel.encode(message.message.noti_user_channel, writer.uint32(578).fork()).ldelim();
+        break;
+      case "join_channel_app_data":
+        JoinChannelAppData.encode(message.message.join_channel_app_data, writer.uint32(586).fork()).ldelim();
+        break;
+      case "canvas_event":
+        ChannelCanvas.encode(message.message.canvas_event, writer.uint32(594).fork()).ldelim();
+        break;
+      case "unpin_message_event":
+        UnpinMessageEvent.encode(message.message.unpin_message_event, writer.uint32(602).fork()).ldelim();
+        break;
+      case "category_event":
+        CategoryEvent.encode(message.message.category_event, writer.uint32(610).fork()).ldelim();
+        break;
+      case "handle_participant_meet_state_event":
+        HandleParticipantMeetStateEvent.encode(
+          message.message.handle_participant_meet_state_event,
+          writer.uint32(618).fork(),
+        ).ldelim();
+        break;
+      case "delete_account_event":
+        DeleteAccountEvent.encode(message.message.delete_account_event, writer.uint32(626).fork()).ldelim();
+        break;
+      case "ephemeral_message_send":
+        EphemeralMessageSend.encode(message.message.ephemeral_message_send, writer.uint32(634).fork()).ldelim();
+        break;
+      case "block_friend":
+        BlockFriend.encode(message.message.block_friend, writer.uint32(642).fork()).ldelim();
+        break;
+      case "voice_reaction_send":
+        VoiceReactionSend.encode(message.message.voice_reaction_send, writer.uint32(650).fork()).ldelim();
+        break;
+      case "mark_as_read":
+        MarkAsRead.encode(message.message.mark_as_read, writer.uint32(658).fork()).ldelim();
+        break;
+      case "list_data_socket":
+        ListDataSocket.encode(message.message.list_data_socket, writer.uint32(666).fork()).ldelim();
+        break;
+      case "quick_menu_event":
+        QuickMenuDataEvent.encode(message.message.quick_menu_event, writer.uint32(674).fork()).ldelim();
+        break;
+      case "un_block_friend":
+        UnblockFriend.encode(message.message.un_block_friend, writer.uint32(682).fork()).ldelim();
+        break;
+      case "meet_participant_event":
+        MeetParticipantEvent.encode(message.message.meet_participant_event, writer.uint32(690).fork()).ldelim();
+        break;
+      case "transfer_ownership_event":
+        TransferOwnershipEvent.encode(message.message.transfer_ownership_event, writer.uint32(698).fork()).ldelim();
+        break;
+      case "add_friend":
+        AddFriend.encode(message.message.add_friend, writer.uint32(706).fork()).ldelim();
+        break;
+      case "ban_user_event":
+        BannedUserEvent.encode(message.message.ban_user_event, writer.uint32(714).fork()).ldelim();
+        break;
+      case "active_archived_thread":
+        ActiveArchivedThread.encode(message.message.active_archived_thread, writer.uint32(722).fork()).ldelim();
+        break;
+      case "allow_anonymous_event":
+        AllowAnonymousEvent.encode(message.message.allow_anonymous_event, writer.uint32(730).fork()).ldelim();
+        break;
     }
     return writer;
   },
@@ -2174,630 +2371,822 @@ export const Envelope = {
             break;
           }
 
-          message.channel = Channel.decode(reader, reader.uint32());
+          message.message = { $case: "channel", channel: Channel.decode(reader, reader.uint32()) };
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.clan_join = ClanJoin.decode(reader, reader.uint32());
+          message.message = { $case: "clan_join", clan_join: ClanJoin.decode(reader, reader.uint32()) };
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.channel_join = ChannelJoin.decode(reader, reader.uint32());
+          message.message = { $case: "channel_join", channel_join: ChannelJoin.decode(reader, reader.uint32()) };
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.channel_leave = ChannelLeave.decode(reader, reader.uint32());
+          message.message = { $case: "channel_leave", channel_leave: ChannelLeave.decode(reader, reader.uint32()) };
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.channel_message = ChannelMessage.decode(reader, reader.uint32());
+          message.message = {
+            $case: "channel_message",
+            channel_message: ChannelMessage.decode(reader, reader.uint32()),
+          };
           continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          message.channel_message_ack = ChannelMessageAck.decode(reader, reader.uint32());
+          message.message = {
+            $case: "channel_message_ack",
+            channel_message_ack: ChannelMessageAck.decode(reader, reader.uint32()),
+          };
           continue;
         case 8:
           if (tag !== 66) {
             break;
           }
 
-          message.channel_message_send = ChannelMessageSend.decode(reader, reader.uint32());
+          message.message = {
+            $case: "channel_message_send",
+            channel_message_send: ChannelMessageSend.decode(reader, reader.uint32()),
+          };
           continue;
         case 9:
           if (tag !== 74) {
             break;
           }
 
-          message.channel_message_update = ChannelMessageUpdate.decode(reader, reader.uint32());
+          message.message = {
+            $case: "channel_message_update",
+            channel_message_update: ChannelMessageUpdate.decode(reader, reader.uint32()),
+          };
           continue;
         case 10:
           if (tag !== 82) {
             break;
           }
 
-          message.channel_message_remove = ChannelMessageRemove.decode(reader, reader.uint32());
+          message.message = {
+            $case: "channel_message_remove",
+            channel_message_remove: ChannelMessageRemove.decode(reader, reader.uint32()),
+          };
           continue;
         case 11:
           if (tag !== 90) {
             break;
           }
 
-          message.channel_presence_event = ChannelPresenceEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "channel_presence_event",
+            channel_presence_event: ChannelPresenceEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 12:
           if (tag !== 98) {
             break;
           }
 
-          message.error = Error.decode(reader, reader.uint32());
+          message.message = { $case: "error", error: Error.decode(reader, reader.uint32()) };
           continue;
         case 13:
           if (tag !== 106) {
             break;
           }
 
-          message.notifications = Notifications.decode(reader, reader.uint32());
+          message.message = { $case: "notifications", notifications: Notifications.decode(reader, reader.uint32()) };
           continue;
         case 14:
           if (tag !== 114) {
             break;
           }
 
-          message.rpc = Rpc.decode(reader, reader.uint32());
+          message.message = { $case: "rpc", rpc: Rpc.decode(reader, reader.uint32()) };
           continue;
         case 15:
           if (tag !== 122) {
             break;
           }
 
-          message.status = Status.decode(reader, reader.uint32());
+          message.message = { $case: "status", status: Status.decode(reader, reader.uint32()) };
           continue;
         case 16:
           if (tag !== 130) {
             break;
           }
 
-          message.status_follow = StatusFollow.decode(reader, reader.uint32());
+          message.message = { $case: "status_follow", status_follow: StatusFollow.decode(reader, reader.uint32()) };
           continue;
         case 17:
           if (tag !== 138) {
             break;
           }
 
-          message.status_presence_event = StatusPresenceEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "status_presence_event",
+            status_presence_event: StatusPresenceEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 18:
           if (tag !== 146) {
             break;
           }
 
-          message.status_unfollow = StatusUnfollow.decode(reader, reader.uint32());
+          message.message = {
+            $case: "status_unfollow",
+            status_unfollow: StatusUnfollow.decode(reader, reader.uint32()),
+          };
           continue;
         case 19:
           if (tag !== 154) {
             break;
           }
 
-          message.status_update = StatusUpdate.decode(reader, reader.uint32());
+          message.message = { $case: "status_update", status_update: StatusUpdate.decode(reader, reader.uint32()) };
           continue;
         case 20:
           if (tag !== 162) {
             break;
           }
 
-          message.stream_data = StreamData.decode(reader, reader.uint32());
+          message.message = { $case: "stream_data", stream_data: StreamData.decode(reader, reader.uint32()) };
           continue;
         case 21:
           if (tag !== 170) {
             break;
           }
 
-          message.stream_presence_event = StreamPresenceEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "stream_presence_event",
+            stream_presence_event: StreamPresenceEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 22:
           if (tag !== 178) {
             break;
           }
 
-          message.ping = Ping.decode(reader, reader.uint32());
+          message.message = { $case: "ping", ping: Ping.decode(reader, reader.uint32()) };
           continue;
         case 23:
           if (tag !== 186) {
             break;
           }
 
-          message.pong = Pong.decode(reader, reader.uint32());
+          message.message = { $case: "pong", pong: Pong.decode(reader, reader.uint32()) };
           continue;
         case 24:
           if (tag !== 194) {
             break;
           }
 
-          message.message_typing_event = MessageTypingEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "message_typing_event",
+            message_typing_event: MessageTypingEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 25:
           if (tag !== 202) {
             break;
           }
 
-          message.last_seen_message_event = LastSeenMessageEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "last_seen_message_event",
+            last_seen_message_event: LastSeenMessageEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 26:
           if (tag !== 210) {
             break;
           }
 
-          message.message_reaction_event = MessageReaction.decode(reader, reader.uint32());
+          message.message = {
+            $case: "message_reaction_event",
+            message_reaction_event: MessageReaction.decode(reader, reader.uint32()),
+          };
           continue;
         case 27:
           if (tag !== 218) {
             break;
           }
 
-          message.voice_joined_event = VoiceJoinedEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "voice_joined_event",
+            voice_joined_event: VoiceJoinedEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 28:
           if (tag !== 226) {
             break;
           }
 
-          message.voice_leaved_event = VoiceLeavedEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "voice_leaved_event",
+            voice_leaved_event: VoiceLeavedEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 29:
           if (tag !== 234) {
             break;
           }
 
-          message.voice_started_event = VoiceStartedEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "voice_started_event",
+            voice_started_event: VoiceStartedEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 30:
           if (tag !== 242) {
             break;
           }
 
-          message.voice_ended_event = VoiceEndedEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "voice_ended_event",
+            voice_ended_event: VoiceEndedEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 31:
           if (tag !== 250) {
             break;
           }
 
-          message.channel_created_event = ChannelCreatedEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "channel_created_event",
+            channel_created_event: ChannelCreatedEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 32:
           if (tag !== 258) {
             break;
           }
 
-          message.channel_deleted_event = ChannelDeletedEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "channel_deleted_event",
+            channel_deleted_event: ChannelDeletedEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 33:
           if (tag !== 266) {
             break;
           }
 
-          message.channel_updated_event = ChannelUpdatedEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "channel_updated_event",
+            channel_updated_event: ChannelUpdatedEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 34:
           if (tag !== 274) {
             break;
           }
 
-          message.last_pin_message_event = LastPinMessageEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "last_pin_message_event",
+            last_pin_message_event: LastPinMessageEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 35:
           if (tag !== 282) {
             break;
           }
 
-          message.custom_status_event = CustomStatusEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "custom_status_event",
+            custom_status_event: CustomStatusEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 36:
           if (tag !== 290) {
             break;
           }
 
-          message.user_channel_added_event = UserChannelAdded.decode(reader, reader.uint32());
+          message.message = {
+            $case: "user_channel_added_event",
+            user_channel_added_event: UserChannelAdded.decode(reader, reader.uint32()),
+          };
           continue;
         case 37:
           if (tag !== 298) {
             break;
           }
 
-          message.user_channel_removed_event = UserChannelRemoved.decode(reader, reader.uint32());
+          message.message = {
+            $case: "user_channel_removed_event",
+            user_channel_removed_event: UserChannelRemoved.decode(reader, reader.uint32()),
+          };
           continue;
         case 38:
           if (tag !== 306) {
             break;
           }
 
-          message.user_clan_removed_event = UserClanRemoved.decode(reader, reader.uint32());
+          message.message = {
+            $case: "user_clan_removed_event",
+            user_clan_removed_event: UserClanRemoved.decode(reader, reader.uint32()),
+          };
           continue;
         case 39:
           if (tag !== 314) {
             break;
           }
 
-          message.clan_updated_event = ClanUpdatedEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "clan_updated_event",
+            clan_updated_event: ClanUpdatedEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 40:
           if (tag !== 322) {
             break;
           }
 
-          message.clan_profile_updated_event = ClanProfileUpdatedEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "clan_profile_updated_event",
+            clan_profile_updated_event: ClanProfileUpdatedEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 41:
           if (tag !== 330) {
             break;
           }
 
-          message.check_name_existed_event = CheckNameExistedEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "check_name_existed_event",
+            check_name_existed_event: CheckNameExistedEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 42:
           if (tag !== 338) {
             break;
           }
 
-          message.user_profile_updated_event = UserProfileUpdatedEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "user_profile_updated_event",
+            user_profile_updated_event: UserProfileUpdatedEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 43:
           if (tag !== 346) {
             break;
           }
 
-          message.add_clan_user_event = AddClanUserEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "add_clan_user_event",
+            add_clan_user_event: AddClanUserEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 44:
           if (tag !== 354) {
             break;
           }
 
-          message.clan_event_created = CreateEventRequest.decode(reader, reader.uint32());
+          message.message = {
+            $case: "clan_event_created",
+            clan_event_created: CreateEventRequest.decode(reader, reader.uint32()),
+          };
           continue;
         case 45:
           if (tag !== 362) {
             break;
           }
 
-          message.role_assign_event = RoleAssignedEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "role_assign_event",
+            role_assign_event: RoleAssignedEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 46:
           if (tag !== 370) {
             break;
           }
 
-          message.clan_deleted_event = ClanDeletedEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "clan_deleted_event",
+            clan_deleted_event: ClanDeletedEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 47:
           if (tag !== 378) {
             break;
           }
 
-          message.give_coffee_event = GiveCoffeeEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "give_coffee_event",
+            give_coffee_event: GiveCoffeeEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 48:
           if (tag !== 386) {
             break;
           }
 
-          message.sticker_create_event = StickerCreateEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "sticker_create_event",
+            sticker_create_event: StickerCreateEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 49:
           if (tag !== 394) {
             break;
           }
 
-          message.sticker_update_event = StickerUpdateEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "sticker_update_event",
+            sticker_update_event: StickerUpdateEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 50:
           if (tag !== 402) {
             break;
           }
 
-          message.sticker_delete_event = StickerDeleteEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "sticker_delete_event",
+            sticker_delete_event: StickerDeleteEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 51:
           if (tag !== 410) {
             break;
           }
 
-          message.role_event = RoleEvent.decode(reader, reader.uint32());
+          message.message = { $case: "role_event", role_event: RoleEvent.decode(reader, reader.uint32()) };
           continue;
         case 52:
           if (tag !== 418) {
             break;
           }
 
-          message.event_emoji = EventEmoji.decode(reader, reader.uint32());
+          message.message = { $case: "event_emoji", event_emoji: EventEmoji.decode(reader, reader.uint32()) };
           continue;
         case 53:
           if (tag !== 426) {
             break;
           }
 
-          message.streaming_joined_event = StreamingJoinedEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "streaming_joined_event",
+            streaming_joined_event: StreamingJoinedEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 54:
           if (tag !== 434) {
             break;
           }
 
-          message.streaming_leaved_event = StreamingLeavedEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "streaming_leaved_event",
+            streaming_leaved_event: StreamingLeavedEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 55:
           if (tag !== 442) {
             break;
           }
 
-          message.streaming_started_event = StreamingStartedEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "streaming_started_event",
+            streaming_started_event: StreamingStartedEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 56:
           if (tag !== 450) {
             break;
           }
 
-          message.streaming_ended_event = StreamingEndedEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "streaming_ended_event",
+            streaming_ended_event: StreamingEndedEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 57:
           if (tag !== 458) {
             break;
           }
 
-          message.permission_set_event = PermissionSetEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "permission_set_event",
+            permission_set_event: PermissionSetEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 58:
           if (tag !== 466) {
             break;
           }
 
-          message.permission_changed_event = PermissionChangedEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "permission_changed_event",
+            permission_changed_event: PermissionChangedEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 59:
           if (tag !== 474) {
             break;
           }
 
-          message.token_sent_event = TokenSentEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "token_sent_event",
+            token_sent_event: TokenSentEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 60:
           if (tag !== 482) {
             break;
           }
 
-          message.message_button_clicked = MessageButtonClicked.decode(reader, reader.uint32());
+          message.message = {
+            $case: "message_button_clicked",
+            message_button_clicked: MessageButtonClicked.decode(reader, reader.uint32()),
+          };
           continue;
         case 61:
           if (tag !== 490) {
             break;
           }
 
-          message.unmute_event = UnmuteEvent.decode(reader, reader.uint32());
+          message.message = { $case: "unmute_event", unmute_event: UnmuteEvent.decode(reader, reader.uint32()) };
           continue;
         case 62:
           if (tag !== 498) {
             break;
           }
 
-          message.webrtc_signaling_fwd = WebrtcSignalingFwd.decode(reader, reader.uint32());
+          message.message = {
+            $case: "webrtc_signaling_fwd",
+            webrtc_signaling_fwd: WebrtcSignalingFwd.decode(reader, reader.uint32()),
+          };
           continue;
         case 63:
           if (tag !== 506) {
             break;
           }
 
-          message.list_activity = ListActivity.decode(reader, reader.uint32());
+          message.message = { $case: "list_activity", list_activity: ListActivity.decode(reader, reader.uint32()) };
           continue;
         case 64:
           if (tag !== 514) {
             break;
           }
 
-          message.dropdown_box_selected = DropdownBoxSelected.decode(reader, reader.uint32());
+          message.message = {
+            $case: "dropdown_box_selected",
+            dropdown_box_selected: DropdownBoxSelected.decode(reader, reader.uint32()),
+          };
           continue;
         case 65:
           if (tag !== 522) {
             break;
           }
 
-          message.incoming_call_push = IncomingCallPush.decode(reader, reader.uint32());
+          message.message = {
+            $case: "incoming_call_push",
+            incoming_call_push: IncomingCallPush.decode(reader, reader.uint32()),
+          };
           continue;
         case 66:
           if (tag !== 530) {
             break;
           }
 
-          message.sd_topic_event = SdTopicEvent.decode(reader, reader.uint32());
+          message.message = { $case: "sd_topic_event", sd_topic_event: SdTopicEvent.decode(reader, reader.uint32()) };
           continue;
         case 67:
           if (tag !== 538) {
             break;
           }
 
-          message.follow_event = FollowEvent.decode(reader, reader.uint32());
+          message.message = { $case: "follow_event", follow_event: FollowEvent.decode(reader, reader.uint32()) };
           continue;
         case 68:
           if (tag !== 546) {
             break;
           }
 
-          message.channel_app_event = ChannelAppEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "channel_app_event",
+            channel_app_event: ChannelAppEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 69:
           if (tag !== 554) {
             break;
           }
 
-          message.user_status_event = UserStatusEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "user_status_event",
+            user_status_event: UserStatusEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 70:
           if (tag !== 562) {
             break;
           }
 
-          message.remove_friend = RemoveFriend.decode(reader, reader.uint32());
+          message.message = { $case: "remove_friend", remove_friend: RemoveFriend.decode(reader, reader.uint32()) };
           continue;
         case 71:
           if (tag !== 570) {
             break;
           }
 
-          message.webhook_event = Webhook.decode(reader, reader.uint32());
+          message.message = { $case: "webhook_event", webhook_event: Webhook.decode(reader, reader.uint32()) };
           continue;
         case 72:
           if (tag !== 578) {
             break;
           }
 
-          message.noti_user_channel = NotificationUserChannel.decode(reader, reader.uint32());
+          message.message = {
+            $case: "noti_user_channel",
+            noti_user_channel: NotificationUserChannel.decode(reader, reader.uint32()),
+          };
           continue;
         case 73:
           if (tag !== 586) {
             break;
           }
 
-          message.join_channel_app_data = JoinChannelAppData.decode(reader, reader.uint32());
+          message.message = {
+            $case: "join_channel_app_data",
+            join_channel_app_data: JoinChannelAppData.decode(reader, reader.uint32()),
+          };
           continue;
         case 74:
           if (tag !== 594) {
             break;
           }
 
-          message.canvas_event = ChannelCanvas.decode(reader, reader.uint32());
+          message.message = { $case: "canvas_event", canvas_event: ChannelCanvas.decode(reader, reader.uint32()) };
           continue;
         case 75:
           if (tag !== 602) {
             break;
           }
 
-          message.unpin_message_event = UnpinMessageEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "unpin_message_event",
+            unpin_message_event: UnpinMessageEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 76:
           if (tag !== 610) {
             break;
           }
 
-          message.category_event = CategoryEvent.decode(reader, reader.uint32());
+          message.message = { $case: "category_event", category_event: CategoryEvent.decode(reader, reader.uint32()) };
           continue;
         case 77:
           if (tag !== 618) {
             break;
           }
 
-          message.handle_participant_meet_state_event = HandleParticipantMeetStateEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "handle_participant_meet_state_event",
+            handle_participant_meet_state_event: HandleParticipantMeetStateEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 78:
           if (tag !== 626) {
             break;
           }
 
-          message.delete_account_event = DeleteAccountEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "delete_account_event",
+            delete_account_event: DeleteAccountEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 79:
           if (tag !== 634) {
             break;
           }
 
-          message.ephemeral_message_send = EphemeralMessageSend.decode(reader, reader.uint32());
+          message.message = {
+            $case: "ephemeral_message_send",
+            ephemeral_message_send: EphemeralMessageSend.decode(reader, reader.uint32()),
+          };
           continue;
         case 80:
           if (tag !== 642) {
             break;
           }
 
-          message.block_friend = BlockFriend.decode(reader, reader.uint32());
+          message.message = { $case: "block_friend", block_friend: BlockFriend.decode(reader, reader.uint32()) };
           continue;
         case 81:
           if (tag !== 650) {
             break;
           }
 
-          message.voice_reaction_send = VoiceReactionSend.decode(reader, reader.uint32());
+          message.message = {
+            $case: "voice_reaction_send",
+            voice_reaction_send: VoiceReactionSend.decode(reader, reader.uint32()),
+          };
           continue;
         case 82:
           if (tag !== 658) {
             break;
           }
 
-          message.mark_as_read = MarkAsRead.decode(reader, reader.uint32());
+          message.message = { $case: "mark_as_read", mark_as_read: MarkAsRead.decode(reader, reader.uint32()) };
           continue;
         case 83:
           if (tag !== 666) {
             break;
           }
 
-          message.list_data_socket = ListDataSocket.decode(reader, reader.uint32());
+          message.message = {
+            $case: "list_data_socket",
+            list_data_socket: ListDataSocket.decode(reader, reader.uint32()),
+          };
           continue;
         case 84:
           if (tag !== 674) {
             break;
           }
 
-          message.quick_menu_event = QuickMenuDataEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "quick_menu_event",
+            quick_menu_event: QuickMenuDataEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 85:
           if (tag !== 682) {
             break;
           }
 
-          message.un_block_friend = UnblockFriend.decode(reader, reader.uint32());
+          message.message = {
+            $case: "un_block_friend",
+            un_block_friend: UnblockFriend.decode(reader, reader.uint32()),
+          };
           continue;
         case 86:
           if (tag !== 690) {
             break;
           }
 
-          message.meet_participant_event = MeetParticipantEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "meet_participant_event",
+            meet_participant_event: MeetParticipantEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 87:
           if (tag !== 698) {
             break;
           }
 
-          message.transfer_ownership_event = TransferOwnershipEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "transfer_ownership_event",
+            transfer_ownership_event: TransferOwnershipEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 88:
           if (tag !== 706) {
             break;
           }
 
-          message.add_friend = AddFriend.decode(reader, reader.uint32());
+          message.message = { $case: "add_friend", add_friend: AddFriend.decode(reader, reader.uint32()) };
           continue;
         case 89:
           if (tag !== 714) {
             break;
           }
 
-          message.ban_user_event = BannedUserEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "ban_user_event",
+            ban_user_event: BannedUserEvent.decode(reader, reader.uint32()),
+          };
           continue;
         case 90:
           if (tag !== 722) {
             break;
           }
 
-          message.active_archived_thread = ActiveArchivedThread.decode(reader, reader.uint32());
+          message.message = {
+            $case: "active_archived_thread",
+            active_archived_thread: ActiveArchivedThread.decode(reader, reader.uint32()),
+          };
           continue;
         case 91:
           if (tag !== 730) {
             break;
           }
 
-          message.allow_anonymous_event = AllowAnonymousEvent.decode(reader, reader.uint32());
+          message.message = {
+            $case: "allow_anonymous_event",
+            allow_anonymous_event: AllowAnonymousEvent.decode(reader, reader.uint32()),
+          };
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -2811,491 +3200,585 @@ export const Envelope = {
   fromJSON(object: any): Envelope {
     return {
       cid: isSet(object.cid) ? globalThis.String(object.cid) : "",
-      channel: isSet(object.channel) ? Channel.fromJSON(object.channel) : undefined,
-      clan_join: isSet(object.clan_join) ? ClanJoin.fromJSON(object.clan_join) : undefined,
-      channel_join: isSet(object.channel_join) ? ChannelJoin.fromJSON(object.channel_join) : undefined,
-      channel_leave: isSet(object.channel_leave) ? ChannelLeave.fromJSON(object.channel_leave) : undefined,
-      channel_message: isSet(object.channel_message) ? ChannelMessage.fromJSON(object.channel_message) : undefined,
-      channel_message_ack: isSet(object.channel_message_ack)
-        ? ChannelMessageAck.fromJSON(object.channel_message_ack)
-        : undefined,
-      channel_message_send: isSet(object.channel_message_send)
-        ? ChannelMessageSend.fromJSON(object.channel_message_send)
-        : undefined,
-      channel_message_update: isSet(object.channel_message_update)
-        ? ChannelMessageUpdate.fromJSON(object.channel_message_update)
-        : undefined,
-      channel_message_remove: isSet(object.channel_message_remove)
-        ? ChannelMessageRemove.fromJSON(object.channel_message_remove)
-        : undefined,
-      channel_presence_event: isSet(object.channel_presence_event)
-        ? ChannelPresenceEvent.fromJSON(object.channel_presence_event)
-        : undefined,
-      error: isSet(object.error) ? Error.fromJSON(object.error) : undefined,
-      notifications: isSet(object.notifications) ? Notifications.fromJSON(object.notifications) : undefined,
-      rpc: isSet(object.rpc) ? Rpc.fromJSON(object.rpc) : undefined,
-      status: isSet(object.status) ? Status.fromJSON(object.status) : undefined,
-      status_follow: isSet(object.status_follow) ? StatusFollow.fromJSON(object.status_follow) : undefined,
-      status_presence_event: isSet(object.status_presence_event)
-        ? StatusPresenceEvent.fromJSON(object.status_presence_event)
-        : undefined,
-      status_unfollow: isSet(object.status_unfollow) ? StatusUnfollow.fromJSON(object.status_unfollow) : undefined,
-      status_update: isSet(object.status_update) ? StatusUpdate.fromJSON(object.status_update) : undefined,
-      stream_data: isSet(object.stream_data) ? StreamData.fromJSON(object.stream_data) : undefined,
-      stream_presence_event: isSet(object.stream_presence_event)
-        ? StreamPresenceEvent.fromJSON(object.stream_presence_event)
-        : undefined,
-      ping: isSet(object.ping) ? Ping.fromJSON(object.ping) : undefined,
-      pong: isSet(object.pong) ? Pong.fromJSON(object.pong) : undefined,
-      message_typing_event: isSet(object.message_typing_event)
-        ? MessageTypingEvent.fromJSON(object.message_typing_event)
-        : undefined,
-      last_seen_message_event: isSet(object.last_seen_message_event)
-        ? LastSeenMessageEvent.fromJSON(object.last_seen_message_event)
-        : undefined,
-      message_reaction_event: isSet(object.message_reaction_event)
-        ? MessageReaction.fromJSON(object.message_reaction_event)
-        : undefined,
-      voice_joined_event: isSet(object.voice_joined_event)
-        ? VoiceJoinedEvent.fromJSON(object.voice_joined_event)
-        : undefined,
-      voice_leaved_event: isSet(object.voice_leaved_event)
-        ? VoiceLeavedEvent.fromJSON(object.voice_leaved_event)
-        : undefined,
-      voice_started_event: isSet(object.voice_started_event)
-        ? VoiceStartedEvent.fromJSON(object.voice_started_event)
-        : undefined,
-      voice_ended_event: isSet(object.voice_ended_event)
-        ? VoiceEndedEvent.fromJSON(object.voice_ended_event)
-        : undefined,
-      channel_created_event: isSet(object.channel_created_event)
-        ? ChannelCreatedEvent.fromJSON(object.channel_created_event)
-        : undefined,
-      channel_deleted_event: isSet(object.channel_deleted_event)
-        ? ChannelDeletedEvent.fromJSON(object.channel_deleted_event)
-        : undefined,
-      channel_updated_event: isSet(object.channel_updated_event)
-        ? ChannelUpdatedEvent.fromJSON(object.channel_updated_event)
-        : undefined,
-      last_pin_message_event: isSet(object.last_pin_message_event)
-        ? LastPinMessageEvent.fromJSON(object.last_pin_message_event)
-        : undefined,
-      custom_status_event: isSet(object.custom_status_event)
-        ? CustomStatusEvent.fromJSON(object.custom_status_event)
-        : undefined,
-      user_channel_added_event: isSet(object.user_channel_added_event)
-        ? UserChannelAdded.fromJSON(object.user_channel_added_event)
-        : undefined,
-      user_channel_removed_event: isSet(object.user_channel_removed_event)
-        ? UserChannelRemoved.fromJSON(object.user_channel_removed_event)
-        : undefined,
-      user_clan_removed_event: isSet(object.user_clan_removed_event)
-        ? UserClanRemoved.fromJSON(object.user_clan_removed_event)
-        : undefined,
-      clan_updated_event: isSet(object.clan_updated_event)
-        ? ClanUpdatedEvent.fromJSON(object.clan_updated_event)
-        : undefined,
-      clan_profile_updated_event: isSet(object.clan_profile_updated_event)
-        ? ClanProfileUpdatedEvent.fromJSON(object.clan_profile_updated_event)
-        : undefined,
-      check_name_existed_event: isSet(object.check_name_existed_event)
-        ? CheckNameExistedEvent.fromJSON(object.check_name_existed_event)
-        : undefined,
-      user_profile_updated_event: isSet(object.user_profile_updated_event)
-        ? UserProfileUpdatedEvent.fromJSON(object.user_profile_updated_event)
-        : undefined,
-      add_clan_user_event: isSet(object.add_clan_user_event)
-        ? AddClanUserEvent.fromJSON(object.add_clan_user_event)
-        : undefined,
-      clan_event_created: isSet(object.clan_event_created)
-        ? CreateEventRequest.fromJSON(object.clan_event_created)
-        : undefined,
-      role_assign_event: isSet(object.role_assign_event)
-        ? RoleAssignedEvent.fromJSON(object.role_assign_event)
-        : undefined,
-      clan_deleted_event: isSet(object.clan_deleted_event)
-        ? ClanDeletedEvent.fromJSON(object.clan_deleted_event)
-        : undefined,
-      give_coffee_event: isSet(object.give_coffee_event)
-        ? GiveCoffeeEvent.fromJSON(object.give_coffee_event)
-        : undefined,
-      sticker_create_event: isSet(object.sticker_create_event)
-        ? StickerCreateEvent.fromJSON(object.sticker_create_event)
-        : undefined,
-      sticker_update_event: isSet(object.sticker_update_event)
-        ? StickerUpdateEvent.fromJSON(object.sticker_update_event)
-        : undefined,
-      sticker_delete_event: isSet(object.sticker_delete_event)
-        ? StickerDeleteEvent.fromJSON(object.sticker_delete_event)
-        : undefined,
-      role_event: isSet(object.role_event) ? RoleEvent.fromJSON(object.role_event) : undefined,
-      event_emoji: isSet(object.event_emoji) ? EventEmoji.fromJSON(object.event_emoji) : undefined,
-      streaming_joined_event: isSet(object.streaming_joined_event)
-        ? StreamingJoinedEvent.fromJSON(object.streaming_joined_event)
-        : undefined,
-      streaming_leaved_event: isSet(object.streaming_leaved_event)
-        ? StreamingLeavedEvent.fromJSON(object.streaming_leaved_event)
-        : undefined,
-      streaming_started_event: isSet(object.streaming_started_event)
-        ? StreamingStartedEvent.fromJSON(object.streaming_started_event)
-        : undefined,
-      streaming_ended_event: isSet(object.streaming_ended_event)
-        ? StreamingEndedEvent.fromJSON(object.streaming_ended_event)
-        : undefined,
-      permission_set_event: isSet(object.permission_set_event)
-        ? PermissionSetEvent.fromJSON(object.permission_set_event)
-        : undefined,
-      permission_changed_event: isSet(object.permission_changed_event)
-        ? PermissionChangedEvent.fromJSON(object.permission_changed_event)
-        : undefined,
-      token_sent_event: isSet(object.token_sent_event) ? TokenSentEvent.fromJSON(object.token_sent_event) : undefined,
-      message_button_clicked: isSet(object.message_button_clicked)
-        ? MessageButtonClicked.fromJSON(object.message_button_clicked)
-        : undefined,
-      unmute_event: isSet(object.unmute_event) ? UnmuteEvent.fromJSON(object.unmute_event) : undefined,
-      webrtc_signaling_fwd: isSet(object.webrtc_signaling_fwd)
-        ? WebrtcSignalingFwd.fromJSON(object.webrtc_signaling_fwd)
-        : undefined,
-      list_activity: isSet(object.list_activity) ? ListActivity.fromJSON(object.list_activity) : undefined,
-      dropdown_box_selected: isSet(object.dropdown_box_selected)
-        ? DropdownBoxSelected.fromJSON(object.dropdown_box_selected)
-        : undefined,
-      incoming_call_push: isSet(object.incoming_call_push)
-        ? IncomingCallPush.fromJSON(object.incoming_call_push)
-        : undefined,
-      sd_topic_event: isSet(object.sd_topic_event) ? SdTopicEvent.fromJSON(object.sd_topic_event) : undefined,
-      follow_event: isSet(object.follow_event) ? FollowEvent.fromJSON(object.follow_event) : undefined,
-      channel_app_event: isSet(object.channel_app_event)
-        ? ChannelAppEvent.fromJSON(object.channel_app_event)
-        : undefined,
-      user_status_event: isSet(object.user_status_event)
-        ? UserStatusEvent.fromJSON(object.user_status_event)
-        : undefined,
-      remove_friend: isSet(object.remove_friend) ? RemoveFriend.fromJSON(object.remove_friend) : undefined,
-      webhook_event: isSet(object.webhook_event) ? Webhook.fromJSON(object.webhook_event) : undefined,
-      noti_user_channel: isSet(object.noti_user_channel)
-        ? NotificationUserChannel.fromJSON(object.noti_user_channel)
-        : undefined,
-      join_channel_app_data: isSet(object.join_channel_app_data)
-        ? JoinChannelAppData.fromJSON(object.join_channel_app_data)
-        : undefined,
-      canvas_event: isSet(object.canvas_event) ? ChannelCanvas.fromJSON(object.canvas_event) : undefined,
-      unpin_message_event: isSet(object.unpin_message_event)
-        ? UnpinMessageEvent.fromJSON(object.unpin_message_event)
-        : undefined,
-      category_event: isSet(object.category_event) ? CategoryEvent.fromJSON(object.category_event) : undefined,
-      handle_participant_meet_state_event: isSet(object.handle_participant_meet_state_event)
-        ? HandleParticipantMeetStateEvent.fromJSON(object.handle_participant_meet_state_event)
-        : undefined,
-      delete_account_event: isSet(object.delete_account_event)
-        ? DeleteAccountEvent.fromJSON(object.delete_account_event)
-        : undefined,
-      ephemeral_message_send: isSet(object.ephemeral_message_send)
-        ? EphemeralMessageSend.fromJSON(object.ephemeral_message_send)
-        : undefined,
-      block_friend: isSet(object.block_friend) ? BlockFriend.fromJSON(object.block_friend) : undefined,
-      voice_reaction_send: isSet(object.voice_reaction_send)
-        ? VoiceReactionSend.fromJSON(object.voice_reaction_send)
-        : undefined,
-      mark_as_read: isSet(object.mark_as_read) ? MarkAsRead.fromJSON(object.mark_as_read) : undefined,
-      list_data_socket: isSet(object.list_data_socket) ? ListDataSocket.fromJSON(object.list_data_socket) : undefined,
-      quick_menu_event: isSet(object.quick_menu_event)
-        ? QuickMenuDataEvent.fromJSON(object.quick_menu_event)
-        : undefined,
-      un_block_friend: isSet(object.un_block_friend) ? UnblockFriend.fromJSON(object.un_block_friend) : undefined,
-      meet_participant_event: isSet(object.meet_participant_event)
-        ? MeetParticipantEvent.fromJSON(object.meet_participant_event)
-        : undefined,
-      transfer_ownership_event: isSet(object.transfer_ownership_event)
-        ? TransferOwnershipEvent.fromJSON(object.transfer_ownership_event)
-        : undefined,
-      add_friend: isSet(object.add_friend) ? AddFriend.fromJSON(object.add_friend) : undefined,
-      ban_user_event: isSet(object.ban_user_event) ? BannedUserEvent.fromJSON(object.ban_user_event) : undefined,
-      active_archived_thread: isSet(object.active_archived_thread)
-        ? ActiveArchivedThread.fromJSON(object.active_archived_thread)
-        : undefined,
-      allow_anonymous_event: isSet(object.allow_anonymous_event)
-        ? AllowAnonymousEvent.fromJSON(object.allow_anonymous_event)
+      message: isSet(object.channel)
+        ? { $case: "channel", channel: Channel.fromJSON(object.channel) }
+        : isSet(object.clan_join)
+        ? { $case: "clan_join", clan_join: ClanJoin.fromJSON(object.clan_join) }
+        : isSet(object.channel_join)
+        ? { $case: "channel_join", channel_join: ChannelJoin.fromJSON(object.channel_join) }
+        : isSet(object.channel_leave)
+        ? { $case: "channel_leave", channel_leave: ChannelLeave.fromJSON(object.channel_leave) }
+        : isSet(object.channel_message)
+        ? { $case: "channel_message", channel_message: ChannelMessage.fromJSON(object.channel_message) }
+        : isSet(object.channel_message_ack)
+        ? { $case: "channel_message_ack", channel_message_ack: ChannelMessageAck.fromJSON(object.channel_message_ack) }
+        : isSet(object.channel_message_send)
+        ? {
+          $case: "channel_message_send",
+          channel_message_send: ChannelMessageSend.fromJSON(object.channel_message_send),
+        }
+        : isSet(object.channel_message_update)
+        ? {
+          $case: "channel_message_update",
+          channel_message_update: ChannelMessageUpdate.fromJSON(object.channel_message_update),
+        }
+        : isSet(object.channel_message_remove)
+        ? {
+          $case: "channel_message_remove",
+          channel_message_remove: ChannelMessageRemove.fromJSON(object.channel_message_remove),
+        }
+        : isSet(object.channel_presence_event)
+        ? {
+          $case: "channel_presence_event",
+          channel_presence_event: ChannelPresenceEvent.fromJSON(object.channel_presence_event),
+        }
+        : isSet(object.error)
+        ? { $case: "error", error: Error.fromJSON(object.error) }
+        : isSet(object.notifications)
+        ? { $case: "notifications", notifications: Notifications.fromJSON(object.notifications) }
+        : isSet(object.rpc)
+        ? { $case: "rpc", rpc: Rpc.fromJSON(object.rpc) }
+        : isSet(object.status)
+        ? { $case: "status", status: Status.fromJSON(object.status) }
+        : isSet(object.status_follow)
+        ? { $case: "status_follow", status_follow: StatusFollow.fromJSON(object.status_follow) }
+        : isSet(object.status_presence_event)
+        ? {
+          $case: "status_presence_event",
+          status_presence_event: StatusPresenceEvent.fromJSON(object.status_presence_event),
+        }
+        : isSet(object.status_unfollow)
+        ? { $case: "status_unfollow", status_unfollow: StatusUnfollow.fromJSON(object.status_unfollow) }
+        : isSet(object.status_update)
+        ? { $case: "status_update", status_update: StatusUpdate.fromJSON(object.status_update) }
+        : isSet(object.stream_data)
+        ? { $case: "stream_data", stream_data: StreamData.fromJSON(object.stream_data) }
+        : isSet(object.stream_presence_event)
+        ? {
+          $case: "stream_presence_event",
+          stream_presence_event: StreamPresenceEvent.fromJSON(object.stream_presence_event),
+        }
+        : isSet(object.ping)
+        ? { $case: "ping", ping: Ping.fromJSON(object.ping) }
+        : isSet(object.pong)
+        ? { $case: "pong", pong: Pong.fromJSON(object.pong) }
+        : isSet(object.message_typing_event)
+        ? {
+          $case: "message_typing_event",
+          message_typing_event: MessageTypingEvent.fromJSON(object.message_typing_event),
+        }
+        : isSet(object.last_seen_message_event)
+        ? {
+          $case: "last_seen_message_event",
+          last_seen_message_event: LastSeenMessageEvent.fromJSON(object.last_seen_message_event),
+        }
+        : isSet(object.message_reaction_event)
+        ? {
+          $case: "message_reaction_event",
+          message_reaction_event: MessageReaction.fromJSON(object.message_reaction_event),
+        }
+        : isSet(object.voice_joined_event)
+        ? { $case: "voice_joined_event", voice_joined_event: VoiceJoinedEvent.fromJSON(object.voice_joined_event) }
+        : isSet(object.voice_leaved_event)
+        ? { $case: "voice_leaved_event", voice_leaved_event: VoiceLeavedEvent.fromJSON(object.voice_leaved_event) }
+        : isSet(object.voice_started_event)
+        ? { $case: "voice_started_event", voice_started_event: VoiceStartedEvent.fromJSON(object.voice_started_event) }
+        : isSet(object.voice_ended_event)
+        ? { $case: "voice_ended_event", voice_ended_event: VoiceEndedEvent.fromJSON(object.voice_ended_event) }
+        : isSet(object.channel_created_event)
+        ? {
+          $case: "channel_created_event",
+          channel_created_event: ChannelCreatedEvent.fromJSON(object.channel_created_event),
+        }
+        : isSet(object.channel_deleted_event)
+        ? {
+          $case: "channel_deleted_event",
+          channel_deleted_event: ChannelDeletedEvent.fromJSON(object.channel_deleted_event),
+        }
+        : isSet(object.channel_updated_event)
+        ? {
+          $case: "channel_updated_event",
+          channel_updated_event: ChannelUpdatedEvent.fromJSON(object.channel_updated_event),
+        }
+        : isSet(object.last_pin_message_event)
+        ? {
+          $case: "last_pin_message_event",
+          last_pin_message_event: LastPinMessageEvent.fromJSON(object.last_pin_message_event),
+        }
+        : isSet(object.custom_status_event)
+        ? { $case: "custom_status_event", custom_status_event: CustomStatusEvent.fromJSON(object.custom_status_event) }
+        : isSet(object.user_channel_added_event)
+        ? {
+          $case: "user_channel_added_event",
+          user_channel_added_event: UserChannelAdded.fromJSON(object.user_channel_added_event),
+        }
+        : isSet(object.user_channel_removed_event)
+        ? {
+          $case: "user_channel_removed_event",
+          user_channel_removed_event: UserChannelRemoved.fromJSON(object.user_channel_removed_event),
+        }
+        : isSet(object.user_clan_removed_event)
+        ? {
+          $case: "user_clan_removed_event",
+          user_clan_removed_event: UserClanRemoved.fromJSON(object.user_clan_removed_event),
+        }
+        : isSet(object.clan_updated_event)
+        ? { $case: "clan_updated_event", clan_updated_event: ClanUpdatedEvent.fromJSON(object.clan_updated_event) }
+        : isSet(object.clan_profile_updated_event)
+        ? {
+          $case: "clan_profile_updated_event",
+          clan_profile_updated_event: ClanProfileUpdatedEvent.fromJSON(object.clan_profile_updated_event),
+        }
+        : isSet(object.check_name_existed_event)
+        ? {
+          $case: "check_name_existed_event",
+          check_name_existed_event: CheckNameExistedEvent.fromJSON(object.check_name_existed_event),
+        }
+        : isSet(object.user_profile_updated_event)
+        ? {
+          $case: "user_profile_updated_event",
+          user_profile_updated_event: UserProfileUpdatedEvent.fromJSON(object.user_profile_updated_event),
+        }
+        : isSet(object.add_clan_user_event)
+        ? { $case: "add_clan_user_event", add_clan_user_event: AddClanUserEvent.fromJSON(object.add_clan_user_event) }
+        : isSet(object.clan_event_created)
+        ? { $case: "clan_event_created", clan_event_created: CreateEventRequest.fromJSON(object.clan_event_created) }
+        : isSet(object.role_assign_event)
+        ? { $case: "role_assign_event", role_assign_event: RoleAssignedEvent.fromJSON(object.role_assign_event) }
+        : isSet(object.clan_deleted_event)
+        ? { $case: "clan_deleted_event", clan_deleted_event: ClanDeletedEvent.fromJSON(object.clan_deleted_event) }
+        : isSet(object.give_coffee_event)
+        ? { $case: "give_coffee_event", give_coffee_event: GiveCoffeeEvent.fromJSON(object.give_coffee_event) }
+        : isSet(object.sticker_create_event)
+        ? {
+          $case: "sticker_create_event",
+          sticker_create_event: StickerCreateEvent.fromJSON(object.sticker_create_event),
+        }
+        : isSet(object.sticker_update_event)
+        ? {
+          $case: "sticker_update_event",
+          sticker_update_event: StickerUpdateEvent.fromJSON(object.sticker_update_event),
+        }
+        : isSet(object.sticker_delete_event)
+        ? {
+          $case: "sticker_delete_event",
+          sticker_delete_event: StickerDeleteEvent.fromJSON(object.sticker_delete_event),
+        }
+        : isSet(object.role_event)
+        ? { $case: "role_event", role_event: RoleEvent.fromJSON(object.role_event) }
+        : isSet(object.event_emoji)
+        ? { $case: "event_emoji", event_emoji: EventEmoji.fromJSON(object.event_emoji) }
+        : isSet(object.streaming_joined_event)
+        ? {
+          $case: "streaming_joined_event",
+          streaming_joined_event: StreamingJoinedEvent.fromJSON(object.streaming_joined_event),
+        }
+        : isSet(object.streaming_leaved_event)
+        ? {
+          $case: "streaming_leaved_event",
+          streaming_leaved_event: StreamingLeavedEvent.fromJSON(object.streaming_leaved_event),
+        }
+        : isSet(object.streaming_started_event)
+        ? {
+          $case: "streaming_started_event",
+          streaming_started_event: StreamingStartedEvent.fromJSON(object.streaming_started_event),
+        }
+        : isSet(object.streaming_ended_event)
+        ? {
+          $case: "streaming_ended_event",
+          streaming_ended_event: StreamingEndedEvent.fromJSON(object.streaming_ended_event),
+        }
+        : isSet(object.permission_set_event)
+        ? {
+          $case: "permission_set_event",
+          permission_set_event: PermissionSetEvent.fromJSON(object.permission_set_event),
+        }
+        : isSet(object.permission_changed_event)
+        ? {
+          $case: "permission_changed_event",
+          permission_changed_event: PermissionChangedEvent.fromJSON(object.permission_changed_event),
+        }
+        : isSet(object.token_sent_event)
+        ? { $case: "token_sent_event", token_sent_event: TokenSentEvent.fromJSON(object.token_sent_event) }
+        : isSet(object.message_button_clicked)
+        ? {
+          $case: "message_button_clicked",
+          message_button_clicked: MessageButtonClicked.fromJSON(object.message_button_clicked),
+        }
+        : isSet(object.unmute_event)
+        ? { $case: "unmute_event", unmute_event: UnmuteEvent.fromJSON(object.unmute_event) }
+        : isSet(object.webrtc_signaling_fwd)
+        ? {
+          $case: "webrtc_signaling_fwd",
+          webrtc_signaling_fwd: WebrtcSignalingFwd.fromJSON(object.webrtc_signaling_fwd),
+        }
+        : isSet(object.list_activity)
+        ? { $case: "list_activity", list_activity: ListActivity.fromJSON(object.list_activity) }
+        : isSet(object.dropdown_box_selected)
+        ? {
+          $case: "dropdown_box_selected",
+          dropdown_box_selected: DropdownBoxSelected.fromJSON(object.dropdown_box_selected),
+        }
+        : isSet(object.incoming_call_push)
+        ? { $case: "incoming_call_push", incoming_call_push: IncomingCallPush.fromJSON(object.incoming_call_push) }
+        : isSet(object.sd_topic_event)
+        ? { $case: "sd_topic_event", sd_topic_event: SdTopicEvent.fromJSON(object.sd_topic_event) }
+        : isSet(object.follow_event)
+        ? { $case: "follow_event", follow_event: FollowEvent.fromJSON(object.follow_event) }
+        : isSet(object.channel_app_event)
+        ? { $case: "channel_app_event", channel_app_event: ChannelAppEvent.fromJSON(object.channel_app_event) }
+        : isSet(object.user_status_event)
+        ? { $case: "user_status_event", user_status_event: UserStatusEvent.fromJSON(object.user_status_event) }
+        : isSet(object.remove_friend)
+        ? { $case: "remove_friend", remove_friend: RemoveFriend.fromJSON(object.remove_friend) }
+        : isSet(object.webhook_event)
+        ? { $case: "webhook_event", webhook_event: Webhook.fromJSON(object.webhook_event) }
+        : isSet(object.noti_user_channel)
+        ? { $case: "noti_user_channel", noti_user_channel: NotificationUserChannel.fromJSON(object.noti_user_channel) }
+        : isSet(object.join_channel_app_data)
+        ? {
+          $case: "join_channel_app_data",
+          join_channel_app_data: JoinChannelAppData.fromJSON(object.join_channel_app_data),
+        }
+        : isSet(object.canvas_event)
+        ? { $case: "canvas_event", canvas_event: ChannelCanvas.fromJSON(object.canvas_event) }
+        : isSet(object.unpin_message_event)
+        ? { $case: "unpin_message_event", unpin_message_event: UnpinMessageEvent.fromJSON(object.unpin_message_event) }
+        : isSet(object.category_event)
+        ? { $case: "category_event", category_event: CategoryEvent.fromJSON(object.category_event) }
+        : isSet(object.handle_participant_meet_state_event)
+        ? {
+          $case: "handle_participant_meet_state_event",
+          handle_participant_meet_state_event: HandleParticipantMeetStateEvent.fromJSON(
+            object.handle_participant_meet_state_event,
+          ),
+        }
+        : isSet(object.delete_account_event)
+        ? {
+          $case: "delete_account_event",
+          delete_account_event: DeleteAccountEvent.fromJSON(object.delete_account_event),
+        }
+        : isSet(object.ephemeral_message_send)
+        ? {
+          $case: "ephemeral_message_send",
+          ephemeral_message_send: EphemeralMessageSend.fromJSON(object.ephemeral_message_send),
+        }
+        : isSet(object.block_friend)
+        ? { $case: "block_friend", block_friend: BlockFriend.fromJSON(object.block_friend) }
+        : isSet(object.voice_reaction_send)
+        ? { $case: "voice_reaction_send", voice_reaction_send: VoiceReactionSend.fromJSON(object.voice_reaction_send) }
+        : isSet(object.mark_as_read)
+        ? { $case: "mark_as_read", mark_as_read: MarkAsRead.fromJSON(object.mark_as_read) }
+        : isSet(object.list_data_socket)
+        ? { $case: "list_data_socket", list_data_socket: ListDataSocket.fromJSON(object.list_data_socket) }
+        : isSet(object.quick_menu_event)
+        ? { $case: "quick_menu_event", quick_menu_event: QuickMenuDataEvent.fromJSON(object.quick_menu_event) }
+        : isSet(object.un_block_friend)
+        ? { $case: "un_block_friend", un_block_friend: UnblockFriend.fromJSON(object.un_block_friend) }
+        : isSet(object.meet_participant_event)
+        ? {
+          $case: "meet_participant_event",
+          meet_participant_event: MeetParticipantEvent.fromJSON(object.meet_participant_event),
+        }
+        : isSet(object.transfer_ownership_event)
+        ? {
+          $case: "transfer_ownership_event",
+          transfer_ownership_event: TransferOwnershipEvent.fromJSON(object.transfer_ownership_event),
+        }
+        : isSet(object.add_friend)
+        ? { $case: "add_friend", add_friend: AddFriend.fromJSON(object.add_friend) }
+        : isSet(object.ban_user_event)
+        ? { $case: "ban_user_event", ban_user_event: BannedUserEvent.fromJSON(object.ban_user_event) }
+        : isSet(object.active_archived_thread)
+        ? {
+          $case: "active_archived_thread",
+          active_archived_thread: ActiveArchivedThread.fromJSON(object.active_archived_thread),
+        }
+        : isSet(object.allow_anonymous_event)
+        ? {
+          $case: "allow_anonymous_event",
+          allow_anonymous_event: AllowAnonymousEvent.fromJSON(object.allow_anonymous_event),
+        }
         : undefined,
     };
   },
 
   toJSON(message: Envelope): unknown {
     const obj: any = {};
-    if (message.cid !== "") {
+    if (message.cid !== undefined && message.cid !== "") {
       obj.cid = message.cid;
     }
-    if (message.channel !== undefined) {
-      obj.channel = Channel.toJSON(message.channel);
+    if (message.message?.$case === "channel") {
+      obj.channel = Channel.toJSON(message.message.channel);
     }
-    if (message.clan_join !== undefined) {
-      obj.clan_join = ClanJoin.toJSON(message.clan_join);
+    if (message.message?.$case === "clan_join") {
+      obj.clan_join = ClanJoin.toJSON(message.message.clan_join);
     }
-    if (message.channel_join !== undefined) {
-      obj.channel_join = ChannelJoin.toJSON(message.channel_join);
+    if (message.message?.$case === "channel_join") {
+      obj.channel_join = ChannelJoin.toJSON(message.message.channel_join);
     }
-    if (message.channel_leave !== undefined) {
-      obj.channel_leave = ChannelLeave.toJSON(message.channel_leave);
+    if (message.message?.$case === "channel_leave") {
+      obj.channel_leave = ChannelLeave.toJSON(message.message.channel_leave);
     }
-    if (message.channel_message !== undefined) {
-      obj.channel_message = ChannelMessage.toJSON(message.channel_message);
+    if (message.message?.$case === "channel_message") {
+      obj.channel_message = ChannelMessage.toJSON(message.message.channel_message);
     }
-    if (message.channel_message_ack !== undefined) {
-      obj.channel_message_ack = ChannelMessageAck.toJSON(message.channel_message_ack);
+    if (message.message?.$case === "channel_message_ack") {
+      obj.channel_message_ack = ChannelMessageAck.toJSON(message.message.channel_message_ack);
     }
-    if (message.channel_message_send !== undefined) {
-      obj.channel_message_send = ChannelMessageSend.toJSON(message.channel_message_send);
+    if (message.message?.$case === "channel_message_send") {
+      obj.channel_message_send = ChannelMessageSend.toJSON(message.message.channel_message_send);
     }
-    if (message.channel_message_update !== undefined) {
-      obj.channel_message_update = ChannelMessageUpdate.toJSON(message.channel_message_update);
+    if (message.message?.$case === "channel_message_update") {
+      obj.channel_message_update = ChannelMessageUpdate.toJSON(message.message.channel_message_update);
     }
-    if (message.channel_message_remove !== undefined) {
-      obj.channel_message_remove = ChannelMessageRemove.toJSON(message.channel_message_remove);
+    if (message.message?.$case === "channel_message_remove") {
+      obj.channel_message_remove = ChannelMessageRemove.toJSON(message.message.channel_message_remove);
     }
-    if (message.channel_presence_event !== undefined) {
-      obj.channel_presence_event = ChannelPresenceEvent.toJSON(message.channel_presence_event);
+    if (message.message?.$case === "channel_presence_event") {
+      obj.channel_presence_event = ChannelPresenceEvent.toJSON(message.message.channel_presence_event);
     }
-    if (message.error !== undefined) {
-      obj.error = Error.toJSON(message.error);
+    if (message.message?.$case === "error") {
+      obj.error = Error.toJSON(message.message.error);
     }
-    if (message.notifications !== undefined) {
-      obj.notifications = Notifications.toJSON(message.notifications);
+    if (message.message?.$case === "notifications") {
+      obj.notifications = Notifications.toJSON(message.message.notifications);
     }
-    if (message.rpc !== undefined) {
-      obj.rpc = Rpc.toJSON(message.rpc);
+    if (message.message?.$case === "rpc") {
+      obj.rpc = Rpc.toJSON(message.message.rpc);
     }
-    if (message.status !== undefined) {
-      obj.status = Status.toJSON(message.status);
+    if (message.message?.$case === "status") {
+      obj.status = Status.toJSON(message.message.status);
     }
-    if (message.status_follow !== undefined) {
-      obj.status_follow = StatusFollow.toJSON(message.status_follow);
+    if (message.message?.$case === "status_follow") {
+      obj.status_follow = StatusFollow.toJSON(message.message.status_follow);
     }
-    if (message.status_presence_event !== undefined) {
-      obj.status_presence_event = StatusPresenceEvent.toJSON(message.status_presence_event);
+    if (message.message?.$case === "status_presence_event") {
+      obj.status_presence_event = StatusPresenceEvent.toJSON(message.message.status_presence_event);
     }
-    if (message.status_unfollow !== undefined) {
-      obj.status_unfollow = StatusUnfollow.toJSON(message.status_unfollow);
+    if (message.message?.$case === "status_unfollow") {
+      obj.status_unfollow = StatusUnfollow.toJSON(message.message.status_unfollow);
     }
-    if (message.status_update !== undefined) {
-      obj.status_update = StatusUpdate.toJSON(message.status_update);
+    if (message.message?.$case === "status_update") {
+      obj.status_update = StatusUpdate.toJSON(message.message.status_update);
     }
-    if (message.stream_data !== undefined) {
-      obj.stream_data = StreamData.toJSON(message.stream_data);
+    if (message.message?.$case === "stream_data") {
+      obj.stream_data = StreamData.toJSON(message.message.stream_data);
     }
-    if (message.stream_presence_event !== undefined) {
-      obj.stream_presence_event = StreamPresenceEvent.toJSON(message.stream_presence_event);
+    if (message.message?.$case === "stream_presence_event") {
+      obj.stream_presence_event = StreamPresenceEvent.toJSON(message.message.stream_presence_event);
     }
-    if (message.ping !== undefined) {
-      obj.ping = Ping.toJSON(message.ping);
+    if (message.message?.$case === "ping") {
+      obj.ping = Ping.toJSON(message.message.ping);
     }
-    if (message.pong !== undefined) {
-      obj.pong = Pong.toJSON(message.pong);
+    if (message.message?.$case === "pong") {
+      obj.pong = Pong.toJSON(message.message.pong);
     }
-    if (message.message_typing_event !== undefined) {
-      obj.message_typing_event = MessageTypingEvent.toJSON(message.message_typing_event);
+    if (message.message?.$case === "message_typing_event") {
+      obj.message_typing_event = MessageTypingEvent.toJSON(message.message.message_typing_event);
     }
-    if (message.last_seen_message_event !== undefined) {
-      obj.last_seen_message_event = LastSeenMessageEvent.toJSON(message.last_seen_message_event);
+    if (message.message?.$case === "last_seen_message_event") {
+      obj.last_seen_message_event = LastSeenMessageEvent.toJSON(message.message.last_seen_message_event);
     }
-    if (message.message_reaction_event !== undefined) {
-      obj.message_reaction_event = MessageReaction.toJSON(message.message_reaction_event);
+    if (message.message?.$case === "message_reaction_event") {
+      obj.message_reaction_event = MessageReaction.toJSON(message.message.message_reaction_event);
     }
-    if (message.voice_joined_event !== undefined) {
-      obj.voice_joined_event = VoiceJoinedEvent.toJSON(message.voice_joined_event);
+    if (message.message?.$case === "voice_joined_event") {
+      obj.voice_joined_event = VoiceJoinedEvent.toJSON(message.message.voice_joined_event);
     }
-    if (message.voice_leaved_event !== undefined) {
-      obj.voice_leaved_event = VoiceLeavedEvent.toJSON(message.voice_leaved_event);
+    if (message.message?.$case === "voice_leaved_event") {
+      obj.voice_leaved_event = VoiceLeavedEvent.toJSON(message.message.voice_leaved_event);
     }
-    if (message.voice_started_event !== undefined) {
-      obj.voice_started_event = VoiceStartedEvent.toJSON(message.voice_started_event);
+    if (message.message?.$case === "voice_started_event") {
+      obj.voice_started_event = VoiceStartedEvent.toJSON(message.message.voice_started_event);
     }
-    if (message.voice_ended_event !== undefined) {
-      obj.voice_ended_event = VoiceEndedEvent.toJSON(message.voice_ended_event);
+    if (message.message?.$case === "voice_ended_event") {
+      obj.voice_ended_event = VoiceEndedEvent.toJSON(message.message.voice_ended_event);
     }
-    if (message.channel_created_event !== undefined) {
-      obj.channel_created_event = ChannelCreatedEvent.toJSON(message.channel_created_event);
+    if (message.message?.$case === "channel_created_event") {
+      obj.channel_created_event = ChannelCreatedEvent.toJSON(message.message.channel_created_event);
     }
-    if (message.channel_deleted_event !== undefined) {
-      obj.channel_deleted_event = ChannelDeletedEvent.toJSON(message.channel_deleted_event);
+    if (message.message?.$case === "channel_deleted_event") {
+      obj.channel_deleted_event = ChannelDeletedEvent.toJSON(message.message.channel_deleted_event);
     }
-    if (message.channel_updated_event !== undefined) {
-      obj.channel_updated_event = ChannelUpdatedEvent.toJSON(message.channel_updated_event);
+    if (message.message?.$case === "channel_updated_event") {
+      obj.channel_updated_event = ChannelUpdatedEvent.toJSON(message.message.channel_updated_event);
     }
-    if (message.last_pin_message_event !== undefined) {
-      obj.last_pin_message_event = LastPinMessageEvent.toJSON(message.last_pin_message_event);
+    if (message.message?.$case === "last_pin_message_event") {
+      obj.last_pin_message_event = LastPinMessageEvent.toJSON(message.message.last_pin_message_event);
     }
-    if (message.custom_status_event !== undefined) {
-      obj.custom_status_event = CustomStatusEvent.toJSON(message.custom_status_event);
+    if (message.message?.$case === "custom_status_event") {
+      obj.custom_status_event = CustomStatusEvent.toJSON(message.message.custom_status_event);
     }
-    if (message.user_channel_added_event !== undefined) {
-      obj.user_channel_added_event = UserChannelAdded.toJSON(message.user_channel_added_event);
+    if (message.message?.$case === "user_channel_added_event") {
+      obj.user_channel_added_event = UserChannelAdded.toJSON(message.message.user_channel_added_event);
     }
-    if (message.user_channel_removed_event !== undefined) {
-      obj.user_channel_removed_event = UserChannelRemoved.toJSON(message.user_channel_removed_event);
+    if (message.message?.$case === "user_channel_removed_event") {
+      obj.user_channel_removed_event = UserChannelRemoved.toJSON(message.message.user_channel_removed_event);
     }
-    if (message.user_clan_removed_event !== undefined) {
-      obj.user_clan_removed_event = UserClanRemoved.toJSON(message.user_clan_removed_event);
+    if (message.message?.$case === "user_clan_removed_event") {
+      obj.user_clan_removed_event = UserClanRemoved.toJSON(message.message.user_clan_removed_event);
     }
-    if (message.clan_updated_event !== undefined) {
-      obj.clan_updated_event = ClanUpdatedEvent.toJSON(message.clan_updated_event);
+    if (message.message?.$case === "clan_updated_event") {
+      obj.clan_updated_event = ClanUpdatedEvent.toJSON(message.message.clan_updated_event);
     }
-    if (message.clan_profile_updated_event !== undefined) {
-      obj.clan_profile_updated_event = ClanProfileUpdatedEvent.toJSON(message.clan_profile_updated_event);
+    if (message.message?.$case === "clan_profile_updated_event") {
+      obj.clan_profile_updated_event = ClanProfileUpdatedEvent.toJSON(message.message.clan_profile_updated_event);
     }
-    if (message.check_name_existed_event !== undefined) {
-      obj.check_name_existed_event = CheckNameExistedEvent.toJSON(message.check_name_existed_event);
+    if (message.message?.$case === "check_name_existed_event") {
+      obj.check_name_existed_event = CheckNameExistedEvent.toJSON(message.message.check_name_existed_event);
     }
-    if (message.user_profile_updated_event !== undefined) {
-      obj.user_profile_updated_event = UserProfileUpdatedEvent.toJSON(message.user_profile_updated_event);
+    if (message.message?.$case === "user_profile_updated_event") {
+      obj.user_profile_updated_event = UserProfileUpdatedEvent.toJSON(message.message.user_profile_updated_event);
     }
-    if (message.add_clan_user_event !== undefined) {
-      obj.add_clan_user_event = AddClanUserEvent.toJSON(message.add_clan_user_event);
+    if (message.message?.$case === "add_clan_user_event") {
+      obj.add_clan_user_event = AddClanUserEvent.toJSON(message.message.add_clan_user_event);
     }
-    if (message.clan_event_created !== undefined) {
-      obj.clan_event_created = CreateEventRequest.toJSON(message.clan_event_created);
+    if (message.message?.$case === "clan_event_created") {
+      obj.clan_event_created = CreateEventRequest.toJSON(message.message.clan_event_created);
     }
-    if (message.role_assign_event !== undefined) {
-      obj.role_assign_event = RoleAssignedEvent.toJSON(message.role_assign_event);
+    if (message.message?.$case === "role_assign_event") {
+      obj.role_assign_event = RoleAssignedEvent.toJSON(message.message.role_assign_event);
     }
-    if (message.clan_deleted_event !== undefined) {
-      obj.clan_deleted_event = ClanDeletedEvent.toJSON(message.clan_deleted_event);
+    if (message.message?.$case === "clan_deleted_event") {
+      obj.clan_deleted_event = ClanDeletedEvent.toJSON(message.message.clan_deleted_event);
     }
-    if (message.give_coffee_event !== undefined) {
-      obj.give_coffee_event = GiveCoffeeEvent.toJSON(message.give_coffee_event);
+    if (message.message?.$case === "give_coffee_event") {
+      obj.give_coffee_event = GiveCoffeeEvent.toJSON(message.message.give_coffee_event);
     }
-    if (message.sticker_create_event !== undefined) {
-      obj.sticker_create_event = StickerCreateEvent.toJSON(message.sticker_create_event);
+    if (message.message?.$case === "sticker_create_event") {
+      obj.sticker_create_event = StickerCreateEvent.toJSON(message.message.sticker_create_event);
     }
-    if (message.sticker_update_event !== undefined) {
-      obj.sticker_update_event = StickerUpdateEvent.toJSON(message.sticker_update_event);
+    if (message.message?.$case === "sticker_update_event") {
+      obj.sticker_update_event = StickerUpdateEvent.toJSON(message.message.sticker_update_event);
     }
-    if (message.sticker_delete_event !== undefined) {
-      obj.sticker_delete_event = StickerDeleteEvent.toJSON(message.sticker_delete_event);
+    if (message.message?.$case === "sticker_delete_event") {
+      obj.sticker_delete_event = StickerDeleteEvent.toJSON(message.message.sticker_delete_event);
     }
-    if (message.role_event !== undefined) {
-      obj.role_event = RoleEvent.toJSON(message.role_event);
+    if (message.message?.$case === "role_event") {
+      obj.role_event = RoleEvent.toJSON(message.message.role_event);
     }
-    if (message.event_emoji !== undefined) {
-      obj.event_emoji = EventEmoji.toJSON(message.event_emoji);
+    if (message.message?.$case === "event_emoji") {
+      obj.event_emoji = EventEmoji.toJSON(message.message.event_emoji);
     }
-    if (message.streaming_joined_event !== undefined) {
-      obj.streaming_joined_event = StreamingJoinedEvent.toJSON(message.streaming_joined_event);
+    if (message.message?.$case === "streaming_joined_event") {
+      obj.streaming_joined_event = StreamingJoinedEvent.toJSON(message.message.streaming_joined_event);
     }
-    if (message.streaming_leaved_event !== undefined) {
-      obj.streaming_leaved_event = StreamingLeavedEvent.toJSON(message.streaming_leaved_event);
+    if (message.message?.$case === "streaming_leaved_event") {
+      obj.streaming_leaved_event = StreamingLeavedEvent.toJSON(message.message.streaming_leaved_event);
     }
-    if (message.streaming_started_event !== undefined) {
-      obj.streaming_started_event = StreamingStartedEvent.toJSON(message.streaming_started_event);
+    if (message.message?.$case === "streaming_started_event") {
+      obj.streaming_started_event = StreamingStartedEvent.toJSON(message.message.streaming_started_event);
     }
-    if (message.streaming_ended_event !== undefined) {
-      obj.streaming_ended_event = StreamingEndedEvent.toJSON(message.streaming_ended_event);
+    if (message.message?.$case === "streaming_ended_event") {
+      obj.streaming_ended_event = StreamingEndedEvent.toJSON(message.message.streaming_ended_event);
     }
-    if (message.permission_set_event !== undefined) {
-      obj.permission_set_event = PermissionSetEvent.toJSON(message.permission_set_event);
+    if (message.message?.$case === "permission_set_event") {
+      obj.permission_set_event = PermissionSetEvent.toJSON(message.message.permission_set_event);
     }
-    if (message.permission_changed_event !== undefined) {
-      obj.permission_changed_event = PermissionChangedEvent.toJSON(message.permission_changed_event);
+    if (message.message?.$case === "permission_changed_event") {
+      obj.permission_changed_event = PermissionChangedEvent.toJSON(message.message.permission_changed_event);
     }
-    if (message.token_sent_event !== undefined) {
-      obj.token_sent_event = TokenSentEvent.toJSON(message.token_sent_event);
+    if (message.message?.$case === "token_sent_event") {
+      obj.token_sent_event = TokenSentEvent.toJSON(message.message.token_sent_event);
     }
-    if (message.message_button_clicked !== undefined) {
-      obj.message_button_clicked = MessageButtonClicked.toJSON(message.message_button_clicked);
+    if (message.message?.$case === "message_button_clicked") {
+      obj.message_button_clicked = MessageButtonClicked.toJSON(message.message.message_button_clicked);
     }
-    if (message.unmute_event !== undefined) {
-      obj.unmute_event = UnmuteEvent.toJSON(message.unmute_event);
+    if (message.message?.$case === "unmute_event") {
+      obj.unmute_event = UnmuteEvent.toJSON(message.message.unmute_event);
     }
-    if (message.webrtc_signaling_fwd !== undefined) {
-      obj.webrtc_signaling_fwd = WebrtcSignalingFwd.toJSON(message.webrtc_signaling_fwd);
+    if (message.message?.$case === "webrtc_signaling_fwd") {
+      obj.webrtc_signaling_fwd = WebrtcSignalingFwd.toJSON(message.message.webrtc_signaling_fwd);
     }
-    if (message.list_activity !== undefined) {
-      obj.list_activity = ListActivity.toJSON(message.list_activity);
+    if (message.message?.$case === "list_activity") {
+      obj.list_activity = ListActivity.toJSON(message.message.list_activity);
     }
-    if (message.dropdown_box_selected !== undefined) {
-      obj.dropdown_box_selected = DropdownBoxSelected.toJSON(message.dropdown_box_selected);
+    if (message.message?.$case === "dropdown_box_selected") {
+      obj.dropdown_box_selected = DropdownBoxSelected.toJSON(message.message.dropdown_box_selected);
     }
-    if (message.incoming_call_push !== undefined) {
-      obj.incoming_call_push = IncomingCallPush.toJSON(message.incoming_call_push);
+    if (message.message?.$case === "incoming_call_push") {
+      obj.incoming_call_push = IncomingCallPush.toJSON(message.message.incoming_call_push);
     }
-    if (message.sd_topic_event !== undefined) {
-      obj.sd_topic_event = SdTopicEvent.toJSON(message.sd_topic_event);
+    if (message.message?.$case === "sd_topic_event") {
+      obj.sd_topic_event = SdTopicEvent.toJSON(message.message.sd_topic_event);
     }
-    if (message.follow_event !== undefined) {
-      obj.follow_event = FollowEvent.toJSON(message.follow_event);
+    if (message.message?.$case === "follow_event") {
+      obj.follow_event = FollowEvent.toJSON(message.message.follow_event);
     }
-    if (message.channel_app_event !== undefined) {
-      obj.channel_app_event = ChannelAppEvent.toJSON(message.channel_app_event);
+    if (message.message?.$case === "channel_app_event") {
+      obj.channel_app_event = ChannelAppEvent.toJSON(message.message.channel_app_event);
     }
-    if (message.user_status_event !== undefined) {
-      obj.user_status_event = UserStatusEvent.toJSON(message.user_status_event);
+    if (message.message?.$case === "user_status_event") {
+      obj.user_status_event = UserStatusEvent.toJSON(message.message.user_status_event);
     }
-    if (message.remove_friend !== undefined) {
-      obj.remove_friend = RemoveFriend.toJSON(message.remove_friend);
+    if (message.message?.$case === "remove_friend") {
+      obj.remove_friend = RemoveFriend.toJSON(message.message.remove_friend);
     }
-    if (message.webhook_event !== undefined) {
-      obj.webhook_event = Webhook.toJSON(message.webhook_event);
+    if (message.message?.$case === "webhook_event") {
+      obj.webhook_event = Webhook.toJSON(message.message.webhook_event);
     }
-    if (message.noti_user_channel !== undefined) {
-      obj.noti_user_channel = NotificationUserChannel.toJSON(message.noti_user_channel);
+    if (message.message?.$case === "noti_user_channel") {
+      obj.noti_user_channel = NotificationUserChannel.toJSON(message.message.noti_user_channel);
     }
-    if (message.join_channel_app_data !== undefined) {
-      obj.join_channel_app_data = JoinChannelAppData.toJSON(message.join_channel_app_data);
+    if (message.message?.$case === "join_channel_app_data") {
+      obj.join_channel_app_data = JoinChannelAppData.toJSON(message.message.join_channel_app_data);
     }
-    if (message.canvas_event !== undefined) {
-      obj.canvas_event = ChannelCanvas.toJSON(message.canvas_event);
+    if (message.message?.$case === "canvas_event") {
+      obj.canvas_event = ChannelCanvas.toJSON(message.message.canvas_event);
     }
-    if (message.unpin_message_event !== undefined) {
-      obj.unpin_message_event = UnpinMessageEvent.toJSON(message.unpin_message_event);
+    if (message.message?.$case === "unpin_message_event") {
+      obj.unpin_message_event = UnpinMessageEvent.toJSON(message.message.unpin_message_event);
     }
-    if (message.category_event !== undefined) {
-      obj.category_event = CategoryEvent.toJSON(message.category_event);
+    if (message.message?.$case === "category_event") {
+      obj.category_event = CategoryEvent.toJSON(message.message.category_event);
     }
-    if (message.handle_participant_meet_state_event !== undefined) {
+    if (message.message?.$case === "handle_participant_meet_state_event") {
       obj.handle_participant_meet_state_event = HandleParticipantMeetStateEvent.toJSON(
-        message.handle_participant_meet_state_event,
+        message.message.handle_participant_meet_state_event,
       );
     }
-    if (message.delete_account_event !== undefined) {
-      obj.delete_account_event = DeleteAccountEvent.toJSON(message.delete_account_event);
+    if (message.message?.$case === "delete_account_event") {
+      obj.delete_account_event = DeleteAccountEvent.toJSON(message.message.delete_account_event);
     }
-    if (message.ephemeral_message_send !== undefined) {
-      obj.ephemeral_message_send = EphemeralMessageSend.toJSON(message.ephemeral_message_send);
+    if (message.message?.$case === "ephemeral_message_send") {
+      obj.ephemeral_message_send = EphemeralMessageSend.toJSON(message.message.ephemeral_message_send);
     }
-    if (message.block_friend !== undefined) {
-      obj.block_friend = BlockFriend.toJSON(message.block_friend);
+    if (message.message?.$case === "block_friend") {
+      obj.block_friend = BlockFriend.toJSON(message.message.block_friend);
     }
-    if (message.voice_reaction_send !== undefined) {
-      obj.voice_reaction_send = VoiceReactionSend.toJSON(message.voice_reaction_send);
+    if (message.message?.$case === "voice_reaction_send") {
+      obj.voice_reaction_send = VoiceReactionSend.toJSON(message.message.voice_reaction_send);
     }
-    if (message.mark_as_read !== undefined) {
-      obj.mark_as_read = MarkAsRead.toJSON(message.mark_as_read);
+    if (message.message?.$case === "mark_as_read") {
+      obj.mark_as_read = MarkAsRead.toJSON(message.message.mark_as_read);
     }
-    if (message.list_data_socket !== undefined) {
-      obj.list_data_socket = ListDataSocket.toJSON(message.list_data_socket);
+    if (message.message?.$case === "list_data_socket") {
+      obj.list_data_socket = ListDataSocket.toJSON(message.message.list_data_socket);
     }
-    if (message.quick_menu_event !== undefined) {
-      obj.quick_menu_event = QuickMenuDataEvent.toJSON(message.quick_menu_event);
+    if (message.message?.$case === "quick_menu_event") {
+      obj.quick_menu_event = QuickMenuDataEvent.toJSON(message.message.quick_menu_event);
     }
-    if (message.un_block_friend !== undefined) {
-      obj.un_block_friend = UnblockFriend.toJSON(message.un_block_friend);
+    if (message.message?.$case === "un_block_friend") {
+      obj.un_block_friend = UnblockFriend.toJSON(message.message.un_block_friend);
     }
-    if (message.meet_participant_event !== undefined) {
-      obj.meet_participant_event = MeetParticipantEvent.toJSON(message.meet_participant_event);
+    if (message.message?.$case === "meet_participant_event") {
+      obj.meet_participant_event = MeetParticipantEvent.toJSON(message.message.meet_participant_event);
     }
-    if (message.transfer_ownership_event !== undefined) {
-      obj.transfer_ownership_event = TransferOwnershipEvent.toJSON(message.transfer_ownership_event);
+    if (message.message?.$case === "transfer_ownership_event") {
+      obj.transfer_ownership_event = TransferOwnershipEvent.toJSON(message.message.transfer_ownership_event);
     }
-    if (message.add_friend !== undefined) {
-      obj.add_friend = AddFriend.toJSON(message.add_friend);
+    if (message.message?.$case === "add_friend") {
+      obj.add_friend = AddFriend.toJSON(message.message.add_friend);
     }
-    if (message.ban_user_event !== undefined) {
-      obj.ban_user_event = BannedUserEvent.toJSON(message.ban_user_event);
+    if (message.message?.$case === "ban_user_event") {
+      obj.ban_user_event = BannedUserEvent.toJSON(message.message.ban_user_event);
     }
-    if (message.active_archived_thread !== undefined) {
-      obj.active_archived_thread = ActiveArchivedThread.toJSON(message.active_archived_thread);
+    if (message.message?.$case === "active_archived_thread") {
+      obj.active_archived_thread = ActiveArchivedThread.toJSON(message.message.active_archived_thread);
     }
-    if (message.allow_anonymous_event !== undefined) {
-      obj.allow_anonymous_event = AllowAnonymousEvent.toJSON(message.allow_anonymous_event);
+    if (message.message?.$case === "allow_anonymous_event") {
+      obj.allow_anonymous_event = AllowAnonymousEvent.toJSON(message.message.allow_anonymous_event);
     }
     return obj;
   },
@@ -3306,299 +3789,832 @@ export const Envelope = {
   fromPartial<I extends Exact<DeepPartial<Envelope>, I>>(object: I): Envelope {
     const message = createBaseEnvelope();
     message.cid = object.cid ?? "";
-    message.channel = (object.channel !== undefined && object.channel !== null)
-      ? Channel.fromPartial(object.channel)
-      : undefined;
-    message.clan_join = (object.clan_join !== undefined && object.clan_join !== null)
-      ? ClanJoin.fromPartial(object.clan_join)
-      : undefined;
-    message.channel_join = (object.channel_join !== undefined && object.channel_join !== null)
-      ? ChannelJoin.fromPartial(object.channel_join)
-      : undefined;
-    message.channel_leave = (object.channel_leave !== undefined && object.channel_leave !== null)
-      ? ChannelLeave.fromPartial(object.channel_leave)
-      : undefined;
-    message.channel_message = (object.channel_message !== undefined && object.channel_message !== null)
-      ? ChannelMessage.fromPartial(object.channel_message)
-      : undefined;
-    message.channel_message_ack = (object.channel_message_ack !== undefined && object.channel_message_ack !== null)
-      ? ChannelMessageAck.fromPartial(object.channel_message_ack)
-      : undefined;
-    message.channel_message_send = (object.channel_message_send !== undefined && object.channel_message_send !== null)
-      ? ChannelMessageSend.fromPartial(object.channel_message_send)
-      : undefined;
-    message.channel_message_update =
-      (object.channel_message_update !== undefined && object.channel_message_update !== null)
-        ? ChannelMessageUpdate.fromPartial(object.channel_message_update)
-        : undefined;
-    message.channel_message_remove =
-      (object.channel_message_remove !== undefined && object.channel_message_remove !== null)
-        ? ChannelMessageRemove.fromPartial(object.channel_message_remove)
-        : undefined;
-    message.channel_presence_event =
-      (object.channel_presence_event !== undefined && object.channel_presence_event !== null)
-        ? ChannelPresenceEvent.fromPartial(object.channel_presence_event)
-        : undefined;
-    message.error = (object.error !== undefined && object.error !== null) ? Error.fromPartial(object.error) : undefined;
-    message.notifications = (object.notifications !== undefined && object.notifications !== null)
-      ? Notifications.fromPartial(object.notifications)
-      : undefined;
-    message.rpc = (object.rpc !== undefined && object.rpc !== null) ? Rpc.fromPartial(object.rpc) : undefined;
-    message.status = (object.status !== undefined && object.status !== null)
-      ? Status.fromPartial(object.status)
-      : undefined;
-    message.status_follow = (object.status_follow !== undefined && object.status_follow !== null)
-      ? StatusFollow.fromPartial(object.status_follow)
-      : undefined;
-    message.status_presence_event =
-      (object.status_presence_event !== undefined && object.status_presence_event !== null)
-        ? StatusPresenceEvent.fromPartial(object.status_presence_event)
-        : undefined;
-    message.status_unfollow = (object.status_unfollow !== undefined && object.status_unfollow !== null)
-      ? StatusUnfollow.fromPartial(object.status_unfollow)
-      : undefined;
-    message.status_update = (object.status_update !== undefined && object.status_update !== null)
-      ? StatusUpdate.fromPartial(object.status_update)
-      : undefined;
-    message.stream_data = (object.stream_data !== undefined && object.stream_data !== null)
-      ? StreamData.fromPartial(object.stream_data)
-      : undefined;
-    message.stream_presence_event =
-      (object.stream_presence_event !== undefined && object.stream_presence_event !== null)
-        ? StreamPresenceEvent.fromPartial(object.stream_presence_event)
-        : undefined;
-    message.ping = (object.ping !== undefined && object.ping !== null) ? Ping.fromPartial(object.ping) : undefined;
-    message.pong = (object.pong !== undefined && object.pong !== null) ? Pong.fromPartial(object.pong) : undefined;
-    message.message_typing_event = (object.message_typing_event !== undefined && object.message_typing_event !== null)
-      ? MessageTypingEvent.fromPartial(object.message_typing_event)
-      : undefined;
-    message.last_seen_message_event =
-      (object.last_seen_message_event !== undefined && object.last_seen_message_event !== null)
-        ? LastSeenMessageEvent.fromPartial(object.last_seen_message_event)
-        : undefined;
-    message.message_reaction_event =
-      (object.message_reaction_event !== undefined && object.message_reaction_event !== null)
-        ? MessageReaction.fromPartial(object.message_reaction_event)
-        : undefined;
-    message.voice_joined_event = (object.voice_joined_event !== undefined && object.voice_joined_event !== null)
-      ? VoiceJoinedEvent.fromPartial(object.voice_joined_event)
-      : undefined;
-    message.voice_leaved_event = (object.voice_leaved_event !== undefined && object.voice_leaved_event !== null)
-      ? VoiceLeavedEvent.fromPartial(object.voice_leaved_event)
-      : undefined;
-    message.voice_started_event = (object.voice_started_event !== undefined && object.voice_started_event !== null)
-      ? VoiceStartedEvent.fromPartial(object.voice_started_event)
-      : undefined;
-    message.voice_ended_event = (object.voice_ended_event !== undefined && object.voice_ended_event !== null)
-      ? VoiceEndedEvent.fromPartial(object.voice_ended_event)
-      : undefined;
-    message.channel_created_event =
-      (object.channel_created_event !== undefined && object.channel_created_event !== null)
-        ? ChannelCreatedEvent.fromPartial(object.channel_created_event)
-        : undefined;
-    message.channel_deleted_event =
-      (object.channel_deleted_event !== undefined && object.channel_deleted_event !== null)
-        ? ChannelDeletedEvent.fromPartial(object.channel_deleted_event)
-        : undefined;
-    message.channel_updated_event =
-      (object.channel_updated_event !== undefined && object.channel_updated_event !== null)
-        ? ChannelUpdatedEvent.fromPartial(object.channel_updated_event)
-        : undefined;
-    message.last_pin_message_event =
-      (object.last_pin_message_event !== undefined && object.last_pin_message_event !== null)
-        ? LastPinMessageEvent.fromPartial(object.last_pin_message_event)
-        : undefined;
-    message.custom_status_event = (object.custom_status_event !== undefined && object.custom_status_event !== null)
-      ? CustomStatusEvent.fromPartial(object.custom_status_event)
-      : undefined;
-    message.user_channel_added_event =
-      (object.user_channel_added_event !== undefined && object.user_channel_added_event !== null)
-        ? UserChannelAdded.fromPartial(object.user_channel_added_event)
-        : undefined;
-    message.user_channel_removed_event =
-      (object.user_channel_removed_event !== undefined && object.user_channel_removed_event !== null)
-        ? UserChannelRemoved.fromPartial(object.user_channel_removed_event)
-        : undefined;
-    message.user_clan_removed_event =
-      (object.user_clan_removed_event !== undefined && object.user_clan_removed_event !== null)
-        ? UserClanRemoved.fromPartial(object.user_clan_removed_event)
-        : undefined;
-    message.clan_updated_event = (object.clan_updated_event !== undefined && object.clan_updated_event !== null)
-      ? ClanUpdatedEvent.fromPartial(object.clan_updated_event)
-      : undefined;
-    message.clan_profile_updated_event =
-      (object.clan_profile_updated_event !== undefined && object.clan_profile_updated_event !== null)
-        ? ClanProfileUpdatedEvent.fromPartial(object.clan_profile_updated_event)
-        : undefined;
-    message.check_name_existed_event =
-      (object.check_name_existed_event !== undefined && object.check_name_existed_event !== null)
-        ? CheckNameExistedEvent.fromPartial(object.check_name_existed_event)
-        : undefined;
-    message.user_profile_updated_event =
-      (object.user_profile_updated_event !== undefined && object.user_profile_updated_event !== null)
-        ? UserProfileUpdatedEvent.fromPartial(object.user_profile_updated_event)
-        : undefined;
-    message.add_clan_user_event = (object.add_clan_user_event !== undefined && object.add_clan_user_event !== null)
-      ? AddClanUserEvent.fromPartial(object.add_clan_user_event)
-      : undefined;
-    message.clan_event_created = (object.clan_event_created !== undefined && object.clan_event_created !== null)
-      ? CreateEventRequest.fromPartial(object.clan_event_created)
-      : undefined;
-    message.role_assign_event = (object.role_assign_event !== undefined && object.role_assign_event !== null)
-      ? RoleAssignedEvent.fromPartial(object.role_assign_event)
-      : undefined;
-    message.clan_deleted_event = (object.clan_deleted_event !== undefined && object.clan_deleted_event !== null)
-      ? ClanDeletedEvent.fromPartial(object.clan_deleted_event)
-      : undefined;
-    message.give_coffee_event = (object.give_coffee_event !== undefined && object.give_coffee_event !== null)
-      ? GiveCoffeeEvent.fromPartial(object.give_coffee_event)
-      : undefined;
-    message.sticker_create_event = (object.sticker_create_event !== undefined && object.sticker_create_event !== null)
-      ? StickerCreateEvent.fromPartial(object.sticker_create_event)
-      : undefined;
-    message.sticker_update_event = (object.sticker_update_event !== undefined && object.sticker_update_event !== null)
-      ? StickerUpdateEvent.fromPartial(object.sticker_update_event)
-      : undefined;
-    message.sticker_delete_event = (object.sticker_delete_event !== undefined && object.sticker_delete_event !== null)
-      ? StickerDeleteEvent.fromPartial(object.sticker_delete_event)
-      : undefined;
-    message.role_event = (object.role_event !== undefined && object.role_event !== null)
-      ? RoleEvent.fromPartial(object.role_event)
-      : undefined;
-    message.event_emoji = (object.event_emoji !== undefined && object.event_emoji !== null)
-      ? EventEmoji.fromPartial(object.event_emoji)
-      : undefined;
-    message.streaming_joined_event =
-      (object.streaming_joined_event !== undefined && object.streaming_joined_event !== null)
-        ? StreamingJoinedEvent.fromPartial(object.streaming_joined_event)
-        : undefined;
-    message.streaming_leaved_event =
-      (object.streaming_leaved_event !== undefined && object.streaming_leaved_event !== null)
-        ? StreamingLeavedEvent.fromPartial(object.streaming_leaved_event)
-        : undefined;
-    message.streaming_started_event =
-      (object.streaming_started_event !== undefined && object.streaming_started_event !== null)
-        ? StreamingStartedEvent.fromPartial(object.streaming_started_event)
-        : undefined;
-    message.streaming_ended_event =
-      (object.streaming_ended_event !== undefined && object.streaming_ended_event !== null)
-        ? StreamingEndedEvent.fromPartial(object.streaming_ended_event)
-        : undefined;
-    message.permission_set_event = (object.permission_set_event !== undefined && object.permission_set_event !== null)
-      ? PermissionSetEvent.fromPartial(object.permission_set_event)
-      : undefined;
-    message.permission_changed_event =
-      (object.permission_changed_event !== undefined && object.permission_changed_event !== null)
-        ? PermissionChangedEvent.fromPartial(object.permission_changed_event)
-        : undefined;
-    message.token_sent_event = (object.token_sent_event !== undefined && object.token_sent_event !== null)
-      ? TokenSentEvent.fromPartial(object.token_sent_event)
-      : undefined;
-    message.message_button_clicked =
-      (object.message_button_clicked !== undefined && object.message_button_clicked !== null)
-        ? MessageButtonClicked.fromPartial(object.message_button_clicked)
-        : undefined;
-    message.unmute_event = (object.unmute_event !== undefined && object.unmute_event !== null)
-      ? UnmuteEvent.fromPartial(object.unmute_event)
-      : undefined;
-    message.webrtc_signaling_fwd = (object.webrtc_signaling_fwd !== undefined && object.webrtc_signaling_fwd !== null)
-      ? WebrtcSignalingFwd.fromPartial(object.webrtc_signaling_fwd)
-      : undefined;
-    message.list_activity = (object.list_activity !== undefined && object.list_activity !== null)
-      ? ListActivity.fromPartial(object.list_activity)
-      : undefined;
-    message.dropdown_box_selected =
-      (object.dropdown_box_selected !== undefined && object.dropdown_box_selected !== null)
-        ? DropdownBoxSelected.fromPartial(object.dropdown_box_selected)
-        : undefined;
-    message.incoming_call_push = (object.incoming_call_push !== undefined && object.incoming_call_push !== null)
-      ? IncomingCallPush.fromPartial(object.incoming_call_push)
-      : undefined;
-    message.sd_topic_event = (object.sd_topic_event !== undefined && object.sd_topic_event !== null)
-      ? SdTopicEvent.fromPartial(object.sd_topic_event)
-      : undefined;
-    message.follow_event = (object.follow_event !== undefined && object.follow_event !== null)
-      ? FollowEvent.fromPartial(object.follow_event)
-      : undefined;
-    message.channel_app_event = (object.channel_app_event !== undefined && object.channel_app_event !== null)
-      ? ChannelAppEvent.fromPartial(object.channel_app_event)
-      : undefined;
-    message.user_status_event = (object.user_status_event !== undefined && object.user_status_event !== null)
-      ? UserStatusEvent.fromPartial(object.user_status_event)
-      : undefined;
-    message.remove_friend = (object.remove_friend !== undefined && object.remove_friend !== null)
-      ? RemoveFriend.fromPartial(object.remove_friend)
-      : undefined;
-    message.webhook_event = (object.webhook_event !== undefined && object.webhook_event !== null)
-      ? Webhook.fromPartial(object.webhook_event)
-      : undefined;
-    message.noti_user_channel = (object.noti_user_channel !== undefined && object.noti_user_channel !== null)
-      ? NotificationUserChannel.fromPartial(object.noti_user_channel)
-      : undefined;
-    message.join_channel_app_data =
-      (object.join_channel_app_data !== undefined && object.join_channel_app_data !== null)
-        ? JoinChannelAppData.fromPartial(object.join_channel_app_data)
-        : undefined;
-    message.canvas_event = (object.canvas_event !== undefined && object.canvas_event !== null)
-      ? ChannelCanvas.fromPartial(object.canvas_event)
-      : undefined;
-    message.unpin_message_event = (object.unpin_message_event !== undefined && object.unpin_message_event !== null)
-      ? UnpinMessageEvent.fromPartial(object.unpin_message_event)
-      : undefined;
-    message.category_event = (object.category_event !== undefined && object.category_event !== null)
-      ? CategoryEvent.fromPartial(object.category_event)
-      : undefined;
-    message.handle_participant_meet_state_event =
-      (object.handle_participant_meet_state_event !== undefined && object.handle_participant_meet_state_event !== null)
-        ? HandleParticipantMeetStateEvent.fromPartial(object.handle_participant_meet_state_event)
-        : undefined;
-    message.delete_account_event = (object.delete_account_event !== undefined && object.delete_account_event !== null)
-      ? DeleteAccountEvent.fromPartial(object.delete_account_event)
-      : undefined;
-    message.ephemeral_message_send =
-      (object.ephemeral_message_send !== undefined && object.ephemeral_message_send !== null)
-        ? EphemeralMessageSend.fromPartial(object.ephemeral_message_send)
-        : undefined;
-    message.block_friend = (object.block_friend !== undefined && object.block_friend !== null)
-      ? BlockFriend.fromPartial(object.block_friend)
-      : undefined;
-    message.voice_reaction_send = (object.voice_reaction_send !== undefined && object.voice_reaction_send !== null)
-      ? VoiceReactionSend.fromPartial(object.voice_reaction_send)
-      : undefined;
-    message.mark_as_read = (object.mark_as_read !== undefined && object.mark_as_read !== null)
-      ? MarkAsRead.fromPartial(object.mark_as_read)
-      : undefined;
-    message.list_data_socket = (object.list_data_socket !== undefined && object.list_data_socket !== null)
-      ? ListDataSocket.fromPartial(object.list_data_socket)
-      : undefined;
-    message.quick_menu_event = (object.quick_menu_event !== undefined && object.quick_menu_event !== null)
-      ? QuickMenuDataEvent.fromPartial(object.quick_menu_event)
-      : undefined;
-    message.un_block_friend = (object.un_block_friend !== undefined && object.un_block_friend !== null)
-      ? UnblockFriend.fromPartial(object.un_block_friend)
-      : undefined;
-    message.meet_participant_event =
-      (object.meet_participant_event !== undefined && object.meet_participant_event !== null)
-        ? MeetParticipantEvent.fromPartial(object.meet_participant_event)
-        : undefined;
-    message.transfer_ownership_event =
-      (object.transfer_ownership_event !== undefined && object.transfer_ownership_event !== null)
-        ? TransferOwnershipEvent.fromPartial(object.transfer_ownership_event)
-        : undefined;
-    message.add_friend = (object.add_friend !== undefined && object.add_friend !== null)
-      ? AddFriend.fromPartial(object.add_friend)
-      : undefined;
-    message.ban_user_event = (object.ban_user_event !== undefined && object.ban_user_event !== null)
-      ? BannedUserEvent.fromPartial(object.ban_user_event)
-      : undefined;
-    message.active_archived_thread =
-      (object.active_archived_thread !== undefined && object.active_archived_thread !== null)
-        ? ActiveArchivedThread.fromPartial(object.active_archived_thread)
-        : undefined;
-    message.allow_anonymous_event =
-      (object.allow_anonymous_event !== undefined && object.allow_anonymous_event !== null)
-        ? AllowAnonymousEvent.fromPartial(object.allow_anonymous_event)
-        : undefined;
+    if (
+      object.message?.$case === "channel" && object.message?.channel !== undefined && object.message?.channel !== null
+    ) {
+      message.message = { $case: "channel", channel: Channel.fromPartial(object.message.channel) };
+    }
+    if (
+      object.message?.$case === "clan_join" &&
+      object.message?.clan_join !== undefined &&
+      object.message?.clan_join !== null
+    ) {
+      message.message = { $case: "clan_join", clan_join: ClanJoin.fromPartial(object.message.clan_join) };
+    }
+    if (
+      object.message?.$case === "channel_join" &&
+      object.message?.channel_join !== undefined &&
+      object.message?.channel_join !== null
+    ) {
+      message.message = { $case: "channel_join", channel_join: ChannelJoin.fromPartial(object.message.channel_join) };
+    }
+    if (
+      object.message?.$case === "channel_leave" &&
+      object.message?.channel_leave !== undefined &&
+      object.message?.channel_leave !== null
+    ) {
+      message.message = {
+        $case: "channel_leave",
+        channel_leave: ChannelLeave.fromPartial(object.message.channel_leave),
+      };
+    }
+    if (
+      object.message?.$case === "channel_message" &&
+      object.message?.channel_message !== undefined &&
+      object.message?.channel_message !== null
+    ) {
+      message.message = {
+        $case: "channel_message",
+        channel_message: ChannelMessage.fromPartial(object.message.channel_message),
+      };
+    }
+    if (
+      object.message?.$case === "channel_message_ack" &&
+      object.message?.channel_message_ack !== undefined &&
+      object.message?.channel_message_ack !== null
+    ) {
+      message.message = {
+        $case: "channel_message_ack",
+        channel_message_ack: ChannelMessageAck.fromPartial(object.message.channel_message_ack),
+      };
+    }
+    if (
+      object.message?.$case === "channel_message_send" &&
+      object.message?.channel_message_send !== undefined &&
+      object.message?.channel_message_send !== null
+    ) {
+      message.message = {
+        $case: "channel_message_send",
+        channel_message_send: ChannelMessageSend.fromPartial(object.message.channel_message_send),
+      };
+    }
+    if (
+      object.message?.$case === "channel_message_update" &&
+      object.message?.channel_message_update !== undefined &&
+      object.message?.channel_message_update !== null
+    ) {
+      message.message = {
+        $case: "channel_message_update",
+        channel_message_update: ChannelMessageUpdate.fromPartial(object.message.channel_message_update),
+      };
+    }
+    if (
+      object.message?.$case === "channel_message_remove" &&
+      object.message?.channel_message_remove !== undefined &&
+      object.message?.channel_message_remove !== null
+    ) {
+      message.message = {
+        $case: "channel_message_remove",
+        channel_message_remove: ChannelMessageRemove.fromPartial(object.message.channel_message_remove),
+      };
+    }
+    if (
+      object.message?.$case === "channel_presence_event" &&
+      object.message?.channel_presence_event !== undefined &&
+      object.message?.channel_presence_event !== null
+    ) {
+      message.message = {
+        $case: "channel_presence_event",
+        channel_presence_event: ChannelPresenceEvent.fromPartial(object.message.channel_presence_event),
+      };
+    }
+    if (object.message?.$case === "error" && object.message?.error !== undefined && object.message?.error !== null) {
+      message.message = { $case: "error", error: Error.fromPartial(object.message.error) };
+    }
+    if (
+      object.message?.$case === "notifications" &&
+      object.message?.notifications !== undefined &&
+      object.message?.notifications !== null
+    ) {
+      message.message = {
+        $case: "notifications",
+        notifications: Notifications.fromPartial(object.message.notifications),
+      };
+    }
+    if (object.message?.$case === "rpc" && object.message?.rpc !== undefined && object.message?.rpc !== null) {
+      message.message = { $case: "rpc", rpc: Rpc.fromPartial(object.message.rpc) };
+    }
+    if (object.message?.$case === "status" && object.message?.status !== undefined && object.message?.status !== null) {
+      message.message = { $case: "status", status: Status.fromPartial(object.message.status) };
+    }
+    if (
+      object.message?.$case === "status_follow" &&
+      object.message?.status_follow !== undefined &&
+      object.message?.status_follow !== null
+    ) {
+      message.message = {
+        $case: "status_follow",
+        status_follow: StatusFollow.fromPartial(object.message.status_follow),
+      };
+    }
+    if (
+      object.message?.$case === "status_presence_event" &&
+      object.message?.status_presence_event !== undefined &&
+      object.message?.status_presence_event !== null
+    ) {
+      message.message = {
+        $case: "status_presence_event",
+        status_presence_event: StatusPresenceEvent.fromPartial(object.message.status_presence_event),
+      };
+    }
+    if (
+      object.message?.$case === "status_unfollow" &&
+      object.message?.status_unfollow !== undefined &&
+      object.message?.status_unfollow !== null
+    ) {
+      message.message = {
+        $case: "status_unfollow",
+        status_unfollow: StatusUnfollow.fromPartial(object.message.status_unfollow),
+      };
+    }
+    if (
+      object.message?.$case === "status_update" &&
+      object.message?.status_update !== undefined &&
+      object.message?.status_update !== null
+    ) {
+      message.message = {
+        $case: "status_update",
+        status_update: StatusUpdate.fromPartial(object.message.status_update),
+      };
+    }
+    if (
+      object.message?.$case === "stream_data" &&
+      object.message?.stream_data !== undefined &&
+      object.message?.stream_data !== null
+    ) {
+      message.message = { $case: "stream_data", stream_data: StreamData.fromPartial(object.message.stream_data) };
+    }
+    if (
+      object.message?.$case === "stream_presence_event" &&
+      object.message?.stream_presence_event !== undefined &&
+      object.message?.stream_presence_event !== null
+    ) {
+      message.message = {
+        $case: "stream_presence_event",
+        stream_presence_event: StreamPresenceEvent.fromPartial(object.message.stream_presence_event),
+      };
+    }
+    if (object.message?.$case === "ping" && object.message?.ping !== undefined && object.message?.ping !== null) {
+      message.message = { $case: "ping", ping: Ping.fromPartial(object.message.ping) };
+    }
+    if (object.message?.$case === "pong" && object.message?.pong !== undefined && object.message?.pong !== null) {
+      message.message = { $case: "pong", pong: Pong.fromPartial(object.message.pong) };
+    }
+    if (
+      object.message?.$case === "message_typing_event" &&
+      object.message?.message_typing_event !== undefined &&
+      object.message?.message_typing_event !== null
+    ) {
+      message.message = {
+        $case: "message_typing_event",
+        message_typing_event: MessageTypingEvent.fromPartial(object.message.message_typing_event),
+      };
+    }
+    if (
+      object.message?.$case === "last_seen_message_event" &&
+      object.message?.last_seen_message_event !== undefined &&
+      object.message?.last_seen_message_event !== null
+    ) {
+      message.message = {
+        $case: "last_seen_message_event",
+        last_seen_message_event: LastSeenMessageEvent.fromPartial(object.message.last_seen_message_event),
+      };
+    }
+    if (
+      object.message?.$case === "message_reaction_event" &&
+      object.message?.message_reaction_event !== undefined &&
+      object.message?.message_reaction_event !== null
+    ) {
+      message.message = {
+        $case: "message_reaction_event",
+        message_reaction_event: MessageReaction.fromPartial(object.message.message_reaction_event),
+      };
+    }
+    if (
+      object.message?.$case === "voice_joined_event" &&
+      object.message?.voice_joined_event !== undefined &&
+      object.message?.voice_joined_event !== null
+    ) {
+      message.message = {
+        $case: "voice_joined_event",
+        voice_joined_event: VoiceJoinedEvent.fromPartial(object.message.voice_joined_event),
+      };
+    }
+    if (
+      object.message?.$case === "voice_leaved_event" &&
+      object.message?.voice_leaved_event !== undefined &&
+      object.message?.voice_leaved_event !== null
+    ) {
+      message.message = {
+        $case: "voice_leaved_event",
+        voice_leaved_event: VoiceLeavedEvent.fromPartial(object.message.voice_leaved_event),
+      };
+    }
+    if (
+      object.message?.$case === "voice_started_event" &&
+      object.message?.voice_started_event !== undefined &&
+      object.message?.voice_started_event !== null
+    ) {
+      message.message = {
+        $case: "voice_started_event",
+        voice_started_event: VoiceStartedEvent.fromPartial(object.message.voice_started_event),
+      };
+    }
+    if (
+      object.message?.$case === "voice_ended_event" &&
+      object.message?.voice_ended_event !== undefined &&
+      object.message?.voice_ended_event !== null
+    ) {
+      message.message = {
+        $case: "voice_ended_event",
+        voice_ended_event: VoiceEndedEvent.fromPartial(object.message.voice_ended_event),
+      };
+    }
+    if (
+      object.message?.$case === "channel_created_event" &&
+      object.message?.channel_created_event !== undefined &&
+      object.message?.channel_created_event !== null
+    ) {
+      message.message = {
+        $case: "channel_created_event",
+        channel_created_event: ChannelCreatedEvent.fromPartial(object.message.channel_created_event),
+      };
+    }
+    if (
+      object.message?.$case === "channel_deleted_event" &&
+      object.message?.channel_deleted_event !== undefined &&
+      object.message?.channel_deleted_event !== null
+    ) {
+      message.message = {
+        $case: "channel_deleted_event",
+        channel_deleted_event: ChannelDeletedEvent.fromPartial(object.message.channel_deleted_event),
+      };
+    }
+    if (
+      object.message?.$case === "channel_updated_event" &&
+      object.message?.channel_updated_event !== undefined &&
+      object.message?.channel_updated_event !== null
+    ) {
+      message.message = {
+        $case: "channel_updated_event",
+        channel_updated_event: ChannelUpdatedEvent.fromPartial(object.message.channel_updated_event),
+      };
+    }
+    if (
+      object.message?.$case === "last_pin_message_event" &&
+      object.message?.last_pin_message_event !== undefined &&
+      object.message?.last_pin_message_event !== null
+    ) {
+      message.message = {
+        $case: "last_pin_message_event",
+        last_pin_message_event: LastPinMessageEvent.fromPartial(object.message.last_pin_message_event),
+      };
+    }
+    if (
+      object.message?.$case === "custom_status_event" &&
+      object.message?.custom_status_event !== undefined &&
+      object.message?.custom_status_event !== null
+    ) {
+      message.message = {
+        $case: "custom_status_event",
+        custom_status_event: CustomStatusEvent.fromPartial(object.message.custom_status_event),
+      };
+    }
+    if (
+      object.message?.$case === "user_channel_added_event" &&
+      object.message?.user_channel_added_event !== undefined &&
+      object.message?.user_channel_added_event !== null
+    ) {
+      message.message = {
+        $case: "user_channel_added_event",
+        user_channel_added_event: UserChannelAdded.fromPartial(object.message.user_channel_added_event),
+      };
+    }
+    if (
+      object.message?.$case === "user_channel_removed_event" &&
+      object.message?.user_channel_removed_event !== undefined &&
+      object.message?.user_channel_removed_event !== null
+    ) {
+      message.message = {
+        $case: "user_channel_removed_event",
+        user_channel_removed_event: UserChannelRemoved.fromPartial(object.message.user_channel_removed_event),
+      };
+    }
+    if (
+      object.message?.$case === "user_clan_removed_event" &&
+      object.message?.user_clan_removed_event !== undefined &&
+      object.message?.user_clan_removed_event !== null
+    ) {
+      message.message = {
+        $case: "user_clan_removed_event",
+        user_clan_removed_event: UserClanRemoved.fromPartial(object.message.user_clan_removed_event),
+      };
+    }
+    if (
+      object.message?.$case === "clan_updated_event" &&
+      object.message?.clan_updated_event !== undefined &&
+      object.message?.clan_updated_event !== null
+    ) {
+      message.message = {
+        $case: "clan_updated_event",
+        clan_updated_event: ClanUpdatedEvent.fromPartial(object.message.clan_updated_event),
+      };
+    }
+    if (
+      object.message?.$case === "clan_profile_updated_event" &&
+      object.message?.clan_profile_updated_event !== undefined &&
+      object.message?.clan_profile_updated_event !== null
+    ) {
+      message.message = {
+        $case: "clan_profile_updated_event",
+        clan_profile_updated_event: ClanProfileUpdatedEvent.fromPartial(object.message.clan_profile_updated_event),
+      };
+    }
+    if (
+      object.message?.$case === "check_name_existed_event" &&
+      object.message?.check_name_existed_event !== undefined &&
+      object.message?.check_name_existed_event !== null
+    ) {
+      message.message = {
+        $case: "check_name_existed_event",
+        check_name_existed_event: CheckNameExistedEvent.fromPartial(object.message.check_name_existed_event),
+      };
+    }
+    if (
+      object.message?.$case === "user_profile_updated_event" &&
+      object.message?.user_profile_updated_event !== undefined &&
+      object.message?.user_profile_updated_event !== null
+    ) {
+      message.message = {
+        $case: "user_profile_updated_event",
+        user_profile_updated_event: UserProfileUpdatedEvent.fromPartial(object.message.user_profile_updated_event),
+      };
+    }
+    if (
+      object.message?.$case === "add_clan_user_event" &&
+      object.message?.add_clan_user_event !== undefined &&
+      object.message?.add_clan_user_event !== null
+    ) {
+      message.message = {
+        $case: "add_clan_user_event",
+        add_clan_user_event: AddClanUserEvent.fromPartial(object.message.add_clan_user_event),
+      };
+    }
+    if (
+      object.message?.$case === "clan_event_created" &&
+      object.message?.clan_event_created !== undefined &&
+      object.message?.clan_event_created !== null
+    ) {
+      message.message = {
+        $case: "clan_event_created",
+        clan_event_created: CreateEventRequest.fromPartial(object.message.clan_event_created),
+      };
+    }
+    if (
+      object.message?.$case === "role_assign_event" &&
+      object.message?.role_assign_event !== undefined &&
+      object.message?.role_assign_event !== null
+    ) {
+      message.message = {
+        $case: "role_assign_event",
+        role_assign_event: RoleAssignedEvent.fromPartial(object.message.role_assign_event),
+      };
+    }
+    if (
+      object.message?.$case === "clan_deleted_event" &&
+      object.message?.clan_deleted_event !== undefined &&
+      object.message?.clan_deleted_event !== null
+    ) {
+      message.message = {
+        $case: "clan_deleted_event",
+        clan_deleted_event: ClanDeletedEvent.fromPartial(object.message.clan_deleted_event),
+      };
+    }
+    if (
+      object.message?.$case === "give_coffee_event" &&
+      object.message?.give_coffee_event !== undefined &&
+      object.message?.give_coffee_event !== null
+    ) {
+      message.message = {
+        $case: "give_coffee_event",
+        give_coffee_event: GiveCoffeeEvent.fromPartial(object.message.give_coffee_event),
+      };
+    }
+    if (
+      object.message?.$case === "sticker_create_event" &&
+      object.message?.sticker_create_event !== undefined &&
+      object.message?.sticker_create_event !== null
+    ) {
+      message.message = {
+        $case: "sticker_create_event",
+        sticker_create_event: StickerCreateEvent.fromPartial(object.message.sticker_create_event),
+      };
+    }
+    if (
+      object.message?.$case === "sticker_update_event" &&
+      object.message?.sticker_update_event !== undefined &&
+      object.message?.sticker_update_event !== null
+    ) {
+      message.message = {
+        $case: "sticker_update_event",
+        sticker_update_event: StickerUpdateEvent.fromPartial(object.message.sticker_update_event),
+      };
+    }
+    if (
+      object.message?.$case === "sticker_delete_event" &&
+      object.message?.sticker_delete_event !== undefined &&
+      object.message?.sticker_delete_event !== null
+    ) {
+      message.message = {
+        $case: "sticker_delete_event",
+        sticker_delete_event: StickerDeleteEvent.fromPartial(object.message.sticker_delete_event),
+      };
+    }
+    if (
+      object.message?.$case === "role_event" &&
+      object.message?.role_event !== undefined &&
+      object.message?.role_event !== null
+    ) {
+      message.message = { $case: "role_event", role_event: RoleEvent.fromPartial(object.message.role_event) };
+    }
+    if (
+      object.message?.$case === "event_emoji" &&
+      object.message?.event_emoji !== undefined &&
+      object.message?.event_emoji !== null
+    ) {
+      message.message = { $case: "event_emoji", event_emoji: EventEmoji.fromPartial(object.message.event_emoji) };
+    }
+    if (
+      object.message?.$case === "streaming_joined_event" &&
+      object.message?.streaming_joined_event !== undefined &&
+      object.message?.streaming_joined_event !== null
+    ) {
+      message.message = {
+        $case: "streaming_joined_event",
+        streaming_joined_event: StreamingJoinedEvent.fromPartial(object.message.streaming_joined_event),
+      };
+    }
+    if (
+      object.message?.$case === "streaming_leaved_event" &&
+      object.message?.streaming_leaved_event !== undefined &&
+      object.message?.streaming_leaved_event !== null
+    ) {
+      message.message = {
+        $case: "streaming_leaved_event",
+        streaming_leaved_event: StreamingLeavedEvent.fromPartial(object.message.streaming_leaved_event),
+      };
+    }
+    if (
+      object.message?.$case === "streaming_started_event" &&
+      object.message?.streaming_started_event !== undefined &&
+      object.message?.streaming_started_event !== null
+    ) {
+      message.message = {
+        $case: "streaming_started_event",
+        streaming_started_event: StreamingStartedEvent.fromPartial(object.message.streaming_started_event),
+      };
+    }
+    if (
+      object.message?.$case === "streaming_ended_event" &&
+      object.message?.streaming_ended_event !== undefined &&
+      object.message?.streaming_ended_event !== null
+    ) {
+      message.message = {
+        $case: "streaming_ended_event",
+        streaming_ended_event: StreamingEndedEvent.fromPartial(object.message.streaming_ended_event),
+      };
+    }
+    if (
+      object.message?.$case === "permission_set_event" &&
+      object.message?.permission_set_event !== undefined &&
+      object.message?.permission_set_event !== null
+    ) {
+      message.message = {
+        $case: "permission_set_event",
+        permission_set_event: PermissionSetEvent.fromPartial(object.message.permission_set_event),
+      };
+    }
+    if (
+      object.message?.$case === "permission_changed_event" &&
+      object.message?.permission_changed_event !== undefined &&
+      object.message?.permission_changed_event !== null
+    ) {
+      message.message = {
+        $case: "permission_changed_event",
+        permission_changed_event: PermissionChangedEvent.fromPartial(object.message.permission_changed_event),
+      };
+    }
+    if (
+      object.message?.$case === "token_sent_event" &&
+      object.message?.token_sent_event !== undefined &&
+      object.message?.token_sent_event !== null
+    ) {
+      message.message = {
+        $case: "token_sent_event",
+        token_sent_event: TokenSentEvent.fromPartial(object.message.token_sent_event),
+      };
+    }
+    if (
+      object.message?.$case === "message_button_clicked" &&
+      object.message?.message_button_clicked !== undefined &&
+      object.message?.message_button_clicked !== null
+    ) {
+      message.message = {
+        $case: "message_button_clicked",
+        message_button_clicked: MessageButtonClicked.fromPartial(object.message.message_button_clicked),
+      };
+    }
+    if (
+      object.message?.$case === "unmute_event" &&
+      object.message?.unmute_event !== undefined &&
+      object.message?.unmute_event !== null
+    ) {
+      message.message = { $case: "unmute_event", unmute_event: UnmuteEvent.fromPartial(object.message.unmute_event) };
+    }
+    if (
+      object.message?.$case === "webrtc_signaling_fwd" &&
+      object.message?.webrtc_signaling_fwd !== undefined &&
+      object.message?.webrtc_signaling_fwd !== null
+    ) {
+      message.message = {
+        $case: "webrtc_signaling_fwd",
+        webrtc_signaling_fwd: WebrtcSignalingFwd.fromPartial(object.message.webrtc_signaling_fwd),
+      };
+    }
+    if (
+      object.message?.$case === "list_activity" &&
+      object.message?.list_activity !== undefined &&
+      object.message?.list_activity !== null
+    ) {
+      message.message = {
+        $case: "list_activity",
+        list_activity: ListActivity.fromPartial(object.message.list_activity),
+      };
+    }
+    if (
+      object.message?.$case === "dropdown_box_selected" &&
+      object.message?.dropdown_box_selected !== undefined &&
+      object.message?.dropdown_box_selected !== null
+    ) {
+      message.message = {
+        $case: "dropdown_box_selected",
+        dropdown_box_selected: DropdownBoxSelected.fromPartial(object.message.dropdown_box_selected),
+      };
+    }
+    if (
+      object.message?.$case === "incoming_call_push" &&
+      object.message?.incoming_call_push !== undefined &&
+      object.message?.incoming_call_push !== null
+    ) {
+      message.message = {
+        $case: "incoming_call_push",
+        incoming_call_push: IncomingCallPush.fromPartial(object.message.incoming_call_push),
+      };
+    }
+    if (
+      object.message?.$case === "sd_topic_event" &&
+      object.message?.sd_topic_event !== undefined &&
+      object.message?.sd_topic_event !== null
+    ) {
+      message.message = {
+        $case: "sd_topic_event",
+        sd_topic_event: SdTopicEvent.fromPartial(object.message.sd_topic_event),
+      };
+    }
+    if (
+      object.message?.$case === "follow_event" &&
+      object.message?.follow_event !== undefined &&
+      object.message?.follow_event !== null
+    ) {
+      message.message = { $case: "follow_event", follow_event: FollowEvent.fromPartial(object.message.follow_event) };
+    }
+    if (
+      object.message?.$case === "channel_app_event" &&
+      object.message?.channel_app_event !== undefined &&
+      object.message?.channel_app_event !== null
+    ) {
+      message.message = {
+        $case: "channel_app_event",
+        channel_app_event: ChannelAppEvent.fromPartial(object.message.channel_app_event),
+      };
+    }
+    if (
+      object.message?.$case === "user_status_event" &&
+      object.message?.user_status_event !== undefined &&
+      object.message?.user_status_event !== null
+    ) {
+      message.message = {
+        $case: "user_status_event",
+        user_status_event: UserStatusEvent.fromPartial(object.message.user_status_event),
+      };
+    }
+    if (
+      object.message?.$case === "remove_friend" &&
+      object.message?.remove_friend !== undefined &&
+      object.message?.remove_friend !== null
+    ) {
+      message.message = {
+        $case: "remove_friend",
+        remove_friend: RemoveFriend.fromPartial(object.message.remove_friend),
+      };
+    }
+    if (
+      object.message?.$case === "webhook_event" &&
+      object.message?.webhook_event !== undefined &&
+      object.message?.webhook_event !== null
+    ) {
+      message.message = { $case: "webhook_event", webhook_event: Webhook.fromPartial(object.message.webhook_event) };
+    }
+    if (
+      object.message?.$case === "noti_user_channel" &&
+      object.message?.noti_user_channel !== undefined &&
+      object.message?.noti_user_channel !== null
+    ) {
+      message.message = {
+        $case: "noti_user_channel",
+        noti_user_channel: NotificationUserChannel.fromPartial(object.message.noti_user_channel),
+      };
+    }
+    if (
+      object.message?.$case === "join_channel_app_data" &&
+      object.message?.join_channel_app_data !== undefined &&
+      object.message?.join_channel_app_data !== null
+    ) {
+      message.message = {
+        $case: "join_channel_app_data",
+        join_channel_app_data: JoinChannelAppData.fromPartial(object.message.join_channel_app_data),
+      };
+    }
+    if (
+      object.message?.$case === "canvas_event" &&
+      object.message?.canvas_event !== undefined &&
+      object.message?.canvas_event !== null
+    ) {
+      message.message = { $case: "canvas_event", canvas_event: ChannelCanvas.fromPartial(object.message.canvas_event) };
+    }
+    if (
+      object.message?.$case === "unpin_message_event" &&
+      object.message?.unpin_message_event !== undefined &&
+      object.message?.unpin_message_event !== null
+    ) {
+      message.message = {
+        $case: "unpin_message_event",
+        unpin_message_event: UnpinMessageEvent.fromPartial(object.message.unpin_message_event),
+      };
+    }
+    if (
+      object.message?.$case === "category_event" &&
+      object.message?.category_event !== undefined &&
+      object.message?.category_event !== null
+    ) {
+      message.message = {
+        $case: "category_event",
+        category_event: CategoryEvent.fromPartial(object.message.category_event),
+      };
+    }
+    if (
+      object.message?.$case === "handle_participant_meet_state_event" &&
+      object.message?.handle_participant_meet_state_event !== undefined &&
+      object.message?.handle_participant_meet_state_event !== null
+    ) {
+      message.message = {
+        $case: "handle_participant_meet_state_event",
+        handle_participant_meet_state_event: HandleParticipantMeetStateEvent.fromPartial(
+          object.message.handle_participant_meet_state_event,
+        ),
+      };
+    }
+    if (
+      object.message?.$case === "delete_account_event" &&
+      object.message?.delete_account_event !== undefined &&
+      object.message?.delete_account_event !== null
+    ) {
+      message.message = {
+        $case: "delete_account_event",
+        delete_account_event: DeleteAccountEvent.fromPartial(object.message.delete_account_event),
+      };
+    }
+    if (
+      object.message?.$case === "ephemeral_message_send" &&
+      object.message?.ephemeral_message_send !== undefined &&
+      object.message?.ephemeral_message_send !== null
+    ) {
+      message.message = {
+        $case: "ephemeral_message_send",
+        ephemeral_message_send: EphemeralMessageSend.fromPartial(object.message.ephemeral_message_send),
+      };
+    }
+    if (
+      object.message?.$case === "block_friend" &&
+      object.message?.block_friend !== undefined &&
+      object.message?.block_friend !== null
+    ) {
+      message.message = { $case: "block_friend", block_friend: BlockFriend.fromPartial(object.message.block_friend) };
+    }
+    if (
+      object.message?.$case === "voice_reaction_send" &&
+      object.message?.voice_reaction_send !== undefined &&
+      object.message?.voice_reaction_send !== null
+    ) {
+      message.message = {
+        $case: "voice_reaction_send",
+        voice_reaction_send: VoiceReactionSend.fromPartial(object.message.voice_reaction_send),
+      };
+    }
+    if (
+      object.message?.$case === "mark_as_read" &&
+      object.message?.mark_as_read !== undefined &&
+      object.message?.mark_as_read !== null
+    ) {
+      message.message = { $case: "mark_as_read", mark_as_read: MarkAsRead.fromPartial(object.message.mark_as_read) };
+    }
+    if (
+      object.message?.$case === "list_data_socket" &&
+      object.message?.list_data_socket !== undefined &&
+      object.message?.list_data_socket !== null
+    ) {
+      message.message = {
+        $case: "list_data_socket",
+        list_data_socket: ListDataSocket.fromPartial(object.message.list_data_socket),
+      };
+    }
+    if (
+      object.message?.$case === "quick_menu_event" &&
+      object.message?.quick_menu_event !== undefined &&
+      object.message?.quick_menu_event !== null
+    ) {
+      message.message = {
+        $case: "quick_menu_event",
+        quick_menu_event: QuickMenuDataEvent.fromPartial(object.message.quick_menu_event),
+      };
+    }
+    if (
+      object.message?.$case === "un_block_friend" &&
+      object.message?.un_block_friend !== undefined &&
+      object.message?.un_block_friend !== null
+    ) {
+      message.message = {
+        $case: "un_block_friend",
+        un_block_friend: UnblockFriend.fromPartial(object.message.un_block_friend),
+      };
+    }
+    if (
+      object.message?.$case === "meet_participant_event" &&
+      object.message?.meet_participant_event !== undefined &&
+      object.message?.meet_participant_event !== null
+    ) {
+      message.message = {
+        $case: "meet_participant_event",
+        meet_participant_event: MeetParticipantEvent.fromPartial(object.message.meet_participant_event),
+      };
+    }
+    if (
+      object.message?.$case === "transfer_ownership_event" &&
+      object.message?.transfer_ownership_event !== undefined &&
+      object.message?.transfer_ownership_event !== null
+    ) {
+      message.message = {
+        $case: "transfer_ownership_event",
+        transfer_ownership_event: TransferOwnershipEvent.fromPartial(object.message.transfer_ownership_event),
+      };
+    }
+    if (
+      object.message?.$case === "add_friend" &&
+      object.message?.add_friend !== undefined &&
+      object.message?.add_friend !== null
+    ) {
+      message.message = { $case: "add_friend", add_friend: AddFriend.fromPartial(object.message.add_friend) };
+    }
+    if (
+      object.message?.$case === "ban_user_event" &&
+      object.message?.ban_user_event !== undefined &&
+      object.message?.ban_user_event !== null
+    ) {
+      message.message = {
+        $case: "ban_user_event",
+        ban_user_event: BannedUserEvent.fromPartial(object.message.ban_user_event),
+      };
+    }
+    if (
+      object.message?.$case === "active_archived_thread" &&
+      object.message?.active_archived_thread !== undefined &&
+      object.message?.active_archived_thread !== null
+    ) {
+      message.message = {
+        $case: "active_archived_thread",
+        active_archived_thread: ActiveArchivedThread.fromPartial(object.message.active_archived_thread),
+      };
+    }
+    if (
+      object.message?.$case === "allow_anonymous_event" &&
+      object.message?.allow_anonymous_event !== undefined &&
+      object.message?.allow_anonymous_event !== null
+    ) {
+      message.message = {
+        $case: "allow_anonymous_event",
+        allow_anonymous_event: AllowAnonymousEvent.fromPartial(object.message.allow_anonymous_event),
+      };
+    }
     return message;
   },
 };
@@ -3652,22 +4668,24 @@ function createBaseBannedUserEvent(): BannedUserEvent {
 
 export const BannedUserEvent = {
   encode(message: BannedUserEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.user_ids) {
-      writer.uint32(10).string(v!);
+    if (message.user_ids !== undefined && message.user_ids.length !== 0) {
+      for (const v of message.user_ids) {
+        writer.uint32(10).string(v!);
+      }
     }
-    if (message.action !== 0) {
+    if (message.action !== undefined && message.action !== 0) {
       writer.uint32(16).int32(message.action);
     }
-    if (message.banner_id !== "") {
+    if (message.banner_id !== undefined && message.banner_id !== "") {
       writer.uint32(26).string(message.banner_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(34).string(message.channel_id);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(42).string(message.clan_id);
     }
-    if (message.ban_time !== 0) {
+    if (message.ban_time !== undefined && message.ban_time !== 0) {
       writer.uint32(48).int32(message.ban_time);
     }
     return writer;
@@ -3685,7 +4703,7 @@ export const BannedUserEvent = {
             break;
           }
 
-          message.user_ids.push(reader.string());
+          message.user_ids!.push(reader.string());
           continue;
         case 2:
           if (tag !== 16) {
@@ -3747,19 +4765,19 @@ export const BannedUserEvent = {
     if (message.user_ids?.length) {
       obj.user_ids = message.user_ids;
     }
-    if (message.action !== 0) {
+    if (message.action !== undefined && message.action !== 0) {
       obj.action = Math.round(message.action);
     }
-    if (message.banner_id !== "") {
+    if (message.banner_id !== undefined && message.banner_id !== "") {
       obj.banner_id = message.banner_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.ban_time !== 0) {
+    if (message.ban_time !== undefined && message.ban_time !== 0) {
       obj.ban_time = Math.round(message.ban_time);
     }
     return obj;
@@ -3795,28 +4813,28 @@ function createBaseChannelCanvas(): ChannelCanvas {
 
 export const ChannelCanvas = {
   encode(message: ChannelCanvas, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.title !== "") {
+    if (message.title !== undefined && message.title !== "") {
       writer.uint32(18).string(message.title);
     }
-    if (message.content !== "") {
+    if (message.content !== undefined && message.content !== "") {
       writer.uint32(26).string(message.content);
     }
-    if (message.creator_id !== "") {
+    if (message.creator_id !== undefined && message.creator_id !== "") {
       writer.uint32(34).string(message.creator_id);
     }
-    if (message.editor_id !== "") {
+    if (message.editor_id !== undefined && message.editor_id !== "") {
       writer.uint32(42).string(message.editor_id);
     }
-    if (message.is_default !== false) {
+    if (message.is_default !== undefined && message.is_default !== false) {
       writer.uint32(48).bool(message.is_default);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(58).string(message.channel_id);
     }
-    if (message.status !== 0) {
+    if (message.status !== undefined && message.status !== 0) {
       writer.uint32(64).int32(message.status);
     }
     return writer;
@@ -3909,28 +4927,28 @@ export const ChannelCanvas = {
 
   toJSON(message: ChannelCanvas): unknown {
     const obj: any = {};
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       obj.id = message.id;
     }
-    if (message.title !== "") {
+    if (message.title !== undefined && message.title !== "") {
       obj.title = message.title;
     }
-    if (message.content !== "") {
+    if (message.content !== undefined && message.content !== "") {
       obj.content = message.content;
     }
-    if (message.creator_id !== "") {
+    if (message.creator_id !== undefined && message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.editor_id !== "") {
+    if (message.editor_id !== undefined && message.editor_id !== "") {
       obj.editor_id = message.editor_id;
     }
-    if (message.is_default !== false) {
+    if (message.is_default !== undefined && message.is_default !== false) {
       obj.is_default = message.is_default;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.status !== 0) {
+    if (message.status !== undefined && message.status !== 0) {
       obj.status = Math.round(message.status);
     }
     return obj;
@@ -3959,16 +4977,16 @@ function createBaseIncomingCallPush(): IncomingCallPush {
 
 export const IncomingCallPush = {
   encode(message: IncomingCallPush, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.receiver_id !== "") {
+    if (message.receiver_id !== undefined && message.receiver_id !== "") {
       writer.uint32(10).string(message.receiver_id);
     }
-    if (message.json_data !== "") {
+    if (message.json_data !== undefined && message.json_data !== "") {
       writer.uint32(26).string(message.json_data);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(34).string(message.channel_id);
     }
-    if (message.caller_id !== "") {
+    if (message.caller_id !== undefined && message.caller_id !== "") {
       writer.uint32(42).string(message.caller_id);
     }
     return writer;
@@ -4029,16 +5047,16 @@ export const IncomingCallPush = {
 
   toJSON(message: IncomingCallPush): unknown {
     const obj: any = {};
-    if (message.receiver_id !== "") {
+    if (message.receiver_id !== undefined && message.receiver_id !== "") {
       obj.receiver_id = message.receiver_id;
     }
-    if (message.json_data !== "") {
+    if (message.json_data !== undefined && message.json_data !== "") {
       obj.json_data = message.json_data;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.caller_id !== "") {
+    if (message.caller_id !== undefined && message.caller_id !== "") {
       obj.caller_id = message.caller_id;
     }
     return obj;
@@ -4063,19 +5081,19 @@ function createBaseWebrtcSignalingFwd(): WebrtcSignalingFwd {
 
 export const WebrtcSignalingFwd = {
   encode(message: WebrtcSignalingFwd, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.receiver_id !== "") {
+    if (message.receiver_id !== undefined && message.receiver_id !== "") {
       writer.uint32(10).string(message.receiver_id);
     }
-    if (message.data_type !== 0) {
+    if (message.data_type !== undefined && message.data_type !== 0) {
       writer.uint32(16).int32(message.data_type);
     }
-    if (message.json_data !== "") {
+    if (message.json_data !== undefined && message.json_data !== "") {
       writer.uint32(26).string(message.json_data);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(34).string(message.channel_id);
     }
-    if (message.caller_id !== "") {
+    if (message.caller_id !== undefined && message.caller_id !== "") {
       writer.uint32(42).string(message.caller_id);
     }
     return writer;
@@ -4144,19 +5162,19 @@ export const WebrtcSignalingFwd = {
 
   toJSON(message: WebrtcSignalingFwd): unknown {
     const obj: any = {};
-    if (message.receiver_id !== "") {
+    if (message.receiver_id !== undefined && message.receiver_id !== "") {
       obj.receiver_id = message.receiver_id;
     }
-    if (message.data_type !== 0) {
+    if (message.data_type !== undefined && message.data_type !== 0) {
       obj.data_type = Math.round(message.data_type);
     }
-    if (message.json_data !== "") {
+    if (message.json_data !== undefined && message.json_data !== "") {
       obj.json_data = message.json_data;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.caller_id !== "") {
+    if (message.caller_id !== undefined && message.caller_id !== "") {
       obj.caller_id = message.caller_id;
     }
     return obj;
@@ -4182,19 +5200,19 @@ function createBaseSFUSignalingFwd(): SFUSignalingFwd {
 
 export const SFUSignalingFwd = {
   encode(message: SFUSignalingFwd, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.data_type !== 0) {
+    if (message.data_type !== undefined && message.data_type !== 0) {
       writer.uint32(24).int32(message.data_type);
     }
-    if (message.json_data !== "") {
+    if (message.json_data !== undefined && message.json_data !== "") {
       writer.uint32(34).string(message.json_data);
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(42).string(message.user_id);
     }
     return writer;
@@ -4263,19 +5281,19 @@ export const SFUSignalingFwd = {
 
   toJSON(message: SFUSignalingFwd): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.data_type !== 0) {
+    if (message.data_type !== undefined && message.data_type !== 0) {
       obj.data_type = Math.round(message.data_type);
     }
-    if (message.json_data !== "") {
+    if (message.json_data !== undefined && message.json_data !== "") {
       obj.json_data = message.json_data;
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
     return obj;
@@ -4301,13 +5319,13 @@ function createBaseAddClanUserEvent(): AddClanUserEvent {
 
 export const AddClanUserEvent = {
   encode(message: AddClanUserEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
     if (message.user !== undefined) {
       UserProfileRedis.encode(message.user, writer.uint32(18).fork()).ldelim();
     }
-    if (message.invitor !== "") {
+    if (message.invitor !== undefined && message.invitor !== "") {
       writer.uint32(26).string(message.invitor);
     }
     return writer;
@@ -4360,13 +5378,13 @@ export const AddClanUserEvent = {
 
   toJSON(message: AddClanUserEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     if (message.user !== undefined) {
       obj.user = UserProfileRedis.toJSON(message.user);
     }
-    if (message.invitor !== "") {
+    if (message.invitor !== undefined && message.invitor !== "") {
       obj.invitor = message.invitor;
     }
     return obj;
@@ -4392,17 +5410,21 @@ function createBaseRoleAssignedEvent(): RoleAssignedEvent {
 
 export const RoleAssignedEvent = {
   encode(message: RoleAssignedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.ClanId !== "") {
+    if (message.ClanId !== undefined && message.ClanId !== "") {
       writer.uint32(10).string(message.ClanId);
     }
-    if (message.role_id !== "") {
+    if (message.role_id !== undefined && message.role_id !== "") {
       writer.uint32(18).string(message.role_id);
     }
-    for (const v of message.user_ids_assigned) {
-      writer.uint32(26).string(v!);
+    if (message.user_ids_assigned !== undefined && message.user_ids_assigned.length !== 0) {
+      for (const v of message.user_ids_assigned) {
+        writer.uint32(26).string(v!);
+      }
     }
-    for (const v of message.user_ids_removed) {
-      writer.uint32(34).string(v!);
+    if (message.user_ids_removed !== undefined && message.user_ids_removed.length !== 0) {
+      for (const v of message.user_ids_removed) {
+        writer.uint32(34).string(v!);
+      }
     }
     return writer;
   },
@@ -4433,14 +5455,14 @@ export const RoleAssignedEvent = {
             break;
           }
 
-          message.user_ids_assigned.push(reader.string());
+          message.user_ids_assigned!.push(reader.string());
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.user_ids_removed.push(reader.string());
+          message.user_ids_removed!.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -4466,10 +5488,10 @@ export const RoleAssignedEvent = {
 
   toJSON(message: RoleAssignedEvent): unknown {
     const obj: any = {};
-    if (message.ClanId !== "") {
+    if (message.ClanId !== undefined && message.ClanId !== "") {
       obj.ClanId = message.ClanId;
     }
-    if (message.role_id !== "") {
+    if (message.role_id !== undefined && message.role_id !== "") {
       obj.role_id = message.role_id;
     }
     if (message.user_ids_assigned?.length) {
@@ -4500,10 +5522,10 @@ function createBasePermissionRoleChannel(): PermissionRoleChannel {
 
 export const PermissionRoleChannel = {
   encode(message: PermissionRoleChannel, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.permission_id !== "") {
+    if (message.permission_id !== undefined && message.permission_id !== "") {
       writer.uint32(10).string(message.permission_id);
     }
-    if (message.active !== false) {
+    if (message.active !== undefined && message.active !== false) {
       writer.uint32(16).bool(message.active);
     }
     return writer;
@@ -4548,10 +5570,10 @@ export const PermissionRoleChannel = {
 
   toJSON(message: PermissionRoleChannel): unknown {
     const obj: any = {};
-    if (message.permission_id !== "") {
+    if (message.permission_id !== undefined && message.permission_id !== "") {
       obj.permission_id = message.permission_id;
     }
-    if (message.active !== false) {
+    if (message.active !== undefined && message.active !== false) {
       obj.active = message.active;
     }
     return obj;
@@ -4583,28 +5605,28 @@ function createBaseHashtagDm(): HashtagDm {
 
 export const HashtagDm = {
   encode(message: HashtagDm, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.channel_label !== "") {
+    if (message.channel_label !== undefined && message.channel_label !== "") {
       writer.uint32(18).string(message.channel_label);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
-    if (message.clan_name !== "") {
+    if (message.clan_name !== undefined && message.clan_name !== "") {
       writer.uint32(34).string(message.clan_name);
     }
-    if (message.meeting_code !== "") {
+    if (message.meeting_code !== undefined && message.meeting_code !== "") {
       writer.uint32(42).string(message.meeting_code);
     }
-    if (message.type !== 0) {
+    if (message.type !== undefined && message.type !== 0) {
       writer.uint32(48).int32(message.type);
     }
-    if (message.channel_private !== 0) {
+    if (message.channel_private !== undefined && message.channel_private !== 0) {
       writer.uint32(56).int32(message.channel_private);
     }
-    if (message.parent_id !== "") {
+    if (message.parent_id !== undefined && message.parent_id !== "") {
       writer.uint32(66).string(message.parent_id);
     }
     return writer;
@@ -4697,28 +5719,28 @@ export const HashtagDm = {
 
   toJSON(message: HashtagDm): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.channel_label !== "") {
+    if (message.channel_label !== undefined && message.channel_label !== "") {
       obj.channel_label = message.channel_label;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.clan_name !== "") {
+    if (message.clan_name !== undefined && message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.meeting_code !== "") {
+    if (message.meeting_code !== undefined && message.meeting_code !== "") {
       obj.meeting_code = message.meeting_code;
     }
-    if (message.type !== 0) {
+    if (message.type !== undefined && message.type !== 0) {
       obj.type = Math.round(message.type);
     }
-    if (message.channel_private !== 0) {
+    if (message.channel_private !== undefined && message.channel_private !== 0) {
       obj.channel_private = Math.round(message.channel_private);
     }
-    if (message.parent_id !== "") {
+    if (message.parent_id !== undefined && message.parent_id !== "") {
       obj.parent_id = message.parent_id;
     }
     return obj;
@@ -4757,28 +5779,28 @@ function createBaseChannelDescription(): ChannelDescription {
 
 export const ChannelDescription = {
   encode(message: ChannelDescription, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
     if (message.type !== undefined) {
       Int32Value.encode({ value: message.type! }, writer.uint32(26).fork()).ldelim();
     }
-    if (message.channel_label !== "") {
+    if (message.channel_label !== undefined && message.channel_label !== "") {
       writer.uint32(34).string(message.channel_label);
     }
-    if (message.channel_private !== 0) {
+    if (message.channel_private !== undefined && message.channel_private !== 0) {
       writer.uint32(40).int32(message.channel_private);
     }
-    if (message.meeting_code !== "") {
+    if (message.meeting_code !== undefined && message.meeting_code !== "") {
       writer.uint32(50).string(message.meeting_code);
     }
-    if (message.clan_name !== "") {
+    if (message.clan_name !== undefined && message.clan_name !== "") {
       writer.uint32(58).string(message.clan_name);
     }
-    if (message.parent_id !== "") {
+    if (message.parent_id !== undefined && message.parent_id !== "") {
       writer.uint32(66).string(message.parent_id);
     }
     if (message.last_sent_message !== undefined) {
@@ -4884,28 +5906,28 @@ export const ChannelDescription = {
 
   toJSON(message: ChannelDescription): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     if (message.type !== undefined) {
       obj.type = message.type;
     }
-    if (message.channel_label !== "") {
+    if (message.channel_label !== undefined && message.channel_label !== "") {
       obj.channel_label = message.channel_label;
     }
-    if (message.channel_private !== 0) {
+    if (message.channel_private !== undefined && message.channel_private !== 0) {
       obj.channel_private = Math.round(message.channel_private);
     }
-    if (message.meeting_code !== "") {
+    if (message.meeting_code !== undefined && message.meeting_code !== "") {
       obj.meeting_code = message.meeting_code;
     }
-    if (message.clan_name !== "") {
+    if (message.clan_name !== undefined && message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.parent_id !== "") {
+    if (message.parent_id !== undefined && message.parent_id !== "") {
       obj.parent_id = message.parent_id;
     }
     if (message.last_sent_message !== undefined) {
@@ -4940,28 +5962,28 @@ function createBaseClanEmoji(): ClanEmoji {
 
 export const ClanEmoji = {
   encode(message: ClanEmoji, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.src !== "") {
+    if (message.src !== undefined && message.src !== "") {
       writer.uint32(18).string(message.src);
     }
-    if (message.shortname !== "") {
+    if (message.shortname !== undefined && message.shortname !== "") {
       writer.uint32(26).string(message.shortname);
     }
-    if (message.category !== "") {
+    if (message.category !== undefined && message.category !== "") {
       writer.uint32(34).string(message.category);
     }
-    if (message.creator_id !== "") {
+    if (message.creator_id !== undefined && message.creator_id !== "") {
       writer.uint32(42).string(message.creator_id);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(50).string(message.clan_id);
     }
-    if (message.logo !== "") {
+    if (message.logo !== undefined && message.logo !== "") {
       writer.uint32(58).string(message.logo);
     }
-    if (message.clan_name !== "") {
+    if (message.clan_name !== undefined && message.clan_name !== "") {
       writer.uint32(66).string(message.clan_name);
     }
     return writer;
@@ -5054,28 +6076,28 @@ export const ClanEmoji = {
 
   toJSON(message: ClanEmoji): unknown {
     const obj: any = {};
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       obj.id = message.id;
     }
-    if (message.src !== "") {
+    if (message.src !== undefined && message.src !== "") {
       obj.src = message.src;
     }
-    if (message.shortname !== "") {
+    if (message.shortname !== undefined && message.shortname !== "") {
       obj.shortname = message.shortname;
     }
-    if (message.category !== "") {
+    if (message.category !== undefined && message.category !== "") {
       obj.category = message.category;
     }
-    if (message.creator_id !== "") {
+    if (message.creator_id !== undefined && message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.logo !== "") {
+    if (message.logo !== undefined && message.logo !== "") {
       obj.logo = message.logo;
     }
-    if (message.clan_name !== "") {
+    if (message.clan_name !== undefined && message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
     return obj;
@@ -5104,22 +6126,24 @@ function createBaseChannel(): Channel {
 
 export const Channel = {
   encode(message: Channel, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    for (const v of message.presences) {
-      UserPresence.encode(v!, writer.uint32(18).fork()).ldelim();
+    if (message.presences !== undefined && message.presences.length !== 0) {
+      for (const v of message.presences) {
+        UserPresence.encode(v!, writer.uint32(18).fork()).ldelim();
+      }
     }
     if (message.self !== undefined) {
       UserPresence.encode(message.self, writer.uint32(26).fork()).ldelim();
     }
-    if (message.chanel_label !== "") {
+    if (message.chanel_label !== undefined && message.chanel_label !== "") {
       writer.uint32(34).string(message.chanel_label);
     }
-    if (message.clan_logo !== "") {
+    if (message.clan_logo !== undefined && message.clan_logo !== "") {
       writer.uint32(42).string(message.clan_logo);
     }
-    if (message.category_name !== "") {
+    if (message.category_name !== undefined && message.category_name !== "") {
       writer.uint32(50).string(message.category_name);
     }
     return writer;
@@ -5144,7 +6168,7 @@ export const Channel = {
             break;
           }
 
-          message.presences.push(UserPresence.decode(reader, reader.uint32()));
+          message.presences!.push(UserPresence.decode(reader, reader.uint32()));
           continue;
         case 3:
           if (tag !== 26) {
@@ -5198,7 +6222,7 @@ export const Channel = {
 
   toJSON(message: Channel): unknown {
     const obj: any = {};
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       obj.id = message.id;
     }
     if (message.presences?.length) {
@@ -5207,13 +6231,13 @@ export const Channel = {
     if (message.self !== undefined) {
       obj.self = UserPresence.toJSON(message.self);
     }
-    if (message.chanel_label !== "") {
+    if (message.chanel_label !== undefined && message.chanel_label !== "") {
       obj.chanel_label = message.chanel_label;
     }
-    if (message.clan_logo !== "") {
+    if (message.clan_logo !== undefined && message.clan_logo !== "") {
       obj.clan_logo = message.clan_logo;
     }
-    if (message.category_name !== "") {
+    if (message.category_name !== undefined && message.category_name !== "") {
       obj.category_name = message.category_name;
     }
     return obj;
@@ -5242,7 +6266,7 @@ function createBaseClanJoin(): ClanJoin {
 
 export const ClanJoin = {
   encode(message: ClanJoin, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
     return writer;
@@ -5277,7 +6301,7 @@ export const ClanJoin = {
 
   toJSON(message: ClanJoin): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -5299,16 +6323,16 @@ function createBaseChannelJoin(): ChannelJoin {
 
 export const ChannelJoin = {
   encode(message: ChannelJoin, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.channel_type !== 0) {
+    if (message.channel_type !== undefined && message.channel_type !== 0) {
       writer.uint32(24).int32(message.channel_type);
     }
-    if (message.is_public !== false) {
+    if (message.is_public !== undefined && message.is_public !== false) {
       writer.uint32(32).bool(message.is_public);
     }
     return writer;
@@ -5369,16 +6393,16 @@ export const ChannelJoin = {
 
   toJSON(message: ChannelJoin): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.channel_type !== 0) {
+    if (message.channel_type !== undefined && message.channel_type !== 0) {
       obj.channel_type = Math.round(message.channel_type);
     }
-    if (message.is_public !== false) {
+    if (message.is_public !== undefined && message.is_public !== false) {
       obj.is_public = message.is_public;
     }
     return obj;
@@ -5403,16 +6427,16 @@ function createBaseChannelLeave(): ChannelLeave {
 
 export const ChannelLeave = {
   encode(message: ChannelLeave, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.channel_type !== 0) {
+    if (message.channel_type !== undefined && message.channel_type !== 0) {
       writer.uint32(24).int32(message.channel_type);
     }
-    if (message.is_public !== false) {
+    if (message.is_public !== undefined && message.is_public !== false) {
       writer.uint32(32).bool(message.is_public);
     }
     return writer;
@@ -5473,16 +6497,16 @@ export const ChannelLeave = {
 
   toJSON(message: ChannelLeave): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.channel_type !== 0) {
+    if (message.channel_type !== undefined && message.channel_type !== 0) {
       obj.channel_type = Math.round(message.channel_type);
     }
-    if (message.is_public !== false) {
+    if (message.is_public !== undefined && message.is_public !== false) {
       obj.is_public = message.is_public;
     }
     return obj;
@@ -5517,16 +6541,16 @@ function createBaseChannelMessageAck(): ChannelMessageAck {
 
 export const ChannelMessageAck = {
   encode(message: ChannelMessageAck, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.message_id !== "") {
+    if (message.message_id !== undefined && message.message_id !== "") {
       writer.uint32(18).string(message.message_id);
     }
     if (message.code !== undefined) {
       Int32Value.encode({ value: message.code! }, writer.uint32(26).fork()).ldelim();
     }
-    if (message.username !== "") {
+    if (message.username !== undefined && message.username !== "") {
       writer.uint32(34).string(message.username);
     }
     if (message.create_time !== undefined) {
@@ -5538,10 +6562,10 @@ export const ChannelMessageAck = {
     if (message.persistent !== undefined) {
       BoolValue.encode({ value: message.persistent! }, writer.uint32(58).fork()).ldelim();
     }
-    if (message.clan_logo !== "") {
+    if (message.clan_logo !== undefined && message.clan_logo !== "") {
       writer.uint32(66).string(message.clan_logo);
     }
-    if (message.category_name !== "") {
+    if (message.category_name !== undefined && message.category_name !== "") {
       writer.uint32(74).string(message.category_name);
     }
     return writer;
@@ -5642,16 +6666,16 @@ export const ChannelMessageAck = {
 
   toJSON(message: ChannelMessageAck): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.message_id !== "") {
+    if (message.message_id !== undefined && message.message_id !== "") {
       obj.message_id = message.message_id;
     }
     if (message.code !== undefined) {
       obj.code = message.code;
     }
-    if (message.username !== "") {
+    if (message.username !== undefined && message.username !== "") {
       obj.username = message.username;
     }
     if (message.create_time !== undefined) {
@@ -5663,10 +6687,10 @@ export const ChannelMessageAck = {
     if (message.persistent !== undefined) {
       obj.persistent = message.persistent;
     }
-    if (message.clan_logo !== "") {
+    if (message.clan_logo !== undefined && message.clan_logo !== "") {
       obj.clan_logo = message.clan_logo;
     }
-    if (message.category_name !== "") {
+    if (message.category_name !== undefined && message.category_name !== "") {
       obj.category_name = message.category_name;
     }
     return obj;
@@ -5699,7 +6723,7 @@ export const EphemeralMessageSend = {
     if (message.message !== undefined) {
       ChannelMessageSend.encode(message.message, writer.uint32(10).fork()).ldelim();
     }
-    if (message.receiver_id !== "") {
+    if (message.receiver_id !== undefined && message.receiver_id !== "") {
       writer.uint32(18).string(message.receiver_id);
     }
     return writer;
@@ -5747,7 +6771,7 @@ export const EphemeralMessageSend = {
     if (message.message !== undefined) {
       obj.message = ChannelMessageSend.toJSON(message.message);
     }
-    if (message.receiver_id !== "") {
+    if (message.receiver_id !== undefined && message.receiver_id !== "") {
       obj.receiver_id = message.receiver_id;
     }
     return obj;
@@ -5772,7 +6796,7 @@ function createBaseQuickMenuDataEvent(): QuickMenuDataEvent {
 
 export const QuickMenuDataEvent = {
   encode(message: QuickMenuDataEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.menu_name !== "") {
+    if (message.menu_name !== undefined && message.menu_name !== "") {
       writer.uint32(10).string(message.menu_name);
     }
     if (message.message !== undefined) {
@@ -5820,7 +6844,7 @@ export const QuickMenuDataEvent = {
 
   toJSON(message: QuickMenuDataEvent): unknown {
     const obj: any = {};
-    if (message.menu_name !== "") {
+    if (message.menu_name !== undefined && message.menu_name !== "") {
       obj.menu_name = message.menu_name;
     }
     if (message.message !== undefined) {
@@ -5848,16 +6872,18 @@ function createBaseVoiceReactionSend(): VoiceReactionSend {
 
 export const VoiceReactionSend = {
   encode(message: VoiceReactionSend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.emojis) {
-      writer.uint32(10).string(v!);
+    if (message.emojis !== undefined && message.emojis.length !== 0) {
+      for (const v of message.emojis) {
+        writer.uint32(10).string(v!);
+      }
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.sender_id !== "") {
+    if (message.sender_id !== undefined && message.sender_id !== "") {
       writer.uint32(26).string(message.sender_id);
     }
-    if (message.media_type !== 0) {
+    if (message.media_type !== undefined && message.media_type !== 0) {
       writer.uint32(32).int32(message.media_type);
     }
     return writer;
@@ -5875,7 +6901,7 @@ export const VoiceReactionSend = {
             break;
           }
 
-          message.emojis.push(reader.string());
+          message.emojis!.push(reader.string());
           continue;
         case 2:
           if (tag !== 18) {
@@ -5921,13 +6947,13 @@ export const VoiceReactionSend = {
     if (message.emojis?.length) {
       obj.emojis = message.emojis;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.sender_id !== "") {
+    if (message.sender_id !== undefined && message.sender_id !== "") {
       obj.sender_id = message.sender_id;
     }
-    if (message.media_type !== 0) {
+    if (message.media_type !== undefined && message.media_type !== 0) {
       obj.media_type = Math.round(message.media_type);
     }
     return obj;
@@ -5952,13 +6978,13 @@ function createBaseMarkAsRead(): MarkAsRead {
 
 export const MarkAsRead = {
   encode(message: MarkAsRead, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.category_id !== "") {
+    if (message.category_id !== undefined && message.category_id !== "") {
       writer.uint32(18).string(message.category_id);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
     return writer;
@@ -6011,13 +7037,13 @@ export const MarkAsRead = {
 
   toJSON(message: MarkAsRead): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.category_id !== "") {
+    if (message.category_id !== undefined && message.category_id !== "") {
       obj.category_id = message.category_id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -6056,46 +7082,52 @@ function createBaseChannelMessageSend(): ChannelMessageSend {
 
 export const ChannelMessageSend = {
   encode(message: ChannelMessageSend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.content !== "") {
+    if (message.content !== undefined && message.content !== "") {
       writer.uint32(26).string(message.content);
     }
-    for (const v of message.mentions) {
-      MessageMention.encode(v!, writer.uint32(34).fork()).ldelim();
+    if (message.mentions !== undefined && message.mentions.length !== 0) {
+      for (const v of message.mentions) {
+        MessageMention.encode(v!, writer.uint32(34).fork()).ldelim();
+      }
     }
-    for (const v of message.attachments) {
-      MessageAttachment.encode(v!, writer.uint32(42).fork()).ldelim();
+    if (message.attachments !== undefined && message.attachments.length !== 0) {
+      for (const v of message.attachments) {
+        MessageAttachment.encode(v!, writer.uint32(42).fork()).ldelim();
+      }
     }
-    for (const v of message.references) {
-      MessageRef.encode(v!, writer.uint32(50).fork()).ldelim();
+    if (message.references !== undefined && message.references.length !== 0) {
+      for (const v of message.references) {
+        MessageRef.encode(v!, writer.uint32(50).fork()).ldelim();
+      }
     }
-    if (message.mode !== 0) {
+    if (message.mode !== undefined && message.mode !== 0) {
       writer.uint32(56).int32(message.mode);
     }
-    if (message.anonymous_message !== false) {
+    if (message.anonymous_message !== undefined && message.anonymous_message !== false) {
       writer.uint32(64).bool(message.anonymous_message);
     }
-    if (message.mention_everyone !== false) {
+    if (message.mention_everyone !== undefined && message.mention_everyone !== false) {
       writer.uint32(72).bool(message.mention_everyone);
     }
-    if (message.avatar !== "") {
+    if (message.avatar !== undefined && message.avatar !== "") {
       writer.uint32(82).string(message.avatar);
     }
-    if (message.is_public !== false) {
+    if (message.is_public !== undefined && message.is_public !== false) {
       writer.uint32(88).bool(message.is_public);
     }
-    if (message.code !== 0) {
+    if (message.code !== undefined && message.code !== 0) {
       writer.uint32(96).int32(message.code);
     }
-    if (message.topic_id !== "") {
+    if (message.topic_id !== undefined && message.topic_id !== "") {
       writer.uint32(106).string(message.topic_id);
     }
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       writer.uint32(114).string(message.id);
     }
     return writer;
@@ -6134,21 +7166,21 @@ export const ChannelMessageSend = {
             break;
           }
 
-          message.mentions.push(MessageMention.decode(reader, reader.uint32()));
+          message.mentions!.push(MessageMention.decode(reader, reader.uint32()));
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
+          message.attachments!.push(MessageAttachment.decode(reader, reader.uint32()));
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.references.push(MessageRef.decode(reader, reader.uint32()));
+          message.references!.push(MessageRef.decode(reader, reader.uint32()));
           continue;
         case 7:
           if (tag !== 56) {
@@ -6242,13 +7274,13 @@ export const ChannelMessageSend = {
 
   toJSON(message: ChannelMessageSend): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.content !== "") {
+    if (message.content !== undefined && message.content !== "") {
       obj.content = message.content;
     }
     if (message.mentions?.length) {
@@ -6260,28 +7292,28 @@ export const ChannelMessageSend = {
     if (message.references?.length) {
       obj.references = message.references.map((e) => MessageRef.toJSON(e));
     }
-    if (message.mode !== 0) {
+    if (message.mode !== undefined && message.mode !== 0) {
       obj.mode = Math.round(message.mode);
     }
-    if (message.anonymous_message !== false) {
+    if (message.anonymous_message !== undefined && message.anonymous_message !== false) {
       obj.anonymous_message = message.anonymous_message;
     }
-    if (message.mention_everyone !== false) {
+    if (message.mention_everyone !== undefined && message.mention_everyone !== false) {
       obj.mention_everyone = message.mention_everyone;
     }
-    if (message.avatar !== "") {
+    if (message.avatar !== undefined && message.avatar !== "") {
       obj.avatar = message.avatar;
     }
-    if (message.is_public !== false) {
+    if (message.is_public !== undefined && message.is_public !== false) {
       obj.is_public = message.is_public;
     }
-    if (message.code !== 0) {
+    if (message.code !== undefined && message.code !== 0) {
       obj.code = Math.round(message.code);
     }
-    if (message.topic_id !== "") {
+    if (message.topic_id !== undefined && message.topic_id !== "") {
       obj.topic_id = message.topic_id;
     }
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       obj.id = message.id;
     }
     return obj;
@@ -6329,40 +7361,44 @@ function createBaseChannelMessageUpdate(): ChannelMessageUpdate {
 
 export const ChannelMessageUpdate = {
   encode(message: ChannelMessageUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.message_id !== "") {
+    if (message.message_id !== undefined && message.message_id !== "") {
       writer.uint32(26).string(message.message_id);
     }
-    if (message.content !== "") {
+    if (message.content !== undefined && message.content !== "") {
       writer.uint32(34).string(message.content);
     }
-    for (const v of message.mentions) {
-      MessageMention.encode(v!, writer.uint32(42).fork()).ldelim();
+    if (message.mentions !== undefined && message.mentions.length !== 0) {
+      for (const v of message.mentions) {
+        MessageMention.encode(v!, writer.uint32(42).fork()).ldelim();
+      }
     }
-    for (const v of message.attachments) {
-      MessageAttachment.encode(v!, writer.uint32(50).fork()).ldelim();
+    if (message.attachments !== undefined && message.attachments.length !== 0) {
+      for (const v of message.attachments) {
+        MessageAttachment.encode(v!, writer.uint32(50).fork()).ldelim();
+      }
     }
-    if (message.mode !== 0) {
+    if (message.mode !== undefined && message.mode !== 0) {
       writer.uint32(56).int32(message.mode);
     }
-    if (message.is_public !== false) {
+    if (message.is_public !== undefined && message.is_public !== false) {
       writer.uint32(64).bool(message.is_public);
     }
-    if (message.hide_editted !== false) {
+    if (message.hide_editted !== undefined && message.hide_editted !== false) {
       writer.uint32(72).bool(message.hide_editted);
     }
-    if (message.topic_id !== "") {
+    if (message.topic_id !== undefined && message.topic_id !== "") {
       writer.uint32(82).string(message.topic_id);
     }
-    if (message.is_update_msg_topic !== false) {
+    if (message.is_update_msg_topic !== undefined && message.is_update_msg_topic !== false) {
       writer.uint32(88).bool(message.is_update_msg_topic);
     }
-    if (message.old_mentions !== "") {
+    if (message.old_mentions !== undefined && message.old_mentions !== "") {
       writer.uint32(98).string(message.old_mentions);
     }
     return writer;
@@ -6408,14 +7444,14 @@ export const ChannelMessageUpdate = {
             break;
           }
 
-          message.mentions.push(MessageMention.decode(reader, reader.uint32()));
+          message.mentions!.push(MessageMention.decode(reader, reader.uint32()));
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
+          message.attachments!.push(MessageAttachment.decode(reader, reader.uint32()));
           continue;
         case 7:
           if (tag !== 56) {
@@ -6491,16 +7527,16 @@ export const ChannelMessageUpdate = {
 
   toJSON(message: ChannelMessageUpdate): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.message_id !== "") {
+    if (message.message_id !== undefined && message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.content !== "") {
+    if (message.content !== undefined && message.content !== "") {
       obj.content = message.content;
     }
     if (message.mentions?.length) {
@@ -6509,22 +7545,22 @@ export const ChannelMessageUpdate = {
     if (message.attachments?.length) {
       obj.attachments = message.attachments.map((e) => MessageAttachment.toJSON(e));
     }
-    if (message.mode !== 0) {
+    if (message.mode !== undefined && message.mode !== 0) {
       obj.mode = Math.round(message.mode);
     }
-    if (message.is_public !== false) {
+    if (message.is_public !== undefined && message.is_public !== false) {
       obj.is_public = message.is_public;
     }
-    if (message.hide_editted !== false) {
+    if (message.hide_editted !== undefined && message.hide_editted !== false) {
       obj.hide_editted = message.hide_editted;
     }
-    if (message.topic_id !== "") {
+    if (message.topic_id !== undefined && message.topic_id !== "") {
       obj.topic_id = message.topic_id;
     }
-    if (message.is_update_msg_topic !== false) {
+    if (message.is_update_msg_topic !== undefined && message.is_update_msg_topic !== false) {
       obj.is_update_msg_topic = message.is_update_msg_topic;
     }
-    if (message.old_mentions !== "") {
+    if (message.old_mentions !== undefined && message.old_mentions !== "") {
       obj.old_mentions = message.old_mentions;
     }
     return obj;
@@ -6567,31 +7603,31 @@ function createBaseChannelMessageRemove(): ChannelMessageRemove {
 
 export const ChannelMessageRemove = {
   encode(message: ChannelMessageRemove, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.message_id !== "") {
+    if (message.message_id !== undefined && message.message_id !== "") {
       writer.uint32(26).string(message.message_id);
     }
-    if (message.mode !== 0) {
+    if (message.mode !== undefined && message.mode !== 0) {
       writer.uint32(32).int32(message.mode);
     }
-    if (message.is_public !== false) {
+    if (message.is_public !== undefined && message.is_public !== false) {
       writer.uint32(40).bool(message.is_public);
     }
-    if (message.has_attachment !== false) {
+    if (message.has_attachment !== undefined && message.has_attachment !== false) {
       writer.uint32(48).bool(message.has_attachment);
     }
-    if (message.topic_id !== "") {
+    if (message.topic_id !== undefined && message.topic_id !== "") {
       writer.uint32(58).string(message.topic_id);
     }
-    if (message.mentions !== "") {
+    if (message.mentions !== undefined && message.mentions !== "") {
       writer.uint32(66).string(message.mentions);
     }
-    if (message.references !== "") {
+    if (message.references !== undefined && message.references !== "") {
       writer.uint32(74).string(message.references);
     }
     return writer;
@@ -6692,31 +7728,31 @@ export const ChannelMessageRemove = {
 
   toJSON(message: ChannelMessageRemove): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.message_id !== "") {
+    if (message.message_id !== undefined && message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.mode !== 0) {
+    if (message.mode !== undefined && message.mode !== 0) {
       obj.mode = Math.round(message.mode);
     }
-    if (message.is_public !== false) {
+    if (message.is_public !== undefined && message.is_public !== false) {
       obj.is_public = message.is_public;
     }
-    if (message.has_attachment !== false) {
+    if (message.has_attachment !== undefined && message.has_attachment !== false) {
       obj.has_attachment = message.has_attachment;
     }
-    if (message.topic_id !== "") {
+    if (message.topic_id !== undefined && message.topic_id !== "") {
       obj.topic_id = message.topic_id;
     }
-    if (message.mentions !== "") {
+    if (message.mentions !== undefined && message.mentions !== "") {
       obj.mentions = message.mentions;
     }
-    if (message.references !== "") {
+    if (message.references !== undefined && message.references !== "") {
       obj.references = message.references;
     }
     return obj;
@@ -6746,22 +7782,26 @@ function createBaseChannelPresenceEvent(): ChannelPresenceEvent {
 
 export const ChannelPresenceEvent = {
   encode(message: ChannelPresenceEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    for (const v of message.joins) {
-      UserPresence.encode(v!, writer.uint32(18).fork()).ldelim();
+    if (message.joins !== undefined && message.joins.length !== 0) {
+      for (const v of message.joins) {
+        UserPresence.encode(v!, writer.uint32(18).fork()).ldelim();
+      }
     }
-    for (const v of message.leaves) {
-      UserPresence.encode(v!, writer.uint32(26).fork()).ldelim();
+    if (message.leaves !== undefined && message.leaves.length !== 0) {
+      for (const v of message.leaves) {
+        UserPresence.encode(v!, writer.uint32(26).fork()).ldelim();
+      }
     }
-    if (message.clan_logo !== "") {
+    if (message.clan_logo !== undefined && message.clan_logo !== "") {
       writer.uint32(34).string(message.clan_logo);
     }
-    if (message.category_name !== "") {
+    if (message.category_name !== undefined && message.category_name !== "") {
       writer.uint32(42).string(message.category_name);
     }
-    if (message.mode !== 0) {
+    if (message.mode !== undefined && message.mode !== 0) {
       writer.uint32(48).int32(message.mode);
     }
     return writer;
@@ -6786,14 +7826,14 @@ export const ChannelPresenceEvent = {
             break;
           }
 
-          message.joins.push(UserPresence.decode(reader, reader.uint32()));
+          message.joins!.push(UserPresence.decode(reader, reader.uint32()));
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.leaves.push(UserPresence.decode(reader, reader.uint32()));
+          message.leaves!.push(UserPresence.decode(reader, reader.uint32()));
           continue;
         case 4:
           if (tag !== 34) {
@@ -6838,7 +7878,7 @@ export const ChannelPresenceEvent = {
 
   toJSON(message: ChannelPresenceEvent): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     if (message.joins?.length) {
@@ -6847,13 +7887,13 @@ export const ChannelPresenceEvent = {
     if (message.leaves?.length) {
       obj.leaves = message.leaves.map((e) => UserPresence.toJSON(e));
     }
-    if (message.clan_logo !== "") {
+    if (message.clan_logo !== undefined && message.clan_logo !== "") {
       obj.clan_logo = message.clan_logo;
     }
-    if (message.category_name !== "") {
+    if (message.category_name !== undefined && message.category_name !== "") {
       obj.category_name = message.category_name;
     }
-    if (message.mode !== 0) {
+    if (message.mode !== undefined && message.mode !== 0) {
       obj.mode = Math.round(message.mode);
     }
     return obj;
@@ -6880,13 +7920,13 @@ function createBaseError(): Error {
 
 export const Error = {
   encode(message: Error, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.code !== 0) {
+    if (message.code !== undefined && message.code !== 0) {
       writer.uint32(8).int32(message.code);
     }
-    if (message.message !== "") {
+    if (message.message !== undefined && message.message !== "") {
       writer.uint32(18).string(message.message);
     }
-    Object.entries(message.context).forEach(([key, value]) => {
+    Object.entries(message.context || {}).forEach(([key, value]) => {
       Error_ContextEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).ldelim();
     });
     return writer;
@@ -6920,7 +7960,7 @@ export const Error = {
 
           const entry3 = Error_ContextEntry.decode(reader, reader.uint32());
           if (entry3.value !== undefined) {
-            message.context[entry3.key] = entry3.value;
+            message.context![entry3.key] = entry3.value;
           }
           continue;
       }
@@ -6947,10 +7987,10 @@ export const Error = {
 
   toJSON(message: Error): unknown {
     const obj: any = {};
-    if (message.code !== 0) {
+    if (message.code !== undefined && message.code !== 0) {
       obj.code = Math.round(message.code);
     }
-    if (message.message !== "") {
+    if (message.message !== undefined && message.message !== "") {
       obj.message = message.message;
     }
     if (message.context) {
@@ -7062,8 +8102,10 @@ function createBaseNotifications(): Notifications {
 
 export const Notifications = {
   encode(message: Notifications, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.notifications) {
-      Notification.encode(v!, writer.uint32(10).fork()).ldelim();
+    if (message.notifications !== undefined && message.notifications.length !== 0) {
+      for (const v of message.notifications) {
+        Notification.encode(v!, writer.uint32(10).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -7080,7 +8122,7 @@ export const Notifications = {
             break;
           }
 
-          message.notifications.push(Notification.decode(reader, reader.uint32()));
+          message.notifications!.push(Notification.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -7123,16 +8165,16 @@ function createBaseAddFriend(): AddFriend {
 
 export const AddFriend = {
   encode(message: AddFriend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
-    if (message.username !== "") {
+    if (message.username !== undefined && message.username !== "") {
       writer.uint32(18).string(message.username);
     }
-    if (message.display_name !== "") {
+    if (message.display_name !== undefined && message.display_name !== "") {
       writer.uint32(26).string(message.display_name);
     }
-    if (message.avatar !== "") {
+    if (message.avatar !== undefined && message.avatar !== "") {
       writer.uint32(34).string(message.avatar);
     }
     return writer;
@@ -7193,16 +8235,16 @@ export const AddFriend = {
 
   toJSON(message: AddFriend): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.username !== "") {
+    if (message.username !== undefined && message.username !== "") {
       obj.username = message.username;
     }
-    if (message.display_name !== "") {
+    if (message.display_name !== undefined && message.display_name !== "") {
       obj.display_name = message.display_name;
     }
-    if (message.avatar !== "") {
+    if (message.avatar !== undefined && message.avatar !== "") {
       obj.avatar = message.avatar;
     }
     return obj;
@@ -7227,7 +8269,7 @@ function createBaseRemoveFriend(): RemoveFriend {
 
 export const RemoveFriend = {
   encode(message: RemoveFriend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
     return writer;
@@ -7262,7 +8304,7 @@ export const RemoveFriend = {
 
   toJSON(message: RemoveFriend): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
     return obj;
@@ -7284,7 +8326,7 @@ function createBaseBlockFriend(): BlockFriend {
 
 export const BlockFriend = {
   encode(message: BlockFriend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
     return writer;
@@ -7319,7 +8361,7 @@ export const BlockFriend = {
 
   toJSON(message: BlockFriend): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
     return obj;
@@ -7341,22 +8383,22 @@ function createBaseUnblockFriend(): UnblockFriend {
 
 export const UnblockFriend = {
   encode(message: UnblockFriend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
-    if (message.username !== "") {
+    if (message.username !== undefined && message.username !== "") {
       writer.uint32(18).string(message.username);
     }
-    if (message.avatar !== "") {
+    if (message.avatar !== undefined && message.avatar !== "") {
       writer.uint32(26).string(message.avatar);
     }
-    if (message.display_name !== "") {
+    if (message.display_name !== undefined && message.display_name !== "") {
       writer.uint32(34).string(message.display_name);
     }
-    if (message.status !== "") {
+    if (message.status !== undefined && message.status !== "") {
       writer.uint32(42).string(message.status);
     }
-    if (message.user_status !== "") {
+    if (message.user_status !== undefined && message.user_status !== "") {
       writer.uint32(50).string(message.user_status);
     }
     return writer;
@@ -7433,22 +8475,22 @@ export const UnblockFriend = {
 
   toJSON(message: UnblockFriend): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.username !== "") {
+    if (message.username !== undefined && message.username !== "") {
       obj.username = message.username;
     }
-    if (message.avatar !== "") {
+    if (message.avatar !== undefined && message.avatar !== "") {
       obj.avatar = message.avatar;
     }
-    if (message.display_name !== "") {
+    if (message.display_name !== undefined && message.display_name !== "") {
       obj.display_name = message.display_name;
     }
-    if (message.status !== "") {
+    if (message.status !== undefined && message.status !== "") {
       obj.status = message.status;
     }
-    if (message.user_status !== "") {
+    if (message.user_status !== undefined && message.user_status !== "") {
       obj.user_status = message.user_status;
     }
     return obj;
@@ -7561,8 +8603,10 @@ function createBaseStatus(): Status {
 
 export const Status = {
   encode(message: Status, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.presences) {
-      UserPresence.encode(v!, writer.uint32(10).fork()).ldelim();
+    if (message.presences !== undefined && message.presences.length !== 0) {
+      for (const v of message.presences) {
+        UserPresence.encode(v!, writer.uint32(10).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -7579,7 +8623,7 @@ export const Status = {
             break;
           }
 
-          message.presences.push(UserPresence.decode(reader, reader.uint32()));
+          message.presences!.push(UserPresence.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -7622,11 +8666,15 @@ function createBaseStatusFollow(): StatusFollow {
 
 export const StatusFollow = {
   encode(message: StatusFollow, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.user_ids) {
-      writer.uint32(10).string(v!);
+    if (message.user_ids !== undefined && message.user_ids.length !== 0) {
+      for (const v of message.user_ids) {
+        writer.uint32(10).string(v!);
+      }
     }
-    for (const v of message.usernames) {
-      writer.uint32(18).string(v!);
+    if (message.usernames !== undefined && message.usernames.length !== 0) {
+      for (const v of message.usernames) {
+        writer.uint32(18).string(v!);
+      }
     }
     return writer;
   },
@@ -7643,14 +8691,14 @@ export const StatusFollow = {
             break;
           }
 
-          message.user_ids.push(reader.string());
+          message.user_ids!.push(reader.string());
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.usernames.push(reader.string());
+          message.usernames!.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -7698,11 +8746,15 @@ function createBaseStatusPresenceEvent(): StatusPresenceEvent {
 
 export const StatusPresenceEvent = {
   encode(message: StatusPresenceEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.joins) {
-      UserPresence.encode(v!, writer.uint32(18).fork()).ldelim();
+    if (message.joins !== undefined && message.joins.length !== 0) {
+      for (const v of message.joins) {
+        UserPresence.encode(v!, writer.uint32(18).fork()).ldelim();
+      }
     }
-    for (const v of message.leaves) {
-      UserPresence.encode(v!, writer.uint32(26).fork()).ldelim();
+    if (message.leaves !== undefined && message.leaves.length !== 0) {
+      for (const v of message.leaves) {
+        UserPresence.encode(v!, writer.uint32(26).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -7719,14 +8771,14 @@ export const StatusPresenceEvent = {
             break;
           }
 
-          message.joins.push(UserPresence.decode(reader, reader.uint32()));
+          message.joins!.push(UserPresence.decode(reader, reader.uint32()));
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.leaves.push(UserPresence.decode(reader, reader.uint32()));
+          message.leaves!.push(UserPresence.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -7787,46 +8839,46 @@ function createBaseLastPinMessageEvent(): LastPinMessageEvent {
 
 export const LastPinMessageEvent = {
   encode(message: LastPinMessageEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.message_id !== "") {
+    if (message.message_id !== undefined && message.message_id !== "") {
       writer.uint32(26).string(message.message_id);
     }
-    if (message.mode !== 0) {
+    if (message.mode !== undefined && message.mode !== 0) {
       writer.uint32(32).int32(message.mode);
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(42).string(message.user_id);
     }
-    if (message.timestamp_seconds !== 0) {
+    if (message.timestamp_seconds !== undefined && message.timestamp_seconds !== 0) {
       writer.uint32(48).uint32(message.timestamp_seconds);
     }
-    if (message.operation !== 0) {
+    if (message.operation !== undefined && message.operation !== 0) {
       writer.uint32(56).int32(message.operation);
     }
-    if (message.is_public !== false) {
+    if (message.is_public !== undefined && message.is_public !== false) {
       writer.uint32(64).bool(message.is_public);
     }
-    if (message.message_sender_avatar !== "") {
+    if (message.message_sender_avatar !== undefined && message.message_sender_avatar !== "") {
       writer.uint32(74).string(message.message_sender_avatar);
     }
-    if (message.message_sender_id !== "") {
+    if (message.message_sender_id !== undefined && message.message_sender_id !== "") {
       writer.uint32(82).string(message.message_sender_id);
     }
-    if (message.message_sender_username !== "") {
+    if (message.message_sender_username !== undefined && message.message_sender_username !== "") {
       writer.uint32(90).string(message.message_sender_username);
     }
-    if (message.message_content !== "") {
+    if (message.message_content !== undefined && message.message_content !== "") {
       writer.uint32(98).string(message.message_content);
     }
-    if (message.message_attachment !== "") {
+    if (message.message_attachment !== undefined && message.message_attachment !== "") {
       writer.uint32(106).string(message.message_attachment);
     }
-    if (message.message_created_time !== "") {
+    if (message.message_created_time !== undefined && message.message_created_time !== "") {
       writer.uint32(114).string(message.message_created_time);
     }
     return writer;
@@ -7969,46 +9021,46 @@ export const LastPinMessageEvent = {
 
   toJSON(message: LastPinMessageEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.message_id !== "") {
+    if (message.message_id !== undefined && message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.mode !== 0) {
+    if (message.mode !== undefined && message.mode !== 0) {
       obj.mode = Math.round(message.mode);
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.timestamp_seconds !== 0) {
+    if (message.timestamp_seconds !== undefined && message.timestamp_seconds !== 0) {
       obj.timestamp_seconds = Math.round(message.timestamp_seconds);
     }
-    if (message.operation !== 0) {
+    if (message.operation !== undefined && message.operation !== 0) {
       obj.operation = Math.round(message.operation);
     }
-    if (message.is_public !== false) {
+    if (message.is_public !== undefined && message.is_public !== false) {
       obj.is_public = message.is_public;
     }
-    if (message.message_sender_avatar !== "") {
+    if (message.message_sender_avatar !== undefined && message.message_sender_avatar !== "") {
       obj.message_sender_avatar = message.message_sender_avatar;
     }
-    if (message.message_sender_id !== "") {
+    if (message.message_sender_id !== undefined && message.message_sender_id !== "") {
       obj.message_sender_id = message.message_sender_id;
     }
-    if (message.message_sender_username !== "") {
+    if (message.message_sender_username !== undefined && message.message_sender_username !== "") {
       obj.message_sender_username = message.message_sender_username;
     }
-    if (message.message_content !== "") {
+    if (message.message_content !== undefined && message.message_content !== "") {
       obj.message_content = message.message_content;
     }
-    if (message.message_attachment !== "") {
+    if (message.message_attachment !== undefined && message.message_attachment !== "") {
       obj.message_attachment = message.message_attachment;
     }
-    if (message.message_created_time !== "") {
+    if (message.message_created_time !== undefined && message.message_created_time !== "") {
       obj.message_created_time = message.message_created_time;
     }
     return obj;
@@ -8043,22 +9095,22 @@ function createBaseLastSeenMessageEvent(): LastSeenMessageEvent {
 
 export const LastSeenMessageEvent = {
   encode(message: LastSeenMessageEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.message_id !== "") {
+    if (message.message_id !== undefined && message.message_id !== "") {
       writer.uint32(26).string(message.message_id);
     }
-    if (message.mode !== 0) {
+    if (message.mode !== undefined && message.mode !== 0) {
       writer.uint32(32).int32(message.mode);
     }
-    if (message.timestamp_seconds !== 0) {
+    if (message.timestamp_seconds !== undefined && message.timestamp_seconds !== 0) {
       writer.uint32(40).uint32(message.timestamp_seconds);
     }
-    if (message.badge_count !== 0) {
+    if (message.badge_count !== undefined && message.badge_count !== 0) {
       writer.uint32(48).int32(message.badge_count);
     }
     return writer;
@@ -8135,22 +9187,22 @@ export const LastSeenMessageEvent = {
 
   toJSON(message: LastSeenMessageEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.message_id !== "") {
+    if (message.message_id !== undefined && message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.mode !== 0) {
+    if (message.mode !== undefined && message.mode !== 0) {
       obj.mode = Math.round(message.mode);
     }
-    if (message.timestamp_seconds !== 0) {
+    if (message.timestamp_seconds !== undefined && message.timestamp_seconds !== 0) {
       obj.timestamp_seconds = Math.round(message.timestamp_seconds);
     }
-    if (message.badge_count !== 0) {
+    if (message.badge_count !== undefined && message.badge_count !== 0) {
       obj.badge_count = Math.round(message.badge_count);
     }
     return obj;
@@ -8186,28 +9238,28 @@ function createBaseMessageTypingEvent(): MessageTypingEvent {
 
 export const MessageTypingEvent = {
   encode(message: MessageTypingEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.sender_id !== "") {
+    if (message.sender_id !== undefined && message.sender_id !== "") {
       writer.uint32(26).string(message.sender_id);
     }
-    if (message.mode !== 0) {
+    if (message.mode !== undefined && message.mode !== 0) {
       writer.uint32(32).int32(message.mode);
     }
-    if (message.is_public !== false) {
+    if (message.is_public !== undefined && message.is_public !== false) {
       writer.uint32(40).bool(message.is_public);
     }
-    if (message.sender_username !== "") {
+    if (message.sender_username !== undefined && message.sender_username !== "") {
       writer.uint32(50).string(message.sender_username);
     }
-    if (message.sender_display_name !== "") {
+    if (message.sender_display_name !== undefined && message.sender_display_name !== "") {
       writer.uint32(58).string(message.sender_display_name);
     }
-    if (message.topic_id !== "") {
+    if (message.topic_id !== undefined && message.topic_id !== "") {
       writer.uint32(66).string(message.topic_id);
     }
     return writer;
@@ -8300,28 +9352,28 @@ export const MessageTypingEvent = {
 
   toJSON(message: MessageTypingEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.sender_id !== "") {
+    if (message.sender_id !== undefined && message.sender_id !== "") {
       obj.sender_id = message.sender_id;
     }
-    if (message.mode !== 0) {
+    if (message.mode !== undefined && message.mode !== 0) {
       obj.mode = Math.round(message.mode);
     }
-    if (message.is_public !== false) {
+    if (message.is_public !== undefined && message.is_public !== false) {
       obj.is_public = message.is_public;
     }
-    if (message.sender_username !== "") {
+    if (message.sender_username !== undefined && message.sender_username !== "") {
       obj.sender_username = message.sender_username;
     }
-    if (message.sender_display_name !== "") {
+    if (message.sender_display_name !== undefined && message.sender_display_name !== "") {
       obj.sender_display_name = message.sender_display_name;
     }
-    if (message.topic_id !== "") {
+    if (message.topic_id !== undefined && message.topic_id !== "") {
       obj.topic_id = message.topic_id;
     }
     return obj;
@@ -8350,16 +9402,16 @@ function createBaseVoiceLeavedEvent(): VoiceLeavedEvent {
 
 export const VoiceLeavedEvent = {
   encode(message: VoiceLeavedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
-    if (message.voice_channel_id !== "") {
+    if (message.voice_channel_id !== undefined && message.voice_channel_id !== "") {
       writer.uint32(26).string(message.voice_channel_id);
     }
-    if (message.voice_user_id !== "") {
+    if (message.voice_user_id !== undefined && message.voice_user_id !== "") {
       writer.uint32(34).string(message.voice_user_id);
     }
     return writer;
@@ -8420,16 +9472,16 @@ export const VoiceLeavedEvent = {
 
   toJSON(message: VoiceLeavedEvent): unknown {
     const obj: any = {};
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       obj.id = message.id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.voice_channel_id !== "") {
+    if (message.voice_channel_id !== undefined && message.voice_channel_id !== "") {
       obj.voice_channel_id = message.voice_channel_id;
     }
-    if (message.voice_user_id !== "") {
+    if (message.voice_user_id !== undefined && message.voice_user_id !== "") {
       obj.voice_user_id = message.voice_user_id;
     }
     return obj;
@@ -8463,28 +9515,28 @@ function createBaseVoiceJoinedEvent(): VoiceJoinedEvent {
 
 export const VoiceJoinedEvent = {
   encode(message: VoiceJoinedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.clan_name !== "") {
+    if (message.clan_name !== undefined && message.clan_name !== "") {
       writer.uint32(18).string(message.clan_name);
     }
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       writer.uint32(26).string(message.id);
     }
-    if (message.participant !== "") {
+    if (message.participant !== undefined && message.participant !== "") {
       writer.uint32(34).string(message.participant);
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(42).string(message.user_id);
     }
-    if (message.voice_channel_label !== "") {
+    if (message.voice_channel_label !== undefined && message.voice_channel_label !== "") {
       writer.uint32(50).string(message.voice_channel_label);
     }
-    if (message.voice_channel_id !== "") {
+    if (message.voice_channel_id !== undefined && message.voice_channel_id !== "") {
       writer.uint32(58).string(message.voice_channel_id);
     }
-    if (message.last_screenshot !== "") {
+    if (message.last_screenshot !== undefined && message.last_screenshot !== "") {
       writer.uint32(66).string(message.last_screenshot);
     }
     return writer;
@@ -8577,28 +9629,28 @@ export const VoiceJoinedEvent = {
 
   toJSON(message: VoiceJoinedEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.clan_name !== "") {
+    if (message.clan_name !== undefined && message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       obj.id = message.id;
     }
-    if (message.participant !== "") {
+    if (message.participant !== undefined && message.participant !== "") {
       obj.participant = message.participant;
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.voice_channel_label !== "") {
+    if (message.voice_channel_label !== undefined && message.voice_channel_label !== "") {
       obj.voice_channel_label = message.voice_channel_label;
     }
-    if (message.voice_channel_id !== "") {
+    if (message.voice_channel_id !== undefined && message.voice_channel_id !== "") {
       obj.voice_channel_id = message.voice_channel_id;
     }
-    if (message.last_screenshot !== "") {
+    if (message.last_screenshot !== undefined && message.last_screenshot !== "") {
       obj.last_screenshot = message.last_screenshot;
     }
     return obj;
@@ -8627,13 +9679,13 @@ function createBaseVoiceStartedEvent(): VoiceStartedEvent {
 
 export const VoiceStartedEvent = {
   encode(message: VoiceStartedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
-    if (message.voice_channel_id !== "") {
+    if (message.voice_channel_id !== undefined && message.voice_channel_id !== "") {
       writer.uint32(26).string(message.voice_channel_id);
     }
     return writer;
@@ -8686,13 +9738,13 @@ export const VoiceStartedEvent = {
 
   toJSON(message: VoiceStartedEvent): unknown {
     const obj: any = {};
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       obj.id = message.id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.voice_channel_id !== "") {
+    if (message.voice_channel_id !== undefined && message.voice_channel_id !== "") {
       obj.voice_channel_id = message.voice_channel_id;
     }
     return obj;
@@ -8716,13 +9768,13 @@ function createBaseVoiceEndedEvent(): VoiceEndedEvent {
 
 export const VoiceEndedEvent = {
   encode(message: VoiceEndedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
-    if (message.voice_channel_id !== "") {
+    if (message.voice_channel_id !== undefined && message.voice_channel_id !== "") {
       writer.uint32(26).string(message.voice_channel_id);
     }
     return writer;
@@ -8775,13 +9827,13 @@ export const VoiceEndedEvent = {
 
   toJSON(message: VoiceEndedEvent): unknown {
     const obj: any = {};
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       obj.id = message.id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.voice_channel_id !== "") {
+    if (message.voice_channel_id !== undefined && message.voice_channel_id !== "") {
       obj.voice_channel_id = message.voice_channel_id;
     }
     return obj;
@@ -8805,16 +9857,16 @@ function createBaseStreamingLeavedEvent(): StreamingLeavedEvent {
 
 export const StreamingLeavedEvent = {
   encode(message: StreamingLeavedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
-    if (message.streaming_channel_id !== "") {
+    if (message.streaming_channel_id !== undefined && message.streaming_channel_id !== "") {
       writer.uint32(26).string(message.streaming_channel_id);
     }
-    if (message.streaming_user_id !== "") {
+    if (message.streaming_user_id !== undefined && message.streaming_user_id !== "") {
       writer.uint32(34).string(message.streaming_user_id);
     }
     return writer;
@@ -8875,16 +9927,16 @@ export const StreamingLeavedEvent = {
 
   toJSON(message: StreamingLeavedEvent): unknown {
     const obj: any = {};
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       obj.id = message.id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.streaming_channel_id !== "") {
+    if (message.streaming_channel_id !== undefined && message.streaming_channel_id !== "") {
       obj.streaming_channel_id = message.streaming_channel_id;
     }
-    if (message.streaming_user_id !== "") {
+    if (message.streaming_user_id !== undefined && message.streaming_user_id !== "") {
       obj.streaming_user_id = message.streaming_user_id;
     }
     return obj;
@@ -8917,25 +9969,25 @@ function createBaseStreamingJoinedEvent(): StreamingJoinedEvent {
 
 export const StreamingJoinedEvent = {
   encode(message: StreamingJoinedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.clan_name !== "") {
+    if (message.clan_name !== undefined && message.clan_name !== "") {
       writer.uint32(18).string(message.clan_name);
     }
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       writer.uint32(26).string(message.id);
     }
-    if (message.participant !== "") {
+    if (message.participant !== undefined && message.participant !== "") {
       writer.uint32(34).string(message.participant);
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(42).string(message.user_id);
     }
-    if (message.streaming_channel_label !== "") {
+    if (message.streaming_channel_label !== undefined && message.streaming_channel_label !== "") {
       writer.uint32(50).string(message.streaming_channel_label);
     }
-    if (message.streaming_channel_id !== "") {
+    if (message.streaming_channel_id !== undefined && message.streaming_channel_id !== "") {
       writer.uint32(58).string(message.streaming_channel_id);
     }
     return writer;
@@ -9022,25 +10074,25 @@ export const StreamingJoinedEvent = {
 
   toJSON(message: StreamingJoinedEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.clan_name !== "") {
+    if (message.clan_name !== undefined && message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       obj.id = message.id;
     }
-    if (message.participant !== "") {
+    if (message.participant !== undefined && message.participant !== "") {
       obj.participant = message.participant;
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.streaming_channel_label !== "") {
+    if (message.streaming_channel_label !== undefined && message.streaming_channel_label !== "") {
       obj.streaming_channel_label = message.streaming_channel_label;
     }
-    if (message.streaming_channel_id !== "") {
+    if (message.streaming_channel_id !== undefined && message.streaming_channel_id !== "") {
       obj.streaming_channel_id = message.streaming_channel_id;
     }
     return obj;
@@ -9068,16 +10120,16 @@ function createBaseStreamingStartedEvent(): StreamingStartedEvent {
 
 export const StreamingStartedEvent = {
   encode(message: StreamingStartedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.streaming_url !== "") {
+    if (message.streaming_url !== undefined && message.streaming_url !== "") {
       writer.uint32(26).string(message.streaming_url);
     }
-    if (message.is_streaming !== false) {
+    if (message.is_streaming !== undefined && message.is_streaming !== false) {
       writer.uint32(32).bool(message.is_streaming);
     }
     return writer;
@@ -9138,16 +10190,16 @@ export const StreamingStartedEvent = {
 
   toJSON(message: StreamingStartedEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.streaming_url !== "") {
+    if (message.streaming_url !== undefined && message.streaming_url !== "") {
       obj.streaming_url = message.streaming_url;
     }
-    if (message.is_streaming !== false) {
+    if (message.is_streaming !== undefined && message.is_streaming !== false) {
       obj.is_streaming = message.is_streaming;
     }
     return obj;
@@ -9172,10 +10224,10 @@ function createBaseStreamingEndedEvent(): StreamingEndedEvent {
 
 export const StreamingEndedEvent = {
   encode(message: StreamingEndedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
     return writer;
@@ -9220,10 +10272,10 @@ export const StreamingEndedEvent = {
 
   toJSON(message: StreamingEndedEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -9259,40 +10311,40 @@ function createBaseChannelCreatedEvent(): ChannelCreatedEvent {
 
 export const ChannelCreatedEvent = {
   encode(message: ChannelCreatedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.category_id !== "") {
+    if (message.category_id !== undefined && message.category_id !== "") {
       writer.uint32(18).string(message.category_id);
     }
-    if (message.creator_id !== "") {
+    if (message.creator_id !== undefined && message.creator_id !== "") {
       writer.uint32(26).string(message.creator_id);
     }
-    if (message.parent_id !== "") {
+    if (message.parent_id !== undefined && message.parent_id !== "") {
       writer.uint32(34).string(message.parent_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(42).string(message.channel_id);
     }
-    if (message.channel_label !== "") {
+    if (message.channel_label !== undefined && message.channel_label !== "") {
       writer.uint32(50).string(message.channel_label);
     }
-    if (message.channel_private !== 0) {
+    if (message.channel_private !== undefined && message.channel_private !== 0) {
       writer.uint32(56).int32(message.channel_private);
     }
     if (message.channel_type !== undefined) {
       Int32Value.encode({ value: message.channel_type! }, writer.uint32(66).fork()).ldelim();
     }
-    if (message.status !== 0) {
+    if (message.status !== undefined && message.status !== 0) {
       writer.uint32(72).int32(message.status);
     }
-    if (message.app_id !== "") {
+    if (message.app_id !== undefined && message.app_id !== "") {
       writer.uint32(82).string(message.app_id);
     }
-    if (message.clan_name !== "") {
+    if (message.clan_name !== undefined && message.clan_name !== "") {
       writer.uint32(90).string(message.clan_name);
     }
-    if (message.channel_avatar !== "") {
+    if (message.channel_avatar !== undefined && message.channel_avatar !== "") {
       writer.uint32(98).string(message.channel_avatar);
     }
     return writer;
@@ -9417,40 +10469,40 @@ export const ChannelCreatedEvent = {
 
   toJSON(message: ChannelCreatedEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.category_id !== "") {
+    if (message.category_id !== undefined && message.category_id !== "") {
       obj.category_id = message.category_id;
     }
-    if (message.creator_id !== "") {
+    if (message.creator_id !== undefined && message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.parent_id !== "") {
+    if (message.parent_id !== undefined && message.parent_id !== "") {
       obj.parent_id = message.parent_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.channel_label !== "") {
+    if (message.channel_label !== undefined && message.channel_label !== "") {
       obj.channel_label = message.channel_label;
     }
-    if (message.channel_private !== 0) {
+    if (message.channel_private !== undefined && message.channel_private !== 0) {
       obj.channel_private = Math.round(message.channel_private);
     }
     if (message.channel_type !== undefined) {
       obj.channel_type = message.channel_type;
     }
-    if (message.status !== 0) {
+    if (message.status !== undefined && message.status !== 0) {
       obj.status = Math.round(message.status);
     }
-    if (message.app_id !== "") {
+    if (message.app_id !== undefined && message.app_id !== "") {
       obj.app_id = message.app_id;
     }
-    if (message.clan_name !== "") {
+    if (message.clan_name !== undefined && message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.channel_avatar !== "") {
+    if (message.channel_avatar !== undefined && message.channel_avatar !== "") {
       obj.channel_avatar = message.channel_avatar;
     }
     return obj;
@@ -9483,19 +10535,19 @@ function createBaseCategoryEvent(): CategoryEvent {
 
 export const CategoryEvent = {
   encode(message: CategoryEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.creator_id !== "") {
+    if (message.creator_id !== undefined && message.creator_id !== "") {
       writer.uint32(10).string(message.creator_id);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
-    if (message.category_name !== "") {
+    if (message.category_name !== undefined && message.category_name !== "") {
       writer.uint32(26).string(message.category_name);
     }
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       writer.uint32(34).string(message.id);
     }
-    if (message.status !== 0) {
+    if (message.status !== undefined && message.status !== 0) {
       writer.uint32(40).int32(message.status);
     }
     return writer;
@@ -9564,19 +10616,19 @@ export const CategoryEvent = {
 
   toJSON(message: CategoryEvent): unknown {
     const obj: any = {};
-    if (message.creator_id !== "") {
+    if (message.creator_id !== undefined && message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.category_name !== "") {
+    if (message.category_name !== undefined && message.category_name !== "") {
       obj.category_name = message.category_name;
     }
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       obj.id = message.id;
     }
-    if (message.status !== 0) {
+    if (message.status !== undefined && message.status !== 0) {
       obj.status = Math.round(message.status);
     }
     return obj;
@@ -9613,23 +10665,31 @@ export const RoleEvent = {
     if (message.role !== undefined) {
       Role.encode(message.role, writer.uint32(10).fork()).ldelim();
     }
-    if (message.status !== 0) {
+    if (message.status !== undefined && message.status !== 0) {
       writer.uint32(16).int32(message.status);
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(26).string(message.user_id);
     }
-    for (const v of message.user_add_ids) {
-      writer.uint32(34).string(v!);
+    if (message.user_add_ids !== undefined && message.user_add_ids.length !== 0) {
+      for (const v of message.user_add_ids) {
+        writer.uint32(34).string(v!);
+      }
     }
-    for (const v of message.user_remove_ids) {
-      writer.uint32(42).string(v!);
+    if (message.user_remove_ids !== undefined && message.user_remove_ids.length !== 0) {
+      for (const v of message.user_remove_ids) {
+        writer.uint32(42).string(v!);
+      }
     }
-    for (const v of message.active_permission_ids) {
-      writer.uint32(50).string(v!);
+    if (message.active_permission_ids !== undefined && message.active_permission_ids.length !== 0) {
+      for (const v of message.active_permission_ids) {
+        writer.uint32(50).string(v!);
+      }
     }
-    for (const v of message.remove_permission_ids) {
-      writer.uint32(58).string(v!);
+    if (message.remove_permission_ids !== undefined && message.remove_permission_ids.length !== 0) {
+      for (const v of message.remove_permission_ids) {
+        writer.uint32(58).string(v!);
+      }
     }
     return writer;
   },
@@ -9667,28 +10727,28 @@ export const RoleEvent = {
             break;
           }
 
-          message.user_add_ids.push(reader.string());
+          message.user_add_ids!.push(reader.string());
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.user_remove_ids.push(reader.string());
+          message.user_remove_ids!.push(reader.string());
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.active_permission_ids.push(reader.string());
+          message.active_permission_ids!.push(reader.string());
           continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          message.remove_permission_ids.push(reader.string());
+          message.remove_permission_ids!.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -9724,10 +10784,10 @@ export const RoleEvent = {
     if (message.role !== undefined) {
       obj.role = Role.toJSON(message.role);
     }
-    if (message.status !== 0) {
+    if (message.status !== undefined && message.status !== 0) {
       obj.status = Math.round(message.status);
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
     if (message.user_add_ids?.length) {
@@ -9767,19 +10827,19 @@ function createBaseChannelDeletedEvent(): ChannelDeletedEvent {
 
 export const ChannelDeletedEvent = {
   encode(message: ChannelDeletedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.category_id !== "") {
+    if (message.category_id !== undefined && message.category_id !== "") {
       writer.uint32(18).string(message.category_id);
     }
-    if (message.parent_id !== "") {
+    if (message.parent_id !== undefined && message.parent_id !== "") {
       writer.uint32(26).string(message.parent_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(34).string(message.channel_id);
     }
-    if (message.deletor !== "") {
+    if (message.deletor !== undefined && message.deletor !== "") {
       writer.uint32(42).string(message.deletor);
     }
     return writer;
@@ -9848,19 +10908,19 @@ export const ChannelDeletedEvent = {
 
   toJSON(message: ChannelDeletedEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.category_id !== "") {
+    if (message.category_id !== undefined && message.category_id !== "") {
       obj.category_id = message.category_id;
     }
-    if (message.parent_id !== "") {
+    if (message.parent_id !== undefined && message.parent_id !== "") {
       obj.parent_id = message.parent_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.deletor !== "") {
+    if (message.deletor !== undefined && message.deletor !== "") {
       obj.deletor = message.deletor;
     }
     return obj;
@@ -9886,10 +10946,10 @@ function createBaseClanDeletedEvent(): ClanDeletedEvent {
 
 export const ClanDeletedEvent = {
   encode(message: ClanDeletedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.deletor !== "") {
+    if (message.deletor !== undefined && message.deletor !== "") {
       writer.uint32(18).string(message.deletor);
     }
     return writer;
@@ -9934,10 +10994,10 @@ export const ClanDeletedEvent = {
 
   toJSON(message: ClanDeletedEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.deletor !== "") {
+    if (message.deletor !== undefined && message.deletor !== "") {
       obj.deletor = message.deletor;
     }
     return obj;
@@ -9969,28 +11029,28 @@ function createBaseStickerCreateEvent(): StickerCreateEvent {
 
 export const StickerCreateEvent = {
   encode(message: StickerCreateEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.source !== "") {
+    if (message.source !== undefined && message.source !== "") {
       writer.uint32(18).string(message.source);
     }
-    if (message.shortname !== "") {
+    if (message.shortname !== undefined && message.shortname !== "") {
       writer.uint32(26).string(message.shortname);
     }
-    if (message.category !== "") {
+    if (message.category !== undefined && message.category !== "") {
       writer.uint32(34).string(message.category);
     }
-    if (message.creator_id !== "") {
+    if (message.creator_id !== undefined && message.creator_id !== "") {
       writer.uint32(42).string(message.creator_id);
     }
-    if (message.sticker_id !== "") {
+    if (message.sticker_id !== undefined && message.sticker_id !== "") {
       writer.uint32(50).string(message.sticker_id);
     }
-    if (message.logo !== "") {
+    if (message.logo !== undefined && message.logo !== "") {
       writer.uint32(58).string(message.logo);
     }
-    if (message.clan_name !== "") {
+    if (message.clan_name !== undefined && message.clan_name !== "") {
       writer.uint32(66).string(message.clan_name);
     }
     return writer;
@@ -10083,28 +11143,28 @@ export const StickerCreateEvent = {
 
   toJSON(message: StickerCreateEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.source !== "") {
+    if (message.source !== undefined && message.source !== "") {
       obj.source = message.source;
     }
-    if (message.shortname !== "") {
+    if (message.shortname !== undefined && message.shortname !== "") {
       obj.shortname = message.shortname;
     }
-    if (message.category !== "") {
+    if (message.category !== undefined && message.category !== "") {
       obj.category = message.category;
     }
-    if (message.creator_id !== "") {
+    if (message.creator_id !== undefined && message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.sticker_id !== "") {
+    if (message.sticker_id !== undefined && message.sticker_id !== "") {
       obj.sticker_id = message.sticker_id;
     }
-    if (message.logo !== "") {
+    if (message.logo !== undefined && message.logo !== "") {
       obj.logo = message.logo;
     }
-    if (message.clan_name !== "") {
+    if (message.clan_name !== undefined && message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
     return obj;
@@ -10133,13 +11193,13 @@ function createBaseStickerUpdateEvent(): StickerUpdateEvent {
 
 export const StickerUpdateEvent = {
   encode(message: StickerUpdateEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.shortname !== "") {
+    if (message.shortname !== undefined && message.shortname !== "") {
       writer.uint32(10).string(message.shortname);
     }
-    if (message.sticker_id !== "") {
+    if (message.sticker_id !== undefined && message.sticker_id !== "") {
       writer.uint32(18).string(message.sticker_id);
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(26).string(message.user_id);
     }
     return writer;
@@ -10192,13 +11252,13 @@ export const StickerUpdateEvent = {
 
   toJSON(message: StickerUpdateEvent): unknown {
     const obj: any = {};
-    if (message.shortname !== "") {
+    if (message.shortname !== undefined && message.shortname !== "") {
       obj.shortname = message.shortname;
     }
-    if (message.sticker_id !== "") {
+    if (message.sticker_id !== undefined && message.sticker_id !== "") {
       obj.sticker_id = message.sticker_id;
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
     return obj;
@@ -10222,10 +11282,10 @@ function createBaseStickerDeleteEvent(): StickerDeleteEvent {
 
 export const StickerDeleteEvent = {
   encode(message: StickerDeleteEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.sticker_id !== "") {
+    if (message.sticker_id !== undefined && message.sticker_id !== "") {
       writer.uint32(18).string(message.sticker_id);
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(26).string(message.user_id);
     }
     return writer;
@@ -10270,10 +11330,10 @@ export const StickerDeleteEvent = {
 
   toJSON(message: StickerDeleteEvent): unknown {
     const obj: any = {};
-    if (message.sticker_id !== "") {
+    if (message.sticker_id !== undefined && message.sticker_id !== "") {
       obj.sticker_id = message.sticker_id;
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
     return obj;
@@ -10317,64 +11377,68 @@ function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
 
 export const ChannelUpdatedEvent = {
   encode(message: ChannelUpdatedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.category_id !== "") {
+    if (message.category_id !== undefined && message.category_id !== "") {
       writer.uint32(18).string(message.category_id);
     }
-    if (message.creator_id !== "") {
+    if (message.creator_id !== undefined && message.creator_id !== "") {
       writer.uint32(26).string(message.creator_id);
     }
-    if (message.parent_id !== "") {
+    if (message.parent_id !== undefined && message.parent_id !== "") {
       writer.uint32(34).string(message.parent_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(42).string(message.channel_id);
     }
-    if (message.channel_label !== "") {
+    if (message.channel_label !== undefined && message.channel_label !== "") {
       writer.uint32(50).string(message.channel_label);
     }
     if (message.channel_type !== undefined) {
       Int32Value.encode({ value: message.channel_type! }, writer.uint32(58).fork()).ldelim();
     }
-    if (message.status !== 0) {
+    if (message.status !== undefined && message.status !== 0) {
       writer.uint32(64).int32(message.status);
     }
-    if (message.meeting_code !== "") {
+    if (message.meeting_code !== undefined && message.meeting_code !== "") {
       writer.uint32(74).string(message.meeting_code);
     }
-    if (message.is_error !== false) {
+    if (message.is_error !== undefined && message.is_error !== false) {
       writer.uint32(80).bool(message.is_error);
     }
-    if (message.channel_private !== false) {
+    if (message.channel_private !== undefined && message.channel_private !== false) {
       writer.uint32(88).bool(message.channel_private);
     }
-    if (message.app_id !== "") {
+    if (message.app_id !== undefined && message.app_id !== "") {
       writer.uint32(98).string(message.app_id);
     }
-    if (message.e2ee !== 0) {
+    if (message.e2ee !== undefined && message.e2ee !== 0) {
       writer.uint32(104).int32(message.e2ee);
     }
-    if (message.topic !== "") {
+    if (message.topic !== undefined && message.topic !== "") {
       writer.uint32(114).string(message.topic);
     }
-    if (message.age_restricted !== 0) {
+    if (message.age_restricted !== undefined && message.age_restricted !== 0) {
       writer.uint32(120).int32(message.age_restricted);
     }
-    if (message.active !== 0) {
+    if (message.active !== undefined && message.active !== 0) {
       writer.uint32(128).int32(message.active);
     }
-    if (message.count_mess_unread !== 0) {
+    if (message.count_mess_unread !== undefined && message.count_mess_unread !== 0) {
       writer.uint32(136).int32(message.count_mess_unread);
     }
-    for (const v of message.user_ids) {
-      writer.uint32(146).string(v!);
+    if (message.user_ids !== undefined && message.user_ids.length !== 0) {
+      for (const v of message.user_ids) {
+        writer.uint32(146).string(v!);
+      }
     }
-    for (const v of message.role_ids) {
-      writer.uint32(154).string(v!);
+    if (message.role_ids !== undefined && message.role_ids.length !== 0) {
+      for (const v of message.role_ids) {
+        writer.uint32(154).string(v!);
+      }
     }
-    if (message.channel_avatar !== "") {
+    if (message.channel_avatar !== undefined && message.channel_avatar !== "") {
       writer.uint32(162).string(message.channel_avatar);
     }
     return writer;
@@ -10511,14 +11575,14 @@ export const ChannelUpdatedEvent = {
             break;
           }
 
-          message.user_ids.push(reader.string());
+          message.user_ids!.push(reader.string());
           continue;
         case 19:
           if (tag !== 154) {
             break;
           }
 
-          message.role_ids.push(reader.string());
+          message.role_ids!.push(reader.string());
           continue;
         case 20:
           if (tag !== 162) {
@@ -10563,55 +11627,55 @@ export const ChannelUpdatedEvent = {
 
   toJSON(message: ChannelUpdatedEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.category_id !== "") {
+    if (message.category_id !== undefined && message.category_id !== "") {
       obj.category_id = message.category_id;
     }
-    if (message.creator_id !== "") {
+    if (message.creator_id !== undefined && message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.parent_id !== "") {
+    if (message.parent_id !== undefined && message.parent_id !== "") {
       obj.parent_id = message.parent_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.channel_label !== "") {
+    if (message.channel_label !== undefined && message.channel_label !== "") {
       obj.channel_label = message.channel_label;
     }
     if (message.channel_type !== undefined) {
       obj.channel_type = message.channel_type;
     }
-    if (message.status !== 0) {
+    if (message.status !== undefined && message.status !== 0) {
       obj.status = Math.round(message.status);
     }
-    if (message.meeting_code !== "") {
+    if (message.meeting_code !== undefined && message.meeting_code !== "") {
       obj.meeting_code = message.meeting_code;
     }
-    if (message.is_error !== false) {
+    if (message.is_error !== undefined && message.is_error !== false) {
       obj.is_error = message.is_error;
     }
-    if (message.channel_private !== false) {
+    if (message.channel_private !== undefined && message.channel_private !== false) {
       obj.channel_private = message.channel_private;
     }
-    if (message.app_id !== "") {
+    if (message.app_id !== undefined && message.app_id !== "") {
       obj.app_id = message.app_id;
     }
-    if (message.e2ee !== 0) {
+    if (message.e2ee !== undefined && message.e2ee !== 0) {
       obj.e2ee = Math.round(message.e2ee);
     }
-    if (message.topic !== "") {
+    if (message.topic !== undefined && message.topic !== "") {
       obj.topic = message.topic;
     }
-    if (message.age_restricted !== 0) {
+    if (message.age_restricted !== undefined && message.age_restricted !== 0) {
       obj.age_restricted = Math.round(message.age_restricted);
     }
-    if (message.active !== 0) {
+    if (message.active !== undefined && message.active !== 0) {
       obj.active = Math.round(message.active);
     }
-    if (message.count_mess_unread !== 0) {
+    if (message.count_mess_unread !== undefined && message.count_mess_unread !== 0) {
       obj.count_mess_unread = Math.round(message.count_mess_unread);
     }
     if (message.user_ids?.length) {
@@ -10620,7 +11684,7 @@ export const ChannelUpdatedEvent = {
     if (message.role_ids?.length) {
       obj.role_ids = message.role_ids;
     }
-    if (message.channel_avatar !== "") {
+    if (message.channel_avatar !== undefined && message.channel_avatar !== "") {
       obj.channel_avatar = message.channel_avatar;
     }
     return obj;
@@ -10661,8 +11725,10 @@ function createBaseStatusUnfollow(): StatusUnfollow {
 
 export const StatusUnfollow = {
   encode(message: StatusUnfollow, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.user_ids) {
-      writer.uint32(10).string(v!);
+    if (message.user_ids !== undefined && message.user_ids.length !== 0) {
+      for (const v of message.user_ids) {
+        writer.uint32(10).string(v!);
+      }
     }
     return writer;
   },
@@ -10679,7 +11745,7 @@ export const StatusUnfollow = {
             break;
           }
 
-          message.user_ids.push(reader.string());
+          message.user_ids!.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -10777,16 +11843,16 @@ function createBaseStream(): Stream {
 
 export const Stream = {
   encode(message: Stream, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.mode !== 0) {
+    if (message.mode !== undefined && message.mode !== 0) {
       writer.uint32(8).int32(message.mode);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
-    if (message.label !== "") {
+    if (message.label !== undefined && message.label !== "") {
       writer.uint32(34).string(message.label);
     }
     return writer;
@@ -10847,16 +11913,16 @@ export const Stream = {
 
   toJSON(message: Stream): unknown {
     const obj: any = {};
-    if (message.mode !== 0) {
+    if (message.mode !== undefined && message.mode !== 0) {
       obj.mode = Math.round(message.mode);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.label !== "") {
+    if (message.label !== undefined && message.label !== "") {
       obj.label = message.label;
     }
     return obj;
@@ -10887,10 +11953,10 @@ export const StreamData = {
     if (message.sender !== undefined) {
       UserPresence.encode(message.sender, writer.uint32(18).fork()).ldelim();
     }
-    if (message.data !== "") {
+    if (message.data !== undefined && message.data !== "") {
       writer.uint32(26).string(message.data);
     }
-    if (message.reliable !== false) {
+    if (message.reliable !== undefined && message.reliable !== false) {
       writer.uint32(32).bool(message.reliable);
     }
     return writer;
@@ -10957,10 +12023,10 @@ export const StreamData = {
     if (message.sender !== undefined) {
       obj.sender = UserPresence.toJSON(message.sender);
     }
-    if (message.data !== "") {
+    if (message.data !== undefined && message.data !== "") {
       obj.data = message.data;
     }
-    if (message.reliable !== false) {
+    if (message.reliable !== undefined && message.reliable !== false) {
       obj.reliable = message.reliable;
     }
     return obj;
@@ -10992,11 +12058,15 @@ export const StreamPresenceEvent = {
     if (message.stream !== undefined) {
       Stream.encode(message.stream, writer.uint32(10).fork()).ldelim();
     }
-    for (const v of message.joins) {
-      UserPresence.encode(v!, writer.uint32(18).fork()).ldelim();
+    if (message.joins !== undefined && message.joins.length !== 0) {
+      for (const v of message.joins) {
+        UserPresence.encode(v!, writer.uint32(18).fork()).ldelim();
+      }
     }
-    for (const v of message.leaves) {
-      UserPresence.encode(v!, writer.uint32(26).fork()).ldelim();
+    if (message.leaves !== undefined && message.leaves.length !== 0) {
+      for (const v of message.leaves) {
+        UserPresence.encode(v!, writer.uint32(26).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -11020,14 +12090,14 @@ export const StreamPresenceEvent = {
             break;
           }
 
-          message.joins.push(UserPresence.decode(reader, reader.uint32()));
+          message.joins!.push(UserPresence.decode(reader, reader.uint32()));
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.leaves.push(UserPresence.decode(reader, reader.uint32()));
+          message.leaves!.push(UserPresence.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -11080,22 +12150,22 @@ function createBaseUserPresence(): UserPresence {
 
 export const UserPresence = {
   encode(message: UserPresence, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
-    if (message.session_id !== "") {
+    if (message.session_id !== undefined && message.session_id !== "") {
       writer.uint32(18).string(message.session_id);
     }
-    if (message.username !== "") {
+    if (message.username !== undefined && message.username !== "") {
       writer.uint32(26).string(message.username);
     }
     if (message.status !== undefined) {
       StringValue.encode({ value: message.status! }, writer.uint32(34).fork()).ldelim();
     }
-    if (message.is_mobile !== false) {
+    if (message.is_mobile !== undefined && message.is_mobile !== false) {
       writer.uint32(40).bool(message.is_mobile);
     }
-    if (message.user_status !== "") {
+    if (message.user_status !== undefined && message.user_status !== "") {
       writer.uint32(50).string(message.user_status);
     }
     return writer;
@@ -11172,22 +12242,22 @@ export const UserPresence = {
 
   toJSON(message: UserPresence): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.session_id !== "") {
+    if (message.session_id !== undefined && message.session_id !== "") {
       obj.session_id = message.session_id;
     }
-    if (message.username !== "") {
+    if (message.username !== undefined && message.username !== "") {
       obj.username = message.username;
     }
     if (message.status !== undefined) {
       obj.status = message.status;
     }
-    if (message.is_mobile !== false) {
+    if (message.is_mobile !== undefined && message.is_mobile !== false) {
       obj.is_mobile = message.is_mobile;
     }
-    if (message.user_status !== "") {
+    if (message.user_status !== undefined && message.user_status !== "") {
       obj.user_status = message.user_status;
     }
     return obj;
@@ -11214,22 +12284,22 @@ function createBaseCustomStatusEvent(): CustomStatusEvent {
 
 export const CustomStatusEvent = {
   encode(message: CustomStatusEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(18).string(message.user_id);
     }
-    if (message.username !== "") {
+    if (message.username !== undefined && message.username !== "") {
       writer.uint32(26).string(message.username);
     }
-    if (message.status !== "") {
+    if (message.status !== undefined && message.status !== "") {
       writer.uint32(34).string(message.status);
     }
-    if (message.time_reset !== 0) {
+    if (message.time_reset !== undefined && message.time_reset !== 0) {
       writer.uint32(40).int32(message.time_reset);
     }
-    if (message.no_clear !== false) {
+    if (message.no_clear !== undefined && message.no_clear !== false) {
       writer.uint32(48).bool(message.no_clear);
     }
     return writer;
@@ -11306,22 +12376,22 @@ export const CustomStatusEvent = {
 
   toJSON(message: CustomStatusEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.username !== "") {
+    if (message.username !== undefined && message.username !== "") {
       obj.username = message.username;
     }
-    if (message.status !== "") {
+    if (message.status !== undefined && message.status !== "") {
       obj.status = message.status;
     }
-    if (message.time_reset !== 0) {
+    if (message.time_reset !== undefined && message.time_reset !== 0) {
       obj.time_reset = Math.round(message.time_reset);
     }
-    if (message.no_clear !== false) {
+    if (message.no_clear !== undefined && message.no_clear !== false) {
       obj.no_clear = message.no_clear;
     }
     return obj;
@@ -11359,22 +12429,24 @@ export const UserChannelAdded = {
     if (message.channel_desc !== undefined) {
       ChannelDescription1.encode(message.channel_desc, writer.uint32(10).fork()).ldelim();
     }
-    for (const v of message.users) {
-      UserProfileRedis.encode(v!, writer.uint32(18).fork()).ldelim();
+    if (message.users !== undefined && message.users.length !== 0) {
+      for (const v of message.users) {
+        UserProfileRedis.encode(v!, writer.uint32(18).fork()).ldelim();
+      }
     }
-    if (message.status !== "") {
+    if (message.status !== undefined && message.status !== "") {
       writer.uint32(26).string(message.status);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
     }
     if (message.caller !== undefined) {
       UserProfileRedis.encode(message.caller, writer.uint32(42).fork()).ldelim();
     }
-    if (message.create_time_second !== 0) {
+    if (message.create_time_second !== undefined && message.create_time_second !== 0) {
       writer.uint32(48).uint32(message.create_time_second);
     }
-    if (message.active !== 0) {
+    if (message.active !== undefined && message.active !== 0) {
       writer.uint32(56).int32(message.active);
     }
     return writer;
@@ -11399,7 +12471,7 @@ export const UserChannelAdded = {
             break;
           }
 
-          message.users.push(UserProfileRedis.decode(reader, reader.uint32()));
+          message.users!.push(UserProfileRedis.decode(reader, reader.uint32()));
           continue;
         case 3:
           if (tag !== 26) {
@@ -11465,19 +12537,19 @@ export const UserChannelAdded = {
     if (message.users?.length) {
       obj.users = message.users.map((e) => UserProfileRedis.toJSON(e));
     }
-    if (message.status !== "") {
+    if (message.status !== undefined && message.status !== "") {
       obj.status = message.status;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     if (message.caller !== undefined) {
       obj.caller = UserProfileRedis.toJSON(message.caller);
     }
-    if (message.create_time_second !== 0) {
+    if (message.create_time_second !== undefined && message.create_time_second !== 0) {
       obj.create_time_second = Math.round(message.create_time_second);
     }
-    if (message.active !== 0) {
+    if (message.active !== undefined && message.active !== 0) {
       obj.active = Math.round(message.active);
     }
     return obj;
@@ -11509,23 +12581,27 @@ function createBaseUserChannelRemoved(): UserChannelRemoved {
 
 export const UserChannelRemoved = {
   encode(message: UserChannelRemoved, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    for (const v of message.user_ids) {
-      writer.uint32(18).string(v!);
+    if (message.user_ids !== undefined && message.user_ids.length !== 0) {
+      for (const v of message.user_ids) {
+        writer.uint32(18).string(v!);
+      }
     }
-    if (message.channel_type !== 0) {
+    if (message.channel_type !== undefined && message.channel_type !== 0) {
       writer.uint32(24).int32(message.channel_type);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
     }
-    writer.uint32(50).fork();
-    for (const v of message.badge_counts) {
-      writer.int32(v);
+    if (message.badge_counts !== undefined && message.badge_counts.length !== 0) {
+      writer.uint32(50).fork();
+      for (const v of message.badge_counts) {
+        writer.int32(v);
+      }
+      writer.ldelim();
     }
-    writer.ldelim();
     return writer;
   },
 
@@ -11548,7 +12624,7 @@ export const UserChannelRemoved = {
             break;
           }
 
-          message.user_ids.push(reader.string());
+          message.user_ids!.push(reader.string());
           continue;
         case 3:
           if (tag !== 24) {
@@ -11566,7 +12642,7 @@ export const UserChannelRemoved = {
           continue;
         case 6:
           if (tag === 48) {
-            message.badge_counts.push(reader.int32());
+            message.badge_counts!.push(reader.int32());
 
             continue;
           }
@@ -11574,7 +12650,7 @@ export const UserChannelRemoved = {
           if (tag === 50) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.badge_counts.push(reader.int32());
+              message.badge_counts!.push(reader.int32());
             }
 
             continue;
@@ -11604,16 +12680,16 @@ export const UserChannelRemoved = {
 
   toJSON(message: UserChannelRemoved): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     if (message.user_ids?.length) {
       obj.user_ids = message.user_ids;
     }
-    if (message.channel_type !== 0) {
+    if (message.channel_type !== undefined && message.channel_type !== 0) {
       obj.channel_type = Math.round(message.channel_type);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     if (message.badge_counts?.length) {
@@ -11642,11 +12718,13 @@ function createBaseUserClanRemoved(): UserClanRemoved {
 
 export const UserClanRemoved = {
   encode(message: UserClanRemoved, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    for (const v of message.user_ids) {
-      writer.uint32(18).string(v!);
+    if (message.user_ids !== undefined && message.user_ids.length !== 0) {
+      for (const v of message.user_ids) {
+        writer.uint32(18).string(v!);
+      }
     }
     return writer;
   },
@@ -11670,7 +12748,7 @@ export const UserClanRemoved = {
             break;
           }
 
-          message.user_ids.push(reader.string());
+          message.user_ids!.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -11690,7 +12768,7 @@ export const UserClanRemoved = {
 
   toJSON(message: UserClanRemoved): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     if (message.user_ids?.length) {
@@ -11730,43 +12808,43 @@ function createBaseClanUpdatedEvent(): ClanUpdatedEvent {
 
 export const ClanUpdatedEvent = {
   encode(message: ClanUpdatedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.clan_name !== "") {
+    if (message.clan_name !== undefined && message.clan_name !== "") {
       writer.uint32(18).string(message.clan_name);
     }
-    if (message.logo !== "") {
+    if (message.logo !== undefined && message.logo !== "") {
       writer.uint32(26).string(message.logo);
     }
-    if (message.banner !== "") {
+    if (message.banner !== undefined && message.banner !== "") {
       writer.uint32(34).string(message.banner);
     }
-    if (message.status !== 0) {
+    if (message.status !== undefined && message.status !== 0) {
       writer.uint32(40).int32(message.status);
     }
-    if (message.is_onboarding !== false) {
+    if (message.is_onboarding !== undefined && message.is_onboarding !== false) {
       writer.uint32(48).bool(message.is_onboarding);
     }
-    if (message.welcome_channel_id !== "") {
+    if (message.welcome_channel_id !== undefined && message.welcome_channel_id !== "") {
       writer.uint32(58).string(message.welcome_channel_id);
     }
-    if (message.onboarding_banner !== "") {
+    if (message.onboarding_banner !== undefined && message.onboarding_banner !== "") {
       writer.uint32(66).string(message.onboarding_banner);
     }
-    if (message.community_banner !== "") {
+    if (message.community_banner !== undefined && message.community_banner !== "") {
       writer.uint32(74).string(message.community_banner);
     }
-    if (message.is_community !== false) {
+    if (message.is_community !== undefined && message.is_community !== false) {
       writer.uint32(80).bool(message.is_community);
     }
-    if (message.about !== "") {
+    if (message.about !== undefined && message.about !== "") {
       writer.uint32(90).string(message.about);
     }
-    if (message.description !== "") {
+    if (message.description !== undefined && message.description !== "") {
       writer.uint32(98).string(message.description);
     }
-    if (message.prevent_anonymous !== false) {
+    if (message.prevent_anonymous !== undefined && message.prevent_anonymous !== false) {
       writer.uint32(104).bool(message.prevent_anonymous);
     }
     return writer;
@@ -11899,43 +12977,43 @@ export const ClanUpdatedEvent = {
 
   toJSON(message: ClanUpdatedEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.clan_name !== "") {
+    if (message.clan_name !== undefined && message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.logo !== "") {
+    if (message.logo !== undefined && message.logo !== "") {
       obj.logo = message.logo;
     }
-    if (message.banner !== "") {
+    if (message.banner !== undefined && message.banner !== "") {
       obj.banner = message.banner;
     }
-    if (message.status !== 0) {
+    if (message.status !== undefined && message.status !== 0) {
       obj.status = Math.round(message.status);
     }
-    if (message.is_onboarding !== false) {
+    if (message.is_onboarding !== undefined && message.is_onboarding !== false) {
       obj.is_onboarding = message.is_onboarding;
     }
-    if (message.welcome_channel_id !== "") {
+    if (message.welcome_channel_id !== undefined && message.welcome_channel_id !== "") {
       obj.welcome_channel_id = message.welcome_channel_id;
     }
-    if (message.onboarding_banner !== "") {
+    if (message.onboarding_banner !== undefined && message.onboarding_banner !== "") {
       obj.onboarding_banner = message.onboarding_banner;
     }
-    if (message.community_banner !== "") {
+    if (message.community_banner !== undefined && message.community_banner !== "") {
       obj.community_banner = message.community_banner;
     }
-    if (message.is_community !== false) {
+    if (message.is_community !== undefined && message.is_community !== false) {
       obj.is_community = message.is_community;
     }
-    if (message.about !== "") {
+    if (message.about !== undefined && message.about !== "") {
       obj.about = message.about;
     }
-    if (message.description !== "") {
+    if (message.description !== undefined && message.description !== "") {
       obj.description = message.description;
     }
-    if (message.prevent_anonymous !== false) {
+    if (message.prevent_anonymous !== undefined && message.prevent_anonymous !== false) {
       obj.prevent_anonymous = message.prevent_anonymous;
     }
     return obj;
@@ -11969,16 +13047,16 @@ function createBaseClanProfileUpdatedEvent(): ClanProfileUpdatedEvent {
 
 export const ClanProfileUpdatedEvent = {
   encode(message: ClanProfileUpdatedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
-    if (message.clan_nick !== "") {
+    if (message.clan_nick !== undefined && message.clan_nick !== "") {
       writer.uint32(18).string(message.clan_nick);
     }
-    if (message.clan_avatar !== "") {
+    if (message.clan_avatar !== undefined && message.clan_avatar !== "") {
       writer.uint32(26).string(message.clan_avatar);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
     }
     return writer;
@@ -12039,16 +13117,16 @@ export const ClanProfileUpdatedEvent = {
 
   toJSON(message: ClanProfileUpdatedEvent): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.clan_nick !== "") {
+    if (message.clan_nick !== undefined && message.clan_nick !== "") {
       obj.clan_nick = message.clan_nick;
     }
-    if (message.clan_avatar !== "") {
+    if (message.clan_avatar !== undefined && message.clan_avatar !== "") {
       obj.clan_avatar = message.clan_avatar;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -12081,25 +13159,25 @@ function createBaseUserProfileUpdatedEvent(): UserProfileUpdatedEvent {
 
 export const UserProfileUpdatedEvent = {
   encode(message: UserProfileUpdatedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
-    if (message.display_name !== "") {
+    if (message.display_name !== undefined && message.display_name !== "") {
       writer.uint32(18).string(message.display_name);
     }
-    if (message.avatar !== "") {
+    if (message.avatar !== undefined && message.avatar !== "") {
       writer.uint32(26).string(message.avatar);
     }
-    if (message.about_me !== "") {
+    if (message.about_me !== undefined && message.about_me !== "") {
       writer.uint32(34).string(message.about_me);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(42).string(message.channel_id);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(50).string(message.clan_id);
     }
-    if (message.encrypt_private_key !== "") {
+    if (message.encrypt_private_key !== undefined && message.encrypt_private_key !== "") {
       writer.uint32(58).string(message.encrypt_private_key);
     }
     return writer;
@@ -12184,25 +13262,25 @@ export const UserProfileUpdatedEvent = {
 
   toJSON(message: UserProfileUpdatedEvent): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.display_name !== "") {
+    if (message.display_name !== undefined && message.display_name !== "") {
       obj.display_name = message.display_name;
     }
-    if (message.avatar !== "") {
+    if (message.avatar !== undefined && message.avatar !== "") {
       obj.avatar = message.avatar;
     }
-    if (message.about_me !== "") {
+    if (message.about_me !== undefined && message.about_me !== "") {
       obj.about_me = message.about_me;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.encrypt_private_key !== "") {
+    if (message.encrypt_private_key !== undefined && message.encrypt_private_key !== "") {
       obj.encrypt_private_key = message.encrypt_private_key;
     }
     return obj;
@@ -12230,10 +13308,10 @@ function createBaseConfirmLinkMezonOTPData(): ConfirmLinkMezonOTPData {
 
 export const ConfirmLinkMezonOTPData = {
   encode(message: ConfirmLinkMezonOTPData, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.type !== 0) {
+    if (message.type !== undefined && message.type !== 0) {
       writer.uint32(8).int32(message.type);
     }
-    if (message.value !== "") {
+    if (message.value !== undefined && message.value !== "") {
       writer.uint32(18).string(message.value);
     }
     return writer;
@@ -12278,10 +13356,10 @@ export const ConfirmLinkMezonOTPData = {
 
   toJSON(message: ConfirmLinkMezonOTPData): unknown {
     const obj: any = {};
-    if (message.type !== 0) {
+    if (message.type !== undefined && message.type !== 0) {
       obj.type = Math.round(message.type);
     }
-    if (message.value !== "") {
+    if (message.value !== undefined && message.value !== "") {
       obj.value = message.value;
     }
     return obj;
@@ -12319,46 +13397,50 @@ function createBaseUserProfileRedis(): UserProfileRedis {
 
 export const UserProfileRedis = {
   encode(message: UserProfileRedis, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
-    if (message.username !== "") {
+    if (message.username !== undefined && message.username !== "") {
       writer.uint32(18).string(message.username);
     }
-    if (message.avatar !== "") {
+    if (message.avatar !== undefined && message.avatar !== "") {
       writer.uint32(26).string(message.avatar);
     }
-    if (message.display_name !== "") {
+    if (message.display_name !== undefined && message.display_name !== "") {
       writer.uint32(34).string(message.display_name);
     }
-    if (message.user_status !== "") {
+    if (message.user_status !== undefined && message.user_status !== "") {
       writer.uint32(42).string(message.user_status);
     }
-    if (message.status !== "") {
+    if (message.status !== undefined && message.status !== "") {
       writer.uint32(50).string(message.status);
     }
-    if (message.online !== false) {
+    if (message.online !== undefined && message.online !== false) {
       writer.uint32(56).bool(message.online);
     }
-    for (const v of message.fcm_tokens) {
-      FCMTokens.encode(v!, writer.uint32(66).fork()).ldelim();
+    if (message.fcm_tokens !== undefined && message.fcm_tokens.length !== 0) {
+      for (const v of message.fcm_tokens) {
+        FCMTokens.encode(v!, writer.uint32(66).fork()).ldelim();
+      }
     }
-    for (const v of message.joined_clans) {
-      writer.uint32(74).string(v!);
+    if (message.joined_clans !== undefined && message.joined_clans.length !== 0) {
+      for (const v of message.joined_clans) {
+        writer.uint32(74).string(v!);
+      }
     }
-    if (message.app_token !== "") {
+    if (message.app_token !== undefined && message.app_token !== "") {
       writer.uint32(82).string(message.app_token);
     }
-    if (message.create_time_second !== 0) {
+    if (message.create_time_second !== undefined && message.create_time_second !== 0) {
       writer.uint32(88).uint32(message.create_time_second);
     }
-    if (message.app_url !== "") {
+    if (message.app_url !== undefined && message.app_url !== "") {
       writer.uint32(98).string(message.app_url);
     }
-    if (message.is_bot !== false) {
+    if (message.is_bot !== undefined && message.is_bot !== false) {
       writer.uint32(104).bool(message.is_bot);
     }
-    if (message.voip_token !== "") {
+    if (message.voip_token !== undefined && message.voip_token !== "") {
       writer.uint32(114).string(message.voip_token);
     }
     return writer;
@@ -12425,14 +13507,14 @@ export const UserProfileRedis = {
             break;
           }
 
-          message.fcm_tokens.push(FCMTokens.decode(reader, reader.uint32()));
+          message.fcm_tokens!.push(FCMTokens.decode(reader, reader.uint32()));
           continue;
         case 9:
           if (tag !== 74) {
             break;
           }
 
-          message.joined_clans.push(reader.string());
+          message.joined_clans!.push(reader.string());
           continue;
         case 10:
           if (tag !== 82) {
@@ -12503,25 +13585,25 @@ export const UserProfileRedis = {
 
   toJSON(message: UserProfileRedis): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.username !== "") {
+    if (message.username !== undefined && message.username !== "") {
       obj.username = message.username;
     }
-    if (message.avatar !== "") {
+    if (message.avatar !== undefined && message.avatar !== "") {
       obj.avatar = message.avatar;
     }
-    if (message.display_name !== "") {
+    if (message.display_name !== undefined && message.display_name !== "") {
       obj.display_name = message.display_name;
     }
-    if (message.user_status !== "") {
+    if (message.user_status !== undefined && message.user_status !== "") {
       obj.user_status = message.user_status;
     }
-    if (message.status !== "") {
+    if (message.status !== undefined && message.status !== "") {
       obj.status = message.status;
     }
-    if (message.online !== false) {
+    if (message.online !== undefined && message.online !== false) {
       obj.online = message.online;
     }
     if (message.fcm_tokens?.length) {
@@ -12530,19 +13612,19 @@ export const UserProfileRedis = {
     if (message.joined_clans?.length) {
       obj.joined_clans = message.joined_clans;
     }
-    if (message.app_token !== "") {
+    if (message.app_token !== undefined && message.app_token !== "") {
       obj.app_token = message.app_token;
     }
-    if (message.create_time_second !== 0) {
+    if (message.create_time_second !== undefined && message.create_time_second !== 0) {
       obj.create_time_second = Math.round(message.create_time_second);
     }
-    if (message.app_url !== "") {
+    if (message.app_url !== undefined && message.app_url !== "") {
       obj.app_url = message.app_url;
     }
-    if (message.is_bot !== false) {
+    if (message.is_bot !== undefined && message.is_bot !== false) {
       obj.is_bot = message.is_bot;
     }
-    if (message.voip_token !== "") {
+    if (message.voip_token !== undefined && message.voip_token !== "") {
       obj.voip_token = message.voip_token;
     }
     return obj;
@@ -12577,13 +13659,13 @@ function createBaseFCMTokens(): FCMTokens {
 
 export const FCMTokens = {
   encode(message: FCMTokens, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.device_id !== "") {
+    if (message.device_id !== undefined && message.device_id !== "") {
       writer.uint32(10).string(message.device_id);
     }
-    if (message.token_id !== "") {
+    if (message.token_id !== undefined && message.token_id !== "") {
       writer.uint32(18).string(message.token_id);
     }
-    if (message.platform !== "") {
+    if (message.platform !== undefined && message.platform !== "") {
       writer.uint32(26).string(message.platform);
     }
     return writer;
@@ -12636,13 +13718,13 @@ export const FCMTokens = {
 
   toJSON(message: FCMTokens): unknown {
     const obj: any = {};
-    if (message.device_id !== "") {
+    if (message.device_id !== undefined && message.device_id !== "") {
       obj.device_id = message.device_id;
     }
-    if (message.token_id !== "") {
+    if (message.token_id !== undefined && message.token_id !== "") {
       obj.token_id = message.token_id;
     }
-    if (message.platform !== "") {
+    if (message.platform !== undefined && message.platform !== "") {
       obj.platform = message.platform;
     }
     return obj;
@@ -12666,19 +13748,19 @@ function createBaseCheckNameExistedEvent(): CheckNameExistedEvent {
 
 export const CheckNameExistedEvent = {
   encode(message: CheckNameExistedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.condition_id !== "") {
+    if (message.condition_id !== undefined && message.condition_id !== "") {
       writer.uint32(18).string(message.condition_id);
     }
-    if (message.exist !== false) {
+    if (message.exist !== undefined && message.exist !== false) {
       writer.uint32(24).bool(message.exist);
     }
-    if (message.type !== 0) {
+    if (message.type !== undefined && message.type !== 0) {
       writer.uint32(32).int32(message.type);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(42).string(message.clan_id);
     }
     return writer;
@@ -12747,19 +13829,19 @@ export const CheckNameExistedEvent = {
 
   toJSON(message: CheckNameExistedEvent): unknown {
     const obj: any = {};
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       obj.name = message.name;
     }
-    if (message.condition_id !== "") {
+    if (message.condition_id !== undefined && message.condition_id !== "") {
       obj.condition_id = message.condition_id;
     }
-    if (message.exist !== false) {
+    if (message.exist !== undefined && message.exist !== false) {
       obj.exist = message.exist;
     }
-    if (message.type !== 0) {
+    if (message.type !== undefined && message.type !== 0) {
       obj.type = Math.round(message.type);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -12785,19 +13867,19 @@ function createBaseNotificationChannelCategorySetting(): NotificationChannelCate
 
 export const NotificationChannelCategorySetting = {
   encode(message: NotificationChannelCategorySetting, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.channel_category_label !== "") {
+    if (message.channel_category_label !== undefined && message.channel_category_label !== "") {
       writer.uint32(18).string(message.channel_category_label);
     }
-    if (message.notification_setting_type !== 0) {
+    if (message.notification_setting_type !== undefined && message.notification_setting_type !== 0) {
       writer.uint32(24).int32(message.notification_setting_type);
     }
-    if (message.channel_category_title !== "") {
+    if (message.channel_category_title !== undefined && message.channel_category_title !== "") {
       writer.uint32(34).string(message.channel_category_title);
     }
-    if (message.action !== 0) {
+    if (message.action !== undefined && message.action !== 0) {
       writer.uint32(40).int32(message.action);
     }
     return writer;
@@ -12872,19 +13954,19 @@ export const NotificationChannelCategorySetting = {
 
   toJSON(message: NotificationChannelCategorySetting): unknown {
     const obj: any = {};
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       obj.id = message.id;
     }
-    if (message.channel_category_label !== "") {
+    if (message.channel_category_label !== undefined && message.channel_category_label !== "") {
       obj.channel_category_label = message.channel_category_label;
     }
-    if (message.notification_setting_type !== 0) {
+    if (message.notification_setting_type !== undefined && message.notification_setting_type !== 0) {
       obj.notification_setting_type = Math.round(message.notification_setting_type);
     }
-    if (message.channel_category_title !== "") {
+    if (message.channel_category_title !== undefined && message.channel_category_title !== "") {
       obj.channel_category_title = message.channel_category_title;
     }
-    if (message.action !== 0) {
+    if (message.action !== undefined && message.action !== 0) {
       obj.action = Math.round(message.action);
     }
     return obj;
@@ -12925,34 +14007,34 @@ function createBaseEventEmoji(): EventEmoji {
 
 export const EventEmoji = {
   encode(message: EventEmoji, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
-    if (message.short_name !== "") {
+    if (message.short_name !== undefined && message.short_name !== "") {
       writer.uint32(26).string(message.short_name);
     }
-    if (message.source !== "") {
+    if (message.source !== undefined && message.source !== "") {
       writer.uint32(34).string(message.source);
     }
-    if (message.category !== "") {
+    if (message.category !== undefined && message.category !== "") {
       writer.uint32(42).string(message.category);
     }
-    if (message.action !== 0) {
+    if (message.action !== undefined && message.action !== 0) {
       writer.uint32(48).int32(message.action);
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(58).string(message.user_id);
     }
-    if (message.logo !== "") {
+    if (message.logo !== undefined && message.logo !== "") {
       writer.uint32(66).string(message.logo);
     }
-    if (message.clan_name !== "") {
+    if (message.clan_name !== undefined && message.clan_name !== "") {
       writer.uint32(74).string(message.clan_name);
     }
-    if (message.is_for_sale !== false) {
+    if (message.is_for_sale !== undefined && message.is_for_sale !== false) {
       writer.uint32(80).bool(message.is_for_sale);
     }
     return writer;
@@ -13061,34 +14143,34 @@ export const EventEmoji = {
 
   toJSON(message: EventEmoji): unknown {
     const obj: any = {};
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       obj.id = message.id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.short_name !== "") {
+    if (message.short_name !== undefined && message.short_name !== "") {
       obj.short_name = message.short_name;
     }
-    if (message.source !== "") {
+    if (message.source !== undefined && message.source !== "") {
       obj.source = message.source;
     }
-    if (message.category !== "") {
+    if (message.category !== undefined && message.category !== "") {
       obj.category = message.category;
     }
-    if (message.action !== 0) {
+    if (message.action !== undefined && message.action !== 0) {
       obj.action = Math.round(message.action);
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.logo !== "") {
+    if (message.logo !== undefined && message.logo !== "") {
       obj.logo = message.logo;
     }
-    if (message.clan_name !== "") {
+    if (message.clan_name !== undefined && message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.is_for_sale !== false) {
+    if (message.is_for_sale !== undefined && message.is_for_sale !== false) {
       obj.is_for_sale = message.is_for_sale;
     }
     return obj;
@@ -13119,20 +14201,22 @@ function createBasePermissionSetEvent(): PermissionSetEvent {
 
 export const PermissionSetEvent = {
   encode(message: PermissionSetEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.caller !== "") {
+    if (message.caller !== undefined && message.caller !== "") {
       writer.uint32(10).string(message.caller);
     }
-    if (message.role_id !== "") {
+    if (message.role_id !== undefined && message.role_id !== "") {
       writer.uint32(18).string(message.role_id);
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(26).string(message.user_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(34).string(message.channel_id);
     }
-    for (const v of message.permission_updates) {
-      PermissionUpdate.encode(v!, writer.uint32(42).fork()).ldelim();
+    if (message.permission_updates !== undefined && message.permission_updates.length !== 0) {
+      for (const v of message.permission_updates) {
+        PermissionUpdate.encode(v!, writer.uint32(42).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -13177,7 +14261,7 @@ export const PermissionSetEvent = {
             break;
           }
 
-          message.permission_updates.push(PermissionUpdate.decode(reader, reader.uint32()));
+          message.permission_updates!.push(PermissionUpdate.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -13202,16 +14286,16 @@ export const PermissionSetEvent = {
 
   toJSON(message: PermissionSetEvent): unknown {
     const obj: any = {};
-    if (message.caller !== "") {
+    if (message.caller !== undefined && message.caller !== "") {
       obj.caller = message.caller;
     }
-    if (message.role_id !== "") {
+    if (message.role_id !== undefined && message.role_id !== "") {
       obj.role_id = message.role_id;
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     if (message.permission_updates?.length) {
@@ -13240,20 +14324,26 @@ function createBasePermissionChangedEvent(): PermissionChangedEvent {
 
 export const PermissionChangedEvent = {
   encode(message: PermissionChangedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    for (const v of message.add_permissions) {
-      PermissionUpdate.encode(v!, writer.uint32(26).fork()).ldelim();
+    if (message.add_permissions !== undefined && message.add_permissions.length !== 0) {
+      for (const v of message.add_permissions) {
+        PermissionUpdate.encode(v!, writer.uint32(26).fork()).ldelim();
+      }
     }
-    for (const v of message.remove_permissions) {
-      PermissionUpdate.encode(v!, writer.uint32(34).fork()).ldelim();
+    if (message.remove_permissions !== undefined && message.remove_permissions.length !== 0) {
+      for (const v of message.remove_permissions) {
+        PermissionUpdate.encode(v!, writer.uint32(34).fork()).ldelim();
+      }
     }
-    for (const v of message.default_permissions) {
-      PermissionUpdate.encode(v!, writer.uint32(42).fork()).ldelim();
+    if (message.default_permissions !== undefined && message.default_permissions.length !== 0) {
+      for (const v of message.default_permissions) {
+        PermissionUpdate.encode(v!, writer.uint32(42).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -13284,21 +14374,21 @@ export const PermissionChangedEvent = {
             break;
           }
 
-          message.add_permissions.push(PermissionUpdate.decode(reader, reader.uint32()));
+          message.add_permissions!.push(PermissionUpdate.decode(reader, reader.uint32()));
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.remove_permissions.push(PermissionUpdate.decode(reader, reader.uint32()));
+          message.remove_permissions!.push(PermissionUpdate.decode(reader, reader.uint32()));
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.default_permissions.push(PermissionUpdate.decode(reader, reader.uint32()));
+          message.default_permissions!.push(PermissionUpdate.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -13327,10 +14417,10 @@ export const PermissionChangedEvent = {
 
   toJSON(message: PermissionChangedEvent): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     if (message.add_permissions?.length) {
@@ -13365,22 +14455,22 @@ function createBaseMessageButtonClicked(): MessageButtonClicked {
 
 export const MessageButtonClicked = {
   encode(message: MessageButtonClicked, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.message_id !== "") {
+    if (message.message_id !== undefined && message.message_id !== "") {
       writer.uint32(10).string(message.message_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.button_id !== "") {
+    if (message.button_id !== undefined && message.button_id !== "") {
       writer.uint32(26).string(message.button_id);
     }
-    if (message.sender_id !== "") {
+    if (message.sender_id !== undefined && message.sender_id !== "") {
       writer.uint32(34).string(message.sender_id);
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(42).string(message.user_id);
     }
-    if (message.extra_data !== "") {
+    if (message.extra_data !== undefined && message.extra_data !== "") {
       writer.uint32(50).string(message.extra_data);
     }
     return writer;
@@ -13457,22 +14547,22 @@ export const MessageButtonClicked = {
 
   toJSON(message: MessageButtonClicked): unknown {
     const obj: any = {};
-    if (message.message_id !== "") {
+    if (message.message_id !== undefined && message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.button_id !== "") {
+    if (message.button_id !== undefined && message.button_id !== "") {
       obj.button_id = message.button_id;
     }
-    if (message.sender_id !== "") {
+    if (message.sender_id !== undefined && message.sender_id !== "") {
       obj.sender_id = message.sender_id;
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.extra_data !== "") {
+    if (message.extra_data !== undefined && message.extra_data !== "") {
       obj.extra_data = message.extra_data;
     }
     return obj;
@@ -13499,13 +14589,13 @@ function createBaseUnmuteEvent(): UnmuteEvent {
 
 export const UnmuteEvent = {
   encode(message: UnmuteEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.category_id !== "") {
+    if (message.category_id !== undefined && message.category_id !== "") {
       writer.uint32(18).string(message.category_id);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
     return writer;
@@ -13558,13 +14648,13 @@ export const UnmuteEvent = {
 
   toJSON(message: UnmuteEvent): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.category_id !== "") {
+    if (message.category_id !== undefined && message.category_id !== "") {
       obj.category_id = message.category_id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -13588,8 +14678,10 @@ function createBaseListActivity(): ListActivity {
 
 export const ListActivity = {
   encode(message: ListActivity, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.acts) {
-      UserActivity.encode(v!, writer.uint32(10).fork()).ldelim();
+    if (message.acts !== undefined && message.acts.length !== 0) {
+      for (const v of message.acts) {
+        UserActivity.encode(v!, writer.uint32(10).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -13606,7 +14698,7 @@ export const ListActivity = {
             break;
           }
 
-          message.acts.push(UserActivity.decode(reader, reader.uint32()));
+          message.acts!.push(UserActivity.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -13647,23 +14739,25 @@ function createBaseDropdownBoxSelected(): DropdownBoxSelected {
 
 export const DropdownBoxSelected = {
   encode(message: DropdownBoxSelected, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.message_id !== "") {
+    if (message.message_id !== undefined && message.message_id !== "") {
       writer.uint32(10).string(message.message_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.selectbox_id !== "") {
+    if (message.selectbox_id !== undefined && message.selectbox_id !== "") {
       writer.uint32(26).string(message.selectbox_id);
     }
-    if (message.sender_id !== "") {
+    if (message.sender_id !== undefined && message.sender_id !== "") {
       writer.uint32(34).string(message.sender_id);
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(42).string(message.user_id);
     }
-    for (const v of message.values) {
-      writer.uint32(50).string(v!);
+    if (message.values !== undefined && message.values.length !== 0) {
+      for (const v of message.values) {
+        writer.uint32(50).string(v!);
+      }
     }
     return writer;
   },
@@ -13715,7 +14809,7 @@ export const DropdownBoxSelected = {
             break;
           }
 
-          message.values.push(reader.string());
+          message.values!.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -13739,19 +14833,19 @@ export const DropdownBoxSelected = {
 
   toJSON(message: DropdownBoxSelected): unknown {
     const obj: any = {};
-    if (message.message_id !== "") {
+    if (message.message_id !== undefined && message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.selectbox_id !== "") {
+    if (message.selectbox_id !== undefined && message.selectbox_id !== "") {
       obj.selectbox_id = message.selectbox_id;
     }
-    if (message.sender_id !== "") {
+    if (message.sender_id !== undefined && message.sender_id !== "") {
       obj.sender_id = message.sender_id;
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
     if (message.values?.length) {
@@ -13789,19 +14883,19 @@ function createBaseSdTopicEvent(): SdTopicEvent {
 
 export const SdTopicEvent = {
   encode(message: SdTopicEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
     }
-    if (message.message_id !== "") {
+    if (message.message_id !== undefined && message.message_id !== "") {
       writer.uint32(34).string(message.message_id);
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(42).string(message.user_id);
     }
     if (message.last_sent_message !== undefined) {
@@ -13894,19 +14988,19 @@ export const SdTopicEvent = {
 
   toJSON(message: SdTopicEvent): unknown {
     const obj: any = {};
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       obj.id = message.id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.message_id !== "") {
+    if (message.message_id !== undefined && message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
     if (message.last_sent_message !== undefined) {
@@ -13944,19 +15038,19 @@ function createBaseChannelAppEvent(): ChannelAppEvent {
 
 export const ChannelAppEvent = {
   encode(message: ChannelAppEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
-    if (message.username !== "") {
+    if (message.username !== undefined && message.username !== "") {
       writer.uint32(18).string(message.username);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(34).string(message.channel_id);
     }
-    if (message.action !== 0) {
+    if (message.action !== undefined && message.action !== 0) {
       writer.uint32(40).int32(message.action);
     }
     return writer;
@@ -14025,19 +15119,19 @@ export const ChannelAppEvent = {
 
   toJSON(message: ChannelAppEvent): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.username !== "") {
+    if (message.username !== undefined && message.username !== "") {
       obj.username = message.username;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.action !== 0) {
+    if (message.action !== undefined && message.action !== 0) {
       obj.action = Math.round(message.action);
     }
     return obj;
@@ -14063,10 +15157,10 @@ function createBaseUserStatusEvent(): UserStatusEvent {
 
 export const UserStatusEvent = {
   encode(message: UserStatusEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
-    if (message.custom_status !== "") {
+    if (message.custom_status !== undefined && message.custom_status !== "") {
       writer.uint32(18).string(message.custom_status);
     }
     return writer;
@@ -14111,10 +15205,10 @@ export const UserStatusEvent = {
 
   toJSON(message: UserStatusEvent): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.custom_status !== "") {
+    if (message.custom_status !== undefined && message.custom_status !== "") {
       obj.custom_status = message.custom_status;
     }
     return obj;
@@ -14137,13 +15231,13 @@ function createBaseJoinChannelAppData(): JoinChannelAppData {
 
 export const JoinChannelAppData = {
   encode(message: JoinChannelAppData, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
-    if (message.username !== "") {
+    if (message.username !== undefined && message.username !== "") {
       writer.uint32(18).string(message.username);
     }
-    if (message.hash !== "") {
+    if (message.hash !== undefined && message.hash !== "") {
       writer.uint32(26).string(message.hash);
     }
     return writer;
@@ -14196,13 +15290,13 @@ export const JoinChannelAppData = {
 
   toJSON(message: JoinChannelAppData): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.username !== "") {
+    if (message.username !== undefined && message.username !== "") {
       obj.username = message.username;
     }
-    if (message.hash !== "") {
+    if (message.hash !== undefined && message.hash !== "") {
       obj.hash = message.hash;
     }
     return obj;
@@ -14226,16 +15320,16 @@ function createBaseUnpinMessageEvent(): UnpinMessageEvent {
 
 export const UnpinMessageEvent = {
   encode(message: UnpinMessageEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.message_id !== "") {
+    if (message.message_id !== undefined && message.message_id !== "") {
       writer.uint32(18).string(message.message_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
     }
     return writer;
@@ -14296,16 +15390,16 @@ export const UnpinMessageEvent = {
 
   toJSON(message: UnpinMessageEvent): unknown {
     const obj: any = {};
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       obj.id = message.id;
     }
-    if (message.message_id !== "") {
+    if (message.message_id !== undefined && message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -14330,19 +15424,19 @@ function createBaseHandleParticipantMeetStateEvent(): HandleParticipantMeetState
 
 export const HandleParticipantMeetStateEvent = {
   encode(message: HandleParticipantMeetStateEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.display_name !== "") {
+    if (message.display_name !== undefined && message.display_name !== "") {
       writer.uint32(26).string(message.display_name);
     }
-    if (message.state !== 0) {
+    if (message.state !== undefined && message.state !== 0) {
       writer.uint32(32).int32(message.state);
     }
-    if (message.room_name !== "") {
+    if (message.room_name !== undefined && message.room_name !== "") {
       writer.uint32(42).string(message.room_name);
     }
     return writer;
@@ -14411,19 +15505,19 @@ export const HandleParticipantMeetStateEvent = {
 
   toJSON(message: HandleParticipantMeetStateEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.display_name !== "") {
+    if (message.display_name !== undefined && message.display_name !== "") {
       obj.display_name = message.display_name;
     }
-    if (message.state !== 0) {
+    if (message.state !== undefined && message.state !== 0) {
       obj.state = Math.round(message.state);
     }
-    if (message.room_name !== "") {
+    if (message.room_name !== undefined && message.room_name !== "") {
       obj.room_name = message.room_name;
     }
     return obj;
@@ -14451,7 +15545,7 @@ function createBaseDeleteAccountEvent(): DeleteAccountEvent {
 
 export const DeleteAccountEvent = {
   encode(message: DeleteAccountEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
     return writer;
@@ -14486,7 +15580,7 @@ export const DeleteAccountEvent = {
 
   toJSON(message: DeleteAccountEvent): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== undefined && message.user_id !== "") {
       obj.user_id = message.user_id;
     }
     return obj;
@@ -14575,7 +15669,7 @@ function createBaseListDataSocket(): ListDataSocket {
 
 export const ListDataSocket = {
   encode(message: ListDataSocket, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.api_name !== "") {
+    if (message.api_name !== undefined && message.api_name !== "") {
       writer.uint32(10).string(message.api_name);
     }
     if (message.list_clan_req !== undefined) {
@@ -15420,7 +16514,7 @@ export const ListDataSocket = {
 
   toJSON(message: ListDataSocket): unknown {
     const obj: any = {};
-    if (message.api_name !== "") {
+    if (message.api_name !== undefined && message.api_name !== "") {
       obj.api_name = message.api_name;
     }
     if (message.list_clan_req !== undefined) {
@@ -15849,19 +16943,19 @@ function createBaseMeetParticipantEvent(): MeetParticipantEvent {
 
 export const MeetParticipantEvent = {
   encode(message: MeetParticipantEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.username !== "") {
+    if (message.username !== undefined && message.username !== "") {
       writer.uint32(10).string(message.username);
     }
-    if (message.room_name !== "") {
+    if (message.room_name !== undefined && message.room_name !== "") {
       writer.uint32(18).string(message.room_name);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
     }
-    if (message.action !== 0) {
+    if (message.action !== undefined && message.action !== 0) {
       writer.uint32(40).int32(message.action);
     }
     return writer;
@@ -15930,19 +17024,19 @@ export const MeetParticipantEvent = {
 
   toJSON(message: MeetParticipantEvent): unknown {
     const obj: any = {};
-    if (message.username !== "") {
+    if (message.username !== undefined && message.username !== "") {
       obj.username = message.username;
     }
-    if (message.room_name !== "") {
+    if (message.room_name !== undefined && message.room_name !== "") {
       obj.room_name = message.room_name;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.action !== 0) {
+    if (message.action !== undefined && message.action !== 0) {
       obj.action = Math.round(message.action);
     }
     return obj;
@@ -15968,13 +17062,13 @@ function createBaseTransferOwnershipEvent(): TransferOwnershipEvent {
 
 export const TransferOwnershipEvent = {
   encode(message: TransferOwnershipEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.prev_owner !== "") {
+    if (message.prev_owner !== undefined && message.prev_owner !== "") {
       writer.uint32(18).string(message.prev_owner);
     }
-    if (message.curr_owner !== "") {
+    if (message.curr_owner !== undefined && message.curr_owner !== "") {
       writer.uint32(26).string(message.curr_owner);
     }
     return writer;
@@ -16027,13 +17121,13 @@ export const TransferOwnershipEvent = {
 
   toJSON(message: TransferOwnershipEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.prev_owner !== "") {
+    if (message.prev_owner !== undefined && message.prev_owner !== "") {
       obj.prev_owner = message.prev_owner;
     }
-    if (message.curr_owner !== "") {
+    if (message.curr_owner !== undefined && message.curr_owner !== "") {
       obj.curr_owner = message.curr_owner;
     }
     return obj;
@@ -16057,10 +17151,10 @@ function createBaseActiveArchivedThread(): ActiveArchivedThread {
 
 export const ActiveArchivedThread = {
   encode(message: ActiveArchivedThread, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
     return writer;
@@ -16105,10 +17199,10 @@ export const ActiveArchivedThread = {
 
   toJSON(message: ActiveArchivedThread): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== undefined && message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -16131,10 +17225,10 @@ function createBaseAllowAnonymousEvent(): AllowAnonymousEvent {
 
 export const AllowAnonymousEvent = {
   encode(message: AllowAnonymousEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.allow !== false) {
+    if (message.allow !== undefined && message.allow !== false) {
       writer.uint32(16).bool(message.allow);
     }
     return writer;
@@ -16179,10 +17273,10 @@ export const AllowAnonymousEvent = {
 
   toJSON(message: AllowAnonymousEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== undefined && message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.allow !== false) {
+    if (message.allow !== undefined && message.allow !== false) {
       obj.allow = message.allow;
     }
     return obj;
@@ -16208,55 +17302,69 @@ function createBaseFcmDataPayload(): FcmDataPayload {
     user_role_ids: [],
     user_sent_ids: [],
     priority: 0,
-    info_message: undefined,
+    message: undefined,
     is_e2ee: false,
     is_dm: false,
     mention_here: false,
     mentions: [],
     references: [],
+    attachments: [],
   };
 }
 
 export const FcmDataPayload = {
   encode(message: FcmDataPayload, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.command_type !== 0) {
+    if (message.command_type !== undefined && message.command_type !== 0) {
       writer.uint32(8).int32(message.command_type);
     }
-    if (message.receiver_id !== "") {
+    if (message.receiver_id !== undefined && message.receiver_id !== "") {
       writer.uint32(18).string(message.receiver_id);
     }
-    if (message.title !== "") {
+    if (message.title !== undefined && message.title !== "") {
       writer.uint32(26).string(message.title);
     }
-    if (message.body !== "") {
+    if (message.body !== undefined && message.body !== "") {
       writer.uint32(34).string(message.body);
     }
-    for (const v of message.user_role_ids) {
-      writer.uint32(42).string(v!);
+    if (message.user_role_ids !== undefined && message.user_role_ids.length !== 0) {
+      for (const v of message.user_role_ids) {
+        writer.uint32(42).string(v!);
+      }
     }
-    for (const v of message.user_sent_ids) {
-      writer.uint32(50).string(v!);
+    if (message.user_sent_ids !== undefined && message.user_sent_ids.length !== 0) {
+      for (const v of message.user_sent_ids) {
+        writer.uint32(50).string(v!);
+      }
     }
-    if (message.priority !== 0) {
+    if (message.priority !== undefined && message.priority !== 0) {
       writer.uint32(56).int32(message.priority);
     }
-    if (message.info_message !== undefined) {
-      ChannelMessage.encode(message.info_message, writer.uint32(66).fork()).ldelim();
+    if (message.message !== undefined) {
+      ChannelMessage.encode(message.message, writer.uint32(66).fork()).ldelim();
     }
-    if (message.is_e2ee !== false) {
+    if (message.is_e2ee !== undefined && message.is_e2ee !== false) {
       writer.uint32(72).bool(message.is_e2ee);
     }
-    if (message.is_dm !== false) {
+    if (message.is_dm !== undefined && message.is_dm !== false) {
       writer.uint32(80).bool(message.is_dm);
     }
-    if (message.mention_here !== false) {
+    if (message.mention_here !== undefined && message.mention_here !== false) {
       writer.uint32(88).bool(message.mention_here);
     }
-    for (const v of message.mentions) {
-      MessageMention.encode(v!, writer.uint32(98).fork()).ldelim();
+    if (message.mentions !== undefined && message.mentions.length !== 0) {
+      for (const v of message.mentions) {
+        MessageMention.encode(v!, writer.uint32(98).fork()).ldelim();
+      }
     }
-    for (const v of message.references) {
-      MessageRef.encode(v!, writer.uint32(106).fork()).ldelim();
+    if (message.references !== undefined && message.references.length !== 0) {
+      for (const v of message.references) {
+        MessageRef.encode(v!, writer.uint32(106).fork()).ldelim();
+      }
+    }
+    if (message.attachments !== undefined && message.attachments.length !== 0) {
+      for (const v of message.attachments) {
+        MessageAttachment.encode(v!, writer.uint32(114).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -16301,14 +17409,14 @@ export const FcmDataPayload = {
             break;
           }
 
-          message.user_role_ids.push(reader.string());
+          message.user_role_ids!.push(reader.string());
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.user_sent_ids.push(reader.string());
+          message.user_sent_ids!.push(reader.string());
           continue;
         case 7:
           if (tag !== 56) {
@@ -16322,7 +17430,7 @@ export const FcmDataPayload = {
             break;
           }
 
-          message.info_message = ChannelMessage.decode(reader, reader.uint32());
+          message.message = ChannelMessage.decode(reader, reader.uint32());
           continue;
         case 9:
           if (tag !== 72) {
@@ -16350,14 +17458,21 @@ export const FcmDataPayload = {
             break;
           }
 
-          message.mentions.push(MessageMention.decode(reader, reader.uint32()));
+          message.mentions!.push(MessageMention.decode(reader, reader.uint32()));
           continue;
         case 13:
           if (tag !== 106) {
             break;
           }
 
-          message.references.push(MessageRef.decode(reader, reader.uint32()));
+          message.references!.push(MessageRef.decode(reader, reader.uint32()));
+          continue;
+        case 14:
+          if (tag !== 114) {
+            break;
+          }
+
+          message.attachments!.push(MessageAttachment.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -16381,7 +17496,7 @@ export const FcmDataPayload = {
         ? object.user_sent_ids.map((e: any) => globalThis.String(e))
         : [],
       priority: isSet(object.priority) ? globalThis.Number(object.priority) : 0,
-      info_message: isSet(object.info_message) ? ChannelMessage.fromJSON(object.info_message) : undefined,
+      message: isSet(object.message) ? ChannelMessage.fromJSON(object.message) : undefined,
       is_e2ee: isSet(object.is_e2ee) ? globalThis.Boolean(object.is_e2ee) : false,
       is_dm: isSet(object.is_dm) ? globalThis.Boolean(object.is_dm) : false,
       mention_here: isSet(object.mention_here) ? globalThis.Boolean(object.mention_here) : false,
@@ -16391,21 +17506,24 @@ export const FcmDataPayload = {
       references: globalThis.Array.isArray(object?.references)
         ? object.references.map((e: any) => MessageRef.fromJSON(e))
         : [],
+      attachments: globalThis.Array.isArray(object?.attachments)
+        ? object.attachments.map((e: any) => MessageAttachment.fromJSON(e))
+        : [],
     };
   },
 
   toJSON(message: FcmDataPayload): unknown {
     const obj: any = {};
-    if (message.command_type !== 0) {
+    if (message.command_type !== undefined && message.command_type !== 0) {
       obj.command_type = Math.round(message.command_type);
     }
-    if (message.receiver_id !== "") {
+    if (message.receiver_id !== undefined && message.receiver_id !== "") {
       obj.receiver_id = message.receiver_id;
     }
-    if (message.title !== "") {
+    if (message.title !== undefined && message.title !== "") {
       obj.title = message.title;
     }
-    if (message.body !== "") {
+    if (message.body !== undefined && message.body !== "") {
       obj.body = message.body;
     }
     if (message.user_role_ids?.length) {
@@ -16414,19 +17532,19 @@ export const FcmDataPayload = {
     if (message.user_sent_ids?.length) {
       obj.user_sent_ids = message.user_sent_ids;
     }
-    if (message.priority !== 0) {
+    if (message.priority !== undefined && message.priority !== 0) {
       obj.priority = Math.round(message.priority);
     }
-    if (message.info_message !== undefined) {
-      obj.info_message = ChannelMessage.toJSON(message.info_message);
+    if (message.message !== undefined) {
+      obj.message = ChannelMessage.toJSON(message.message);
     }
-    if (message.is_e2ee !== false) {
+    if (message.is_e2ee !== undefined && message.is_e2ee !== false) {
       obj.is_e2ee = message.is_e2ee;
     }
-    if (message.is_dm !== false) {
+    if (message.is_dm !== undefined && message.is_dm !== false) {
       obj.is_dm = message.is_dm;
     }
-    if (message.mention_here !== false) {
+    if (message.mention_here !== undefined && message.mention_here !== false) {
       obj.mention_here = message.mention_here;
     }
     if (message.mentions?.length) {
@@ -16434,6 +17552,9 @@ export const FcmDataPayload = {
     }
     if (message.references?.length) {
       obj.references = message.references.map((e) => MessageRef.toJSON(e));
+    }
+    if (message.attachments?.length) {
+      obj.attachments = message.attachments.map((e) => MessageAttachment.toJSON(e));
     }
     return obj;
   },
@@ -16450,14 +17571,15 @@ export const FcmDataPayload = {
     message.user_role_ids = object.user_role_ids?.map((e) => e) || [];
     message.user_sent_ids = object.user_sent_ids?.map((e) => e) || [];
     message.priority = object.priority ?? 0;
-    message.info_message = (object.info_message !== undefined && object.info_message !== null)
-      ? ChannelMessage.fromPartial(object.info_message)
+    message.message = (object.message !== undefined && object.message !== null)
+      ? ChannelMessage.fromPartial(object.message)
       : undefined;
     message.is_e2ee = object.is_e2ee ?? false;
     message.is_dm = object.is_dm ?? false;
     message.mention_here = object.mention_here ?? false;
     message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
     message.references = object.references?.map((e) => MessageRef.fromPartial(e)) || [];
+    message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
     return message;
   },
 };
@@ -16467,6 +17589,7 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 export type DeepPartial<T> = T extends Builtin ? T
   : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
