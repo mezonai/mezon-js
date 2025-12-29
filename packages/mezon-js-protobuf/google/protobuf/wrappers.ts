@@ -17,7 +17,7 @@ export const protobufPackage = "google.protobuf";
  */
 export interface DoubleValue {
   /** The double value. */
-  value?: number | undefined;
+  value: number;
 }
 
 /**
@@ -27,7 +27,7 @@ export interface DoubleValue {
  */
 export interface FloatValue {
   /** The float value. */
-  value?: number | undefined;
+  value: number;
 }
 
 /**
@@ -37,7 +37,7 @@ export interface FloatValue {
  */
 export interface Int64Value {
   /** The int64 value. */
-  value?: number | undefined;
+  value: number;
 }
 
 /**
@@ -47,7 +47,7 @@ export interface Int64Value {
  */
 export interface UInt64Value {
   /** The uint64 value. */
-  value?: number | undefined;
+  value: number;
 }
 
 /**
@@ -57,7 +57,7 @@ export interface UInt64Value {
  */
 export interface Int32Value {
   /** The int32 value. */
-  value?: number | undefined;
+  value: number;
 }
 
 /**
@@ -67,7 +67,7 @@ export interface Int32Value {
  */
 export interface UInt32Value {
   /** The uint32 value. */
-  value?: number | undefined;
+  value: number;
 }
 
 /**
@@ -77,7 +77,7 @@ export interface UInt32Value {
  */
 export interface BoolValue {
   /** The bool value. */
-  value?: boolean | undefined;
+  value: boolean;
 }
 
 /**
@@ -87,7 +87,7 @@ export interface BoolValue {
  */
 export interface StringValue {
   /** The string value. */
-  value?: string | undefined;
+  value: string;
 }
 
 /**
@@ -97,7 +97,7 @@ export interface StringValue {
  */
 export interface BytesValue {
   /** The bytes value. */
-  value?: Uint8Array | undefined;
+  value: Uint8Array;
 }
 
 function createBaseDoubleValue(): DoubleValue {
@@ -106,7 +106,7 @@ function createBaseDoubleValue(): DoubleValue {
 
 export const DoubleValue = {
   encode(message: DoubleValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.value !== undefined && message.value !== 0) {
+    if (message.value !== 0) {
       writer.uint32(9).double(message.value);
     }
     return writer;
@@ -141,7 +141,7 @@ export const DoubleValue = {
 
   toJSON(message: DoubleValue): unknown {
     const obj: any = {};
-    if (message.value !== undefined && message.value !== 0) {
+    if (message.value !== 0) {
       obj.value = message.value;
     }
     return obj;
@@ -163,7 +163,7 @@ function createBaseFloatValue(): FloatValue {
 
 export const FloatValue = {
   encode(message: FloatValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.value !== undefined && message.value !== 0) {
+    if (message.value !== 0) {
       writer.uint32(13).float(message.value);
     }
     return writer;
@@ -198,7 +198,7 @@ export const FloatValue = {
 
   toJSON(message: FloatValue): unknown {
     const obj: any = {};
-    if (message.value !== undefined && message.value !== 0) {
+    if (message.value !== 0) {
       obj.value = message.value;
     }
     return obj;
@@ -220,7 +220,7 @@ function createBaseInt64Value(): Int64Value {
 
 export const Int64Value = {
   encode(message: Int64Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.value !== undefined && message.value !== 0) {
+    if (message.value !== 0) {
       writer.uint32(8).int64(message.value);
     }
     return writer;
@@ -255,7 +255,7 @@ export const Int64Value = {
 
   toJSON(message: Int64Value): unknown {
     const obj: any = {};
-    if (message.value !== undefined && message.value !== 0) {
+    if (message.value !== 0) {
       obj.value = Math.round(message.value);
     }
     return obj;
@@ -277,7 +277,7 @@ function createBaseUInt64Value(): UInt64Value {
 
 export const UInt64Value = {
   encode(message: UInt64Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.value !== undefined && message.value !== 0) {
+    if (message.value !== 0) {
       writer.uint32(8).uint64(message.value);
     }
     return writer;
@@ -312,7 +312,7 @@ export const UInt64Value = {
 
   toJSON(message: UInt64Value): unknown {
     const obj: any = {};
-    if (message.value !== undefined && message.value !== 0) {
+    if (message.value !== 0) {
       obj.value = Math.round(message.value);
     }
     return obj;
@@ -334,7 +334,7 @@ function createBaseInt32Value(): Int32Value {
 
 export const Int32Value = {
   encode(message: Int32Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.value !== undefined && message.value !== 0) {
+    if (message.value !== 0) {
       writer.uint32(8).int32(message.value);
     }
     return writer;
@@ -369,7 +369,7 @@ export const Int32Value = {
 
   toJSON(message: Int32Value): unknown {
     const obj: any = {};
-    if (message.value !== undefined && message.value !== 0) {
+    if (message.value !== 0) {
       obj.value = Math.round(message.value);
     }
     return obj;
@@ -391,7 +391,7 @@ function createBaseUInt32Value(): UInt32Value {
 
 export const UInt32Value = {
   encode(message: UInt32Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.value !== undefined && message.value !== 0) {
+    if (message.value !== 0) {
       writer.uint32(8).uint32(message.value);
     }
     return writer;
@@ -426,7 +426,7 @@ export const UInt32Value = {
 
   toJSON(message: UInt32Value): unknown {
     const obj: any = {};
-    if (message.value !== undefined && message.value !== 0) {
+    if (message.value !== 0) {
       obj.value = Math.round(message.value);
     }
     return obj;
@@ -448,7 +448,7 @@ function createBaseBoolValue(): BoolValue {
 
 export const BoolValue = {
   encode(message: BoolValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.value !== undefined && message.value !== false) {
+    if (message.value !== false) {
       writer.uint32(8).bool(message.value);
     }
     return writer;
@@ -483,7 +483,7 @@ export const BoolValue = {
 
   toJSON(message: BoolValue): unknown {
     const obj: any = {};
-    if (message.value !== undefined && message.value !== false) {
+    if (message.value !== false) {
       obj.value = message.value;
     }
     return obj;
@@ -505,7 +505,7 @@ function createBaseStringValue(): StringValue {
 
 export const StringValue = {
   encode(message: StringValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.value !== undefined && message.value !== "") {
+    if (message.value !== "") {
       writer.uint32(10).string(message.value);
     }
     return writer;
@@ -540,7 +540,7 @@ export const StringValue = {
 
   toJSON(message: StringValue): unknown {
     const obj: any = {};
-    if (message.value !== undefined && message.value !== "") {
+    if (message.value !== "") {
       obj.value = message.value;
     }
     return obj;
@@ -562,7 +562,7 @@ function createBaseBytesValue(): BytesValue {
 
 export const BytesValue = {
   encode(message: BytesValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.value !== undefined && message.value.length !== 0) {
+    if (message.value.length !== 0) {
       writer.uint32(10).bytes(message.value);
     }
     return writer;
@@ -597,7 +597,7 @@ export const BytesValue = {
 
   toJSON(message: BytesValue): unknown {
     const obj: any = {};
-    if (message.value !== undefined && message.value.length !== 0) {
+    if (message.value.length !== 0) {
       obj.value = base64FromBytes(message.value);
     }
     return obj;
@@ -614,20 +614,28 @@ export const BytesValue = {
 };
 
 function bytesFromBase64(b64: string): Uint8Array {
-  const bin = globalThis.atob(b64);
-  const arr = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; ++i) {
-    arr[i] = bin.charCodeAt(i);
+  if ((globalThis as any).Buffer) {
+    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
+  } else {
+    const bin = globalThis.atob(b64);
+    const arr = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; ++i) {
+      arr[i] = bin.charCodeAt(i);
+    }
+    return arr;
   }
-  return arr;
 }
 
 function base64FromBytes(arr: Uint8Array): string {
-  const bin: string[] = [];
-  arr.forEach((byte) => {
-    bin.push(globalThis.String.fromCharCode(byte));
-  });
-  return globalThis.btoa(bin.join(""));
+  if ((globalThis as any).Buffer) {
+    return globalThis.Buffer.from(arr).toString("base64");
+  } else {
+    const bin: string[] = [];
+    arr.forEach((byte) => {
+      bin.push(globalThis.String.fromCharCode(byte));
+    });
+    return globalThis.btoa(bin.join(""));
+  }
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
@@ -635,7 +643,6 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 export type DeepPartial<T> = T extends Builtin ? T
   : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

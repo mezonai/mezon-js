@@ -168,49 +168,37 @@ export function operatorToJSON(object: Operator): string {
 /** A user with additional account details. Always the current user. */
 export interface Account {
   /** The user object. */
-  user?:
+  user:
     | User
     | undefined;
   /** The email address of the user. */
-  email?:
-    | string
-    | undefined;
+  email: string;
   /** The qr code in the user's account. */
-  qr_code?:
-    | string
-    | undefined;
+  qr_code: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user's email was verified. */
-  verify_time?:
+  verify_time:
     | Date
     | undefined;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user's account was disabled/banned. */
-  disable_time?:
+  disable_time:
     | Date
     | undefined;
   /** Logo url */
-  logo?:
-    | string
-    | undefined;
+  logo: string;
   /** Splash screen url */
-  splash_screen?:
-    | string
-    | undefined;
+  splash_screen: string;
   /** E2ee encrypt private key */
-  encrypt_private_key?:
-    | string
-    | undefined;
+  encrypt_private_key: string;
   /** password is setted */
-  password_setted?: boolean | undefined;
+  password_setted: boolean;
 }
 
 /** Obtain a new authentication token using a refresh token. */
 export interface AccountRefresh {
   /** Refresh token. */
-  token?:
-    | string
-    | undefined;
+  token: string;
   /** Extra information that will be bundled in the session token. */
-  vars?: { [key: string]: string } | undefined;
+  vars: { [key: string]: string };
 }
 
 export interface AccountRefresh_VarsEntry {
@@ -221,45 +209,35 @@ export interface AccountRefresh_VarsEntry {
 /** Add one or more friends to the current user. */
 export interface AddFriendsRequest {
   /** The account id of a user. */
-  ids?:
-    | string[]
-    | undefined;
+  ids: string[];
   /** The account username of a user. */
-  usernames?: string[] | undefined;
+  usernames: string[];
 }
 
 /** Add one or more friends to the current user. */
 export interface AddFriendsResponse {
   /** The account id of a user. */
-  ids?:
-    | string[]
-    | undefined;
+  ids: string[];
   /** The account username of a user. */
-  usernames?: string[] | undefined;
+  usernames: string[];
 }
 
 /** Add users to a group. */
 export interface AddGroupUsersRequest {
   /** The group to add users to. */
-  group_id?:
-    | string
-    | undefined;
+  group_id: string;
   /** The users to add. */
-  user_ids?: string[] | undefined;
+  user_ids: string[];
 }
 
 /** Authenticate against the server with a refresh token. */
 export interface SessionRefreshRequest {
   /** Refresh token. */
-  token?:
-    | string
-    | undefined;
+  token: string;
   /** Extra information that will be bundled in the session token. */
-  vars?:
-    | { [key: string]: string }
-    | undefined;
+  vars: { [key: string]: string };
   /** Whether to enable "Remember Me" for extended session duration. */
-  is_remember?: boolean | undefined;
+  is_remember: boolean | undefined;
 }
 
 export interface SessionRefreshRequest_VarsEntry {
@@ -270,478 +248,304 @@ export interface SessionRefreshRequest_VarsEntry {
 /** Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user. */
 export interface SessionLogoutRequest {
   /** Session token to log out. */
-  token?:
-    | string
-    | undefined;
+  token: string;
   /** Refresh token to invalidate. */
-  refresh_token?:
-    | string
-    | undefined;
+  refresh_token: string;
   /** Device Id */
-  device_id?:
-    | string
-    | undefined;
+  device_id: string;
   /** FCM token from firebase */
-  fcm_token?:
-    | string
-    | undefined;
+  fcm_token: string;
   /** platform */
-  platform?: string | undefined;
+  platform: string;
 }
 
 export interface IsBannedResponse {
-  is_banned?: boolean | undefined;
-  expired_ban_time?: number | undefined;
+  is_banned: boolean;
+  expired_ban_time: number;
 }
 
 export interface IsBannedRequest {
-  channel_id?: string | undefined;
+  channel_id: string;
 }
 
 /** Ban users from a group. */
 export interface BanGroupUsersRequest {
   /** The group to ban users from. */
-  group_id?:
-    | string
-    | undefined;
+  group_id: string;
   /** The users to ban. */
-  user_ids?: string[] | undefined;
+  user_ids: string[];
 }
 
 /** Block one or more friends for the current user. */
 export interface BlockFriendsRequest {
   /** The account id of a user. */
-  ids?:
-    | string[]
-    | undefined;
+  ids: string[];
   /** The account username of a user. */
-  usernames?: string[] | undefined;
+  usernames: string[];
 }
 
 /** A message sent on a channel. */
 export interface ChannelMessage {
   /** The clan this message belong to. */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** The channel this message belongs to. */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** The unique ID of this message. */
-  message_id?:
-    | string
-    | undefined;
+  message_id: string;
   /** The code representing a message type or category. */
-  code?:
+  code:
     | number
     | undefined;
   /** Message sender, usually a user ID. */
-  sender_id?:
-    | string
-    | undefined;
+  sender_id: string;
   /** The username of the message sender, if any. */
-  username?:
-    | string
-    | undefined;
+  username: string;
   /** The avatar of user who send message */
-  avatar?:
-    | string
-    | undefined;
+  avatar: string;
   /** The content payload. */
-  content?:
-    | string
-    | undefined;
+  content: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
-  create_time?:
+  create_time:
     | Date
     | undefined;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated. */
-  update_time?:
+  update_time:
     | Date
     | undefined;
   /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-  channel_label?:
-    | string
-    | undefined;
+  channel_label: string;
   /** The clan logo */
-  clan_logo?:
-    | string
-    | undefined;
+  clan_logo: string;
   /** The category name */
-  category_name?:
-    | string
-    | undefined;
+  category_name: string;
   /** The clan nick name */
-  display_name?:
-    | string
-    | undefined;
+  display_name: string;
   /** The clan nick name */
-  clan_nick?:
-    | string
-    | undefined;
+  clan_nick: string;
   /** The clan avatar */
-  clan_avatar?:
-    | string
-    | undefined;
+  clan_avatar: string;
   /** Emoji reaction */
-  reactions?:
-    | string
-    | undefined;
+  reactions: string;
   /** Message mention */
-  mentions?:
-    | string
-    | undefined;
+  mentions: string;
   /** Message attachment */
-  attachments?:
-    | string
-    | undefined;
+  attachments: string;
   /** Message reference */
-  references?:
-    | string
-    | undefined;
+  references: string;
   /** referenced message */
-  referenced_message?:
-    | string
-    | undefined;
+  referenced_message: string;
   /** create time in ms */
-  create_time_seconds?:
-    | number
-    | undefined;
+  create_time_seconds: number;
   /** update time in ms */
-  update_time_seconds?:
-    | number
-    | undefined;
+  update_time_seconds: number;
   /** channel mode */
-  mode?:
-    | number
-    | undefined;
+  mode: number;
   /** hide editted */
-  hide_editted?:
-    | boolean
-    | undefined;
+  hide_editted: boolean;
   /** is public */
-  is_public?:
-    | boolean
-    | undefined;
+  is_public: boolean;
   /** topic */
-  topic_id?: string | undefined;
+  topic_id: string;
 }
 
 /** Mention to message */
 export interface MessageMention {
   /** Mention id */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** mention user id */
-  user_id?:
-    | string
-    | undefined;
+  user_id: string;
   /** mention username */
-  username?:
-    | string
-    | undefined;
+  username: string;
   /** role id */
-  role_id?:
-    | string
-    | undefined;
+  role_id: string;
   /** role name */
-  rolename?:
-    | string
-    | undefined;
+  rolename: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
-  create_time?:
+  create_time:
     | Date
     | undefined;
   /** start position from text */
-  s?:
-    | number
-    | undefined;
+  s: number;
   /** end position from text */
-  e?: number | undefined;
+  e: number;
 }
 
 /** Mention to message */
 export interface NotificationInfo {
   /** username */
-  username?:
-    | string
-    | undefined;
+  username: string;
   /** avatar */
-  avatar?:
-    | string
-    | undefined;
+  avatar: string;
   /** clan nick name */
-  clan_nick?:
-    | string
-    | undefined;
+  clan_nick: string;
   /** clan avatar */
-  clan_avatar?:
-    | string
-    | undefined;
+  clan_avatar: string;
   /** display name */
-  display_name?:
-    | string
-    | undefined;
+  display_name: string;
   /** channel label */
-  channel_label?:
-    | string
-    | undefined;
+  channel_label: string;
   /** channel type */
-  channel_type?:
-    | number
-    | undefined;
+  channel_type: number;
   /** category name */
-  category_name?:
-    | string
-    | undefined;
+  category_name: string;
   /** clan name */
-  clan_name?:
-    | string
-    | undefined;
+  clan_name: string;
   /** clan logo */
-  clan_logo?:
-    | string
-    | undefined;
+  clan_logo: string;
   /**  */
-  channel?: ChannelDescription | undefined;
+  channel: ChannelDescription | undefined;
 }
 
 /** Emoji reaction by user */
 export interface MessageReaction {
   /** Reaction id */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** An emoji id */
-  emoji_id?:
-    | string
-    | undefined;
+  emoji_id: string;
   /** An emoji shortname */
-  emoji?:
-    | string
-    | undefined;
+  emoji: string;
   /** User react to message */
-  sender_id?:
-    | string
-    | undefined;
+  sender_id: string;
   /** Sender name */
-  sender_name?:
-    | string
-    | undefined;
+  sender_name: string;
   /** avatar */
-  sender_avatar?:
-    | string
-    | undefined;
+  sender_avatar: string;
   /** Action reaction delete or add */
-  action?:
-    | boolean
-    | undefined;
+  action: boolean;
   /** count of emoji */
-  count?:
-    | number
-    | undefined;
+  count: number;
   /** channel id */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** message id */
-  message_id?:
-    | string
-    | undefined;
+  message_id: string;
   /** clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** mode */
-  mode?:
-    | number
-    | undefined;
+  mode: number;
   /** message sender id */
-  message_sender_id?:
-    | string
-    | undefined;
+  message_sender_id: string;
   /** is public */
-  is_public?:
-    | boolean
-    | undefined;
+  is_public: boolean;
   /** topic id */
-  topic_id?:
-    | string
-    | undefined;
+  topic_id: string;
   /** emoji_recent_id */
-  emoji_recent_id?: string | undefined;
+  emoji_recent_id: string;
 }
 
 /** Message attachment */
 export interface MessageAttachment {
   /** Attachment file name */
-  filename?:
-    | string
-    | undefined;
+  filename: string;
   /** Attachment file size */
-  size?:
-    | number
-    | undefined;
+  size: number;
   /** Attachment url */
-  url?:
-    | string
-    | undefined;
+  url: string;
   /** Attachment file type */
-  filetype?:
-    | string
-    | undefined;
+  filetype: string;
   /** Attachment width */
-  width?:
-    | number
-    | undefined;
+  width: number;
   /** Attachment width */
-  height?:
-    | number
-    | undefined;
+  height: number;
   /** thumbnail */
-  thumbnail?:
-    | string
-    | undefined;
+  thumbnail: string;
   /** duration for video */
-  duration?: number | undefined;
+  duration: number;
 }
 
 /** Message reference */
 export interface MessageRef {
   /** A message source */
-  message_id?:
-    | string
-    | undefined;
+  message_id: string;
   /** A message reference to */
-  message_ref_id?:
-    | string
-    | undefined;
+  message_ref_id: string;
   /** content reference */
-  content?:
-    | string
-    | undefined;
+  content: string;
   /** has attachment */
-  has_attachment?:
-    | boolean
-    | undefined;
+  has_attachment: boolean;
   /** Reference type. 0: reply */
-  ref_type?:
-    | number
-    | undefined;
+  ref_type: number;
   /** original message sender */
-  message_sender_id?:
-    | string
-    | undefined;
+  message_sender_id: string;
   /** original message sendre username */
-  message_sender_username?:
-    | string
-    | undefined;
+  message_sender_username: string;
   /** original message sender avatar */
-  mesages_sender_avatar?:
-    | string
-    | undefined;
+  mesages_sender_avatar: string;
   /** original sender clan nick name */
-  message_sender_clan_nick?:
-    | string
-    | undefined;
+  message_sender_clan_nick: string;
   /** original sender display name */
-  message_sender_display_name?: string | undefined;
+  message_sender_display_name: string;
 }
 
 /** Message reference */
 export interface MessageDeleted {
   /** A deleted message source */
-  message_id?:
-    | string
-    | undefined;
+  message_id: string;
   /** Who delete it */
-  deletor?: string | undefined;
+  deletor: string;
 }
 
 /** A list of channel messages, usually a result of a list operation. */
 export interface ChannelMessageList {
   /** A list of messages. */
-  messages?:
-    | ChannelMessage[]
-    | undefined;
+  messages: ChannelMessage[];
   /** last seen message id by user */
-  last_seen_message?:
+  last_seen_message:
     | ChannelMessageHeader
     | undefined;
   /** last sent message id */
-  last_sent_message?: ChannelMessageHeader | undefined;
+  last_sent_message: ChannelMessageHeader | undefined;
 }
 
 /** Create a group with the current user as owner. */
 export interface CreateGroupRequest {
   /** A unique name for the group. */
-  name?:
-    | string
-    | undefined;
+  name: string;
   /** A description for the group. */
-  description?:
-    | string
-    | undefined;
+  description: string;
   /** The language expected to be a tag which follows the BCP-47 spec. */
-  lang_tag?:
-    | string
-    | undefined;
+  lang_tag: string;
   /** A URL for an avatar image. */
-  avatar_url?:
-    | string
-    | undefined;
+  avatar_url: string;
   /** Mark a group as open or not where only admins can accept members. */
-  open?:
-    | boolean
-    | undefined;
+  open: boolean;
   /** Maximum number of group members. */
-  max_count?: number | undefined;
+  max_count: number;
 }
 
 /** Delete one or more friends for the current user. */
 export interface DeleteFriendsRequest {
   /** The account id of a user. */
-  ids?:
-    | string[]
-    | undefined;
+  ids: string[];
   /** The account username of a user. */
-  usernames?: string[] | undefined;
+  usernames: string[];
 }
 
 /** Delete a group the user has access to. */
 export interface DeleteGroupRequest {
   /** The id of a group. */
-  group_id?: string | undefined;
+  group_id: string;
 }
 
 /** Delete one or more notifications for the current user. */
 export interface DeleteNotificationsRequest {
   /** The id of notifications. */
-  ids?:
-    | string[]
-    | undefined;
+  ids: string[];
   /** The category of notifications. */
-  category?: number | undefined;
+  category: number;
 }
 
 /** Represents an event to be passed through the server to registered event handlers. */
 export interface Event {
   /** An event name, type, category, or identifier. */
-  name?:
-    | string
-    | undefined;
+  name: string;
   /** Arbitrary event property values. */
-  properties?:
-    | { [key: string]: string }
-    | undefined;
+  properties: { [key: string]: string };
   /** The time when the event was triggered. */
-  timestamp?:
+  timestamp:
     | Date
     | undefined;
   /** True if the event came directly from a client call, false otherwise. */
-  external?: boolean | undefined;
+  external: boolean;
 }
 
 export interface Event_PropertiesEntry {
@@ -752,19 +556,19 @@ export interface Event_PropertiesEntry {
 /** A friend of a user. */
 export interface Friend {
   /** The user object. */
-  user?:
+  user:
     | User
     | undefined;
   /** The friend status. */
-  state?:
+  state:
     | number
     | undefined;
   /** Time of the latest relationship update. */
-  update_time?:
+  update_time:
     | Date
     | undefined;
   /** source id */
-  source_id?: string | undefined;
+  source_id: string;
 }
 
 /** The friendship status. */
@@ -820,2377 +624,1751 @@ export function friend_StateToJSON(object: Friend_State): string {
 /** A collection of zero or more friends of the user. */
 export interface FriendList {
   /** The Friend objects. */
-  friends?:
-    | Friend[]
-    | undefined;
+  friends: Friend[];
   /** Cursor for the next page of results, if any. */
-  cursor?: string | undefined;
+  cursor: string;
 }
 
 /** Fetch a batch of zero or more users from the server. */
 export interface UpdateUsersRequest {
   /** The account username of a user. */
-  display_name?:
-    | string
-    | undefined;
+  display_name: string;
   /** The avarar_url of a user. */
-  avatar_url?: string | undefined;
+  avatar_url: string;
 }
 
 /** A list of users belonging to a channel, along with their role. */
 export interface ChannelUserList {
   /** User-role pairs for a channel. */
-  channel_users?:
-    | ChannelUserList_ChannelUser[]
-    | undefined;
+  channel_users: ChannelUserList_ChannelUser[];
   /** Cursor for the next page of results, if any. */
-  cursor?:
-    | string
-    | undefined;
+  cursor: string;
   /** channel id */
-  channel_id?: string | undefined;
+  channel_id: string;
 }
 
 /** A single user-role pair. */
 export interface ChannelUserList_ChannelUser {
   /** User. */
-  user_id?:
-    | string
-    | undefined;
+  user_id: string;
   /** Their relationship to the role. */
-  role_id?:
-    | string[]
-    | undefined;
+  role_id: string[];
   /** Id */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** thread id */
-  thread_id?:
-    | string
-    | undefined;
+  thread_id: string;
   /** clan nick name */
-  clan_nick?:
-    | string
-    | undefined;
+  clan_nick: string;
   /** clan avatar */
-  clan_avatar?:
-    | string
-    | undefined;
+  clan_avatar: string;
   /** clan Id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** added by */
-  added_by?:
-    | string
-    | undefined;
+  added_by: string;
   /** is banned */
-  is_banned?:
-    | boolean
-    | undefined;
+  is_banned: boolean;
   /** expired time */
-  expired_ban_time?: number | undefined;
+  expired_ban_time: number;
 }
 
 /** A list of users belonging to a channel, along with their role. */
 export interface VoiceChannelUser {
   /** voice user join id */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** User for a channel. */
-  user_id?:
-    | string
-    | undefined;
+  user_id: string;
   /** channel id */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** participant */
-  participant?: string | undefined;
+  participant: string;
 }
 
 /** A list of users belonging to a channel, along with their role. */
 export interface VoiceChannelUserList {
   /** list of voice channel user */
-  voice_channel_users?: VoiceChannelUser[] | undefined;
+  voice_channel_users: VoiceChannelUser[];
 }
 
 /** channel attachment */
 export interface ChannelAttachment {
   /** url attachment */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** file name */
-  filename?:
-    | string
-    | undefined;
+  filename: string;
   /** filetype */
-  filetype?:
-    | string
-    | undefined;
+  filetype: string;
   /** size */
-  filesize?:
-    | string
-    | undefined;
+  filesize: string;
   /** url */
-  url?:
-    | string
-    | undefined;
+  url: string;
   /** uploader */
-  uploader?:
-    | string
-    | undefined;
+  uploader: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the group was created. */
-  create_time?:
+  create_time:
     | Date
     | undefined;
   /** message id. */
-  message_id?:
-    | string
-    | undefined;
+  message_id: string;
   /** width */
-  width?:
-    | number
-    | undefined;
+  width: number;
   /** height */
-  height?: number | undefined;
+  height: number;
 }
 
 /** channel attachment list */
 export interface ChannelAttachmentList {
   /** list attachment */
-  attachments?: ChannelAttachment[] | undefined;
+  attachments: ChannelAttachment[];
 }
 
 /** A list of users belonging to a clan, along with their role. */
 export interface ClanUserList {
   /** User-role pairs for a clan. */
-  clan_users?:
-    | ClanUserList_ClanUser[]
-    | undefined;
+  clan_users: ClanUserList_ClanUser[];
   /** Cursor for the next page of results, if any. */
-  cursor?:
-    | string
-    | undefined;
+  cursor: string;
   /** clan id */
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 /** A single user-role pair. */
 export interface ClanUserList_ClanUser {
   /** User. */
-  user?:
+  user:
     | User
     | undefined;
   /** Their relationship to the role. */
-  role_id?:
-    | string[]
-    | undefined;
+  role_id: string[];
   /** from the `nick_name` field in the `clan_desc_profile` table. */
-  clan_nick?:
-    | string
-    | undefined;
+  clan_nick: string;
   /** from the `avatar_url` field in the `clan_desc_profile` table. */
-  clan_avatar?:
-    | string
-    | undefined;
+  clan_avatar: string;
   /**  */
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 export interface RegistFcmDeviceTokenRequest {
   /** The token */
-  token?:
-    | string
-    | undefined;
+  token: string;
   /**  */
-  device_id?:
-    | string
-    | undefined;
+  device_id: string;
   /**  */
-  platform?:
-    | string
-    | undefined;
+  platform: string;
   /** voip token for IOS */
-  voip_token?: string | undefined;
+  voip_token: string;
 }
 
 export interface RegistFcmDeviceTokenResponse {
   /** The token */
-  token?:
-    | string
-    | undefined;
+  token: string;
   /**  */
-  device_id?:
-    | string
-    | undefined;
+  device_id: string;
   /**  */
-  platform?: string | undefined;
+  platform: string;
 }
 
 /** List a channel's message history. */
 export interface ListChannelMessagesRequest {
   /** the clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** The channel ID to list from. */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** The current message ID. */
-  message_id?:
-    | string
-    | undefined;
+  message_id: string;
   /** Max number of records to return. Between 1 and 100. */
-  limit?:
+  limit:
     | number
     | undefined;
   /** True if listing should be older messages to newer, false if reverse. */
-  direction?:
+  direction:
     | number
     | undefined;
   /**  */
-  topic_id?: string | undefined;
+  topic_id: string;
 }
 
 /** List friends for a user. */
 export interface ListFriendsRequest {
   /** Max number of records to return. Between 1 and 100. */
-  limit?:
+  limit:
     | number
     | undefined;
   /** The friend state to list. */
-  state?:
+  state:
     | number
     | undefined;
   /** An optional next page cursor. */
-  cursor?: string | undefined;
+  cursor: string;
 }
 
 /** List groups based on given filters. */
 export interface ListGroupsRequest {
   /** List groups that contain this value in their names. */
-  name?:
-    | string
-    | undefined;
+  name: string;
   /** Optional pagination cursor. */
-  cursor?:
-    | string
-    | undefined;
+  cursor: string;
   /** Max number of groups to return. Between 1 and 100. */
-  limit?:
+  limit:
     | number
     | undefined;
   /** Language tag filter */
-  lang_tag?:
-    | string
-    | undefined;
+  lang_tag: string;
   /** Number of group members */
-  members?:
+  members:
     | number
     | undefined;
   /** Optional Open/Closed filter. */
-  open?: boolean | undefined;
+  open: boolean | undefined;
 }
 
 /** List all users that are part of a group. */
 export interface ListGroupUsersRequest {
   /** The group ID to list from. */
-  group_id?:
-    | string
-    | undefined;
+  group_id: string;
   /** Max number of records to return. Between 1 and 100. */
-  limit?:
+  limit:
     | number
     | undefined;
   /** The group user state to list. */
-  state?:
+  state:
     | number
     | undefined;
   /** An optional next page cursor. */
-  cursor?: string | undefined;
+  cursor: string;
 }
 
 /** List all users that are part of a channel. */
 export interface ListChannelUsersRequest {
   /** The clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** The channel ID to list from. */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** The channel type */
-  channel_type?:
-    | number
-    | undefined;
+  channel_type: number;
   /** Max number of records to return. Between 1 and 100. */
-  limit?:
+  limit:
     | number
     | undefined;
   /** The group user state to list. */
-  state?:
+  state:
     | number
     | undefined;
   /** An optional next page cursor. */
-  cursor?: string | undefined;
+  cursor: string;
 }
 
 /** List all attachments that are part of a channel. */
 export interface ListChannelAttachmentRequest {
   /** The clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** The channel ID to list from. */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** The channel type */
-  file_type?:
-    | string
-    | undefined;
+  file_type: string;
   /** Max number of records to return. Between 1 and 100. */
-  limit?:
+  limit:
     | number
     | undefined;
   /** The group user state to list. */
-  state?:
+  state:
     | number
     | undefined;
   /** An optional previous id for page. */
-  before?:
-    | number
-    | undefined;
+  before: number;
   /** An optional next id for page. */
-  after?:
-    | number
-    | undefined;
+  after: number;
   /** An optional around id for page. */
-  around?: number | undefined;
+  around: number;
 }
 
 /** List all users that are part of a clan. */
 export interface ListClanUsersRequest {
   /** The clan ID to list from. */
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 /** Get a list of unexpired notifications. */
 export interface ListNotificationsRequest {
   /** The number of notifications to get. Between 1 and 100. */
-  limit?:
+  limit:
     | number
     | undefined;
   /** The clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** The current notification Id. */
-  notification_id?:
-    | string
-    | undefined;
+  notification_id: string;
   /** The category (1: mentions, 2: mesages, 3: for you). */
-  category?:
-    | number
-    | undefined;
+  category: number;
   /** True if listing should be older notifications to newer, false if reverse. */
-  direction?: number | undefined;
+  direction: number | undefined;
 }
 
 /** List the groups a user is part of, and their relationship to each. */
 export interface ListUserGroupsRequest {
   /** ID of the user. */
-  user_id?:
-    | string
-    | undefined;
+  user_id: string;
   /** Max number of records to return. Between 1 and 100. */
-  limit?:
+  limit:
     | number
     | undefined;
   /** The user group state to list. */
-  state?:
+  state:
     | number
     | undefined;
   /** An optional next page cursor. */
-  cursor?: string | undefined;
+  cursor: string;
 }
 
 /** A notification in the server. */
 export interface Notification {
   /** ID of the Notification. */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** Subject of the notification. */
-  subject?:
-    | string
-    | undefined;
+  subject: string;
   /** Content of the notification in JSON. */
-  content?:
-    | string
-    | undefined;
+  content: string;
   /** Category code for this notification. */
-  code?:
-    | number
-    | undefined;
+  code: number;
   /** ID of the sender, if a user. Otherwise 'null'. */
-  sender_id?:
-    | string
-    | undefined;
+  sender_id: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the notification was created. */
-  create_time?:
+  create_time:
     | Date
     | undefined;
   /** True if this notification was persisted to the database. */
-  persistent?:
-    | boolean
-    | undefined;
+  persistent: boolean;
   /** ID of clan */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** ID of channel */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** mode of */
-  channel_type?:
-    | number
-    | undefined;
+  channel_type: number;
   /**  */
-  avatar_url?:
-    | string
-    | undefined;
+  avatar_url: string;
   /**  */
-  channel?:
+  channel:
     | ChannelDescription
     | undefined;
   /**  */
-  topic_id?:
-    | string
-    | undefined;
+  topic_id: string;
   /** category. */
-  category?: number | undefined;
+  category: number;
 }
 
 /**  */
 export interface EmojiRecent {
   /** ID of the emoji. */
-  emoji_recents_id?:
-    | string
-    | undefined;
+  emoji_recents_id: string;
   /**  */
-  emoji_id?:
-    | string
-    | undefined;
+  emoji_id: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the emoji was created. */
-  update_time?: Date | undefined;
+  update_time: Date | undefined;
 }
 
 /** A collection of zero or more notifications. */
 export interface EmojiRecentList {
   /** Collection of emojiRecents. */
-  emoji_recents?: EmojiRecent[] | undefined;
+  emoji_recents: EmojiRecent[];
 }
 
 /** A collection of zero or more notifications. */
 export interface NotificationList {
   /** Collection of notifications. */
-  notifications?:
-    | Notification[]
-    | undefined;
+  notifications: Notification[];
   /** Use this cursor to paginate notifications. Cache this to catch up to new notifications. */
-  cacheable_cursor?: string | undefined;
+  cacheable_cursor: string;
 }
 
 /** Promote a set of users in a group to the next role up. */
 export interface PromoteGroupUsersRequest {
   /** The group ID to promote in. */
-  group_id?:
-    | string
-    | undefined;
+  group_id: string;
   /** The users to promote. */
-  user_ids?: string[] | undefined;
+  user_ids: string[];
 }
 
 /** Demote a set of users in a group to the next role down. */
 export interface DemoteGroupUsersRequest {
   /** The group ID to demote in. */
-  group_id?:
-    | string
-    | undefined;
+  group_id: string;
   /** The users to demote. */
-  user_ids?: string[] | undefined;
+  user_ids: string[];
 }
 
 /** Execute an Lua function on the server. */
 export interface Rpc {
   /** The identifier of the function. */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** The payload of the function which must be a JSON object. */
-  payload?:
-    | string
-    | undefined;
+  payload: string;
   /** The authentication key used when executed as a non-client HTTP request. */
-  http_key?: string | undefined;
+  http_key: string;
 }
 
 /** A user's session used to authenticate messages. */
 export interface Session {
   /** True if the corresponding account was just created, false otherwise. */
-  created?:
-    | boolean
-    | undefined;
+  created: boolean;
   /** Authentication credentials. */
-  token?:
-    | string
-    | undefined;
+  token: string;
   /** Refresh token that can be used for session token renewal. */
-  refresh_token?:
-    | string
-    | undefined;
+  refresh_token: string;
   /** User id */
-  user_id?:
-    | string
-    | undefined;
+  user_id: string;
   /** Whether to enable "Remember Me" for extended session duration. */
-  is_remember?: boolean | undefined;
+  is_remember: boolean;
 }
 
 /** Update username */
 export interface UpdateUsernameRequest {
-  username?: string | undefined;
+  username: string;
 }
 
 /** Update a user's account details. */
 export interface UpdateAccountRequest {
   /** The display name of the user. */
-  display_name?:
+  display_name:
     | string
     | undefined;
   /** A URL for an avatar image. */
-  avatar_url?:
+  avatar_url:
     | string
     | undefined;
   /** The language expected to be a tag which follows the BCP-47 spec. */
-  lang_tag?:
+  lang_tag:
     | string
     | undefined;
   /** The location set by the user. */
-  location?:
+  location:
     | string
     | undefined;
   /** The timezone set by the user. */
-  timezone?:
+  timezone:
     | string
     | undefined;
   /** update about me */
-  about_me?:
+  about_me:
     | string
     | undefined;
   /** date of birth */
-  dob?:
+  dob:
     | Date
     | undefined;
   /** logo url */
-  logo?:
+  logo:
     | string
     | undefined;
   /** splash screen */
-  splash_screen?:
+  splash_screen:
     | string
     | undefined;
   /** e2ee encrypt private key */
-  encrypt_private_key?:
-    | string
-    | undefined;
+  encrypt_private_key: string;
   /** The email of the user's account. */
-  email?: string | undefined;
+  email: string | undefined;
 }
 
 /** Update fields in a given group. */
 export interface UpdateGroupRequest {
   /** The ID of the group to update. */
-  group_id?:
-    | string
-    | undefined;
+  group_id: string;
   /** Name. */
-  name?:
+  name:
     | string
     | undefined;
   /** Description string. */
-  description?:
+  description:
     | string
     | undefined;
   /** Lang tag. */
-  lang_tag?:
+  lang_tag:
     | string
     | undefined;
   /** Avatar URL. */
-  avatar_url?:
+  avatar_url:
     | string
     | undefined;
   /** Open is true if anyone should be allowed to join, or false if joins must be approved by a group admin. */
-  open?: boolean | undefined;
+  open: boolean | undefined;
 }
 
 export interface UpdateCategoryDescRequest {
   /** The ID of the group to update. */
-  category_id?: string | undefined;
-  category_name?: string | undefined;
-  clan_id?: string | undefined;
+  category_id: string;
+  category_name: string;
+  clan_id: string;
 }
 
 /** A user in the server. */
 export interface User {
   /** The id of the user's account. */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** The username of the user's account. */
-  username?:
-    | string
-    | undefined;
+  username: string;
   /** The display name of the user. */
-  display_name?:
-    | string
-    | undefined;
+  display_name: string;
   /** A URL for an avatar image. */
-  avatar_url?:
-    | string
-    | undefined;
+  avatar_url: string;
   /** The language expected to be a tag which follows the BCP-47 spec. */
-  lang_tag?:
-    | string
-    | undefined;
+  lang_tag: string;
   /** The location set by the user. */
-  location?:
-    | string
-    | undefined;
+  location: string;
   /** The timezone set by the user. */
-  timezone?:
-    | string
-    | undefined;
+  timezone: string;
   /** custom status */
-  user_status?:
-    | string
-    | undefined;
+  user_status: string;
   /** Indicates whether the user is currently online. */
-  online?:
-    | boolean
-    | undefined;
+  online: boolean;
   /** The phone number */
-  phone_number?:
-    | string
-    | undefined;
+  phone_number: string;
   /** Number of related edges to this user. */
-  edge_count?:
-    | number
-    | undefined;
+  edge_count: number;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was created. */
-  create_time?:
+  create_time:
     | Date
     | undefined;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was last updated. */
-  update_time?:
+  update_time:
     | Date
     | undefined;
   /** About me */
-  about_me?:
-    | string
-    | undefined;
+  about_me: string;
   /** Join time */
-  join_time?:
+  join_time:
     | Date
     | undefined;
   /** Platform */
-  is_mobile?:
-    | boolean
-    | undefined;
+  is_mobile: boolean;
   /** dob */
-  dob?:
+  dob:
     | Date
     | undefined;
   /** Mezone id */
-  mezon_id?:
-    | string
-    | undefined;
+  mezon_id: string;
   /** list clan nick name */
-  list_nick_names?:
-    | string[]
-    | undefined;
+  list_nick_names: string[];
   /** online, offline, invisible, idle, do not disturb */
-  status?: string | undefined;
+  status: string;
 }
 
 /** A collection of zero or more users. */
 export interface Users {
   /** The User objects. */
-  users?: User[] | undefined;
+  users: User[];
 }
 
 /** Clan profile information */
 export interface ClanDescProfile {
   /** Clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** Clan creator */
-  creator_id?:
-    | string
-    | undefined;
+  creator_id: string;
   /** Clan nick name */
-  nick_name?:
-    | string
-    | undefined;
+  nick_name: string;
   /** Clan profile banner */
-  profile_banner?:
-    | string
-    | undefined;
+  profile_banner: string;
   /** Clan profile theme */
-  profile_theme?:
-    | string
-    | undefined;
+  profile_theme: string;
   /** Clan profile avatar */
-  avatar_url?: string | undefined;
+  avatar_url: string;
 }
 
 /** Update Clan profile information */
 export interface UpdateClanDescProfileRequest {
   /** Clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** Clan nick name */
-  nick_name?:
-    | string
-    | undefined;
+  nick_name: string;
   /** Clan profile banner */
-  profile_banner?:
-    | string
-    | undefined;
+  profile_banner: string;
   /** Clan profile theme */
-  profile_theme?:
-    | string
-    | undefined;
+  profile_theme: string;
   /** Clan profile avatar */
-  avatar_url?: string | undefined;
+  avatar_url: string;
 }
 
 /** Clan profile information */
 export interface ClanDescProfileRequest {
   /** Clan id */
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 /** Clan information */
 export interface ClanDesc {
   /** Clan creator */
-  creator_id?:
-    | string
-    | undefined;
+  creator_id: string;
   /** Clan name */
-  clan_name?:
-    | string
-    | undefined;
+  clan_name: string;
   /** Clan logo */
-  logo?:
-    | string
-    | undefined;
+  logo: string;
   /** Clan banner */
-  banner?:
-    | string
-    | undefined;
+  banner: string;
   /** Clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** Clan status */
-  status?:
-    | number
-    | undefined;
+  status: number;
   /** Badge count */
-  badge_count?:
-    | number
-    | undefined;
+  badge_count: number;
   /** Is onboarding. */
-  is_onboarding?:
-    | boolean
-    | undefined;
+  is_onboarding: boolean;
   /** Welcome channel id. */
-  welcome_channel_id?:
-    | string
-    | undefined;
+  welcome_channel_id: string;
   /** Onboarding_banner. */
-  onboarding_banner?:
-    | string
-    | undefined;
+  onboarding_banner: string;
   /** clan order */
-  clan_order?:
-    | number
-    | undefined;
+  clan_order: number;
   /** is community */
-  is_community?:
-    | boolean
-    | undefined;
+  is_community: boolean;
   /** community banner */
-  community_banner?:
-    | string
-    | undefined;
+  community_banner: string;
   /** description */
-  description?:
-    | string
-    | undefined;
+  description: string;
   /** about */
-  about?:
-    | string
-    | undefined;
+  about: string;
   /** short_url */
-  short_url?:
-    | string
-    | undefined;
+  short_url: string;
   /** prevent anonymous */
-  prevent_anonymous?:
-    | boolean
-    | undefined;
+  prevent_anonymous: boolean;
   /** has unread message */
-  has_unread_message?: boolean | undefined;
+  has_unread_message: boolean;
 }
 
 /** Clan information */
 export interface CreateClanDescRequest {
   /** Clan name */
-  clan_name?:
-    | string
-    | undefined;
+  clan_name: string;
   /** Clan logo */
-  logo?:
-    | string
-    | undefined;
+  logo: string;
   /** Clan banner */
-  banner?: string | undefined;
+  banner: string;
 }
 
 /** Update Clan information */
 export interface UpdateClanDescRequest {
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** Clan name */
-  clan_name?:
-    | string
-    | undefined;
+  clan_name: string;
   /** Clan logo */
-  logo?:
+  logo:
     | string
     | undefined;
   /** Clan banner */
-  banner?:
+  banner:
     | string
     | undefined;
   /** Clan status */
-  status?:
-    | number
-    | undefined;
+  status: number;
   /** Is onboarding. */
-  is_onboarding?:
+  is_onboarding:
     | boolean
     | undefined;
   /** Welcome channel id. */
-  welcome_channel_id?:
-    | string
-    | undefined;
+  welcome_channel_id: string;
   /** Onboarding_banner. */
-  onboarding_banner?:
+  onboarding_banner:
     | string
     | undefined;
   /** Enable community. */
-  is_community?:
+  is_community:
     | boolean
     | undefined;
   /** Community banner. */
-  community_banner?:
+  community_banner:
     | string
     | undefined;
   /** string description */
-  description?:
+  description:
     | string
     | undefined;
   /** About */
-  about?:
+  about:
     | string
     | undefined;
   /** Short url for community */
-  short_url?:
+  short_url:
     | string
     | undefined;
   /** Prevent anonymous */
-  prevent_anonymous?: boolean | undefined;
+  prevent_anonymous: boolean;
 }
 
 /** Delete a clan the user has access to. */
 export interface DeleteClanDescRequest {
   /** The id of a group. */
-  clan_desc_id?: string | undefined;
+  clan_desc_id: string;
 }
 
 /** List (and optionally filter) channels. */
 export interface ListClanDescRequest {
   /** Max number of records to return. Between 1 and 100. */
-  limit?:
+  limit:
     | number
     | undefined;
   /** The friend state to list. */
-  state?:
+  state:
     | number
     | undefined;
   /** Cursor to start from */
-  cursor?: string | undefined;
+  cursor: string;
 }
 
 export interface ListClanUnreadMsgIndicatorRequest {
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 export interface ListClanUnreadMsgIndicatorResponse {
-  has_unread_message?: boolean | undefined;
+  has_unread_message: boolean;
 }
 
 /** A list of clan */
 export interface ClanDescList {
   /** A list of channel. */
-  clandesc?: ClanDesc[] | undefined;
+  clandesc: ClanDesc[];
 }
 
 /** Add link invite users to. */
 export interface LinkInviteUserRequest {
   /** id clan to add link to . */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** id channel to add link to. */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** expiry time */
-  expiry_time?: number | undefined;
+  expiry_time: number;
 }
 
 /** Add link invite users to. */
 export interface InviteUserRequest {
   /** id clan to add link to . */
-  invite_id?: string | undefined;
+  invite_id: string;
 }
 
 /** Add link invite users to. */
 export interface InviteUserRes {
   /** id clan to add link to . */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** id channel to add link to. */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** clan name */
-  clan_name?:
-    | string
-    | undefined;
+  clan_name: string;
   /** channel name */
-  channel_label?:
-    | string
-    | undefined;
+  channel_label: string;
   /** check user exist */
-  user_joined?:
-    | boolean
-    | undefined;
+  user_joined: boolean;
   /** expiry_time */
-  expiry_time?:
+  expiry_time:
     | Date
     | undefined;
   /**  */
-  channel_desc?: ChannelDescription | undefined;
-  clan_logo?: string | undefined;
-  member_count?: number | undefined;
+  channel_desc: ChannelDescription | undefined;
+  clan_logo: string;
+  member_count: number;
 }
 
 /** Add link invite users to. */
 export interface JoinClanChannelRequest {
   /** id clan to add link to . */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** id channel to add link to. */
-  channel_id?: string | undefined;
+  channel_id: string;
 }
 
 /** Add link invite users to. */
 export interface LinkInviteUser {
   /** id clan */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** The user to add. */
-  creator_id?:
-    | string
-    | undefined;
+  creator_id: string;
   /** is clan invite */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** link invite */
-  invite_link?:
-    | string
-    | undefined;
+  invite_link: string;
   /** create time */
-  create_time?:
+  create_time:
     | Date
     | undefined;
   /** expiry time */
-  expiry_time?: Date | undefined;
-  id?: string | undefined;
+  expiry_time: Date | undefined;
+  id: string;
 }
 
 /** Get clan profile. */
 export interface ClanProfile {
   /** id user to find user */
-  user_id?:
-    | string
-    | undefined;
+  user_id: string;
   /** name user */
-  nick_name?:
-    | string
-    | undefined;
+  nick_name: string;
   /** id avatar */
-  avatar?:
-    | string
-    | undefined;
+  avatar: string;
   /** id clan */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** about clan */
-  about?: string | undefined;
+  about: string;
 }
 
 /** information user by clan requset */
 export interface ClanProfileRequest {
   /** id clanc */
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 /** update nickname user by clan requset */
 export interface UpdateClanProfileRequest {
   /** id clanc */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** nick_name new */
-  nick_name?:
+  nick_name:
     | string
     | undefined;
   /** avatar */
-  avatar?: string | undefined;
+  avatar: string | undefined;
 }
 
 /** Update Clan Order Request */
 export interface UpdateClanOrderRequest {
-  clans_order?: UpdateClanOrderRequest_ClanOrder[] | undefined;
+  clans_order: UpdateClanOrderRequest_ClanOrder[];
 }
 
 export interface UpdateClanOrderRequest_ClanOrder {
-  order?: number | undefined;
-  clan_id?: string | undefined;
+  order: number;
+  clan_id: string;
 }
 
 /** Category to group the channel */
 export interface CategoryDesc {
   /** Category creator */
-  creator_id?:
-    | string
-    | undefined;
+  creator_id: string;
   /** the Clan that category belong to */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** Category name */
-  category_name?: string | undefined;
-  category_id?: string | undefined;
-  category_order?: number | undefined;
+  category_name: string;
+  category_id: string;
+  category_order: number;
 }
 
 export interface UpdateCategoryOrderRequest {
-  clan_id?: string | undefined;
-  categories?: CategoryOrderUpdate[] | undefined;
+  clan_id: string;
+  categories: CategoryOrderUpdate[];
 }
 
 export interface UpdateRoleOrderRequest {
-  clan_id?: string | undefined;
-  roles?: RoleOrderUpdate[] | undefined;
+  clan_id: string;
+  roles: RoleOrderUpdate[];
 }
 
 export interface RoleOrderUpdate {
-  role_id?: string | undefined;
-  order?: number | undefined;
+  role_id: string;
+  order: number;
 }
 
 export interface CategoryOrderUpdate {
-  category_id?: string | undefined;
-  order?: number | undefined;
+  category_id: string;
+  order: number;
 }
 
 export interface CreateCategoryDescRequest {
-  category_name?: string | undefined;
-  clan_id?: string | undefined;
+  category_name: string;
+  clan_id: string;
 }
 
 export interface DeleteCategoryDescRequest {
-  category_id?: string | undefined;
-  clan_id?: string | undefined;
-  category_label?: string | undefined;
+  category_id: string;
+  clan_id: string;
+  category_label: string;
 }
 
 /** A list of clan */
 export interface CategoryDescList {
   /** A list of channel. */
-  categorydesc?: CategoryDesc[] | undefined;
+  categorydesc: CategoryDesc[];
 }
 
 /** List (and optionally filter) channels. */
 export interface ListCategoryDescsRequest {
   /** Max number of records to return. Between 1 and 100. */
-  limit?:
+  limit:
     | number
     | undefined;
   /** The friend state to list. */
-  state?:
+  state:
     | number
     | undefined;
   /** Cursor to start from */
-  cursor?: string | undefined;
+  cursor: string;
 }
 
 export interface ChannelMessageHeader {
   /** the message id */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** the time stamp */
-  timestamp_seconds?:
-    | number
-    | undefined;
+  timestamp_seconds: number;
   /** the sender id */
-  sender_id?:
-    | string
-    | undefined;
+  sender_id: string;
   /** the content */
-  content?:
-    | string
-    | undefined;
+  content: string;
   /** the attachment */
-  attachment?:
-    | string
-    | undefined;
+  attachment: string;
   /** the reference */
-  reference?:
-    | string
-    | undefined;
+  reference: string;
   /** the mention */
-  mention?:
-    | string
-    | undefined;
+  mention: string;
   /** the reactions */
-  reaction?: string | undefined;
+  reaction: string;
 }
 
 /** Channel description record */
 export interface ChannelDescription {
   /** The clan of this channel */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** The parent channel this message belongs to. */
-  parent_id?:
-    | string
-    | undefined;
+  parent_id: string;
   /** The channel this message belongs to. */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** The category of channel */
-  category_id?:
-    | string
-    | undefined;
+  category_id: string;
   /** The category name */
-  category_name?:
-    | string
-    | undefined;
+  category_name: string;
   /** The channel type. */
-  type?:
+  type:
     | number
     | undefined;
   /** creator ID. */
-  creator_id?:
-    | string
-    | undefined;
+  creator_id: string;
   /** The channel lable */
-  channel_label?:
-    | string
-    | undefined;
+  channel_label: string;
   /** The channel private */
-  channel_private?:
-    | number
-    | undefined;
+  channel_private: number;
   /** DM avatars */
-  avatars?:
-    | string[]
-    | undefined;
+  avatars: string[];
   /** List DM user ids */
-  user_ids?:
-    | string[]
-    | undefined;
+  user_ids: string[];
   /** last message id */
-  last_sent_message?:
+  last_sent_message:
     | ChannelMessageHeader
     | undefined;
   /** last seen message id */
-  last_seen_message?:
+  last_seen_message:
     | ChannelMessageHeader
     | undefined;
   /** DM status */
-  onlines?:
-    | boolean[]
-    | undefined;
+  onlines: boolean[];
   /** meeting code */
-  meeting_code?:
-    | string
-    | undefined;
+  meeting_code: string;
   /** count message unread */
-  count_mess_unread?:
-    | number
-    | undefined;
+  count_mess_unread: number;
   /** active channel */
-  active?:
-    | number
-    | undefined;
+  active: number;
   /** last pin message */
-  last_pin_message?:
-    | string
-    | undefined;
+  last_pin_message: string;
   /** List DM usernames */
-  usernames?:
-    | string[]
-    | undefined;
+  usernames: string[];
   /** creator name */
-  creator_name?:
-    | string
-    | undefined;
+  creator_name: string;
   /** create time ms */
-  create_time_seconds?:
-    | number
-    | undefined;
+  create_time_seconds: number;
   /** update time ms */
-  update_time_seconds?:
-    | number
-    | undefined;
+  update_time_seconds: number;
   /** List DM diplay names */
-  display_names?:
-    | string[]
-    | undefined;
+  display_names: string[];
   /** channel avatar */
-  channel_avatar?:
-    | string
-    | undefined;
+  channel_avatar: string;
   /** clan_name */
-  clan_name?:
-    | string
-    | undefined;
+  clan_name: string;
   /** app id */
-  app_id?:
-    | string
-    | undefined;
+  app_id: string;
   /** channel all message */
-  is_mute?:
-    | boolean
-    | undefined;
+  is_mute: boolean;
   /** age restricted */
-  age_restricted?:
-    | number
-    | undefined;
+  age_restricted: number;
   /** channel description topic */
-  topic?:
-    | string
-    | undefined;
+  topic: string;
   /** e2ee */
-  e2ee?:
-    | number
-    | undefined;
+  e2ee: number;
   /** channel member count */
-  member_count?: number | undefined;
+  member_count: number;
 }
 
 /** A list of channel description, usually a result of a list operation. */
 export interface ChannelDescList {
   /** A list of channel. */
-  channeldesc?:
-    | ChannelDescription[]
-    | undefined;
+  channeldesc: ChannelDescription[];
   /** Page thread */
-  page?: number | undefined;
+  page: number;
 }
 
 export interface ListThreadRequest {
   /** Max number of records to return. Between 1 and 100. */
-  limit?:
+  limit:
     | number
     | undefined;
   /** The channel state to list. */
-  state?:
+  state:
     | number
     | undefined;
   /** The clan of this channel */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** channel id */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** thread id */
-  thread_id?:
-    | string
-    | undefined;
+  thread_id: string;
   /** Number of page */
-  page?: number | undefined;
+  page: number | undefined;
 }
 
 /** List (and optionally filter) channels. */
 export interface ListChannelDescsRequest {
   /** Max number of records to return. Between 1 and 100. */
-  limit?:
+  limit:
     | number
     | undefined;
   /** The channel state to list. */
-  state?:
+  state:
     | number
     | undefined;
   /** Cursor to start from */
-  cursor?:
-    | string
-    | undefined;
+  cursor: string;
   /** The clan of this channel */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** channel type */
-  channel_type?:
-    | number
-    | undefined;
+  channel_type: number;
   /** is mobile */
-  is_mobile?: boolean | undefined;
+  is_mobile: boolean;
 }
 
 /** List channel description detail */
 export interface ListChannelDetailRequest {
   /** channel id */
-  channel_id?: string | undefined;
+  channel_id: string;
 }
 
 /** Add a role for channel. */
 export interface AddRoleChannelDescRequest {
   /** This is the role that needs to be added to the channel */
-  role_ids?:
-    | string[]
-    | undefined;
+  role_ids: string[];
   /** This is a channel that needs more roles */
-  channel_id?: string | undefined;
+  channel_id: string;
 }
 
 /** Create a channel within clan. */
 export interface CreateChannelDescRequest {
   /** The clan of this channel */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** The parent channel this message belongs to. */
-  parent_id?:
-    | string
-    | undefined;
+  parent_id: string;
   /** The channel this message belongs to. */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** The category of channel */
-  category_id?:
-    | string
-    | undefined;
+  category_id: string;
   /** The channel type. */
-  type?:
+  type:
     | number
     | undefined;
   /** The channel lable */
-  channel_label?:
-    | string
-    | undefined;
+  channel_label: string;
   /** The channel private */
-  channel_private?:
-    | number
-    | undefined;
+  channel_private: number;
   /** The users to add. */
-  user_ids?:
-    | string[]
-    | undefined;
+  user_ids: string[];
   /** app url for channel type app */
-  app_id?: string | undefined;
+  app_id: string;
 }
 
 /** Delete a channel the user has access to. */
 export interface DeleteChannelDescRequest {
   /** The clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** The id of a channel. */
-  channel_id?: string | undefined;
+  channel_id: string;
 }
 
 /** Update fields in a given channel. */
 export interface UpdateChannelDescRequest {
   /** The clan ID */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** The ID of the channel to update. */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** The channel lable */
-  channel_label?:
+  channel_label:
     | string
     | undefined;
   /** The category of channel */
-  category_id?:
+  category_id:
     | string
     | undefined;
   /** app url for channel type app */
-  app_id?:
-    | string
-    | undefined;
+  app_id: string;
   /** topic */
-  topic?:
-    | string
-    | undefined;
+  topic: string;
   /**  */
-  age_restricted?:
-    | number
-    | undefined;
+  age_restricted: number;
   /**  */
-  e2ee?:
-    | number
-    | undefined;
+  e2ee: number;
   /** channel avatar */
-  channel_avatar?: string | undefined;
+  channel_avatar: string | undefined;
 }
 
 /** Update fields in a given channel. */
 export interface ChangeChannelPrivateRequest {
   /** The clan ID */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** The ID of the channel to update. */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** The channel private */
-  channel_private?:
-    | number
-    | undefined;
+  channel_private: number;
   /** The users to add. */
-  user_ids?:
-    | string[]
-    | undefined;
+  user_ids: string[];
   /** This is the role that needs to be added to the channel */
-  role_ids?: string[] | undefined;
+  role_ids: string[];
 }
 
 /** Add users to a channel. */
 export interface AddChannelUsersRequest {
   /** The channel to add users to. */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** The users to add. */
-  user_ids?: string[] | undefined;
+  user_ids: string[];
 }
 
 /** Kick a set of users from a channel. */
 export interface RemoveChannelUsersRequest {
   /** The channel ID to kick from. */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** The users to kick. */
-  user_ids?: string[] | undefined;
+  user_ids: string[];
 }
 
 /** Kick a set of users from a clan. */
 export interface RemoveClanUsersRequest {
   /** The clan ID to kick from. */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** The users to kick. */
-  user_ids?: string[] | undefined;
+  user_ids: string[];
 }
 
 /** Ban a set of users from a channel. */
 export interface BanClanUsersRequest {
   /** The clan ID to kick from. */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** The channel ID to ban */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** The users to kick. */
-  user_ids?:
-    | string[]
-    | undefined;
+  user_ids: string[];
   /** ban time */
-  ban_time?:
-    | number
-    | undefined;
+  ban_time: number;
   /** The reason */
-  reason?: string | undefined;
+  reason: string;
 }
 
 /** list banned user */
 export interface BannedUser {
   /** The channel ID to ban */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** The banned user. */
-  banned_id?:
-    | string
-    | undefined;
+  banned_id: string;
   /** The avatar */
-  banner_id?:
-    | string
-    | undefined;
+  banner_id: string;
   /** ban time */
-  ban_time?:
-    | number
-    | undefined;
+  ban_time: number;
   /** The reason */
-  reason?: string | undefined;
+  reason: string;
 }
 
 export interface BannedUserListRequest {
-  clan_id?: string | undefined;
-  channel_id?: string | undefined;
+  clan_id: string;
+  channel_id: string;
 }
 
 export interface BannedUserList {
-  banned_users?: BannedUser[] | undefined;
+  banned_users: BannedUser[];
 }
 
 /** Leave a channel. */
 export interface LeaveThreadRequest {
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** The channel ID to leave. */
-  channel_id?: string | undefined;
+  channel_id: string;
 }
 
 /** Role record */
 export interface Role {
   /** Role id */
-  id?: string | undefined;
-  title?: string | undefined;
-  color?: string | undefined;
-  role_icon?: string | undefined;
-  slug?: string | undefined;
-  description?: string | undefined;
-  creator_id?: string | undefined;
-  clan_id?: string | undefined;
-  active?: number | undefined;
-  display_online?: number | undefined;
-  allow_mention?: number | undefined;
-  role_user_list?: RoleUserList | undefined;
-  permission_list?: PermissionList | undefined;
-  role_channel_active?: number | undefined;
-  channel_ids?: string[] | undefined;
-  max_level_permission?: number | undefined;
-  order_role?: number | undefined;
+  id: string;
+  title: string;
+  color: string;
+  role_icon: string;
+  slug: string;
+  description: string;
+  creator_id: string;
+  clan_id: string;
+  active: number;
+  display_online: number;
+  allow_mention: number;
+  role_user_list: RoleUserList | undefined;
+  permission_list: PermissionList | undefined;
+  role_channel_active: number;
+  channel_ids: string[];
+  max_level_permission: number;
+  order_role: number;
 }
 
 /** Event clan */
 export interface EventManagement {
-  id?: string | undefined;
-  title?: string | undefined;
-  logo?: string | undefined;
-  description?: string | undefined;
-  active?: number | undefined;
-  start_event?: number | undefined;
-  creator_id?: string | undefined;
-  clan_id?: string | undefined;
-  channel_voice_id?: string | undefined;
-  address?: string | undefined;
-  start_time?: Date | undefined;
-  end_time?: Date | undefined;
-  user_ids?: string[] | undefined;
-  create_time?: Date | undefined;
-  max_permission?: number | undefined;
-  channel_id?: string | undefined;
-  event_status?: number | undefined;
-  repeat_type?: number | undefined;
-  is_private?: boolean | undefined;
-  meet_room?: GenerateMezonMeetResponse | undefined;
+  id: string;
+  title: string;
+  logo: string;
+  description: string;
+  active: number;
+  start_event: number;
+  creator_id: string;
+  clan_id: string;
+  channel_voice_id: string;
+  address: string;
+  start_time: Date | undefined;
+  end_time: Date | undefined;
+  user_ids: string[];
+  create_time: Date | undefined;
+  max_permission: number;
+  channel_id: string;
+  event_status: number;
+  repeat_type: number;
+  is_private: boolean;
+  meet_room: GenerateMezonMeetResponse | undefined;
 }
 
 /** Permission record */
 export interface Permission {
   /** Permission id */
-  id?: string | undefined;
-  title?: string | undefined;
-  slug?: string | undefined;
-  description?: string | undefined;
-  active?: number | undefined;
-  scope?: number | undefined;
-  level?: number | undefined;
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  active: number;
+  scope: number;
+  level: number;
 }
 
 /** Notification setting record */
 export interface NotificationSetting {
   /** Notification id */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** Notification title */
-  notification_setting_type?: number | undefined;
+  notification_setting_type: number;
 }
 
 /**  */
 export interface DeletePinMessage {
   /**  */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /**  */
-  message_id?:
-    | string
-    | undefined;
+  message_id: string;
   /**  */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /**  */
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 /**  */
 export interface PinMessage {
   /**  */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /**  */
-  message_id?:
-    | string
-    | undefined;
+  message_id: string;
   /**  */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /**  */
-  sender_id?:
-    | string
-    | undefined;
+  sender_id: string;
   /**  */
-  content?:
-    | string
-    | undefined;
+  content: string;
   /**  */
-  username?:
-    | string
-    | undefined;
+  username: string;
   /**  */
-  avatar?:
-    | string
-    | undefined;
+  avatar: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
-  create_time?:
+  create_time:
     | Date
     | undefined;
   /** create time in ms */
-  create_time_seconds?:
-    | number
-    | undefined;
+  create_time_seconds: number;
   /** attachment */
-  attachment?: string | undefined;
+  attachment: string;
 }
 
 export interface PinMessagesList {
-  pin_messages_list?: PinMessage[] | undefined;
+  pin_messages_list: PinMessage[];
 }
 
 /** Notification channel */
 export interface NotificationUserChannel {
   /** Notification id */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /**  */
-  notification_setting_type?:
-    | number
-    | undefined;
+  notification_setting_type: number;
   /**  */
-  time_mute?:
+  time_mute:
     | Date
     | undefined;
   /**  */
-  active?:
-    | number
-    | undefined;
+  active: number;
   /**  */
-  channel_id?: string | undefined;
+  channel_id: string;
 }
 
 /** Notification channel */
 export interface NotifiReactMessage {
   /** Notification id */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /**  */
-  user_id?:
-    | string
-    | undefined;
+  user_id: string;
   /**  */
-  channel_id?: string | undefined;
+  channel_id: string;
 }
 
 /**  */
 export interface DefaultNotificationClan {
   /**  */
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 /**  */
 export interface DefaultNotificationCategory {
   /**  */
-  category_id?: string | undefined;
+  category_id: string;
 }
 
 /**  */
 export interface NotificationChannel {
   /**  */
-  channel_id?: string | undefined;
+  channel_id: string;
 }
 
 /**  */
 export interface NotificationClan {
   /**  */
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 /**  */
 export interface NotificationSettingList {
   /** A list of notification setting. */
-  notification_setting?: NotificationSetting[] | undefined;
+  notification_setting: NotificationSetting[];
 }
 
 /** set notification */
 export interface SetNotificationRequest {
   /** channelId or categoryId */
-  channel_category_id?:
-    | string
-    | undefined;
+  channel_category_id: string;
   /** notification_type */
-  notification_type?:
-    | number
-    | undefined;
+  notification_type: number;
   /**  */
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 /**  */
 export interface PinMessageRequest {
-  message_id?: string | undefined;
-  channel_id?: string | undefined;
-  clan_id?: string | undefined;
+  message_id: string;
+  channel_id: string;
+  clan_id: string;
 }
 
 /** set notification */
 export interface SetMuteRequest {
   /** channel_id and category_id */
-  id?: string | undefined;
-  mute_time?: number | undefined;
-  active?: number | undefined;
-  clan_id?: string | undefined;
+  id: string;
+  mute_time: number;
+  active: number;
+  clan_id: string;
 }
 
 export interface HashtagDmListRequest {
   /** user Id */
-  user_id?:
-    | string[]
-    | undefined;
+  user_id: string[];
   /** Max number of records to return. Between 1 and 100. */
-  limit?: number | undefined;
+  limit: number | undefined;
 }
 
 export interface HashtagDmList {
-  hashtag_dm?: HashtagDm[] | undefined;
+  hashtag_dm: HashtagDm[];
 }
 
 /** hashtagDM */
 export interface HashtagDm {
   /** The channel id. */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** The channel lable */
-  channel_label?:
-    | string
-    | undefined;
+  channel_label: string;
   /** The clan of this channel */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** The clan name */
-  clan_name?:
-    | string
-    | undefined;
+  clan_name: string;
   /**  */
-  meeting_code?:
-    | string
-    | undefined;
+  meeting_code: string;
   /**  */
-  type?:
-    | number
-    | undefined;
+  type: number;
   /**  */
-  channel_private?:
-    | number
-    | undefined;
+  channel_private: number;
   /**  */
-  parent_id?: string | undefined;
+  parent_id: string;
 }
 
 export interface NotificationChannelCategorySettingList {
-  notification_channel_category_settings_list?: NotificationChannelCategorySetting[] | undefined;
+  notification_channel_category_settings_list: NotificationChannelCategorySetting[];
 }
 
 export interface NotificationChannelCategorySetting {
   /** Notification id */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /**  */
-  channel_category_label?:
-    | string
-    | undefined;
+  channel_category_label: string;
   /** Notification title */
-  notification_setting_type?:
-    | number
-    | undefined;
+  notification_setting_type: number;
   /**  */
-  channel_category_title?:
-    | string
-    | undefined;
+  channel_category_title: string;
   /**  */
-  action?: number | undefined;
+  action: number;
 }
 
 /** set default notification */
 export interface SetDefaultNotificationRequest {
-  clan_id?: string | undefined;
-  notification_type?: number | undefined;
-  category_id?: string | undefined;
+  clan_id: string;
+  notification_type: number;
+  category_id: string;
 }
 
 /** A list of role description, usually a result of a list operation. */
 export interface RoleList {
   /** A list of role. */
-  roles?:
-    | Role[]
-    | undefined;
+  roles: Role[];
   /** level permission max */
-  max_level_permission?: number | undefined;
+  max_level_permission: number;
 }
 
 export interface EventList {
   /** A list of event. */
-  events?: EventManagement[] | undefined;
+  events: EventManagement[];
 }
 
 /** A list of permission description, usually a result of a list operation. */
 export interface PermissionList {
   /** A list of permission. */
-  permissions?:
-    | Permission[]
-    | undefined;
+  permissions: Permission[];
   /** level permission max */
-  max_level_permission?: number | undefined;
+  max_level_permission: number;
 }
 
 /** List (and optionally filter) permissions. */
 export interface ListPermissionsRequest {
-  role_id?: string | undefined;
+  role_id: string;
 }
 
 /** List (and optionally filter) role-users. */
 export interface ListRoleUsersRequest {
-  role_id?:
-    | string
-    | undefined;
+  role_id: string;
   /** Max number of records to return. Between 1 and 100. */
-  limit?:
+  limit:
     | number
     | undefined;
   /** An optional next page cursor. */
-  cursor?: string | undefined;
+  cursor: string;
 }
 
 /** List Permission Of User In The Clan. */
 export interface ListPermissionOfUsersRequest {
   /** clan_id. */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** channel_id */
-  channel_id?: string | undefined;
+  channel_id: string;
 }
 
 export interface RoleUserList {
   /** role_users pairs for a clan. */
-  role_users?:
-    | RoleUserList_RoleUser[]
-    | undefined;
+  role_users: RoleUserList_RoleUser[];
   /** Cursor for the next page of results, if any. */
-  cursor?: string | undefined;
+  cursor: string;
 }
 
 /** A single user-role pair. */
 export interface RoleUserList_RoleUser {
   /** The id of the user's account. */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** The username of the user's account. */
-  username?:
-    | string
-    | undefined;
+  username: string;
   /** The display name of the user. */
-  display_name?:
-    | string
-    | undefined;
+  display_name: string;
   /** A URL for an avatar image. */
-  avatar_url?:
-    | string
-    | undefined;
+  avatar_url: string;
   /** The language expected to be a tag which follows the BCP-47 spec. */
-  lang_tag?:
-    | string
-    | undefined;
+  lang_tag: string;
   /** The location set by the user. */
-  location?:
-    | string
-    | undefined;
+  location: string;
   /** The timezone set by the user. */
-  online?: boolean | undefined;
+  online: boolean;
 }
 
 export interface UserEventRequest {
   /** The ID of the clan to be updated. */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** The ID of the event to be updated. */
-  event_id?: string | undefined;
+  event_id: string;
 }
 
 export interface ListEventsRequest {
   /** The clan of this event */
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 /** Create a role within clan. */
 export interface CreateRoleRequest {
-  title?: string | undefined;
-  color?: string | undefined;
-  role_icon?: string | undefined;
-  description?: string | undefined;
-  clan_id?: string | undefined;
-  display_online?: number | undefined;
-  allow_mention?:
-    | number
-    | undefined;
+  title: string;
+  color: string;
+  role_icon: string;
+  description: string;
+  clan_id: string;
+  display_online: number;
+  allow_mention: number;
   /** id of permission which has max level permission */
-  max_permission_id?:
-    | string
-    | undefined;
+  max_permission_id: string;
   /** The users to add. */
-  add_user_ids?:
-    | string[]
-    | undefined;
+  add_user_ids: string[];
   /** The permissions to add. */
-  active_permission_ids?:
-    | string[]
-    | undefined;
+  active_permission_ids: string[];
   /** order role */
-  order_role?: number | undefined;
+  order_role: number;
 }
 
 /** Create a event within clan. */
 export interface CreateEventRequest {
-  title?: string | undefined;
-  logo?: string | undefined;
-  description?: string | undefined;
-  clan_id?: string | undefined;
-  channel_voice_id?: string | undefined;
-  address?: string | undefined;
-  start_time?: Date | undefined;
-  end_time?: Date | undefined;
-  event_id?: string | undefined;
-  event_status?: number | undefined;
-  channel_id?: string | undefined;
-  action?: number | undefined;
-  repeat_type?: number | undefined;
-  creator_id?: string | undefined;
-  user_id?: string | undefined;
-  is_private?: boolean | undefined;
-  meet_room?: GenerateMezonMeetResponse | undefined;
+  title: string;
+  logo: string;
+  description: string;
+  clan_id: string;
+  channel_voice_id: string;
+  address: string;
+  start_time: Date | undefined;
+  end_time: Date | undefined;
+  event_id: string;
+  event_status: number;
+  channel_id: string;
+  action: number;
+  repeat_type: number;
+  creator_id: string;
+  user_id: string;
+  is_private: boolean | undefined;
+  meet_room: GenerateMezonMeetResponse | undefined;
 }
 
 /** update a event within clan. */
 export interface UpdateEventRequest {
-  title?: string | undefined;
-  logo?: string | undefined;
-  description?: string | undefined;
-  event_id?: string | undefined;
-  channel_id?: string | undefined;
-  address?: string | undefined;
-  start_time?: Date | undefined;
-  end_time?: Date | undefined;
-  clan_id?: string | undefined;
-  creator_id?: string | undefined;
-  channel_voice_id?: string | undefined;
-  channel_id_old?: string | undefined;
-  repeat_type?: number | undefined;
+  title: string;
+  logo: string;
+  description: string;
+  event_id: string;
+  channel_id: string;
+  address: string;
+  start_time: Date | undefined;
+  end_time: Date | undefined;
+  clan_id: string;
+  creator_id: string;
+  channel_voice_id: string;
+  channel_id_old: string;
+  repeat_type: number;
 }
 
 /** Delete a role the user has access to. */
 export interface DeleteRoleRequest {
   /** The id of a role. */
-  role_id?:
-    | string
-    | undefined;
+  role_id: string;
   /** The id of a channel */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** clan_id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** role label */
-  role_label?: string | undefined;
+  role_label: string;
 }
 
 export interface DeleteEventRequest {
   /** The id of a event. */
-  event_id?:
-    | string
-    | undefined;
+  event_id: string;
   /** clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** creator id */
-  creator_id?:
-    | string
-    | undefined;
+  creator_id: string;
   /** event label */
-  event_label?:
-    | string
-    | undefined;
+  event_label: string;
   /** channel id */
-  channel_id?: string | undefined;
+  channel_id: string;
 }
 
 /** Update fields in a given role. */
 export interface UpdateRoleRequest {
   /** The ID of the role to update. */
-  role_id?: string | undefined;
-  title?: string | undefined;
-  color?: string | undefined;
-  role_icon?: string | undefined;
-  description?: string | undefined;
-  display_online?: number | undefined;
-  allow_mention?:
+  role_id: string;
+  title: string | undefined;
+  color: string | undefined;
+  role_icon: string | undefined;
+  description: string | undefined;
+  display_online: number | undefined;
+  allow_mention:
     | number
     | undefined;
   /** The users to add. */
-  add_user_ids?:
-    | string[]
-    | undefined;
+  add_user_ids: string[];
   /** The permissions to add. */
-  active_permission_ids?:
-    | string[]
-    | undefined;
+  active_permission_ids: string[];
   /** The users to remove. */
-  remove_user_ids?:
-    | string[]
-    | undefined;
+  remove_user_ids: string[];
   /** The permissions to remove. */
-  remove_permission_ids?:
-    | string[]
-    | undefined;
+  remove_permission_ids: string[];
   /** the clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** id of permission which has max level permission */
-  max_permission_id?: string | undefined;
+  max_permission_id: string;
 }
 
 export interface UpdateRoleChannelRequest {
   /** The ID of the role to update. */
-  role_id?:
-    | string
-    | undefined;
+  role_id: string;
   /** The permissions to add. */
-  permission_update?:
-    | PermissionUpdate[]
-    | undefined;
+  permission_update: PermissionUpdate[];
   /** id of permission which has max level permission */
-  max_permission_id?:
-    | string
-    | undefined;
+  max_permission_id: string;
   /** The channel_id */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** The ID of the role to update. */
-  user_id?:
-    | string
-    | undefined;
+  user_id: string;
   /** Role label */
-  role_label?: string | undefined;
+  role_label: string;
 }
 
 export interface PermissionUpdate {
   /** permission_id */
-  permission_id?:
-    | string
-    | undefined;
+  permission_id: string;
   /** permission slug */
-  slug?:
-    | string
-    | undefined;
+  slug: string;
   /** type set permission */
-  type?: number | undefined;
+  type: number;
 }
 
 export interface UploadAttachmentRequest {
   /** The name of file that need to upload */
-  filename?:
-    | string
-    | undefined;
+  filename: string;
   /** The type of file that need to upload */
-  filetype?:
-    | string
-    | undefined;
+  filetype: string;
   /** The size of file that need to upload */
-  size?:
-    | number
-    | undefined;
+  size: number;
   /** width */
-  width?:
-    | number
-    | undefined;
+  width: number;
   /** Height */
-  height?: number | undefined;
+  height: number;
 }
 
 export interface ListMessageMentionRequest {
   /** Max number of records to return. Between 1 and 100. */
-  limit?:
+  limit:
     | number
     | undefined;
   /** True if listing should be older messages to newer, false if reverse. */
-  forward?:
+  forward:
     | boolean
     | undefined;
   /** A pagination cursor, if any. */
-  cursor?: string | undefined;
+  cursor: string;
 }
 
 export interface UploadAttachment {
   /** The name of file that need to upload */
-  filename?:
-    | string
-    | undefined;
+  filename: string;
   /** The url */
-  url?: string | undefined;
+  url: string;
 }
 
 export interface SearchMessageRequest {
-  filters?:
-    | FilterParam[]
-    | undefined;
+  filters: FilterParam[];
   /** Offset value */
-  from?:
+  from:
     | number
     | undefined;
   /** Page size */
-  size?:
+  size:
     | number
     | undefined;
   /** Sort information */
-  sorts?: SortParam[] | undefined;
+  sorts: SortParam[];
 }
 
 export interface SortParam {
   /** Field name to sort by */
-  field_name?:
-    | string
-    | undefined;
+  field_name: string;
   /** Sort order */
-  order?: string | undefined;
+  order: string;
 }
 
 export interface FilterParam {
   /** Field name to filter by */
-  field_name?:
-    | string
-    | undefined;
+  field_name: string;
   /** Filter value */
-  field_value?: string | undefined;
+  field_value: string;
 }
 
 export interface SearchMessageDocument {
   /** The message ID. */
-  message_id?:
-    | string
-    | undefined;
+  message_id: string;
   /** The channel ID. */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** The clan ID. */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** The user ID of sender. */
-  sender_id?:
-    | string
-    | undefined;
+  sender_id: string;
   /** Message content */
-  content?:
-    | string
-    | undefined;
+  content: string;
   /** Mention users */
-  mentions?:
-    | string
-    | undefined;
+  mentions: string;
   /** Reactions */
-  reactions?:
-    | string
-    | undefined;
+  reactions: string;
   /** Attachment */
-  attachments?:
-    | MessageAttachment[]
-    | undefined;
+  attachments: MessageAttachment[];
   /** Reference users */
-  references?:
-    | string
-    | undefined;
+  references: string;
   /** Message create time */
-  create_time?:
-    | string
-    | undefined;
+  create_time: string;
   /** Message update time */
-  update_time?:
-    | string
-    | undefined;
+  update_time: string;
   /** Channel name */
-  channel_label?:
-    | string
-    | undefined;
+  channel_label: string;
   /** Channel type */
-  channel_type?:
-    | number
-    | undefined;
+  channel_type: number;
   /** Clan name */
-  clan_name?:
-    | string
-    | undefined;
+  clan_name: string;
   /** Sender's username */
-  username?:
-    | string
-    | undefined;
+  username: string;
   /** Sender's display name */
-  display_name?:
-    | string
-    | undefined;
+  display_name: string;
   /** Sender's avatar URL */
-  avatar_url?: string | undefined;
+  avatar_url: string;
 }
 
 export interface SearchMessageResponse {
   /** List of paged messages. */
-  messages?:
-    | SearchMessageDocument[]
-    | undefined;
+  messages: SearchMessageDocument[];
   /** The total number of messages. */
-  total?: number | undefined;
+  total: number;
 }
 
 export interface RegistrationEmailRequest {
   /** A valid RFC-5322 email address. */
-  email?:
-    | string
-    | undefined;
+  email: string;
   /** A password for the user account. */
-  password?:
-    | string
-    | undefined;
+  password: string;
   /** A old password for the user account. */
-  old_password?:
-    | string
-    | undefined;
+  old_password: string;
   /** Set the username on the account at register. Must be unique. */
-  username?:
-    | string
-    | undefined;
+  username: string;
   /** Display name */
-  display_name?:
-    | string
-    | undefined;
+  display_name: string;
   /** Avatar url */
-  avatar_url?:
-    | string
-    | undefined;
+  avatar_url: string;
   /** DOB */
-  dob?:
-    | string
-    | undefined;
+  dob: string;
   /** Extra information that will be bundled in the session token. */
-  vars?: { [key: string]: string } | undefined;
+  vars: { [key: string]: string };
 }
 
 export interface RegistrationEmailRequest_VarsEntry {
@@ -3199,1729 +2377,1315 @@ export interface RegistrationEmailRequest_VarsEntry {
 }
 
 export interface ClanEmoji {
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** src url */
-  src?:
-    | string
-    | undefined;
+  src: string;
   /** shortname */
-  shortname?:
-    | string
-    | undefined;
+  shortname: string;
   /** category */
-  category?:
-    | string
-    | undefined;
+  category: string;
   /** creator id */
-  creator_id?:
-    | string
-    | undefined;
+  creator_id: string;
   /** clan_id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** clan logo */
-  logo?:
-    | string
-    | undefined;
+  logo: string;
   /** clan name */
-  clan_name?:
-    | string
-    | undefined;
+  clan_name: string;
   /** is for sale */
-  is_for_sale?: boolean | undefined;
+  is_for_sale: boolean;
 }
 
 export interface EmojiListedResponse {
-  emoji_list?: ClanEmoji[] | undefined;
+  emoji_list: ClanEmoji[];
 }
 
 export interface StickerListedResponse {
-  stickers?: ClanSticker[] | undefined;
+  stickers: ClanSticker[];
 }
 
 export interface ClanSticker {
-  id?: string | undefined;
-  source?: string | undefined;
-  shortname?: string | undefined;
-  category?: string | undefined;
-  creator_id?: string | undefined;
-  create_time?: Date | undefined;
-  clan_id?: string | undefined;
-  logo?: string | undefined;
-  clan_name?: string | undefined;
-  media_type?:
-    | number
-    | undefined;
+  id: string;
+  source: string;
+  shortname: string;
+  category: string;
+  creator_id: string;
+  create_time: Date | undefined;
+  clan_id: string;
+  logo: string;
+  clan_name: string;
+  media_type: number;
   /** is for sale */
-  is_for_sale?: boolean | undefined;
+  is_for_sale: boolean;
 }
 
 export interface AllUsersAddChannelRequest {
-  channel_id?: string | undefined;
-  limit?: number | undefined;
+  channel_id: string;
+  limit: number | undefined;
 }
 
 export interface AllUsersAddChannelResponse {
-  channel_id?: string | undefined;
-  user_ids?: string[] | undefined;
-  limit?: number | undefined;
-  usernames?: string[] | undefined;
-  display_names?: string[] | undefined;
-  avatars?: string[] | undefined;
-  onlines?: boolean[] | undefined;
+  channel_id: string;
+  user_ids: string[];
+  limit: number | undefined;
+  usernames: string[];
+  display_names: string[];
+  avatars: string[];
+  onlines: boolean[];
 }
 
 export interface ClanEmojiCreateRequest {
-  clan_id?: string | undefined;
-  source?: string | undefined;
-  shortname?: string | undefined;
-  category?: string | undefined;
-  id?: string | undefined;
-  is_for_sale?: boolean | undefined;
+  clan_id: string;
+  source: string;
+  shortname: string;
+  category: string;
+  id: string;
+  is_for_sale: boolean;
 }
 
 export interface ClanEmojiGetByClanIdRequest {
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 export interface ClanEmojiDeleteRequest {
-  id?: string | undefined;
-  clan_id?: string | undefined;
-  emoji_label?: string | undefined;
+  id: string;
+  clan_id: string;
+  emoji_label: string;
 }
 
 export interface ClanEmojiUpdateRequest {
-  id?: string | undefined;
-  shortname?: string | undefined;
-  clan_id?: string | undefined;
+  id: string;
+  shortname: string;
+  clan_id: string;
 }
 
 export interface Webhook {
-  id?: string | undefined;
-  webhook_name?: string | undefined;
-  channel_id?: string | undefined;
-  active?:
-    | number
-    | undefined;
+  id: string;
+  webhook_name: string;
+  channel_id: string;
+  active: number;
   /** URL of the webhook, which is automatically generated and different from the avatar */
-  url?: string | undefined;
-  creator_id?: string | undefined;
-  create_time?: string | undefined;
-  update_time?: string | undefined;
-  avatar?: string | undefined;
-  status?: number | undefined;
-  clan_id?: string | undefined;
+  url: string;
+  creator_id: string;
+  create_time: string;
+  update_time: string;
+  avatar: string;
+  status: number;
+  clan_id: string;
 }
 
 export interface WebhookCreateRequest {
-  webhook_name?: string | undefined;
-  channel_id?: string | undefined;
-  avatar?: string | undefined;
-  clan_id?: string | undefined;
+  webhook_name: string;
+  channel_id: string;
+  avatar: string;
+  clan_id: string;
 }
 
 export interface WebhookListRequestById {
-  id?: string | undefined;
+  id: string;
 }
 
 export interface WebhookUpdateRequestById {
   /** webhook Id */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** webhook name */
-  webhook_name?:
-    | string
-    | undefined;
+  webhook_name: string;
   /** change channel_id of webhook */
-  channel_id_update?:
-    | string
-    | undefined;
+  channel_id_update: string;
   /** webhook avatar */
-  avatar?:
-    | string
-    | undefined;
+  avatar: string;
   /** channel id */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** clan id */
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 export interface WebhookDeleteRequestById {
-  id?: string | undefined;
-  clan_id?: string | undefined;
-  channel_id?: string | undefined;
+  id: string;
+  clan_id: string;
+  channel_id: string;
 }
 
 export interface WebhookListRequest {
-  channel_id?: string | undefined;
-  clan_id?: string | undefined;
+  channel_id: string;
+  clan_id: string;
 }
 
 export interface WebhookListResponse {
-  webhooks?: Webhook[] | undefined;
+  webhooks: Webhook[];
 }
 
 export interface WebhookGenerateResponse {
-  url?: string | undefined;
-  hook_name?: string | undefined;
-  channel_id?: string | undefined;
-  avatar?: string | undefined;
+  url: string;
+  hook_name: string;
+  channel_id: string;
+  avatar: string;
 }
 
 export interface WebhookHandlerRequest {
-  body?: { [key: string]: any } | undefined;
-  channel_id?: string | undefined;
-  token?: string | undefined;
+  body: { [key: string]: any } | undefined;
+  channel_id: string;
+  token: string;
 }
 
 export interface CheckDuplicateClanNameRequest {
-  clan_name?: string | undefined;
+  clan_name: string;
 }
 
 export interface CheckDuplicateClanNameResponse {
-  is_duplicate?: boolean | undefined;
+  is_duplicate: boolean;
 }
 
 export interface ClanStickerAddRequest {
-  source?: string | undefined;
-  shortname?: string | undefined;
-  category?: string | undefined;
-  clan_id?:
-    | string
-    | undefined;
+  source: string;
+  shortname: string;
+  category: string;
+  clan_id: string;
   /** UNIQUE include type number */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** media type for image or audio */
-  media_type?:
-    | number
-    | undefined;
+  media_type: number;
   /** is for sale */
-  is_for_sale?: boolean | undefined;
+  is_for_sale: boolean;
 }
 
 export interface ClanStickerListByClanIdRequest {
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 export interface ClanStickerUpdateByIdRequest {
-  id?: string | undefined;
-  source?: string | undefined;
-  shortname?: string | undefined;
-  category?: string | undefined;
-  clan_id?: string | undefined;
+  id: string;
+  source: string;
+  shortname: string;
+  category: string;
+  clan_id: string;
 }
 
 export interface ClanStickerDeleteRequest {
-  id?: string | undefined;
-  clan_id?: string | undefined;
-  sticker_label?: string | undefined;
+  id: string;
+  clan_id: string;
+  sticker_label: string;
 }
 
 export interface ChangeChannelCategoryRequest {
-  clan_id?: string | undefined;
-  channel_id?: string | undefined;
-  new_category_id?: string | undefined;
+  clan_id: string;
+  channel_id: string;
+  new_category_id: string;
 }
 
 /** App information. */
 export interface App {
   /** app id */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** appname */
-  appname?:
-    | string
-    | undefined;
+  appname: string;
   /** creator_id */
-  creator_id?:
-    | string
-    | undefined;
+  creator_id: string;
   /** logo */
-  applogo?:
-    | string
-    | undefined;
+  applogo: string;
   /** status online */
-  is_shadow?:
-    | boolean
-    | undefined;
+  is_shadow: boolean;
   /** The UNIX time when the app was disabled. */
-  disable_time?:
+  disable_time:
     | Date
     | undefined;
   /** string token */
-  token?:
-    | string
-    | undefined;
+  token: string;
   /** role */
-  role?:
-    | number
-    | undefined;
+  role: number;
   /** about */
-  about?:
-    | string
-    | undefined;
+  about: string;
   /** app url */
-  app_url?: string | undefined;
+  app_url: string;
 }
 
 /** Delete a app. */
 export interface AppDeleteRequest {
   /** The unique identifier of the app. */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** Record the app deletion - used for GDPR compliance. */
-  record_deletion?: boolean | undefined;
+  record_deletion: boolean | undefined;
 }
 
 /** A list of apps. */
 export interface AppList {
   /** A list of apps. */
-  apps?:
-    | App[]
-    | undefined;
+  apps: App[];
   /** Approximate total number of apps. */
-  total_count?:
-    | number
-    | undefined;
+  total_count: number;
   /** Next cursor. */
-  next_cursor?: string | undefined;
+  next_cursor: string;
 }
 
 /** Add a new app */
 export interface AddAppRequest {
   /** The appname. */
-  appname?:
-    | string
-    | undefined;
+  appname: string;
   /** The password. */
-  token?:
-    | string
-    | undefined;
+  token: string;
   /** Creator of the app. */
-  creator_id?:
-    | string
-    | undefined;
+  creator_id: string;
   /** Role of this app. */
-  role?:
-    | number
-    | undefined;
+  role: number;
   /** Is shadow. */
-  is_shadow?:
-    | boolean
-    | undefined;
+  is_shadow: boolean;
   /** App url. */
-  app_url?:
-    | string
-    | undefined;
+  app_url: string;
   /** app logo */
-  app_logo?:
-    | string
-    | undefined;
+  app_logo: string;
   /** about me */
-  about_me?: string | undefined;
+  about_me: string;
 }
 
 /** List (and optionally filter) users. */
 export interface ListAppsRequest {
   /** User ID or username filter. */
-  filter?:
-    | string
-    | undefined;
+  filter: string;
   /** Search only recorded deletes. */
-  tombstones?:
-    | boolean
-    | undefined;
+  tombstones: boolean;
   /** Cursor to start from */
-  cursor?: string | undefined;
+  cursor: string;
 }
 
 /** Update app information. */
 export interface UpdateAppRequest {
   /** User ID to update. */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** Username. */
-  appname?:
+  appname:
     | string
     | undefined;
   /** Metadata. */
-  metadata?:
+  metadata:
     | string
     | undefined;
   /** Avatar URL. */
-  applogo?:
+  applogo:
     | string
     | undefined;
   /** Token. */
-  token?:
+  token:
     | string
     | undefined;
   /** about the app. */
-  about?:
-    | string
-    | undefined;
+  about: string;
   /** App url. */
-  app_url?:
-    | string
-    | undefined;
+  app_url: string;
   /** need update or not */
-  is_shadow?: string | undefined;
+  is_shadow: string;
 }
 
 /** The identifier for an app. */
 export interface AppId {
   /** The unique identifier of the app. */
-  id?: string | undefined;
+  id: string;
 }
 
 /** The identifier for an app. */
 export interface AppClan {
   /** The unique identifier of the app. */
-  app_id?: string | undefined;
-  clan_id?: string | undefined;
+  app_id: string;
+  clan_id: string;
 }
 
 /** Delete channel messages by timestamp or/and ids. */
 export interface DeleteChannelMessagesRequest {
   /** Timestamp before which messages will be deleted. */
-  before?:
+  before:
     | Date
     | undefined;
   /** IDs of the messages to delete. */
-  ids?: string[] | undefined;
+  ids: string[];
 }
 
 export interface DeleteChannelMessagesResponse {
   /** Total number of messages deleted. */
-  total?: number | undefined;
+  total: number;
 }
 
 /** System message details. */
 export interface SystemMessage {
   /** ID */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** Clan ID */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** Channel ID */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** Welcome random */
-  welcome_random?:
-    | string
-    | undefined;
+  welcome_random: string;
   /** Welcome sticker */
-  welcome_sticker?:
-    | string
-    | undefined;
+  welcome_sticker: string;
   /** Boost message */
-  boost_message?:
-    | string
-    | undefined;
+  boost_message: string;
   /** Setup tips */
-  setup_tips?:
-    | string
-    | undefined;
+  setup_tips: string;
   /** Hide audit log */
-  hide_audit_log?: string | undefined;
+  hide_audit_log: string;
 }
 
 /** List of system message. */
 export interface SystemMessagesList {
-  system_messages_list?: SystemMessage[] | undefined;
+  system_messages_list: SystemMessage[];
 }
 
 /** Request to get system message by clan and channel IDs. */
 export interface SystemMessageRequest {
   /** Clan ID */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** Channel ID */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** Welcome random */
-  welcome_random?:
-    | string
-    | undefined;
+  welcome_random: string;
   /** Welcome sticker */
-  welcome_sticker?:
-    | string
-    | undefined;
+  welcome_sticker: string;
   /** Boost message */
-  boost_message?:
-    | string
-    | undefined;
+  boost_message: string;
   /** Setup tips */
-  setup_tips?:
-    | string
-    | undefined;
+  setup_tips: string;
   /** Hide audit log */
-  hide_audit_log?: string | undefined;
+  hide_audit_log: string;
 }
 
 /** Request to delete a system message by clan ID. */
 export interface DeleteSystemMessage {
   /** Clan ID */
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 /** Request to get system message by clan ID. */
 export interface GetSystemMessage {
   /** Clan ID */
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 export interface DeleteCategoryOrderRequest {
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 export interface StreamHttpCallbackRequest {
   /** id */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** client_id */
-  client_id?:
-    | string
-    | undefined;
+  client_id: string;
   /** clan_id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** channel_id */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** user_id */
-  user_id?:
-    | string
-    | undefined;
+  user_id: string;
   /** action */
-  action?:
-    | number
-    | undefined;
+  action: number;
   /** is_publisher */
-  is_publisher?:
-    | boolean
-    | undefined;
+  is_publisher: boolean;
   /** token */
-  token?: string | undefined;
+  token: string;
 }
 
 export interface StreamHttpCallbackResponse {
-  code?: number | undefined;
-  msg?: string | undefined;
+  code: number | undefined;
+  msg: string;
 }
 
 /** A list of users belonging to a channel, along with their role. */
 export interface StreamingChannelUser {
   /** user join id */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** user for a channel. */
-  user_id?:
-    | string
-    | undefined;
+  user_id: string;
   /** channel id */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** participant */
-  participant?: string | undefined;
+  participant: string;
 }
 
 /** A list of users belonging to a channel, along with their role. */
 export interface StreamingChannelUserList {
   /** list of voice channel user */
-  streaming_channel_users?: StreamingChannelUser[] | undefined;
+  streaming_channel_users: StreamingChannelUser[];
 }
 
 export interface RegisterStreamingChannelRequest {
   /** clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** channel id */
-  channel_id?: string | undefined;
+  channel_id: string;
 }
 
 export interface RegisterStreamingChannelResponse {
   /** clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** channel id */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** streaming url */
-  streaming_url?: string | undefined;
+  streaming_url: string;
 }
 
 export interface GiveCoffeeEvent {
   /** sender id */
-  sender_id?:
-    | string
-    | undefined;
+  sender_id: string;
   /** receiver id */
-  receiver_id?:
-    | string
-    | undefined;
+  receiver_id: string;
   /** token count */
-  token_count?:
-    | number
-    | undefined;
+  token_count: number;
   /** message_ref */
-  message_ref_id?:
-    | string
-    | undefined;
+  message_ref_id: string;
   /** chanel id */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** clan id */
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 export interface ListChannelAppsRequest {
   /** clan id */
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 export interface ListChannelAppsResponse {
   /** list of channel apps */
-  channel_apps?: ChannelAppResponse[] | undefined;
+  channel_apps: ChannelAppResponse[];
 }
 
 export interface ChannelAppResponse {
   /** id */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** channel id */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** app id */
-  app_id?:
-    | string
-    | undefined;
+  app_id: string;
   /** app url */
-  app_url?:
-    | string
-    | undefined;
+  app_url: string;
   /** app name */
-  app_name?:
-    | string
-    | undefined;
+  app_name: string;
   /** app logo */
-  app_logo?: string | undefined;
+  app_logo: string;
 }
 
 export interface AllUserClans {
-  users?: User[] | undefined;
+  users: User[];
 }
 
 export interface RoleListEventRequest {
   /** clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** limit */
-  limit?:
-    | number
-    | undefined;
+  limit: number;
   /** state */
-  state?:
-    | number
-    | undefined;
+  state: number;
   /** cursor */
-  cursor?: string | undefined;
+  cursor: string;
 }
 
 export interface RoleListEventResponse {
   /** limit */
-  limit?:
-    | number
-    | undefined;
+  limit: number;
   /** state */
-  state?:
-    | number
-    | undefined;
+  state: number;
   /** cursor */
-  cursor?:
-    | string
-    | undefined;
+  cursor: string;
   /** clan_id */
-  clanId?:
-    | string
-    | undefined;
+  clanId: string;
   /** list of roles */
-  roles?: RoleList | undefined;
+  roles: RoleList | undefined;
 }
 
 export interface UserPermissionInChannelListRequest {
   /** clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** channel id */
-  channel_id?: string | undefined;
+  channel_id: string;
 }
 
 export interface UserPermissionInChannelListResponse {
   /** clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** channel id */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** A list of permission. */
-  permissions?: PermissionList | undefined;
+  permissions: PermissionList | undefined;
 }
 
 /** Permission role channel */
 export interface PermissionRoleChannel {
   /** permission id */
-  permission_id?:
-    | string
-    | undefined;
+  permission_id: string;
   /** active */
-  active?: boolean | undefined;
+  active: boolean;
 }
 
 export interface PermissionRoleChannelListEventRequest {
   /** role id */
-  role_id?:
-    | string
-    | undefined;
+  role_id: string;
   /** channel id */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** user id */
-  user_id?: string | undefined;
+  user_id: string;
 }
 
 /** List of permission role channel */
 export interface PermissionRoleChannelListEventResponse {
   /** role id */
-  role_id?:
-    | string
-    | undefined;
+  role_id: string;
   /** channel id */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** user id */
-  user_id?:
-    | string
-    | undefined;
+  user_id: string;
   /** list of permission role channel */
-  permission_role_channel?: PermissionRoleChannel[] | undefined;
+  permission_role_channel: PermissionRoleChannel[];
 }
 
 export interface ChannelSettingListRequest {
   /** clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** parent id of thread */
-  parent_id?:
-    | string
-    | undefined;
+  parent_id: string;
   /** category id */
-  category_id?:
-    | string
-    | undefined;
+  category_id: string;
   /** is private channel */
-  privateChannel?:
+  privateChannel:
     | number
     | undefined;
   /** is active */
-  active?:
+  active:
     | number
     | undefined;
   /** status */
-  status?:
+  status:
     | number
     | undefined;
   /** type */
-  type?:
+  type:
     | number
     | undefined;
   /** limit */
-  limit?:
+  limit:
     | number
     | undefined;
   /** page */
-  page?:
+  page:
     | number
     | undefined;
   /** channel label */
-  channel_label?: string | undefined;
+  channel_label: string;
 }
 
 export interface ChannelSettingItem {
   /** channel id */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** creator id */
-  creator_id?:
-    | string
-    | undefined;
+  creator_id: string;
   /** parentId */
-  parent_id?:
-    | string
-    | undefined;
+  parent_id: string;
   /** label of channel */
-  channel_label?:
-    | string
-    | undefined;
+  channel_label: string;
   /** category id */
-  category_id?:
-    | string
-    | undefined;
+  category_id: string;
   /** meeting code */
-  meeting_code?:
-    | string
-    | undefined;
+  meeting_code: string;
   /** channel private */
-  channel_private?:
-    | number
-    | undefined;
+  channel_private: number;
   /** channel type */
-  channel_type?:
-    | number
-    | undefined;
+  channel_type: number;
   /** is active */
-  active?:
-    | number
-    | undefined;
+  active: number;
   /** list user in channel */
-  user_ids?:
-    | string[]
-    | undefined;
+  user_ids: string[];
   /** message count */
-  message_count?:
-    | number
-    | undefined;
+  message_count: number;
   /** last sent message */
-  last_sent_message?: ChannelMessageHeader | undefined;
+  last_sent_message: ChannelMessageHeader | undefined;
 }
 
 export interface ChannelSettingListResponse {
   /** clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** channel count */
-  channel_count?:
-    | number
-    | undefined;
+  channel_count: number;
   /** thread count */
-  thread_count?:
-    | number
-    | undefined;
+  thread_count: number;
   /** channel setting list */
-  channel_setting_list?: ChannelSettingItem[] | undefined;
+  channel_setting_list: ChannelSettingItem[];
 }
 
 export interface MarkAsReadRequest {
   /** channel id */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** category_id */
-  category_id?:
-    | string
-    | undefined;
+  category_id: string;
   /** clan id */
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 export interface EditChannelCanvasRequest {
   /** id */
-  id?:
+  id:
     | string
     | undefined;
   /** channel id */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** title */
-  title?:
-    | string
-    | undefined;
+  title: string;
   /** content */
-  content?:
-    | string
-    | undefined;
+  content: string;
   /** is default */
-  is_default?:
-    | boolean
-    | undefined;
+  is_default: boolean;
   /** status */
-  status?: number | undefined;
+  status: number;
 }
 
 export interface EditChannelCanvasResponse {
   /** id */
-  id?: string | undefined;
+  id: string;
 }
 
 export interface DeleteChannelCanvasRequest {
   /** clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** channel id */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** canvas id */
-  canvas_id?: string | undefined;
+  canvas_id: string;
 }
 
 export interface ChannelCanvasListRequest {
   /** clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** channel id */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** limit */
-  limit?:
+  limit:
     | number
     | undefined;
   /** page */
-  page?:
+  page:
     | number
     | undefined;
   /**  */
-  cursor?: string | undefined;
+  cursor: string;
 }
 
 export interface ChannelCanvasItem {
   /** id */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** title */
-  title?:
-    | string
-    | undefined;
+  title: string;
   /** is default */
-  is_default?:
-    | boolean
-    | undefined;
+  is_default: boolean;
   /** content */
-  content?:
-    | string
-    | undefined;
+  content: string;
   /** creator */
-  creator_id?:
-    | string
-    | undefined;
+  creator_id: string;
   /**  */
-  update_time?: Date | undefined;
-  create_time?: Date | undefined;
+  update_time: Date | undefined;
+  create_time: Date | undefined;
 }
 
 export interface ChannelCanvasListResponse {
   /** clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** channel id */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** channel doc item */
-  channel_canvases?:
-    | ChannelCanvasItem[]
-    | undefined;
+  channel_canvases: ChannelCanvasItem[];
   /**  */
-  count?: number | undefined;
+  count: number;
 }
 
 export interface ChannelCanvasDetailRequest {
   /** id */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** channel id */
-  channel_id?: string | undefined;
+  channel_id: string;
 }
 
 export interface ChannelCanvasDetailResponse {
   /** id */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** title */
-  title?:
-    | string
-    | undefined;
+  title: string;
   /** content */
-  content?:
-    | string
-    | undefined;
+  content: string;
   /** creator */
-  creator_id?:
-    | string
-    | undefined;
+  creator_id: string;
   /** editor */
-  editor_id?:
-    | string
-    | undefined;
+  editor_id: string;
   /** is default */
-  is_default?: boolean | undefined;
+  is_default: boolean;
 }
 
 export interface AddFavoriteChannelRequest {
-  channel_id?: string | undefined;
-  clan_id?: string | undefined;
+  channel_id: string;
+  clan_id: string;
 }
 
 export interface RemoveFavoriteChannelRequest {
-  clan_id?: string | undefined;
-  channel_id?: string | undefined;
+  clan_id: string;
+  channel_id: string;
 }
 
 export interface AddFavoriteChannelResponse {
-  channel_id?: string | undefined;
+  channel_id: string;
 }
 
 export interface ListFavoriteChannelRequest {
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 export interface ListFavoriteChannelResponse {
-  channel_ids?: string[] | undefined;
+  channel_ids: string[];
 }
 
 export interface UserActivity {
-  user_id?: string | undefined;
-  activity_name?: string | undefined;
-  activity_type?: number | undefined;
-  activity_description?: string | undefined;
-  start_time?: Date | undefined;
-  end_time?: Date | undefined;
-  application_id?: string | undefined;
-  status?: number | undefined;
+  user_id: string;
+  activity_name: string;
+  activity_type: number;
+  activity_description: string;
+  start_time: Date | undefined;
+  end_time: Date | undefined;
+  application_id: string;
+  status: number;
 }
 
 export interface ListUserActivity {
-  activities?: UserActivity[] | undefined;
+  activities: UserActivity[];
 }
 
 export interface CreateActivityRequest {
-  activity_name?: string | undefined;
-  activity_type?: number | undefined;
-  activity_description?: string | undefined;
-  start_time?: Date | undefined;
-  application_id?: string | undefined;
-  status?: number | undefined;
+  activity_name: string;
+  activity_type: number;
+  activity_description: string;
+  start_time: Date | undefined;
+  application_id: string;
+  status: number;
 }
 
 export interface LoginIDResponse {
   /** loginId */
-  login_id?:
-    | string
-    | undefined;
+  login_id: string;
   /** status login */
-  status?:
-    | number
-    | undefined;
+  status: number;
   /** create time */
-  create_time_second?:
-    | number
-    | undefined;
+  create_time_second: number;
   /** platform */
-  platform?:
-    | string
-    | undefined;
+  platform: string;
   /** user_id */
-  user_id?:
-    | number
-    | undefined;
+  user_id: number;
   /** username */
-  username?:
-    | string
-    | undefined;
+  username: string;
   /** address */
-  address?: string | undefined;
+  address: string;
 }
 
 export interface LoginRequest {
   /** platform */
-  platform?:
-    | string
-    | undefined;
+  platform: string;
   /** address */
-  address?: string | undefined;
+  address: string;
 }
 
 export interface ConfirmLoginRequest {
   /** loginId */
-  login_id?:
-    | string
-    | undefined;
+  login_id: string;
   /** Whether to enable "Remember Me" for extended session duration. */
-  is_remember?: boolean | undefined;
+  is_remember: boolean | undefined;
 }
 
 export interface PubKey {
-  encr?: Uint8Array | undefined;
-  sign?: Uint8Array | undefined;
+  encr: Uint8Array;
+  sign: Uint8Array;
 }
 
 export interface PushPubKeyRequest {
-  PK?: PubKey | undefined;
+  PK: PubKey | undefined;
 }
 
 export interface GetPubKeysRequest {
-  user_ids?: string[] | undefined;
+  user_ids: string[];
 }
 
 export interface GetPubKeysResponse {
-  pub_keys?: GetPubKeysResponse_UserPubKey[] | undefined;
+  pub_keys: GetPubKeysResponse_UserPubKey[];
 }
 
 export interface GetPubKeysResponse_UserPubKey {
-  user_id?: string | undefined;
-  PK?: PubKey | undefined;
+  user_id: string;
+  PK: PubKey | undefined;
 }
 
 export interface ChanEncryptionMethod {
-  method?: string | undefined;
-  channel_id?: string | undefined;
+  method: string;
+  channel_id: string;
 }
 
 export interface GetKeyServerResp {
-  url?: string | undefined;
+  url: string;
 }
 
 export interface AuditLog {
-  id?: string | undefined;
-  user_id?: string | undefined;
-  clan_id?: string | undefined;
-  action_log?: string | undefined;
-  entity_name?: string | undefined;
-  entity_id?: string | undefined;
-  details?: string | undefined;
-  time_log?: Date | undefined;
-  channel_id?: string | undefined;
-  channel_label?: string | undefined;
+  id: string;
+  user_id: string;
+  clan_id: string;
+  action_log: string;
+  entity_name: string;
+  entity_id: string;
+  details: string;
+  time_log: Date | undefined;
+  channel_id: string;
+  channel_label: string;
 }
 
 export interface ListAuditLog {
-  total_count?: number | undefined;
-  date_log?: string | undefined;
-  logs?: AuditLog[] | undefined;
+  total_count: number;
+  date_log: string;
+  logs: AuditLog[];
 }
 
 export interface ListAuditLogRequest {
-  action_log?: string | undefined;
-  user_id?: string | undefined;
-  clan_id?: string | undefined;
-  date_log?: string | undefined;
+  action_log: string;
+  user_id: string;
+  clan_id: string;
+  date_log: string;
 }
 
 export interface TokenSentEvent {
   /** sender id */
-  sender_id?:
-    | string
-    | undefined;
+  sender_id: string;
   /** sender name */
-  sender_name?:
-    | string
-    | undefined;
+  sender_name: string;
   /** receiver */
-  receiver_id?:
-    | string
-    | undefined;
+  receiver_id: string;
   /** amount of token */
-  amount?:
-    | number
-    | undefined;
+  amount: number;
   /** note */
-  note?:
-    | string
-    | undefined;
+  note: string;
   /** extra attribute */
-  extra_attribute?:
-    | string
-    | undefined;
+  extra_attribute: string;
   /** transaction id */
-  transaction_id?: string | undefined;
+  transaction_id: string;
 }
 
 export interface UnlockItemRequest {
   /** item id */
-  item_id?:
-    | string
-    | undefined;
+  item_id: string;
   /** item type */
-  item_type?: number | undefined;
+  item_type: number;
 }
 
 export interface UnlockedItemResponse {
-  source?: string | undefined;
+  source: string;
 }
 
 export interface ListOnboardingRequest {
   /** clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** guide_type: 0 = greeting, 1 = rule, 2 = task, 3 = question */
-  guide_type?:
+  guide_type:
     | number
     | undefined;
   /** limit */
-  limit?:
+  limit:
     | number
     | undefined;
   /** page */
-  page?: number | undefined;
+  page: number | undefined;
 }
 
 export interface ListOnboardingResponse {
-  list_onboarding?: OnboardingItem[] | undefined;
+  list_onboarding: OnboardingItem[];
 }
 
 export interface OnboardingItem {
   /** id */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** guide_type: 0 = greeting, 1 = rule, 2 = task, 3 = question */
-  guide_type?:
-    | number
-    | undefined;
+  guide_type: number;
   /** task type */
-  task_type?:
-    | number
-    | undefined;
+  task_type: number;
   /** channel id */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** title */
-  title?:
-    | string
-    | undefined;
+  title: string;
   /** content */
-  content?:
-    | string
-    | undefined;
+  content: string;
   /** image */
-  image_url?:
-    | string
-    | undefined;
+  image_url: string;
   /** answers */
-  answers?:
-    | OnboardingAnswer[]
-    | undefined;
+  answers: OnboardingAnswer[];
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
-  create_time?:
+  create_time:
     | Date
     | undefined;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated. */
-  update_time?: Date | undefined;
+  update_time: Date | undefined;
 }
 
 export interface OnboardingAnswer {
   /** title */
-  title?:
-    | string
-    | undefined;
+  title: string;
   /** description */
-  description?:
-    | string
-    | undefined;
+  description: string;
   /** emoji */
-  emoji?:
-    | string
-    | undefined;
+  emoji: string;
   /** image */
-  image_url?: string | undefined;
+  image_url: string;
 }
 
 export interface OnboardingContent {
   /** guide type */
-  guide_type?:
-    | number
-    | undefined;
+  guide_type: number;
   /** task type */
-  task_type?:
-    | number
-    | undefined;
+  task_type: number;
   /** channel id */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** title */
-  title?:
-    | string
-    | undefined;
+  title: string;
   /** content */
-  content?:
-    | string
-    | undefined;
+  content: string;
   /** image */
-  image_url?:
-    | string
-    | undefined;
+  image_url: string;
   /** answers */
-  answers?: OnboardingAnswer[] | undefined;
+  answers: OnboardingAnswer[];
 }
 
 export interface CreateOnboardingRequest {
   /** clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** contents */
-  contents?: OnboardingContent[] | undefined;
+  contents: OnboardingContent[];
 }
 
 export interface UpdateOnboardingRequest {
   /** id */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** clan id */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** task type */
-  task_type?:
+  task_type:
     | number
     | undefined;
   /** channel id */
-  channel_id?:
-    | string
-    | undefined;
+  channel_id: string;
   /** title */
-  title?:
-    | string
-    | undefined;
+  title: string;
   /** content */
-  content?:
-    | string
-    | undefined;
+  content: string;
   /** image */
-  image_url?:
-    | string
-    | undefined;
+  image_url: string;
   /** answers */
-  answers?: OnboardingAnswer[] | undefined;
+  answers: OnboardingAnswer[];
 }
 
 export interface OnboardingRequest {
   /** id */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** clan id */
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 export interface ClanWebhook {
   /** id. */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** webhook name. */
-  webhook_name?:
-    | string
-    | undefined;
+  webhook_name: string;
   /** clan id. */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** active. */
-  active?:
-    | number
-    | undefined;
+  active: number;
   /** URL of the webhook, which is automatically generated and different from the avatar. */
-  url?:
-    | string
-    | undefined;
+  url: string;
   /** creator id. */
-  creator_id?:
-    | string
-    | undefined;
+  creator_id: string;
   /** avatar */
-  avatar?:
-    | string
-    | undefined;
+  avatar: string;
   /** create time. */
-  create_time?:
-    | string
-    | undefined;
+  create_time: string;
   /** update time. */
-  update_time?: string | undefined;
+  update_time: string;
 }
 
 export interface GenerateClanWebhookRequest {
   /** clan id. */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** webhook name. */
-  webhook_name?:
-    | string
-    | undefined;
+  webhook_name: string;
   /** avatar. */
-  avatar?: string | undefined;
+  avatar: string;
 }
 
 export interface GenerateClanWebhookResponse {
   /** clan id. */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** url. */
-  url?:
-    | string
-    | undefined;
+  url: string;
   /** webhook name. */
-  webhook_name?:
-    | string
-    | undefined;
+  webhook_name: string;
   /** avatar. */
-  avatar?: string | undefined;
+  avatar: string;
 }
 
 export interface ClanWebhookRequest {
   /** id. */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** clan id. */
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 export interface UpdateClanWebhookRequest {
   /** webhook id. */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** clan id. */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** webhook name. */
-  webhook_name?:
-    | string
-    | undefined;
+  webhook_name: string;
   /** avatar. */
-  avatar?:
-    | string
-    | undefined;
+  avatar: string;
   /** reset token. */
-  reset_token?: boolean | undefined;
+  reset_token: boolean;
 }
 
 export interface ListClanWebhookRequest {
   /** clan_id. */
-  clan_id?: string | undefined;
+  clan_id: string;
 }
 
 export interface ListClanWebhookResponse {
   /** list clan webhook. */
-  list_clan_webhooks?: ClanWebhook[] | undefined;
+  list_clan_webhooks: ClanWebhook[];
 }
 
 export interface ClanWebhookHandlerBody {
   /** content */
-  content?:
-    | string
-    | undefined;
+  content: string;
   /** list clan webhook. */
-  attachments?: MessageAttachment[] | undefined;
+  attachments: MessageAttachment[];
 }
 
 export interface ClanWebhookHandlerRequest {
   /** body. */
-  body?:
+  body:
     | ClanWebhookHandlerBody
     | undefined;
   /** token. */
-  token?:
-    | string
-    | undefined;
+  token: string;
   /** username. */
-  username?: string | undefined;
+  username: string;
 }
 
 export interface UserStatus {
-  user_id?: string | undefined;
-  status?: string | undefined;
+  user_id: string;
+  status: string;
 }
 
 export interface UserStatusUpdate {
-  status?: string | undefined;
-  minutes?: number | undefined;
-  until_turn_on?: boolean | undefined;
+  status: string;
+  minutes: number;
+  until_turn_on: boolean;
 }
 
 export interface OnboardingSteps {
   /** id. */
-  id?:
-    | string
-    | undefined;
+  id: string;
   /** user id. */
-  user_id?:
-    | string
-    | undefined;
+  user_id: string;
   /** clan id. */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** onboarding step. */
-  onboarding_step?: number | undefined;
+  onboarding_step: number;
 }
 
 export interface ListOnboardingStepResponse {
   /** list onboarding steps. */
-  list_onboarding_step?: OnboardingSteps[] | undefined;
+  list_onboarding_step: OnboardingSteps[];
 }
 
 export interface ListOnboardingStepRequest {
   /** clan id. */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** limit */
-  limit?:
+  limit:
     | number
     | undefined;
   /** page */
-  page?: number | undefined;
+  page: number | undefined;
 }
 
 export interface UpdateOnboardingStepRequest {
   /** clan id. */
-  clan_id?:
-    | string
-    | undefined;
+  clan_id: string;
   /** onboarding step. */
-  onboarding_step?: number | undefined;
+  onboarding_step: number | undefined;
 }
 
 export interface SdTopic {
-  id?: string | undefined;
-  creator_id?: string | undefined;
-  message_id?: string | undefined;
-  clan_id?: string | undefined;
-  channel_id?: string | undefined;
-  status?: number | undefined;
-  create_time?: Date | undefined;
-  update_time?: Date | undefined;
-  message?: ChannelMessage | undefined;
-  last_sent_message?: ChannelMessageHeader | undefined;
+  id: string;
+  creator_id: string;
+  message_id: string;
+  clan_id: string;
+  channel_id: string;
+  status: number;
+  create_time: Date | undefined;
+  update_time: Date | undefined;
+  message: ChannelMessage | undefined;
+  last_sent_message: ChannelMessageHeader | undefined;
 }
 
 export interface SdTopicRequest {
-  message_id?: string | undefined;
-  clan_id?: string | undefined;
-  channel_id?: string | undefined;
+  message_id: string;
+  clan_id: string;
+  channel_id: string;
 }
 
 export interface SdTopicList {
-  count?: number | undefined;
-  topics?: SdTopic[] | undefined;
+  count: number;
+  topics: SdTopic[];
 }
 
 export interface ListSdTopicRequest {
-  clan_id?: string | undefined;
-  limit?: number | undefined;
+  clan_id: string;
+  limit: number;
 }
 
 export interface SdTopicDetailRequest {
-  topic_id?: string | undefined;
+  topic_id: string;
 }
 
 export interface DeleteSdTopicRequest {
-  channel_id?: string | undefined;
-  id?: string | undefined;
-  clan_id?: string | undefined;
+  channel_id: string;
+  id: string;
+  clan_id: string;
 }
 
 export interface GenerateMeetTokenRequest {
-  channel_id?: string | undefined;
-  room_name?: string | undefined;
+  channel_id: string;
+  room_name: string;
 }
 
 export interface MeetParticipantRequest {
-  username?: string | undefined;
-  room_name?: string | undefined;
-  channel_id?: string | undefined;
-  clan_id?: string | undefined;
+  username: string;
+  room_name: string;
+  channel_id: string;
+  clan_id: string;
 }
 
 export interface GenerateMeetTokenResponse {
-  token?: string | undefined;
+  token: string;
 }
 
 export interface GenerateMezonMeetResponse {
-  meet_id?: string | undefined;
-  room_name?: string | undefined;
-  external_link?: string | undefined;
-  creator_id?: string | undefined;
-  event_id?: string | undefined;
+  meet_id: string;
+  room_name: string;
+  external_link: string;
+  creator_id: string;
+  event_id: string;
 }
 
 export interface CreateRoomChannelApps {
-  channel_id?: string | undefined;
-  room_name?: string | undefined;
+  channel_id: string;
+  room_name: string;
 }
 
 export interface MezonOauthClient {
-  access_token_strategy?: string | undefined;
-  allowed_cors_origins?: string[] | undefined;
-  audience?: string[] | undefined;
-  authorization_code_grant_access_token_lifespan?: string | undefined;
-  authorization_code_grant_id_token_lifespan?: string | undefined;
-  authorization_code_grant_refresh_token_lifespan?: string | undefined;
-  backchannel_logout_session_required?: boolean | undefined;
-  backchannel_logout_uri?: string | undefined;
-  client_credentials_grant_access_token_lifespan?: string | undefined;
-  client_id?: string | undefined;
-  client_name?: string | undefined;
-  client_secret?: string | undefined;
-  client_secret_expires_at?: number | undefined;
-  client_uri?: string | undefined;
-  contacts?: string[] | undefined;
-  created_at?: Date | undefined;
-  frontchannel_logout_session_required?: boolean | undefined;
-  frontchannel_logout_uri?: string | undefined;
-  grant_types?: string[] | undefined;
-  implicit_grant_access_token_lifespan?: string | undefined;
-  implicit_grant_id_token_lifespan?: string | undefined;
-  jwks?: string[] | undefined;
-  jwks_uri?: string | undefined;
-  jwt_bearer_grant_access_token_lifespan?: string | undefined;
-  logo_uri?: string | undefined;
-  owner?: string | undefined;
-  policy_uri?: string | undefined;
-  post_logout_redirect_uris?: string[] | undefined;
-  redirect_uris?: string[] | undefined;
-  refresh_token_grant_access_token_lifespan?: string | undefined;
-  refresh_token_grant_id_token_lifespan?: string | undefined;
-  refresh_token_grant_refresh_token_lifespan?: string | undefined;
-  registration_access_token?: string | undefined;
-  registration_client_uri?: string | undefined;
-  request_object_signing_alg?: string | undefined;
-  request_uris?: string[] | undefined;
-  response_types?: string[] | undefined;
-  scope?: string | undefined;
-  sector_identifier_uri?: string | undefined;
-  skip_consent?: boolean | undefined;
-  skip_logout_consent?: boolean | undefined;
-  subject_type?: string | undefined;
-  token_endpoint_auth_method?: string | undefined;
-  token_endpoint_auth_signing_alg?: string | undefined;
-  tos_uri?: string | undefined;
-  updated_at?: Date | undefined;
-  userinfo_signed_response_alg?: string | undefined;
+  access_token_strategy: string;
+  allowed_cors_origins: string[];
+  audience: string[];
+  authorization_code_grant_access_token_lifespan: string;
+  authorization_code_grant_id_token_lifespan: string;
+  authorization_code_grant_refresh_token_lifespan: string;
+  backchannel_logout_session_required: boolean;
+  backchannel_logout_uri: string;
+  client_credentials_grant_access_token_lifespan: string;
+  client_id: string;
+  client_name: string;
+  client_secret: string;
+  client_secret_expires_at: number;
+  client_uri: string;
+  contacts: string[];
+  created_at: Date | undefined;
+  frontchannel_logout_session_required: boolean;
+  frontchannel_logout_uri: string;
+  grant_types: string[];
+  implicit_grant_access_token_lifespan: string;
+  implicit_grant_id_token_lifespan: string;
+  jwks: string[];
+  jwks_uri: string;
+  jwt_bearer_grant_access_token_lifespan: string;
+  logo_uri: string;
+  owner: string;
+  policy_uri: string;
+  post_logout_redirect_uris: string[];
+  redirect_uris: string[];
+  refresh_token_grant_access_token_lifespan: string;
+  refresh_token_grant_id_token_lifespan: string;
+  refresh_token_grant_refresh_token_lifespan: string;
+  registration_access_token: string;
+  registration_client_uri: string;
+  request_object_signing_alg: string;
+  request_uris: string[];
+  response_types: string[];
+  scope: string;
+  sector_identifier_uri: string;
+  skip_consent: boolean;
+  skip_logout_consent: boolean;
+  subject_type: string;
+  token_endpoint_auth_method: string;
+  token_endpoint_auth_signing_alg: string;
+  tos_uri: string;
+  updated_at: Date | undefined;
+  userinfo_signed_response_alg: string;
 }
 
 export interface MezonOauthClientList {
-  list_mezon_oauth_client?: MezonOauthClient[] | undefined;
+  list_mezon_oauth_client: MezonOauthClient[];
 }
 
 export interface GetMezonOauthClientRequest {
-  client_id?: string | undefined;
-  client_name?: string | undefined;
+  client_id: string;
+  client_name: string;
 }
 
 export interface SearchThreadRequest {
-  clan_id?: string | undefined;
-  channel_id?: string | undefined;
-  label?: string | undefined;
+  clan_id: string;
+  channel_id: string;
+  label: string;
 }
 
 export interface GenerateHashChannelAppsRequest {
-  app_id?: string | undefined;
+  app_id: string;
 }
 
 export interface GenerateHashChannelAppsResponse {
-  web_app_data?: string | undefined;
+  web_app_data: string;
 }
 
 export interface Message2InboxRequest {
-  message_id?: string | undefined;
-  channel_id?: string | undefined;
-  clan_id?: string | undefined;
-  avatar?: string | undefined;
-  content?: string | undefined;
-  mentions?: string | undefined;
-  attachments?: string | undefined;
-  reactions?: string | undefined;
-  references?: string | undefined;
+  message_id: string;
+  channel_id: string;
+  clan_id: string;
+  avatar: string;
+  content: string;
+  mentions: string;
+  attachments: string;
+  reactions: string;
+  references: string;
 }
 
 /** Send an email with password to the server. Used with authenticate/link/unlink. */
 export interface AccountEmail {
   /** A valid RFC-5322 email address. */
-  email?:
-    | string
-    | undefined;
+  email: string;
   /** A password for the user account. */
-  password?:
-    | string
-    | undefined;
+  password: string;
   /** Prev email */
-  prev_email?:
-    | string
-    | undefined;
+  prev_email: string;
   /** Extra information that will be bundled in the session token. */
-  vars?: { [key: string]: string } | undefined;
+  vars: { [key: string]: string };
 }
 
 export interface AccountEmail_VarsEntry {
@@ -4932,11 +3696,9 @@ export interface AccountEmail_VarsEntry {
 /** Send a Mezon token to the server. Used with authenticate/link/unlink. */
 export interface AccountMezon {
   /** The phone number. */
-  phone_number?:
-    | string
-    | undefined;
+  phone_number: string;
   /** Extra information that will be bundled in the session token. */
-  vars?: { [key: string]: string } | undefined;
+  vars: { [key: string]: string };
 }
 
 export interface AccountMezon_VarsEntry {
@@ -4946,72 +3708,68 @@ export interface AccountMezon_VarsEntry {
 
 export interface LinkAccountConfirmRequest {
   /** The request id */
-  req_id?:
-    | string
-    | undefined;
+  req_id: string;
   /** Status */
-  status?:
-    | number
-    | undefined;
+  status: number;
   /** The confirm code */
-  otp_code?: string | undefined;
+  otp_code: string;
 }
 
 export interface QuickMenuAccess {
-  id?: string | undefined;
-  bot_id?: string | undefined;
-  clan_id?: string | undefined;
-  channel_id?: string | undefined;
-  menu_name?: string | undefined;
-  background?: string | undefined;
-  action_msg?: string | undefined;
-  menu_type?: number | undefined;
+  id: string;
+  bot_id: string;
+  clan_id: string;
+  channel_id: string;
+  menu_name: string;
+  background: string;
+  action_msg: string;
+  menu_type: number;
 }
 
 export interface ListQuickMenuAccessRequest {
-  bot_id?: string | undefined;
-  channel_id?: string | undefined;
-  menu_type?: number | undefined;
+  bot_id: string;
+  channel_id: string;
+  menu_type: number;
 }
 
 export interface QuickMenuAccessList {
-  list_menus?: QuickMenuAccess[] | undefined;
+  list_menus: QuickMenuAccess[];
 }
 
 export interface ListForSaleItemsRequest {
-  page?: number | undefined;
+  page: number;
 }
 
 export interface ForSaleItem {
-  type?: number | undefined;
-  preview_url?: string | undefined;
+  type: number;
+  preview_url: string;
 }
 
 export interface ForSaleItemList {
-  for_sale_items?: ForSaleItem[] | undefined;
+  for_sale_items: ForSaleItem[];
 }
 
 export interface IsFollowerRequest {
-  follow_id?: string | undefined;
+  follow_id: string;
 }
 
 export interface IsFollowerResponse {
-  follow_id?: string | undefined;
-  is_follower?: boolean | undefined;
+  follow_id: string;
+  is_follower: boolean;
 }
 
 export interface TransferOwnershipRequest {
-  clan_id?: string | undefined;
-  new_owner_id?: string | undefined;
+  clan_id: string;
+  new_owner_id: string;
 }
 
 export interface UserIds {
-  user_ids?: string[] | undefined;
+  user_ids: string[];
 }
 
 export interface ReportMessageAbuseReqest {
-  message_id?: string | undefined;
-  abuse_type?: string | undefined;
+  message_id: string;
+  abuse_type: string;
 }
 
 function createBaseAccount(): Account {
@@ -5033,10 +3791,10 @@ export const Account = {
     if (message.user !== undefined) {
       User.encode(message.user, writer.uint32(10).fork()).ldelim();
     }
-    if (message.email !== undefined && message.email !== "") {
+    if (message.email !== "") {
       writer.uint32(18).string(message.email);
     }
-    if (message.qr_code !== undefined && message.qr_code !== "") {
+    if (message.qr_code !== "") {
       writer.uint32(26).string(message.qr_code);
     }
     if (message.verify_time !== undefined) {
@@ -5045,16 +3803,16 @@ export const Account = {
     if (message.disable_time !== undefined) {
       Timestamp.encode(toTimestamp(message.disable_time), writer.uint32(42).fork()).ldelim();
     }
-    if (message.logo !== undefined && message.logo !== "") {
+    if (message.logo !== "") {
       writer.uint32(50).string(message.logo);
     }
-    if (message.splash_screen !== undefined && message.splash_screen !== "") {
+    if (message.splash_screen !== "") {
       writer.uint32(58).string(message.splash_screen);
     }
-    if (message.encrypt_private_key !== undefined && message.encrypt_private_key !== "") {
+    if (message.encrypt_private_key !== "") {
       writer.uint32(66).string(message.encrypt_private_key);
     }
-    if (message.password_setted !== undefined && message.password_setted !== false) {
+    if (message.password_setted !== false) {
       writer.uint32(72).bool(message.password_setted);
     }
     return writer;
@@ -5158,10 +3916,10 @@ export const Account = {
     if (message.user !== undefined) {
       obj.user = User.toJSON(message.user);
     }
-    if (message.email !== undefined && message.email !== "") {
+    if (message.email !== "") {
       obj.email = message.email;
     }
-    if (message.qr_code !== undefined && message.qr_code !== "") {
+    if (message.qr_code !== "") {
       obj.qr_code = message.qr_code;
     }
     if (message.verify_time !== undefined) {
@@ -5170,16 +3928,16 @@ export const Account = {
     if (message.disable_time !== undefined) {
       obj.disable_time = message.disable_time.toISOString();
     }
-    if (message.logo !== undefined && message.logo !== "") {
+    if (message.logo !== "") {
       obj.logo = message.logo;
     }
-    if (message.splash_screen !== undefined && message.splash_screen !== "") {
+    if (message.splash_screen !== "") {
       obj.splash_screen = message.splash_screen;
     }
-    if (message.encrypt_private_key !== undefined && message.encrypt_private_key !== "") {
+    if (message.encrypt_private_key !== "") {
       obj.encrypt_private_key = message.encrypt_private_key;
     }
-    if (message.password_setted !== undefined && message.password_setted !== false) {
+    if (message.password_setted !== false) {
       obj.password_setted = message.password_setted;
     }
     return obj;
@@ -5209,10 +3967,10 @@ function createBaseAccountRefresh(): AccountRefresh {
 
 export const AccountRefresh = {
   encode(message: AccountRefresh, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       writer.uint32(10).string(message.token);
     }
-    Object.entries(message.vars || {}).forEach(([key, value]) => {
+    Object.entries(message.vars).forEach(([key, value]) => {
       AccountRefresh_VarsEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).ldelim();
     });
     return writer;
@@ -5239,7 +3997,7 @@ export const AccountRefresh = {
 
           const entry2 = AccountRefresh_VarsEntry.decode(reader, reader.uint32());
           if (entry2.value !== undefined) {
-            message.vars![entry2.key] = entry2.value;
+            message.vars[entry2.key] = entry2.value;
           }
           continue;
       }
@@ -5265,7 +4023,7 @@ export const AccountRefresh = {
 
   toJSON(message: AccountRefresh): unknown {
     const obj: any = {};
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       obj.token = message.token;
     }
     if (message.vars) {
@@ -5376,15 +4134,11 @@ function createBaseAddFriendsRequest(): AddFriendsRequest {
 
 export const AddFriendsRequest = {
   encode(message: AddFriendsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.ids !== undefined && message.ids.length !== 0) {
-      for (const v of message.ids) {
-        writer.uint32(10).string(v!);
-      }
+    for (const v of message.ids) {
+      writer.uint32(10).string(v!);
     }
-    if (message.usernames !== undefined && message.usernames.length !== 0) {
-      for (const v of message.usernames) {
-        writer.uint32(18).string(v!);
-      }
+    for (const v of message.usernames) {
+      writer.uint32(18).string(v!);
     }
     return writer;
   },
@@ -5401,14 +4155,14 @@ export const AddFriendsRequest = {
             break;
           }
 
-          message.ids!.push(reader.string());
+          message.ids.push(reader.string());
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.usernames!.push(reader.string());
+          message.usernames.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -5456,15 +4210,11 @@ function createBaseAddFriendsResponse(): AddFriendsResponse {
 
 export const AddFriendsResponse = {
   encode(message: AddFriendsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.ids !== undefined && message.ids.length !== 0) {
-      for (const v of message.ids) {
-        writer.uint32(10).string(v!);
-      }
+    for (const v of message.ids) {
+      writer.uint32(10).string(v!);
     }
-    if (message.usernames !== undefined && message.usernames.length !== 0) {
-      for (const v of message.usernames) {
-        writer.uint32(18).string(v!);
-      }
+    for (const v of message.usernames) {
+      writer.uint32(18).string(v!);
     }
     return writer;
   },
@@ -5481,14 +4231,14 @@ export const AddFriendsResponse = {
             break;
           }
 
-          message.ids!.push(reader.string());
+          message.ids.push(reader.string());
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.usernames!.push(reader.string());
+          message.usernames.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -5536,13 +4286,11 @@ function createBaseAddGroupUsersRequest(): AddGroupUsersRequest {
 
 export const AddGroupUsersRequest = {
   encode(message: AddGroupUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.group_id !== undefined && message.group_id !== "") {
+    if (message.group_id !== "") {
       writer.uint32(10).string(message.group_id);
     }
-    if (message.user_ids !== undefined && message.user_ids.length !== 0) {
-      for (const v of message.user_ids) {
-        writer.uint32(18).string(v!);
-      }
+    for (const v of message.user_ids) {
+      writer.uint32(18).string(v!);
     }
     return writer;
   },
@@ -5566,7 +4314,7 @@ export const AddGroupUsersRequest = {
             break;
           }
 
-          message.user_ids!.push(reader.string());
+          message.user_ids.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -5586,7 +4334,7 @@ export const AddGroupUsersRequest = {
 
   toJSON(message: AddGroupUsersRequest): unknown {
     const obj: any = {};
-    if (message.group_id !== undefined && message.group_id !== "") {
+    if (message.group_id !== "") {
       obj.group_id = message.group_id;
     }
     if (message.user_ids?.length) {
@@ -5612,10 +4360,10 @@ function createBaseSessionRefreshRequest(): SessionRefreshRequest {
 
 export const SessionRefreshRequest = {
   encode(message: SessionRefreshRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       writer.uint32(10).string(message.token);
     }
-    Object.entries(message.vars || {}).forEach(([key, value]) => {
+    Object.entries(message.vars).forEach(([key, value]) => {
       SessionRefreshRequest_VarsEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).ldelim();
     });
     if (message.is_remember !== undefined) {
@@ -5645,7 +4393,7 @@ export const SessionRefreshRequest = {
 
           const entry2 = SessionRefreshRequest_VarsEntry.decode(reader, reader.uint32());
           if (entry2.value !== undefined) {
-            message.vars![entry2.key] = entry2.value;
+            message.vars[entry2.key] = entry2.value;
           }
           continue;
         case 3:
@@ -5679,7 +4427,7 @@ export const SessionRefreshRequest = {
 
   toJSON(message: SessionRefreshRequest): unknown {
     const obj: any = {};
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       obj.token = message.token;
     }
     if (message.vars) {
@@ -5796,19 +4544,19 @@ function createBaseSessionLogoutRequest(): SessionLogoutRequest {
 
 export const SessionLogoutRequest = {
   encode(message: SessionLogoutRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       writer.uint32(10).string(message.token);
     }
-    if (message.refresh_token !== undefined && message.refresh_token !== "") {
+    if (message.refresh_token !== "") {
       writer.uint32(18).string(message.refresh_token);
     }
-    if (message.device_id !== undefined && message.device_id !== "") {
+    if (message.device_id !== "") {
       writer.uint32(26).string(message.device_id);
     }
-    if (message.fcm_token !== undefined && message.fcm_token !== "") {
+    if (message.fcm_token !== "") {
       writer.uint32(34).string(message.fcm_token);
     }
-    if (message.platform !== undefined && message.platform !== "") {
+    if (message.platform !== "") {
       writer.uint32(42).string(message.platform);
     }
     return writer;
@@ -5877,19 +4625,19 @@ export const SessionLogoutRequest = {
 
   toJSON(message: SessionLogoutRequest): unknown {
     const obj: any = {};
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       obj.token = message.token;
     }
-    if (message.refresh_token !== undefined && message.refresh_token !== "") {
+    if (message.refresh_token !== "") {
       obj.refresh_token = message.refresh_token;
     }
-    if (message.device_id !== undefined && message.device_id !== "") {
+    if (message.device_id !== "") {
       obj.device_id = message.device_id;
     }
-    if (message.fcm_token !== undefined && message.fcm_token !== "") {
+    if (message.fcm_token !== "") {
       obj.fcm_token = message.fcm_token;
     }
-    if (message.platform !== undefined && message.platform !== "") {
+    if (message.platform !== "") {
       obj.platform = message.platform;
     }
     return obj;
@@ -5915,10 +4663,10 @@ function createBaseIsBannedResponse(): IsBannedResponse {
 
 export const IsBannedResponse = {
   encode(message: IsBannedResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.is_banned !== undefined && message.is_banned !== false) {
+    if (message.is_banned !== false) {
       writer.uint32(8).bool(message.is_banned);
     }
-    if (message.expired_ban_time !== undefined && message.expired_ban_time !== 0) {
+    if (message.expired_ban_time !== 0) {
       writer.uint32(16).int32(message.expired_ban_time);
     }
     return writer;
@@ -5963,10 +4711,10 @@ export const IsBannedResponse = {
 
   toJSON(message: IsBannedResponse): unknown {
     const obj: any = {};
-    if (message.is_banned !== undefined && message.is_banned !== false) {
+    if (message.is_banned !== false) {
       obj.is_banned = message.is_banned;
     }
-    if (message.expired_ban_time !== undefined && message.expired_ban_time !== 0) {
+    if (message.expired_ban_time !== 0) {
       obj.expired_ban_time = Math.round(message.expired_ban_time);
     }
     return obj;
@@ -5989,7 +4737,7 @@ function createBaseIsBannedRequest(): IsBannedRequest {
 
 export const IsBannedRequest = {
   encode(message: IsBannedRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
     return writer;
@@ -6024,7 +4772,7 @@ export const IsBannedRequest = {
 
   toJSON(message: IsBannedRequest): unknown {
     const obj: any = {};
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -6046,13 +4794,11 @@ function createBaseBanGroupUsersRequest(): BanGroupUsersRequest {
 
 export const BanGroupUsersRequest = {
   encode(message: BanGroupUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.group_id !== undefined && message.group_id !== "") {
+    if (message.group_id !== "") {
       writer.uint32(10).string(message.group_id);
     }
-    if (message.user_ids !== undefined && message.user_ids.length !== 0) {
-      for (const v of message.user_ids) {
-        writer.uint32(18).string(v!);
-      }
+    for (const v of message.user_ids) {
+      writer.uint32(18).string(v!);
     }
     return writer;
   },
@@ -6076,7 +4822,7 @@ export const BanGroupUsersRequest = {
             break;
           }
 
-          message.user_ids!.push(reader.string());
+          message.user_ids.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -6096,7 +4842,7 @@ export const BanGroupUsersRequest = {
 
   toJSON(message: BanGroupUsersRequest): unknown {
     const obj: any = {};
-    if (message.group_id !== undefined && message.group_id !== "") {
+    if (message.group_id !== "") {
       obj.group_id = message.group_id;
     }
     if (message.user_ids?.length) {
@@ -6122,15 +4868,11 @@ function createBaseBlockFriendsRequest(): BlockFriendsRequest {
 
 export const BlockFriendsRequest = {
   encode(message: BlockFriendsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.ids !== undefined && message.ids.length !== 0) {
-      for (const v of message.ids) {
-        writer.uint32(10).string(v!);
-      }
+    for (const v of message.ids) {
+      writer.uint32(10).string(v!);
     }
-    if (message.usernames !== undefined && message.usernames.length !== 0) {
-      for (const v of message.usernames) {
-        writer.uint32(18).string(v!);
-      }
+    for (const v of message.usernames) {
+      writer.uint32(18).string(v!);
     }
     return writer;
   },
@@ -6147,14 +4889,14 @@ export const BlockFriendsRequest = {
             break;
           }
 
-          message.ids!.push(reader.string());
+          message.ids.push(reader.string());
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.usernames!.push(reader.string());
+          message.usernames.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -6230,28 +4972,28 @@ function createBaseChannelMessage(): ChannelMessage {
 
 export const ChannelMessage = {
   encode(message: ChannelMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       writer.uint32(26).string(message.message_id);
     }
     if (message.code !== undefined) {
       Int32Value.encode({ value: message.code! }, writer.uint32(34).fork()).ldelim();
     }
-    if (message.sender_id !== undefined && message.sender_id !== "") {
+    if (message.sender_id !== "") {
       writer.uint32(42).string(message.sender_id);
     }
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       writer.uint32(50).string(message.username);
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       writer.uint32(58).string(message.avatar);
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       writer.uint32(66).string(message.content);
     }
     if (message.create_time !== undefined) {
@@ -6260,55 +5002,55 @@ export const ChannelMessage = {
     if (message.update_time !== undefined) {
       Timestamp.encode(toTimestamp(message.update_time), writer.uint32(82).fork()).ldelim();
     }
-    if (message.channel_label !== undefined && message.channel_label !== "") {
+    if (message.channel_label !== "") {
       writer.uint32(90).string(message.channel_label);
     }
-    if (message.clan_logo !== undefined && message.clan_logo !== "") {
+    if (message.clan_logo !== "") {
       writer.uint32(98).string(message.clan_logo);
     }
-    if (message.category_name !== undefined && message.category_name !== "") {
+    if (message.category_name !== "") {
       writer.uint32(106).string(message.category_name);
     }
-    if (message.display_name !== undefined && message.display_name !== "") {
+    if (message.display_name !== "") {
       writer.uint32(114).string(message.display_name);
     }
-    if (message.clan_nick !== undefined && message.clan_nick !== "") {
+    if (message.clan_nick !== "") {
       writer.uint32(122).string(message.clan_nick);
     }
-    if (message.clan_avatar !== undefined && message.clan_avatar !== "") {
+    if (message.clan_avatar !== "") {
       writer.uint32(130).string(message.clan_avatar);
     }
-    if (message.reactions !== undefined && message.reactions !== "") {
+    if (message.reactions !== "") {
       writer.uint32(138).string(message.reactions);
     }
-    if (message.mentions !== undefined && message.mentions !== "") {
+    if (message.mentions !== "") {
       writer.uint32(146).string(message.mentions);
     }
-    if (message.attachments !== undefined && message.attachments !== "") {
+    if (message.attachments !== "") {
       writer.uint32(154).string(message.attachments);
     }
-    if (message.references !== undefined && message.references !== "") {
+    if (message.references !== "") {
       writer.uint32(162).string(message.references);
     }
-    if (message.referenced_message !== undefined && message.referenced_message !== "") {
+    if (message.referenced_message !== "") {
       writer.uint32(170).string(message.referenced_message);
     }
-    if (message.create_time_seconds !== undefined && message.create_time_seconds !== 0) {
+    if (message.create_time_seconds !== 0) {
       writer.uint32(176).uint32(message.create_time_seconds);
     }
-    if (message.update_time_seconds !== undefined && message.update_time_seconds !== 0) {
+    if (message.update_time_seconds !== 0) {
       writer.uint32(184).uint32(message.update_time_seconds);
     }
-    if (message.mode !== undefined && message.mode !== 0) {
+    if (message.mode !== 0) {
       writer.uint32(192).int32(message.mode);
     }
-    if (message.hide_editted !== undefined && message.hide_editted !== false) {
+    if (message.hide_editted !== false) {
       writer.uint32(200).bool(message.hide_editted);
     }
-    if (message.is_public !== undefined && message.is_public !== false) {
+    if (message.is_public !== false) {
       writer.uint32(208).bool(message.is_public);
     }
-    if (message.topic_id !== undefined && message.topic_id !== "") {
+    if (message.topic_id !== "") {
       writer.uint32(218).string(message.topic_id);
     }
     return writer;
@@ -6553,28 +5295,28 @@ export const ChannelMessage = {
 
   toJSON(message: ChannelMessage): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       obj.message_id = message.message_id;
     }
     if (message.code !== undefined) {
       obj.code = message.code;
     }
-    if (message.sender_id !== undefined && message.sender_id !== "") {
+    if (message.sender_id !== "") {
       obj.sender_id = message.sender_id;
     }
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       obj.username = message.username;
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       obj.content = message.content;
     }
     if (message.create_time !== undefined) {
@@ -6583,55 +5325,55 @@ export const ChannelMessage = {
     if (message.update_time !== undefined) {
       obj.update_time = message.update_time.toISOString();
     }
-    if (message.channel_label !== undefined && message.channel_label !== "") {
+    if (message.channel_label !== "") {
       obj.channel_label = message.channel_label;
     }
-    if (message.clan_logo !== undefined && message.clan_logo !== "") {
+    if (message.clan_logo !== "") {
       obj.clan_logo = message.clan_logo;
     }
-    if (message.category_name !== undefined && message.category_name !== "") {
+    if (message.category_name !== "") {
       obj.category_name = message.category_name;
     }
-    if (message.display_name !== undefined && message.display_name !== "") {
+    if (message.display_name !== "") {
       obj.display_name = message.display_name;
     }
-    if (message.clan_nick !== undefined && message.clan_nick !== "") {
+    if (message.clan_nick !== "") {
       obj.clan_nick = message.clan_nick;
     }
-    if (message.clan_avatar !== undefined && message.clan_avatar !== "") {
+    if (message.clan_avatar !== "") {
       obj.clan_avatar = message.clan_avatar;
     }
-    if (message.reactions !== undefined && message.reactions !== "") {
+    if (message.reactions !== "") {
       obj.reactions = message.reactions;
     }
-    if (message.mentions !== undefined && message.mentions !== "") {
+    if (message.mentions !== "") {
       obj.mentions = message.mentions;
     }
-    if (message.attachments !== undefined && message.attachments !== "") {
+    if (message.attachments !== "") {
       obj.attachments = message.attachments;
     }
-    if (message.references !== undefined && message.references !== "") {
+    if (message.references !== "") {
       obj.references = message.references;
     }
-    if (message.referenced_message !== undefined && message.referenced_message !== "") {
+    if (message.referenced_message !== "") {
       obj.referenced_message = message.referenced_message;
     }
-    if (message.create_time_seconds !== undefined && message.create_time_seconds !== 0) {
+    if (message.create_time_seconds !== 0) {
       obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
-    if (message.update_time_seconds !== undefined && message.update_time_seconds !== 0) {
+    if (message.update_time_seconds !== 0) {
       obj.update_time_seconds = Math.round(message.update_time_seconds);
     }
-    if (message.mode !== undefined && message.mode !== 0) {
+    if (message.mode !== 0) {
       obj.mode = Math.round(message.mode);
     }
-    if (message.hide_editted !== undefined && message.hide_editted !== false) {
+    if (message.hide_editted !== false) {
       obj.hide_editted = message.hide_editted;
     }
-    if (message.is_public !== undefined && message.is_public !== false) {
+    if (message.is_public !== false) {
       obj.is_public = message.is_public;
     }
-    if (message.topic_id !== undefined && message.topic_id !== "") {
+    if (message.topic_id !== "") {
       obj.topic_id = message.topic_id;
     }
     return obj;
@@ -6679,28 +5421,28 @@ function createBaseMessageMention(): MessageMention {
 
 export const MessageMention = {
   encode(message: MessageMention, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       writer.uint32(18).string(message.user_id);
     }
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       writer.uint32(26).string(message.username);
     }
-    if (message.role_id !== undefined && message.role_id !== "") {
+    if (message.role_id !== "") {
       writer.uint32(34).string(message.role_id);
     }
-    if (message.rolename !== undefined && message.rolename !== "") {
+    if (message.rolename !== "") {
       writer.uint32(42).string(message.rolename);
     }
     if (message.create_time !== undefined) {
       Timestamp.encode(toTimestamp(message.create_time), writer.uint32(50).fork()).ldelim();
     }
-    if (message.s !== undefined && message.s !== 0) {
+    if (message.s !== 0) {
       writer.uint32(56).int32(message.s);
     }
-    if (message.e !== undefined && message.e !== 0) {
+    if (message.e !== 0) {
       writer.uint32(64).int32(message.e);
     }
     return writer;
@@ -6793,28 +5535,28 @@ export const MessageMention = {
 
   toJSON(message: MessageMention): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       obj.username = message.username;
     }
-    if (message.role_id !== undefined && message.role_id !== "") {
+    if (message.role_id !== "") {
       obj.role_id = message.role_id;
     }
-    if (message.rolename !== undefined && message.rolename !== "") {
+    if (message.rolename !== "") {
       obj.rolename = message.rolename;
     }
     if (message.create_time !== undefined) {
       obj.create_time = message.create_time.toISOString();
     }
-    if (message.s !== undefined && message.s !== 0) {
+    if (message.s !== 0) {
       obj.s = Math.round(message.s);
     }
-    if (message.e !== undefined && message.e !== 0) {
+    if (message.e !== 0) {
       obj.e = Math.round(message.e);
     }
     return obj;
@@ -6855,34 +5597,34 @@ function createBaseNotificationInfo(): NotificationInfo {
 
 export const NotificationInfo = {
   encode(message: NotificationInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       writer.uint32(10).string(message.username);
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       writer.uint32(18).string(message.avatar);
     }
-    if (message.clan_nick !== undefined && message.clan_nick !== "") {
+    if (message.clan_nick !== "") {
       writer.uint32(26).string(message.clan_nick);
     }
-    if (message.clan_avatar !== undefined && message.clan_avatar !== "") {
+    if (message.clan_avatar !== "") {
       writer.uint32(34).string(message.clan_avatar);
     }
-    if (message.display_name !== undefined && message.display_name !== "") {
+    if (message.display_name !== "") {
       writer.uint32(42).string(message.display_name);
     }
-    if (message.channel_label !== undefined && message.channel_label !== "") {
+    if (message.channel_label !== "") {
       writer.uint32(50).string(message.channel_label);
     }
-    if (message.channel_type !== undefined && message.channel_type !== 0) {
+    if (message.channel_type !== 0) {
       writer.uint32(56).int32(message.channel_type);
     }
-    if (message.category_name !== undefined && message.category_name !== "") {
+    if (message.category_name !== "") {
       writer.uint32(66).string(message.category_name);
     }
-    if (message.clan_name !== undefined && message.clan_name !== "") {
+    if (message.clan_name !== "") {
       writer.uint32(74).string(message.clan_name);
     }
-    if (message.clan_logo !== undefined && message.clan_logo !== "") {
+    if (message.clan_logo !== "") {
       writer.uint32(82).string(message.clan_logo);
     }
     if (message.channel !== undefined) {
@@ -7002,34 +5744,34 @@ export const NotificationInfo = {
 
   toJSON(message: NotificationInfo): unknown {
     const obj: any = {};
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       obj.username = message.username;
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
-    if (message.clan_nick !== undefined && message.clan_nick !== "") {
+    if (message.clan_nick !== "") {
       obj.clan_nick = message.clan_nick;
     }
-    if (message.clan_avatar !== undefined && message.clan_avatar !== "") {
+    if (message.clan_avatar !== "") {
       obj.clan_avatar = message.clan_avatar;
     }
-    if (message.display_name !== undefined && message.display_name !== "") {
+    if (message.display_name !== "") {
       obj.display_name = message.display_name;
     }
-    if (message.channel_label !== undefined && message.channel_label !== "") {
+    if (message.channel_label !== "") {
       obj.channel_label = message.channel_label;
     }
-    if (message.channel_type !== undefined && message.channel_type !== 0) {
+    if (message.channel_type !== 0) {
       obj.channel_type = Math.round(message.channel_type);
     }
-    if (message.category_name !== undefined && message.category_name !== "") {
+    if (message.category_name !== "") {
       obj.category_name = message.category_name;
     }
-    if (message.clan_name !== undefined && message.clan_name !== "") {
+    if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.clan_logo !== undefined && message.clan_logo !== "") {
+    if (message.clan_logo !== "") {
       obj.clan_logo = message.clan_logo;
     }
     if (message.channel !== undefined) {
@@ -7083,52 +5825,52 @@ function createBaseMessageReaction(): MessageReaction {
 
 export const MessageReaction = {
   encode(message: MessageReaction, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.emoji_id !== undefined && message.emoji_id !== "") {
+    if (message.emoji_id !== "") {
       writer.uint32(18).string(message.emoji_id);
     }
-    if (message.emoji !== undefined && message.emoji !== "") {
+    if (message.emoji !== "") {
       writer.uint32(26).string(message.emoji);
     }
-    if (message.sender_id !== undefined && message.sender_id !== "") {
+    if (message.sender_id !== "") {
       writer.uint32(34).string(message.sender_id);
     }
-    if (message.sender_name !== undefined && message.sender_name !== "") {
+    if (message.sender_name !== "") {
       writer.uint32(42).string(message.sender_name);
     }
-    if (message.sender_avatar !== undefined && message.sender_avatar !== "") {
+    if (message.sender_avatar !== "") {
       writer.uint32(50).string(message.sender_avatar);
     }
-    if (message.action !== undefined && message.action !== false) {
+    if (message.action !== false) {
       writer.uint32(56).bool(message.action);
     }
-    if (message.count !== undefined && message.count !== 0) {
+    if (message.count !== 0) {
       writer.uint32(64).int32(message.count);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(74).string(message.channel_id);
     }
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       writer.uint32(82).string(message.message_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(90).string(message.clan_id);
     }
-    if (message.mode !== undefined && message.mode !== 0) {
+    if (message.mode !== 0) {
       writer.uint32(96).int32(message.mode);
     }
-    if (message.message_sender_id !== undefined && message.message_sender_id !== "") {
+    if (message.message_sender_id !== "") {
       writer.uint32(106).string(message.message_sender_id);
     }
-    if (message.is_public !== undefined && message.is_public !== false) {
+    if (message.is_public !== false) {
       writer.uint32(112).bool(message.is_public);
     }
-    if (message.topic_id !== undefined && message.topic_id !== "") {
+    if (message.topic_id !== "") {
       writer.uint32(122).string(message.topic_id);
     }
-    if (message.emoji_recent_id !== undefined && message.emoji_recent_id !== "") {
+    if (message.emoji_recent_id !== "") {
       writer.uint32(130).string(message.emoji_recent_id);
     }
     return writer;
@@ -7285,52 +6027,52 @@ export const MessageReaction = {
 
   toJSON(message: MessageReaction): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.emoji_id !== undefined && message.emoji_id !== "") {
+    if (message.emoji_id !== "") {
       obj.emoji_id = message.emoji_id;
     }
-    if (message.emoji !== undefined && message.emoji !== "") {
+    if (message.emoji !== "") {
       obj.emoji = message.emoji;
     }
-    if (message.sender_id !== undefined && message.sender_id !== "") {
+    if (message.sender_id !== "") {
       obj.sender_id = message.sender_id;
     }
-    if (message.sender_name !== undefined && message.sender_name !== "") {
+    if (message.sender_name !== "") {
       obj.sender_name = message.sender_name;
     }
-    if (message.sender_avatar !== undefined && message.sender_avatar !== "") {
+    if (message.sender_avatar !== "") {
       obj.sender_avatar = message.sender_avatar;
     }
-    if (message.action !== undefined && message.action !== false) {
+    if (message.action !== false) {
       obj.action = message.action;
     }
-    if (message.count !== undefined && message.count !== 0) {
+    if (message.count !== 0) {
       obj.count = Math.round(message.count);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.mode !== undefined && message.mode !== 0) {
+    if (message.mode !== 0) {
       obj.mode = Math.round(message.mode);
     }
-    if (message.message_sender_id !== undefined && message.message_sender_id !== "") {
+    if (message.message_sender_id !== "") {
       obj.message_sender_id = message.message_sender_id;
     }
-    if (message.is_public !== undefined && message.is_public !== false) {
+    if (message.is_public !== false) {
       obj.is_public = message.is_public;
     }
-    if (message.topic_id !== undefined && message.topic_id !== "") {
+    if (message.topic_id !== "") {
       obj.topic_id = message.topic_id;
     }
-    if (message.emoji_recent_id !== undefined && message.emoji_recent_id !== "") {
+    if (message.emoji_recent_id !== "") {
       obj.emoji_recent_id = message.emoji_recent_id;
     }
     return obj;
@@ -7367,28 +6109,28 @@ function createBaseMessageAttachment(): MessageAttachment {
 
 export const MessageAttachment = {
   encode(message: MessageAttachment, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.filename !== undefined && message.filename !== "") {
+    if (message.filename !== "") {
       writer.uint32(10).string(message.filename);
     }
-    if (message.size !== undefined && message.size !== 0) {
+    if (message.size !== 0) {
       writer.uint32(16).int64(message.size);
     }
-    if (message.url !== undefined && message.url !== "") {
+    if (message.url !== "") {
       writer.uint32(26).string(message.url);
     }
-    if (message.filetype !== undefined && message.filetype !== "") {
+    if (message.filetype !== "") {
       writer.uint32(34).string(message.filetype);
     }
-    if (message.width !== undefined && message.width !== 0) {
+    if (message.width !== 0) {
       writer.uint32(40).int32(message.width);
     }
-    if (message.height !== undefined && message.height !== 0) {
+    if (message.height !== 0) {
       writer.uint32(48).int32(message.height);
     }
-    if (message.thumbnail !== undefined && message.thumbnail !== "") {
+    if (message.thumbnail !== "") {
       writer.uint32(58).string(message.thumbnail);
     }
-    if (message.duration !== undefined && message.duration !== 0) {
+    if (message.duration !== 0) {
       writer.uint32(64).int32(message.duration);
     }
     return writer;
@@ -7481,28 +6223,28 @@ export const MessageAttachment = {
 
   toJSON(message: MessageAttachment): unknown {
     const obj: any = {};
-    if (message.filename !== undefined && message.filename !== "") {
+    if (message.filename !== "") {
       obj.filename = message.filename;
     }
-    if (message.size !== undefined && message.size !== 0) {
+    if (message.size !== 0) {
       obj.size = Math.round(message.size);
     }
-    if (message.url !== undefined && message.url !== "") {
+    if (message.url !== "") {
       obj.url = message.url;
     }
-    if (message.filetype !== undefined && message.filetype !== "") {
+    if (message.filetype !== "") {
       obj.filetype = message.filetype;
     }
-    if (message.width !== undefined && message.width !== 0) {
+    if (message.width !== 0) {
       obj.width = Math.round(message.width);
     }
-    if (message.height !== undefined && message.height !== 0) {
+    if (message.height !== 0) {
       obj.height = Math.round(message.height);
     }
-    if (message.thumbnail !== undefined && message.thumbnail !== "") {
+    if (message.thumbnail !== "") {
       obj.thumbnail = message.thumbnail;
     }
-    if (message.duration !== undefined && message.duration !== 0) {
+    if (message.duration !== 0) {
       obj.duration = Math.round(message.duration);
     }
     return obj;
@@ -7542,34 +6284,34 @@ function createBaseMessageRef(): MessageRef {
 
 export const MessageRef = {
   encode(message: MessageRef, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       writer.uint32(10).string(message.message_id);
     }
-    if (message.message_ref_id !== undefined && message.message_ref_id !== "") {
+    if (message.message_ref_id !== "") {
       writer.uint32(18).string(message.message_ref_id);
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       writer.uint32(26).string(message.content);
     }
-    if (message.has_attachment !== undefined && message.has_attachment !== false) {
+    if (message.has_attachment !== false) {
       writer.uint32(32).bool(message.has_attachment);
     }
-    if (message.ref_type !== undefined && message.ref_type !== 0) {
+    if (message.ref_type !== 0) {
       writer.uint32(40).int32(message.ref_type);
     }
-    if (message.message_sender_id !== undefined && message.message_sender_id !== "") {
+    if (message.message_sender_id !== "") {
       writer.uint32(50).string(message.message_sender_id);
     }
-    if (message.message_sender_username !== undefined && message.message_sender_username !== "") {
+    if (message.message_sender_username !== "") {
       writer.uint32(58).string(message.message_sender_username);
     }
-    if (message.mesages_sender_avatar !== undefined && message.mesages_sender_avatar !== "") {
+    if (message.mesages_sender_avatar !== "") {
       writer.uint32(66).string(message.mesages_sender_avatar);
     }
-    if (message.message_sender_clan_nick !== undefined && message.message_sender_clan_nick !== "") {
+    if (message.message_sender_clan_nick !== "") {
       writer.uint32(74).string(message.message_sender_clan_nick);
     }
-    if (message.message_sender_display_name !== undefined && message.message_sender_display_name !== "") {
+    if (message.message_sender_display_name !== "") {
       writer.uint32(82).string(message.message_sender_display_name);
     }
     return writer;
@@ -7684,34 +6426,34 @@ export const MessageRef = {
 
   toJSON(message: MessageRef): unknown {
     const obj: any = {};
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.message_ref_id !== undefined && message.message_ref_id !== "") {
+    if (message.message_ref_id !== "") {
       obj.message_ref_id = message.message_ref_id;
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.has_attachment !== undefined && message.has_attachment !== false) {
+    if (message.has_attachment !== false) {
       obj.has_attachment = message.has_attachment;
     }
-    if (message.ref_type !== undefined && message.ref_type !== 0) {
+    if (message.ref_type !== 0) {
       obj.ref_type = Math.round(message.ref_type);
     }
-    if (message.message_sender_id !== undefined && message.message_sender_id !== "") {
+    if (message.message_sender_id !== "") {
       obj.message_sender_id = message.message_sender_id;
     }
-    if (message.message_sender_username !== undefined && message.message_sender_username !== "") {
+    if (message.message_sender_username !== "") {
       obj.message_sender_username = message.message_sender_username;
     }
-    if (message.mesages_sender_avatar !== undefined && message.mesages_sender_avatar !== "") {
+    if (message.mesages_sender_avatar !== "") {
       obj.mesages_sender_avatar = message.mesages_sender_avatar;
     }
-    if (message.message_sender_clan_nick !== undefined && message.message_sender_clan_nick !== "") {
+    if (message.message_sender_clan_nick !== "") {
       obj.message_sender_clan_nick = message.message_sender_clan_nick;
     }
-    if (message.message_sender_display_name !== undefined && message.message_sender_display_name !== "") {
+    if (message.message_sender_display_name !== "") {
       obj.message_sender_display_name = message.message_sender_display_name;
     }
     return obj;
@@ -7742,10 +6484,10 @@ function createBaseMessageDeleted(): MessageDeleted {
 
 export const MessageDeleted = {
   encode(message: MessageDeleted, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       writer.uint32(10).string(message.message_id);
     }
-    if (message.deletor !== undefined && message.deletor !== "") {
+    if (message.deletor !== "") {
       writer.uint32(18).string(message.deletor);
     }
     return writer;
@@ -7790,10 +6532,10 @@ export const MessageDeleted = {
 
   toJSON(message: MessageDeleted): unknown {
     const obj: any = {};
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.deletor !== undefined && message.deletor !== "") {
+    if (message.deletor !== "") {
       obj.deletor = message.deletor;
     }
     return obj;
@@ -7816,10 +6558,8 @@ function createBaseChannelMessageList(): ChannelMessageList {
 
 export const ChannelMessageList = {
   encode(message: ChannelMessageList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.messages !== undefined && message.messages.length !== 0) {
-      for (const v of message.messages) {
-        ChannelMessage.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.messages) {
+      ChannelMessage.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     if (message.last_seen_message !== undefined) {
       ChannelMessageHeader.encode(message.last_seen_message, writer.uint32(18).fork()).ldelim();
@@ -7842,7 +6582,7 @@ export const ChannelMessageList = {
             break;
           }
 
-          message.messages!.push(ChannelMessage.decode(reader, reader.uint32()));
+          message.messages.push(ChannelMessage.decode(reader, reader.uint32()));
           continue;
         case 2:
           if (tag !== 18) {
@@ -7917,22 +6657,22 @@ function createBaseCreateGroupRequest(): CreateGroupRequest {
 
 export const CreateGroupRequest = {
   encode(message: CreateGroupRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.description !== undefined && message.description !== "") {
+    if (message.description !== "") {
       writer.uint32(18).string(message.description);
     }
-    if (message.lang_tag !== undefined && message.lang_tag !== "") {
+    if (message.lang_tag !== "") {
       writer.uint32(26).string(message.lang_tag);
     }
-    if (message.avatar_url !== undefined && message.avatar_url !== "") {
+    if (message.avatar_url !== "") {
       writer.uint32(34).string(message.avatar_url);
     }
-    if (message.open !== undefined && message.open !== false) {
+    if (message.open !== false) {
       writer.uint32(40).bool(message.open);
     }
-    if (message.max_count !== undefined && message.max_count !== 0) {
+    if (message.max_count !== 0) {
       writer.uint32(48).int32(message.max_count);
     }
     return writer;
@@ -8009,22 +6749,22 @@ export const CreateGroupRequest = {
 
   toJSON(message: CreateGroupRequest): unknown {
     const obj: any = {};
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== "") {
       obj.name = message.name;
     }
-    if (message.description !== undefined && message.description !== "") {
+    if (message.description !== "") {
       obj.description = message.description;
     }
-    if (message.lang_tag !== undefined && message.lang_tag !== "") {
+    if (message.lang_tag !== "") {
       obj.lang_tag = message.lang_tag;
     }
-    if (message.avatar_url !== undefined && message.avatar_url !== "") {
+    if (message.avatar_url !== "") {
       obj.avatar_url = message.avatar_url;
     }
-    if (message.open !== undefined && message.open !== false) {
+    if (message.open !== false) {
       obj.open = message.open;
     }
-    if (message.max_count !== undefined && message.max_count !== 0) {
+    if (message.max_count !== 0) {
       obj.max_count = Math.round(message.max_count);
     }
     return obj;
@@ -8051,15 +6791,11 @@ function createBaseDeleteFriendsRequest(): DeleteFriendsRequest {
 
 export const DeleteFriendsRequest = {
   encode(message: DeleteFriendsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.ids !== undefined && message.ids.length !== 0) {
-      for (const v of message.ids) {
-        writer.uint32(10).string(v!);
-      }
+    for (const v of message.ids) {
+      writer.uint32(10).string(v!);
     }
-    if (message.usernames !== undefined && message.usernames.length !== 0) {
-      for (const v of message.usernames) {
-        writer.uint32(18).string(v!);
-      }
+    for (const v of message.usernames) {
+      writer.uint32(18).string(v!);
     }
     return writer;
   },
@@ -8076,14 +6812,14 @@ export const DeleteFriendsRequest = {
             break;
           }
 
-          message.ids!.push(reader.string());
+          message.ids.push(reader.string());
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.usernames!.push(reader.string());
+          message.usernames.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -8131,7 +6867,7 @@ function createBaseDeleteGroupRequest(): DeleteGroupRequest {
 
 export const DeleteGroupRequest = {
   encode(message: DeleteGroupRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.group_id !== undefined && message.group_id !== "") {
+    if (message.group_id !== "") {
       writer.uint32(10).string(message.group_id);
     }
     return writer;
@@ -8166,7 +6902,7 @@ export const DeleteGroupRequest = {
 
   toJSON(message: DeleteGroupRequest): unknown {
     const obj: any = {};
-    if (message.group_id !== undefined && message.group_id !== "") {
+    if (message.group_id !== "") {
       obj.group_id = message.group_id;
     }
     return obj;
@@ -8188,12 +6924,10 @@ function createBaseDeleteNotificationsRequest(): DeleteNotificationsRequest {
 
 export const DeleteNotificationsRequest = {
   encode(message: DeleteNotificationsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.ids !== undefined && message.ids.length !== 0) {
-      for (const v of message.ids) {
-        writer.uint32(10).string(v!);
-      }
+    for (const v of message.ids) {
+      writer.uint32(10).string(v!);
     }
-    if (message.category !== undefined && message.category !== 0) {
+    if (message.category !== 0) {
       writer.uint32(16).int32(message.category);
     }
     return writer;
@@ -8211,7 +6945,7 @@ export const DeleteNotificationsRequest = {
             break;
           }
 
-          message.ids!.push(reader.string());
+          message.ids.push(reader.string());
           continue;
         case 2:
           if (tag !== 16) {
@@ -8241,7 +6975,7 @@ export const DeleteNotificationsRequest = {
     if (message.ids?.length) {
       obj.ids = message.ids;
     }
-    if (message.category !== undefined && message.category !== 0) {
+    if (message.category !== 0) {
       obj.category = Math.round(message.category);
     }
     return obj;
@@ -8264,16 +6998,16 @@ function createBaseEvent(): Event {
 
 export const Event = {
   encode(message: Event, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    Object.entries(message.properties || {}).forEach(([key, value]) => {
+    Object.entries(message.properties).forEach(([key, value]) => {
       Event_PropertiesEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).ldelim();
     });
     if (message.timestamp !== undefined) {
       Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(26).fork()).ldelim();
     }
-    if (message.external !== undefined && message.external !== false) {
+    if (message.external !== false) {
       writer.uint32(32).bool(message.external);
     }
     return writer;
@@ -8300,7 +7034,7 @@ export const Event = {
 
           const entry2 = Event_PropertiesEntry.decode(reader, reader.uint32());
           if (entry2.value !== undefined) {
-            message.properties![entry2.key] = entry2.value;
+            message.properties[entry2.key] = entry2.value;
           }
           continue;
         case 3:
@@ -8342,7 +7076,7 @@ export const Event = {
 
   toJSON(message: Event): unknown {
     const obj: any = {};
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== "") {
       obj.name = message.name;
     }
     if (message.properties) {
@@ -8357,7 +7091,7 @@ export const Event = {
     if (message.timestamp !== undefined) {
       obj.timestamp = message.timestamp.toISOString();
     }
-    if (message.external !== undefined && message.external !== false) {
+    if (message.external !== false) {
       obj.external = message.external;
     }
     return obj;
@@ -8473,7 +7207,7 @@ export const Friend = {
     if (message.update_time !== undefined) {
       Timestamp.encode(toTimestamp(message.update_time), writer.uint32(26).fork()).ldelim();
     }
-    if (message.source_id !== undefined && message.source_id !== "") {
+    if (message.source_id !== "") {
       writer.uint32(34).string(message.source_id);
     }
     return writer;
@@ -8543,7 +7277,7 @@ export const Friend = {
     if (message.update_time !== undefined) {
       obj.update_time = message.update_time.toISOString();
     }
-    if (message.source_id !== undefined && message.source_id !== "") {
+    if (message.source_id !== "") {
       obj.source_id = message.source_id;
     }
     return obj;
@@ -8568,12 +7302,10 @@ function createBaseFriendList(): FriendList {
 
 export const FriendList = {
   encode(message: FriendList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.friends !== undefined && message.friends.length !== 0) {
-      for (const v of message.friends) {
-        Friend.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.friends) {
+      Friend.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       writer.uint32(18).string(message.cursor);
     }
     return writer;
@@ -8591,7 +7323,7 @@ export const FriendList = {
             break;
           }
 
-          message.friends!.push(Friend.decode(reader, reader.uint32()));
+          message.friends.push(Friend.decode(reader, reader.uint32()));
           continue;
         case 2:
           if (tag !== 18) {
@@ -8621,7 +7353,7 @@ export const FriendList = {
     if (message.friends?.length) {
       obj.friends = message.friends.map((e) => Friend.toJSON(e));
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
     return obj;
@@ -8644,10 +7376,10 @@ function createBaseUpdateUsersRequest(): UpdateUsersRequest {
 
 export const UpdateUsersRequest = {
   encode(message: UpdateUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.display_name !== undefined && message.display_name !== "") {
+    if (message.display_name !== "") {
       writer.uint32(18).string(message.display_name);
     }
-    if (message.avatar_url !== undefined && message.avatar_url !== "") {
+    if (message.avatar_url !== "") {
       writer.uint32(26).string(message.avatar_url);
     }
     return writer;
@@ -8692,10 +7424,10 @@ export const UpdateUsersRequest = {
 
   toJSON(message: UpdateUsersRequest): unknown {
     const obj: any = {};
-    if (message.display_name !== undefined && message.display_name !== "") {
+    if (message.display_name !== "") {
       obj.display_name = message.display_name;
     }
-    if (message.avatar_url !== undefined && message.avatar_url !== "") {
+    if (message.avatar_url !== "") {
       obj.avatar_url = message.avatar_url;
     }
     return obj;
@@ -8718,15 +7450,13 @@ function createBaseChannelUserList(): ChannelUserList {
 
 export const ChannelUserList = {
   encode(message: ChannelUserList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_users !== undefined && message.channel_users.length !== 0) {
-      for (const v of message.channel_users) {
-        ChannelUserList_ChannelUser.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.channel_users) {
+      ChannelUserList_ChannelUser.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       writer.uint32(18).string(message.cursor);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
     }
     return writer;
@@ -8744,7 +7474,7 @@ export const ChannelUserList = {
             break;
           }
 
-          message.channel_users!.push(ChannelUserList_ChannelUser.decode(reader, reader.uint32()));
+          message.channel_users.push(ChannelUserList_ChannelUser.decode(reader, reader.uint32()));
           continue;
         case 2:
           if (tag !== 18) {
@@ -8784,10 +7514,10 @@ export const ChannelUserList = {
     if (message.channel_users?.length) {
       obj.channel_users = message.channel_users.map((e) => ChannelUserList_ChannelUser.toJSON(e));
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -8822,36 +7552,34 @@ function createBaseChannelUserList_ChannelUser(): ChannelUserList_ChannelUser {
 
 export const ChannelUserList_ChannelUser = {
   encode(message: ChannelUserList_ChannelUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
-    if (message.role_id !== undefined && message.role_id.length !== 0) {
-      for (const v of message.role_id) {
-        writer.uint32(18).string(v!);
-      }
+    for (const v of message.role_id) {
+      writer.uint32(18).string(v!);
     }
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(26).string(message.id);
     }
-    if (message.thread_id !== undefined && message.thread_id !== "") {
+    if (message.thread_id !== "") {
       writer.uint32(34).string(message.thread_id);
     }
-    if (message.clan_nick !== undefined && message.clan_nick !== "") {
+    if (message.clan_nick !== "") {
       writer.uint32(42).string(message.clan_nick);
     }
-    if (message.clan_avatar !== undefined && message.clan_avatar !== "") {
+    if (message.clan_avatar !== "") {
       writer.uint32(50).string(message.clan_avatar);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(58).string(message.clan_id);
     }
-    if (message.added_by !== undefined && message.added_by !== "") {
+    if (message.added_by !== "") {
       writer.uint32(66).string(message.added_by);
     }
-    if (message.is_banned !== undefined && message.is_banned !== false) {
+    if (message.is_banned !== false) {
       writer.uint32(72).bool(message.is_banned);
     }
-    if (message.expired_ban_time !== undefined && message.expired_ban_time !== 0) {
+    if (message.expired_ban_time !== 0) {
       writer.uint32(80).int32(message.expired_ban_time);
     }
     return writer;
@@ -8876,7 +7604,7 @@ export const ChannelUserList_ChannelUser = {
             break;
           }
 
-          message.role_id!.push(reader.string());
+          message.role_id.push(reader.string());
           continue;
         case 3:
           if (tag !== 26) {
@@ -8960,34 +7688,34 @@ export const ChannelUserList_ChannelUser = {
 
   toJSON(message: ChannelUserList_ChannelUser): unknown {
     const obj: any = {};
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
     if (message.role_id?.length) {
       obj.role_id = message.role_id;
     }
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.thread_id !== undefined && message.thread_id !== "") {
+    if (message.thread_id !== "") {
       obj.thread_id = message.thread_id;
     }
-    if (message.clan_nick !== undefined && message.clan_nick !== "") {
+    if (message.clan_nick !== "") {
       obj.clan_nick = message.clan_nick;
     }
-    if (message.clan_avatar !== undefined && message.clan_avatar !== "") {
+    if (message.clan_avatar !== "") {
       obj.clan_avatar = message.clan_avatar;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.added_by !== undefined && message.added_by !== "") {
+    if (message.added_by !== "") {
       obj.added_by = message.added_by;
     }
-    if (message.is_banned !== undefined && message.is_banned !== false) {
+    if (message.is_banned !== false) {
       obj.is_banned = message.is_banned;
     }
-    if (message.expired_ban_time !== undefined && message.expired_ban_time !== 0) {
+    if (message.expired_ban_time !== 0) {
       obj.expired_ban_time = Math.round(message.expired_ban_time);
     }
     return obj;
@@ -9018,16 +7746,16 @@ function createBaseVoiceChannelUser(): VoiceChannelUser {
 
 export const VoiceChannelUser = {
   encode(message: VoiceChannelUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       writer.uint32(18).string(message.user_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
     }
-    if (message.participant !== undefined && message.participant !== "") {
+    if (message.participant !== "") {
       writer.uint32(34).string(message.participant);
     }
     return writer;
@@ -9088,16 +7816,16 @@ export const VoiceChannelUser = {
 
   toJSON(message: VoiceChannelUser): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.participant !== undefined && message.participant !== "") {
+    if (message.participant !== "") {
       obj.participant = message.participant;
     }
     return obj;
@@ -9122,10 +7850,8 @@ function createBaseVoiceChannelUserList(): VoiceChannelUserList {
 
 export const VoiceChannelUserList = {
   encode(message: VoiceChannelUserList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.voice_channel_users !== undefined && message.voice_channel_users.length !== 0) {
-      for (const v of message.voice_channel_users) {
-        VoiceChannelUser.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.voice_channel_users) {
+      VoiceChannelUser.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -9142,7 +7868,7 @@ export const VoiceChannelUserList = {
             break;
           }
 
-          message.voice_channel_users!.push(VoiceChannelUser.decode(reader, reader.uint32()));
+          message.voice_channel_users.push(VoiceChannelUser.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -9196,34 +7922,34 @@ function createBaseChannelAttachment(): ChannelAttachment {
 
 export const ChannelAttachment = {
   encode(message: ChannelAttachment, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.filename !== undefined && message.filename !== "") {
+    if (message.filename !== "") {
       writer.uint32(18).string(message.filename);
     }
-    if (message.filetype !== undefined && message.filetype !== "") {
+    if (message.filetype !== "") {
       writer.uint32(26).string(message.filetype);
     }
-    if (message.filesize !== undefined && message.filesize !== "") {
+    if (message.filesize !== "") {
       writer.uint32(34).string(message.filesize);
     }
-    if (message.url !== undefined && message.url !== "") {
+    if (message.url !== "") {
       writer.uint32(42).string(message.url);
     }
-    if (message.uploader !== undefined && message.uploader !== "") {
+    if (message.uploader !== "") {
       writer.uint32(50).string(message.uploader);
     }
     if (message.create_time !== undefined) {
       Timestamp.encode(toTimestamp(message.create_time), writer.uint32(58).fork()).ldelim();
     }
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       writer.uint32(66).string(message.message_id);
     }
-    if (message.width !== undefined && message.width !== 0) {
+    if (message.width !== 0) {
       writer.uint32(72).int32(message.width);
     }
-    if (message.height !== undefined && message.height !== 0) {
+    if (message.height !== 0) {
       writer.uint32(80).int32(message.height);
     }
     return writer;
@@ -9332,34 +8058,34 @@ export const ChannelAttachment = {
 
   toJSON(message: ChannelAttachment): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.filename !== undefined && message.filename !== "") {
+    if (message.filename !== "") {
       obj.filename = message.filename;
     }
-    if (message.filetype !== undefined && message.filetype !== "") {
+    if (message.filetype !== "") {
       obj.filetype = message.filetype;
     }
-    if (message.filesize !== undefined && message.filesize !== "") {
+    if (message.filesize !== "") {
       obj.filesize = message.filesize;
     }
-    if (message.url !== undefined && message.url !== "") {
+    if (message.url !== "") {
       obj.url = message.url;
     }
-    if (message.uploader !== undefined && message.uploader !== "") {
+    if (message.uploader !== "") {
       obj.uploader = message.uploader;
     }
     if (message.create_time !== undefined) {
       obj.create_time = message.create_time.toISOString();
     }
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.width !== undefined && message.width !== 0) {
+    if (message.width !== 0) {
       obj.width = Math.round(message.width);
     }
-    if (message.height !== undefined && message.height !== 0) {
+    if (message.height !== 0) {
       obj.height = Math.round(message.height);
     }
     return obj;
@@ -9390,10 +8116,8 @@ function createBaseChannelAttachmentList(): ChannelAttachmentList {
 
 export const ChannelAttachmentList = {
   encode(message: ChannelAttachmentList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.attachments !== undefined && message.attachments.length !== 0) {
-      for (const v of message.attachments) {
-        ChannelAttachment.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.attachments) {
+      ChannelAttachment.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -9410,7 +8134,7 @@ export const ChannelAttachmentList = {
             break;
           }
 
-          message.attachments!.push(ChannelAttachment.decode(reader, reader.uint32()));
+          message.attachments.push(ChannelAttachment.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -9453,15 +8177,13 @@ function createBaseClanUserList(): ClanUserList {
 
 export const ClanUserList = {
   encode(message: ClanUserList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_users !== undefined && message.clan_users.length !== 0) {
-      for (const v of message.clan_users) {
-        ClanUserList_ClanUser.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.clan_users) {
+      ClanUserList_ClanUser.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       writer.uint32(18).string(message.cursor);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
     return writer;
@@ -9479,7 +8201,7 @@ export const ClanUserList = {
             break;
           }
 
-          message.clan_users!.push(ClanUserList_ClanUser.decode(reader, reader.uint32()));
+          message.clan_users.push(ClanUserList_ClanUser.decode(reader, reader.uint32()));
           continue;
         case 2:
           if (tag !== 18) {
@@ -9519,10 +8241,10 @@ export const ClanUserList = {
     if (message.clan_users?.length) {
       obj.clan_users = message.clan_users.map((e) => ClanUserList_ClanUser.toJSON(e));
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -9549,18 +8271,16 @@ export const ClanUserList_ClanUser = {
     if (message.user !== undefined) {
       User.encode(message.user, writer.uint32(10).fork()).ldelim();
     }
-    if (message.role_id !== undefined && message.role_id.length !== 0) {
-      for (const v of message.role_id) {
-        writer.uint32(18).string(v!);
-      }
+    for (const v of message.role_id) {
+      writer.uint32(18).string(v!);
     }
-    if (message.clan_nick !== undefined && message.clan_nick !== "") {
+    if (message.clan_nick !== "") {
       writer.uint32(26).string(message.clan_nick);
     }
-    if (message.clan_avatar !== undefined && message.clan_avatar !== "") {
+    if (message.clan_avatar !== "") {
       writer.uint32(34).string(message.clan_avatar);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(42).string(message.clan_id);
     }
     return writer;
@@ -9585,7 +8305,7 @@ export const ClanUserList_ClanUser = {
             break;
           }
 
-          message.role_id!.push(reader.string());
+          message.role_id.push(reader.string());
           continue;
         case 3:
           if (tag !== 26) {
@@ -9635,13 +8355,13 @@ export const ClanUserList_ClanUser = {
     if (message.role_id?.length) {
       obj.role_id = message.role_id;
     }
-    if (message.clan_nick !== undefined && message.clan_nick !== "") {
+    if (message.clan_nick !== "") {
       obj.clan_nick = message.clan_nick;
     }
-    if (message.clan_avatar !== undefined && message.clan_avatar !== "") {
+    if (message.clan_avatar !== "") {
       obj.clan_avatar = message.clan_avatar;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -9667,16 +8387,16 @@ function createBaseRegistFcmDeviceTokenRequest(): RegistFcmDeviceTokenRequest {
 
 export const RegistFcmDeviceTokenRequest = {
   encode(message: RegistFcmDeviceTokenRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       writer.uint32(10).string(message.token);
     }
-    if (message.device_id !== undefined && message.device_id !== "") {
+    if (message.device_id !== "") {
       writer.uint32(18).string(message.device_id);
     }
-    if (message.platform !== undefined && message.platform !== "") {
+    if (message.platform !== "") {
       writer.uint32(26).string(message.platform);
     }
-    if (message.voip_token !== undefined && message.voip_token !== "") {
+    if (message.voip_token !== "") {
       writer.uint32(34).string(message.voip_token);
     }
     return writer;
@@ -9737,16 +8457,16 @@ export const RegistFcmDeviceTokenRequest = {
 
   toJSON(message: RegistFcmDeviceTokenRequest): unknown {
     const obj: any = {};
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       obj.token = message.token;
     }
-    if (message.device_id !== undefined && message.device_id !== "") {
+    if (message.device_id !== "") {
       obj.device_id = message.device_id;
     }
-    if (message.platform !== undefined && message.platform !== "") {
+    if (message.platform !== "") {
       obj.platform = message.platform;
     }
-    if (message.voip_token !== undefined && message.voip_token !== "") {
+    if (message.voip_token !== "") {
       obj.voip_token = message.voip_token;
     }
     return obj;
@@ -9771,13 +8491,13 @@ function createBaseRegistFcmDeviceTokenResponse(): RegistFcmDeviceTokenResponse 
 
 export const RegistFcmDeviceTokenResponse = {
   encode(message: RegistFcmDeviceTokenResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       writer.uint32(10).string(message.token);
     }
-    if (message.device_id !== undefined && message.device_id !== "") {
+    if (message.device_id !== "") {
       writer.uint32(18).string(message.device_id);
     }
-    if (message.platform !== undefined && message.platform !== "") {
+    if (message.platform !== "") {
       writer.uint32(26).string(message.platform);
     }
     return writer;
@@ -9830,13 +8550,13 @@ export const RegistFcmDeviceTokenResponse = {
 
   toJSON(message: RegistFcmDeviceTokenResponse): unknown {
     const obj: any = {};
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       obj.token = message.token;
     }
-    if (message.device_id !== undefined && message.device_id !== "") {
+    if (message.device_id !== "") {
       obj.device_id = message.device_id;
     }
-    if (message.platform !== undefined && message.platform !== "") {
+    if (message.platform !== "") {
       obj.platform = message.platform;
     }
     return obj;
@@ -9860,13 +8580,13 @@ function createBaseListChannelMessagesRequest(): ListChannelMessagesRequest {
 
 export const ListChannelMessagesRequest = {
   encode(message: ListChannelMessagesRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       writer.uint32(26).string(message.message_id);
     }
     if (message.limit !== undefined) {
@@ -9875,7 +8595,7 @@ export const ListChannelMessagesRequest = {
     if (message.direction !== undefined) {
       Int32Value.encode({ value: message.direction! }, writer.uint32(42).fork()).ldelim();
     }
-    if (message.topic_id !== undefined && message.topic_id !== "") {
+    if (message.topic_id !== "") {
       writer.uint32(50).string(message.topic_id);
     }
     return writer;
@@ -9952,13 +8672,13 @@ export const ListChannelMessagesRequest = {
 
   toJSON(message: ListChannelMessagesRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       obj.message_id = message.message_id;
     }
     if (message.limit !== undefined) {
@@ -9967,7 +8687,7 @@ export const ListChannelMessagesRequest = {
     if (message.direction !== undefined) {
       obj.direction = message.direction;
     }
-    if (message.topic_id !== undefined && message.topic_id !== "") {
+    if (message.topic_id !== "") {
       obj.topic_id = message.topic_id;
     }
     return obj;
@@ -10000,7 +8720,7 @@ export const ListFriendsRequest = {
     if (message.state !== undefined) {
       Int32Value.encode({ value: message.state! }, writer.uint32(18).fork()).ldelim();
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       writer.uint32(26).string(message.cursor);
     }
     return writer;
@@ -10059,7 +8779,7 @@ export const ListFriendsRequest = {
     if (message.state !== undefined) {
       obj.state = message.state;
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
     return obj;
@@ -10083,16 +8803,16 @@ function createBaseListGroupsRequest(): ListGroupsRequest {
 
 export const ListGroupsRequest = {
   encode(message: ListGroupsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       writer.uint32(18).string(message.cursor);
     }
     if (message.limit !== undefined) {
       Int32Value.encode({ value: message.limit! }, writer.uint32(26).fork()).ldelim();
     }
-    if (message.lang_tag !== undefined && message.lang_tag !== "") {
+    if (message.lang_tag !== "") {
       writer.uint32(34).string(message.lang_tag);
     }
     if (message.members !== undefined) {
@@ -10175,16 +8895,16 @@ export const ListGroupsRequest = {
 
   toJSON(message: ListGroupsRequest): unknown {
     const obj: any = {};
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== "") {
       obj.name = message.name;
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
     if (message.limit !== undefined) {
       obj.limit = message.limit;
     }
-    if (message.lang_tag !== undefined && message.lang_tag !== "") {
+    if (message.lang_tag !== "") {
       obj.lang_tag = message.lang_tag;
     }
     if (message.members !== undefined) {
@@ -10217,7 +8937,7 @@ function createBaseListGroupUsersRequest(): ListGroupUsersRequest {
 
 export const ListGroupUsersRequest = {
   encode(message: ListGroupUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.group_id !== undefined && message.group_id !== "") {
+    if (message.group_id !== "") {
       writer.uint32(10).string(message.group_id);
     }
     if (message.limit !== undefined) {
@@ -10226,7 +8946,7 @@ export const ListGroupUsersRequest = {
     if (message.state !== undefined) {
       Int32Value.encode({ value: message.state! }, writer.uint32(26).fork()).ldelim();
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       writer.uint32(34).string(message.cursor);
     }
     return writer;
@@ -10287,7 +9007,7 @@ export const ListGroupUsersRequest = {
 
   toJSON(message: ListGroupUsersRequest): unknown {
     const obj: any = {};
-    if (message.group_id !== undefined && message.group_id !== "") {
+    if (message.group_id !== "") {
       obj.group_id = message.group_id;
     }
     if (message.limit !== undefined) {
@@ -10296,7 +9016,7 @@ export const ListGroupUsersRequest = {
     if (message.state !== undefined) {
       obj.state = message.state;
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
     return obj;
@@ -10321,13 +9041,13 @@ function createBaseListChannelUsersRequest(): ListChannelUsersRequest {
 
 export const ListChannelUsersRequest = {
   encode(message: ListChannelUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.channel_type !== undefined && message.channel_type !== 0) {
+    if (message.channel_type !== 0) {
       writer.uint32(24).int32(message.channel_type);
     }
     if (message.limit !== undefined) {
@@ -10336,7 +9056,7 @@ export const ListChannelUsersRequest = {
     if (message.state !== undefined) {
       Int32Value.encode({ value: message.state! }, writer.uint32(42).fork()).ldelim();
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       writer.uint32(50).string(message.cursor);
     }
     return writer;
@@ -10413,13 +9133,13 @@ export const ListChannelUsersRequest = {
 
   toJSON(message: ListChannelUsersRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.channel_type !== undefined && message.channel_type !== 0) {
+    if (message.channel_type !== 0) {
       obj.channel_type = Math.round(message.channel_type);
     }
     if (message.limit !== undefined) {
@@ -10428,7 +9148,7 @@ export const ListChannelUsersRequest = {
     if (message.state !== undefined) {
       obj.state = message.state;
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
     return obj;
@@ -10464,13 +9184,13 @@ function createBaseListChannelAttachmentRequest(): ListChannelAttachmentRequest 
 
 export const ListChannelAttachmentRequest = {
   encode(message: ListChannelAttachmentRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.file_type !== undefined && message.file_type !== "") {
+    if (message.file_type !== "") {
       writer.uint32(26).string(message.file_type);
     }
     if (message.limit !== undefined) {
@@ -10479,13 +9199,13 @@ export const ListChannelAttachmentRequest = {
     if (message.state !== undefined) {
       Int32Value.encode({ value: message.state! }, writer.uint32(42).fork()).ldelim();
     }
-    if (message.before !== undefined && message.before !== 0) {
+    if (message.before !== 0) {
       writer.uint32(48).uint32(message.before);
     }
-    if (message.after !== undefined && message.after !== 0) {
+    if (message.after !== 0) {
       writer.uint32(56).uint32(message.after);
     }
-    if (message.around !== undefined && message.around !== 0) {
+    if (message.around !== 0) {
       writer.uint32(64).uint32(message.around);
     }
     return writer;
@@ -10578,13 +9298,13 @@ export const ListChannelAttachmentRequest = {
 
   toJSON(message: ListChannelAttachmentRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.file_type !== undefined && message.file_type !== "") {
+    if (message.file_type !== "") {
       obj.file_type = message.file_type;
     }
     if (message.limit !== undefined) {
@@ -10593,13 +9313,13 @@ export const ListChannelAttachmentRequest = {
     if (message.state !== undefined) {
       obj.state = message.state;
     }
-    if (message.before !== undefined && message.before !== 0) {
+    if (message.before !== 0) {
       obj.before = Math.round(message.before);
     }
-    if (message.after !== undefined && message.after !== 0) {
+    if (message.after !== 0) {
       obj.after = Math.round(message.after);
     }
-    if (message.around !== undefined && message.around !== 0) {
+    if (message.around !== 0) {
       obj.around = Math.round(message.around);
     }
     return obj;
@@ -10628,7 +9348,7 @@ function createBaseListClanUsersRequest(): ListClanUsersRequest {
 
 export const ListClanUsersRequest = {
   encode(message: ListClanUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
     return writer;
@@ -10663,7 +9383,7 @@ export const ListClanUsersRequest = {
 
   toJSON(message: ListClanUsersRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -10688,13 +9408,13 @@ export const ListNotificationsRequest = {
     if (message.limit !== undefined) {
       Int32Value.encode({ value: message.limit! }, writer.uint32(10).fork()).ldelim();
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
-    if (message.notification_id !== undefined && message.notification_id !== "") {
+    if (message.notification_id !== "") {
       writer.uint32(26).string(message.notification_id);
     }
-    if (message.category !== undefined && message.category !== 0) {
+    if (message.category !== 0) {
       writer.uint32(32).int32(message.category);
     }
     if (message.direction !== undefined) {
@@ -10769,13 +9489,13 @@ export const ListNotificationsRequest = {
     if (message.limit !== undefined) {
       obj.limit = message.limit;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.notification_id !== undefined && message.notification_id !== "") {
+    if (message.notification_id !== "") {
       obj.notification_id = message.notification_id;
     }
-    if (message.category !== undefined && message.category !== 0) {
+    if (message.category !== 0) {
       obj.category = Math.round(message.category);
     }
     if (message.direction !== undefined) {
@@ -10804,7 +9524,7 @@ function createBaseListUserGroupsRequest(): ListUserGroupsRequest {
 
 export const ListUserGroupsRequest = {
   encode(message: ListUserGroupsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
     if (message.limit !== undefined) {
@@ -10813,7 +9533,7 @@ export const ListUserGroupsRequest = {
     if (message.state !== undefined) {
       Int32Value.encode({ value: message.state! }, writer.uint32(26).fork()).ldelim();
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       writer.uint32(34).string(message.cursor);
     }
     return writer;
@@ -10874,7 +9594,7 @@ export const ListUserGroupsRequest = {
 
   toJSON(message: ListUserGroupsRequest): unknown {
     const obj: any = {};
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
     if (message.limit !== undefined) {
@@ -10883,7 +9603,7 @@ export const ListUserGroupsRequest = {
     if (message.state !== undefined) {
       obj.state = message.state;
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
     return obj;
@@ -10923,46 +9643,46 @@ function createBaseNotification(): Notification {
 
 export const Notification = {
   encode(message: Notification, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.subject !== undefined && message.subject !== "") {
+    if (message.subject !== "") {
       writer.uint32(18).string(message.subject);
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       writer.uint32(26).string(message.content);
     }
-    if (message.code !== undefined && message.code !== 0) {
+    if (message.code !== 0) {
       writer.uint32(32).int32(message.code);
     }
-    if (message.sender_id !== undefined && message.sender_id !== "") {
+    if (message.sender_id !== "") {
       writer.uint32(42).string(message.sender_id);
     }
     if (message.create_time !== undefined) {
       Timestamp.encode(toTimestamp(message.create_time), writer.uint32(50).fork()).ldelim();
     }
-    if (message.persistent !== undefined && message.persistent !== false) {
+    if (message.persistent !== false) {
       writer.uint32(56).bool(message.persistent);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(66).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(74).string(message.channel_id);
     }
-    if (message.channel_type !== undefined && message.channel_type !== 0) {
+    if (message.channel_type !== 0) {
       writer.uint32(80).int32(message.channel_type);
     }
-    if (message.avatar_url !== undefined && message.avatar_url !== "") {
+    if (message.avatar_url !== "") {
       writer.uint32(90).string(message.avatar_url);
     }
     if (message.channel !== undefined) {
       ChannelDescription.encode(message.channel, writer.uint32(98).fork()).ldelim();
     }
-    if (message.topic_id !== undefined && message.topic_id !== "") {
+    if (message.topic_id !== "") {
       writer.uint32(106).string(message.topic_id);
     }
-    if (message.category !== undefined && message.category !== 0) {
+    if (message.category !== 0) {
       writer.uint32(112).int32(message.category);
     }
     return writer;
@@ -11103,46 +9823,46 @@ export const Notification = {
 
   toJSON(message: Notification): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.subject !== undefined && message.subject !== "") {
+    if (message.subject !== "") {
       obj.subject = message.subject;
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.code !== undefined && message.code !== 0) {
+    if (message.code !== 0) {
       obj.code = Math.round(message.code);
     }
-    if (message.sender_id !== undefined && message.sender_id !== "") {
+    if (message.sender_id !== "") {
       obj.sender_id = message.sender_id;
     }
     if (message.create_time !== undefined) {
       obj.create_time = message.create_time.toISOString();
     }
-    if (message.persistent !== undefined && message.persistent !== false) {
+    if (message.persistent !== false) {
       obj.persistent = message.persistent;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.channel_type !== undefined && message.channel_type !== 0) {
+    if (message.channel_type !== 0) {
       obj.channel_type = Math.round(message.channel_type);
     }
-    if (message.avatar_url !== undefined && message.avatar_url !== "") {
+    if (message.avatar_url !== "") {
       obj.avatar_url = message.avatar_url;
     }
     if (message.channel !== undefined) {
       obj.channel = ChannelDescription.toJSON(message.channel);
     }
-    if (message.topic_id !== undefined && message.topic_id !== "") {
+    if (message.topic_id !== "") {
       obj.topic_id = message.topic_id;
     }
-    if (message.category !== undefined && message.category !== 0) {
+    if (message.category !== 0) {
       obj.category = Math.round(message.category);
     }
     return obj;
@@ -11179,10 +9899,10 @@ function createBaseEmojiRecent(): EmojiRecent {
 
 export const EmojiRecent = {
   encode(message: EmojiRecent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.emoji_recents_id !== undefined && message.emoji_recents_id !== "") {
+    if (message.emoji_recents_id !== "") {
       writer.uint32(10).string(message.emoji_recents_id);
     }
-    if (message.emoji_id !== undefined && message.emoji_id !== "") {
+    if (message.emoji_id !== "") {
       writer.uint32(18).string(message.emoji_id);
     }
     if (message.update_time !== undefined) {
@@ -11238,10 +9958,10 @@ export const EmojiRecent = {
 
   toJSON(message: EmojiRecent): unknown {
     const obj: any = {};
-    if (message.emoji_recents_id !== undefined && message.emoji_recents_id !== "") {
+    if (message.emoji_recents_id !== "") {
       obj.emoji_recents_id = message.emoji_recents_id;
     }
-    if (message.emoji_id !== undefined && message.emoji_id !== "") {
+    if (message.emoji_id !== "") {
       obj.emoji_id = message.emoji_id;
     }
     if (message.update_time !== undefined) {
@@ -11268,10 +9988,8 @@ function createBaseEmojiRecentList(): EmojiRecentList {
 
 export const EmojiRecentList = {
   encode(message: EmojiRecentList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.emoji_recents !== undefined && message.emoji_recents.length !== 0) {
-      for (const v of message.emoji_recents) {
-        EmojiRecent.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.emoji_recents) {
+      EmojiRecent.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -11288,7 +10006,7 @@ export const EmojiRecentList = {
             break;
           }
 
-          message.emoji_recents!.push(EmojiRecent.decode(reader, reader.uint32()));
+          message.emoji_recents.push(EmojiRecent.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -11331,12 +10049,10 @@ function createBaseNotificationList(): NotificationList {
 
 export const NotificationList = {
   encode(message: NotificationList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.notifications !== undefined && message.notifications.length !== 0) {
-      for (const v of message.notifications) {
-        Notification.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.notifications) {
+      Notification.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if (message.cacheable_cursor !== undefined && message.cacheable_cursor !== "") {
+    if (message.cacheable_cursor !== "") {
       writer.uint32(18).string(message.cacheable_cursor);
     }
     return writer;
@@ -11354,7 +10070,7 @@ export const NotificationList = {
             break;
           }
 
-          message.notifications!.push(Notification.decode(reader, reader.uint32()));
+          message.notifications.push(Notification.decode(reader, reader.uint32()));
           continue;
         case 2:
           if (tag !== 18) {
@@ -11386,7 +10102,7 @@ export const NotificationList = {
     if (message.notifications?.length) {
       obj.notifications = message.notifications.map((e) => Notification.toJSON(e));
     }
-    if (message.cacheable_cursor !== undefined && message.cacheable_cursor !== "") {
+    if (message.cacheable_cursor !== "") {
       obj.cacheable_cursor = message.cacheable_cursor;
     }
     return obj;
@@ -11409,13 +10125,11 @@ function createBasePromoteGroupUsersRequest(): PromoteGroupUsersRequest {
 
 export const PromoteGroupUsersRequest = {
   encode(message: PromoteGroupUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.group_id !== undefined && message.group_id !== "") {
+    if (message.group_id !== "") {
       writer.uint32(10).string(message.group_id);
     }
-    if (message.user_ids !== undefined && message.user_ids.length !== 0) {
-      for (const v of message.user_ids) {
-        writer.uint32(18).string(v!);
-      }
+    for (const v of message.user_ids) {
+      writer.uint32(18).string(v!);
     }
     return writer;
   },
@@ -11439,7 +10153,7 @@ export const PromoteGroupUsersRequest = {
             break;
           }
 
-          message.user_ids!.push(reader.string());
+          message.user_ids.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -11459,7 +10173,7 @@ export const PromoteGroupUsersRequest = {
 
   toJSON(message: PromoteGroupUsersRequest): unknown {
     const obj: any = {};
-    if (message.group_id !== undefined && message.group_id !== "") {
+    if (message.group_id !== "") {
       obj.group_id = message.group_id;
     }
     if (message.user_ids?.length) {
@@ -11485,13 +10199,11 @@ function createBaseDemoteGroupUsersRequest(): DemoteGroupUsersRequest {
 
 export const DemoteGroupUsersRequest = {
   encode(message: DemoteGroupUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.group_id !== undefined && message.group_id !== "") {
+    if (message.group_id !== "") {
       writer.uint32(10).string(message.group_id);
     }
-    if (message.user_ids !== undefined && message.user_ids.length !== 0) {
-      for (const v of message.user_ids) {
-        writer.uint32(18).string(v!);
-      }
+    for (const v of message.user_ids) {
+      writer.uint32(18).string(v!);
     }
     return writer;
   },
@@ -11515,7 +10227,7 @@ export const DemoteGroupUsersRequest = {
             break;
           }
 
-          message.user_ids!.push(reader.string());
+          message.user_ids.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -11535,7 +10247,7 @@ export const DemoteGroupUsersRequest = {
 
   toJSON(message: DemoteGroupUsersRequest): unknown {
     const obj: any = {};
-    if (message.group_id !== undefined && message.group_id !== "") {
+    if (message.group_id !== "") {
       obj.group_id = message.group_id;
     }
     if (message.user_ids?.length) {
@@ -11561,13 +10273,13 @@ function createBaseRpc(): Rpc {
 
 export const Rpc = {
   encode(message: Rpc, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.payload !== undefined && message.payload !== "") {
+    if (message.payload !== "") {
       writer.uint32(18).string(message.payload);
     }
-    if (message.http_key !== undefined && message.http_key !== "") {
+    if (message.http_key !== "") {
       writer.uint32(26).string(message.http_key);
     }
     return writer;
@@ -11620,13 +10332,13 @@ export const Rpc = {
 
   toJSON(message: Rpc): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.payload !== undefined && message.payload !== "") {
+    if (message.payload !== "") {
       obj.payload = message.payload;
     }
-    if (message.http_key !== undefined && message.http_key !== "") {
+    if (message.http_key !== "") {
       obj.http_key = message.http_key;
     }
     return obj;
@@ -11650,19 +10362,19 @@ function createBaseSession(): Session {
 
 export const Session = {
   encode(message: Session, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.created !== undefined && message.created !== false) {
+    if (message.created !== false) {
       writer.uint32(8).bool(message.created);
     }
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       writer.uint32(18).string(message.token);
     }
-    if (message.refresh_token !== undefined && message.refresh_token !== "") {
+    if (message.refresh_token !== "") {
       writer.uint32(26).string(message.refresh_token);
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       writer.uint32(34).string(message.user_id);
     }
-    if (message.is_remember !== undefined && message.is_remember !== false) {
+    if (message.is_remember !== false) {
       writer.uint32(40).bool(message.is_remember);
     }
     return writer;
@@ -11731,19 +10443,19 @@ export const Session = {
 
   toJSON(message: Session): unknown {
     const obj: any = {};
-    if (message.created !== undefined && message.created !== false) {
+    if (message.created !== false) {
       obj.created = message.created;
     }
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       obj.token = message.token;
     }
-    if (message.refresh_token !== undefined && message.refresh_token !== "") {
+    if (message.refresh_token !== "") {
       obj.refresh_token = message.refresh_token;
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.is_remember !== undefined && message.is_remember !== false) {
+    if (message.is_remember !== false) {
       obj.is_remember = message.is_remember;
     }
     return obj;
@@ -11769,7 +10481,7 @@ function createBaseUpdateUsernameRequest(): UpdateUsernameRequest {
 
 export const UpdateUsernameRequest = {
   encode(message: UpdateUsernameRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       writer.uint32(10).string(message.username);
     }
     return writer;
@@ -11804,7 +10516,7 @@ export const UpdateUsernameRequest = {
 
   toJSON(message: UpdateUsernameRequest): unknown {
     const obj: any = {};
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       obj.username = message.username;
     }
     return obj;
@@ -11865,7 +10577,7 @@ export const UpdateAccountRequest = {
     if (message.splash_screen !== undefined) {
       StringValue.encode({ value: message.splash_screen! }, writer.uint32(74).fork()).ldelim();
     }
-    if (message.encrypt_private_key !== undefined && message.encrypt_private_key !== "") {
+    if (message.encrypt_private_key !== "") {
       writer.uint32(82).string(message.encrypt_private_key);
     }
     if (message.email !== undefined) {
@@ -12012,7 +10724,7 @@ export const UpdateAccountRequest = {
     if (message.splash_screen !== undefined) {
       obj.splash_screen = message.splash_screen;
     }
-    if (message.encrypt_private_key !== undefined && message.encrypt_private_key !== "") {
+    if (message.encrypt_private_key !== "") {
       obj.encrypt_private_key = message.encrypt_private_key;
     }
     if (message.email !== undefined) {
@@ -12054,7 +10766,7 @@ function createBaseUpdateGroupRequest(): UpdateGroupRequest {
 
 export const UpdateGroupRequest = {
   encode(message: UpdateGroupRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.group_id !== undefined && message.group_id !== "") {
+    if (message.group_id !== "") {
       writer.uint32(10).string(message.group_id);
     }
     if (message.name !== undefined) {
@@ -12146,7 +10858,7 @@ export const UpdateGroupRequest = {
 
   toJSON(message: UpdateGroupRequest): unknown {
     const obj: any = {};
-    if (message.group_id !== undefined && message.group_id !== "") {
+    if (message.group_id !== "") {
       obj.group_id = message.group_id;
     }
     if (message.name !== undefined) {
@@ -12188,13 +10900,13 @@ function createBaseUpdateCategoryDescRequest(): UpdateCategoryDescRequest {
 
 export const UpdateCategoryDescRequest = {
   encode(message: UpdateCategoryDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.category_id !== undefined && message.category_id !== "") {
+    if (message.category_id !== "") {
       writer.uint32(10).string(message.category_id);
     }
-    if (message.category_name !== undefined && message.category_name !== "") {
+    if (message.category_name !== "") {
       writer.uint32(18).string(message.category_name);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
     return writer;
@@ -12247,13 +10959,13 @@ export const UpdateCategoryDescRequest = {
 
   toJSON(message: UpdateCategoryDescRequest): unknown {
     const obj: any = {};
-    if (message.category_id !== undefined && message.category_id !== "") {
+    if (message.category_id !== "") {
       obj.category_id = message.category_id;
     }
-    if (message.category_name !== undefined && message.category_name !== "") {
+    if (message.category_name !== "") {
       obj.category_name = message.category_name;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -12298,37 +11010,37 @@ function createBaseUser(): User {
 
 export const User = {
   encode(message: User, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       writer.uint32(18).string(message.username);
     }
-    if (message.display_name !== undefined && message.display_name !== "") {
+    if (message.display_name !== "") {
       writer.uint32(26).string(message.display_name);
     }
-    if (message.avatar_url !== undefined && message.avatar_url !== "") {
+    if (message.avatar_url !== "") {
       writer.uint32(34).string(message.avatar_url);
     }
-    if (message.lang_tag !== undefined && message.lang_tag !== "") {
+    if (message.lang_tag !== "") {
       writer.uint32(42).string(message.lang_tag);
     }
-    if (message.location !== undefined && message.location !== "") {
+    if (message.location !== "") {
       writer.uint32(50).string(message.location);
     }
-    if (message.timezone !== undefined && message.timezone !== "") {
+    if (message.timezone !== "") {
       writer.uint32(58).string(message.timezone);
     }
-    if (message.user_status !== undefined && message.user_status !== "") {
+    if (message.user_status !== "") {
       writer.uint32(66).string(message.user_status);
     }
-    if (message.online !== undefined && message.online !== false) {
+    if (message.online !== false) {
       writer.uint32(72).bool(message.online);
     }
-    if (message.phone_number !== undefined && message.phone_number !== "") {
+    if (message.phone_number !== "") {
       writer.uint32(82).string(message.phone_number);
     }
-    if (message.edge_count !== undefined && message.edge_count !== 0) {
+    if (message.edge_count !== 0) {
       writer.uint32(88).int32(message.edge_count);
     }
     if (message.create_time !== undefined) {
@@ -12337,27 +11049,25 @@ export const User = {
     if (message.update_time !== undefined) {
       Timestamp.encode(toTimestamp(message.update_time), writer.uint32(106).fork()).ldelim();
     }
-    if (message.about_me !== undefined && message.about_me !== "") {
+    if (message.about_me !== "") {
       writer.uint32(114).string(message.about_me);
     }
     if (message.join_time !== undefined) {
       Timestamp.encode(toTimestamp(message.join_time), writer.uint32(122).fork()).ldelim();
     }
-    if (message.is_mobile !== undefined && message.is_mobile !== false) {
+    if (message.is_mobile !== false) {
       writer.uint32(128).bool(message.is_mobile);
     }
     if (message.dob !== undefined) {
       Timestamp.encode(toTimestamp(message.dob), writer.uint32(138).fork()).ldelim();
     }
-    if (message.mezon_id !== undefined && message.mezon_id !== "") {
+    if (message.mezon_id !== "") {
       writer.uint32(146).string(message.mezon_id);
     }
-    if (message.list_nick_names !== undefined && message.list_nick_names.length !== 0) {
-      for (const v of message.list_nick_names) {
-        writer.uint32(154).string(v!);
-      }
+    for (const v of message.list_nick_names) {
+      writer.uint32(154).string(v!);
     }
-    if (message.status !== undefined && message.status !== "") {
+    if (message.status !== "") {
       writer.uint32(162).string(message.status);
     }
     return writer;
@@ -12501,7 +11211,7 @@ export const User = {
             break;
           }
 
-          message.list_nick_names!.push(reader.string());
+          message.list_nick_names.push(reader.string());
           continue;
         case 20:
           if (tag !== 162) {
@@ -12548,37 +11258,37 @@ export const User = {
 
   toJSON(message: User): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       obj.username = message.username;
     }
-    if (message.display_name !== undefined && message.display_name !== "") {
+    if (message.display_name !== "") {
       obj.display_name = message.display_name;
     }
-    if (message.avatar_url !== undefined && message.avatar_url !== "") {
+    if (message.avatar_url !== "") {
       obj.avatar_url = message.avatar_url;
     }
-    if (message.lang_tag !== undefined && message.lang_tag !== "") {
+    if (message.lang_tag !== "") {
       obj.lang_tag = message.lang_tag;
     }
-    if (message.location !== undefined && message.location !== "") {
+    if (message.location !== "") {
       obj.location = message.location;
     }
-    if (message.timezone !== undefined && message.timezone !== "") {
+    if (message.timezone !== "") {
       obj.timezone = message.timezone;
     }
-    if (message.user_status !== undefined && message.user_status !== "") {
+    if (message.user_status !== "") {
       obj.user_status = message.user_status;
     }
-    if (message.online !== undefined && message.online !== false) {
+    if (message.online !== false) {
       obj.online = message.online;
     }
-    if (message.phone_number !== undefined && message.phone_number !== "") {
+    if (message.phone_number !== "") {
       obj.phone_number = message.phone_number;
     }
-    if (message.edge_count !== undefined && message.edge_count !== 0) {
+    if (message.edge_count !== 0) {
       obj.edge_count = Math.round(message.edge_count);
     }
     if (message.create_time !== undefined) {
@@ -12587,25 +11297,25 @@ export const User = {
     if (message.update_time !== undefined) {
       obj.update_time = message.update_time.toISOString();
     }
-    if (message.about_me !== undefined && message.about_me !== "") {
+    if (message.about_me !== "") {
       obj.about_me = message.about_me;
     }
     if (message.join_time !== undefined) {
       obj.join_time = message.join_time.toISOString();
     }
-    if (message.is_mobile !== undefined && message.is_mobile !== false) {
+    if (message.is_mobile !== false) {
       obj.is_mobile = message.is_mobile;
     }
     if (message.dob !== undefined) {
       obj.dob = message.dob.toISOString();
     }
-    if (message.mezon_id !== undefined && message.mezon_id !== "") {
+    if (message.mezon_id !== "") {
       obj.mezon_id = message.mezon_id;
     }
     if (message.list_nick_names?.length) {
       obj.list_nick_names = message.list_nick_names;
     }
-    if (message.status !== undefined && message.status !== "") {
+    if (message.status !== "") {
       obj.status = message.status;
     }
     return obj;
@@ -12646,10 +11356,8 @@ function createBaseUsers(): Users {
 
 export const Users = {
   encode(message: Users, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.users !== undefined && message.users.length !== 0) {
-      for (const v of message.users) {
-        User.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.users) {
+      User.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -12666,7 +11374,7 @@ export const Users = {
             break;
           }
 
-          message.users!.push(User.decode(reader, reader.uint32()));
+          message.users.push(User.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -12705,22 +11413,22 @@ function createBaseClanDescProfile(): ClanDescProfile {
 
 export const ClanDescProfile = {
   encode(message: ClanDescProfile, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       writer.uint32(18).string(message.creator_id);
     }
-    if (message.nick_name !== undefined && message.nick_name !== "") {
+    if (message.nick_name !== "") {
       writer.uint32(26).string(message.nick_name);
     }
-    if (message.profile_banner !== undefined && message.profile_banner !== "") {
+    if (message.profile_banner !== "") {
       writer.uint32(34).string(message.profile_banner);
     }
-    if (message.profile_theme !== undefined && message.profile_theme !== "") {
+    if (message.profile_theme !== "") {
       writer.uint32(42).string(message.profile_theme);
     }
-    if (message.avatar_url !== undefined && message.avatar_url !== "") {
+    if (message.avatar_url !== "") {
       writer.uint32(50).string(message.avatar_url);
     }
     return writer;
@@ -12797,22 +11505,22 @@ export const ClanDescProfile = {
 
   toJSON(message: ClanDescProfile): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.nick_name !== undefined && message.nick_name !== "") {
+    if (message.nick_name !== "") {
       obj.nick_name = message.nick_name;
     }
-    if (message.profile_banner !== undefined && message.profile_banner !== "") {
+    if (message.profile_banner !== "") {
       obj.profile_banner = message.profile_banner;
     }
-    if (message.profile_theme !== undefined && message.profile_theme !== "") {
+    if (message.profile_theme !== "") {
       obj.profile_theme = message.profile_theme;
     }
-    if (message.avatar_url !== undefined && message.avatar_url !== "") {
+    if (message.avatar_url !== "") {
       obj.avatar_url = message.avatar_url;
     }
     return obj;
@@ -12839,19 +11547,19 @@ function createBaseUpdateClanDescProfileRequest(): UpdateClanDescProfileRequest 
 
 export const UpdateClanDescProfileRequest = {
   encode(message: UpdateClanDescProfileRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.nick_name !== undefined && message.nick_name !== "") {
+    if (message.nick_name !== "") {
       writer.uint32(18).string(message.nick_name);
     }
-    if (message.profile_banner !== undefined && message.profile_banner !== "") {
+    if (message.profile_banner !== "") {
       writer.uint32(26).string(message.profile_banner);
     }
-    if (message.profile_theme !== undefined && message.profile_theme !== "") {
+    if (message.profile_theme !== "") {
       writer.uint32(34).string(message.profile_theme);
     }
-    if (message.avatar_url !== undefined && message.avatar_url !== "") {
+    if (message.avatar_url !== "") {
       writer.uint32(42).string(message.avatar_url);
     }
     return writer;
@@ -12920,19 +11628,19 @@ export const UpdateClanDescProfileRequest = {
 
   toJSON(message: UpdateClanDescProfileRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.nick_name !== undefined && message.nick_name !== "") {
+    if (message.nick_name !== "") {
       obj.nick_name = message.nick_name;
     }
-    if (message.profile_banner !== undefined && message.profile_banner !== "") {
+    if (message.profile_banner !== "") {
       obj.profile_banner = message.profile_banner;
     }
-    if (message.profile_theme !== undefined && message.profile_theme !== "") {
+    if (message.profile_theme !== "") {
       obj.profile_theme = message.profile_theme;
     }
-    if (message.avatar_url !== undefined && message.avatar_url !== "") {
+    if (message.avatar_url !== "") {
       obj.avatar_url = message.avatar_url;
     }
     return obj;
@@ -12958,7 +11666,7 @@ function createBaseClanDescProfileRequest(): ClanDescProfileRequest {
 
 export const ClanDescProfileRequest = {
   encode(message: ClanDescProfileRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
     return writer;
@@ -12993,7 +11701,7 @@ export const ClanDescProfileRequest = {
 
   toJSON(message: ClanDescProfileRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -13034,58 +11742,58 @@ function createBaseClanDesc(): ClanDesc {
 
 export const ClanDesc = {
   encode(message: ClanDesc, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       writer.uint32(10).string(message.creator_id);
     }
-    if (message.clan_name !== undefined && message.clan_name !== "") {
+    if (message.clan_name !== "") {
       writer.uint32(18).string(message.clan_name);
     }
-    if (message.logo !== undefined && message.logo !== "") {
+    if (message.logo !== "") {
       writer.uint32(26).string(message.logo);
     }
-    if (message.banner !== undefined && message.banner !== "") {
+    if (message.banner !== "") {
       writer.uint32(34).string(message.banner);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(42).string(message.clan_id);
     }
-    if (message.status !== undefined && message.status !== 0) {
+    if (message.status !== 0) {
       writer.uint32(48).int32(message.status);
     }
-    if (message.badge_count !== undefined && message.badge_count !== 0) {
+    if (message.badge_count !== 0) {
       writer.uint32(56).int32(message.badge_count);
     }
-    if (message.is_onboarding !== undefined && message.is_onboarding !== false) {
+    if (message.is_onboarding !== false) {
       writer.uint32(64).bool(message.is_onboarding);
     }
-    if (message.welcome_channel_id !== undefined && message.welcome_channel_id !== "") {
+    if (message.welcome_channel_id !== "") {
       writer.uint32(74).string(message.welcome_channel_id);
     }
-    if (message.onboarding_banner !== undefined && message.onboarding_banner !== "") {
+    if (message.onboarding_banner !== "") {
       writer.uint32(82).string(message.onboarding_banner);
     }
-    if (message.clan_order !== undefined && message.clan_order !== 0) {
+    if (message.clan_order !== 0) {
       writer.uint32(88).int32(message.clan_order);
     }
-    if (message.is_community !== undefined && message.is_community !== false) {
+    if (message.is_community !== false) {
       writer.uint32(96).bool(message.is_community);
     }
-    if (message.community_banner !== undefined && message.community_banner !== "") {
+    if (message.community_banner !== "") {
       writer.uint32(106).string(message.community_banner);
     }
-    if (message.description !== undefined && message.description !== "") {
+    if (message.description !== "") {
       writer.uint32(114).string(message.description);
     }
-    if (message.about !== undefined && message.about !== "") {
+    if (message.about !== "") {
       writer.uint32(122).string(message.about);
     }
-    if (message.short_url !== undefined && message.short_url !== "") {
+    if (message.short_url !== "") {
       writer.uint32(130).string(message.short_url);
     }
-    if (message.prevent_anonymous !== undefined && message.prevent_anonymous !== false) {
+    if (message.prevent_anonymous !== false) {
       writer.uint32(136).bool(message.prevent_anonymous);
     }
-    if (message.has_unread_message !== undefined && message.has_unread_message !== false) {
+    if (message.has_unread_message !== false) {
       writer.uint32(144).bool(message.has_unread_message);
     }
     return writer;
@@ -13258,58 +11966,58 @@ export const ClanDesc = {
 
   toJSON(message: ClanDesc): unknown {
     const obj: any = {};
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.clan_name !== undefined && message.clan_name !== "") {
+    if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.logo !== undefined && message.logo !== "") {
+    if (message.logo !== "") {
       obj.logo = message.logo;
     }
-    if (message.banner !== undefined && message.banner !== "") {
+    if (message.banner !== "") {
       obj.banner = message.banner;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.status !== undefined && message.status !== 0) {
+    if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
-    if (message.badge_count !== undefined && message.badge_count !== 0) {
+    if (message.badge_count !== 0) {
       obj.badge_count = Math.round(message.badge_count);
     }
-    if (message.is_onboarding !== undefined && message.is_onboarding !== false) {
+    if (message.is_onboarding !== false) {
       obj.is_onboarding = message.is_onboarding;
     }
-    if (message.welcome_channel_id !== undefined && message.welcome_channel_id !== "") {
+    if (message.welcome_channel_id !== "") {
       obj.welcome_channel_id = message.welcome_channel_id;
     }
-    if (message.onboarding_banner !== undefined && message.onboarding_banner !== "") {
+    if (message.onboarding_banner !== "") {
       obj.onboarding_banner = message.onboarding_banner;
     }
-    if (message.clan_order !== undefined && message.clan_order !== 0) {
+    if (message.clan_order !== 0) {
       obj.clan_order = Math.round(message.clan_order);
     }
-    if (message.is_community !== undefined && message.is_community !== false) {
+    if (message.is_community !== false) {
       obj.is_community = message.is_community;
     }
-    if (message.community_banner !== undefined && message.community_banner !== "") {
+    if (message.community_banner !== "") {
       obj.community_banner = message.community_banner;
     }
-    if (message.description !== undefined && message.description !== "") {
+    if (message.description !== "") {
       obj.description = message.description;
     }
-    if (message.about !== undefined && message.about !== "") {
+    if (message.about !== "") {
       obj.about = message.about;
     }
-    if (message.short_url !== undefined && message.short_url !== "") {
+    if (message.short_url !== "") {
       obj.short_url = message.short_url;
     }
-    if (message.prevent_anonymous !== undefined && message.prevent_anonymous !== false) {
+    if (message.prevent_anonymous !== false) {
       obj.prevent_anonymous = message.prevent_anonymous;
     }
-    if (message.has_unread_message !== undefined && message.has_unread_message !== false) {
+    if (message.has_unread_message !== false) {
       obj.has_unread_message = message.has_unread_message;
     }
     return obj;
@@ -13348,13 +12056,13 @@ function createBaseCreateClanDescRequest(): CreateClanDescRequest {
 
 export const CreateClanDescRequest = {
   encode(message: CreateClanDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_name !== undefined && message.clan_name !== "") {
+    if (message.clan_name !== "") {
       writer.uint32(10).string(message.clan_name);
     }
-    if (message.logo !== undefined && message.logo !== "") {
+    if (message.logo !== "") {
       writer.uint32(18).string(message.logo);
     }
-    if (message.banner !== undefined && message.banner !== "") {
+    if (message.banner !== "") {
       writer.uint32(26).string(message.banner);
     }
     return writer;
@@ -13407,13 +12115,13 @@ export const CreateClanDescRequest = {
 
   toJSON(message: CreateClanDescRequest): unknown {
     const obj: any = {};
-    if (message.clan_name !== undefined && message.clan_name !== "") {
+    if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.logo !== undefined && message.logo !== "") {
+    if (message.logo !== "") {
       obj.logo = message.logo;
     }
-    if (message.banner !== undefined && message.banner !== "") {
+    if (message.banner !== "") {
       obj.banner = message.banner;
     }
     return obj;
@@ -13452,10 +12160,10 @@ function createBaseUpdateClanDescRequest(): UpdateClanDescRequest {
 
 export const UpdateClanDescRequest = {
   encode(message: UpdateClanDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.clan_name !== undefined && message.clan_name !== "") {
+    if (message.clan_name !== "") {
       writer.uint32(18).string(message.clan_name);
     }
     if (message.logo !== undefined) {
@@ -13464,13 +12172,13 @@ export const UpdateClanDescRequest = {
     if (message.banner !== undefined) {
       StringValue.encode({ value: message.banner! }, writer.uint32(34).fork()).ldelim();
     }
-    if (message.status !== undefined && message.status !== 0) {
+    if (message.status !== 0) {
       writer.uint32(40).int32(message.status);
     }
     if (message.is_onboarding !== undefined) {
       BoolValue.encode({ value: message.is_onboarding! }, writer.uint32(50).fork()).ldelim();
     }
-    if (message.welcome_channel_id !== undefined && message.welcome_channel_id !== "") {
+    if (message.welcome_channel_id !== "") {
       writer.uint32(58).string(message.welcome_channel_id);
     }
     if (message.onboarding_banner !== undefined) {
@@ -13491,7 +12199,7 @@ export const UpdateClanDescRequest = {
     if (message.short_url !== undefined) {
       StringValue.encode({ value: message.short_url! }, writer.uint32(106).fork()).ldelim();
     }
-    if (message.prevent_anonymous !== undefined && message.prevent_anonymous !== false) {
+    if (message.prevent_anonymous !== false) {
       writer.uint32(112).bool(message.prevent_anonymous);
     }
     return writer;
@@ -13632,10 +12340,10 @@ export const UpdateClanDescRequest = {
 
   toJSON(message: UpdateClanDescRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.clan_name !== undefined && message.clan_name !== "") {
+    if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
     if (message.logo !== undefined) {
@@ -13644,13 +12352,13 @@ export const UpdateClanDescRequest = {
     if (message.banner !== undefined) {
       obj.banner = message.banner;
     }
-    if (message.status !== undefined && message.status !== 0) {
+    if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
     if (message.is_onboarding !== undefined) {
       obj.is_onboarding = message.is_onboarding;
     }
-    if (message.welcome_channel_id !== undefined && message.welcome_channel_id !== "") {
+    if (message.welcome_channel_id !== "") {
       obj.welcome_channel_id = message.welcome_channel_id;
     }
     if (message.onboarding_banner !== undefined) {
@@ -13671,7 +12379,7 @@ export const UpdateClanDescRequest = {
     if (message.short_url !== undefined) {
       obj.short_url = message.short_url;
     }
-    if (message.prevent_anonymous !== undefined && message.prevent_anonymous !== false) {
+    if (message.prevent_anonymous !== false) {
       obj.prevent_anonymous = message.prevent_anonymous;
     }
     return obj;
@@ -13706,7 +12414,7 @@ function createBaseDeleteClanDescRequest(): DeleteClanDescRequest {
 
 export const DeleteClanDescRequest = {
   encode(message: DeleteClanDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_desc_id !== undefined && message.clan_desc_id !== "") {
+    if (message.clan_desc_id !== "") {
       writer.uint32(10).string(message.clan_desc_id);
     }
     return writer;
@@ -13741,7 +12449,7 @@ export const DeleteClanDescRequest = {
 
   toJSON(message: DeleteClanDescRequest): unknown {
     const obj: any = {};
-    if (message.clan_desc_id !== undefined && message.clan_desc_id !== "") {
+    if (message.clan_desc_id !== "") {
       obj.clan_desc_id = message.clan_desc_id;
     }
     return obj;
@@ -13769,7 +12477,7 @@ export const ListClanDescRequest = {
     if (message.state !== undefined) {
       Int32Value.encode({ value: message.state! }, writer.uint32(18).fork()).ldelim();
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       writer.uint32(26).string(message.cursor);
     }
     return writer;
@@ -13828,7 +12536,7 @@ export const ListClanDescRequest = {
     if (message.state !== undefined) {
       obj.state = message.state;
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
     return obj;
@@ -13852,7 +12560,7 @@ function createBaseListClanUnreadMsgIndicatorRequest(): ListClanUnreadMsgIndicat
 
 export const ListClanUnreadMsgIndicatorRequest = {
   encode(message: ListClanUnreadMsgIndicatorRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
     return writer;
@@ -13887,7 +12595,7 @@ export const ListClanUnreadMsgIndicatorRequest = {
 
   toJSON(message: ListClanUnreadMsgIndicatorRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -13913,7 +12621,7 @@ function createBaseListClanUnreadMsgIndicatorResponse(): ListClanUnreadMsgIndica
 
 export const ListClanUnreadMsgIndicatorResponse = {
   encode(message: ListClanUnreadMsgIndicatorResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.has_unread_message !== undefined && message.has_unread_message !== false) {
+    if (message.has_unread_message !== false) {
       writer.uint32(8).bool(message.has_unread_message);
     }
     return writer;
@@ -13950,7 +12658,7 @@ export const ListClanUnreadMsgIndicatorResponse = {
 
   toJSON(message: ListClanUnreadMsgIndicatorResponse): unknown {
     const obj: any = {};
-    if (message.has_unread_message !== undefined && message.has_unread_message !== false) {
+    if (message.has_unread_message !== false) {
       obj.has_unread_message = message.has_unread_message;
     }
     return obj;
@@ -13976,10 +12684,8 @@ function createBaseClanDescList(): ClanDescList {
 
 export const ClanDescList = {
   encode(message: ClanDescList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clandesc !== undefined && message.clandesc.length !== 0) {
-      for (const v of message.clandesc) {
-        ClanDesc.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.clandesc) {
+      ClanDesc.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -13996,7 +12702,7 @@ export const ClanDescList = {
             break;
           }
 
-          message.clandesc!.push(ClanDesc.decode(reader, reader.uint32()));
+          message.clandesc.push(ClanDesc.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -14037,13 +12743,13 @@ function createBaseLinkInviteUserRequest(): LinkInviteUserRequest {
 
 export const LinkInviteUserRequest = {
   encode(message: LinkInviteUserRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.expiry_time !== undefined && message.expiry_time !== 0) {
+    if (message.expiry_time !== 0) {
       writer.uint32(24).int32(message.expiry_time);
     }
     return writer;
@@ -14096,13 +12802,13 @@ export const LinkInviteUserRequest = {
 
   toJSON(message: LinkInviteUserRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.expiry_time !== undefined && message.expiry_time !== 0) {
+    if (message.expiry_time !== 0) {
       obj.expiry_time = Math.round(message.expiry_time);
     }
     return obj;
@@ -14126,7 +12832,7 @@ function createBaseInviteUserRequest(): InviteUserRequest {
 
 export const InviteUserRequest = {
   encode(message: InviteUserRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.invite_id !== undefined && message.invite_id !== "") {
+    if (message.invite_id !== "") {
       writer.uint32(10).string(message.invite_id);
     }
     return writer;
@@ -14161,7 +12867,7 @@ export const InviteUserRequest = {
 
   toJSON(message: InviteUserRequest): unknown {
     const obj: any = {};
-    if (message.invite_id !== undefined && message.invite_id !== "") {
+    if (message.invite_id !== "") {
       obj.invite_id = message.invite_id;
     }
     return obj;
@@ -14193,19 +12899,19 @@ function createBaseInviteUserRes(): InviteUserRes {
 
 export const InviteUserRes = {
   encode(message: InviteUserRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.clan_name !== undefined && message.clan_name !== "") {
+    if (message.clan_name !== "") {
       writer.uint32(26).string(message.clan_name);
     }
-    if (message.channel_label !== undefined && message.channel_label !== "") {
+    if (message.channel_label !== "") {
       writer.uint32(34).string(message.channel_label);
     }
-    if (message.user_joined !== undefined && message.user_joined !== false) {
+    if (message.user_joined !== false) {
       writer.uint32(40).bool(message.user_joined);
     }
     if (message.expiry_time !== undefined) {
@@ -14214,10 +12920,10 @@ export const InviteUserRes = {
     if (message.channel_desc !== undefined) {
       ChannelDescription.encode(message.channel_desc, writer.uint32(58).fork()).ldelim();
     }
-    if (message.clan_logo !== undefined && message.clan_logo !== "") {
+    if (message.clan_logo !== "") {
       writer.uint32(66).string(message.clan_logo);
     }
-    if (message.member_count !== undefined && message.member_count !== 0) {
+    if (message.member_count !== 0) {
       writer.uint32(72).int32(message.member_count);
     }
     return writer;
@@ -14318,19 +13024,19 @@ export const InviteUserRes = {
 
   toJSON(message: InviteUserRes): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_name !== undefined && message.clan_name !== "") {
+    if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.channel_label !== undefined && message.channel_label !== "") {
+    if (message.channel_label !== "") {
       obj.channel_label = message.channel_label;
     }
-    if (message.user_joined !== undefined && message.user_joined !== false) {
+    if (message.user_joined !== false) {
       obj.user_joined = message.user_joined;
     }
     if (message.expiry_time !== undefined) {
@@ -14339,10 +13045,10 @@ export const InviteUserRes = {
     if (message.channel_desc !== undefined) {
       obj.channel_desc = ChannelDescription.toJSON(message.channel_desc);
     }
-    if (message.clan_logo !== undefined && message.clan_logo !== "") {
+    if (message.clan_logo !== "") {
       obj.clan_logo = message.clan_logo;
     }
-    if (message.member_count !== undefined && message.member_count !== 0) {
+    if (message.member_count !== 0) {
       obj.member_count = Math.round(message.member_count);
     }
     return obj;
@@ -14374,10 +13080,10 @@ function createBaseJoinClanChannelRequest(): JoinClanChannelRequest {
 
 export const JoinClanChannelRequest = {
   encode(message: JoinClanChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
     return writer;
@@ -14422,10 +13128,10 @@ export const JoinClanChannelRequest = {
 
   toJSON(message: JoinClanChannelRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -14456,16 +13162,16 @@ function createBaseLinkInviteUser(): LinkInviteUser {
 
 export const LinkInviteUser = {
   encode(message: LinkInviteUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       writer.uint32(18).string(message.creator_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
     }
-    if (message.invite_link !== undefined && message.invite_link !== "") {
+    if (message.invite_link !== "") {
       writer.uint32(34).string(message.invite_link);
     }
     if (message.create_time !== undefined) {
@@ -14474,7 +13180,7 @@ export const LinkInviteUser = {
     if (message.expiry_time !== undefined) {
       Timestamp.encode(toTimestamp(message.expiry_time), writer.uint32(50).fork()).ldelim();
     }
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(58).string(message.id);
     }
     return writer;
@@ -14559,16 +13265,16 @@ export const LinkInviteUser = {
 
   toJSON(message: LinkInviteUser): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.invite_link !== undefined && message.invite_link !== "") {
+    if (message.invite_link !== "") {
       obj.invite_link = message.invite_link;
     }
     if (message.create_time !== undefined) {
@@ -14577,7 +13283,7 @@ export const LinkInviteUser = {
     if (message.expiry_time !== undefined) {
       obj.expiry_time = message.expiry_time.toISOString();
     }
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
     return obj;
@@ -14605,19 +13311,19 @@ function createBaseClanProfile(): ClanProfile {
 
 export const ClanProfile = {
   encode(message: ClanProfile, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
-    if (message.nick_name !== undefined && message.nick_name !== "") {
+    if (message.nick_name !== "") {
       writer.uint32(18).string(message.nick_name);
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       writer.uint32(26).string(message.avatar);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
     }
-    if (message.about !== undefined && message.about !== "") {
+    if (message.about !== "") {
       writer.uint32(42).string(message.about);
     }
     return writer;
@@ -14686,19 +13392,19 @@ export const ClanProfile = {
 
   toJSON(message: ClanProfile): unknown {
     const obj: any = {};
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.nick_name !== undefined && message.nick_name !== "") {
+    if (message.nick_name !== "") {
       obj.nick_name = message.nick_name;
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.about !== undefined && message.about !== "") {
+    if (message.about !== "") {
       obj.about = message.about;
     }
     return obj;
@@ -14724,7 +13430,7 @@ function createBaseClanProfileRequest(): ClanProfileRequest {
 
 export const ClanProfileRequest = {
   encode(message: ClanProfileRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
     return writer;
@@ -14759,7 +13465,7 @@ export const ClanProfileRequest = {
 
   toJSON(message: ClanProfileRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -14781,7 +13487,7 @@ function createBaseUpdateClanProfileRequest(): UpdateClanProfileRequest {
 
 export const UpdateClanProfileRequest = {
   encode(message: UpdateClanProfileRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
     if (message.nick_name !== undefined) {
@@ -14840,7 +13546,7 @@ export const UpdateClanProfileRequest = {
 
   toJSON(message: UpdateClanProfileRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     if (message.nick_name !== undefined) {
@@ -14870,10 +13576,8 @@ function createBaseUpdateClanOrderRequest(): UpdateClanOrderRequest {
 
 export const UpdateClanOrderRequest = {
   encode(message: UpdateClanOrderRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clans_order !== undefined && message.clans_order.length !== 0) {
-      for (const v of message.clans_order) {
-        UpdateClanOrderRequest_ClanOrder.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.clans_order) {
+      UpdateClanOrderRequest_ClanOrder.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -14890,7 +13594,7 @@ export const UpdateClanOrderRequest = {
             break;
           }
 
-          message.clans_order!.push(UpdateClanOrderRequest_ClanOrder.decode(reader, reader.uint32()));
+          message.clans_order.push(UpdateClanOrderRequest_ClanOrder.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -14933,10 +13637,10 @@ function createBaseUpdateClanOrderRequest_ClanOrder(): UpdateClanOrderRequest_Cl
 
 export const UpdateClanOrderRequest_ClanOrder = {
   encode(message: UpdateClanOrderRequest_ClanOrder, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.order !== undefined && message.order !== 0) {
+    if (message.order !== 0) {
       writer.uint32(8).int32(message.order);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
     return writer;
@@ -14981,10 +13685,10 @@ export const UpdateClanOrderRequest_ClanOrder = {
 
   toJSON(message: UpdateClanOrderRequest_ClanOrder): unknown {
     const obj: any = {};
-    if (message.order !== undefined && message.order !== 0) {
+    if (message.order !== 0) {
       obj.order = Math.round(message.order);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -15011,19 +13715,19 @@ function createBaseCategoryDesc(): CategoryDesc {
 
 export const CategoryDesc = {
   encode(message: CategoryDesc, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       writer.uint32(10).string(message.creator_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
-    if (message.category_name !== undefined && message.category_name !== "") {
+    if (message.category_name !== "") {
       writer.uint32(26).string(message.category_name);
     }
-    if (message.category_id !== undefined && message.category_id !== "") {
+    if (message.category_id !== "") {
       writer.uint32(34).string(message.category_id);
     }
-    if (message.category_order !== undefined && message.category_order !== 0) {
+    if (message.category_order !== 0) {
       writer.uint32(40).int32(message.category_order);
     }
     return writer;
@@ -15092,19 +13796,19 @@ export const CategoryDesc = {
 
   toJSON(message: CategoryDesc): unknown {
     const obj: any = {};
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.category_name !== undefined && message.category_name !== "") {
+    if (message.category_name !== "") {
       obj.category_name = message.category_name;
     }
-    if (message.category_id !== undefined && message.category_id !== "") {
+    if (message.category_id !== "") {
       obj.category_id = message.category_id;
     }
-    if (message.category_order !== undefined && message.category_order !== 0) {
+    if (message.category_order !== 0) {
       obj.category_order = Math.round(message.category_order);
     }
     return obj;
@@ -15130,13 +13834,11 @@ function createBaseUpdateCategoryOrderRequest(): UpdateCategoryOrderRequest {
 
 export const UpdateCategoryOrderRequest = {
   encode(message: UpdateCategoryOrderRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.categories !== undefined && message.categories.length !== 0) {
-      for (const v of message.categories) {
-        CategoryOrderUpdate.encode(v!, writer.uint32(18).fork()).ldelim();
-      }
+    for (const v of message.categories) {
+      CategoryOrderUpdate.encode(v!, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -15160,7 +13862,7 @@ export const UpdateCategoryOrderRequest = {
             break;
           }
 
-          message.categories!.push(CategoryOrderUpdate.decode(reader, reader.uint32()));
+          message.categories.push(CategoryOrderUpdate.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -15182,7 +13884,7 @@ export const UpdateCategoryOrderRequest = {
 
   toJSON(message: UpdateCategoryOrderRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     if (message.categories?.length) {
@@ -15208,13 +13910,11 @@ function createBaseUpdateRoleOrderRequest(): UpdateRoleOrderRequest {
 
 export const UpdateRoleOrderRequest = {
   encode(message: UpdateRoleOrderRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.roles !== undefined && message.roles.length !== 0) {
-      for (const v of message.roles) {
-        RoleOrderUpdate.encode(v!, writer.uint32(18).fork()).ldelim();
-      }
+    for (const v of message.roles) {
+      RoleOrderUpdate.encode(v!, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -15238,7 +13938,7 @@ export const UpdateRoleOrderRequest = {
             break;
           }
 
-          message.roles!.push(RoleOrderUpdate.decode(reader, reader.uint32()));
+          message.roles.push(RoleOrderUpdate.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -15258,7 +13958,7 @@ export const UpdateRoleOrderRequest = {
 
   toJSON(message: UpdateRoleOrderRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     if (message.roles?.length) {
@@ -15284,10 +13984,10 @@ function createBaseRoleOrderUpdate(): RoleOrderUpdate {
 
 export const RoleOrderUpdate = {
   encode(message: RoleOrderUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.role_id !== undefined && message.role_id !== "") {
+    if (message.role_id !== "") {
       writer.uint32(10).string(message.role_id);
     }
-    if (message.order !== undefined && message.order !== 0) {
+    if (message.order !== 0) {
       writer.uint32(16).int32(message.order);
     }
     return writer;
@@ -15332,10 +14032,10 @@ export const RoleOrderUpdate = {
 
   toJSON(message: RoleOrderUpdate): unknown {
     const obj: any = {};
-    if (message.role_id !== undefined && message.role_id !== "") {
+    if (message.role_id !== "") {
       obj.role_id = message.role_id;
     }
-    if (message.order !== undefined && message.order !== 0) {
+    if (message.order !== 0) {
       obj.order = Math.round(message.order);
     }
     return obj;
@@ -15358,10 +14058,10 @@ function createBaseCategoryOrderUpdate(): CategoryOrderUpdate {
 
 export const CategoryOrderUpdate = {
   encode(message: CategoryOrderUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.category_id !== undefined && message.category_id !== "") {
+    if (message.category_id !== "") {
       writer.uint32(10).string(message.category_id);
     }
-    if (message.order !== undefined && message.order !== 0) {
+    if (message.order !== 0) {
       writer.uint32(16).int32(message.order);
     }
     return writer;
@@ -15406,10 +14106,10 @@ export const CategoryOrderUpdate = {
 
   toJSON(message: CategoryOrderUpdate): unknown {
     const obj: any = {};
-    if (message.category_id !== undefined && message.category_id !== "") {
+    if (message.category_id !== "") {
       obj.category_id = message.category_id;
     }
-    if (message.order !== undefined && message.order !== 0) {
+    if (message.order !== 0) {
       obj.order = Math.round(message.order);
     }
     return obj;
@@ -15432,10 +14132,10 @@ function createBaseCreateCategoryDescRequest(): CreateCategoryDescRequest {
 
 export const CreateCategoryDescRequest = {
   encode(message: CreateCategoryDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.category_name !== undefined && message.category_name !== "") {
+    if (message.category_name !== "") {
       writer.uint32(10).string(message.category_name);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
     return writer;
@@ -15480,10 +14180,10 @@ export const CreateCategoryDescRequest = {
 
   toJSON(message: CreateCategoryDescRequest): unknown {
     const obj: any = {};
-    if (message.category_name !== undefined && message.category_name !== "") {
+    if (message.category_name !== "") {
       obj.category_name = message.category_name;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -15506,13 +14206,13 @@ function createBaseDeleteCategoryDescRequest(): DeleteCategoryDescRequest {
 
 export const DeleteCategoryDescRequest = {
   encode(message: DeleteCategoryDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.category_id !== undefined && message.category_id !== "") {
+    if (message.category_id !== "") {
       writer.uint32(10).string(message.category_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
-    if (message.category_label !== undefined && message.category_label !== "") {
+    if (message.category_label !== "") {
       writer.uint32(26).string(message.category_label);
     }
     return writer;
@@ -15565,13 +14265,13 @@ export const DeleteCategoryDescRequest = {
 
   toJSON(message: DeleteCategoryDescRequest): unknown {
     const obj: any = {};
-    if (message.category_id !== undefined && message.category_id !== "") {
+    if (message.category_id !== "") {
       obj.category_id = message.category_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.category_label !== undefined && message.category_label !== "") {
+    if (message.category_label !== "") {
       obj.category_label = message.category_label;
     }
     return obj;
@@ -15595,10 +14295,8 @@ function createBaseCategoryDescList(): CategoryDescList {
 
 export const CategoryDescList = {
   encode(message: CategoryDescList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.categorydesc !== undefined && message.categorydesc.length !== 0) {
-      for (const v of message.categorydesc) {
-        CategoryDesc.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.categorydesc) {
+      CategoryDesc.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -15615,7 +14313,7 @@ export const CategoryDescList = {
             break;
           }
 
-          message.categorydesc!.push(CategoryDesc.decode(reader, reader.uint32()));
+          message.categorydesc.push(CategoryDesc.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -15664,7 +14362,7 @@ export const ListCategoryDescsRequest = {
     if (message.state !== undefined) {
       Int32Value.encode({ value: message.state! }, writer.uint32(18).fork()).ldelim();
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       writer.uint32(26).string(message.cursor);
     }
     return writer;
@@ -15723,7 +14421,7 @@ export const ListCategoryDescsRequest = {
     if (message.state !== undefined) {
       obj.state = message.state;
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
     return obj;
@@ -15756,28 +14454,28 @@ function createBaseChannelMessageHeader(): ChannelMessageHeader {
 
 export const ChannelMessageHeader = {
   encode(message: ChannelMessageHeader, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.timestamp_seconds !== undefined && message.timestamp_seconds !== 0) {
+    if (message.timestamp_seconds !== 0) {
       writer.uint32(16).uint32(message.timestamp_seconds);
     }
-    if (message.sender_id !== undefined && message.sender_id !== "") {
+    if (message.sender_id !== "") {
       writer.uint32(26).string(message.sender_id);
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       writer.uint32(34).string(message.content);
     }
-    if (message.attachment !== undefined && message.attachment !== "") {
+    if (message.attachment !== "") {
       writer.uint32(42).string(message.attachment);
     }
-    if (message.reference !== undefined && message.reference !== "") {
+    if (message.reference !== "") {
       writer.uint32(50).string(message.reference);
     }
-    if (message.mention !== undefined && message.mention !== "") {
+    if (message.mention !== "") {
       writer.uint32(58).string(message.mention);
     }
-    if (message.reaction !== undefined && message.reaction !== "") {
+    if (message.reaction !== "") {
       writer.uint32(66).string(message.reaction);
     }
     return writer;
@@ -15870,28 +14568,28 @@ export const ChannelMessageHeader = {
 
   toJSON(message: ChannelMessageHeader): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.timestamp_seconds !== undefined && message.timestamp_seconds !== 0) {
+    if (message.timestamp_seconds !== 0) {
       obj.timestamp_seconds = Math.round(message.timestamp_seconds);
     }
-    if (message.sender_id !== undefined && message.sender_id !== "") {
+    if (message.sender_id !== "") {
       obj.sender_id = message.sender_id;
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.attachment !== undefined && message.attachment !== "") {
+    if (message.attachment !== "") {
       obj.attachment = message.attachment;
     }
-    if (message.reference !== undefined && message.reference !== "") {
+    if (message.reference !== "") {
       obj.reference = message.reference;
     }
-    if (message.mention !== undefined && message.mention !== "") {
+    if (message.mention !== "") {
       obj.mention = message.mention;
     }
-    if (message.reaction !== undefined && message.reaction !== "") {
+    if (message.reaction !== "") {
       obj.reaction = message.reaction;
     }
     return obj;
@@ -15952,42 +14650,38 @@ function createBaseChannelDescription(): ChannelDescription {
 
 export const ChannelDescription = {
   encode(message: ChannelDescription, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.parent_id !== undefined && message.parent_id !== "") {
+    if (message.parent_id !== "") {
       writer.uint32(18).string(message.parent_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
     }
-    if (message.category_id !== undefined && message.category_id !== "") {
+    if (message.category_id !== "") {
       writer.uint32(34).string(message.category_id);
     }
-    if (message.category_name !== undefined && message.category_name !== "") {
+    if (message.category_name !== "") {
       writer.uint32(42).string(message.category_name);
     }
     if (message.type !== undefined) {
       Int32Value.encode({ value: message.type! }, writer.uint32(50).fork()).ldelim();
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       writer.uint32(58).string(message.creator_id);
     }
-    if (message.channel_label !== undefined && message.channel_label !== "") {
+    if (message.channel_label !== "") {
       writer.uint32(66).string(message.channel_label);
     }
-    if (message.channel_private !== undefined && message.channel_private !== 0) {
+    if (message.channel_private !== 0) {
       writer.uint32(72).int32(message.channel_private);
     }
-    if (message.avatars !== undefined && message.avatars.length !== 0) {
-      for (const v of message.avatars) {
-        writer.uint32(82).string(v!);
-      }
+    for (const v of message.avatars) {
+      writer.uint32(82).string(v!);
     }
-    if (message.user_ids !== undefined && message.user_ids.length !== 0) {
-      for (const v of message.user_ids) {
-        writer.uint32(90).string(v!);
-      }
+    for (const v of message.user_ids) {
+      writer.uint32(90).string(v!);
     }
     if (message.last_sent_message !== undefined) {
       ChannelMessageHeader.encode(message.last_sent_message, writer.uint32(98).fork()).ldelim();
@@ -15995,66 +14689,60 @@ export const ChannelDescription = {
     if (message.last_seen_message !== undefined) {
       ChannelMessageHeader.encode(message.last_seen_message, writer.uint32(106).fork()).ldelim();
     }
-    if (message.onlines !== undefined && message.onlines.length !== 0) {
-      writer.uint32(114).fork();
-      for (const v of message.onlines) {
-        writer.bool(v);
-      }
-      writer.ldelim();
+    writer.uint32(114).fork();
+    for (const v of message.onlines) {
+      writer.bool(v);
     }
-    if (message.meeting_code !== undefined && message.meeting_code !== "") {
+    writer.ldelim();
+    if (message.meeting_code !== "") {
       writer.uint32(122).string(message.meeting_code);
     }
-    if (message.count_mess_unread !== undefined && message.count_mess_unread !== 0) {
+    if (message.count_mess_unread !== 0) {
       writer.uint32(128).int32(message.count_mess_unread);
     }
-    if (message.active !== undefined && message.active !== 0) {
+    if (message.active !== 0) {
       writer.uint32(136).int32(message.active);
     }
-    if (message.last_pin_message !== undefined && message.last_pin_message !== "") {
+    if (message.last_pin_message !== "") {
       writer.uint32(146).string(message.last_pin_message);
     }
-    if (message.usernames !== undefined && message.usernames.length !== 0) {
-      for (const v of message.usernames) {
-        writer.uint32(154).string(v!);
-      }
+    for (const v of message.usernames) {
+      writer.uint32(154).string(v!);
     }
-    if (message.creator_name !== undefined && message.creator_name !== "") {
+    if (message.creator_name !== "") {
       writer.uint32(162).string(message.creator_name);
     }
-    if (message.create_time_seconds !== undefined && message.create_time_seconds !== 0) {
+    if (message.create_time_seconds !== 0) {
       writer.uint32(168).uint32(message.create_time_seconds);
     }
-    if (message.update_time_seconds !== undefined && message.update_time_seconds !== 0) {
+    if (message.update_time_seconds !== 0) {
       writer.uint32(176).uint32(message.update_time_seconds);
     }
-    if (message.display_names !== undefined && message.display_names.length !== 0) {
-      for (const v of message.display_names) {
-        writer.uint32(186).string(v!);
-      }
+    for (const v of message.display_names) {
+      writer.uint32(186).string(v!);
     }
-    if (message.channel_avatar !== undefined && message.channel_avatar !== "") {
+    if (message.channel_avatar !== "") {
       writer.uint32(194).string(message.channel_avatar);
     }
-    if (message.clan_name !== undefined && message.clan_name !== "") {
+    if (message.clan_name !== "") {
       writer.uint32(202).string(message.clan_name);
     }
-    if (message.app_id !== undefined && message.app_id !== "") {
+    if (message.app_id !== "") {
       writer.uint32(210).string(message.app_id);
     }
-    if (message.is_mute !== undefined && message.is_mute !== false) {
+    if (message.is_mute !== false) {
       writer.uint32(216).bool(message.is_mute);
     }
-    if (message.age_restricted !== undefined && message.age_restricted !== 0) {
+    if (message.age_restricted !== 0) {
       writer.uint32(224).int32(message.age_restricted);
     }
-    if (message.topic !== undefined && message.topic !== "") {
+    if (message.topic !== "") {
       writer.uint32(234).string(message.topic);
     }
-    if (message.e2ee !== undefined && message.e2ee !== 0) {
+    if (message.e2ee !== 0) {
       writer.uint32(240).int32(message.e2ee);
     }
-    if (message.member_count !== undefined && message.member_count !== 0) {
+    if (message.member_count !== 0) {
       writer.uint32(248).int32(message.member_count);
     }
     return writer;
@@ -16135,14 +14823,14 @@ export const ChannelDescription = {
             break;
           }
 
-          message.avatars!.push(reader.string());
+          message.avatars.push(reader.string());
           continue;
         case 11:
           if (tag !== 90) {
             break;
           }
 
-          message.user_ids!.push(reader.string());
+          message.user_ids.push(reader.string());
           continue;
         case 12:
           if (tag !== 98) {
@@ -16160,7 +14848,7 @@ export const ChannelDescription = {
           continue;
         case 14:
           if (tag === 112) {
-            message.onlines!.push(reader.bool());
+            message.onlines.push(reader.bool());
 
             continue;
           }
@@ -16168,7 +14856,7 @@ export const ChannelDescription = {
           if (tag === 114) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.onlines!.push(reader.bool());
+              message.onlines.push(reader.bool());
             }
 
             continue;
@@ -16208,7 +14896,7 @@ export const ChannelDescription = {
             break;
           }
 
-          message.usernames!.push(reader.string());
+          message.usernames.push(reader.string());
           continue;
         case 20:
           if (tag !== 162) {
@@ -16236,7 +14924,7 @@ export const ChannelDescription = {
             break;
           }
 
-          message.display_names!.push(reader.string());
+          message.display_names.push(reader.string());
           continue;
         case 24:
           if (tag !== 194) {
@@ -16349,31 +15037,31 @@ export const ChannelDescription = {
 
   toJSON(message: ChannelDescription): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.parent_id !== undefined && message.parent_id !== "") {
+    if (message.parent_id !== "") {
       obj.parent_id = message.parent_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.category_id !== undefined && message.category_id !== "") {
+    if (message.category_id !== "") {
       obj.category_id = message.category_id;
     }
-    if (message.category_name !== undefined && message.category_name !== "") {
+    if (message.category_name !== "") {
       obj.category_name = message.category_name;
     }
     if (message.type !== undefined) {
       obj.type = message.type;
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.channel_label !== undefined && message.channel_label !== "") {
+    if (message.channel_label !== "") {
       obj.channel_label = message.channel_label;
     }
-    if (message.channel_private !== undefined && message.channel_private !== 0) {
+    if (message.channel_private !== 0) {
       obj.channel_private = Math.round(message.channel_private);
     }
     if (message.avatars?.length) {
@@ -16391,55 +15079,55 @@ export const ChannelDescription = {
     if (message.onlines?.length) {
       obj.onlines = message.onlines;
     }
-    if (message.meeting_code !== undefined && message.meeting_code !== "") {
+    if (message.meeting_code !== "") {
       obj.meeting_code = message.meeting_code;
     }
-    if (message.count_mess_unread !== undefined && message.count_mess_unread !== 0) {
+    if (message.count_mess_unread !== 0) {
       obj.count_mess_unread = Math.round(message.count_mess_unread);
     }
-    if (message.active !== undefined && message.active !== 0) {
+    if (message.active !== 0) {
       obj.active = Math.round(message.active);
     }
-    if (message.last_pin_message !== undefined && message.last_pin_message !== "") {
+    if (message.last_pin_message !== "") {
       obj.last_pin_message = message.last_pin_message;
     }
     if (message.usernames?.length) {
       obj.usernames = message.usernames;
     }
-    if (message.creator_name !== undefined && message.creator_name !== "") {
+    if (message.creator_name !== "") {
       obj.creator_name = message.creator_name;
     }
-    if (message.create_time_seconds !== undefined && message.create_time_seconds !== 0) {
+    if (message.create_time_seconds !== 0) {
       obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
-    if (message.update_time_seconds !== undefined && message.update_time_seconds !== 0) {
+    if (message.update_time_seconds !== 0) {
       obj.update_time_seconds = Math.round(message.update_time_seconds);
     }
     if (message.display_names?.length) {
       obj.display_names = message.display_names;
     }
-    if (message.channel_avatar !== undefined && message.channel_avatar !== "") {
+    if (message.channel_avatar !== "") {
       obj.channel_avatar = message.channel_avatar;
     }
-    if (message.clan_name !== undefined && message.clan_name !== "") {
+    if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.app_id !== undefined && message.app_id !== "") {
+    if (message.app_id !== "") {
       obj.app_id = message.app_id;
     }
-    if (message.is_mute !== undefined && message.is_mute !== false) {
+    if (message.is_mute !== false) {
       obj.is_mute = message.is_mute;
     }
-    if (message.age_restricted !== undefined && message.age_restricted !== 0) {
+    if (message.age_restricted !== 0) {
       obj.age_restricted = Math.round(message.age_restricted);
     }
-    if (message.topic !== undefined && message.topic !== "") {
+    if (message.topic !== "") {
       obj.topic = message.topic;
     }
-    if (message.e2ee !== undefined && message.e2ee !== 0) {
+    if (message.e2ee !== 0) {
       obj.e2ee = Math.round(message.e2ee);
     }
-    if (message.member_count !== undefined && message.member_count !== 0) {
+    if (message.member_count !== 0) {
       obj.member_count = Math.round(message.member_count);
     }
     return obj;
@@ -16495,12 +15183,10 @@ function createBaseChannelDescList(): ChannelDescList {
 
 export const ChannelDescList = {
   encode(message: ChannelDescList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channeldesc !== undefined && message.channeldesc.length !== 0) {
-      for (const v of message.channeldesc) {
-        ChannelDescription.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.channeldesc) {
+      ChannelDescription.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if (message.page !== undefined && message.page !== 0) {
+    if (message.page !== 0) {
       writer.uint32(16).int32(message.page);
     }
     return writer;
@@ -16518,7 +15204,7 @@ export const ChannelDescList = {
             break;
           }
 
-          message.channeldesc!.push(ChannelDescription.decode(reader, reader.uint32()));
+          message.channeldesc.push(ChannelDescription.decode(reader, reader.uint32()));
           continue;
         case 2:
           if (tag !== 16) {
@@ -16550,7 +15236,7 @@ export const ChannelDescList = {
     if (message.channeldesc?.length) {
       obj.channeldesc = message.channeldesc.map((e) => ChannelDescription.toJSON(e));
     }
-    if (message.page !== undefined && message.page !== 0) {
+    if (message.page !== 0) {
       obj.page = Math.round(message.page);
     }
     return obj;
@@ -16579,13 +15265,13 @@ export const ListThreadRequest = {
     if (message.state !== undefined) {
       Int32Value.encode({ value: message.state! }, writer.uint32(18).fork()).ldelim();
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(34).string(message.channel_id);
     }
-    if (message.thread_id !== undefined && message.thread_id !== "") {
+    if (message.thread_id !== "") {
       writer.uint32(42).string(message.thread_id);
     }
     if (message.page !== undefined) {
@@ -16671,13 +15357,13 @@ export const ListThreadRequest = {
     if (message.state !== undefined) {
       obj.state = message.state;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.thread_id !== undefined && message.thread_id !== "") {
+    if (message.thread_id !== "") {
       obj.thread_id = message.thread_id;
     }
     if (message.page !== undefined) {
@@ -16713,16 +15399,16 @@ export const ListChannelDescsRequest = {
     if (message.state !== undefined) {
       Int32Value.encode({ value: message.state! }, writer.uint32(18).fork()).ldelim();
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       writer.uint32(26).string(message.cursor);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
     }
-    if (message.channel_type !== undefined && message.channel_type !== 0) {
+    if (message.channel_type !== 0) {
       writer.uint32(40).int32(message.channel_type);
     }
-    if (message.is_mobile !== undefined && message.is_mobile !== false) {
+    if (message.is_mobile !== false) {
       writer.uint32(48).bool(message.is_mobile);
     }
     return writer;
@@ -16805,16 +15491,16 @@ export const ListChannelDescsRequest = {
     if (message.state !== undefined) {
       obj.state = message.state;
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_type !== undefined && message.channel_type !== 0) {
+    if (message.channel_type !== 0) {
       obj.channel_type = Math.round(message.channel_type);
     }
-    if (message.is_mobile !== undefined && message.is_mobile !== false) {
+    if (message.is_mobile !== false) {
       obj.is_mobile = message.is_mobile;
     }
     return obj;
@@ -16841,7 +15527,7 @@ function createBaseListChannelDetailRequest(): ListChannelDetailRequest {
 
 export const ListChannelDetailRequest = {
   encode(message: ListChannelDetailRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
     return writer;
@@ -16876,7 +15562,7 @@ export const ListChannelDetailRequest = {
 
   toJSON(message: ListChannelDetailRequest): unknown {
     const obj: any = {};
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -16898,12 +15584,10 @@ function createBaseAddRoleChannelDescRequest(): AddRoleChannelDescRequest {
 
 export const AddRoleChannelDescRequest = {
   encode(message: AddRoleChannelDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.role_ids !== undefined && message.role_ids.length !== 0) {
-      for (const v of message.role_ids) {
-        writer.uint32(10).string(v!);
-      }
+    for (const v of message.role_ids) {
+      writer.uint32(10).string(v!);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
     return writer;
@@ -16921,7 +15605,7 @@ export const AddRoleChannelDescRequest = {
             break;
           }
 
-          message.role_ids!.push(reader.string());
+          message.role_ids.push(reader.string());
           continue;
         case 2:
           if (tag !== 18) {
@@ -16951,7 +15635,7 @@ export const AddRoleChannelDescRequest = {
     if (message.role_ids?.length) {
       obj.role_ids = message.role_ids;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -16984,33 +15668,31 @@ function createBaseCreateChannelDescRequest(): CreateChannelDescRequest {
 
 export const CreateChannelDescRequest = {
   encode(message: CreateChannelDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.parent_id !== undefined && message.parent_id !== "") {
+    if (message.parent_id !== "") {
       writer.uint32(18).string(message.parent_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
     }
-    if (message.category_id !== undefined && message.category_id !== "") {
+    if (message.category_id !== "") {
       writer.uint32(34).string(message.category_id);
     }
     if (message.type !== undefined) {
       Int32Value.encode({ value: message.type! }, writer.uint32(42).fork()).ldelim();
     }
-    if (message.channel_label !== undefined && message.channel_label !== "") {
+    if (message.channel_label !== "") {
       writer.uint32(50).string(message.channel_label);
     }
-    if (message.channel_private !== undefined && message.channel_private !== 0) {
+    if (message.channel_private !== 0) {
       writer.uint32(56).int32(message.channel_private);
     }
-    if (message.user_ids !== undefined && message.user_ids.length !== 0) {
-      for (const v of message.user_ids) {
-        writer.uint32(66).string(v!);
-      }
+    for (const v of message.user_ids) {
+      writer.uint32(66).string(v!);
     }
-    if (message.app_id !== undefined && message.app_id !== "") {
+    if (message.app_id !== "") {
       writer.uint32(74).string(message.app_id);
     }
     return writer;
@@ -17077,7 +15759,7 @@ export const CreateChannelDescRequest = {
             break;
           }
 
-          message.user_ids!.push(reader.string());
+          message.user_ids.push(reader.string());
           continue;
         case 9:
           if (tag !== 74) {
@@ -17111,31 +15793,31 @@ export const CreateChannelDescRequest = {
 
   toJSON(message: CreateChannelDescRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.parent_id !== undefined && message.parent_id !== "") {
+    if (message.parent_id !== "") {
       obj.parent_id = message.parent_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.category_id !== undefined && message.category_id !== "") {
+    if (message.category_id !== "") {
       obj.category_id = message.category_id;
     }
     if (message.type !== undefined) {
       obj.type = message.type;
     }
-    if (message.channel_label !== undefined && message.channel_label !== "") {
+    if (message.channel_label !== "") {
       obj.channel_label = message.channel_label;
     }
-    if (message.channel_private !== undefined && message.channel_private !== 0) {
+    if (message.channel_private !== 0) {
       obj.channel_private = Math.round(message.channel_private);
     }
     if (message.user_ids?.length) {
       obj.user_ids = message.user_ids;
     }
-    if (message.app_id !== undefined && message.app_id !== "") {
+    if (message.app_id !== "") {
       obj.app_id = message.app_id;
     }
     return obj;
@@ -17165,10 +15847,10 @@ function createBaseDeleteChannelDescRequest(): DeleteChannelDescRequest {
 
 export const DeleteChannelDescRequest = {
   encode(message: DeleteChannelDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
     return writer;
@@ -17213,10 +15895,10 @@ export const DeleteChannelDescRequest = {
 
   toJSON(message: DeleteChannelDescRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -17249,10 +15931,10 @@ function createBaseUpdateChannelDescRequest(): UpdateChannelDescRequest {
 
 export const UpdateChannelDescRequest = {
   encode(message: UpdateChannelDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
     if (message.channel_label !== undefined) {
@@ -17261,16 +15943,16 @@ export const UpdateChannelDescRequest = {
     if (message.category_id !== undefined) {
       StringValue.encode({ value: message.category_id! }, writer.uint32(34).fork()).ldelim();
     }
-    if (message.app_id !== undefined && message.app_id !== "") {
+    if (message.app_id !== "") {
       writer.uint32(42).string(message.app_id);
     }
-    if (message.topic !== undefined && message.topic !== "") {
+    if (message.topic !== "") {
       writer.uint32(50).string(message.topic);
     }
-    if (message.age_restricted !== undefined && message.age_restricted !== 0) {
+    if (message.age_restricted !== 0) {
       writer.uint32(56).int32(message.age_restricted);
     }
-    if (message.e2ee !== undefined && message.e2ee !== 0) {
+    if (message.e2ee !== 0) {
       writer.uint32(64).int32(message.e2ee);
     }
     if (message.channel_avatar !== undefined) {
@@ -17374,10 +16056,10 @@ export const UpdateChannelDescRequest = {
 
   toJSON(message: UpdateChannelDescRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     if (message.channel_label !== undefined) {
@@ -17386,16 +16068,16 @@ export const UpdateChannelDescRequest = {
     if (message.category_id !== undefined) {
       obj.category_id = message.category_id;
     }
-    if (message.app_id !== undefined && message.app_id !== "") {
+    if (message.app_id !== "") {
       obj.app_id = message.app_id;
     }
-    if (message.topic !== undefined && message.topic !== "") {
+    if (message.topic !== "") {
       obj.topic = message.topic;
     }
-    if (message.age_restricted !== undefined && message.age_restricted !== 0) {
+    if (message.age_restricted !== 0) {
       obj.age_restricted = Math.round(message.age_restricted);
     }
-    if (message.e2ee !== undefined && message.e2ee !== 0) {
+    if (message.e2ee !== 0) {
       obj.e2ee = Math.round(message.e2ee);
     }
     if (message.channel_avatar !== undefined) {
@@ -17428,24 +16110,20 @@ function createBaseChangeChannelPrivateRequest(): ChangeChannelPrivateRequest {
 
 export const ChangeChannelPrivateRequest = {
   encode(message: ChangeChannelPrivateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.channel_private !== undefined && message.channel_private !== 0) {
+    if (message.channel_private !== 0) {
       writer.uint32(24).int32(message.channel_private);
     }
-    if (message.user_ids !== undefined && message.user_ids.length !== 0) {
-      for (const v of message.user_ids) {
-        writer.uint32(34).string(v!);
-      }
+    for (const v of message.user_ids) {
+      writer.uint32(34).string(v!);
     }
-    if (message.role_ids !== undefined && message.role_ids.length !== 0) {
-      for (const v of message.role_ids) {
-        writer.uint32(42).string(v!);
-      }
+    for (const v of message.role_ids) {
+      writer.uint32(42).string(v!);
     }
     return writer;
   },
@@ -17483,14 +16161,14 @@ export const ChangeChannelPrivateRequest = {
             break;
           }
 
-          message.user_ids!.push(reader.string());
+          message.user_ids.push(reader.string());
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.role_ids!.push(reader.string());
+          message.role_ids.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -17513,13 +16191,13 @@ export const ChangeChannelPrivateRequest = {
 
   toJSON(message: ChangeChannelPrivateRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.channel_private !== undefined && message.channel_private !== 0) {
+    if (message.channel_private !== 0) {
       obj.channel_private = Math.round(message.channel_private);
     }
     if (message.user_ids?.length) {
@@ -17551,13 +16229,11 @@ function createBaseAddChannelUsersRequest(): AddChannelUsersRequest {
 
 export const AddChannelUsersRequest = {
   encode(message: AddChannelUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.user_ids !== undefined && message.user_ids.length !== 0) {
-      for (const v of message.user_ids) {
-        writer.uint32(18).string(v!);
-      }
+    for (const v of message.user_ids) {
+      writer.uint32(18).string(v!);
     }
     return writer;
   },
@@ -17581,7 +16257,7 @@ export const AddChannelUsersRequest = {
             break;
           }
 
-          message.user_ids!.push(reader.string());
+          message.user_ids.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -17601,7 +16277,7 @@ export const AddChannelUsersRequest = {
 
   toJSON(message: AddChannelUsersRequest): unknown {
     const obj: any = {};
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     if (message.user_ids?.length) {
@@ -17627,13 +16303,11 @@ function createBaseRemoveChannelUsersRequest(): RemoveChannelUsersRequest {
 
 export const RemoveChannelUsersRequest = {
   encode(message: RemoveChannelUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.user_ids !== undefined && message.user_ids.length !== 0) {
-      for (const v of message.user_ids) {
-        writer.uint32(18).string(v!);
-      }
+    for (const v of message.user_ids) {
+      writer.uint32(18).string(v!);
     }
     return writer;
   },
@@ -17657,7 +16331,7 @@ export const RemoveChannelUsersRequest = {
             break;
           }
 
-          message.user_ids!.push(reader.string());
+          message.user_ids.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -17677,7 +16351,7 @@ export const RemoveChannelUsersRequest = {
 
   toJSON(message: RemoveChannelUsersRequest): unknown {
     const obj: any = {};
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     if (message.user_ids?.length) {
@@ -17703,13 +16377,11 @@ function createBaseRemoveClanUsersRequest(): RemoveClanUsersRequest {
 
 export const RemoveClanUsersRequest = {
   encode(message: RemoveClanUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.user_ids !== undefined && message.user_ids.length !== 0) {
-      for (const v of message.user_ids) {
-        writer.uint32(18).string(v!);
-      }
+    for (const v of message.user_ids) {
+      writer.uint32(18).string(v!);
     }
     return writer;
   },
@@ -17733,7 +16405,7 @@ export const RemoveClanUsersRequest = {
             break;
           }
 
-          message.user_ids!.push(reader.string());
+          message.user_ids.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -17753,7 +16425,7 @@ export const RemoveClanUsersRequest = {
 
   toJSON(message: RemoveClanUsersRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     if (message.user_ids?.length) {
@@ -17779,21 +16451,19 @@ function createBaseBanClanUsersRequest(): BanClanUsersRequest {
 
 export const BanClanUsersRequest = {
   encode(message: BanClanUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.user_ids !== undefined && message.user_ids.length !== 0) {
-      for (const v of message.user_ids) {
-        writer.uint32(26).string(v!);
-      }
+    for (const v of message.user_ids) {
+      writer.uint32(26).string(v!);
     }
-    if (message.ban_time !== undefined && message.ban_time !== 0) {
+    if (message.ban_time !== 0) {
       writer.uint32(32).int32(message.ban_time);
     }
-    if (message.reason !== undefined && message.reason !== "") {
+    if (message.reason !== "") {
       writer.uint32(42).string(message.reason);
     }
     return writer;
@@ -17825,7 +16495,7 @@ export const BanClanUsersRequest = {
             break;
           }
 
-          message.user_ids!.push(reader.string());
+          message.user_ids.push(reader.string());
           continue;
         case 4:
           if (tag !== 32) {
@@ -17862,19 +16532,19 @@ export const BanClanUsersRequest = {
 
   toJSON(message: BanClanUsersRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     if (message.user_ids?.length) {
       obj.user_ids = message.user_ids;
     }
-    if (message.ban_time !== undefined && message.ban_time !== 0) {
+    if (message.ban_time !== 0) {
       obj.ban_time = Math.round(message.ban_time);
     }
-    if (message.reason !== undefined && message.reason !== "") {
+    if (message.reason !== "") {
       obj.reason = message.reason;
     }
     return obj;
@@ -17900,19 +16570,19 @@ function createBaseBannedUser(): BannedUser {
 
 export const BannedUser = {
   encode(message: BannedUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.banned_id !== undefined && message.banned_id !== "") {
+    if (message.banned_id !== "") {
       writer.uint32(18).string(message.banned_id);
     }
-    if (message.banner_id !== undefined && message.banner_id !== "") {
+    if (message.banner_id !== "") {
       writer.uint32(26).string(message.banner_id);
     }
-    if (message.ban_time !== undefined && message.ban_time !== 0) {
+    if (message.ban_time !== 0) {
       writer.uint32(32).int32(message.ban_time);
     }
-    if (message.reason !== undefined && message.reason !== "") {
+    if (message.reason !== "") {
       writer.uint32(42).string(message.reason);
     }
     return writer;
@@ -17981,19 +16651,19 @@ export const BannedUser = {
 
   toJSON(message: BannedUser): unknown {
     const obj: any = {};
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.banned_id !== undefined && message.banned_id !== "") {
+    if (message.banned_id !== "") {
       obj.banned_id = message.banned_id;
     }
-    if (message.banner_id !== undefined && message.banner_id !== "") {
+    if (message.banner_id !== "") {
       obj.banner_id = message.banner_id;
     }
-    if (message.ban_time !== undefined && message.ban_time !== 0) {
+    if (message.ban_time !== 0) {
       obj.ban_time = Math.round(message.ban_time);
     }
-    if (message.reason !== undefined && message.reason !== "") {
+    if (message.reason !== "") {
       obj.reason = message.reason;
     }
     return obj;
@@ -18019,10 +16689,10 @@ function createBaseBannedUserListRequest(): BannedUserListRequest {
 
 export const BannedUserListRequest = {
   encode(message: BannedUserListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
     return writer;
@@ -18067,10 +16737,10 @@ export const BannedUserListRequest = {
 
   toJSON(message: BannedUserListRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -18093,10 +16763,8 @@ function createBaseBannedUserList(): BannedUserList {
 
 export const BannedUserList = {
   encode(message: BannedUserList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.banned_users !== undefined && message.banned_users.length !== 0) {
-      for (const v of message.banned_users) {
-        BannedUser.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.banned_users) {
+      BannedUser.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -18113,7 +16781,7 @@ export const BannedUserList = {
             break;
           }
 
-          message.banned_users!.push(BannedUser.decode(reader, reader.uint32()));
+          message.banned_users.push(BannedUser.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -18156,10 +16824,10 @@ function createBaseLeaveThreadRequest(): LeaveThreadRequest {
 
 export const LeaveThreadRequest = {
   encode(message: LeaveThreadRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
     return writer;
@@ -18204,10 +16872,10 @@ export const LeaveThreadRequest = {
 
   toJSON(message: LeaveThreadRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -18248,37 +16916,37 @@ function createBaseRole(): Role {
 
 export const Role = {
   encode(message: Role, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       writer.uint32(18).string(message.title);
     }
-    if (message.color !== undefined && message.color !== "") {
+    if (message.color !== "") {
       writer.uint32(26).string(message.color);
     }
-    if (message.role_icon !== undefined && message.role_icon !== "") {
+    if (message.role_icon !== "") {
       writer.uint32(34).string(message.role_icon);
     }
-    if (message.slug !== undefined && message.slug !== "") {
+    if (message.slug !== "") {
       writer.uint32(42).string(message.slug);
     }
-    if (message.description !== undefined && message.description !== "") {
+    if (message.description !== "") {
       writer.uint32(50).string(message.description);
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       writer.uint32(58).string(message.creator_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(66).string(message.clan_id);
     }
-    if (message.active !== undefined && message.active !== 0) {
+    if (message.active !== 0) {
       writer.uint32(72).int32(message.active);
     }
-    if (message.display_online !== undefined && message.display_online !== 0) {
+    if (message.display_online !== 0) {
       writer.uint32(80).int32(message.display_online);
     }
-    if (message.allow_mention !== undefined && message.allow_mention !== 0) {
+    if (message.allow_mention !== 0) {
       writer.uint32(88).int32(message.allow_mention);
     }
     if (message.role_user_list !== undefined) {
@@ -18287,18 +16955,16 @@ export const Role = {
     if (message.permission_list !== undefined) {
       PermissionList.encode(message.permission_list, writer.uint32(106).fork()).ldelim();
     }
-    if (message.role_channel_active !== undefined && message.role_channel_active !== 0) {
+    if (message.role_channel_active !== 0) {
       writer.uint32(112).int32(message.role_channel_active);
     }
-    if (message.channel_ids !== undefined && message.channel_ids.length !== 0) {
-      for (const v of message.channel_ids) {
-        writer.uint32(122).string(v!);
-      }
+    for (const v of message.channel_ids) {
+      writer.uint32(122).string(v!);
     }
-    if (message.max_level_permission !== undefined && message.max_level_permission !== 0) {
+    if (message.max_level_permission !== 0) {
       writer.uint32(128).int32(message.max_level_permission);
     }
-    if (message.order_role !== undefined && message.order_role !== 0) {
+    if (message.order_role !== 0) {
       writer.uint32(136).int32(message.order_role);
     }
     return writer;
@@ -18414,7 +17080,7 @@ export const Role = {
             break;
           }
 
-          message.channel_ids!.push(reader.string());
+          message.channel_ids.push(reader.string());
           continue;
         case 16:
           if (tag !== 128) {
@@ -18465,37 +17131,37 @@ export const Role = {
 
   toJSON(message: Role): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       obj.title = message.title;
     }
-    if (message.color !== undefined && message.color !== "") {
+    if (message.color !== "") {
       obj.color = message.color;
     }
-    if (message.role_icon !== undefined && message.role_icon !== "") {
+    if (message.role_icon !== "") {
       obj.role_icon = message.role_icon;
     }
-    if (message.slug !== undefined && message.slug !== "") {
+    if (message.slug !== "") {
       obj.slug = message.slug;
     }
-    if (message.description !== undefined && message.description !== "") {
+    if (message.description !== "") {
       obj.description = message.description;
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.active !== undefined && message.active !== 0) {
+    if (message.active !== 0) {
       obj.active = Math.round(message.active);
     }
-    if (message.display_online !== undefined && message.display_online !== 0) {
+    if (message.display_online !== 0) {
       obj.display_online = Math.round(message.display_online);
     }
-    if (message.allow_mention !== undefined && message.allow_mention !== 0) {
+    if (message.allow_mention !== 0) {
       obj.allow_mention = Math.round(message.allow_mention);
     }
     if (message.role_user_list !== undefined) {
@@ -18504,16 +17170,16 @@ export const Role = {
     if (message.permission_list !== undefined) {
       obj.permission_list = PermissionList.toJSON(message.permission_list);
     }
-    if (message.role_channel_active !== undefined && message.role_channel_active !== 0) {
+    if (message.role_channel_active !== 0) {
       obj.role_channel_active = Math.round(message.role_channel_active);
     }
     if (message.channel_ids?.length) {
       obj.channel_ids = message.channel_ids;
     }
-    if (message.max_level_permission !== undefined && message.max_level_permission !== 0) {
+    if (message.max_level_permission !== 0) {
       obj.max_level_permission = Math.round(message.max_level_permission);
     }
-    if (message.order_role !== undefined && message.order_role !== 0) {
+    if (message.order_role !== 0) {
       obj.order_role = Math.round(message.order_role);
     }
     return obj;
@@ -18576,34 +17242,34 @@ function createBaseEventManagement(): EventManagement {
 
 export const EventManagement = {
   encode(message: EventManagement, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       writer.uint32(18).string(message.title);
     }
-    if (message.logo !== undefined && message.logo !== "") {
+    if (message.logo !== "") {
       writer.uint32(26).string(message.logo);
     }
-    if (message.description !== undefined && message.description !== "") {
+    if (message.description !== "") {
       writer.uint32(34).string(message.description);
     }
-    if (message.active !== undefined && message.active !== 0) {
+    if (message.active !== 0) {
       writer.uint32(40).int32(message.active);
     }
-    if (message.start_event !== undefined && message.start_event !== 0) {
+    if (message.start_event !== 0) {
       writer.uint32(48).int32(message.start_event);
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       writer.uint32(58).string(message.creator_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(66).string(message.clan_id);
     }
-    if (message.channel_voice_id !== undefined && message.channel_voice_id !== "") {
+    if (message.channel_voice_id !== "") {
       writer.uint32(74).string(message.channel_voice_id);
     }
-    if (message.address !== undefined && message.address !== "") {
+    if (message.address !== "") {
       writer.uint32(82).string(message.address);
     }
     if (message.start_time !== undefined) {
@@ -18612,27 +17278,25 @@ export const EventManagement = {
     if (message.end_time !== undefined) {
       Timestamp.encode(toTimestamp(message.end_time), writer.uint32(98).fork()).ldelim();
     }
-    if (message.user_ids !== undefined && message.user_ids.length !== 0) {
-      for (const v of message.user_ids) {
-        writer.uint32(106).string(v!);
-      }
+    for (const v of message.user_ids) {
+      writer.uint32(106).string(v!);
     }
     if (message.create_time !== undefined) {
       Timestamp.encode(toTimestamp(message.create_time), writer.uint32(114).fork()).ldelim();
     }
-    if (message.max_permission !== undefined && message.max_permission !== 0) {
+    if (message.max_permission !== 0) {
       writer.uint32(120).int32(message.max_permission);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(130).string(message.channel_id);
     }
-    if (message.event_status !== undefined && message.event_status !== 0) {
+    if (message.event_status !== 0) {
       writer.uint32(136).int32(message.event_status);
     }
-    if (message.repeat_type !== undefined && message.repeat_type !== 0) {
+    if (message.repeat_type !== 0) {
       writer.uint32(144).int32(message.repeat_type);
     }
-    if (message.is_private !== undefined && message.is_private !== false) {
+    if (message.is_private !== false) {
       writer.uint32(152).bool(message.is_private);
     }
     if (message.meet_room !== undefined) {
@@ -18737,7 +17401,7 @@ export const EventManagement = {
             break;
           }
 
-          message.user_ids!.push(reader.string());
+          message.user_ids.push(reader.string());
           continue;
         case 14:
           if (tag !== 114) {
@@ -18824,34 +17488,34 @@ export const EventManagement = {
 
   toJSON(message: EventManagement): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       obj.title = message.title;
     }
-    if (message.logo !== undefined && message.logo !== "") {
+    if (message.logo !== "") {
       obj.logo = message.logo;
     }
-    if (message.description !== undefined && message.description !== "") {
+    if (message.description !== "") {
       obj.description = message.description;
     }
-    if (message.active !== undefined && message.active !== 0) {
+    if (message.active !== 0) {
       obj.active = Math.round(message.active);
     }
-    if (message.start_event !== undefined && message.start_event !== 0) {
+    if (message.start_event !== 0) {
       obj.start_event = Math.round(message.start_event);
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_voice_id !== undefined && message.channel_voice_id !== "") {
+    if (message.channel_voice_id !== "") {
       obj.channel_voice_id = message.channel_voice_id;
     }
-    if (message.address !== undefined && message.address !== "") {
+    if (message.address !== "") {
       obj.address = message.address;
     }
     if (message.start_time !== undefined) {
@@ -18866,19 +17530,19 @@ export const EventManagement = {
     if (message.create_time !== undefined) {
       obj.create_time = message.create_time.toISOString();
     }
-    if (message.max_permission !== undefined && message.max_permission !== 0) {
+    if (message.max_permission !== 0) {
       obj.max_permission = Math.round(message.max_permission);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.event_status !== undefined && message.event_status !== 0) {
+    if (message.event_status !== 0) {
       obj.event_status = Math.round(message.event_status);
     }
-    if (message.repeat_type !== undefined && message.repeat_type !== 0) {
+    if (message.repeat_type !== 0) {
       obj.repeat_type = Math.round(message.repeat_type);
     }
-    if (message.is_private !== undefined && message.is_private !== false) {
+    if (message.is_private !== false) {
       obj.is_private = message.is_private;
     }
     if (message.meet_room !== undefined) {
@@ -18924,25 +17588,25 @@ function createBasePermission(): Permission {
 
 export const Permission = {
   encode(message: Permission, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       writer.uint32(18).string(message.title);
     }
-    if (message.slug !== undefined && message.slug !== "") {
+    if (message.slug !== "") {
       writer.uint32(26).string(message.slug);
     }
-    if (message.description !== undefined && message.description !== "") {
+    if (message.description !== "") {
       writer.uint32(34).string(message.description);
     }
-    if (message.active !== undefined && message.active !== 0) {
+    if (message.active !== 0) {
       writer.uint32(40).int32(message.active);
     }
-    if (message.scope !== undefined && message.scope !== 0) {
+    if (message.scope !== 0) {
       writer.uint32(48).int32(message.scope);
     }
-    if (message.level !== undefined && message.level !== 0) {
+    if (message.level !== 0) {
       writer.uint32(56).int32(message.level);
     }
     return writer;
@@ -19027,25 +17691,25 @@ export const Permission = {
 
   toJSON(message: Permission): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       obj.title = message.title;
     }
-    if (message.slug !== undefined && message.slug !== "") {
+    if (message.slug !== "") {
       obj.slug = message.slug;
     }
-    if (message.description !== undefined && message.description !== "") {
+    if (message.description !== "") {
       obj.description = message.description;
     }
-    if (message.active !== undefined && message.active !== 0) {
+    if (message.active !== 0) {
       obj.active = Math.round(message.active);
     }
-    if (message.scope !== undefined && message.scope !== 0) {
+    if (message.scope !== 0) {
       obj.scope = Math.round(message.scope);
     }
-    if (message.level !== undefined && message.level !== 0) {
+    if (message.level !== 0) {
       obj.level = Math.round(message.level);
     }
     return obj;
@@ -19073,10 +17737,10 @@ function createBaseNotificationSetting(): NotificationSetting {
 
 export const NotificationSetting = {
   encode(message: NotificationSetting, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.notification_setting_type !== undefined && message.notification_setting_type !== 0) {
+    if (message.notification_setting_type !== 0) {
       writer.uint32(16).int32(message.notification_setting_type);
     }
     return writer;
@@ -19123,10 +17787,10 @@ export const NotificationSetting = {
 
   toJSON(message: NotificationSetting): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.notification_setting_type !== undefined && message.notification_setting_type !== 0) {
+    if (message.notification_setting_type !== 0) {
       obj.notification_setting_type = Math.round(message.notification_setting_type);
     }
     return obj;
@@ -19149,16 +17813,16 @@ function createBaseDeletePinMessage(): DeletePinMessage {
 
 export const DeletePinMessage = {
   encode(message: DeletePinMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       writer.uint32(18).string(message.message_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
     }
     return writer;
@@ -19219,16 +17883,16 @@ export const DeletePinMessage = {
 
   toJSON(message: DeletePinMessage): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -19264,34 +17928,34 @@ function createBasePinMessage(): PinMessage {
 
 export const PinMessage = {
   encode(message: PinMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       writer.uint32(18).string(message.message_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
     }
-    if (message.sender_id !== undefined && message.sender_id !== "") {
+    if (message.sender_id !== "") {
       writer.uint32(34).string(message.sender_id);
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       writer.uint32(42).string(message.content);
     }
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       writer.uint32(50).string(message.username);
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       writer.uint32(58).string(message.avatar);
     }
     if (message.create_time !== undefined) {
       Timestamp.encode(toTimestamp(message.create_time), writer.uint32(66).fork()).ldelim();
     }
-    if (message.create_time_seconds !== undefined && message.create_time_seconds !== 0) {
+    if (message.create_time_seconds !== 0) {
       writer.uint32(72).uint32(message.create_time_seconds);
     }
-    if (message.attachment !== undefined && message.attachment !== "") {
+    if (message.attachment !== "") {
       writer.uint32(82).string(message.attachment);
     }
     return writer;
@@ -19400,34 +18064,34 @@ export const PinMessage = {
 
   toJSON(message: PinMessage): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.sender_id !== undefined && message.sender_id !== "") {
+    if (message.sender_id !== "") {
       obj.sender_id = message.sender_id;
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       obj.username = message.username;
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
     if (message.create_time !== undefined) {
       obj.create_time = message.create_time.toISOString();
     }
-    if (message.create_time_seconds !== undefined && message.create_time_seconds !== 0) {
+    if (message.create_time_seconds !== 0) {
       obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
-    if (message.attachment !== undefined && message.attachment !== "") {
+    if (message.attachment !== "") {
       obj.attachment = message.attachment;
     }
     return obj;
@@ -19458,10 +18122,8 @@ function createBasePinMessagesList(): PinMessagesList {
 
 export const PinMessagesList = {
   encode(message: PinMessagesList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.pin_messages_list !== undefined && message.pin_messages_list.length !== 0) {
-      for (const v of message.pin_messages_list) {
-        PinMessage.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.pin_messages_list) {
+      PinMessage.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -19478,7 +18140,7 @@ export const PinMessagesList = {
             break;
           }
 
-          message.pin_messages_list!.push(PinMessage.decode(reader, reader.uint32()));
+          message.pin_messages_list.push(PinMessage.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -19521,19 +18183,19 @@ function createBaseNotificationUserChannel(): NotificationUserChannel {
 
 export const NotificationUserChannel = {
   encode(message: NotificationUserChannel, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.notification_setting_type !== undefined && message.notification_setting_type !== 0) {
+    if (message.notification_setting_type !== 0) {
       writer.uint32(16).int32(message.notification_setting_type);
     }
     if (message.time_mute !== undefined) {
       Timestamp.encode(toTimestamp(message.time_mute), writer.uint32(26).fork()).ldelim();
     }
-    if (message.active !== undefined && message.active !== 0) {
+    if (message.active !== 0) {
       writer.uint32(32).int32(message.active);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(42).string(message.channel_id);
     }
     return writer;
@@ -19604,19 +18266,19 @@ export const NotificationUserChannel = {
 
   toJSON(message: NotificationUserChannel): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.notification_setting_type !== undefined && message.notification_setting_type !== 0) {
+    if (message.notification_setting_type !== 0) {
       obj.notification_setting_type = Math.round(message.notification_setting_type);
     }
     if (message.time_mute !== undefined) {
       obj.time_mute = message.time_mute.toISOString();
     }
-    if (message.active !== undefined && message.active !== 0) {
+    if (message.active !== 0) {
       obj.active = Math.round(message.active);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -19642,13 +18304,13 @@ function createBaseNotifiReactMessage(): NotifiReactMessage {
 
 export const NotifiReactMessage = {
   encode(message: NotifiReactMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       writer.uint32(18).string(message.user_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
     }
     return writer;
@@ -19701,13 +18363,13 @@ export const NotifiReactMessage = {
 
   toJSON(message: NotifiReactMessage): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -19731,7 +18393,7 @@ function createBaseDefaultNotificationClan(): DefaultNotificationClan {
 
 export const DefaultNotificationClan = {
   encode(message: DefaultNotificationClan, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
     return writer;
@@ -19766,7 +18428,7 @@ export const DefaultNotificationClan = {
 
   toJSON(message: DefaultNotificationClan): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -19788,7 +18450,7 @@ function createBaseDefaultNotificationCategory(): DefaultNotificationCategory {
 
 export const DefaultNotificationCategory = {
   encode(message: DefaultNotificationCategory, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.category_id !== undefined && message.category_id !== "") {
+    if (message.category_id !== "") {
       writer.uint32(10).string(message.category_id);
     }
     return writer;
@@ -19823,7 +18485,7 @@ export const DefaultNotificationCategory = {
 
   toJSON(message: DefaultNotificationCategory): unknown {
     const obj: any = {};
-    if (message.category_id !== undefined && message.category_id !== "") {
+    if (message.category_id !== "") {
       obj.category_id = message.category_id;
     }
     return obj;
@@ -19845,7 +18507,7 @@ function createBaseNotificationChannel(): NotificationChannel {
 
 export const NotificationChannel = {
   encode(message: NotificationChannel, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
     return writer;
@@ -19880,7 +18542,7 @@ export const NotificationChannel = {
 
   toJSON(message: NotificationChannel): unknown {
     const obj: any = {};
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -19902,7 +18564,7 @@ function createBaseNotificationClan(): NotificationClan {
 
 export const NotificationClan = {
   encode(message: NotificationClan, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
     return writer;
@@ -19937,7 +18599,7 @@ export const NotificationClan = {
 
   toJSON(message: NotificationClan): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -19959,10 +18621,8 @@ function createBaseNotificationSettingList(): NotificationSettingList {
 
 export const NotificationSettingList = {
   encode(message: NotificationSettingList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.notification_setting !== undefined && message.notification_setting.length !== 0) {
-      for (const v of message.notification_setting) {
-        NotificationSetting.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.notification_setting) {
+      NotificationSetting.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -19979,7 +18639,7 @@ export const NotificationSettingList = {
             break;
           }
 
-          message.notification_setting!.push(NotificationSetting.decode(reader, reader.uint32()));
+          message.notification_setting.push(NotificationSetting.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -20022,13 +18682,13 @@ function createBaseSetNotificationRequest(): SetNotificationRequest {
 
 export const SetNotificationRequest = {
   encode(message: SetNotificationRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_category_id !== undefined && message.channel_category_id !== "") {
+    if (message.channel_category_id !== "") {
       writer.uint32(10).string(message.channel_category_id);
     }
-    if (message.notification_type !== undefined && message.notification_type !== 0) {
+    if (message.notification_type !== 0) {
       writer.uint32(16).int32(message.notification_type);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
     return writer;
@@ -20081,13 +18741,13 @@ export const SetNotificationRequest = {
 
   toJSON(message: SetNotificationRequest): unknown {
     const obj: any = {};
-    if (message.channel_category_id !== undefined && message.channel_category_id !== "") {
+    if (message.channel_category_id !== "") {
       obj.channel_category_id = message.channel_category_id;
     }
-    if (message.notification_type !== undefined && message.notification_type !== 0) {
+    if (message.notification_type !== 0) {
       obj.notification_type = Math.round(message.notification_type);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -20111,13 +18771,13 @@ function createBasePinMessageRequest(): PinMessageRequest {
 
 export const PinMessageRequest = {
   encode(message: PinMessageRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       writer.uint32(10).string(message.message_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
     return writer;
@@ -20170,13 +18830,13 @@ export const PinMessageRequest = {
 
   toJSON(message: PinMessageRequest): unknown {
     const obj: any = {};
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -20200,16 +18860,16 @@ function createBaseSetMuteRequest(): SetMuteRequest {
 
 export const SetMuteRequest = {
   encode(message: SetMuteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.mute_time !== undefined && message.mute_time !== 0) {
+    if (message.mute_time !== 0) {
       writer.uint32(16).int32(message.mute_time);
     }
-    if (message.active !== undefined && message.active !== 0) {
+    if (message.active !== 0) {
       writer.uint32(24).int32(message.active);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
     }
     return writer;
@@ -20270,16 +18930,16 @@ export const SetMuteRequest = {
 
   toJSON(message: SetMuteRequest): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.mute_time !== undefined && message.mute_time !== 0) {
+    if (message.mute_time !== 0) {
       obj.mute_time = Math.round(message.mute_time);
     }
-    if (message.active !== undefined && message.active !== 0) {
+    if (message.active !== 0) {
       obj.active = Math.round(message.active);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -20304,10 +18964,8 @@ function createBaseHashtagDmListRequest(): HashtagDmListRequest {
 
 export const HashtagDmListRequest = {
   encode(message: HashtagDmListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== undefined && message.user_id.length !== 0) {
-      for (const v of message.user_id) {
-        writer.uint32(10).string(v!);
-      }
+    for (const v of message.user_id) {
+      writer.uint32(10).string(v!);
     }
     if (message.limit !== undefined) {
       Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
@@ -20327,7 +18985,7 @@ export const HashtagDmListRequest = {
             break;
           }
 
-          message.user_id!.push(reader.string());
+          message.user_id.push(reader.string());
           continue;
         case 2:
           if (tag !== 18) {
@@ -20380,10 +19038,8 @@ function createBaseHashtagDmList(): HashtagDmList {
 
 export const HashtagDmList = {
   encode(message: HashtagDmList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.hashtag_dm !== undefined && message.hashtag_dm.length !== 0) {
-      for (const v of message.hashtag_dm) {
-        HashtagDm.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.hashtag_dm) {
+      HashtagDm.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -20400,7 +19056,7 @@ export const HashtagDmList = {
             break;
           }
 
-          message.hashtag_dm!.push(HashtagDm.decode(reader, reader.uint32()));
+          message.hashtag_dm.push(HashtagDm.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -20452,28 +19108,28 @@ function createBaseHashtagDm(): HashtagDm {
 
 export const HashtagDm = {
   encode(message: HashtagDm, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.channel_label !== undefined && message.channel_label !== "") {
+    if (message.channel_label !== "") {
       writer.uint32(18).string(message.channel_label);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
-    if (message.clan_name !== undefined && message.clan_name !== "") {
+    if (message.clan_name !== "") {
       writer.uint32(34).string(message.clan_name);
     }
-    if (message.meeting_code !== undefined && message.meeting_code !== "") {
+    if (message.meeting_code !== "") {
       writer.uint32(42).string(message.meeting_code);
     }
-    if (message.type !== undefined && message.type !== 0) {
+    if (message.type !== 0) {
       writer.uint32(48).int32(message.type);
     }
-    if (message.channel_private !== undefined && message.channel_private !== 0) {
+    if (message.channel_private !== 0) {
       writer.uint32(56).int32(message.channel_private);
     }
-    if (message.parent_id !== undefined && message.parent_id !== "") {
+    if (message.parent_id !== "") {
       writer.uint32(66).string(message.parent_id);
     }
     return writer;
@@ -20566,28 +19222,28 @@ export const HashtagDm = {
 
   toJSON(message: HashtagDm): unknown {
     const obj: any = {};
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.channel_label !== undefined && message.channel_label !== "") {
+    if (message.channel_label !== "") {
       obj.channel_label = message.channel_label;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.clan_name !== undefined && message.clan_name !== "") {
+    if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.meeting_code !== undefined && message.meeting_code !== "") {
+    if (message.meeting_code !== "") {
       obj.meeting_code = message.meeting_code;
     }
-    if (message.type !== undefined && message.type !== 0) {
+    if (message.type !== 0) {
       obj.type = Math.round(message.type);
     }
-    if (message.channel_private !== undefined && message.channel_private !== 0) {
+    if (message.channel_private !== 0) {
       obj.channel_private = Math.round(message.channel_private);
     }
-    if (message.parent_id !== undefined && message.parent_id !== "") {
+    if (message.parent_id !== "") {
       obj.parent_id = message.parent_id;
     }
     return obj;
@@ -20616,13 +19272,8 @@ function createBaseNotificationChannelCategorySettingList(): NotificationChannel
 
 export const NotificationChannelCategorySettingList = {
   encode(message: NotificationChannelCategorySettingList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (
-      message.notification_channel_category_settings_list !== undefined &&
-      message.notification_channel_category_settings_list.length !== 0
-    ) {
-      for (const v of message.notification_channel_category_settings_list) {
-        NotificationChannelCategorySetting.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.notification_channel_category_settings_list) {
+      NotificationChannelCategorySetting.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -20639,7 +19290,7 @@ export const NotificationChannelCategorySettingList = {
             break;
           }
 
-          message.notification_channel_category_settings_list!.push(
+          message.notification_channel_category_settings_list.push(
             NotificationChannelCategorySetting.decode(reader, reader.uint32()),
           );
           continue;
@@ -20696,19 +19347,19 @@ function createBaseNotificationChannelCategorySetting(): NotificationChannelCate
 
 export const NotificationChannelCategorySetting = {
   encode(message: NotificationChannelCategorySetting, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.channel_category_label !== undefined && message.channel_category_label !== "") {
+    if (message.channel_category_label !== "") {
       writer.uint32(18).string(message.channel_category_label);
     }
-    if (message.notification_setting_type !== undefined && message.notification_setting_type !== 0) {
+    if (message.notification_setting_type !== 0) {
       writer.uint32(24).int32(message.notification_setting_type);
     }
-    if (message.channel_category_title !== undefined && message.channel_category_title !== "") {
+    if (message.channel_category_title !== "") {
       writer.uint32(34).string(message.channel_category_title);
     }
-    if (message.action !== undefined && message.action !== 0) {
+    if (message.action !== 0) {
       writer.uint32(40).int32(message.action);
     }
     return writer;
@@ -20783,19 +19434,19 @@ export const NotificationChannelCategorySetting = {
 
   toJSON(message: NotificationChannelCategorySetting): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.channel_category_label !== undefined && message.channel_category_label !== "") {
+    if (message.channel_category_label !== "") {
       obj.channel_category_label = message.channel_category_label;
     }
-    if (message.notification_setting_type !== undefined && message.notification_setting_type !== 0) {
+    if (message.notification_setting_type !== 0) {
       obj.notification_setting_type = Math.round(message.notification_setting_type);
     }
-    if (message.channel_category_title !== undefined && message.channel_category_title !== "") {
+    if (message.channel_category_title !== "") {
       obj.channel_category_title = message.channel_category_title;
     }
-    if (message.action !== undefined && message.action !== 0) {
+    if (message.action !== 0) {
       obj.action = Math.round(message.action);
     }
     return obj;
@@ -20825,13 +19476,13 @@ function createBaseSetDefaultNotificationRequest(): SetDefaultNotificationReques
 
 export const SetDefaultNotificationRequest = {
   encode(message: SetDefaultNotificationRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.notification_type !== undefined && message.notification_type !== 0) {
+    if (message.notification_type !== 0) {
       writer.uint32(16).int32(message.notification_type);
     }
-    if (message.category_id !== undefined && message.category_id !== "") {
+    if (message.category_id !== "") {
       writer.uint32(26).string(message.category_id);
     }
     return writer;
@@ -20884,13 +19535,13 @@ export const SetDefaultNotificationRequest = {
 
   toJSON(message: SetDefaultNotificationRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.notification_type !== undefined && message.notification_type !== 0) {
+    if (message.notification_type !== 0) {
       obj.notification_type = Math.round(message.notification_type);
     }
-    if (message.category_id !== undefined && message.category_id !== "") {
+    if (message.category_id !== "") {
       obj.category_id = message.category_id;
     }
     return obj;
@@ -20916,12 +19567,10 @@ function createBaseRoleList(): RoleList {
 
 export const RoleList = {
   encode(message: RoleList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.roles !== undefined && message.roles.length !== 0) {
-      for (const v of message.roles) {
-        Role.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.roles) {
+      Role.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if (message.max_level_permission !== undefined && message.max_level_permission !== 0) {
+    if (message.max_level_permission !== 0) {
       writer.uint32(16).int32(message.max_level_permission);
     }
     return writer;
@@ -20939,7 +19588,7 @@ export const RoleList = {
             break;
           }
 
-          message.roles!.push(Role.decode(reader, reader.uint32()));
+          message.roles.push(Role.decode(reader, reader.uint32()));
           continue;
         case 2:
           if (tag !== 16) {
@@ -20969,7 +19618,7 @@ export const RoleList = {
     if (message.roles?.length) {
       obj.roles = message.roles.map((e) => Role.toJSON(e));
     }
-    if (message.max_level_permission !== undefined && message.max_level_permission !== 0) {
+    if (message.max_level_permission !== 0) {
       obj.max_level_permission = Math.round(message.max_level_permission);
     }
     return obj;
@@ -20992,10 +19641,8 @@ function createBaseEventList(): EventList {
 
 export const EventList = {
   encode(message: EventList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.events !== undefined && message.events.length !== 0) {
-      for (const v of message.events) {
-        EventManagement.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.events) {
+      EventManagement.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -21012,7 +19659,7 @@ export const EventList = {
             break;
           }
 
-          message.events!.push(EventManagement.decode(reader, reader.uint32()));
+          message.events.push(EventManagement.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -21055,12 +19702,10 @@ function createBasePermissionList(): PermissionList {
 
 export const PermissionList = {
   encode(message: PermissionList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.permissions !== undefined && message.permissions.length !== 0) {
-      for (const v of message.permissions) {
-        Permission.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.permissions) {
+      Permission.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if (message.max_level_permission !== undefined && message.max_level_permission !== 0) {
+    if (message.max_level_permission !== 0) {
       writer.uint32(16).int32(message.max_level_permission);
     }
     return writer;
@@ -21078,7 +19723,7 @@ export const PermissionList = {
             break;
           }
 
-          message.permissions!.push(Permission.decode(reader, reader.uint32()));
+          message.permissions.push(Permission.decode(reader, reader.uint32()));
           continue;
         case 2:
           if (tag !== 16) {
@@ -21110,7 +19755,7 @@ export const PermissionList = {
     if (message.permissions?.length) {
       obj.permissions = message.permissions.map((e) => Permission.toJSON(e));
     }
-    if (message.max_level_permission !== undefined && message.max_level_permission !== 0) {
+    if (message.max_level_permission !== 0) {
       obj.max_level_permission = Math.round(message.max_level_permission);
     }
     return obj;
@@ -21133,7 +19778,7 @@ function createBaseListPermissionsRequest(): ListPermissionsRequest {
 
 export const ListPermissionsRequest = {
   encode(message: ListPermissionsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.role_id !== undefined && message.role_id !== "") {
+    if (message.role_id !== "") {
       writer.uint32(10).string(message.role_id);
     }
     return writer;
@@ -21168,7 +19813,7 @@ export const ListPermissionsRequest = {
 
   toJSON(message: ListPermissionsRequest): unknown {
     const obj: any = {};
-    if (message.role_id !== undefined && message.role_id !== "") {
+    if (message.role_id !== "") {
       obj.role_id = message.role_id;
     }
     return obj;
@@ -21190,13 +19835,13 @@ function createBaseListRoleUsersRequest(): ListRoleUsersRequest {
 
 export const ListRoleUsersRequest = {
   encode(message: ListRoleUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.role_id !== undefined && message.role_id !== "") {
+    if (message.role_id !== "") {
       writer.uint32(10).string(message.role_id);
     }
     if (message.limit !== undefined) {
       Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       writer.uint32(26).string(message.cursor);
     }
     return writer;
@@ -21249,13 +19894,13 @@ export const ListRoleUsersRequest = {
 
   toJSON(message: ListRoleUsersRequest): unknown {
     const obj: any = {};
-    if (message.role_id !== undefined && message.role_id !== "") {
+    if (message.role_id !== "") {
       obj.role_id = message.role_id;
     }
     if (message.limit !== undefined) {
       obj.limit = message.limit;
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
     return obj;
@@ -21279,10 +19924,10 @@ function createBaseListPermissionOfUsersRequest(): ListPermissionOfUsersRequest 
 
 export const ListPermissionOfUsersRequest = {
   encode(message: ListPermissionOfUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
     return writer;
@@ -21327,10 +19972,10 @@ export const ListPermissionOfUsersRequest = {
 
   toJSON(message: ListPermissionOfUsersRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -21353,12 +19998,10 @@ function createBaseRoleUserList(): RoleUserList {
 
 export const RoleUserList = {
   encode(message: RoleUserList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.role_users !== undefined && message.role_users.length !== 0) {
-      for (const v of message.role_users) {
-        RoleUserList_RoleUser.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.role_users) {
+      RoleUserList_RoleUser.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       writer.uint32(18).string(message.cursor);
     }
     return writer;
@@ -21376,7 +20019,7 @@ export const RoleUserList = {
             break;
           }
 
-          message.role_users!.push(RoleUserList_RoleUser.decode(reader, reader.uint32()));
+          message.role_users.push(RoleUserList_RoleUser.decode(reader, reader.uint32()));
           continue;
         case 2:
           if (tag !== 18) {
@@ -21408,7 +20051,7 @@ export const RoleUserList = {
     if (message.role_users?.length) {
       obj.role_users = message.role_users.map((e) => RoleUserList_RoleUser.toJSON(e));
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
     return obj;
@@ -21431,25 +20074,25 @@ function createBaseRoleUserList_RoleUser(): RoleUserList_RoleUser {
 
 export const RoleUserList_RoleUser = {
   encode(message: RoleUserList_RoleUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       writer.uint32(18).string(message.username);
     }
-    if (message.display_name !== undefined && message.display_name !== "") {
+    if (message.display_name !== "") {
       writer.uint32(26).string(message.display_name);
     }
-    if (message.avatar_url !== undefined && message.avatar_url !== "") {
+    if (message.avatar_url !== "") {
       writer.uint32(34).string(message.avatar_url);
     }
-    if (message.lang_tag !== undefined && message.lang_tag !== "") {
+    if (message.lang_tag !== "") {
       writer.uint32(42).string(message.lang_tag);
     }
-    if (message.location !== undefined && message.location !== "") {
+    if (message.location !== "") {
       writer.uint32(50).string(message.location);
     }
-    if (message.online !== undefined && message.online !== false) {
+    if (message.online !== false) {
       writer.uint32(56).bool(message.online);
     }
     return writer;
@@ -21534,25 +20177,25 @@ export const RoleUserList_RoleUser = {
 
   toJSON(message: RoleUserList_RoleUser): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       obj.username = message.username;
     }
-    if (message.display_name !== undefined && message.display_name !== "") {
+    if (message.display_name !== "") {
       obj.display_name = message.display_name;
     }
-    if (message.avatar_url !== undefined && message.avatar_url !== "") {
+    if (message.avatar_url !== "") {
       obj.avatar_url = message.avatar_url;
     }
-    if (message.lang_tag !== undefined && message.lang_tag !== "") {
+    if (message.lang_tag !== "") {
       obj.lang_tag = message.lang_tag;
     }
-    if (message.location !== undefined && message.location !== "") {
+    if (message.location !== "") {
       obj.location = message.location;
     }
-    if (message.online !== undefined && message.online !== false) {
+    if (message.online !== false) {
       obj.online = message.online;
     }
     return obj;
@@ -21580,10 +20223,10 @@ function createBaseUserEventRequest(): UserEventRequest {
 
 export const UserEventRequest = {
   encode(message: UserEventRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.event_id !== undefined && message.event_id !== "") {
+    if (message.event_id !== "") {
       writer.uint32(18).string(message.event_id);
     }
     return writer;
@@ -21628,10 +20271,10 @@ export const UserEventRequest = {
 
   toJSON(message: UserEventRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.event_id !== undefined && message.event_id !== "") {
+    if (message.event_id !== "") {
       obj.event_id = message.event_id;
     }
     return obj;
@@ -21654,7 +20297,7 @@ function createBaseListEventsRequest(): ListEventsRequest {
 
 export const ListEventsRequest = {
   encode(message: ListEventsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
     return writer;
@@ -21689,7 +20332,7 @@ export const ListEventsRequest = {
 
   toJSON(message: ListEventsRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -21723,41 +20366,37 @@ function createBaseCreateRoleRequest(): CreateRoleRequest {
 
 export const CreateRoleRequest = {
   encode(message: CreateRoleRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       writer.uint32(10).string(message.title);
     }
-    if (message.color !== undefined && message.color !== "") {
+    if (message.color !== "") {
       writer.uint32(18).string(message.color);
     }
-    if (message.role_icon !== undefined && message.role_icon !== "") {
+    if (message.role_icon !== "") {
       writer.uint32(26).string(message.role_icon);
     }
-    if (message.description !== undefined && message.description !== "") {
+    if (message.description !== "") {
       writer.uint32(34).string(message.description);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(42).string(message.clan_id);
     }
-    if (message.display_online !== undefined && message.display_online !== 0) {
+    if (message.display_online !== 0) {
       writer.uint32(48).int32(message.display_online);
     }
-    if (message.allow_mention !== undefined && message.allow_mention !== 0) {
+    if (message.allow_mention !== 0) {
       writer.uint32(56).int32(message.allow_mention);
     }
-    if (message.max_permission_id !== undefined && message.max_permission_id !== "") {
+    if (message.max_permission_id !== "") {
       writer.uint32(66).string(message.max_permission_id);
     }
-    if (message.add_user_ids !== undefined && message.add_user_ids.length !== 0) {
-      for (const v of message.add_user_ids) {
-        writer.uint32(74).string(v!);
-      }
+    for (const v of message.add_user_ids) {
+      writer.uint32(74).string(v!);
     }
-    if (message.active_permission_ids !== undefined && message.active_permission_ids.length !== 0) {
-      for (const v of message.active_permission_ids) {
-        writer.uint32(82).string(v!);
-      }
+    for (const v of message.active_permission_ids) {
+      writer.uint32(82).string(v!);
     }
-    if (message.order_role !== undefined && message.order_role !== 0) {
+    if (message.order_role !== 0) {
       writer.uint32(88).int32(message.order_role);
     }
     return writer;
@@ -21831,14 +20470,14 @@ export const CreateRoleRequest = {
             break;
           }
 
-          message.add_user_ids!.push(reader.string());
+          message.add_user_ids.push(reader.string());
           continue;
         case 10:
           if (tag !== 82) {
             break;
           }
 
-          message.active_permission_ids!.push(reader.string());
+          message.active_permission_ids.push(reader.string());
           continue;
         case 11:
           if (tag !== 88) {
@@ -21878,28 +20517,28 @@ export const CreateRoleRequest = {
 
   toJSON(message: CreateRoleRequest): unknown {
     const obj: any = {};
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       obj.title = message.title;
     }
-    if (message.color !== undefined && message.color !== "") {
+    if (message.color !== "") {
       obj.color = message.color;
     }
-    if (message.role_icon !== undefined && message.role_icon !== "") {
+    if (message.role_icon !== "") {
       obj.role_icon = message.role_icon;
     }
-    if (message.description !== undefined && message.description !== "") {
+    if (message.description !== "") {
       obj.description = message.description;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.display_online !== undefined && message.display_online !== 0) {
+    if (message.display_online !== 0) {
       obj.display_online = Math.round(message.display_online);
     }
-    if (message.allow_mention !== undefined && message.allow_mention !== 0) {
+    if (message.allow_mention !== 0) {
       obj.allow_mention = Math.round(message.allow_mention);
     }
-    if (message.max_permission_id !== undefined && message.max_permission_id !== "") {
+    if (message.max_permission_id !== "") {
       obj.max_permission_id = message.max_permission_id;
     }
     if (message.add_user_ids?.length) {
@@ -21908,7 +20547,7 @@ export const CreateRoleRequest = {
     if (message.active_permission_ids?.length) {
       obj.active_permission_ids = message.active_permission_ids;
     }
-    if (message.order_role !== undefined && message.order_role !== 0) {
+    if (message.order_role !== 0) {
       obj.order_role = Math.round(message.order_role);
     }
     return obj;
@@ -21958,22 +20597,22 @@ function createBaseCreateEventRequest(): CreateEventRequest {
 
 export const CreateEventRequest = {
   encode(message: CreateEventRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       writer.uint32(10).string(message.title);
     }
-    if (message.logo !== undefined && message.logo !== "") {
+    if (message.logo !== "") {
       writer.uint32(18).string(message.logo);
     }
-    if (message.description !== undefined && message.description !== "") {
+    if (message.description !== "") {
       writer.uint32(26).string(message.description);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
     }
-    if (message.channel_voice_id !== undefined && message.channel_voice_id !== "") {
+    if (message.channel_voice_id !== "") {
       writer.uint32(42).string(message.channel_voice_id);
     }
-    if (message.address !== undefined && message.address !== "") {
+    if (message.address !== "") {
       writer.uint32(50).string(message.address);
     }
     if (message.start_time !== undefined) {
@@ -21982,25 +20621,25 @@ export const CreateEventRequest = {
     if (message.end_time !== undefined) {
       Timestamp.encode(toTimestamp(message.end_time), writer.uint32(66).fork()).ldelim();
     }
-    if (message.event_id !== undefined && message.event_id !== "") {
+    if (message.event_id !== "") {
       writer.uint32(74).string(message.event_id);
     }
-    if (message.event_status !== undefined && message.event_status !== 0) {
+    if (message.event_status !== 0) {
       writer.uint32(80).int32(message.event_status);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(90).string(message.channel_id);
     }
-    if (message.action !== undefined && message.action !== 0) {
+    if (message.action !== 0) {
       writer.uint32(96).int32(message.action);
     }
-    if (message.repeat_type !== undefined && message.repeat_type !== 0) {
+    if (message.repeat_type !== 0) {
       writer.uint32(104).int32(message.repeat_type);
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       writer.uint32(114).string(message.creator_id);
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       writer.uint32(122).string(message.user_id);
     }
     if (message.is_private !== undefined) {
@@ -22171,22 +20810,22 @@ export const CreateEventRequest = {
 
   toJSON(message: CreateEventRequest): unknown {
     const obj: any = {};
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       obj.title = message.title;
     }
-    if (message.logo !== undefined && message.logo !== "") {
+    if (message.logo !== "") {
       obj.logo = message.logo;
     }
-    if (message.description !== undefined && message.description !== "") {
+    if (message.description !== "") {
       obj.description = message.description;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_voice_id !== undefined && message.channel_voice_id !== "") {
+    if (message.channel_voice_id !== "") {
       obj.channel_voice_id = message.channel_voice_id;
     }
-    if (message.address !== undefined && message.address !== "") {
+    if (message.address !== "") {
       obj.address = message.address;
     }
     if (message.start_time !== undefined) {
@@ -22195,25 +20834,25 @@ export const CreateEventRequest = {
     if (message.end_time !== undefined) {
       obj.end_time = message.end_time.toISOString();
     }
-    if (message.event_id !== undefined && message.event_id !== "") {
+    if (message.event_id !== "") {
       obj.event_id = message.event_id;
     }
-    if (message.event_status !== undefined && message.event_status !== 0) {
+    if (message.event_status !== 0) {
       obj.event_status = Math.round(message.event_status);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.action !== undefined && message.action !== 0) {
+    if (message.action !== 0) {
       obj.action = Math.round(message.action);
     }
-    if (message.repeat_type !== undefined && message.repeat_type !== 0) {
+    if (message.repeat_type !== 0) {
       obj.repeat_type = Math.round(message.repeat_type);
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
     if (message.is_private !== undefined) {
@@ -22273,22 +20912,22 @@ function createBaseUpdateEventRequest(): UpdateEventRequest {
 
 export const UpdateEventRequest = {
   encode(message: UpdateEventRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       writer.uint32(10).string(message.title);
     }
-    if (message.logo !== undefined && message.logo !== "") {
+    if (message.logo !== "") {
       writer.uint32(18).string(message.logo);
     }
-    if (message.description !== undefined && message.description !== "") {
+    if (message.description !== "") {
       writer.uint32(26).string(message.description);
     }
-    if (message.event_id !== undefined && message.event_id !== "") {
+    if (message.event_id !== "") {
       writer.uint32(34).string(message.event_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(42).string(message.channel_id);
     }
-    if (message.address !== undefined && message.address !== "") {
+    if (message.address !== "") {
       writer.uint32(50).string(message.address);
     }
     if (message.start_time !== undefined) {
@@ -22297,19 +20936,19 @@ export const UpdateEventRequest = {
     if (message.end_time !== undefined) {
       Timestamp.encode(toTimestamp(message.end_time), writer.uint32(66).fork()).ldelim();
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(74).string(message.clan_id);
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       writer.uint32(82).string(message.creator_id);
     }
-    if (message.channel_voice_id !== undefined && message.channel_voice_id !== "") {
+    if (message.channel_voice_id !== "") {
       writer.uint32(90).string(message.channel_voice_id);
     }
-    if (message.channel_id_old !== undefined && message.channel_id_old !== "") {
+    if (message.channel_id_old !== "") {
       writer.uint32(98).string(message.channel_id_old);
     }
-    if (message.repeat_type !== undefined && message.repeat_type !== 0) {
+    if (message.repeat_type !== 0) {
       writer.uint32(104).int32(message.repeat_type);
     }
     return writer;
@@ -22442,22 +21081,22 @@ export const UpdateEventRequest = {
 
   toJSON(message: UpdateEventRequest): unknown {
     const obj: any = {};
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       obj.title = message.title;
     }
-    if (message.logo !== undefined && message.logo !== "") {
+    if (message.logo !== "") {
       obj.logo = message.logo;
     }
-    if (message.description !== undefined && message.description !== "") {
+    if (message.description !== "") {
       obj.description = message.description;
     }
-    if (message.event_id !== undefined && message.event_id !== "") {
+    if (message.event_id !== "") {
       obj.event_id = message.event_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.address !== undefined && message.address !== "") {
+    if (message.address !== "") {
       obj.address = message.address;
     }
     if (message.start_time !== undefined) {
@@ -22466,19 +21105,19 @@ export const UpdateEventRequest = {
     if (message.end_time !== undefined) {
       obj.end_time = message.end_time.toISOString();
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.channel_voice_id !== undefined && message.channel_voice_id !== "") {
+    if (message.channel_voice_id !== "") {
       obj.channel_voice_id = message.channel_voice_id;
     }
-    if (message.channel_id_old !== undefined && message.channel_id_old !== "") {
+    if (message.channel_id_old !== "") {
       obj.channel_id_old = message.channel_id_old;
     }
-    if (message.repeat_type !== undefined && message.repeat_type !== 0) {
+    if (message.repeat_type !== 0) {
       obj.repeat_type = Math.round(message.repeat_type);
     }
     return obj;
@@ -22512,16 +21151,16 @@ function createBaseDeleteRoleRequest(): DeleteRoleRequest {
 
 export const DeleteRoleRequest = {
   encode(message: DeleteRoleRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.role_id !== undefined && message.role_id !== "") {
+    if (message.role_id !== "") {
       writer.uint32(10).string(message.role_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
-    if (message.role_label !== undefined && message.role_label !== "") {
+    if (message.role_label !== "") {
       writer.uint32(34).string(message.role_label);
     }
     return writer;
@@ -22582,16 +21221,16 @@ export const DeleteRoleRequest = {
 
   toJSON(message: DeleteRoleRequest): unknown {
     const obj: any = {};
-    if (message.role_id !== undefined && message.role_id !== "") {
+    if (message.role_id !== "") {
       obj.role_id = message.role_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.role_label !== undefined && message.role_label !== "") {
+    if (message.role_label !== "") {
       obj.role_label = message.role_label;
     }
     return obj;
@@ -22616,19 +21255,19 @@ function createBaseDeleteEventRequest(): DeleteEventRequest {
 
 export const DeleteEventRequest = {
   encode(message: DeleteEventRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.event_id !== undefined && message.event_id !== "") {
+    if (message.event_id !== "") {
       writer.uint32(10).string(message.event_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       writer.uint32(26).string(message.creator_id);
     }
-    if (message.event_label !== undefined && message.event_label !== "") {
+    if (message.event_label !== "") {
       writer.uint32(34).string(message.event_label);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(42).string(message.channel_id);
     }
     return writer;
@@ -22697,19 +21336,19 @@ export const DeleteEventRequest = {
 
   toJSON(message: DeleteEventRequest): unknown {
     const obj: any = {};
-    if (message.event_id !== undefined && message.event_id !== "") {
+    if (message.event_id !== "") {
       obj.event_id = message.event_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.event_label !== undefined && message.event_label !== "") {
+    if (message.event_label !== "") {
       obj.event_label = message.event_label;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -22749,7 +21388,7 @@ function createBaseUpdateRoleRequest(): UpdateRoleRequest {
 
 export const UpdateRoleRequest = {
   encode(message: UpdateRoleRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.role_id !== undefined && message.role_id !== "") {
+    if (message.role_id !== "") {
       writer.uint32(10).string(message.role_id);
     }
     if (message.title !== undefined) {
@@ -22770,30 +21409,22 @@ export const UpdateRoleRequest = {
     if (message.allow_mention !== undefined) {
       Int32Value.encode({ value: message.allow_mention! }, writer.uint32(58).fork()).ldelim();
     }
-    if (message.add_user_ids !== undefined && message.add_user_ids.length !== 0) {
-      for (const v of message.add_user_ids) {
-        writer.uint32(66).string(v!);
-      }
+    for (const v of message.add_user_ids) {
+      writer.uint32(66).string(v!);
     }
-    if (message.active_permission_ids !== undefined && message.active_permission_ids.length !== 0) {
-      for (const v of message.active_permission_ids) {
-        writer.uint32(74).string(v!);
-      }
+    for (const v of message.active_permission_ids) {
+      writer.uint32(74).string(v!);
     }
-    if (message.remove_user_ids !== undefined && message.remove_user_ids.length !== 0) {
-      for (const v of message.remove_user_ids) {
-        writer.uint32(82).string(v!);
-      }
+    for (const v of message.remove_user_ids) {
+      writer.uint32(82).string(v!);
     }
-    if (message.remove_permission_ids !== undefined && message.remove_permission_ids.length !== 0) {
-      for (const v of message.remove_permission_ids) {
-        writer.uint32(90).string(v!);
-      }
+    for (const v of message.remove_permission_ids) {
+      writer.uint32(90).string(v!);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(98).string(message.clan_id);
     }
-    if (message.max_permission_id !== undefined && message.max_permission_id !== "") {
+    if (message.max_permission_id !== "") {
       writer.uint32(106).string(message.max_permission_id);
     }
     return writer;
@@ -22860,28 +21491,28 @@ export const UpdateRoleRequest = {
             break;
           }
 
-          message.add_user_ids!.push(reader.string());
+          message.add_user_ids.push(reader.string());
           continue;
         case 9:
           if (tag !== 74) {
             break;
           }
 
-          message.active_permission_ids!.push(reader.string());
+          message.active_permission_ids.push(reader.string());
           continue;
         case 10:
           if (tag !== 82) {
             break;
           }
 
-          message.remove_user_ids!.push(reader.string());
+          message.remove_user_ids.push(reader.string());
           continue;
         case 11:
           if (tag !== 90) {
             break;
           }
 
-          message.remove_permission_ids!.push(reader.string());
+          message.remove_permission_ids.push(reader.string());
           continue;
         case 12:
           if (tag !== 98) {
@@ -22934,7 +21565,7 @@ export const UpdateRoleRequest = {
 
   toJSON(message: UpdateRoleRequest): unknown {
     const obj: any = {};
-    if (message.role_id !== undefined && message.role_id !== "") {
+    if (message.role_id !== "") {
       obj.role_id = message.role_id;
     }
     if (message.title !== undefined) {
@@ -22967,10 +21598,10 @@ export const UpdateRoleRequest = {
     if (message.remove_permission_ids?.length) {
       obj.remove_permission_ids = message.remove_permission_ids;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.max_permission_id !== undefined && message.max_permission_id !== "") {
+    if (message.max_permission_id !== "") {
       obj.max_permission_id = message.max_permission_id;
     }
     return obj;
@@ -23004,24 +21635,22 @@ function createBaseUpdateRoleChannelRequest(): UpdateRoleChannelRequest {
 
 export const UpdateRoleChannelRequest = {
   encode(message: UpdateRoleChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.role_id !== undefined && message.role_id !== "") {
+    if (message.role_id !== "") {
       writer.uint32(10).string(message.role_id);
     }
-    if (message.permission_update !== undefined && message.permission_update.length !== 0) {
-      for (const v of message.permission_update) {
-        PermissionUpdate.encode(v!, writer.uint32(18).fork()).ldelim();
-      }
+    for (const v of message.permission_update) {
+      PermissionUpdate.encode(v!, writer.uint32(18).fork()).ldelim();
     }
-    if (message.max_permission_id !== undefined && message.max_permission_id !== "") {
+    if (message.max_permission_id !== "") {
       writer.uint32(26).string(message.max_permission_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(34).string(message.channel_id);
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       writer.uint32(42).string(message.user_id);
     }
-    if (message.role_label !== undefined && message.role_label !== "") {
+    if (message.role_label !== "") {
       writer.uint32(50).string(message.role_label);
     }
     return writer;
@@ -23046,7 +21675,7 @@ export const UpdateRoleChannelRequest = {
             break;
           }
 
-          message.permission_update!.push(PermissionUpdate.decode(reader, reader.uint32()));
+          message.permission_update.push(PermissionUpdate.decode(reader, reader.uint32()));
           continue;
         case 3:
           if (tag !== 26) {
@@ -23100,22 +21729,22 @@ export const UpdateRoleChannelRequest = {
 
   toJSON(message: UpdateRoleChannelRequest): unknown {
     const obj: any = {};
-    if (message.role_id !== undefined && message.role_id !== "") {
+    if (message.role_id !== "") {
       obj.role_id = message.role_id;
     }
     if (message.permission_update?.length) {
       obj.permission_update = message.permission_update.map((e) => PermissionUpdate.toJSON(e));
     }
-    if (message.max_permission_id !== undefined && message.max_permission_id !== "") {
+    if (message.max_permission_id !== "") {
       obj.max_permission_id = message.max_permission_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.role_label !== undefined && message.role_label !== "") {
+    if (message.role_label !== "") {
       obj.role_label = message.role_label;
     }
     return obj;
@@ -23142,13 +21771,13 @@ function createBasePermissionUpdate(): PermissionUpdate {
 
 export const PermissionUpdate = {
   encode(message: PermissionUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.permission_id !== undefined && message.permission_id !== "") {
+    if (message.permission_id !== "") {
       writer.uint32(10).string(message.permission_id);
     }
-    if (message.slug !== undefined && message.slug !== "") {
+    if (message.slug !== "") {
       writer.uint32(18).string(message.slug);
     }
-    if (message.type !== undefined && message.type !== 0) {
+    if (message.type !== 0) {
       writer.uint32(24).int32(message.type);
     }
     return writer;
@@ -23201,13 +21830,13 @@ export const PermissionUpdate = {
 
   toJSON(message: PermissionUpdate): unknown {
     const obj: any = {};
-    if (message.permission_id !== undefined && message.permission_id !== "") {
+    if (message.permission_id !== "") {
       obj.permission_id = message.permission_id;
     }
-    if (message.slug !== undefined && message.slug !== "") {
+    if (message.slug !== "") {
       obj.slug = message.slug;
     }
-    if (message.type !== undefined && message.type !== 0) {
+    if (message.type !== 0) {
       obj.type = Math.round(message.type);
     }
     return obj;
@@ -23231,19 +21860,19 @@ function createBaseUploadAttachmentRequest(): UploadAttachmentRequest {
 
 export const UploadAttachmentRequest = {
   encode(message: UploadAttachmentRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.filename !== undefined && message.filename !== "") {
+    if (message.filename !== "") {
       writer.uint32(10).string(message.filename);
     }
-    if (message.filetype !== undefined && message.filetype !== "") {
+    if (message.filetype !== "") {
       writer.uint32(18).string(message.filetype);
     }
-    if (message.size !== undefined && message.size !== 0) {
+    if (message.size !== 0) {
       writer.uint32(24).int32(message.size);
     }
-    if (message.width !== undefined && message.width !== 0) {
+    if (message.width !== 0) {
       writer.uint32(32).int32(message.width);
     }
-    if (message.height !== undefined && message.height !== 0) {
+    if (message.height !== 0) {
       writer.uint32(40).int32(message.height);
     }
     return writer;
@@ -23312,19 +21941,19 @@ export const UploadAttachmentRequest = {
 
   toJSON(message: UploadAttachmentRequest): unknown {
     const obj: any = {};
-    if (message.filename !== undefined && message.filename !== "") {
+    if (message.filename !== "") {
       obj.filename = message.filename;
     }
-    if (message.filetype !== undefined && message.filetype !== "") {
+    if (message.filetype !== "") {
       obj.filetype = message.filetype;
     }
-    if (message.size !== undefined && message.size !== 0) {
+    if (message.size !== 0) {
       obj.size = Math.round(message.size);
     }
-    if (message.width !== undefined && message.width !== 0) {
+    if (message.width !== 0) {
       obj.width = Math.round(message.width);
     }
-    if (message.height !== undefined && message.height !== 0) {
+    if (message.height !== 0) {
       obj.height = Math.round(message.height);
     }
     return obj;
@@ -23356,7 +21985,7 @@ export const ListMessageMentionRequest = {
     if (message.forward !== undefined) {
       BoolValue.encode({ value: message.forward! }, writer.uint32(18).fork()).ldelim();
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       writer.uint32(26).string(message.cursor);
     }
     return writer;
@@ -23415,7 +22044,7 @@ export const ListMessageMentionRequest = {
     if (message.forward !== undefined) {
       obj.forward = message.forward;
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
     return obj;
@@ -23439,10 +22068,10 @@ function createBaseUploadAttachment(): UploadAttachment {
 
 export const UploadAttachment = {
   encode(message: UploadAttachment, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.filename !== undefined && message.filename !== "") {
+    if (message.filename !== "") {
       writer.uint32(10).string(message.filename);
     }
-    if (message.url !== undefined && message.url !== "") {
+    if (message.url !== "") {
       writer.uint32(18).string(message.url);
     }
     return writer;
@@ -23487,10 +22116,10 @@ export const UploadAttachment = {
 
   toJSON(message: UploadAttachment): unknown {
     const obj: any = {};
-    if (message.filename !== undefined && message.filename !== "") {
+    if (message.filename !== "") {
       obj.filename = message.filename;
     }
-    if (message.url !== undefined && message.url !== "") {
+    if (message.url !== "") {
       obj.url = message.url;
     }
     return obj;
@@ -23513,10 +22142,8 @@ function createBaseSearchMessageRequest(): SearchMessageRequest {
 
 export const SearchMessageRequest = {
   encode(message: SearchMessageRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.filters !== undefined && message.filters.length !== 0) {
-      for (const v of message.filters) {
-        FilterParam.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.filters) {
+      FilterParam.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     if (message.from !== undefined) {
       Int32Value.encode({ value: message.from! }, writer.uint32(26).fork()).ldelim();
@@ -23524,10 +22151,8 @@ export const SearchMessageRequest = {
     if (message.size !== undefined) {
       Int32Value.encode({ value: message.size! }, writer.uint32(34).fork()).ldelim();
     }
-    if (message.sorts !== undefined && message.sorts.length !== 0) {
-      for (const v of message.sorts) {
-        SortParam.encode(v!, writer.uint32(42).fork()).ldelim();
-      }
+    for (const v of message.sorts) {
+      SortParam.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -23544,7 +22169,7 @@ export const SearchMessageRequest = {
             break;
           }
 
-          message.filters!.push(FilterParam.decode(reader, reader.uint32()));
+          message.filters.push(FilterParam.decode(reader, reader.uint32()));
           continue;
         case 3:
           if (tag !== 26) {
@@ -23565,7 +22190,7 @@ export const SearchMessageRequest = {
             break;
           }
 
-          message.sorts!.push(SortParam.decode(reader, reader.uint32()));
+          message.sorts.push(SortParam.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -23621,10 +22246,10 @@ function createBaseSortParam(): SortParam {
 
 export const SortParam = {
   encode(message: SortParam, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.field_name !== undefined && message.field_name !== "") {
+    if (message.field_name !== "") {
       writer.uint32(10).string(message.field_name);
     }
-    if (message.order !== undefined && message.order !== "") {
+    if (message.order !== "") {
       writer.uint32(18).string(message.order);
     }
     return writer;
@@ -23669,10 +22294,10 @@ export const SortParam = {
 
   toJSON(message: SortParam): unknown {
     const obj: any = {};
-    if (message.field_name !== undefined && message.field_name !== "") {
+    if (message.field_name !== "") {
       obj.field_name = message.field_name;
     }
-    if (message.order !== undefined && message.order !== "") {
+    if (message.order !== "") {
       obj.order = message.order;
     }
     return obj;
@@ -23695,10 +22320,10 @@ function createBaseFilterParam(): FilterParam {
 
 export const FilterParam = {
   encode(message: FilterParam, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.field_name !== undefined && message.field_name !== "") {
+    if (message.field_name !== "") {
       writer.uint32(10).string(message.field_name);
     }
-    if (message.field_value !== undefined && message.field_value !== "") {
+    if (message.field_value !== "") {
       writer.uint32(18).string(message.field_value);
     }
     return writer;
@@ -23743,10 +22368,10 @@ export const FilterParam = {
 
   toJSON(message: FilterParam): unknown {
     const obj: any = {};
-    if (message.field_name !== undefined && message.field_name !== "") {
+    if (message.field_name !== "") {
       obj.field_name = message.field_name;
     }
-    if (message.field_value !== undefined && message.field_value !== "") {
+    if (message.field_value !== "") {
       obj.field_value = message.field_value;
     }
     return obj;
@@ -23787,57 +22412,55 @@ function createBaseSearchMessageDocument(): SearchMessageDocument {
 
 export const SearchMessageDocument = {
   encode(message: SearchMessageDocument, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       writer.uint32(10).string(message.message_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
-    if (message.sender_id !== undefined && message.sender_id !== "") {
+    if (message.sender_id !== "") {
       writer.uint32(34).string(message.sender_id);
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       writer.uint32(42).string(message.content);
     }
-    if (message.mentions !== undefined && message.mentions !== "") {
+    if (message.mentions !== "") {
       writer.uint32(50).string(message.mentions);
     }
-    if (message.reactions !== undefined && message.reactions !== "") {
+    if (message.reactions !== "") {
       writer.uint32(58).string(message.reactions);
     }
-    if (message.attachments !== undefined && message.attachments.length !== 0) {
-      for (const v of message.attachments) {
-        MessageAttachment.encode(v!, writer.uint32(66).fork()).ldelim();
-      }
+    for (const v of message.attachments) {
+      MessageAttachment.encode(v!, writer.uint32(66).fork()).ldelim();
     }
-    if (message.references !== undefined && message.references !== "") {
+    if (message.references !== "") {
       writer.uint32(74).string(message.references);
     }
-    if (message.create_time !== undefined && message.create_time !== "") {
+    if (message.create_time !== "") {
       writer.uint32(82).string(message.create_time);
     }
-    if (message.update_time !== undefined && message.update_time !== "") {
+    if (message.update_time !== "") {
       writer.uint32(90).string(message.update_time);
     }
-    if (message.channel_label !== undefined && message.channel_label !== "") {
+    if (message.channel_label !== "") {
       writer.uint32(98).string(message.channel_label);
     }
-    if (message.channel_type !== undefined && message.channel_type !== 0) {
+    if (message.channel_type !== 0) {
       writer.uint32(104).int32(message.channel_type);
     }
-    if (message.clan_name !== undefined && message.clan_name !== "") {
+    if (message.clan_name !== "") {
       writer.uint32(114).string(message.clan_name);
     }
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       writer.uint32(122).string(message.username);
     }
-    if (message.display_name !== undefined && message.display_name !== "") {
+    if (message.display_name !== "") {
       writer.uint32(130).string(message.display_name);
     }
-    if (message.avatar_url !== undefined && message.avatar_url !== "") {
+    if (message.avatar_url !== "") {
       writer.uint32(138).string(message.avatar_url);
     }
     return writer;
@@ -23904,7 +22527,7 @@ export const SearchMessageDocument = {
             break;
           }
 
-          message.attachments!.push(MessageAttachment.decode(reader, reader.uint32()));
+          message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
           continue;
         case 9:
           if (tag !== 74) {
@@ -24004,55 +22627,55 @@ export const SearchMessageDocument = {
 
   toJSON(message: SearchMessageDocument): unknown {
     const obj: any = {};
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.sender_id !== undefined && message.sender_id !== "") {
+    if (message.sender_id !== "") {
       obj.sender_id = message.sender_id;
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.mentions !== undefined && message.mentions !== "") {
+    if (message.mentions !== "") {
       obj.mentions = message.mentions;
     }
-    if (message.reactions !== undefined && message.reactions !== "") {
+    if (message.reactions !== "") {
       obj.reactions = message.reactions;
     }
     if (message.attachments?.length) {
       obj.attachments = message.attachments.map((e) => MessageAttachment.toJSON(e));
     }
-    if (message.references !== undefined && message.references !== "") {
+    if (message.references !== "") {
       obj.references = message.references;
     }
-    if (message.create_time !== undefined && message.create_time !== "") {
+    if (message.create_time !== "") {
       obj.create_time = message.create_time;
     }
-    if (message.update_time !== undefined && message.update_time !== "") {
+    if (message.update_time !== "") {
       obj.update_time = message.update_time;
     }
-    if (message.channel_label !== undefined && message.channel_label !== "") {
+    if (message.channel_label !== "") {
       obj.channel_label = message.channel_label;
     }
-    if (message.channel_type !== undefined && message.channel_type !== 0) {
+    if (message.channel_type !== 0) {
       obj.channel_type = Math.round(message.channel_type);
     }
-    if (message.clan_name !== undefined && message.clan_name !== "") {
+    if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       obj.username = message.username;
     }
-    if (message.display_name !== undefined && message.display_name !== "") {
+    if (message.display_name !== "") {
       obj.display_name = message.display_name;
     }
-    if (message.avatar_url !== undefined && message.avatar_url !== "") {
+    if (message.avatar_url !== "") {
       obj.avatar_url = message.avatar_url;
     }
     return obj;
@@ -24090,12 +22713,10 @@ function createBaseSearchMessageResponse(): SearchMessageResponse {
 
 export const SearchMessageResponse = {
   encode(message: SearchMessageResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.messages !== undefined && message.messages.length !== 0) {
-      for (const v of message.messages) {
-        SearchMessageDocument.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.messages) {
+      SearchMessageDocument.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if (message.total !== undefined && message.total !== 0) {
+    if (message.total !== 0) {
       writer.uint32(16).int32(message.total);
     }
     return writer;
@@ -24113,7 +22734,7 @@ export const SearchMessageResponse = {
             break;
           }
 
-          message.messages!.push(SearchMessageDocument.decode(reader, reader.uint32()));
+          message.messages.push(SearchMessageDocument.decode(reader, reader.uint32()));
           continue;
         case 2:
           if (tag !== 16) {
@@ -24145,7 +22766,7 @@ export const SearchMessageResponse = {
     if (message.messages?.length) {
       obj.messages = message.messages.map((e) => SearchMessageDocument.toJSON(e));
     }
-    if (message.total !== undefined && message.total !== 0) {
+    if (message.total !== 0) {
       obj.total = Math.round(message.total);
     }
     return obj;
@@ -24177,28 +22798,28 @@ function createBaseRegistrationEmailRequest(): RegistrationEmailRequest {
 
 export const RegistrationEmailRequest = {
   encode(message: RegistrationEmailRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.email !== undefined && message.email !== "") {
+    if (message.email !== "") {
       writer.uint32(10).string(message.email);
     }
-    if (message.password !== undefined && message.password !== "") {
+    if (message.password !== "") {
       writer.uint32(18).string(message.password);
     }
-    if (message.old_password !== undefined && message.old_password !== "") {
+    if (message.old_password !== "") {
       writer.uint32(26).string(message.old_password);
     }
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       writer.uint32(34).string(message.username);
     }
-    if (message.display_name !== undefined && message.display_name !== "") {
+    if (message.display_name !== "") {
       writer.uint32(42).string(message.display_name);
     }
-    if (message.avatar_url !== undefined && message.avatar_url !== "") {
+    if (message.avatar_url !== "") {
       writer.uint32(50).string(message.avatar_url);
     }
-    if (message.dob !== undefined && message.dob !== "") {
+    if (message.dob !== "") {
       writer.uint32(58).string(message.dob);
     }
-    Object.entries(message.vars || {}).forEach(([key, value]) => {
+    Object.entries(message.vars).forEach(([key, value]) => {
       RegistrationEmailRequest_VarsEntry.encode({ key: key as any, value }, writer.uint32(66).fork()).ldelim();
     });
     return writer;
@@ -24267,7 +22888,7 @@ export const RegistrationEmailRequest = {
 
           const entry8 = RegistrationEmailRequest_VarsEntry.decode(reader, reader.uint32());
           if (entry8.value !== undefined) {
-            message.vars![entry8.key] = entry8.value;
+            message.vars[entry8.key] = entry8.value;
           }
           continue;
       }
@@ -24299,25 +22920,25 @@ export const RegistrationEmailRequest = {
 
   toJSON(message: RegistrationEmailRequest): unknown {
     const obj: any = {};
-    if (message.email !== undefined && message.email !== "") {
+    if (message.email !== "") {
       obj.email = message.email;
     }
-    if (message.password !== undefined && message.password !== "") {
+    if (message.password !== "") {
       obj.password = message.password;
     }
-    if (message.old_password !== undefined && message.old_password !== "") {
+    if (message.old_password !== "") {
       obj.old_password = message.old_password;
     }
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       obj.username = message.username;
     }
-    if (message.display_name !== undefined && message.display_name !== "") {
+    if (message.display_name !== "") {
       obj.display_name = message.display_name;
     }
-    if (message.avatar_url !== undefined && message.avatar_url !== "") {
+    if (message.avatar_url !== "") {
       obj.avatar_url = message.avatar_url;
     }
-    if (message.dob !== undefined && message.dob !== "") {
+    if (message.dob !== "") {
       obj.dob = message.dob;
     }
     if (message.vars) {
@@ -24448,31 +23069,31 @@ function createBaseClanEmoji(): ClanEmoji {
 
 export const ClanEmoji = {
   encode(message: ClanEmoji, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.src !== undefined && message.src !== "") {
+    if (message.src !== "") {
       writer.uint32(18).string(message.src);
     }
-    if (message.shortname !== undefined && message.shortname !== "") {
+    if (message.shortname !== "") {
       writer.uint32(26).string(message.shortname);
     }
-    if (message.category !== undefined && message.category !== "") {
+    if (message.category !== "") {
       writer.uint32(34).string(message.category);
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       writer.uint32(42).string(message.creator_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(50).string(message.clan_id);
     }
-    if (message.logo !== undefined && message.logo !== "") {
+    if (message.logo !== "") {
       writer.uint32(58).string(message.logo);
     }
-    if (message.clan_name !== undefined && message.clan_name !== "") {
+    if (message.clan_name !== "") {
       writer.uint32(66).string(message.clan_name);
     }
-    if (message.is_for_sale !== undefined && message.is_for_sale !== false) {
+    if (message.is_for_sale !== false) {
       writer.uint32(72).bool(message.is_for_sale);
     }
     return writer;
@@ -24573,31 +23194,31 @@ export const ClanEmoji = {
 
   toJSON(message: ClanEmoji): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.src !== undefined && message.src !== "") {
+    if (message.src !== "") {
       obj.src = message.src;
     }
-    if (message.shortname !== undefined && message.shortname !== "") {
+    if (message.shortname !== "") {
       obj.shortname = message.shortname;
     }
-    if (message.category !== undefined && message.category !== "") {
+    if (message.category !== "") {
       obj.category = message.category;
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.logo !== undefined && message.logo !== "") {
+    if (message.logo !== "") {
       obj.logo = message.logo;
     }
-    if (message.clan_name !== undefined && message.clan_name !== "") {
+    if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.is_for_sale !== undefined && message.is_for_sale !== false) {
+    if (message.is_for_sale !== false) {
       obj.is_for_sale = message.is_for_sale;
     }
     return obj;
@@ -24627,10 +23248,8 @@ function createBaseEmojiListedResponse(): EmojiListedResponse {
 
 export const EmojiListedResponse = {
   encode(message: EmojiListedResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.emoji_list !== undefined && message.emoji_list.length !== 0) {
-      for (const v of message.emoji_list) {
-        ClanEmoji.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.emoji_list) {
+      ClanEmoji.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -24647,7 +23266,7 @@ export const EmojiListedResponse = {
             break;
           }
 
-          message.emoji_list!.push(ClanEmoji.decode(reader, reader.uint32()));
+          message.emoji_list.push(ClanEmoji.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -24690,10 +23309,8 @@ function createBaseStickerListedResponse(): StickerListedResponse {
 
 export const StickerListedResponse = {
   encode(message: StickerListedResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.stickers !== undefined && message.stickers.length !== 0) {
-      for (const v of message.stickers) {
-        ClanSticker.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.stickers) {
+      ClanSticker.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -24710,7 +23327,7 @@ export const StickerListedResponse = {
             break;
           }
 
-          message.stickers!.push(ClanSticker.decode(reader, reader.uint32()));
+          message.stickers.push(ClanSticker.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -24765,37 +23382,37 @@ function createBaseClanSticker(): ClanSticker {
 
 export const ClanSticker = {
   encode(message: ClanSticker, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.source !== undefined && message.source !== "") {
+    if (message.source !== "") {
       writer.uint32(18).string(message.source);
     }
-    if (message.shortname !== undefined && message.shortname !== "") {
+    if (message.shortname !== "") {
       writer.uint32(26).string(message.shortname);
     }
-    if (message.category !== undefined && message.category !== "") {
+    if (message.category !== "") {
       writer.uint32(34).string(message.category);
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       writer.uint32(42).string(message.creator_id);
     }
     if (message.create_time !== undefined) {
       Timestamp.encode(toTimestamp(message.create_time), writer.uint32(50).fork()).ldelim();
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(58).string(message.clan_id);
     }
-    if (message.logo !== undefined && message.logo !== "") {
+    if (message.logo !== "") {
       writer.uint32(66).string(message.logo);
     }
-    if (message.clan_name !== undefined && message.clan_name !== "") {
+    if (message.clan_name !== "") {
       writer.uint32(74).string(message.clan_name);
     }
-    if (message.media_type !== undefined && message.media_type !== 0) {
+    if (message.media_type !== 0) {
       writer.uint32(80).int32(message.media_type);
     }
-    if (message.is_for_sale !== undefined && message.is_for_sale !== false) {
+    if (message.is_for_sale !== false) {
       writer.uint32(88).bool(message.is_for_sale);
     }
     return writer;
@@ -24912,37 +23529,37 @@ export const ClanSticker = {
 
   toJSON(message: ClanSticker): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.source !== undefined && message.source !== "") {
+    if (message.source !== "") {
       obj.source = message.source;
     }
-    if (message.shortname !== undefined && message.shortname !== "") {
+    if (message.shortname !== "") {
       obj.shortname = message.shortname;
     }
-    if (message.category !== undefined && message.category !== "") {
+    if (message.category !== "") {
       obj.category = message.category;
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
     if (message.create_time !== undefined) {
       obj.create_time = message.create_time.toISOString();
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.logo !== undefined && message.logo !== "") {
+    if (message.logo !== "") {
       obj.logo = message.logo;
     }
-    if (message.clan_name !== undefined && message.clan_name !== "") {
+    if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.media_type !== undefined && message.media_type !== 0) {
+    if (message.media_type !== 0) {
       obj.media_type = Math.round(message.media_type);
     }
-    if (message.is_for_sale !== undefined && message.is_for_sale !== false) {
+    if (message.is_for_sale !== false) {
       obj.is_for_sale = message.is_for_sale;
     }
     return obj;
@@ -24974,7 +23591,7 @@ function createBaseAllUsersAddChannelRequest(): AllUsersAddChannelRequest {
 
 export const AllUsersAddChannelRequest = {
   encode(message: AllUsersAddChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
     if (message.limit !== undefined) {
@@ -25022,7 +23639,7 @@ export const AllUsersAddChannelRequest = {
 
   toJSON(message: AllUsersAddChannelRequest): unknown {
     const obj: any = {};
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     if (message.limit !== undefined) {
@@ -25048,39 +23665,29 @@ function createBaseAllUsersAddChannelResponse(): AllUsersAddChannelResponse {
 
 export const AllUsersAddChannelResponse = {
   encode(message: AllUsersAddChannelResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.user_ids !== undefined && message.user_ids.length !== 0) {
-      for (const v of message.user_ids) {
-        writer.uint32(18).string(v!);
-      }
+    for (const v of message.user_ids) {
+      writer.uint32(18).string(v!);
     }
     if (message.limit !== undefined) {
       Int32Value.encode({ value: message.limit! }, writer.uint32(26).fork()).ldelim();
     }
-    if (message.usernames !== undefined && message.usernames.length !== 0) {
-      for (const v of message.usernames) {
-        writer.uint32(34).string(v!);
-      }
+    for (const v of message.usernames) {
+      writer.uint32(34).string(v!);
     }
-    if (message.display_names !== undefined && message.display_names.length !== 0) {
-      for (const v of message.display_names) {
-        writer.uint32(42).string(v!);
-      }
+    for (const v of message.display_names) {
+      writer.uint32(42).string(v!);
     }
-    if (message.avatars !== undefined && message.avatars.length !== 0) {
-      for (const v of message.avatars) {
-        writer.uint32(50).string(v!);
-      }
+    for (const v of message.avatars) {
+      writer.uint32(50).string(v!);
     }
-    if (message.onlines !== undefined && message.onlines.length !== 0) {
-      writer.uint32(58).fork();
-      for (const v of message.onlines) {
-        writer.bool(v);
-      }
-      writer.ldelim();
+    writer.uint32(58).fork();
+    for (const v of message.onlines) {
+      writer.bool(v);
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -25103,7 +23710,7 @@ export const AllUsersAddChannelResponse = {
             break;
           }
 
-          message.user_ids!.push(reader.string());
+          message.user_ids.push(reader.string());
           continue;
         case 3:
           if (tag !== 26) {
@@ -25117,25 +23724,25 @@ export const AllUsersAddChannelResponse = {
             break;
           }
 
-          message.usernames!.push(reader.string());
+          message.usernames.push(reader.string());
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.display_names!.push(reader.string());
+          message.display_names.push(reader.string());
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.avatars!.push(reader.string());
+          message.avatars.push(reader.string());
           continue;
         case 7:
           if (tag === 56) {
-            message.onlines!.push(reader.bool());
+            message.onlines.push(reader.bool());
 
             continue;
           }
@@ -25143,7 +23750,7 @@ export const AllUsersAddChannelResponse = {
           if (tag === 58) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.onlines!.push(reader.bool());
+              message.onlines.push(reader.bool());
             }
 
             continue;
@@ -25177,7 +23784,7 @@ export const AllUsersAddChannelResponse = {
 
   toJSON(message: AllUsersAddChannelResponse): unknown {
     const obj: any = {};
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     if (message.user_ids?.length) {
@@ -25223,22 +23830,22 @@ function createBaseClanEmojiCreateRequest(): ClanEmojiCreateRequest {
 
 export const ClanEmojiCreateRequest = {
   encode(message: ClanEmojiCreateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.source !== undefined && message.source !== "") {
+    if (message.source !== "") {
       writer.uint32(18).string(message.source);
     }
-    if (message.shortname !== undefined && message.shortname !== "") {
+    if (message.shortname !== "") {
       writer.uint32(26).string(message.shortname);
     }
-    if (message.category !== undefined && message.category !== "") {
+    if (message.category !== "") {
       writer.uint32(34).string(message.category);
     }
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(42).string(message.id);
     }
-    if (message.is_for_sale !== undefined && message.is_for_sale !== false) {
+    if (message.is_for_sale !== false) {
       writer.uint32(48).bool(message.is_for_sale);
     }
     return writer;
@@ -25315,22 +23922,22 @@ export const ClanEmojiCreateRequest = {
 
   toJSON(message: ClanEmojiCreateRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.source !== undefined && message.source !== "") {
+    if (message.source !== "") {
       obj.source = message.source;
     }
-    if (message.shortname !== undefined && message.shortname !== "") {
+    if (message.shortname !== "") {
       obj.shortname = message.shortname;
     }
-    if (message.category !== undefined && message.category !== "") {
+    if (message.category !== "") {
       obj.category = message.category;
     }
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.is_for_sale !== undefined && message.is_for_sale !== false) {
+    if (message.is_for_sale !== false) {
       obj.is_for_sale = message.is_for_sale;
     }
     return obj;
@@ -25357,7 +23964,7 @@ function createBaseClanEmojiGetByClanIdRequest(): ClanEmojiGetByClanIdRequest {
 
 export const ClanEmojiGetByClanIdRequest = {
   encode(message: ClanEmojiGetByClanIdRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
     return writer;
@@ -25392,7 +23999,7 @@ export const ClanEmojiGetByClanIdRequest = {
 
   toJSON(message: ClanEmojiGetByClanIdRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -25414,13 +24021,13 @@ function createBaseClanEmojiDeleteRequest(): ClanEmojiDeleteRequest {
 
 export const ClanEmojiDeleteRequest = {
   encode(message: ClanEmojiDeleteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
-    if (message.emoji_label !== undefined && message.emoji_label !== "") {
+    if (message.emoji_label !== "") {
       writer.uint32(26).string(message.emoji_label);
     }
     return writer;
@@ -25473,13 +24080,13 @@ export const ClanEmojiDeleteRequest = {
 
   toJSON(message: ClanEmojiDeleteRequest): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.emoji_label !== undefined && message.emoji_label !== "") {
+    if (message.emoji_label !== "") {
       obj.emoji_label = message.emoji_label;
     }
     return obj;
@@ -25503,13 +24110,13 @@ function createBaseClanEmojiUpdateRequest(): ClanEmojiUpdateRequest {
 
 export const ClanEmojiUpdateRequest = {
   encode(message: ClanEmojiUpdateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.shortname !== undefined && message.shortname !== "") {
+    if (message.shortname !== "") {
       writer.uint32(18).string(message.shortname);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
     return writer;
@@ -25562,13 +24169,13 @@ export const ClanEmojiUpdateRequest = {
 
   toJSON(message: ClanEmojiUpdateRequest): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.shortname !== undefined && message.shortname !== "") {
+    if (message.shortname !== "") {
       obj.shortname = message.shortname;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -25604,37 +24211,37 @@ function createBaseWebhook(): Webhook {
 
 export const Webhook = {
   encode(message: Webhook, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.webhook_name !== undefined && message.webhook_name !== "") {
+    if (message.webhook_name !== "") {
       writer.uint32(18).string(message.webhook_name);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
     }
-    if (message.active !== undefined && message.active !== 0) {
+    if (message.active !== 0) {
       writer.uint32(32).int32(message.active);
     }
-    if (message.url !== undefined && message.url !== "") {
+    if (message.url !== "") {
       writer.uint32(42).string(message.url);
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       writer.uint32(50).string(message.creator_id);
     }
-    if (message.create_time !== undefined && message.create_time !== "") {
+    if (message.create_time !== "") {
       writer.uint32(58).string(message.create_time);
     }
-    if (message.update_time !== undefined && message.update_time !== "") {
+    if (message.update_time !== "") {
       writer.uint32(66).string(message.update_time);
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       writer.uint32(74).string(message.avatar);
     }
-    if (message.status !== undefined && message.status !== 0) {
+    if (message.status !== 0) {
       writer.uint32(80).int32(message.status);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(90).string(message.clan_id);
     }
     return writer;
@@ -25751,37 +24358,37 @@ export const Webhook = {
 
   toJSON(message: Webhook): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.webhook_name !== undefined && message.webhook_name !== "") {
+    if (message.webhook_name !== "") {
       obj.webhook_name = message.webhook_name;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.active !== undefined && message.active !== 0) {
+    if (message.active !== 0) {
       obj.active = Math.round(message.active);
     }
-    if (message.url !== undefined && message.url !== "") {
+    if (message.url !== "") {
       obj.url = message.url;
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.create_time !== undefined && message.create_time !== "") {
+    if (message.create_time !== "") {
       obj.create_time = message.create_time;
     }
-    if (message.update_time !== undefined && message.update_time !== "") {
+    if (message.update_time !== "") {
       obj.update_time = message.update_time;
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
-    if (message.status !== undefined && message.status !== 0) {
+    if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -25813,16 +24420,16 @@ function createBaseWebhookCreateRequest(): WebhookCreateRequest {
 
 export const WebhookCreateRequest = {
   encode(message: WebhookCreateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.webhook_name !== undefined && message.webhook_name !== "") {
+    if (message.webhook_name !== "") {
       writer.uint32(10).string(message.webhook_name);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       writer.uint32(26).string(message.avatar);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
     }
     return writer;
@@ -25883,16 +24490,16 @@ export const WebhookCreateRequest = {
 
   toJSON(message: WebhookCreateRequest): unknown {
     const obj: any = {};
-    if (message.webhook_name !== undefined && message.webhook_name !== "") {
+    if (message.webhook_name !== "") {
       obj.webhook_name = message.webhook_name;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -25917,7 +24524,7 @@ function createBaseWebhookListRequestById(): WebhookListRequestById {
 
 export const WebhookListRequestById = {
   encode(message: WebhookListRequestById, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
     return writer;
@@ -25952,7 +24559,7 @@ export const WebhookListRequestById = {
 
   toJSON(message: WebhookListRequestById): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
     return obj;
@@ -25974,22 +24581,22 @@ function createBaseWebhookUpdateRequestById(): WebhookUpdateRequestById {
 
 export const WebhookUpdateRequestById = {
   encode(message: WebhookUpdateRequestById, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.webhook_name !== undefined && message.webhook_name !== "") {
+    if (message.webhook_name !== "") {
       writer.uint32(18).string(message.webhook_name);
     }
-    if (message.channel_id_update !== undefined && message.channel_id_update !== "") {
+    if (message.channel_id_update !== "") {
       writer.uint32(26).string(message.channel_id_update);
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       writer.uint32(34).string(message.avatar);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(42).string(message.channel_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(50).string(message.clan_id);
     }
     return writer;
@@ -26066,22 +24673,22 @@ export const WebhookUpdateRequestById = {
 
   toJSON(message: WebhookUpdateRequestById): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.webhook_name !== undefined && message.webhook_name !== "") {
+    if (message.webhook_name !== "") {
       obj.webhook_name = message.webhook_name;
     }
-    if (message.channel_id_update !== undefined && message.channel_id_update !== "") {
+    if (message.channel_id_update !== "") {
       obj.channel_id_update = message.channel_id_update;
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -26108,13 +24715,13 @@ function createBaseWebhookDeleteRequestById(): WebhookDeleteRequestById {
 
 export const WebhookDeleteRequestById = {
   encode(message: WebhookDeleteRequestById, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
     }
     return writer;
@@ -26167,13 +24774,13 @@ export const WebhookDeleteRequestById = {
 
   toJSON(message: WebhookDeleteRequestById): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -26197,10 +24804,10 @@ function createBaseWebhookListRequest(): WebhookListRequest {
 
 export const WebhookListRequest = {
   encode(message: WebhookListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
     return writer;
@@ -26245,10 +24852,10 @@ export const WebhookListRequest = {
 
   toJSON(message: WebhookListRequest): unknown {
     const obj: any = {};
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -26271,10 +24878,8 @@ function createBaseWebhookListResponse(): WebhookListResponse {
 
 export const WebhookListResponse = {
   encode(message: WebhookListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.webhooks !== undefined && message.webhooks.length !== 0) {
-      for (const v of message.webhooks) {
-        Webhook.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.webhooks) {
+      Webhook.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -26291,7 +24896,7 @@ export const WebhookListResponse = {
             break;
           }
 
-          message.webhooks!.push(Webhook.decode(reader, reader.uint32()));
+          message.webhooks.push(Webhook.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -26332,16 +24937,16 @@ function createBaseWebhookGenerateResponse(): WebhookGenerateResponse {
 
 export const WebhookGenerateResponse = {
   encode(message: WebhookGenerateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.url !== undefined && message.url !== "") {
+    if (message.url !== "") {
       writer.uint32(10).string(message.url);
     }
-    if (message.hook_name !== undefined && message.hook_name !== "") {
+    if (message.hook_name !== "") {
       writer.uint32(18).string(message.hook_name);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       writer.uint32(34).string(message.avatar);
     }
     return writer;
@@ -26402,16 +25007,16 @@ export const WebhookGenerateResponse = {
 
   toJSON(message: WebhookGenerateResponse): unknown {
     const obj: any = {};
-    if (message.url !== undefined && message.url !== "") {
+    if (message.url !== "") {
       obj.url = message.url;
     }
-    if (message.hook_name !== undefined && message.hook_name !== "") {
+    if (message.hook_name !== "") {
       obj.hook_name = message.hook_name;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
     return obj;
@@ -26439,10 +25044,10 @@ export const WebhookHandlerRequest = {
     if (message.body !== undefined) {
       Struct.encode(Struct.wrap(message.body), writer.uint32(10).fork()).ldelim();
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       writer.uint32(26).string(message.token);
     }
     return writer;
@@ -26498,10 +25103,10 @@ export const WebhookHandlerRequest = {
     if (message.body !== undefined) {
       obj.body = message.body;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       obj.token = message.token;
     }
     return obj;
@@ -26525,7 +25130,7 @@ function createBaseCheckDuplicateClanNameRequest(): CheckDuplicateClanNameReques
 
 export const CheckDuplicateClanNameRequest = {
   encode(message: CheckDuplicateClanNameRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_name !== undefined && message.clan_name !== "") {
+    if (message.clan_name !== "") {
       writer.uint32(10).string(message.clan_name);
     }
     return writer;
@@ -26560,7 +25165,7 @@ export const CheckDuplicateClanNameRequest = {
 
   toJSON(message: CheckDuplicateClanNameRequest): unknown {
     const obj: any = {};
-    if (message.clan_name !== undefined && message.clan_name !== "") {
+    if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
     return obj;
@@ -26584,7 +25189,7 @@ function createBaseCheckDuplicateClanNameResponse(): CheckDuplicateClanNameRespo
 
 export const CheckDuplicateClanNameResponse = {
   encode(message: CheckDuplicateClanNameResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.is_duplicate !== undefined && message.is_duplicate !== false) {
+    if (message.is_duplicate !== false) {
       writer.uint32(8).bool(message.is_duplicate);
     }
     return writer;
@@ -26619,7 +25224,7 @@ export const CheckDuplicateClanNameResponse = {
 
   toJSON(message: CheckDuplicateClanNameResponse): unknown {
     const obj: any = {};
-    if (message.is_duplicate !== undefined && message.is_duplicate !== false) {
+    if (message.is_duplicate !== false) {
       obj.is_duplicate = message.is_duplicate;
     }
     return obj;
@@ -26643,25 +25248,25 @@ function createBaseClanStickerAddRequest(): ClanStickerAddRequest {
 
 export const ClanStickerAddRequest = {
   encode(message: ClanStickerAddRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.source !== undefined && message.source !== "") {
+    if (message.source !== "") {
       writer.uint32(10).string(message.source);
     }
-    if (message.shortname !== undefined && message.shortname !== "") {
+    if (message.shortname !== "") {
       writer.uint32(18).string(message.shortname);
     }
-    if (message.category !== undefined && message.category !== "") {
+    if (message.category !== "") {
       writer.uint32(26).string(message.category);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
     }
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(42).string(message.id);
     }
-    if (message.media_type !== undefined && message.media_type !== 0) {
+    if (message.media_type !== 0) {
       writer.uint32(48).int32(message.media_type);
     }
-    if (message.is_for_sale !== undefined && message.is_for_sale !== false) {
+    if (message.is_for_sale !== false) {
       writer.uint32(56).bool(message.is_for_sale);
     }
     return writer;
@@ -26746,25 +25351,25 @@ export const ClanStickerAddRequest = {
 
   toJSON(message: ClanStickerAddRequest): unknown {
     const obj: any = {};
-    if (message.source !== undefined && message.source !== "") {
+    if (message.source !== "") {
       obj.source = message.source;
     }
-    if (message.shortname !== undefined && message.shortname !== "") {
+    if (message.shortname !== "") {
       obj.shortname = message.shortname;
     }
-    if (message.category !== undefined && message.category !== "") {
+    if (message.category !== "") {
       obj.category = message.category;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.media_type !== undefined && message.media_type !== 0) {
+    if (message.media_type !== 0) {
       obj.media_type = Math.round(message.media_type);
     }
-    if (message.is_for_sale !== undefined && message.is_for_sale !== false) {
+    if (message.is_for_sale !== false) {
       obj.is_for_sale = message.is_for_sale;
     }
     return obj;
@@ -26792,7 +25397,7 @@ function createBaseClanStickerListByClanIdRequest(): ClanStickerListByClanIdRequ
 
 export const ClanStickerListByClanIdRequest = {
   encode(message: ClanStickerListByClanIdRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
     return writer;
@@ -26827,7 +25432,7 @@ export const ClanStickerListByClanIdRequest = {
 
   toJSON(message: ClanStickerListByClanIdRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -26851,19 +25456,19 @@ function createBaseClanStickerUpdateByIdRequest(): ClanStickerUpdateByIdRequest 
 
 export const ClanStickerUpdateByIdRequest = {
   encode(message: ClanStickerUpdateByIdRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.source !== undefined && message.source !== "") {
+    if (message.source !== "") {
       writer.uint32(18).string(message.source);
     }
-    if (message.shortname !== undefined && message.shortname !== "") {
+    if (message.shortname !== "") {
       writer.uint32(26).string(message.shortname);
     }
-    if (message.category !== undefined && message.category !== "") {
+    if (message.category !== "") {
       writer.uint32(34).string(message.category);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(42).string(message.clan_id);
     }
     return writer;
@@ -26932,19 +25537,19 @@ export const ClanStickerUpdateByIdRequest = {
 
   toJSON(message: ClanStickerUpdateByIdRequest): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.source !== undefined && message.source !== "") {
+    if (message.source !== "") {
       obj.source = message.source;
     }
-    if (message.shortname !== undefined && message.shortname !== "") {
+    if (message.shortname !== "") {
       obj.shortname = message.shortname;
     }
-    if (message.category !== undefined && message.category !== "") {
+    if (message.category !== "") {
       obj.category = message.category;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -26970,13 +25575,13 @@ function createBaseClanStickerDeleteRequest(): ClanStickerDeleteRequest {
 
 export const ClanStickerDeleteRequest = {
   encode(message: ClanStickerDeleteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
-    if (message.sticker_label !== undefined && message.sticker_label !== "") {
+    if (message.sticker_label !== "") {
       writer.uint32(26).string(message.sticker_label);
     }
     return writer;
@@ -27029,13 +25634,13 @@ export const ClanStickerDeleteRequest = {
 
   toJSON(message: ClanStickerDeleteRequest): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.sticker_label !== undefined && message.sticker_label !== "") {
+    if (message.sticker_label !== "") {
       obj.sticker_label = message.sticker_label;
     }
     return obj;
@@ -27059,13 +25664,13 @@ function createBaseChangeChannelCategoryRequest(): ChangeChannelCategoryRequest 
 
 export const ChangeChannelCategoryRequest = {
   encode(message: ChangeChannelCategoryRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.new_category_id !== undefined && message.new_category_id !== "") {
+    if (message.new_category_id !== "") {
       writer.uint32(26).string(message.new_category_id);
     }
     return writer;
@@ -27118,13 +25723,13 @@ export const ChangeChannelCategoryRequest = {
 
   toJSON(message: ChangeChannelCategoryRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.new_category_id !== undefined && message.new_category_id !== "") {
+    if (message.new_category_id !== "") {
       obj.new_category_id = message.new_category_id;
     }
     return obj;
@@ -27159,34 +25764,34 @@ function createBaseApp(): App {
 
 export const App = {
   encode(message: App, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.appname !== undefined && message.appname !== "") {
+    if (message.appname !== "") {
       writer.uint32(18).string(message.appname);
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       writer.uint32(26).string(message.creator_id);
     }
-    if (message.applogo !== undefined && message.applogo !== "") {
+    if (message.applogo !== "") {
       writer.uint32(34).string(message.applogo);
     }
-    if (message.is_shadow !== undefined && message.is_shadow !== false) {
+    if (message.is_shadow !== false) {
       writer.uint32(40).bool(message.is_shadow);
     }
     if (message.disable_time !== undefined) {
       Timestamp.encode(toTimestamp(message.disable_time), writer.uint32(50).fork()).ldelim();
     }
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       writer.uint32(58).string(message.token);
     }
-    if (message.role !== undefined && message.role !== 0) {
+    if (message.role !== 0) {
       writer.uint32(64).int32(message.role);
     }
-    if (message.about !== undefined && message.about !== "") {
+    if (message.about !== "") {
       writer.uint32(74).string(message.about);
     }
-    if (message.app_url !== undefined && message.app_url !== "") {
+    if (message.app_url !== "") {
       writer.uint32(82).string(message.app_url);
     }
     return writer;
@@ -27295,34 +25900,34 @@ export const App = {
 
   toJSON(message: App): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.appname !== undefined && message.appname !== "") {
+    if (message.appname !== "") {
       obj.appname = message.appname;
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.applogo !== undefined && message.applogo !== "") {
+    if (message.applogo !== "") {
       obj.applogo = message.applogo;
     }
-    if (message.is_shadow !== undefined && message.is_shadow !== false) {
+    if (message.is_shadow !== false) {
       obj.is_shadow = message.is_shadow;
     }
     if (message.disable_time !== undefined) {
       obj.disable_time = message.disable_time.toISOString();
     }
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       obj.token = message.token;
     }
-    if (message.role !== undefined && message.role !== 0) {
+    if (message.role !== 0) {
       obj.role = Math.round(message.role);
     }
-    if (message.about !== undefined && message.about !== "") {
+    if (message.about !== "") {
       obj.about = message.about;
     }
-    if (message.app_url !== undefined && message.app_url !== "") {
+    if (message.app_url !== "") {
       obj.app_url = message.app_url;
     }
     return obj;
@@ -27353,7 +25958,7 @@ function createBaseAppDeleteRequest(): AppDeleteRequest {
 
 export const AppDeleteRequest = {
   encode(message: AppDeleteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
     if (message.record_deletion !== undefined) {
@@ -27401,7 +26006,7 @@ export const AppDeleteRequest = {
 
   toJSON(message: AppDeleteRequest): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
     if (message.record_deletion !== undefined) {
@@ -27427,15 +26032,13 @@ function createBaseAppList(): AppList {
 
 export const AppList = {
   encode(message: AppList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.apps !== undefined && message.apps.length !== 0) {
-      for (const v of message.apps) {
-        App.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.apps) {
+      App.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if (message.total_count !== undefined && message.total_count !== 0) {
+    if (message.total_count !== 0) {
       writer.uint32(16).int32(message.total_count);
     }
-    if (message.next_cursor !== undefined && message.next_cursor !== "") {
+    if (message.next_cursor !== "") {
       writer.uint32(26).string(message.next_cursor);
     }
     return writer;
@@ -27453,7 +26056,7 @@ export const AppList = {
             break;
           }
 
-          message.apps!.push(App.decode(reader, reader.uint32()));
+          message.apps.push(App.decode(reader, reader.uint32()));
           continue;
         case 2:
           if (tag !== 16) {
@@ -27491,10 +26094,10 @@ export const AppList = {
     if (message.apps?.length) {
       obj.apps = message.apps.map((e) => App.toJSON(e));
     }
-    if (message.total_count !== undefined && message.total_count !== 0) {
+    if (message.total_count !== 0) {
       obj.total_count = Math.round(message.total_count);
     }
-    if (message.next_cursor !== undefined && message.next_cursor !== "") {
+    if (message.next_cursor !== "") {
       obj.next_cursor = message.next_cursor;
     }
     return obj;
@@ -27518,28 +26121,28 @@ function createBaseAddAppRequest(): AddAppRequest {
 
 export const AddAppRequest = {
   encode(message: AddAppRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.appname !== undefined && message.appname !== "") {
+    if (message.appname !== "") {
       writer.uint32(10).string(message.appname);
     }
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       writer.uint32(18).string(message.token);
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       writer.uint32(26).string(message.creator_id);
     }
-    if (message.role !== undefined && message.role !== 0) {
+    if (message.role !== 0) {
       writer.uint32(32).int32(message.role);
     }
-    if (message.is_shadow !== undefined && message.is_shadow !== false) {
+    if (message.is_shadow !== false) {
       writer.uint32(40).bool(message.is_shadow);
     }
-    if (message.app_url !== undefined && message.app_url !== "") {
+    if (message.app_url !== "") {
       writer.uint32(50).string(message.app_url);
     }
-    if (message.app_logo !== undefined && message.app_logo !== "") {
+    if (message.app_logo !== "") {
       writer.uint32(58).string(message.app_logo);
     }
-    if (message.about_me !== undefined && message.about_me !== "") {
+    if (message.about_me !== "") {
       writer.uint32(66).string(message.about_me);
     }
     return writer;
@@ -27632,28 +26235,28 @@ export const AddAppRequest = {
 
   toJSON(message: AddAppRequest): unknown {
     const obj: any = {};
-    if (message.appname !== undefined && message.appname !== "") {
+    if (message.appname !== "") {
       obj.appname = message.appname;
     }
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       obj.token = message.token;
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.role !== undefined && message.role !== 0) {
+    if (message.role !== 0) {
       obj.role = Math.round(message.role);
     }
-    if (message.is_shadow !== undefined && message.is_shadow !== false) {
+    if (message.is_shadow !== false) {
       obj.is_shadow = message.is_shadow;
     }
-    if (message.app_url !== undefined && message.app_url !== "") {
+    if (message.app_url !== "") {
       obj.app_url = message.app_url;
     }
-    if (message.app_logo !== undefined && message.app_logo !== "") {
+    if (message.app_logo !== "") {
       obj.app_logo = message.app_logo;
     }
-    if (message.about_me !== undefined && message.about_me !== "") {
+    if (message.about_me !== "") {
       obj.about_me = message.about_me;
     }
     return obj;
@@ -27682,13 +26285,13 @@ function createBaseListAppsRequest(): ListAppsRequest {
 
 export const ListAppsRequest = {
   encode(message: ListAppsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.filter !== undefined && message.filter !== "") {
+    if (message.filter !== "") {
       writer.uint32(10).string(message.filter);
     }
-    if (message.tombstones !== undefined && message.tombstones !== false) {
+    if (message.tombstones !== false) {
       writer.uint32(16).bool(message.tombstones);
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       writer.uint32(26).string(message.cursor);
     }
     return writer;
@@ -27741,13 +26344,13 @@ export const ListAppsRequest = {
 
   toJSON(message: ListAppsRequest): unknown {
     const obj: any = {};
-    if (message.filter !== undefined && message.filter !== "") {
+    if (message.filter !== "") {
       obj.filter = message.filter;
     }
-    if (message.tombstones !== undefined && message.tombstones !== false) {
+    if (message.tombstones !== false) {
       obj.tombstones = message.tombstones;
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
     return obj;
@@ -27780,7 +26383,7 @@ function createBaseUpdateAppRequest(): UpdateAppRequest {
 
 export const UpdateAppRequest = {
   encode(message: UpdateAppRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
     if (message.appname !== undefined) {
@@ -27795,13 +26398,13 @@ export const UpdateAppRequest = {
     if (message.token !== undefined) {
       StringValue.encode({ value: message.token! }, writer.uint32(42).fork()).ldelim();
     }
-    if (message.about !== undefined && message.about !== "") {
+    if (message.about !== "") {
       writer.uint32(50).string(message.about);
     }
-    if (message.app_url !== undefined && message.app_url !== "") {
+    if (message.app_url !== "") {
       writer.uint32(58).string(message.app_url);
     }
-    if (message.is_shadow !== undefined && message.is_shadow !== "") {
+    if (message.is_shadow !== "") {
       writer.uint32(74).string(message.is_shadow);
     }
     return writer;
@@ -27894,7 +26497,7 @@ export const UpdateAppRequest = {
 
   toJSON(message: UpdateAppRequest): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
     if (message.appname !== undefined) {
@@ -27909,13 +26512,13 @@ export const UpdateAppRequest = {
     if (message.token !== undefined) {
       obj.token = message.token;
     }
-    if (message.about !== undefined && message.about !== "") {
+    if (message.about !== "") {
       obj.about = message.about;
     }
-    if (message.app_url !== undefined && message.app_url !== "") {
+    if (message.app_url !== "") {
       obj.app_url = message.app_url;
     }
-    if (message.is_shadow !== undefined && message.is_shadow !== "") {
+    if (message.is_shadow !== "") {
       obj.is_shadow = message.is_shadow;
     }
     return obj;
@@ -27944,7 +26547,7 @@ function createBaseAppId(): AppId {
 
 export const AppId = {
   encode(message: AppId, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
     return writer;
@@ -27979,7 +26582,7 @@ export const AppId = {
 
   toJSON(message: AppId): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
     return obj;
@@ -28001,10 +26604,10 @@ function createBaseAppClan(): AppClan {
 
 export const AppClan = {
   encode(message: AppClan, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.app_id !== undefined && message.app_id !== "") {
+    if (message.app_id !== "") {
       writer.uint32(10).string(message.app_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
     return writer;
@@ -28049,10 +26652,10 @@ export const AppClan = {
 
   toJSON(message: AppClan): unknown {
     const obj: any = {};
-    if (message.app_id !== undefined && message.app_id !== "") {
+    if (message.app_id !== "") {
       obj.app_id = message.app_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -28078,10 +26681,8 @@ export const DeleteChannelMessagesRequest = {
     if (message.before !== undefined) {
       Timestamp.encode(toTimestamp(message.before), writer.uint32(10).fork()).ldelim();
     }
-    if (message.ids !== undefined && message.ids.length !== 0) {
-      for (const v of message.ids) {
-        writer.uint32(18).string(v!);
-      }
+    for (const v of message.ids) {
+      writer.uint32(18).string(v!);
     }
     return writer;
   },
@@ -28105,7 +26706,7 @@ export const DeleteChannelMessagesRequest = {
             break;
           }
 
-          message.ids!.push(reader.string());
+          message.ids.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -28151,7 +26752,7 @@ function createBaseDeleteChannelMessagesResponse(): DeleteChannelMessagesRespons
 
 export const DeleteChannelMessagesResponse = {
   encode(message: DeleteChannelMessagesResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.total !== undefined && message.total !== 0) {
+    if (message.total !== 0) {
       writer.uint32(8).int64(message.total);
     }
     return writer;
@@ -28186,7 +26787,7 @@ export const DeleteChannelMessagesResponse = {
 
   toJSON(message: DeleteChannelMessagesResponse): unknown {
     const obj: any = {};
-    if (message.total !== undefined && message.total !== 0) {
+    if (message.total !== 0) {
       obj.total = Math.round(message.total);
     }
     return obj;
@@ -28219,28 +26820,28 @@ function createBaseSystemMessage(): SystemMessage {
 
 export const SystemMessage = {
   encode(message: SystemMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
     }
-    if (message.welcome_random !== undefined && message.welcome_random !== "") {
+    if (message.welcome_random !== "") {
       writer.uint32(34).string(message.welcome_random);
     }
-    if (message.welcome_sticker !== undefined && message.welcome_sticker !== "") {
+    if (message.welcome_sticker !== "") {
       writer.uint32(42).string(message.welcome_sticker);
     }
-    if (message.boost_message !== undefined && message.boost_message !== "") {
+    if (message.boost_message !== "") {
       writer.uint32(50).string(message.boost_message);
     }
-    if (message.setup_tips !== undefined && message.setup_tips !== "") {
+    if (message.setup_tips !== "") {
       writer.uint32(58).string(message.setup_tips);
     }
-    if (message.hide_audit_log !== undefined && message.hide_audit_log !== "") {
+    if (message.hide_audit_log !== "") {
       writer.uint32(66).string(message.hide_audit_log);
     }
     return writer;
@@ -28333,28 +26934,28 @@ export const SystemMessage = {
 
   toJSON(message: SystemMessage): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.welcome_random !== undefined && message.welcome_random !== "") {
+    if (message.welcome_random !== "") {
       obj.welcome_random = message.welcome_random;
     }
-    if (message.welcome_sticker !== undefined && message.welcome_sticker !== "") {
+    if (message.welcome_sticker !== "") {
       obj.welcome_sticker = message.welcome_sticker;
     }
-    if (message.boost_message !== undefined && message.boost_message !== "") {
+    if (message.boost_message !== "") {
       obj.boost_message = message.boost_message;
     }
-    if (message.setup_tips !== undefined && message.setup_tips !== "") {
+    if (message.setup_tips !== "") {
       obj.setup_tips = message.setup_tips;
     }
-    if (message.hide_audit_log !== undefined && message.hide_audit_log !== "") {
+    if (message.hide_audit_log !== "") {
       obj.hide_audit_log = message.hide_audit_log;
     }
     return obj;
@@ -28383,10 +26984,8 @@ function createBaseSystemMessagesList(): SystemMessagesList {
 
 export const SystemMessagesList = {
   encode(message: SystemMessagesList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.system_messages_list !== undefined && message.system_messages_list.length !== 0) {
-      for (const v of message.system_messages_list) {
-        SystemMessage.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.system_messages_list) {
+      SystemMessage.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -28403,7 +27002,7 @@ export const SystemMessagesList = {
             break;
           }
 
-          message.system_messages_list!.push(SystemMessage.decode(reader, reader.uint32()));
+          message.system_messages_list.push(SystemMessage.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -28454,25 +27053,25 @@ function createBaseSystemMessageRequest(): SystemMessageRequest {
 
 export const SystemMessageRequest = {
   encode(message: SystemMessageRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.welcome_random !== undefined && message.welcome_random !== "") {
+    if (message.welcome_random !== "") {
       writer.uint32(26).string(message.welcome_random);
     }
-    if (message.welcome_sticker !== undefined && message.welcome_sticker !== "") {
+    if (message.welcome_sticker !== "") {
       writer.uint32(34).string(message.welcome_sticker);
     }
-    if (message.boost_message !== undefined && message.boost_message !== "") {
+    if (message.boost_message !== "") {
       writer.uint32(42).string(message.boost_message);
     }
-    if (message.setup_tips !== undefined && message.setup_tips !== "") {
+    if (message.setup_tips !== "") {
       writer.uint32(50).string(message.setup_tips);
     }
-    if (message.hide_audit_log !== undefined && message.hide_audit_log !== "") {
+    if (message.hide_audit_log !== "") {
       writer.uint32(58).string(message.hide_audit_log);
     }
     return writer;
@@ -28557,25 +27156,25 @@ export const SystemMessageRequest = {
 
   toJSON(message: SystemMessageRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.welcome_random !== undefined && message.welcome_random !== "") {
+    if (message.welcome_random !== "") {
       obj.welcome_random = message.welcome_random;
     }
-    if (message.welcome_sticker !== undefined && message.welcome_sticker !== "") {
+    if (message.welcome_sticker !== "") {
       obj.welcome_sticker = message.welcome_sticker;
     }
-    if (message.boost_message !== undefined && message.boost_message !== "") {
+    if (message.boost_message !== "") {
       obj.boost_message = message.boost_message;
     }
-    if (message.setup_tips !== undefined && message.setup_tips !== "") {
+    if (message.setup_tips !== "") {
       obj.setup_tips = message.setup_tips;
     }
-    if (message.hide_audit_log !== undefined && message.hide_audit_log !== "") {
+    if (message.hide_audit_log !== "") {
       obj.hide_audit_log = message.hide_audit_log;
     }
     return obj;
@@ -28603,7 +27202,7 @@ function createBaseDeleteSystemMessage(): DeleteSystemMessage {
 
 export const DeleteSystemMessage = {
   encode(message: DeleteSystemMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
     return writer;
@@ -28638,7 +27237,7 @@ export const DeleteSystemMessage = {
 
   toJSON(message: DeleteSystemMessage): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -28660,7 +27259,7 @@ function createBaseGetSystemMessage(): GetSystemMessage {
 
 export const GetSystemMessage = {
   encode(message: GetSystemMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
     return writer;
@@ -28695,7 +27294,7 @@ export const GetSystemMessage = {
 
   toJSON(message: GetSystemMessage): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -28717,7 +27316,7 @@ function createBaseDeleteCategoryOrderRequest(): DeleteCategoryOrderRequest {
 
 export const DeleteCategoryOrderRequest = {
   encode(message: DeleteCategoryOrderRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
     return writer;
@@ -28752,7 +27351,7 @@ export const DeleteCategoryOrderRequest = {
 
   toJSON(message: DeleteCategoryOrderRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -28774,28 +27373,28 @@ function createBaseStreamHttpCallbackRequest(): StreamHttpCallbackRequest {
 
 export const StreamHttpCallbackRequest = {
   encode(message: StreamHttpCallbackRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.client_id !== undefined && message.client_id !== "") {
+    if (message.client_id !== "") {
       writer.uint32(18).string(message.client_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(34).string(message.channel_id);
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       writer.uint32(42).string(message.user_id);
     }
-    if (message.action !== undefined && message.action !== 0) {
+    if (message.action !== 0) {
       writer.uint32(48).int32(message.action);
     }
-    if (message.is_publisher !== undefined && message.is_publisher !== false) {
+    if (message.is_publisher !== false) {
       writer.uint32(56).bool(message.is_publisher);
     }
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       writer.uint32(66).string(message.token);
     }
     return writer;
@@ -28888,28 +27487,28 @@ export const StreamHttpCallbackRequest = {
 
   toJSON(message: StreamHttpCallbackRequest): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.client_id !== undefined && message.client_id !== "") {
+    if (message.client_id !== "") {
       obj.client_id = message.client_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.action !== undefined && message.action !== 0) {
+    if (message.action !== 0) {
       obj.action = Math.round(message.action);
     }
-    if (message.is_publisher !== undefined && message.is_publisher !== false) {
+    if (message.is_publisher !== false) {
       obj.is_publisher = message.is_publisher;
     }
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       obj.token = message.token;
     }
     return obj;
@@ -28941,7 +27540,7 @@ export const StreamHttpCallbackResponse = {
     if (message.code !== undefined) {
       Int32Value.encode({ value: message.code! }, writer.uint32(10).fork()).ldelim();
     }
-    if (message.msg !== undefined && message.msg !== "") {
+    if (message.msg !== "") {
       writer.uint32(18).string(message.msg);
     }
     return writer;
@@ -28989,7 +27588,7 @@ export const StreamHttpCallbackResponse = {
     if (message.code !== undefined) {
       obj.code = message.code;
     }
-    if (message.msg !== undefined && message.msg !== "") {
+    if (message.msg !== "") {
       obj.msg = message.msg;
     }
     return obj;
@@ -29012,16 +27611,16 @@ function createBaseStreamingChannelUser(): StreamingChannelUser {
 
 export const StreamingChannelUser = {
   encode(message: StreamingChannelUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       writer.uint32(18).string(message.user_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
     }
-    if (message.participant !== undefined && message.participant !== "") {
+    if (message.participant !== "") {
       writer.uint32(34).string(message.participant);
     }
     return writer;
@@ -29082,16 +27681,16 @@ export const StreamingChannelUser = {
 
   toJSON(message: StreamingChannelUser): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.participant !== undefined && message.participant !== "") {
+    if (message.participant !== "") {
       obj.participant = message.participant;
     }
     return obj;
@@ -29116,10 +27715,8 @@ function createBaseStreamingChannelUserList(): StreamingChannelUserList {
 
 export const StreamingChannelUserList = {
   encode(message: StreamingChannelUserList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.streaming_channel_users !== undefined && message.streaming_channel_users.length !== 0) {
-      for (const v of message.streaming_channel_users) {
-        StreamingChannelUser.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.streaming_channel_users) {
+      StreamingChannelUser.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -29136,7 +27733,7 @@ export const StreamingChannelUserList = {
             break;
           }
 
-          message.streaming_channel_users!.push(StreamingChannelUser.decode(reader, reader.uint32()));
+          message.streaming_channel_users.push(StreamingChannelUser.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -29180,10 +27777,10 @@ function createBaseRegisterStreamingChannelRequest(): RegisterStreamingChannelRe
 
 export const RegisterStreamingChannelRequest = {
   encode(message: RegisterStreamingChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
     return writer;
@@ -29228,10 +27825,10 @@ export const RegisterStreamingChannelRequest = {
 
   toJSON(message: RegisterStreamingChannelRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -29256,13 +27853,13 @@ function createBaseRegisterStreamingChannelResponse(): RegisterStreamingChannelR
 
 export const RegisterStreamingChannelResponse = {
   encode(message: RegisterStreamingChannelResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.streaming_url !== undefined && message.streaming_url !== "") {
+    if (message.streaming_url !== "") {
       writer.uint32(26).string(message.streaming_url);
     }
     return writer;
@@ -29315,13 +27912,13 @@ export const RegisterStreamingChannelResponse = {
 
   toJSON(message: RegisterStreamingChannelResponse): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.streaming_url !== undefined && message.streaming_url !== "") {
+    if (message.streaming_url !== "") {
       obj.streaming_url = message.streaming_url;
     }
     return obj;
@@ -29349,22 +27946,22 @@ function createBaseGiveCoffeeEvent(): GiveCoffeeEvent {
 
 export const GiveCoffeeEvent = {
   encode(message: GiveCoffeeEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.sender_id !== undefined && message.sender_id !== "") {
+    if (message.sender_id !== "") {
       writer.uint32(10).string(message.sender_id);
     }
-    if (message.receiver_id !== undefined && message.receiver_id !== "") {
+    if (message.receiver_id !== "") {
       writer.uint32(18).string(message.receiver_id);
     }
-    if (message.token_count !== undefined && message.token_count !== 0) {
+    if (message.token_count !== 0) {
       writer.uint32(24).int32(message.token_count);
     }
-    if (message.message_ref_id !== undefined && message.message_ref_id !== "") {
+    if (message.message_ref_id !== "") {
       writer.uint32(34).string(message.message_ref_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(42).string(message.channel_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(50).string(message.clan_id);
     }
     return writer;
@@ -29441,22 +28038,22 @@ export const GiveCoffeeEvent = {
 
   toJSON(message: GiveCoffeeEvent): unknown {
     const obj: any = {};
-    if (message.sender_id !== undefined && message.sender_id !== "") {
+    if (message.sender_id !== "") {
       obj.sender_id = message.sender_id;
     }
-    if (message.receiver_id !== undefined && message.receiver_id !== "") {
+    if (message.receiver_id !== "") {
       obj.receiver_id = message.receiver_id;
     }
-    if (message.token_count !== undefined && message.token_count !== 0) {
+    if (message.token_count !== 0) {
       obj.token_count = Math.round(message.token_count);
     }
-    if (message.message_ref_id !== undefined && message.message_ref_id !== "") {
+    if (message.message_ref_id !== "") {
       obj.message_ref_id = message.message_ref_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -29483,7 +28080,7 @@ function createBaseListChannelAppsRequest(): ListChannelAppsRequest {
 
 export const ListChannelAppsRequest = {
   encode(message: ListChannelAppsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
     return writer;
@@ -29518,7 +28115,7 @@ export const ListChannelAppsRequest = {
 
   toJSON(message: ListChannelAppsRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -29540,10 +28137,8 @@ function createBaseListChannelAppsResponse(): ListChannelAppsResponse {
 
 export const ListChannelAppsResponse = {
   encode(message: ListChannelAppsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_apps !== undefined && message.channel_apps.length !== 0) {
-      for (const v of message.channel_apps) {
-        ChannelAppResponse.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.channel_apps) {
+      ChannelAppResponse.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -29560,7 +28155,7 @@ export const ListChannelAppsResponse = {
             break;
           }
 
-          message.channel_apps!.push(ChannelAppResponse.decode(reader, reader.uint32()));
+          message.channel_apps.push(ChannelAppResponse.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -29603,25 +28198,25 @@ function createBaseChannelAppResponse(): ChannelAppResponse {
 
 export const ChannelAppResponse = {
   encode(message: ChannelAppResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
     }
-    if (message.app_id !== undefined && message.app_id !== "") {
+    if (message.app_id !== "") {
       writer.uint32(34).string(message.app_id);
     }
-    if (message.app_url !== undefined && message.app_url !== "") {
+    if (message.app_url !== "") {
       writer.uint32(42).string(message.app_url);
     }
-    if (message.app_name !== undefined && message.app_name !== "") {
+    if (message.app_name !== "") {
       writer.uint32(50).string(message.app_name);
     }
-    if (message.app_logo !== undefined && message.app_logo !== "") {
+    if (message.app_logo !== "") {
       writer.uint32(58).string(message.app_logo);
     }
     return writer;
@@ -29706,25 +28301,25 @@ export const ChannelAppResponse = {
 
   toJSON(message: ChannelAppResponse): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.app_id !== undefined && message.app_id !== "") {
+    if (message.app_id !== "") {
       obj.app_id = message.app_id;
     }
-    if (message.app_url !== undefined && message.app_url !== "") {
+    if (message.app_url !== "") {
       obj.app_url = message.app_url;
     }
-    if (message.app_name !== undefined && message.app_name !== "") {
+    if (message.app_name !== "") {
       obj.app_name = message.app_name;
     }
-    if (message.app_logo !== undefined && message.app_logo !== "") {
+    if (message.app_logo !== "") {
       obj.app_logo = message.app_logo;
     }
     return obj;
@@ -29752,10 +28347,8 @@ function createBaseAllUserClans(): AllUserClans {
 
 export const AllUserClans = {
   encode(message: AllUserClans, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.users !== undefined && message.users.length !== 0) {
-      for (const v of message.users) {
-        User.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.users) {
+      User.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -29772,7 +28365,7 @@ export const AllUserClans = {
             break;
           }
 
-          message.users!.push(User.decode(reader, reader.uint32()));
+          message.users.push(User.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -29811,16 +28404,16 @@ function createBaseRoleListEventRequest(): RoleListEventRequest {
 
 export const RoleListEventRequest = {
   encode(message: RoleListEventRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.limit !== undefined && message.limit !== 0) {
+    if (message.limit !== 0) {
       writer.uint32(16).int32(message.limit);
     }
-    if (message.state !== undefined && message.state !== 0) {
+    if (message.state !== 0) {
       writer.uint32(24).int32(message.state);
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       writer.uint32(34).string(message.cursor);
     }
     return writer;
@@ -29881,16 +28474,16 @@ export const RoleListEventRequest = {
 
   toJSON(message: RoleListEventRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.limit !== undefined && message.limit !== 0) {
+    if (message.limit !== 0) {
       obj.limit = Math.round(message.limit);
     }
-    if (message.state !== undefined && message.state !== 0) {
+    if (message.state !== 0) {
       obj.state = Math.round(message.state);
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
     return obj;
@@ -29915,16 +28508,16 @@ function createBaseRoleListEventResponse(): RoleListEventResponse {
 
 export const RoleListEventResponse = {
   encode(message: RoleListEventResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.limit !== undefined && message.limit !== 0) {
+    if (message.limit !== 0) {
       writer.uint32(8).int32(message.limit);
     }
-    if (message.state !== undefined && message.state !== 0) {
+    if (message.state !== 0) {
       writer.uint32(16).int32(message.state);
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       writer.uint32(26).string(message.cursor);
     }
-    if (message.clanId !== undefined && message.clanId !== "") {
+    if (message.clanId !== "") {
       writer.uint32(34).string(message.clanId);
     }
     if (message.roles !== undefined) {
@@ -29996,16 +28589,16 @@ export const RoleListEventResponse = {
 
   toJSON(message: RoleListEventResponse): unknown {
     const obj: any = {};
-    if (message.limit !== undefined && message.limit !== 0) {
+    if (message.limit !== 0) {
       obj.limit = Math.round(message.limit);
     }
-    if (message.state !== undefined && message.state !== 0) {
+    if (message.state !== 0) {
       obj.state = Math.round(message.state);
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
-    if (message.clanId !== undefined && message.clanId !== "") {
+    if (message.clanId !== "") {
       obj.clanId = message.clanId;
     }
     if (message.roles !== undefined) {
@@ -30036,10 +28629,10 @@ function createBaseUserPermissionInChannelListRequest(): UserPermissionInChannel
 
 export const UserPermissionInChannelListRequest = {
   encode(message: UserPermissionInChannelListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
     return writer;
@@ -30084,10 +28677,10 @@ export const UserPermissionInChannelListRequest = {
 
   toJSON(message: UserPermissionInChannelListRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -30114,10 +28707,10 @@ function createBaseUserPermissionInChannelListResponse(): UserPermissionInChanne
 
 export const UserPermissionInChannelListResponse = {
   encode(message: UserPermissionInChannelListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
     if (message.permissions !== undefined) {
@@ -30173,10 +28766,10 @@ export const UserPermissionInChannelListResponse = {
 
   toJSON(message: UserPermissionInChannelListResponse): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     if (message.permissions !== undefined) {
@@ -30209,10 +28802,10 @@ function createBasePermissionRoleChannel(): PermissionRoleChannel {
 
 export const PermissionRoleChannel = {
   encode(message: PermissionRoleChannel, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.permission_id !== undefined && message.permission_id !== "") {
+    if (message.permission_id !== "") {
       writer.uint32(10).string(message.permission_id);
     }
-    if (message.active !== undefined && message.active !== false) {
+    if (message.active !== false) {
       writer.uint32(16).bool(message.active);
     }
     return writer;
@@ -30257,10 +28850,10 @@ export const PermissionRoleChannel = {
 
   toJSON(message: PermissionRoleChannel): unknown {
     const obj: any = {};
-    if (message.permission_id !== undefined && message.permission_id !== "") {
+    if (message.permission_id !== "") {
       obj.permission_id = message.permission_id;
     }
-    if (message.active !== undefined && message.active !== false) {
+    if (message.active !== false) {
       obj.active = message.active;
     }
     return obj;
@@ -30283,13 +28876,13 @@ function createBasePermissionRoleChannelListEventRequest(): PermissionRoleChanne
 
 export const PermissionRoleChannelListEventRequest = {
   encode(message: PermissionRoleChannelListEventRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.role_id !== undefined && message.role_id !== "") {
+    if (message.role_id !== "") {
       writer.uint32(10).string(message.role_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       writer.uint32(34).string(message.user_id);
     }
     return writer;
@@ -30342,13 +28935,13 @@ export const PermissionRoleChannelListEventRequest = {
 
   toJSON(message: PermissionRoleChannelListEventRequest): unknown {
     const obj: any = {};
-    if (message.role_id !== undefined && message.role_id !== "") {
+    if (message.role_id !== "") {
       obj.role_id = message.role_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
     return obj;
@@ -30376,19 +28969,17 @@ function createBasePermissionRoleChannelListEventResponse(): PermissionRoleChann
 
 export const PermissionRoleChannelListEventResponse = {
   encode(message: PermissionRoleChannelListEventResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.role_id !== undefined && message.role_id !== "") {
+    if (message.role_id !== "") {
       writer.uint32(10).string(message.role_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       writer.uint32(26).string(message.user_id);
     }
-    if (message.permission_role_channel !== undefined && message.permission_role_channel.length !== 0) {
-      for (const v of message.permission_role_channel) {
-        PermissionRoleChannel.encode(v!, writer.uint32(34).fork()).ldelim();
-      }
+    for (const v of message.permission_role_channel) {
+      PermissionRoleChannel.encode(v!, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -30426,7 +29017,7 @@ export const PermissionRoleChannelListEventResponse = {
             break;
           }
 
-          message.permission_role_channel!.push(PermissionRoleChannel.decode(reader, reader.uint32()));
+          message.permission_role_channel.push(PermissionRoleChannel.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -30450,13 +29041,13 @@ export const PermissionRoleChannelListEventResponse = {
 
   toJSON(message: PermissionRoleChannelListEventResponse): unknown {
     const obj: any = {};
-    if (message.role_id !== undefined && message.role_id !== "") {
+    if (message.role_id !== "") {
       obj.role_id = message.role_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
     if (message.permission_role_channel?.length) {
@@ -30500,13 +29091,13 @@ function createBaseChannelSettingListRequest(): ChannelSettingListRequest {
 
 export const ChannelSettingListRequest = {
   encode(message: ChannelSettingListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.parent_id !== undefined && message.parent_id !== "") {
+    if (message.parent_id !== "") {
       writer.uint32(18).string(message.parent_id);
     }
-    if (message.category_id !== undefined && message.category_id !== "") {
+    if (message.category_id !== "") {
       writer.uint32(26).string(message.category_id);
     }
     if (message.privateChannel !== undefined) {
@@ -30527,7 +29118,7 @@ export const ChannelSettingListRequest = {
     if (message.page !== undefined) {
       Int32Value.encode({ value: message.page! }, writer.uint32(74).fork()).ldelim();
     }
-    if (message.channel_label !== undefined && message.channel_label !== "") {
+    if (message.channel_label !== "") {
       writer.uint32(82).string(message.channel_label);
     }
     return writer;
@@ -30636,13 +29227,13 @@ export const ChannelSettingListRequest = {
 
   toJSON(message: ChannelSettingListRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.parent_id !== undefined && message.parent_id !== "") {
+    if (message.parent_id !== "") {
       obj.parent_id = message.parent_id;
     }
-    if (message.category_id !== undefined && message.category_id !== "") {
+    if (message.category_id !== "") {
       obj.category_id = message.category_id;
     }
     if (message.privateChannel !== undefined) {
@@ -30663,7 +29254,7 @@ export const ChannelSettingListRequest = {
     if (message.page !== undefined) {
       obj.page = message.page;
     }
-    if (message.channel_label !== undefined && message.channel_label !== "") {
+    if (message.channel_label !== "") {
       obj.channel_label = message.channel_label;
     }
     return obj;
@@ -30707,39 +29298,37 @@ function createBaseChannelSettingItem(): ChannelSettingItem {
 
 export const ChannelSettingItem = {
   encode(message: ChannelSettingItem, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       writer.uint32(18).string(message.creator_id);
     }
-    if (message.parent_id !== undefined && message.parent_id !== "") {
+    if (message.parent_id !== "") {
       writer.uint32(26).string(message.parent_id);
     }
-    if (message.channel_label !== undefined && message.channel_label !== "") {
+    if (message.channel_label !== "") {
       writer.uint32(34).string(message.channel_label);
     }
-    if (message.category_id !== undefined && message.category_id !== "") {
+    if (message.category_id !== "") {
       writer.uint32(42).string(message.category_id);
     }
-    if (message.meeting_code !== undefined && message.meeting_code !== "") {
+    if (message.meeting_code !== "") {
       writer.uint32(50).string(message.meeting_code);
     }
-    if (message.channel_private !== undefined && message.channel_private !== 0) {
+    if (message.channel_private !== 0) {
       writer.uint32(56).int32(message.channel_private);
     }
-    if (message.channel_type !== undefined && message.channel_type !== 0) {
+    if (message.channel_type !== 0) {
       writer.uint32(64).int32(message.channel_type);
     }
-    if (message.active !== undefined && message.active !== 0) {
+    if (message.active !== 0) {
       writer.uint32(72).int32(message.active);
     }
-    if (message.user_ids !== undefined && message.user_ids.length !== 0) {
-      for (const v of message.user_ids) {
-        writer.uint32(82).string(v!);
-      }
+    for (const v of message.user_ids) {
+      writer.uint32(82).string(v!);
     }
-    if (message.message_count !== undefined && message.message_count !== 0) {
+    if (message.message_count !== 0) {
       writer.uint32(88).int64(message.message_count);
     }
     if (message.last_sent_message !== undefined) {
@@ -30823,7 +29412,7 @@ export const ChannelSettingItem = {
             break;
           }
 
-          message.user_ids!.push(reader.string());
+          message.user_ids.push(reader.string());
           continue;
         case 11:
           if (tag !== 88) {
@@ -30869,37 +29458,37 @@ export const ChannelSettingItem = {
 
   toJSON(message: ChannelSettingItem): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.parent_id !== undefined && message.parent_id !== "") {
+    if (message.parent_id !== "") {
       obj.parent_id = message.parent_id;
     }
-    if (message.channel_label !== undefined && message.channel_label !== "") {
+    if (message.channel_label !== "") {
       obj.channel_label = message.channel_label;
     }
-    if (message.category_id !== undefined && message.category_id !== "") {
+    if (message.category_id !== "") {
       obj.category_id = message.category_id;
     }
-    if (message.meeting_code !== undefined && message.meeting_code !== "") {
+    if (message.meeting_code !== "") {
       obj.meeting_code = message.meeting_code;
     }
-    if (message.channel_private !== undefined && message.channel_private !== 0) {
+    if (message.channel_private !== 0) {
       obj.channel_private = Math.round(message.channel_private);
     }
-    if (message.channel_type !== undefined && message.channel_type !== 0) {
+    if (message.channel_type !== 0) {
       obj.channel_type = Math.round(message.channel_type);
     }
-    if (message.active !== undefined && message.active !== 0) {
+    if (message.active !== 0) {
       obj.active = Math.round(message.active);
     }
     if (message.user_ids?.length) {
       obj.user_ids = message.user_ids;
     }
-    if (message.message_count !== undefined && message.message_count !== 0) {
+    if (message.message_count !== 0) {
       obj.message_count = Math.round(message.message_count);
     }
     if (message.last_sent_message !== undefined) {
@@ -30937,19 +29526,17 @@ function createBaseChannelSettingListResponse(): ChannelSettingListResponse {
 
 export const ChannelSettingListResponse = {
   encode(message: ChannelSettingListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_count !== undefined && message.channel_count !== 0) {
+    if (message.channel_count !== 0) {
       writer.uint32(16).int32(message.channel_count);
     }
-    if (message.thread_count !== undefined && message.thread_count !== 0) {
+    if (message.thread_count !== 0) {
       writer.uint32(24).int32(message.thread_count);
     }
-    if (message.channel_setting_list !== undefined && message.channel_setting_list.length !== 0) {
-      for (const v of message.channel_setting_list) {
-        ChannelSettingItem.encode(v!, writer.uint32(34).fork()).ldelim();
-      }
+    for (const v of message.channel_setting_list) {
+      ChannelSettingItem.encode(v!, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -30987,7 +29574,7 @@ export const ChannelSettingListResponse = {
             break;
           }
 
-          message.channel_setting_list!.push(ChannelSettingItem.decode(reader, reader.uint32()));
+          message.channel_setting_list.push(ChannelSettingItem.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -31011,13 +29598,13 @@ export const ChannelSettingListResponse = {
 
   toJSON(message: ChannelSettingListResponse): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_count !== undefined && message.channel_count !== 0) {
+    if (message.channel_count !== 0) {
       obj.channel_count = Math.round(message.channel_count);
     }
-    if (message.thread_count !== undefined && message.thread_count !== 0) {
+    if (message.thread_count !== 0) {
       obj.thread_count = Math.round(message.thread_count);
     }
     if (message.channel_setting_list?.length) {
@@ -31045,13 +29632,13 @@ function createBaseMarkAsReadRequest(): MarkAsReadRequest {
 
 export const MarkAsReadRequest = {
   encode(message: MarkAsReadRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.category_id !== undefined && message.category_id !== "") {
+    if (message.category_id !== "") {
       writer.uint32(18).string(message.category_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
     return writer;
@@ -31104,13 +29691,13 @@ export const MarkAsReadRequest = {
 
   toJSON(message: MarkAsReadRequest): unknown {
     const obj: any = {};
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.category_id !== undefined && message.category_id !== "") {
+    if (message.category_id !== "") {
       obj.category_id = message.category_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -31137,22 +29724,22 @@ export const EditChannelCanvasRequest = {
     if (message.id !== undefined) {
       StringValue.encode({ value: message.id! }, writer.uint32(10).fork()).ldelim();
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       writer.uint32(34).string(message.title);
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       writer.uint32(42).string(message.content);
     }
-    if (message.is_default !== undefined && message.is_default !== false) {
+    if (message.is_default !== false) {
       writer.uint32(48).bool(message.is_default);
     }
-    if (message.status !== undefined && message.status !== 0) {
+    if (message.status !== 0) {
       writer.uint32(56).int32(message.status);
     }
     return writer;
@@ -31240,22 +29827,22 @@ export const EditChannelCanvasRequest = {
     if (message.id !== undefined) {
       obj.id = message.id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       obj.title = message.title;
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.is_default !== undefined && message.is_default !== false) {
+    if (message.is_default !== false) {
       obj.is_default = message.is_default;
     }
-    if (message.status !== undefined && message.status !== 0) {
+    if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
     return obj;
@@ -31283,7 +29870,7 @@ function createBaseEditChannelCanvasResponse(): EditChannelCanvasResponse {
 
 export const EditChannelCanvasResponse = {
   encode(message: EditChannelCanvasResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
     return writer;
@@ -31318,7 +29905,7 @@ export const EditChannelCanvasResponse = {
 
   toJSON(message: EditChannelCanvasResponse): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
     return obj;
@@ -31340,13 +29927,13 @@ function createBaseDeleteChannelCanvasRequest(): DeleteChannelCanvasRequest {
 
 export const DeleteChannelCanvasRequest = {
   encode(message: DeleteChannelCanvasRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.canvas_id !== undefined && message.canvas_id !== "") {
+    if (message.canvas_id !== "") {
       writer.uint32(26).string(message.canvas_id);
     }
     return writer;
@@ -31399,13 +29986,13 @@ export const DeleteChannelCanvasRequest = {
 
   toJSON(message: DeleteChannelCanvasRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.canvas_id !== undefined && message.canvas_id !== "") {
+    if (message.canvas_id !== "") {
       obj.canvas_id = message.canvas_id;
     }
     return obj;
@@ -31429,10 +30016,10 @@ function createBaseChannelCanvasListRequest(): ChannelCanvasListRequest {
 
 export const ChannelCanvasListRequest = {
   encode(message: ChannelCanvasListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
     if (message.limit !== undefined) {
@@ -31441,7 +30028,7 @@ export const ChannelCanvasListRequest = {
     if (message.page !== undefined) {
       Int32Value.encode({ value: message.page! }, writer.uint32(34).fork()).ldelim();
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       writer.uint32(42).string(message.cursor);
     }
     return writer;
@@ -31510,10 +30097,10 @@ export const ChannelCanvasListRequest = {
 
   toJSON(message: ChannelCanvasListRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     if (message.limit !== undefined) {
@@ -31522,7 +30109,7 @@ export const ChannelCanvasListRequest = {
     if (message.page !== undefined) {
       obj.page = message.page;
     }
-    if (message.cursor !== undefined && message.cursor !== "") {
+    if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
     return obj;
@@ -31556,19 +30143,19 @@ function createBaseChannelCanvasItem(): ChannelCanvasItem {
 
 export const ChannelCanvasItem = {
   encode(message: ChannelCanvasItem, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       writer.uint32(18).string(message.title);
     }
-    if (message.is_default !== undefined && message.is_default !== false) {
+    if (message.is_default !== false) {
       writer.uint32(24).bool(message.is_default);
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       writer.uint32(34).string(message.content);
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       writer.uint32(42).string(message.creator_id);
     }
     if (message.update_time !== undefined) {
@@ -31659,19 +30246,19 @@ export const ChannelCanvasItem = {
 
   toJSON(message: ChannelCanvasItem): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       obj.title = message.title;
     }
-    if (message.is_default !== undefined && message.is_default !== false) {
+    if (message.is_default !== false) {
       obj.is_default = message.is_default;
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
     if (message.update_time !== undefined) {
@@ -31705,18 +30292,16 @@ function createBaseChannelCanvasListResponse(): ChannelCanvasListResponse {
 
 export const ChannelCanvasListResponse = {
   encode(message: ChannelCanvasListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.channel_canvases !== undefined && message.channel_canvases.length !== 0) {
-      for (const v of message.channel_canvases) {
-        ChannelCanvasItem.encode(v!, writer.uint32(26).fork()).ldelim();
-      }
+    for (const v of message.channel_canvases) {
+      ChannelCanvasItem.encode(v!, writer.uint32(26).fork()).ldelim();
     }
-    if (message.count !== undefined && message.count !== 0) {
+    if (message.count !== 0) {
       writer.uint32(32).int64(message.count);
     }
     return writer;
@@ -31748,7 +30333,7 @@ export const ChannelCanvasListResponse = {
             break;
           }
 
-          message.channel_canvases!.push(ChannelCanvasItem.decode(reader, reader.uint32()));
+          message.channel_canvases.push(ChannelCanvasItem.decode(reader, reader.uint32()));
           continue;
         case 4:
           if (tag !== 32) {
@@ -31779,16 +30364,16 @@ export const ChannelCanvasListResponse = {
 
   toJSON(message: ChannelCanvasListResponse): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     if (message.channel_canvases?.length) {
       obj.channel_canvases = message.channel_canvases.map((e) => ChannelCanvasItem.toJSON(e));
     }
-    if (message.count !== undefined && message.count !== 0) {
+    if (message.count !== 0) {
       obj.count = Math.round(message.count);
     }
     return obj;
@@ -31813,13 +30398,13 @@ function createBaseChannelCanvasDetailRequest(): ChannelCanvasDetailRequest {
 
 export const ChannelCanvasDetailRequest = {
   encode(message: ChannelCanvasDetailRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
     }
     return writer;
@@ -31872,13 +30457,13 @@ export const ChannelCanvasDetailRequest = {
 
   toJSON(message: ChannelCanvasDetailRequest): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -31902,22 +30487,22 @@ function createBaseChannelCanvasDetailResponse(): ChannelCanvasDetailResponse {
 
 export const ChannelCanvasDetailResponse = {
   encode(message: ChannelCanvasDetailResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       writer.uint32(18).string(message.title);
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       writer.uint32(26).string(message.content);
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       writer.uint32(34).string(message.creator_id);
     }
-    if (message.editor_id !== undefined && message.editor_id !== "") {
+    if (message.editor_id !== "") {
       writer.uint32(42).string(message.editor_id);
     }
-    if (message.is_default !== undefined && message.is_default !== false) {
+    if (message.is_default !== false) {
       writer.uint32(48).bool(message.is_default);
     }
     return writer;
@@ -31994,22 +30579,22 @@ export const ChannelCanvasDetailResponse = {
 
   toJSON(message: ChannelCanvasDetailResponse): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       obj.title = message.title;
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.editor_id !== undefined && message.editor_id !== "") {
+    if (message.editor_id !== "") {
       obj.editor_id = message.editor_id;
     }
-    if (message.is_default !== undefined && message.is_default !== false) {
+    if (message.is_default !== false) {
       obj.is_default = message.is_default;
     }
     return obj;
@@ -32036,10 +30621,10 @@ function createBaseAddFavoriteChannelRequest(): AddFavoriteChannelRequest {
 
 export const AddFavoriteChannelRequest = {
   encode(message: AddFavoriteChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
     return writer;
@@ -32084,10 +30669,10 @@ export const AddFavoriteChannelRequest = {
 
   toJSON(message: AddFavoriteChannelRequest): unknown {
     const obj: any = {};
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -32110,10 +30695,10 @@ function createBaseRemoveFavoriteChannelRequest(): RemoveFavoriteChannelRequest 
 
 export const RemoveFavoriteChannelRequest = {
   encode(message: RemoveFavoriteChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
     return writer;
@@ -32158,10 +30743,10 @@ export const RemoveFavoriteChannelRequest = {
 
   toJSON(message: RemoveFavoriteChannelRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -32184,7 +30769,7 @@ function createBaseAddFavoriteChannelResponse(): AddFavoriteChannelResponse {
 
 export const AddFavoriteChannelResponse = {
   encode(message: AddFavoriteChannelResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
     return writer;
@@ -32219,7 +30804,7 @@ export const AddFavoriteChannelResponse = {
 
   toJSON(message: AddFavoriteChannelResponse): unknown {
     const obj: any = {};
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -32241,7 +30826,7 @@ function createBaseListFavoriteChannelRequest(): ListFavoriteChannelRequest {
 
 export const ListFavoriteChannelRequest = {
   encode(message: ListFavoriteChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
     return writer;
@@ -32276,7 +30861,7 @@ export const ListFavoriteChannelRequest = {
 
   toJSON(message: ListFavoriteChannelRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -32298,10 +30883,8 @@ function createBaseListFavoriteChannelResponse(): ListFavoriteChannelResponse {
 
 export const ListFavoriteChannelResponse = {
   encode(message: ListFavoriteChannelResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_ids !== undefined && message.channel_ids.length !== 0) {
-      for (const v of message.channel_ids) {
-        writer.uint32(10).string(v!);
-      }
+    for (const v of message.channel_ids) {
+      writer.uint32(10).string(v!);
     }
     return writer;
   },
@@ -32318,7 +30901,7 @@ export const ListFavoriteChannelResponse = {
             break;
           }
 
-          message.channel_ids!.push(reader.string());
+          message.channel_ids.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -32370,16 +30953,16 @@ function createBaseUserActivity(): UserActivity {
 
 export const UserActivity = {
   encode(message: UserActivity, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
-    if (message.activity_name !== undefined && message.activity_name !== "") {
+    if (message.activity_name !== "") {
       writer.uint32(18).string(message.activity_name);
     }
-    if (message.activity_type !== undefined && message.activity_type !== 0) {
+    if (message.activity_type !== 0) {
       writer.uint32(24).int32(message.activity_type);
     }
-    if (message.activity_description !== undefined && message.activity_description !== "") {
+    if (message.activity_description !== "") {
       writer.uint32(34).string(message.activity_description);
     }
     if (message.start_time !== undefined) {
@@ -32388,10 +30971,10 @@ export const UserActivity = {
     if (message.end_time !== undefined) {
       Timestamp.encode(toTimestamp(message.end_time), writer.uint32(50).fork()).ldelim();
     }
-    if (message.application_id !== undefined && message.application_id !== "") {
+    if (message.application_id !== "") {
       writer.uint32(58).string(message.application_id);
     }
-    if (message.status !== undefined && message.status !== 0) {
+    if (message.status !== 0) {
       writer.uint32(64).int32(message.status);
     }
     return writer;
@@ -32484,16 +31067,16 @@ export const UserActivity = {
 
   toJSON(message: UserActivity): unknown {
     const obj: any = {};
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.activity_name !== undefined && message.activity_name !== "") {
+    if (message.activity_name !== "") {
       obj.activity_name = message.activity_name;
     }
-    if (message.activity_type !== undefined && message.activity_type !== 0) {
+    if (message.activity_type !== 0) {
       obj.activity_type = Math.round(message.activity_type);
     }
-    if (message.activity_description !== undefined && message.activity_description !== "") {
+    if (message.activity_description !== "") {
       obj.activity_description = message.activity_description;
     }
     if (message.start_time !== undefined) {
@@ -32502,10 +31085,10 @@ export const UserActivity = {
     if (message.end_time !== undefined) {
       obj.end_time = message.end_time.toISOString();
     }
-    if (message.application_id !== undefined && message.application_id !== "") {
+    if (message.application_id !== "") {
       obj.application_id = message.application_id;
     }
-    if (message.status !== undefined && message.status !== 0) {
+    if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
     return obj;
@@ -32534,10 +31117,8 @@ function createBaseListUserActivity(): ListUserActivity {
 
 export const ListUserActivity = {
   encode(message: ListUserActivity, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.activities !== undefined && message.activities.length !== 0) {
-      for (const v of message.activities) {
-        UserActivity.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.activities) {
+      UserActivity.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -32554,7 +31135,7 @@ export const ListUserActivity = {
             break;
           }
 
-          message.activities!.push(UserActivity.decode(reader, reader.uint32()));
+          message.activities.push(UserActivity.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -32604,22 +31185,22 @@ function createBaseCreateActivityRequest(): CreateActivityRequest {
 
 export const CreateActivityRequest = {
   encode(message: CreateActivityRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.activity_name !== undefined && message.activity_name !== "") {
+    if (message.activity_name !== "") {
       writer.uint32(10).string(message.activity_name);
     }
-    if (message.activity_type !== undefined && message.activity_type !== 0) {
+    if (message.activity_type !== 0) {
       writer.uint32(16).int32(message.activity_type);
     }
-    if (message.activity_description !== undefined && message.activity_description !== "") {
+    if (message.activity_description !== "") {
       writer.uint32(26).string(message.activity_description);
     }
     if (message.start_time !== undefined) {
       Timestamp.encode(toTimestamp(message.start_time), writer.uint32(34).fork()).ldelim();
     }
-    if (message.application_id !== undefined && message.application_id !== "") {
+    if (message.application_id !== "") {
       writer.uint32(42).string(message.application_id);
     }
-    if (message.status !== undefined && message.status !== 0) {
+    if (message.status !== 0) {
       writer.uint32(48).int32(message.status);
     }
     return writer;
@@ -32696,22 +31277,22 @@ export const CreateActivityRequest = {
 
   toJSON(message: CreateActivityRequest): unknown {
     const obj: any = {};
-    if (message.activity_name !== undefined && message.activity_name !== "") {
+    if (message.activity_name !== "") {
       obj.activity_name = message.activity_name;
     }
-    if (message.activity_type !== undefined && message.activity_type !== 0) {
+    if (message.activity_type !== 0) {
       obj.activity_type = Math.round(message.activity_type);
     }
-    if (message.activity_description !== undefined && message.activity_description !== "") {
+    if (message.activity_description !== "") {
       obj.activity_description = message.activity_description;
     }
     if (message.start_time !== undefined) {
       obj.start_time = message.start_time.toISOString();
     }
-    if (message.application_id !== undefined && message.application_id !== "") {
+    if (message.application_id !== "") {
       obj.application_id = message.application_id;
     }
-    if (message.status !== undefined && message.status !== 0) {
+    if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
     return obj;
@@ -32738,25 +31319,25 @@ function createBaseLoginIDResponse(): LoginIDResponse {
 
 export const LoginIDResponse = {
   encode(message: LoginIDResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.login_id !== undefined && message.login_id !== "") {
+    if (message.login_id !== "") {
       writer.uint32(10).string(message.login_id);
     }
-    if (message.status !== undefined && message.status !== 0) {
+    if (message.status !== 0) {
       writer.uint32(16).int32(message.status);
     }
-    if (message.create_time_second !== undefined && message.create_time_second !== 0) {
+    if (message.create_time_second !== 0) {
       writer.uint32(24).int64(message.create_time_second);
     }
-    if (message.platform !== undefined && message.platform !== "") {
+    if (message.platform !== "") {
       writer.uint32(34).string(message.platform);
     }
-    if (message.user_id !== undefined && message.user_id !== 0) {
+    if (message.user_id !== 0) {
       writer.uint32(40).int64(message.user_id);
     }
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       writer.uint32(50).string(message.username);
     }
-    if (message.address !== undefined && message.address !== "") {
+    if (message.address !== "") {
       writer.uint32(58).string(message.address);
     }
     return writer;
@@ -32841,25 +31422,25 @@ export const LoginIDResponse = {
 
   toJSON(message: LoginIDResponse): unknown {
     const obj: any = {};
-    if (message.login_id !== undefined && message.login_id !== "") {
+    if (message.login_id !== "") {
       obj.login_id = message.login_id;
     }
-    if (message.status !== undefined && message.status !== 0) {
+    if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
-    if (message.create_time_second !== undefined && message.create_time_second !== 0) {
+    if (message.create_time_second !== 0) {
       obj.create_time_second = Math.round(message.create_time_second);
     }
-    if (message.platform !== undefined && message.platform !== "") {
+    if (message.platform !== "") {
       obj.platform = message.platform;
     }
-    if (message.user_id !== undefined && message.user_id !== 0) {
+    if (message.user_id !== 0) {
       obj.user_id = Math.round(message.user_id);
     }
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       obj.username = message.username;
     }
-    if (message.address !== undefined && message.address !== "") {
+    if (message.address !== "") {
       obj.address = message.address;
     }
     return obj;
@@ -32887,10 +31468,10 @@ function createBaseLoginRequest(): LoginRequest {
 
 export const LoginRequest = {
   encode(message: LoginRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.platform !== undefined && message.platform !== "") {
+    if (message.platform !== "") {
       writer.uint32(10).string(message.platform);
     }
-    if (message.address !== undefined && message.address !== "") {
+    if (message.address !== "") {
       writer.uint32(18).string(message.address);
     }
     return writer;
@@ -32935,10 +31516,10 @@ export const LoginRequest = {
 
   toJSON(message: LoginRequest): unknown {
     const obj: any = {};
-    if (message.platform !== undefined && message.platform !== "") {
+    if (message.platform !== "") {
       obj.platform = message.platform;
     }
-    if (message.address !== undefined && message.address !== "") {
+    if (message.address !== "") {
       obj.address = message.address;
     }
     return obj;
@@ -32961,7 +31542,7 @@ function createBaseConfirmLoginRequest(): ConfirmLoginRequest {
 
 export const ConfirmLoginRequest = {
   encode(message: ConfirmLoginRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.login_id !== undefined && message.login_id !== "") {
+    if (message.login_id !== "") {
       writer.uint32(10).string(message.login_id);
     }
     if (message.is_remember !== undefined) {
@@ -33009,7 +31590,7 @@ export const ConfirmLoginRequest = {
 
   toJSON(message: ConfirmLoginRequest): unknown {
     const obj: any = {};
-    if (message.login_id !== undefined && message.login_id !== "") {
+    if (message.login_id !== "") {
       obj.login_id = message.login_id;
     }
     if (message.is_remember !== undefined) {
@@ -33035,10 +31616,10 @@ function createBasePubKey(): PubKey {
 
 export const PubKey = {
   encode(message: PubKey, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.encr !== undefined && message.encr.length !== 0) {
+    if (message.encr.length !== 0) {
       writer.uint32(10).bytes(message.encr);
     }
-    if (message.sign !== undefined && message.sign.length !== 0) {
+    if (message.sign.length !== 0) {
       writer.uint32(18).bytes(message.sign);
     }
     return writer;
@@ -33083,10 +31664,10 @@ export const PubKey = {
 
   toJSON(message: PubKey): unknown {
     const obj: any = {};
-    if (message.encr !== undefined && message.encr.length !== 0) {
+    if (message.encr.length !== 0) {
       obj.encr = base64FromBytes(message.encr);
     }
-    if (message.sign !== undefined && message.sign.length !== 0) {
+    if (message.sign.length !== 0) {
       obj.sign = base64FromBytes(message.sign);
     }
     return obj;
@@ -33166,10 +31747,8 @@ function createBaseGetPubKeysRequest(): GetPubKeysRequest {
 
 export const GetPubKeysRequest = {
   encode(message: GetPubKeysRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_ids !== undefined && message.user_ids.length !== 0) {
-      for (const v of message.user_ids) {
-        writer.uint32(10).string(v!);
-      }
+    for (const v of message.user_ids) {
+      writer.uint32(10).string(v!);
     }
     return writer;
   },
@@ -33186,7 +31765,7 @@ export const GetPubKeysRequest = {
             break;
           }
 
-          message.user_ids!.push(reader.string());
+          message.user_ids.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -33227,10 +31806,8 @@ function createBaseGetPubKeysResponse(): GetPubKeysResponse {
 
 export const GetPubKeysResponse = {
   encode(message: GetPubKeysResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.pub_keys !== undefined && message.pub_keys.length !== 0) {
-      for (const v of message.pub_keys) {
-        GetPubKeysResponse_UserPubKey.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.pub_keys) {
+      GetPubKeysResponse_UserPubKey.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -33247,7 +31824,7 @@ export const GetPubKeysResponse = {
             break;
           }
 
-          message.pub_keys!.push(GetPubKeysResponse_UserPubKey.decode(reader, reader.uint32()));
+          message.pub_keys.push(GetPubKeysResponse_UserPubKey.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -33290,7 +31867,7 @@ function createBaseGetPubKeysResponse_UserPubKey(): GetPubKeysResponse_UserPubKe
 
 export const GetPubKeysResponse_UserPubKey = {
   encode(message: GetPubKeysResponse_UserPubKey, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
     if (message.PK !== undefined) {
@@ -33338,7 +31915,7 @@ export const GetPubKeysResponse_UserPubKey = {
 
   toJSON(message: GetPubKeysResponse_UserPubKey): unknown {
     const obj: any = {};
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
     if (message.PK !== undefined) {
@@ -33366,10 +31943,10 @@ function createBaseChanEncryptionMethod(): ChanEncryptionMethod {
 
 export const ChanEncryptionMethod = {
   encode(message: ChanEncryptionMethod, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.method !== undefined && message.method !== "") {
+    if (message.method !== "") {
       writer.uint32(10).string(message.method);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
     return writer;
@@ -33414,10 +31991,10 @@ export const ChanEncryptionMethod = {
 
   toJSON(message: ChanEncryptionMethod): unknown {
     const obj: any = {};
-    if (message.method !== undefined && message.method !== "") {
+    if (message.method !== "") {
       obj.method = message.method;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -33440,7 +32017,7 @@ function createBaseGetKeyServerResp(): GetKeyServerResp {
 
 export const GetKeyServerResp = {
   encode(message: GetKeyServerResp, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.url !== undefined && message.url !== "") {
+    if (message.url !== "") {
       writer.uint32(10).string(message.url);
     }
     return writer;
@@ -33475,7 +32052,7 @@ export const GetKeyServerResp = {
 
   toJSON(message: GetKeyServerResp): unknown {
     const obj: any = {};
-    if (message.url !== undefined && message.url !== "") {
+    if (message.url !== "") {
       obj.url = message.url;
     }
     return obj;
@@ -33508,34 +32085,34 @@ function createBaseAuditLog(): AuditLog {
 
 export const AuditLog = {
   encode(message: AuditLog, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       writer.uint32(18).string(message.user_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
-    if (message.action_log !== undefined && message.action_log !== "") {
+    if (message.action_log !== "") {
       writer.uint32(34).string(message.action_log);
     }
-    if (message.entity_name !== undefined && message.entity_name !== "") {
+    if (message.entity_name !== "") {
       writer.uint32(42).string(message.entity_name);
     }
-    if (message.entity_id !== undefined && message.entity_id !== "") {
+    if (message.entity_id !== "") {
       writer.uint32(50).string(message.entity_id);
     }
-    if (message.details !== undefined && message.details !== "") {
+    if (message.details !== "") {
       writer.uint32(58).string(message.details);
     }
     if (message.time_log !== undefined) {
       Timestamp.encode(toTimestamp(message.time_log), writer.uint32(66).fork()).ldelim();
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(74).string(message.channel_id);
     }
-    if (message.channel_label !== undefined && message.channel_label !== "") {
+    if (message.channel_label !== "") {
       writer.uint32(82).string(message.channel_label);
     }
     return writer;
@@ -33644,34 +32221,34 @@ export const AuditLog = {
 
   toJSON(message: AuditLog): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.action_log !== undefined && message.action_log !== "") {
+    if (message.action_log !== "") {
       obj.action_log = message.action_log;
     }
-    if (message.entity_name !== undefined && message.entity_name !== "") {
+    if (message.entity_name !== "") {
       obj.entity_name = message.entity_name;
     }
-    if (message.entity_id !== undefined && message.entity_id !== "") {
+    if (message.entity_id !== "") {
       obj.entity_id = message.entity_id;
     }
-    if (message.details !== undefined && message.details !== "") {
+    if (message.details !== "") {
       obj.details = message.details;
     }
     if (message.time_log !== undefined) {
       obj.time_log = message.time_log.toISOString();
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.channel_label !== undefined && message.channel_label !== "") {
+    if (message.channel_label !== "") {
       obj.channel_label = message.channel_label;
     }
     return obj;
@@ -33702,16 +32279,14 @@ function createBaseListAuditLog(): ListAuditLog {
 
 export const ListAuditLog = {
   encode(message: ListAuditLog, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.total_count !== undefined && message.total_count !== 0) {
+    if (message.total_count !== 0) {
       writer.uint32(8).int32(message.total_count);
     }
-    if (message.date_log !== undefined && message.date_log !== "") {
+    if (message.date_log !== "") {
       writer.uint32(18).string(message.date_log);
     }
-    if (message.logs !== undefined && message.logs.length !== 0) {
-      for (const v of message.logs) {
-        AuditLog.encode(v!, writer.uint32(26).fork()).ldelim();
-      }
+    for (const v of message.logs) {
+      AuditLog.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -33742,7 +32317,7 @@ export const ListAuditLog = {
             break;
           }
 
-          message.logs!.push(AuditLog.decode(reader, reader.uint32()));
+          message.logs.push(AuditLog.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -33763,10 +32338,10 @@ export const ListAuditLog = {
 
   toJSON(message: ListAuditLog): unknown {
     const obj: any = {};
-    if (message.total_count !== undefined && message.total_count !== 0) {
+    if (message.total_count !== 0) {
       obj.total_count = Math.round(message.total_count);
     }
-    if (message.date_log !== undefined && message.date_log !== "") {
+    if (message.date_log !== "") {
       obj.date_log = message.date_log;
     }
     if (message.logs?.length) {
@@ -33793,16 +32368,16 @@ function createBaseListAuditLogRequest(): ListAuditLogRequest {
 
 export const ListAuditLogRequest = {
   encode(message: ListAuditLogRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.action_log !== undefined && message.action_log !== "") {
+    if (message.action_log !== "") {
       writer.uint32(10).string(message.action_log);
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       writer.uint32(18).string(message.user_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
-    if (message.date_log !== undefined && message.date_log !== "") {
+    if (message.date_log !== "") {
       writer.uint32(34).string(message.date_log);
     }
     return writer;
@@ -33863,16 +32438,16 @@ export const ListAuditLogRequest = {
 
   toJSON(message: ListAuditLogRequest): unknown {
     const obj: any = {};
-    if (message.action_log !== undefined && message.action_log !== "") {
+    if (message.action_log !== "") {
       obj.action_log = message.action_log;
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.date_log !== undefined && message.date_log !== "") {
+    if (message.date_log !== "") {
       obj.date_log = message.date_log;
     }
     return obj;
@@ -33905,25 +32480,25 @@ function createBaseTokenSentEvent(): TokenSentEvent {
 
 export const TokenSentEvent = {
   encode(message: TokenSentEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.sender_id !== undefined && message.sender_id !== "") {
+    if (message.sender_id !== "") {
       writer.uint32(10).string(message.sender_id);
     }
-    if (message.sender_name !== undefined && message.sender_name !== "") {
+    if (message.sender_name !== "") {
       writer.uint32(18).string(message.sender_name);
     }
-    if (message.receiver_id !== undefined && message.receiver_id !== "") {
+    if (message.receiver_id !== "") {
       writer.uint32(26).string(message.receiver_id);
     }
-    if (message.amount !== undefined && message.amount !== 0) {
+    if (message.amount !== 0) {
       writer.uint32(32).int32(message.amount);
     }
-    if (message.note !== undefined && message.note !== "") {
+    if (message.note !== "") {
       writer.uint32(42).string(message.note);
     }
-    if (message.extra_attribute !== undefined && message.extra_attribute !== "") {
+    if (message.extra_attribute !== "") {
       writer.uint32(50).string(message.extra_attribute);
     }
-    if (message.transaction_id !== undefined && message.transaction_id !== "") {
+    if (message.transaction_id !== "") {
       writer.uint32(58).string(message.transaction_id);
     }
     return writer;
@@ -34008,25 +32583,25 @@ export const TokenSentEvent = {
 
   toJSON(message: TokenSentEvent): unknown {
     const obj: any = {};
-    if (message.sender_id !== undefined && message.sender_id !== "") {
+    if (message.sender_id !== "") {
       obj.sender_id = message.sender_id;
     }
-    if (message.sender_name !== undefined && message.sender_name !== "") {
+    if (message.sender_name !== "") {
       obj.sender_name = message.sender_name;
     }
-    if (message.receiver_id !== undefined && message.receiver_id !== "") {
+    if (message.receiver_id !== "") {
       obj.receiver_id = message.receiver_id;
     }
-    if (message.amount !== undefined && message.amount !== 0) {
+    if (message.amount !== 0) {
       obj.amount = Math.round(message.amount);
     }
-    if (message.note !== undefined && message.note !== "") {
+    if (message.note !== "") {
       obj.note = message.note;
     }
-    if (message.extra_attribute !== undefined && message.extra_attribute !== "") {
+    if (message.extra_attribute !== "") {
       obj.extra_attribute = message.extra_attribute;
     }
-    if (message.transaction_id !== undefined && message.transaction_id !== "") {
+    if (message.transaction_id !== "") {
       obj.transaction_id = message.transaction_id;
     }
     return obj;
@@ -34054,10 +32629,10 @@ function createBaseUnlockItemRequest(): UnlockItemRequest {
 
 export const UnlockItemRequest = {
   encode(message: UnlockItemRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.item_id !== undefined && message.item_id !== "") {
+    if (message.item_id !== "") {
       writer.uint32(10).string(message.item_id);
     }
-    if (message.item_type !== undefined && message.item_type !== 0) {
+    if (message.item_type !== 0) {
       writer.uint32(16).int32(message.item_type);
     }
     return writer;
@@ -34102,10 +32677,10 @@ export const UnlockItemRequest = {
 
   toJSON(message: UnlockItemRequest): unknown {
     const obj: any = {};
-    if (message.item_id !== undefined && message.item_id !== "") {
+    if (message.item_id !== "") {
       obj.item_id = message.item_id;
     }
-    if (message.item_type !== undefined && message.item_type !== 0) {
+    if (message.item_type !== 0) {
       obj.item_type = Math.round(message.item_type);
     }
     return obj;
@@ -34128,7 +32703,7 @@ function createBaseUnlockedItemResponse(): UnlockedItemResponse {
 
 export const UnlockedItemResponse = {
   encode(message: UnlockedItemResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.source !== undefined && message.source !== "") {
+    if (message.source !== "") {
       writer.uint32(10).string(message.source);
     }
     return writer;
@@ -34163,7 +32738,7 @@ export const UnlockedItemResponse = {
 
   toJSON(message: UnlockedItemResponse): unknown {
     const obj: any = {};
-    if (message.source !== undefined && message.source !== "") {
+    if (message.source !== "") {
       obj.source = message.source;
     }
     return obj;
@@ -34185,7 +32760,7 @@ function createBaseListOnboardingRequest(): ListOnboardingRequest {
 
 export const ListOnboardingRequest = {
   encode(message: ListOnboardingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
     if (message.guide_type !== undefined) {
@@ -34255,7 +32830,7 @@ export const ListOnboardingRequest = {
 
   toJSON(message: ListOnboardingRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     if (message.guide_type !== undefined) {
@@ -34289,10 +32864,8 @@ function createBaseListOnboardingResponse(): ListOnboardingResponse {
 
 export const ListOnboardingResponse = {
   encode(message: ListOnboardingResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.list_onboarding !== undefined && message.list_onboarding.length !== 0) {
-      for (const v of message.list_onboarding) {
-        OnboardingItem.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.list_onboarding) {
+      OnboardingItem.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -34309,7 +32882,7 @@ export const ListOnboardingResponse = {
             break;
           }
 
-          message.list_onboarding!.push(OnboardingItem.decode(reader, reader.uint32()));
+          message.list_onboarding.push(OnboardingItem.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -34364,34 +32937,32 @@ function createBaseOnboardingItem(): OnboardingItem {
 
 export const OnboardingItem = {
   encode(message: OnboardingItem, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
-    if (message.guide_type !== undefined && message.guide_type !== 0) {
+    if (message.guide_type !== 0) {
       writer.uint32(24).int32(message.guide_type);
     }
-    if (message.task_type !== undefined && message.task_type !== 0) {
+    if (message.task_type !== 0) {
       writer.uint32(32).int32(message.task_type);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(42).string(message.channel_id);
     }
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       writer.uint32(50).string(message.title);
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       writer.uint32(58).string(message.content);
     }
-    if (message.image_url !== undefined && message.image_url !== "") {
+    if (message.image_url !== "") {
       writer.uint32(66).string(message.image_url);
     }
-    if (message.answers !== undefined && message.answers.length !== 0) {
-      for (const v of message.answers) {
-        OnboardingAnswer.encode(v!, writer.uint32(74).fork()).ldelim();
-      }
+    for (const v of message.answers) {
+      OnboardingAnswer.encode(v!, writer.uint32(74).fork()).ldelim();
     }
     if (message.create_time !== undefined) {
       Timestamp.encode(toTimestamp(message.create_time), writer.uint32(82).fork()).ldelim();
@@ -34470,7 +33041,7 @@ export const OnboardingItem = {
             break;
           }
 
-          message.answers!.push(OnboardingAnswer.decode(reader, reader.uint32()));
+          message.answers.push(OnboardingAnswer.decode(reader, reader.uint32()));
           continue;
         case 10:
           if (tag !== 82) {
@@ -34515,28 +33086,28 @@ export const OnboardingItem = {
 
   toJSON(message: OnboardingItem): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.guide_type !== undefined && message.guide_type !== 0) {
+    if (message.guide_type !== 0) {
       obj.guide_type = Math.round(message.guide_type);
     }
-    if (message.task_type !== undefined && message.task_type !== 0) {
+    if (message.task_type !== 0) {
       obj.task_type = Math.round(message.task_type);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       obj.title = message.title;
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.image_url !== undefined && message.image_url !== "") {
+    if (message.image_url !== "") {
       obj.image_url = message.image_url;
     }
     if (message.answers?.length) {
@@ -34577,16 +33148,16 @@ function createBaseOnboardingAnswer(): OnboardingAnswer {
 
 export const OnboardingAnswer = {
   encode(message: OnboardingAnswer, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       writer.uint32(10).string(message.title);
     }
-    if (message.description !== undefined && message.description !== "") {
+    if (message.description !== "") {
       writer.uint32(18).string(message.description);
     }
-    if (message.emoji !== undefined && message.emoji !== "") {
+    if (message.emoji !== "") {
       writer.uint32(26).string(message.emoji);
     }
-    if (message.image_url !== undefined && message.image_url !== "") {
+    if (message.image_url !== "") {
       writer.uint32(34).string(message.image_url);
     }
     return writer;
@@ -34647,16 +33218,16 @@ export const OnboardingAnswer = {
 
   toJSON(message: OnboardingAnswer): unknown {
     const obj: any = {};
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       obj.title = message.title;
     }
-    if (message.description !== undefined && message.description !== "") {
+    if (message.description !== "") {
       obj.description = message.description;
     }
-    if (message.emoji !== undefined && message.emoji !== "") {
+    if (message.emoji !== "") {
       obj.emoji = message.emoji;
     }
-    if (message.image_url !== undefined && message.image_url !== "") {
+    if (message.image_url !== "") {
       obj.image_url = message.image_url;
     }
     return obj;
@@ -34681,28 +33252,26 @@ function createBaseOnboardingContent(): OnboardingContent {
 
 export const OnboardingContent = {
   encode(message: OnboardingContent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.guide_type !== undefined && message.guide_type !== 0) {
+    if (message.guide_type !== 0) {
       writer.uint32(8).int32(message.guide_type);
     }
-    if (message.task_type !== undefined && message.task_type !== 0) {
+    if (message.task_type !== 0) {
       writer.uint32(16).int32(message.task_type);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
     }
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       writer.uint32(34).string(message.title);
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       writer.uint32(42).string(message.content);
     }
-    if (message.image_url !== undefined && message.image_url !== "") {
+    if (message.image_url !== "") {
       writer.uint32(50).string(message.image_url);
     }
-    if (message.answers !== undefined && message.answers.length !== 0) {
-      for (const v of message.answers) {
-        OnboardingAnswer.encode(v!, writer.uint32(58).fork()).ldelim();
-      }
+    for (const v of message.answers) {
+      OnboardingAnswer.encode(v!, writer.uint32(58).fork()).ldelim();
     }
     return writer;
   },
@@ -34761,7 +33330,7 @@ export const OnboardingContent = {
             break;
           }
 
-          message.answers!.push(OnboardingAnswer.decode(reader, reader.uint32()));
+          message.answers.push(OnboardingAnswer.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -34788,22 +33357,22 @@ export const OnboardingContent = {
 
   toJSON(message: OnboardingContent): unknown {
     const obj: any = {};
-    if (message.guide_type !== undefined && message.guide_type !== 0) {
+    if (message.guide_type !== 0) {
       obj.guide_type = Math.round(message.guide_type);
     }
-    if (message.task_type !== undefined && message.task_type !== 0) {
+    if (message.task_type !== 0) {
       obj.task_type = Math.round(message.task_type);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       obj.title = message.title;
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.image_url !== undefined && message.image_url !== "") {
+    if (message.image_url !== "") {
       obj.image_url = message.image_url;
     }
     if (message.answers?.length) {
@@ -34834,13 +33403,11 @@ function createBaseCreateOnboardingRequest(): CreateOnboardingRequest {
 
 export const CreateOnboardingRequest = {
   encode(message: CreateOnboardingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.contents !== undefined && message.contents.length !== 0) {
-      for (const v of message.contents) {
-        OnboardingContent.encode(v!, writer.uint32(18).fork()).ldelim();
-      }
+    for (const v of message.contents) {
+      OnboardingContent.encode(v!, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -34864,7 +33431,7 @@ export const CreateOnboardingRequest = {
             break;
           }
 
-          message.contents!.push(OnboardingContent.decode(reader, reader.uint32()));
+          message.contents.push(OnboardingContent.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -34886,7 +33453,7 @@ export const CreateOnboardingRequest = {
 
   toJSON(message: CreateOnboardingRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     if (message.contents?.length) {
@@ -34921,31 +33488,29 @@ function createBaseUpdateOnboardingRequest(): UpdateOnboardingRequest {
 
 export const UpdateOnboardingRequest = {
   encode(message: UpdateOnboardingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
     if (message.task_type !== undefined) {
       Int32Value.encode({ value: message.task_type! }, writer.uint32(26).fork()).ldelim();
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(34).string(message.channel_id);
     }
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       writer.uint32(42).string(message.title);
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       writer.uint32(50).string(message.content);
     }
-    if (message.image_url !== undefined && message.image_url !== "") {
+    if (message.image_url !== "") {
       writer.uint32(58).string(message.image_url);
     }
-    if (message.answers !== undefined && message.answers.length !== 0) {
-      for (const v of message.answers) {
-        OnboardingAnswer.encode(v!, writer.uint32(66).fork()).ldelim();
-      }
+    for (const v of message.answers) {
+      OnboardingAnswer.encode(v!, writer.uint32(66).fork()).ldelim();
     }
     return writer;
   },
@@ -35011,7 +33576,7 @@ export const UpdateOnboardingRequest = {
             break;
           }
 
-          message.answers!.push(OnboardingAnswer.decode(reader, reader.uint32()));
+          message.answers.push(OnboardingAnswer.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -35039,25 +33604,25 @@ export const UpdateOnboardingRequest = {
 
   toJSON(message: UpdateOnboardingRequest): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     if (message.task_type !== undefined) {
       obj.task_type = message.task_type;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       obj.title = message.title;
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.image_url !== undefined && message.image_url !== "") {
+    if (message.image_url !== "") {
       obj.image_url = message.image_url;
     }
     if (message.answers?.length) {
@@ -35089,10 +33654,10 @@ function createBaseOnboardingRequest(): OnboardingRequest {
 
 export const OnboardingRequest = {
   encode(message: OnboardingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
     return writer;
@@ -35137,10 +33702,10 @@ export const OnboardingRequest = {
 
   toJSON(message: OnboardingRequest): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -35173,31 +33738,31 @@ function createBaseClanWebhook(): ClanWebhook {
 
 export const ClanWebhook = {
   encode(message: ClanWebhook, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.webhook_name !== undefined && message.webhook_name !== "") {
+    if (message.webhook_name !== "") {
       writer.uint32(18).string(message.webhook_name);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
-    if (message.active !== undefined && message.active !== 0) {
+    if (message.active !== 0) {
       writer.uint32(32).int32(message.active);
     }
-    if (message.url !== undefined && message.url !== "") {
+    if (message.url !== "") {
       writer.uint32(42).string(message.url);
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       writer.uint32(50).string(message.creator_id);
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       writer.uint32(58).string(message.avatar);
     }
-    if (message.create_time !== undefined && message.create_time !== "") {
+    if (message.create_time !== "") {
       writer.uint32(66).string(message.create_time);
     }
-    if (message.update_time !== undefined && message.update_time !== "") {
+    if (message.update_time !== "") {
       writer.uint32(74).string(message.update_time);
     }
     return writer;
@@ -35298,31 +33863,31 @@ export const ClanWebhook = {
 
   toJSON(message: ClanWebhook): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.webhook_name !== undefined && message.webhook_name !== "") {
+    if (message.webhook_name !== "") {
       obj.webhook_name = message.webhook_name;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.active !== undefined && message.active !== 0) {
+    if (message.active !== 0) {
       obj.active = Math.round(message.active);
     }
-    if (message.url !== undefined && message.url !== "") {
+    if (message.url !== "") {
       obj.url = message.url;
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
-    if (message.create_time !== undefined && message.create_time !== "") {
+    if (message.create_time !== "") {
       obj.create_time = message.create_time;
     }
-    if (message.update_time !== undefined && message.update_time !== "") {
+    if (message.update_time !== "") {
       obj.update_time = message.update_time;
     }
     return obj;
@@ -35352,13 +33917,13 @@ function createBaseGenerateClanWebhookRequest(): GenerateClanWebhookRequest {
 
 export const GenerateClanWebhookRequest = {
   encode(message: GenerateClanWebhookRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.webhook_name !== undefined && message.webhook_name !== "") {
+    if (message.webhook_name !== "") {
       writer.uint32(18).string(message.webhook_name);
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       writer.uint32(26).string(message.avatar);
     }
     return writer;
@@ -35411,13 +33976,13 @@ export const GenerateClanWebhookRequest = {
 
   toJSON(message: GenerateClanWebhookRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.webhook_name !== undefined && message.webhook_name !== "") {
+    if (message.webhook_name !== "") {
       obj.webhook_name = message.webhook_name;
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
     return obj;
@@ -35441,16 +34006,16 @@ function createBaseGenerateClanWebhookResponse(): GenerateClanWebhookResponse {
 
 export const GenerateClanWebhookResponse = {
   encode(message: GenerateClanWebhookResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.url !== undefined && message.url !== "") {
+    if (message.url !== "") {
       writer.uint32(18).string(message.url);
     }
-    if (message.webhook_name !== undefined && message.webhook_name !== "") {
+    if (message.webhook_name !== "") {
       writer.uint32(26).string(message.webhook_name);
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       writer.uint32(34).string(message.avatar);
     }
     return writer;
@@ -35511,16 +34076,16 @@ export const GenerateClanWebhookResponse = {
 
   toJSON(message: GenerateClanWebhookResponse): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.url !== undefined && message.url !== "") {
+    if (message.url !== "") {
       obj.url = message.url;
     }
-    if (message.webhook_name !== undefined && message.webhook_name !== "") {
+    if (message.webhook_name !== "") {
       obj.webhook_name = message.webhook_name;
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
     return obj;
@@ -35545,10 +34110,10 @@ function createBaseClanWebhookRequest(): ClanWebhookRequest {
 
 export const ClanWebhookRequest = {
   encode(message: ClanWebhookRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
     return writer;
@@ -35593,10 +34158,10 @@ export const ClanWebhookRequest = {
 
   toJSON(message: ClanWebhookRequest): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -35619,19 +34184,19 @@ function createBaseUpdateClanWebhookRequest(): UpdateClanWebhookRequest {
 
 export const UpdateClanWebhookRequest = {
   encode(message: UpdateClanWebhookRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
-    if (message.webhook_name !== undefined && message.webhook_name !== "") {
+    if (message.webhook_name !== "") {
       writer.uint32(26).string(message.webhook_name);
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       writer.uint32(34).string(message.avatar);
     }
-    if (message.reset_token !== undefined && message.reset_token !== false) {
+    if (message.reset_token !== false) {
       writer.uint32(40).bool(message.reset_token);
     }
     return writer;
@@ -35700,19 +34265,19 @@ export const UpdateClanWebhookRequest = {
 
   toJSON(message: UpdateClanWebhookRequest): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.webhook_name !== undefined && message.webhook_name !== "") {
+    if (message.webhook_name !== "") {
       obj.webhook_name = message.webhook_name;
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
-    if (message.reset_token !== undefined && message.reset_token !== false) {
+    if (message.reset_token !== false) {
       obj.reset_token = message.reset_token;
     }
     return obj;
@@ -35738,7 +34303,7 @@ function createBaseListClanWebhookRequest(): ListClanWebhookRequest {
 
 export const ListClanWebhookRequest = {
   encode(message: ListClanWebhookRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
     return writer;
@@ -35773,7 +34338,7 @@ export const ListClanWebhookRequest = {
 
   toJSON(message: ListClanWebhookRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -35795,10 +34360,8 @@ function createBaseListClanWebhookResponse(): ListClanWebhookResponse {
 
 export const ListClanWebhookResponse = {
   encode(message: ListClanWebhookResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.list_clan_webhooks !== undefined && message.list_clan_webhooks.length !== 0) {
-      for (const v of message.list_clan_webhooks) {
-        ClanWebhook.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.list_clan_webhooks) {
+      ClanWebhook.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -35815,7 +34378,7 @@ export const ListClanWebhookResponse = {
             break;
           }
 
-          message.list_clan_webhooks!.push(ClanWebhook.decode(reader, reader.uint32()));
+          message.list_clan_webhooks.push(ClanWebhook.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -35858,13 +34421,11 @@ function createBaseClanWebhookHandlerBody(): ClanWebhookHandlerBody {
 
 export const ClanWebhookHandlerBody = {
   encode(message: ClanWebhookHandlerBody, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       writer.uint32(10).string(message.content);
     }
-    if (message.attachments !== undefined && message.attachments.length !== 0) {
-      for (const v of message.attachments) {
-        MessageAttachment.encode(v!, writer.uint32(18).fork()).ldelim();
-      }
+    for (const v of message.attachments) {
+      MessageAttachment.encode(v!, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -35888,7 +34449,7 @@ export const ClanWebhookHandlerBody = {
             break;
           }
 
-          message.attachments!.push(MessageAttachment.decode(reader, reader.uint32()));
+          message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -35910,7 +34471,7 @@ export const ClanWebhookHandlerBody = {
 
   toJSON(message: ClanWebhookHandlerBody): unknown {
     const obj: any = {};
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       obj.content = message.content;
     }
     if (message.attachments?.length) {
@@ -35939,10 +34500,10 @@ export const ClanWebhookHandlerRequest = {
     if (message.body !== undefined) {
       ClanWebhookHandlerBody.encode(message.body, writer.uint32(10).fork()).ldelim();
     }
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       writer.uint32(18).string(message.token);
     }
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       writer.uint32(26).string(message.username);
     }
     return writer;
@@ -35998,10 +34559,10 @@ export const ClanWebhookHandlerRequest = {
     if (message.body !== undefined) {
       obj.body = ClanWebhookHandlerBody.toJSON(message.body);
     }
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       obj.token = message.token;
     }
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       obj.username = message.username;
     }
     return obj;
@@ -36027,10 +34588,10 @@ function createBaseUserStatus(): UserStatus {
 
 export const UserStatus = {
   encode(message: UserStatus, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
-    if (message.status !== undefined && message.status !== "") {
+    if (message.status !== "") {
       writer.uint32(18).string(message.status);
     }
     return writer;
@@ -36075,10 +34636,10 @@ export const UserStatus = {
 
   toJSON(message: UserStatus): unknown {
     const obj: any = {};
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.status !== undefined && message.status !== "") {
+    if (message.status !== "") {
       obj.status = message.status;
     }
     return obj;
@@ -36101,13 +34662,13 @@ function createBaseUserStatusUpdate(): UserStatusUpdate {
 
 export const UserStatusUpdate = {
   encode(message: UserStatusUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.status !== undefined && message.status !== "") {
+    if (message.status !== "") {
       writer.uint32(10).string(message.status);
     }
-    if (message.minutes !== undefined && message.minutes !== 0) {
+    if (message.minutes !== 0) {
       writer.uint32(16).int32(message.minutes);
     }
-    if (message.until_turn_on !== undefined && message.until_turn_on !== false) {
+    if (message.until_turn_on !== false) {
       writer.uint32(24).bool(message.until_turn_on);
     }
     return writer;
@@ -36160,13 +34721,13 @@ export const UserStatusUpdate = {
 
   toJSON(message: UserStatusUpdate): unknown {
     const obj: any = {};
-    if (message.status !== undefined && message.status !== "") {
+    if (message.status !== "") {
       obj.status = message.status;
     }
-    if (message.minutes !== undefined && message.minutes !== 0) {
+    if (message.minutes !== 0) {
       obj.minutes = Math.round(message.minutes);
     }
-    if (message.until_turn_on !== undefined && message.until_turn_on !== false) {
+    if (message.until_turn_on !== false) {
       obj.until_turn_on = message.until_turn_on;
     }
     return obj;
@@ -36190,16 +34751,16 @@ function createBaseOnboardingSteps(): OnboardingSteps {
 
 export const OnboardingSteps = {
   encode(message: OnboardingSteps, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       writer.uint32(18).string(message.user_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
-    if (message.onboarding_step !== undefined && message.onboarding_step !== 0) {
+    if (message.onboarding_step !== 0) {
       writer.uint32(32).int32(message.onboarding_step);
     }
     return writer;
@@ -36260,16 +34821,16 @@ export const OnboardingSteps = {
 
   toJSON(message: OnboardingSteps): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.user_id !== undefined && message.user_id !== "") {
+    if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.onboarding_step !== undefined && message.onboarding_step !== 0) {
+    if (message.onboarding_step !== 0) {
       obj.onboarding_step = Math.round(message.onboarding_step);
     }
     return obj;
@@ -36294,10 +34855,8 @@ function createBaseListOnboardingStepResponse(): ListOnboardingStepResponse {
 
 export const ListOnboardingStepResponse = {
   encode(message: ListOnboardingStepResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.list_onboarding_step !== undefined && message.list_onboarding_step.length !== 0) {
-      for (const v of message.list_onboarding_step) {
-        OnboardingSteps.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.list_onboarding_step) {
+      OnboardingSteps.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -36314,7 +34873,7 @@ export const ListOnboardingStepResponse = {
             break;
           }
 
-          message.list_onboarding_step!.push(OnboardingSteps.decode(reader, reader.uint32()));
+          message.list_onboarding_step.push(OnboardingSteps.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -36357,7 +34916,7 @@ function createBaseListOnboardingStepRequest(): ListOnboardingStepRequest {
 
 export const ListOnboardingStepRequest = {
   encode(message: ListOnboardingStepRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
     if (message.limit !== undefined) {
@@ -36416,7 +34975,7 @@ export const ListOnboardingStepRequest = {
 
   toJSON(message: ListOnboardingStepRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     if (message.limit !== undefined) {
@@ -36446,7 +35005,7 @@ function createBaseUpdateOnboardingStepRequest(): UpdateOnboardingStepRequest {
 
 export const UpdateOnboardingStepRequest = {
   encode(message: UpdateOnboardingStepRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
     if (message.onboarding_step !== undefined) {
@@ -36494,7 +35053,7 @@ export const UpdateOnboardingStepRequest = {
 
   toJSON(message: UpdateOnboardingStepRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     if (message.onboarding_step !== undefined) {
@@ -36531,22 +35090,22 @@ function createBaseSdTopic(): SdTopic {
 
 export const SdTopic = {
   encode(message: SdTopic, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       writer.uint32(18).string(message.creator_id);
     }
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       writer.uint32(26).string(message.message_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(42).string(message.channel_id);
     }
-    if (message.status !== undefined && message.status !== 0) {
+    if (message.status !== 0) {
       writer.uint32(48).int32(message.status);
     }
     if (message.create_time !== undefined) {
@@ -36669,22 +35228,22 @@ export const SdTopic = {
 
   toJSON(message: SdTopic): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.status !== undefined && message.status !== 0) {
+    if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
     if (message.create_time !== undefined) {
@@ -36731,13 +35290,13 @@ function createBaseSdTopicRequest(): SdTopicRequest {
 
 export const SdTopicRequest = {
   encode(message: SdTopicRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       writer.uint32(10).string(message.message_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
     }
     return writer;
@@ -36790,13 +35349,13 @@ export const SdTopicRequest = {
 
   toJSON(message: SdTopicRequest): unknown {
     const obj: any = {};
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -36820,13 +35379,11 @@ function createBaseSdTopicList(): SdTopicList {
 
 export const SdTopicList = {
   encode(message: SdTopicList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.count !== undefined && message.count !== 0) {
+    if (message.count !== 0) {
       writer.uint32(8).int32(message.count);
     }
-    if (message.topics !== undefined && message.topics.length !== 0) {
-      for (const v of message.topics) {
-        SdTopic.encode(v!, writer.uint32(18).fork()).ldelim();
-      }
+    for (const v of message.topics) {
+      SdTopic.encode(v!, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -36850,7 +35407,7 @@ export const SdTopicList = {
             break;
           }
 
-          message.topics!.push(SdTopic.decode(reader, reader.uint32()));
+          message.topics.push(SdTopic.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -36870,7 +35427,7 @@ export const SdTopicList = {
 
   toJSON(message: SdTopicList): unknown {
     const obj: any = {};
-    if (message.count !== undefined && message.count !== 0) {
+    if (message.count !== 0) {
       obj.count = Math.round(message.count);
     }
     if (message.topics?.length) {
@@ -36896,10 +35453,10 @@ function createBaseListSdTopicRequest(): ListSdTopicRequest {
 
 export const ListSdTopicRequest = {
   encode(message: ListSdTopicRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.limit !== undefined && message.limit !== 0) {
+    if (message.limit !== 0) {
       writer.uint32(16).int32(message.limit);
     }
     return writer;
@@ -36944,10 +35501,10 @@ export const ListSdTopicRequest = {
 
   toJSON(message: ListSdTopicRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.limit !== undefined && message.limit !== 0) {
+    if (message.limit !== 0) {
       obj.limit = Math.round(message.limit);
     }
     return obj;
@@ -36970,7 +35527,7 @@ function createBaseSdTopicDetailRequest(): SdTopicDetailRequest {
 
 export const SdTopicDetailRequest = {
   encode(message: SdTopicDetailRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.topic_id !== undefined && message.topic_id !== "") {
+    if (message.topic_id !== "") {
       writer.uint32(10).string(message.topic_id);
     }
     return writer;
@@ -37005,7 +35562,7 @@ export const SdTopicDetailRequest = {
 
   toJSON(message: SdTopicDetailRequest): unknown {
     const obj: any = {};
-    if (message.topic_id !== undefined && message.topic_id !== "") {
+    if (message.topic_id !== "") {
       obj.topic_id = message.topic_id;
     }
     return obj;
@@ -37027,13 +35584,13 @@ function createBaseDeleteSdTopicRequest(): DeleteSdTopicRequest {
 
 export const DeleteSdTopicRequest = {
   encode(message: DeleteSdTopicRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(18).string(message.id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
     return writer;
@@ -37086,13 +35643,13 @@ export const DeleteSdTopicRequest = {
 
   toJSON(message: DeleteSdTopicRequest): unknown {
     const obj: any = {};
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -37116,10 +35673,10 @@ function createBaseGenerateMeetTokenRequest(): GenerateMeetTokenRequest {
 
 export const GenerateMeetTokenRequest = {
   encode(message: GenerateMeetTokenRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.room_name !== undefined && message.room_name !== "") {
+    if (message.room_name !== "") {
       writer.uint32(18).string(message.room_name);
     }
     return writer;
@@ -37164,10 +35721,10 @@ export const GenerateMeetTokenRequest = {
 
   toJSON(message: GenerateMeetTokenRequest): unknown {
     const obj: any = {};
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.room_name !== undefined && message.room_name !== "") {
+    if (message.room_name !== "") {
       obj.room_name = message.room_name;
     }
     return obj;
@@ -37190,16 +35747,16 @@ function createBaseMeetParticipantRequest(): MeetParticipantRequest {
 
 export const MeetParticipantRequest = {
   encode(message: MeetParticipantRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       writer.uint32(10).string(message.username);
     }
-    if (message.room_name !== undefined && message.room_name !== "") {
+    if (message.room_name !== "") {
       writer.uint32(18).string(message.room_name);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
     }
     return writer;
@@ -37260,16 +35817,16 @@ export const MeetParticipantRequest = {
 
   toJSON(message: MeetParticipantRequest): unknown {
     const obj: any = {};
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       obj.username = message.username;
     }
-    if (message.room_name !== undefined && message.room_name !== "") {
+    if (message.room_name !== "") {
       obj.room_name = message.room_name;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -37294,7 +35851,7 @@ function createBaseGenerateMeetTokenResponse(): GenerateMeetTokenResponse {
 
 export const GenerateMeetTokenResponse = {
   encode(message: GenerateMeetTokenResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       writer.uint32(10).string(message.token);
     }
     return writer;
@@ -37329,7 +35886,7 @@ export const GenerateMeetTokenResponse = {
 
   toJSON(message: GenerateMeetTokenResponse): unknown {
     const obj: any = {};
-    if (message.token !== undefined && message.token !== "") {
+    if (message.token !== "") {
       obj.token = message.token;
     }
     return obj;
@@ -37351,19 +35908,19 @@ function createBaseGenerateMezonMeetResponse(): GenerateMezonMeetResponse {
 
 export const GenerateMezonMeetResponse = {
   encode(message: GenerateMezonMeetResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.meet_id !== undefined && message.meet_id !== "") {
+    if (message.meet_id !== "") {
       writer.uint32(10).string(message.meet_id);
     }
-    if (message.room_name !== undefined && message.room_name !== "") {
+    if (message.room_name !== "") {
       writer.uint32(18).string(message.room_name);
     }
-    if (message.external_link !== undefined && message.external_link !== "") {
+    if (message.external_link !== "") {
       writer.uint32(26).string(message.external_link);
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       writer.uint32(34).string(message.creator_id);
     }
-    if (message.event_id !== undefined && message.event_id !== "") {
+    if (message.event_id !== "") {
       writer.uint32(42).string(message.event_id);
     }
     return writer;
@@ -37432,19 +35989,19 @@ export const GenerateMezonMeetResponse = {
 
   toJSON(message: GenerateMezonMeetResponse): unknown {
     const obj: any = {};
-    if (message.meet_id !== undefined && message.meet_id !== "") {
+    if (message.meet_id !== "") {
       obj.meet_id = message.meet_id;
     }
-    if (message.room_name !== undefined && message.room_name !== "") {
+    if (message.room_name !== "") {
       obj.room_name = message.room_name;
     }
-    if (message.external_link !== undefined && message.external_link !== "") {
+    if (message.external_link !== "") {
       obj.external_link = message.external_link;
     }
-    if (message.creator_id !== undefined && message.creator_id !== "") {
+    if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.event_id !== undefined && message.event_id !== "") {
+    if (message.event_id !== "") {
       obj.event_id = message.event_id;
     }
     return obj;
@@ -37470,10 +36027,10 @@ function createBaseCreateRoomChannelApps(): CreateRoomChannelApps {
 
 export const CreateRoomChannelApps = {
   encode(message: CreateRoomChannelApps, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.room_name !== undefined && message.room_name !== "") {
+    if (message.room_name !== "") {
       writer.uint32(18).string(message.room_name);
     }
     return writer;
@@ -37518,10 +36075,10 @@ export const CreateRoomChannelApps = {
 
   toJSON(message: CreateRoomChannelApps): unknown {
     const obj: any = {};
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.room_name !== undefined && message.room_name !== "") {
+    if (message.room_name !== "") {
       obj.room_name = message.room_name;
     }
     return obj;
@@ -37592,194 +36149,145 @@ function createBaseMezonOauthClient(): MezonOauthClient {
 
 export const MezonOauthClient = {
   encode(message: MezonOauthClient, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.access_token_strategy !== undefined && message.access_token_strategy !== "") {
+    if (message.access_token_strategy !== "") {
       writer.uint32(10).string(message.access_token_strategy);
     }
-    if (message.allowed_cors_origins !== undefined && message.allowed_cors_origins.length !== 0) {
-      for (const v of message.allowed_cors_origins) {
-        writer.uint32(18).string(v!);
-      }
+    for (const v of message.allowed_cors_origins) {
+      writer.uint32(18).string(v!);
     }
-    if (message.audience !== undefined && message.audience.length !== 0) {
-      for (const v of message.audience) {
-        writer.uint32(26).string(v!);
-      }
+    for (const v of message.audience) {
+      writer.uint32(26).string(v!);
     }
-    if (
-      message.authorization_code_grant_access_token_lifespan !== undefined &&
-      message.authorization_code_grant_access_token_lifespan !== ""
-    ) {
+    if (message.authorization_code_grant_access_token_lifespan !== "") {
       writer.uint32(34).string(message.authorization_code_grant_access_token_lifespan);
     }
-    if (
-      message.authorization_code_grant_id_token_lifespan !== undefined &&
-      message.authorization_code_grant_id_token_lifespan !== ""
-    ) {
+    if (message.authorization_code_grant_id_token_lifespan !== "") {
       writer.uint32(42).string(message.authorization_code_grant_id_token_lifespan);
     }
-    if (
-      message.authorization_code_grant_refresh_token_lifespan !== undefined &&
-      message.authorization_code_grant_refresh_token_lifespan !== ""
-    ) {
+    if (message.authorization_code_grant_refresh_token_lifespan !== "") {
       writer.uint32(50).string(message.authorization_code_grant_refresh_token_lifespan);
     }
-    if (
-      message.backchannel_logout_session_required !== undefined && message.backchannel_logout_session_required !== false
-    ) {
+    if (message.backchannel_logout_session_required !== false) {
       writer.uint32(56).bool(message.backchannel_logout_session_required);
     }
-    if (message.backchannel_logout_uri !== undefined && message.backchannel_logout_uri !== "") {
+    if (message.backchannel_logout_uri !== "") {
       writer.uint32(66).string(message.backchannel_logout_uri);
     }
-    if (
-      message.client_credentials_grant_access_token_lifespan !== undefined &&
-      message.client_credentials_grant_access_token_lifespan !== ""
-    ) {
+    if (message.client_credentials_grant_access_token_lifespan !== "") {
       writer.uint32(74).string(message.client_credentials_grant_access_token_lifespan);
     }
-    if (message.client_id !== undefined && message.client_id !== "") {
+    if (message.client_id !== "") {
       writer.uint32(82).string(message.client_id);
     }
-    if (message.client_name !== undefined && message.client_name !== "") {
+    if (message.client_name !== "") {
       writer.uint32(90).string(message.client_name);
     }
-    if (message.client_secret !== undefined && message.client_secret !== "") {
+    if (message.client_secret !== "") {
       writer.uint32(98).string(message.client_secret);
     }
-    if (message.client_secret_expires_at !== undefined && message.client_secret_expires_at !== 0) {
+    if (message.client_secret_expires_at !== 0) {
       writer.uint32(104).int32(message.client_secret_expires_at);
     }
-    if (message.client_uri !== undefined && message.client_uri !== "") {
+    if (message.client_uri !== "") {
       writer.uint32(114).string(message.client_uri);
     }
-    if (message.contacts !== undefined && message.contacts.length !== 0) {
-      for (const v of message.contacts) {
-        writer.uint32(122).string(v!);
-      }
+    for (const v of message.contacts) {
+      writer.uint32(122).string(v!);
     }
     if (message.created_at !== undefined) {
       Timestamp.encode(toTimestamp(message.created_at), writer.uint32(130).fork()).ldelim();
     }
-    if (
-      message.frontchannel_logout_session_required !== undefined &&
-      message.frontchannel_logout_session_required !== false
-    ) {
+    if (message.frontchannel_logout_session_required !== false) {
       writer.uint32(136).bool(message.frontchannel_logout_session_required);
     }
-    if (message.frontchannel_logout_uri !== undefined && message.frontchannel_logout_uri !== "") {
+    if (message.frontchannel_logout_uri !== "") {
       writer.uint32(146).string(message.frontchannel_logout_uri);
     }
-    if (message.grant_types !== undefined && message.grant_types.length !== 0) {
-      for (const v of message.grant_types) {
-        writer.uint32(154).string(v!);
-      }
+    for (const v of message.grant_types) {
+      writer.uint32(154).string(v!);
     }
-    if (
-      message.implicit_grant_access_token_lifespan !== undefined && message.implicit_grant_access_token_lifespan !== ""
-    ) {
+    if (message.implicit_grant_access_token_lifespan !== "") {
       writer.uint32(162).string(message.implicit_grant_access_token_lifespan);
     }
-    if (message.implicit_grant_id_token_lifespan !== undefined && message.implicit_grant_id_token_lifespan !== "") {
+    if (message.implicit_grant_id_token_lifespan !== "") {
       writer.uint32(170).string(message.implicit_grant_id_token_lifespan);
     }
-    if (message.jwks !== undefined && message.jwks.length !== 0) {
-      for (const v of message.jwks) {
-        writer.uint32(178).string(v!);
-      }
+    for (const v of message.jwks) {
+      writer.uint32(178).string(v!);
     }
-    if (message.jwks_uri !== undefined && message.jwks_uri !== "") {
+    if (message.jwks_uri !== "") {
       writer.uint32(186).string(message.jwks_uri);
     }
-    if (
-      message.jwt_bearer_grant_access_token_lifespan !== undefined &&
-      message.jwt_bearer_grant_access_token_lifespan !== ""
-    ) {
+    if (message.jwt_bearer_grant_access_token_lifespan !== "") {
       writer.uint32(194).string(message.jwt_bearer_grant_access_token_lifespan);
     }
-    if (message.logo_uri !== undefined && message.logo_uri !== "") {
+    if (message.logo_uri !== "") {
       writer.uint32(202).string(message.logo_uri);
     }
-    if (message.owner !== undefined && message.owner !== "") {
+    if (message.owner !== "") {
       writer.uint32(210).string(message.owner);
     }
-    if (message.policy_uri !== undefined && message.policy_uri !== "") {
+    if (message.policy_uri !== "") {
       writer.uint32(218).string(message.policy_uri);
     }
-    if (message.post_logout_redirect_uris !== undefined && message.post_logout_redirect_uris.length !== 0) {
-      for (const v of message.post_logout_redirect_uris) {
-        writer.uint32(226).string(v!);
-      }
+    for (const v of message.post_logout_redirect_uris) {
+      writer.uint32(226).string(v!);
     }
-    if (message.redirect_uris !== undefined && message.redirect_uris.length !== 0) {
-      for (const v of message.redirect_uris) {
-        writer.uint32(234).string(v!);
-      }
+    for (const v of message.redirect_uris) {
+      writer.uint32(234).string(v!);
     }
-    if (
-      message.refresh_token_grant_access_token_lifespan !== undefined &&
-      message.refresh_token_grant_access_token_lifespan !== ""
-    ) {
+    if (message.refresh_token_grant_access_token_lifespan !== "") {
       writer.uint32(242).string(message.refresh_token_grant_access_token_lifespan);
     }
-    if (
-      message.refresh_token_grant_id_token_lifespan !== undefined &&
-      message.refresh_token_grant_id_token_lifespan !== ""
-    ) {
+    if (message.refresh_token_grant_id_token_lifespan !== "") {
       writer.uint32(250).string(message.refresh_token_grant_id_token_lifespan);
     }
-    if (
-      message.refresh_token_grant_refresh_token_lifespan !== undefined &&
-      message.refresh_token_grant_refresh_token_lifespan !== ""
-    ) {
+    if (message.refresh_token_grant_refresh_token_lifespan !== "") {
       writer.uint32(258).string(message.refresh_token_grant_refresh_token_lifespan);
     }
-    if (message.registration_access_token !== undefined && message.registration_access_token !== "") {
+    if (message.registration_access_token !== "") {
       writer.uint32(266).string(message.registration_access_token);
     }
-    if (message.registration_client_uri !== undefined && message.registration_client_uri !== "") {
+    if (message.registration_client_uri !== "") {
       writer.uint32(274).string(message.registration_client_uri);
     }
-    if (message.request_object_signing_alg !== undefined && message.request_object_signing_alg !== "") {
+    if (message.request_object_signing_alg !== "") {
       writer.uint32(282).string(message.request_object_signing_alg);
     }
-    if (message.request_uris !== undefined && message.request_uris.length !== 0) {
-      for (const v of message.request_uris) {
-        writer.uint32(290).string(v!);
-      }
+    for (const v of message.request_uris) {
+      writer.uint32(290).string(v!);
     }
-    if (message.response_types !== undefined && message.response_types.length !== 0) {
-      for (const v of message.response_types) {
-        writer.uint32(298).string(v!);
-      }
+    for (const v of message.response_types) {
+      writer.uint32(298).string(v!);
     }
-    if (message.scope !== undefined && message.scope !== "") {
+    if (message.scope !== "") {
       writer.uint32(306).string(message.scope);
     }
-    if (message.sector_identifier_uri !== undefined && message.sector_identifier_uri !== "") {
+    if (message.sector_identifier_uri !== "") {
       writer.uint32(314).string(message.sector_identifier_uri);
     }
-    if (message.skip_consent !== undefined && message.skip_consent !== false) {
+    if (message.skip_consent !== false) {
       writer.uint32(320).bool(message.skip_consent);
     }
-    if (message.skip_logout_consent !== undefined && message.skip_logout_consent !== false) {
+    if (message.skip_logout_consent !== false) {
       writer.uint32(328).bool(message.skip_logout_consent);
     }
-    if (message.subject_type !== undefined && message.subject_type !== "") {
+    if (message.subject_type !== "") {
       writer.uint32(338).string(message.subject_type);
     }
-    if (message.token_endpoint_auth_method !== undefined && message.token_endpoint_auth_method !== "") {
+    if (message.token_endpoint_auth_method !== "") {
       writer.uint32(346).string(message.token_endpoint_auth_method);
     }
-    if (message.token_endpoint_auth_signing_alg !== undefined && message.token_endpoint_auth_signing_alg !== "") {
+    if (message.token_endpoint_auth_signing_alg !== "") {
       writer.uint32(354).string(message.token_endpoint_auth_signing_alg);
     }
-    if (message.tos_uri !== undefined && message.tos_uri !== "") {
+    if (message.tos_uri !== "") {
       writer.uint32(362).string(message.tos_uri);
     }
     if (message.updated_at !== undefined) {
       Timestamp.encode(toTimestamp(message.updated_at), writer.uint32(370).fork()).ldelim();
     }
-    if (message.userinfo_signed_response_alg !== undefined && message.userinfo_signed_response_alg !== "") {
+    if (message.userinfo_signed_response_alg !== "") {
       writer.uint32(378).string(message.userinfo_signed_response_alg);
     }
     return writer;
@@ -37804,14 +36312,14 @@ export const MezonOauthClient = {
             break;
           }
 
-          message.allowed_cors_origins!.push(reader.string());
+          message.allowed_cors_origins.push(reader.string());
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.audience!.push(reader.string());
+          message.audience.push(reader.string());
           continue;
         case 4:
           if (tag !== 34) {
@@ -37895,7 +36403,7 @@ export const MezonOauthClient = {
             break;
           }
 
-          message.contacts!.push(reader.string());
+          message.contacts.push(reader.string());
           continue;
         case 16:
           if (tag !== 130) {
@@ -37923,7 +36431,7 @@ export const MezonOauthClient = {
             break;
           }
 
-          message.grant_types!.push(reader.string());
+          message.grant_types.push(reader.string());
           continue;
         case 20:
           if (tag !== 162) {
@@ -37944,7 +36452,7 @@ export const MezonOauthClient = {
             break;
           }
 
-          message.jwks!.push(reader.string());
+          message.jwks.push(reader.string());
           continue;
         case 23:
           if (tag !== 186) {
@@ -37986,14 +36494,14 @@ export const MezonOauthClient = {
             break;
           }
 
-          message.post_logout_redirect_uris!.push(reader.string());
+          message.post_logout_redirect_uris.push(reader.string());
           continue;
         case 29:
           if (tag !== 234) {
             break;
           }
 
-          message.redirect_uris!.push(reader.string());
+          message.redirect_uris.push(reader.string());
           continue;
         case 30:
           if (tag !== 242) {
@@ -38042,14 +36550,14 @@ export const MezonOauthClient = {
             break;
           }
 
-          message.request_uris!.push(reader.string());
+          message.request_uris.push(reader.string());
           continue;
         case 37:
           if (tag !== 298) {
             break;
           }
 
-          message.response_types!.push(reader.string());
+          message.response_types.push(reader.string());
           continue;
         case 38:
           if (tag !== 306) {
@@ -38162,7 +36670,9 @@ export const MezonOauthClient = {
         ? globalThis.Number(object.client_secret_expires_at)
         : 0,
       client_uri: isSet(object.client_uri) ? globalThis.String(object.client_uri) : "",
-      contacts: globalThis.Array.isArray(object?.contacts) ? object.contacts.map((e: any) => globalThis.String(e)) : [],
+      contacts: globalThis.Array.isArray(object?.contacts)
+        ? object.contacts.map((e: any) => globalThis.String(e))
+        : [],
       created_at: isSet(object.created_at) ? fromJsonTimestamp(object.created_at) : undefined,
       frontchannel_logout_session_required: isSet(object.frontchannel_logout_session_required)
         ? globalThis.Boolean(object.frontchannel_logout_session_required)
@@ -38240,7 +36750,7 @@ export const MezonOauthClient = {
 
   toJSON(message: MezonOauthClient): unknown {
     const obj: any = {};
-    if (message.access_token_strategy !== undefined && message.access_token_strategy !== "") {
+    if (message.access_token_strategy !== "") {
       obj.access_token_strategy = message.access_token_strategy;
     }
     if (message.allowed_cors_origins?.length) {
@@ -38249,51 +36759,37 @@ export const MezonOauthClient = {
     if (message.audience?.length) {
       obj.audience = message.audience;
     }
-    if (
-      message.authorization_code_grant_access_token_lifespan !== undefined &&
-      message.authorization_code_grant_access_token_lifespan !== ""
-    ) {
+    if (message.authorization_code_grant_access_token_lifespan !== "") {
       obj.authorization_code_grant_access_token_lifespan = message.authorization_code_grant_access_token_lifespan;
     }
-    if (
-      message.authorization_code_grant_id_token_lifespan !== undefined &&
-      message.authorization_code_grant_id_token_lifespan !== ""
-    ) {
+    if (message.authorization_code_grant_id_token_lifespan !== "") {
       obj.authorization_code_grant_id_token_lifespan = message.authorization_code_grant_id_token_lifespan;
     }
-    if (
-      message.authorization_code_grant_refresh_token_lifespan !== undefined &&
-      message.authorization_code_grant_refresh_token_lifespan !== ""
-    ) {
+    if (message.authorization_code_grant_refresh_token_lifespan !== "") {
       obj.authorization_code_grant_refresh_token_lifespan = message.authorization_code_grant_refresh_token_lifespan;
     }
-    if (
-      message.backchannel_logout_session_required !== undefined && message.backchannel_logout_session_required !== false
-    ) {
+    if (message.backchannel_logout_session_required !== false) {
       obj.backchannel_logout_session_required = message.backchannel_logout_session_required;
     }
-    if (message.backchannel_logout_uri !== undefined && message.backchannel_logout_uri !== "") {
+    if (message.backchannel_logout_uri !== "") {
       obj.backchannel_logout_uri = message.backchannel_logout_uri;
     }
-    if (
-      message.client_credentials_grant_access_token_lifespan !== undefined &&
-      message.client_credentials_grant_access_token_lifespan !== ""
-    ) {
+    if (message.client_credentials_grant_access_token_lifespan !== "") {
       obj.client_credentials_grant_access_token_lifespan = message.client_credentials_grant_access_token_lifespan;
     }
-    if (message.client_id !== undefined && message.client_id !== "") {
+    if (message.client_id !== "") {
       obj.client_id = message.client_id;
     }
-    if (message.client_name !== undefined && message.client_name !== "") {
+    if (message.client_name !== "") {
       obj.client_name = message.client_name;
     }
-    if (message.client_secret !== undefined && message.client_secret !== "") {
+    if (message.client_secret !== "") {
       obj.client_secret = message.client_secret;
     }
-    if (message.client_secret_expires_at !== undefined && message.client_secret_expires_at !== 0) {
+    if (message.client_secret_expires_at !== 0) {
       obj.client_secret_expires_at = Math.round(message.client_secret_expires_at);
     }
-    if (message.client_uri !== undefined && message.client_uri !== "") {
+    if (message.client_uri !== "") {
       obj.client_uri = message.client_uri;
     }
     if (message.contacts?.length) {
@@ -38302,45 +36798,37 @@ export const MezonOauthClient = {
     if (message.created_at !== undefined) {
       obj.created_at = message.created_at.toISOString();
     }
-    if (
-      message.frontchannel_logout_session_required !== undefined &&
-      message.frontchannel_logout_session_required !== false
-    ) {
+    if (message.frontchannel_logout_session_required !== false) {
       obj.frontchannel_logout_session_required = message.frontchannel_logout_session_required;
     }
-    if (message.frontchannel_logout_uri !== undefined && message.frontchannel_logout_uri !== "") {
+    if (message.frontchannel_logout_uri !== "") {
       obj.frontchannel_logout_uri = message.frontchannel_logout_uri;
     }
     if (message.grant_types?.length) {
       obj.grant_types = message.grant_types;
     }
-    if (
-      message.implicit_grant_access_token_lifespan !== undefined && message.implicit_grant_access_token_lifespan !== ""
-    ) {
+    if (message.implicit_grant_access_token_lifespan !== "") {
       obj.implicit_grant_access_token_lifespan = message.implicit_grant_access_token_lifespan;
     }
-    if (message.implicit_grant_id_token_lifespan !== undefined && message.implicit_grant_id_token_lifespan !== "") {
+    if (message.implicit_grant_id_token_lifespan !== "") {
       obj.implicit_grant_id_token_lifespan = message.implicit_grant_id_token_lifespan;
     }
     if (message.jwks?.length) {
       obj.jwks = message.jwks;
     }
-    if (message.jwks_uri !== undefined && message.jwks_uri !== "") {
+    if (message.jwks_uri !== "") {
       obj.jwks_uri = message.jwks_uri;
     }
-    if (
-      message.jwt_bearer_grant_access_token_lifespan !== undefined &&
-      message.jwt_bearer_grant_access_token_lifespan !== ""
-    ) {
+    if (message.jwt_bearer_grant_access_token_lifespan !== "") {
       obj.jwt_bearer_grant_access_token_lifespan = message.jwt_bearer_grant_access_token_lifespan;
     }
-    if (message.logo_uri !== undefined && message.logo_uri !== "") {
+    if (message.logo_uri !== "") {
       obj.logo_uri = message.logo_uri;
     }
-    if (message.owner !== undefined && message.owner !== "") {
+    if (message.owner !== "") {
       obj.owner = message.owner;
     }
-    if (message.policy_uri !== undefined && message.policy_uri !== "") {
+    if (message.policy_uri !== "") {
       obj.policy_uri = message.policy_uri;
     }
     if (message.post_logout_redirect_uris?.length) {
@@ -38349,31 +36837,22 @@ export const MezonOauthClient = {
     if (message.redirect_uris?.length) {
       obj.redirect_uris = message.redirect_uris;
     }
-    if (
-      message.refresh_token_grant_access_token_lifespan !== undefined &&
-      message.refresh_token_grant_access_token_lifespan !== ""
-    ) {
+    if (message.refresh_token_grant_access_token_lifespan !== "") {
       obj.refresh_token_grant_access_token_lifespan = message.refresh_token_grant_access_token_lifespan;
     }
-    if (
-      message.refresh_token_grant_id_token_lifespan !== undefined &&
-      message.refresh_token_grant_id_token_lifespan !== ""
-    ) {
+    if (message.refresh_token_grant_id_token_lifespan !== "") {
       obj.refresh_token_grant_id_token_lifespan = message.refresh_token_grant_id_token_lifespan;
     }
-    if (
-      message.refresh_token_grant_refresh_token_lifespan !== undefined &&
-      message.refresh_token_grant_refresh_token_lifespan !== ""
-    ) {
+    if (message.refresh_token_grant_refresh_token_lifespan !== "") {
       obj.refresh_token_grant_refresh_token_lifespan = message.refresh_token_grant_refresh_token_lifespan;
     }
-    if (message.registration_access_token !== undefined && message.registration_access_token !== "") {
+    if (message.registration_access_token !== "") {
       obj.registration_access_token = message.registration_access_token;
     }
-    if (message.registration_client_uri !== undefined && message.registration_client_uri !== "") {
+    if (message.registration_client_uri !== "") {
       obj.registration_client_uri = message.registration_client_uri;
     }
-    if (message.request_object_signing_alg !== undefined && message.request_object_signing_alg !== "") {
+    if (message.request_object_signing_alg !== "") {
       obj.request_object_signing_alg = message.request_object_signing_alg;
     }
     if (message.request_uris?.length) {
@@ -38382,34 +36861,34 @@ export const MezonOauthClient = {
     if (message.response_types?.length) {
       obj.response_types = message.response_types;
     }
-    if (message.scope !== undefined && message.scope !== "") {
+    if (message.scope !== "") {
       obj.scope = message.scope;
     }
-    if (message.sector_identifier_uri !== undefined && message.sector_identifier_uri !== "") {
+    if (message.sector_identifier_uri !== "") {
       obj.sector_identifier_uri = message.sector_identifier_uri;
     }
-    if (message.skip_consent !== undefined && message.skip_consent !== false) {
+    if (message.skip_consent !== false) {
       obj.skip_consent = message.skip_consent;
     }
-    if (message.skip_logout_consent !== undefined && message.skip_logout_consent !== false) {
+    if (message.skip_logout_consent !== false) {
       obj.skip_logout_consent = message.skip_logout_consent;
     }
-    if (message.subject_type !== undefined && message.subject_type !== "") {
+    if (message.subject_type !== "") {
       obj.subject_type = message.subject_type;
     }
-    if (message.token_endpoint_auth_method !== undefined && message.token_endpoint_auth_method !== "") {
+    if (message.token_endpoint_auth_method !== "") {
       obj.token_endpoint_auth_method = message.token_endpoint_auth_method;
     }
-    if (message.token_endpoint_auth_signing_alg !== undefined && message.token_endpoint_auth_signing_alg !== "") {
+    if (message.token_endpoint_auth_signing_alg !== "") {
       obj.token_endpoint_auth_signing_alg = message.token_endpoint_auth_signing_alg;
     }
-    if (message.tos_uri !== undefined && message.tos_uri !== "") {
+    if (message.tos_uri !== "") {
       obj.tos_uri = message.tos_uri;
     }
     if (message.updated_at !== undefined) {
       obj.updated_at = message.updated_at.toISOString();
     }
-    if (message.userinfo_signed_response_alg !== undefined && message.userinfo_signed_response_alg !== "") {
+    if (message.userinfo_signed_response_alg !== "") {
       obj.userinfo_signed_response_alg = message.userinfo_signed_response_alg;
     }
     return obj;
@@ -38480,10 +36959,8 @@ function createBaseMezonOauthClientList(): MezonOauthClientList {
 
 export const MezonOauthClientList = {
   encode(message: MezonOauthClientList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.list_mezon_oauth_client !== undefined && message.list_mezon_oauth_client.length !== 0) {
-      for (const v of message.list_mezon_oauth_client) {
-        MezonOauthClient.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.list_mezon_oauth_client) {
+      MezonOauthClient.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -38500,7 +36977,7 @@ export const MezonOauthClientList = {
             break;
           }
 
-          message.list_mezon_oauth_client!.push(MezonOauthClient.decode(reader, reader.uint32()));
+          message.list_mezon_oauth_client.push(MezonOauthClient.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -38543,10 +37020,10 @@ function createBaseGetMezonOauthClientRequest(): GetMezonOauthClientRequest {
 
 export const GetMezonOauthClientRequest = {
   encode(message: GetMezonOauthClientRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.client_id !== undefined && message.client_id !== "") {
+    if (message.client_id !== "") {
       writer.uint32(10).string(message.client_id);
     }
-    if (message.client_name !== undefined && message.client_name !== "") {
+    if (message.client_name !== "") {
       writer.uint32(18).string(message.client_name);
     }
     return writer;
@@ -38591,10 +37068,10 @@ export const GetMezonOauthClientRequest = {
 
   toJSON(message: GetMezonOauthClientRequest): unknown {
     const obj: any = {};
-    if (message.client_id !== undefined && message.client_id !== "") {
+    if (message.client_id !== "") {
       obj.client_id = message.client_id;
     }
-    if (message.client_name !== undefined && message.client_name !== "") {
+    if (message.client_name !== "") {
       obj.client_name = message.client_name;
     }
     return obj;
@@ -38617,13 +37094,13 @@ function createBaseSearchThreadRequest(): SearchThreadRequest {
 
 export const SearchThreadRequest = {
   encode(message: SearchThreadRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.label !== undefined && message.label !== "") {
+    if (message.label !== "") {
       writer.uint32(26).string(message.label);
     }
     return writer;
@@ -38676,13 +37153,13 @@ export const SearchThreadRequest = {
 
   toJSON(message: SearchThreadRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.label !== undefined && message.label !== "") {
+    if (message.label !== "") {
       obj.label = message.label;
     }
     return obj;
@@ -38706,7 +37183,7 @@ function createBaseGenerateHashChannelAppsRequest(): GenerateHashChannelAppsRequ
 
 export const GenerateHashChannelAppsRequest = {
   encode(message: GenerateHashChannelAppsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.app_id !== undefined && message.app_id !== "") {
+    if (message.app_id !== "") {
       writer.uint32(10).string(message.app_id);
     }
     return writer;
@@ -38741,7 +37218,7 @@ export const GenerateHashChannelAppsRequest = {
 
   toJSON(message: GenerateHashChannelAppsRequest): unknown {
     const obj: any = {};
-    if (message.app_id !== undefined && message.app_id !== "") {
+    if (message.app_id !== "") {
       obj.app_id = message.app_id;
     }
     return obj;
@@ -38765,7 +37242,7 @@ function createBaseGenerateHashChannelAppsResponse(): GenerateHashChannelAppsRes
 
 export const GenerateHashChannelAppsResponse = {
   encode(message: GenerateHashChannelAppsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.web_app_data !== undefined && message.web_app_data !== "") {
+    if (message.web_app_data !== "") {
       writer.uint32(10).string(message.web_app_data);
     }
     return writer;
@@ -38800,7 +37277,7 @@ export const GenerateHashChannelAppsResponse = {
 
   toJSON(message: GenerateHashChannelAppsResponse): unknown {
     const obj: any = {};
-    if (message.web_app_data !== undefined && message.web_app_data !== "") {
+    if (message.web_app_data !== "") {
       obj.web_app_data = message.web_app_data;
     }
     return obj;
@@ -38834,31 +37311,31 @@ function createBaseMessage2InboxRequest(): Message2InboxRequest {
 
 export const Message2InboxRequest = {
   encode(message: Message2InboxRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       writer.uint32(10).string(message.message_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       writer.uint32(34).string(message.avatar);
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       writer.uint32(42).string(message.content);
     }
-    if (message.mentions !== undefined && message.mentions !== "") {
+    if (message.mentions !== "") {
       writer.uint32(50).string(message.mentions);
     }
-    if (message.attachments !== undefined && message.attachments !== "") {
+    if (message.attachments !== "") {
       writer.uint32(58).string(message.attachments);
     }
-    if (message.reactions !== undefined && message.reactions !== "") {
+    if (message.reactions !== "") {
       writer.uint32(66).string(message.reactions);
     }
-    if (message.references !== undefined && message.references !== "") {
+    if (message.references !== "") {
       writer.uint32(74).string(message.references);
     }
     return writer;
@@ -38959,31 +37436,31 @@ export const Message2InboxRequest = {
 
   toJSON(message: Message2InboxRequest): unknown {
     const obj: any = {};
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.avatar !== undefined && message.avatar !== "") {
+    if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.mentions !== undefined && message.mentions !== "") {
+    if (message.mentions !== "") {
       obj.mentions = message.mentions;
     }
-    if (message.attachments !== undefined && message.attachments !== "") {
+    if (message.attachments !== "") {
       obj.attachments = message.attachments;
     }
-    if (message.reactions !== undefined && message.reactions !== "") {
+    if (message.reactions !== "") {
       obj.reactions = message.reactions;
     }
-    if (message.references !== undefined && message.references !== "") {
+    if (message.references !== "") {
       obj.references = message.references;
     }
     return obj;
@@ -39013,16 +37490,16 @@ function createBaseAccountEmail(): AccountEmail {
 
 export const AccountEmail = {
   encode(message: AccountEmail, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.email !== undefined && message.email !== "") {
+    if (message.email !== "") {
       writer.uint32(10).string(message.email);
     }
-    if (message.password !== undefined && message.password !== "") {
+    if (message.password !== "") {
       writer.uint32(18).string(message.password);
     }
-    if (message.prev_email !== undefined && message.prev_email !== "") {
+    if (message.prev_email !== "") {
       writer.uint32(26).string(message.prev_email);
     }
-    Object.entries(message.vars || {}).forEach(([key, value]) => {
+    Object.entries(message.vars).forEach(([key, value]) => {
       AccountEmail_VarsEntry.encode({ key: key as any, value }, writer.uint32(34).fork()).ldelim();
     });
     return writer;
@@ -39063,7 +37540,7 @@ export const AccountEmail = {
 
           const entry4 = AccountEmail_VarsEntry.decode(reader, reader.uint32());
           if (entry4.value !== undefined) {
-            message.vars![entry4.key] = entry4.value;
+            message.vars[entry4.key] = entry4.value;
           }
           continue;
       }
@@ -39091,13 +37568,13 @@ export const AccountEmail = {
 
   toJSON(message: AccountEmail): unknown {
     const obj: any = {};
-    if (message.email !== undefined && message.email !== "") {
+    if (message.email !== "") {
       obj.email = message.email;
     }
-    if (message.password !== undefined && message.password !== "") {
+    if (message.password !== "") {
       obj.password = message.password;
     }
-    if (message.prev_email !== undefined && message.prev_email !== "") {
+    if (message.prev_email !== "") {
       obj.prev_email = message.prev_email;
     }
     if (message.vars) {
@@ -39210,10 +37687,10 @@ function createBaseAccountMezon(): AccountMezon {
 
 export const AccountMezon = {
   encode(message: AccountMezon, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.phone_number !== undefined && message.phone_number !== "") {
+    if (message.phone_number !== "") {
       writer.uint32(10).string(message.phone_number);
     }
-    Object.entries(message.vars || {}).forEach(([key, value]) => {
+    Object.entries(message.vars).forEach(([key, value]) => {
       AccountMezon_VarsEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).ldelim();
     });
     return writer;
@@ -39240,7 +37717,7 @@ export const AccountMezon = {
 
           const entry2 = AccountMezon_VarsEntry.decode(reader, reader.uint32());
           if (entry2.value !== undefined) {
-            message.vars![entry2.key] = entry2.value;
+            message.vars[entry2.key] = entry2.value;
           }
           continue;
       }
@@ -39266,7 +37743,7 @@ export const AccountMezon = {
 
   toJSON(message: AccountMezon): unknown {
     const obj: any = {};
-    if (message.phone_number !== undefined && message.phone_number !== "") {
+    if (message.phone_number !== "") {
       obj.phone_number = message.phone_number;
     }
     if (message.vars) {
@@ -39377,13 +37854,13 @@ function createBaseLinkAccountConfirmRequest(): LinkAccountConfirmRequest {
 
 export const LinkAccountConfirmRequest = {
   encode(message: LinkAccountConfirmRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.req_id !== undefined && message.req_id !== "") {
+    if (message.req_id !== "") {
       writer.uint32(10).string(message.req_id);
     }
-    if (message.status !== undefined && message.status !== 0) {
+    if (message.status !== 0) {
       writer.uint32(16).int32(message.status);
     }
-    if (message.otp_code !== undefined && message.otp_code !== "") {
+    if (message.otp_code !== "") {
       writer.uint32(26).string(message.otp_code);
     }
     return writer;
@@ -39436,13 +37913,13 @@ export const LinkAccountConfirmRequest = {
 
   toJSON(message: LinkAccountConfirmRequest): unknown {
     const obj: any = {};
-    if (message.req_id !== undefined && message.req_id !== "") {
+    if (message.req_id !== "") {
       obj.req_id = message.req_id;
     }
-    if (message.status !== undefined && message.status !== 0) {
+    if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
-    if (message.otp_code !== undefined && message.otp_code !== "") {
+    if (message.otp_code !== "") {
       obj.otp_code = message.otp_code;
     }
     return obj;
@@ -39475,28 +37952,28 @@ function createBaseQuickMenuAccess(): QuickMenuAccess {
 
 export const QuickMenuAccess = {
   encode(message: QuickMenuAccess, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.bot_id !== undefined && message.bot_id !== "") {
+    if (message.bot_id !== "") {
       writer.uint32(18).string(message.bot_id);
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(34).string(message.channel_id);
     }
-    if (message.menu_name !== undefined && message.menu_name !== "") {
+    if (message.menu_name !== "") {
       writer.uint32(42).string(message.menu_name);
     }
-    if (message.background !== undefined && message.background !== "") {
+    if (message.background !== "") {
       writer.uint32(50).string(message.background);
     }
-    if (message.action_msg !== undefined && message.action_msg !== "") {
+    if (message.action_msg !== "") {
       writer.uint32(58).string(message.action_msg);
     }
-    if (message.menu_type !== undefined && message.menu_type !== 0) {
+    if (message.menu_type !== 0) {
       writer.uint32(64).int32(message.menu_type);
     }
     return writer;
@@ -39589,28 +38066,28 @@ export const QuickMenuAccess = {
 
   toJSON(message: QuickMenuAccess): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.bot_id !== undefined && message.bot_id !== "") {
+    if (message.bot_id !== "") {
       obj.bot_id = message.bot_id;
     }
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.menu_name !== undefined && message.menu_name !== "") {
+    if (message.menu_name !== "") {
       obj.menu_name = message.menu_name;
     }
-    if (message.background !== undefined && message.background !== "") {
+    if (message.background !== "") {
       obj.background = message.background;
     }
-    if (message.action_msg !== undefined && message.action_msg !== "") {
+    if (message.action_msg !== "") {
       obj.action_msg = message.action_msg;
     }
-    if (message.menu_type !== undefined && message.menu_type !== 0) {
+    if (message.menu_type !== 0) {
       obj.menu_type = Math.round(message.menu_type);
     }
     return obj;
@@ -39639,13 +38116,13 @@ function createBaseListQuickMenuAccessRequest(): ListQuickMenuAccessRequest {
 
 export const ListQuickMenuAccessRequest = {
   encode(message: ListQuickMenuAccessRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.bot_id !== undefined && message.bot_id !== "") {
+    if (message.bot_id !== "") {
       writer.uint32(10).string(message.bot_id);
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.menu_type !== undefined && message.menu_type !== 0) {
+    if (message.menu_type !== 0) {
       writer.uint32(24).int32(message.menu_type);
     }
     return writer;
@@ -39698,13 +38175,13 @@ export const ListQuickMenuAccessRequest = {
 
   toJSON(message: ListQuickMenuAccessRequest): unknown {
     const obj: any = {};
-    if (message.bot_id !== undefined && message.bot_id !== "") {
+    if (message.bot_id !== "") {
       obj.bot_id = message.bot_id;
     }
-    if (message.channel_id !== undefined && message.channel_id !== "") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.menu_type !== undefined && message.menu_type !== 0) {
+    if (message.menu_type !== 0) {
       obj.menu_type = Math.round(message.menu_type);
     }
     return obj;
@@ -39728,10 +38205,8 @@ function createBaseQuickMenuAccessList(): QuickMenuAccessList {
 
 export const QuickMenuAccessList = {
   encode(message: QuickMenuAccessList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.list_menus !== undefined && message.list_menus.length !== 0) {
-      for (const v of message.list_menus) {
-        QuickMenuAccess.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.list_menus) {
+      QuickMenuAccess.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -39748,7 +38223,7 @@ export const QuickMenuAccessList = {
             break;
           }
 
-          message.list_menus!.push(QuickMenuAccess.decode(reader, reader.uint32()));
+          message.list_menus.push(QuickMenuAccess.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -39791,7 +38266,7 @@ function createBaseListForSaleItemsRequest(): ListForSaleItemsRequest {
 
 export const ListForSaleItemsRequest = {
   encode(message: ListForSaleItemsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.page !== undefined && message.page !== 0) {
+    if (message.page !== 0) {
       writer.uint32(8).int32(message.page);
     }
     return writer;
@@ -39826,7 +38301,7 @@ export const ListForSaleItemsRequest = {
 
   toJSON(message: ListForSaleItemsRequest): unknown {
     const obj: any = {};
-    if (message.page !== undefined && message.page !== 0) {
+    if (message.page !== 0) {
       obj.page = Math.round(message.page);
     }
     return obj;
@@ -39848,10 +38323,10 @@ function createBaseForSaleItem(): ForSaleItem {
 
 export const ForSaleItem = {
   encode(message: ForSaleItem, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.type !== undefined && message.type !== 0) {
+    if (message.type !== 0) {
       writer.uint32(8).int32(message.type);
     }
-    if (message.preview_url !== undefined && message.preview_url !== "") {
+    if (message.preview_url !== "") {
       writer.uint32(18).string(message.preview_url);
     }
     return writer;
@@ -39896,10 +38371,10 @@ export const ForSaleItem = {
 
   toJSON(message: ForSaleItem): unknown {
     const obj: any = {};
-    if (message.type !== undefined && message.type !== 0) {
+    if (message.type !== 0) {
       obj.type = Math.round(message.type);
     }
-    if (message.preview_url !== undefined && message.preview_url !== "") {
+    if (message.preview_url !== "") {
       obj.preview_url = message.preview_url;
     }
     return obj;
@@ -39922,10 +38397,8 @@ function createBaseForSaleItemList(): ForSaleItemList {
 
 export const ForSaleItemList = {
   encode(message: ForSaleItemList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.for_sale_items !== undefined && message.for_sale_items.length !== 0) {
-      for (const v of message.for_sale_items) {
-        ForSaleItem.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.for_sale_items) {
+      ForSaleItem.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -39942,7 +38415,7 @@ export const ForSaleItemList = {
             break;
           }
 
-          message.for_sale_items!.push(ForSaleItem.decode(reader, reader.uint32()));
+          message.for_sale_items.push(ForSaleItem.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -39985,7 +38458,7 @@ function createBaseIsFollowerRequest(): IsFollowerRequest {
 
 export const IsFollowerRequest = {
   encode(message: IsFollowerRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.follow_id !== undefined && message.follow_id !== "") {
+    if (message.follow_id !== "") {
       writer.uint32(10).string(message.follow_id);
     }
     return writer;
@@ -40020,7 +38493,7 @@ export const IsFollowerRequest = {
 
   toJSON(message: IsFollowerRequest): unknown {
     const obj: any = {};
-    if (message.follow_id !== undefined && message.follow_id !== "") {
+    if (message.follow_id !== "") {
       obj.follow_id = message.follow_id;
     }
     return obj;
@@ -40042,10 +38515,10 @@ function createBaseIsFollowerResponse(): IsFollowerResponse {
 
 export const IsFollowerResponse = {
   encode(message: IsFollowerResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.follow_id !== undefined && message.follow_id !== "") {
+    if (message.follow_id !== "") {
       writer.uint32(10).string(message.follow_id);
     }
-    if (message.is_follower !== undefined && message.is_follower !== false) {
+    if (message.is_follower !== false) {
       writer.uint32(16).bool(message.is_follower);
     }
     return writer;
@@ -40090,10 +38563,10 @@ export const IsFollowerResponse = {
 
   toJSON(message: IsFollowerResponse): unknown {
     const obj: any = {};
-    if (message.follow_id !== undefined && message.follow_id !== "") {
+    if (message.follow_id !== "") {
       obj.follow_id = message.follow_id;
     }
-    if (message.is_follower !== undefined && message.is_follower !== false) {
+    if (message.is_follower !== false) {
       obj.is_follower = message.is_follower;
     }
     return obj;
@@ -40116,10 +38589,10 @@ function createBaseTransferOwnershipRequest(): TransferOwnershipRequest {
 
 export const TransferOwnershipRequest = {
   encode(message: TransferOwnershipRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.new_owner_id !== undefined && message.new_owner_id !== "") {
+    if (message.new_owner_id !== "") {
       writer.uint32(18).string(message.new_owner_id);
     }
     return writer;
@@ -40164,10 +38637,10 @@ export const TransferOwnershipRequest = {
 
   toJSON(message: TransferOwnershipRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== undefined && message.clan_id !== "") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.new_owner_id !== undefined && message.new_owner_id !== "") {
+    if (message.new_owner_id !== "") {
       obj.new_owner_id = message.new_owner_id;
     }
     return obj;
@@ -40190,10 +38663,8 @@ function createBaseUserIds(): UserIds {
 
 export const UserIds = {
   encode(message: UserIds, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_ids !== undefined && message.user_ids.length !== 0) {
-      for (const v of message.user_ids) {
-        writer.uint32(10).string(v!);
-      }
+    for (const v of message.user_ids) {
+      writer.uint32(10).string(v!);
     }
     return writer;
   },
@@ -40210,7 +38681,7 @@ export const UserIds = {
             break;
           }
 
-          message.user_ids!.push(reader.string());
+          message.user_ids.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -40251,10 +38722,10 @@ function createBaseReportMessageAbuseReqest(): ReportMessageAbuseReqest {
 
 export const ReportMessageAbuseReqest = {
   encode(message: ReportMessageAbuseReqest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       writer.uint32(10).string(message.message_id);
     }
-    if (message.abuse_type !== undefined && message.abuse_type !== "") {
+    if (message.abuse_type !== "") {
       writer.uint32(18).string(message.abuse_type);
     }
     return writer;
@@ -40299,10 +38770,10 @@ export const ReportMessageAbuseReqest = {
 
   toJSON(message: ReportMessageAbuseReqest): unknown {
     const obj: any = {};
-    if (message.message_id !== undefined && message.message_id !== "") {
+    if (message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.abuse_type !== undefined && message.abuse_type !== "") {
+    if (message.abuse_type !== "") {
       obj.abuse_type = message.abuse_type;
     }
     return obj;
@@ -40320,20 +38791,28 @@ export const ReportMessageAbuseReqest = {
 };
 
 function bytesFromBase64(b64: string): Uint8Array {
-  const bin = globalThis.atob(b64);
-  const arr = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; ++i) {
-    arr[i] = bin.charCodeAt(i);
+  if ((globalThis as any).Buffer) {
+    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
+  } else {
+    const bin = globalThis.atob(b64);
+    const arr = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; ++i) {
+      arr[i] = bin.charCodeAt(i);
+    }
+    return arr;
   }
-  return arr;
 }
 
 function base64FromBytes(arr: Uint8Array): string {
-  const bin: string[] = [];
-  arr.forEach((byte) => {
-    bin.push(globalThis.String.fromCharCode(byte));
-  });
-  return globalThis.btoa(bin.join(""));
+  if ((globalThis as any).Buffer) {
+    return globalThis.Buffer.from(arr).toString("base64");
+  } else {
+    const bin: string[] = [];
+    arr.forEach((byte) => {
+      bin.push(globalThis.String.fromCharCode(byte));
+    });
+    return globalThis.btoa(bin.join(""));
+  }
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
@@ -40341,7 +38820,6 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 export type DeepPartial<T> = T extends Builtin ? T
   : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
