@@ -179,16 +179,29 @@ export interface MezonUpdateChannelDescBody {
   topic?: string;
 }
 
+
 /**  */
-export interface ApiLogedDeviceList {
+export interface ApiLogedDevice {
+  //
+  device_id?: string;
   //
   device_name?: string;
   //
-  loged_time?: string;
+  ip?: string;
+  //
+  last_active?: string;
+  //
+  login_at?: string;
   //
   platform?: string;
   //
   status?: number;
+}
+
+/**  */
+export interface ApiLogedDeviceList {
+  //
+  devices?: Array<ApiLogedDevice>;
 }
 
 /**  */
@@ -11785,7 +11798,7 @@ export class MezonApi {
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return response;
+          return {} as ApiLogedDeviceList;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
           return tsproto.LogedDeviceList.decode(new Uint8Array(buffer)) as unknown as ApiLogedDeviceList;
