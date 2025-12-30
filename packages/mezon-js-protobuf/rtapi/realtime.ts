@@ -1772,12 +1772,13 @@ export interface FcmDataPayload {
   user_role_ids: string[];
   user_sent_ids: string[];
   priority: number;
-  info_message: ChannelMessage | undefined;
+  message: ChannelMessage | undefined;
   is_e2ee: boolean;
   is_dm: boolean;
   mention_here: boolean;
   mentions: MessageMention[];
   references: MessageRef[];
+  attachments: MessageAttachment[];
 }
 
 function createBaseEnvelope(): Envelope {
@@ -16208,12 +16209,13 @@ function createBaseFcmDataPayload(): FcmDataPayload {
     user_role_ids: [],
     user_sent_ids: [],
     priority: 0,
-    info_message: undefined,
+    message: undefined,
     is_e2ee: false,
     is_dm: false,
     mention_here: false,
     mentions: [],
     references: [],
+    attachments: [],
   };
 }
 
@@ -16240,8 +16242,8 @@ export const FcmDataPayload = {
     if (message.priority !== 0) {
       writer.uint32(56).int32(message.priority);
     }
-    if (message.info_message !== undefined) {
-      ChannelMessage.encode(message.info_message, writer.uint32(66).fork()).ldelim();
+    if (message.message !== undefined) {
+      ChannelMessage.encode(message.message, writer.uint32(66).fork()).ldelim();
     }
     if (message.is_e2ee !== false) {
       writer.uint32(72).bool(message.is_e2ee);
@@ -16257,6 +16259,9 @@ export const FcmDataPayload = {
     }
     for (const v of message.references) {
       MessageRef.encode(v!, writer.uint32(106).fork()).ldelim();
+    }
+    for (const v of message.attachments) {
+      MessageAttachment.encode(v!, writer.uint32(114).fork()).ldelim();
     }
     return writer;
   },
@@ -16322,7 +16327,7 @@ export const FcmDataPayload = {
             break;
           }
 
-          message.info_message = ChannelMessage.decode(reader, reader.uint32());
+          message.message = ChannelMessage.decode(reader, reader.uint32());
           continue;
         case 9:
           if (tag !== 72) {
@@ -16359,6 +16364,13 @@ export const FcmDataPayload = {
 
           message.references.push(MessageRef.decode(reader, reader.uint32()));
           continue;
+        case 14:
+          if (tag !== 114) {
+            break;
+          }
+
+          message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -16381,7 +16393,7 @@ export const FcmDataPayload = {
         ? object.user_sent_ids.map((e: any) => globalThis.String(e))
         : [],
       priority: isSet(object.priority) ? globalThis.Number(object.priority) : 0,
-      info_message: isSet(object.info_message) ? ChannelMessage.fromJSON(object.info_message) : undefined,
+      message: isSet(object.message) ? ChannelMessage.fromJSON(object.message) : undefined,
       is_e2ee: isSet(object.is_e2ee) ? globalThis.Boolean(object.is_e2ee) : false,
       is_dm: isSet(object.is_dm) ? globalThis.Boolean(object.is_dm) : false,
       mention_here: isSet(object.mention_here) ? globalThis.Boolean(object.mention_here) : false,
@@ -16390,6 +16402,9 @@ export const FcmDataPayload = {
         : [],
       references: globalThis.Array.isArray(object?.references)
         ? object.references.map((e: any) => MessageRef.fromJSON(e))
+        : [],
+      attachments: globalThis.Array.isArray(object?.attachments)
+        ? object.attachments.map((e: any) => MessageAttachment.fromJSON(e))
         : [],
     };
   },
@@ -16417,8 +16432,8 @@ export const FcmDataPayload = {
     if (message.priority !== 0) {
       obj.priority = Math.round(message.priority);
     }
-    if (message.info_message !== undefined) {
-      obj.info_message = ChannelMessage.toJSON(message.info_message);
+    if (message.message !== undefined) {
+      obj.message = ChannelMessage.toJSON(message.message);
     }
     if (message.is_e2ee !== false) {
       obj.is_e2ee = message.is_e2ee;
@@ -16435,6 +16450,9 @@ export const FcmDataPayload = {
     if (message.references?.length) {
       obj.references = message.references.map((e) => MessageRef.toJSON(e));
     }
+    if (message.attachments?.length) {
+      obj.attachments = message.attachments.map((e) => MessageAttachment.toJSON(e));
+    }
     return obj;
   },
 
@@ -16450,14 +16468,15 @@ export const FcmDataPayload = {
     message.user_role_ids = object.user_role_ids?.map((e) => e) || [];
     message.user_sent_ids = object.user_sent_ids?.map((e) => e) || [];
     message.priority = object.priority ?? 0;
-    message.info_message = (object.info_message !== undefined && object.info_message !== null)
-      ? ChannelMessage.fromPartial(object.info_message)
+    message.message = (object.message !== undefined && object.message !== null)
+      ? ChannelMessage.fromPartial(object.message)
       : undefined;
     message.is_e2ee = object.is_e2ee ?? false;
     message.is_dm = object.is_dm ?? false;
     message.mention_here = object.mention_here ?? false;
     message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
     message.references = object.references?.map((e) => MessageRef.fromPartial(e)) || [];
+    message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
     return message;
   },
 };
