@@ -180,6 +180,18 @@ export interface MezonUpdateChannelDescBody {
 }
 
 /**  */
+export interface ApiLogedDeviceList {
+  //
+  device_name?: string;
+  //
+  loged_time?: string;
+  //
+  platform?: string;
+  //
+  status?: number;
+}
+
+/**  */
 export interface MezonUpdateClanDescBody {
   //
   banner?: string;
@@ -4196,19 +4208,21 @@ export class MezonApi {
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return response;
+          return {} as ApiListUserActivity;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.ListUserActivity.decode(new Uint8Array(buffer)) as unknown as ApiListUserActivity;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -4312,19 +4326,21 @@ export class MezonApi {
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return response;
+          return {} as ApiAppList;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.AppList.decode(new Uint8Array(buffer)) as unknown as ApiAppList;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -4585,19 +4601,21 @@ export class MezonApi {
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return response;
+          return {} as MezonapiListAuditLog;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.ListAuditLog.decode(new Uint8Array(buffer)) as unknown as MezonapiListAuditLog;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -4672,19 +4690,21 @@ export class MezonApi {
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return response;
+          return {} as ApiCategoryDescList;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.CategoryDescList.decode(new Uint8Array(buffer)) as unknown as ApiCategoryDescList;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -4706,19 +4726,21 @@ export class MezonApi {
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return response;
+          return {} as ApiListChannelAppsResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.ListChannelAppsResponse.decode(new Uint8Array(buffer)) as unknown as ApiListChannelAppsResponse;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -4753,19 +4775,21 @@ export class MezonApi {
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return response;
+          return {} as ApiChannelCanvasListResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.ChannelCanvasListResponse.decode(new Uint8Array(buffer)) as unknown as ApiChannelCanvasListResponse;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -4871,19 +4895,21 @@ export class MezonApi {
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return response;
+          return {} as ApiListFavoriteChannelResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.ListFavoriteChannelResponse.decode(new Uint8Array(buffer)) as unknown as ApiListFavoriteChannelResponse;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -5017,19 +5043,21 @@ export class MezonApi {
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return response;
+          return {} as ApiChannelAttachmentList;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.ChannelAttachmentList.decode(new Uint8Array(buffer)) as unknown as ApiChannelAttachmentList;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -5240,19 +5268,21 @@ export class MezonApi {
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async(response) => {
         if (response.status == 204) {
-          return response;
+          return {} as ApiChannelUserList;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.ChannelUserList.decode(new Uint8Array(buffer)) as unknown as ApiChannelUserList;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -5833,19 +5863,21 @@ export class MezonApi {
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async(response) => {
         if (response.status == 204) {
-          return response;
+          return {} as ApiBannedUserList;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.BannedUserList.decode(new Uint8Array(buffer)) as unknown as ApiBannedUserList;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -7131,19 +7163,21 @@ export class MezonApi {
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async(response) => {
         if (response.status == 204) {
-          return response;
+          return {} as ApiNotifiReactMessage;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.NotifiReactMessage.decode(new Uint8Array(buffer)) as unknown as ApiNotifiReactMessage;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -7194,42 +7228,6 @@ export class MezonApi {
   ): Promise<ApiGetKeyServerResp> {
     const urlPath = "/v2/e2ee/key_server";
     const queryParams = new Map<string, any>();
-
-    let bodyJson: string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
-
-  /** List HashtagDMList */
-  hashtagDMList(
-    bearerToken: string,
-    userId?: Array<string>,
-    limit?: number,
-    options: any = {}
-  ): Promise<ApiHashtagDmList> {
-    const urlPath = "/v2/hashtagdmlist";
-    const queryParams = new Map<string, any>();
-    queryParams.set("user_id", userId);
-    queryParams.set("limit", limit);
 
     let bodyJson: string = "";
 
@@ -7465,19 +7463,21 @@ export class MezonApi {
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return response;
+          return {} as ApiMezonOauthClientList;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.MezonOauthClientList.decode(new Uint8Array(buffer)) as unknown as ApiMezonOauthClientList;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -8886,20 +8886,22 @@ export class MezonApi {
   if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
   }
+  fetchOptions.headers["Accept"] = "application/x-protobuf";
 
   return Promise.race([
-    fetch(fullUrl, fetchOptions).then((response) => {
+    fetch(fullUrl, fetchOptions).then(async (response) => {
       if (response.status == 204) {
-        return response;
+        return {} as ApiChannelDescList;
       } else if (response.status >= 200 && response.status < 300) {
-        return response.json();
+        const buffer = await response.arrayBuffer();      
+          return tsproto.ChannelDescList.decode(new Uint8Array(buffer)) as unknown as ApiChannelDescList;
       } else {
         throw response;
       }
     }),
-    new Promise((_, reject) =>
-      setTimeout(reject, this.timeoutMs, "Request timed out.")
-    ),
+    new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
   ]);
 }
 
@@ -9862,19 +9864,21 @@ export class MezonApi {
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return response;
+          return {} as ApiUserPermissionInChannelListResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.UserPermissionInChannelListResponse.decode(new Uint8Array(buffer)) as unknown as ApiUserPermissionInChannelListResponse;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -9950,42 +9954,6 @@ export class MezonApi {
     ]);
   }
 
-  /** list transaction detail */
-  listTransactionDetail(bearerToken: string,
-      transId:string,
-      options: any = {}): Promise<ApiTransactionDetail> {
-    
-    if (transId === null || transId === undefined) {
-      throw new Error("'transId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/transaction/{transId}"
-        .replace("{transId}", encodeURIComponent(String(transId)));
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
-
   /** Store wallet key */
   storeWalletKey(bearerToken: string,
       body:ApiStoreWalletKeyRequest,
@@ -10021,45 +9989,6 @@ export class MezonApi {
       ),
     ]);
   }
-
-  /** Get user status */
-  listWalletLedger(bearerToken: string,
-      limit?:number,
-      filter?:number,
-      transactionId?:string,
-      page?:number,
-      options: any = {}): Promise<ApiWalletLedgerList> {
-    
-    const urlPath = "/v2/walletledger";
-    const queryParams = new Map<string, any>();
-    queryParams.set("limit", limit);
-    queryParams.set("filter", filter);
-    queryParams.set("transaction_id", transactionId);
-    queryParams.set("page", page);
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
 
   /** create webhook */
   generateWebhook(
@@ -10172,19 +10101,21 @@ export class MezonApi {
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return response;
+          return {} as ApiWebhookListResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.WebhookListResponse.decode(new Uint8Array(buffer)) as unknown as ApiWebhookListResponse;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -10658,19 +10589,21 @@ export class MezonApi {
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return response;
+          return {} as ApiListClanWebhookResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.ListClanWebhookResponse.decode(new Uint8Array(buffer)) as unknown as ApiListClanWebhookResponse;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -11336,19 +11269,21 @@ export class MezonApi {
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return response;
+          return {} as ApiChannelDescription;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.ChannelDescription.decode(new Uint8Array(buffer)) as unknown as ApiChannelDescription;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -11773,23 +11708,25 @@ export class MezonApi {
     let bodyJson : string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return response;
+          return {} as ApiIsBannedResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.IsBannedResponse.decode(new Uint8Array(buffer)) as unknown as ApiIsBannedResponse;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -11825,6 +11762,39 @@ export class MezonApi {
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /**  */
+  listLogedDevice(bearerToken: string,
+      options: any = {}): Promise<ApiLogedDeviceList> {
+    
+    const urlPath = "/v2/loged/device";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();      
+          return tsproto.LogedDeviceList.decode(new Uint8Array(buffer)) as unknown as ApiLogedDeviceList;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }

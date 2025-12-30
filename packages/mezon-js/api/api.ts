@@ -3772,6 +3772,13 @@ export interface ReportMessageAbuseReqest {
   abuse_type: string;
 }
 
+export interface LogedDeviceList {
+  device_name: string;
+  loged_time: Date | undefined;
+  status: number;
+  platform: string;
+}
+
 function createBaseAccount(): Account {
   return {
     user: undefined,
@@ -38786,6 +38793,110 @@ export const ReportMessageAbuseReqest = {
     const message = createBaseReportMessageAbuseReqest();
     message.message_id = object.message_id ?? "";
     message.abuse_type = object.abuse_type ?? "";
+    return message;
+  },
+};
+
+function createBaseLogedDeviceList(): LogedDeviceList {
+  return { device_name: "", loged_time: undefined, status: 0, platform: "" };
+}
+
+export const LogedDeviceList = {
+  encode(message: LogedDeviceList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.device_name !== "") {
+      writer.uint32(10).string(message.device_name);
+    }
+    if (message.loged_time !== undefined) {
+      Timestamp.encode(toTimestamp(message.loged_time), writer.uint32(18).fork()).ldelim();
+    }
+    if (message.status !== 0) {
+      writer.uint32(24).int32(message.status);
+    }
+    if (message.platform !== "") {
+      writer.uint32(34).string(message.platform);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): LogedDeviceList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseLogedDeviceList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.device_name = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.loged_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.status = reader.int32();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.platform = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): LogedDeviceList {
+    return {
+      device_name: isSet(object.device_name) ? globalThis.String(object.device_name) : "",
+      loged_time: isSet(object.loged_time) ? fromJsonTimestamp(object.loged_time) : undefined,
+      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
+      platform: isSet(object.platform) ? globalThis.String(object.platform) : "",
+    };
+  },
+
+  toJSON(message: LogedDeviceList): unknown {
+    const obj: any = {};
+    if (message.device_name !== "") {
+      obj.device_name = message.device_name;
+    }
+    if (message.loged_time !== undefined) {
+      obj.loged_time = message.loged_time.toISOString();
+    }
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
+    }
+    if (message.platform !== "") {
+      obj.platform = message.platform;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<LogedDeviceList>, I>>(base?: I): LogedDeviceList {
+    return LogedDeviceList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<LogedDeviceList>, I>>(object: I): LogedDeviceList {
+    const message = createBaseLogedDeviceList();
+    message.device_name = object.device_name ?? "";
+    message.loged_time = object.loged_time ?? undefined;
+    message.status = object.status ?? 0;
+    message.platform = object.platform ?? "";
     return message;
   },
 };

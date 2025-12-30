@@ -100,7 +100,6 @@ import {
   ApiNotificationUserChannel,
   ApiNotificationSetting,
   ApiNotifiReactMessage,
-  ApiHashtagDmList,
   ApiEmojiListedResponse,
   ApiStickerListedResponse,
   ApiAllUsersAddChannelResponse,
@@ -140,12 +139,10 @@ import {
   ApiUserStatus,
   ApiListOnboardingStepResponse,
   MezonUpdateOnboardingStepByClanIdBody,
-  ApiWalletLedgerList,
   ApiSdTopicList,
   ApiSdTopicRequest,
   ApiSdTopic,
   MezonUpdateEventBody,
-  ApiTransactionDetail,
   MezonapiCreateRoomChannelApps,
   ApiGenerateMeetTokenRequest,
   ApiGenerateMeetTokenResponse,
@@ -179,6 +176,7 @@ import {
   ApiUpdateUsernameRequest,
   ApiBannedUserList,
   ApiIsBannedResponse,
+  ApiLogedDeviceList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -3428,26 +3426,6 @@ export class Client {
       });
   }
 
-  async hashtagDMList(
-    session: Session,
-    userId: Array<string>,
-    limit: number
-  ): Promise<ApiHashtagDmList> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .hashtagDMList(session.token, userId, limit)
-      .then((response: ApiHashtagDmList) => {
-        return Promise.resolve(response);
-      });
-  }
-
   async listChannelByUserId(session: Session): Promise<ApiChannelDescList> {
     if (
       this.autoRefreshSession &&
@@ -4365,49 +4343,6 @@ export class Client {
       });
   }
 
-  /** list transaction detail */
-  async listTransactionDetail(
-    session: Session,
-    transId:string
-  ): Promise<ApiTransactionDetail> {  
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .listTransactionDetail(session.token, transId)
-      .then((response: ApiTransactionDetail) => {
-        return Promise.resolve(response);
-      });
-  }
-
-  //**list wallet ledger */
-  async listWalletLedger(
-    session: Session,
-    limit?: number,
-    filter?: number,
-    transactionId?: string,
-    page?: number
-  ): Promise<ApiWalletLedgerList> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .listWalletLedger(session.token, limit, filter, transactionId, page)
-      .then((response: ApiWalletLedgerList) => {
-        return Promise.resolve(response);
-      });
-  }
-
   //**list sd topic */
   async listSdTopic(
     session: Session,
@@ -4992,6 +4927,22 @@ export class Client {
       .reportMessageAbuse(session.token, messageId, abuseType)
       .then((response: any) => {
         return response !== undefined;
+      });
+  }
+
+  async listLogedDevice(session: Session): Promise<ApiLogedDeviceList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listLogedDevice(session.token)
+      .then((response: ApiLogedDeviceList) => {
+        return Promise.resolve(response);
       });
   }
 }
