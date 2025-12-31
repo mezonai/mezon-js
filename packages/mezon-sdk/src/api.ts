@@ -8,6 +8,7 @@ import { RateLimiter } from "./mezon-client/manager/rate-limit_manager"
 import * as tsproto from "./api/api";
 
 const GLOBAL_LIMITER = new RateLimiter(1024);
+type ProtoDecoder<T> = (bytes: Uint8Array) => T;
 export class MezonApi {
 
   constructor(readonly apiKey: string, readonly basePath: string, readonly timeoutMs: number) {}
@@ -28,16 +29,39 @@ export class MezonApi {
     });
   }
 
-  private async handleResponse<T = any>(response: Response): Promise<T> {
+   private async handleResponse<T = any>(
+    response: Response,
+    opts?: {
+      decode?: ProtoDecoder<T>;
+      emptyAs?: T;
+    }
+  ): Promise<T> {
     if (response.status === 204) {
-      return response as unknown as T;
+      return (opts?.emptyAs ?? ({} as any)) as T;
     }
 
-    if (response.status >= 200 && response.status < 300) {
-      const buffer = await response.arrayBuffer();      
-      return tsproto.VoiceChannelUserList.decode(new Uint8Array(buffer)) as unknown as any;
+    if (response.status < 200 || response.status >= 300) {
+      throw response;
     }
-    throw response;
+
+    const ct = (response.headers.get("content-type") || "").toLowerCase();
+    const looksBinary =
+      ct.includes("application/x-protobuf") ||
+      ct.includes("application/protobuf") ||
+      ct.includes("application/octet-stream");
+
+    if (opts?.decode) {
+      const buffer = await response.arrayBuffer();
+      return opts.decode(new Uint8Array(buffer));
+    }
+
+    if (looksBinary) {
+      throw new Error(
+        `Binary/protobuf response detected (content-type: "${ct}") but no decoder was provided for this endpoint.`
+      );
+    }
+
+    return (await response.json()) as T;
   }
 
   /** A healthcheck which load balancers can use to check the service. */
@@ -260,7 +284,9 @@ export class MezonApi {
     fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
-      this.handleResponse(res)
+      this.handleResponse(res, {
+        decode: (bytes) => tsproto.ClanDescList.decode(bytes)
+      })
     );
   }
 
@@ -291,7 +317,9 @@ export class MezonApi {
     fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
-      this.handleResponse(res)
+      this.handleResponse(res, {
+        decode: (bytes) => tsproto.ChannelDescription.decode(bytes)
+      })
     );
   }
 
@@ -343,7 +371,9 @@ export class MezonApi {
     fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
-      this.handleResponse(res)
+      this.handleResponse(res, {
+        decode: (bytes) => tsproto.ChannelDescList.decode(bytes)
+      })
     );
   }
 
@@ -376,21 +406,11 @@ export class MezonApi {
       }
       fetchOptions.headers["Accept"] = "application/x-protobuf";
   
-      return Promise.race([
-        fetch(fullUrl, fetchOptions).then(async (response) => {
-          if (response.status == 204) {
-            return {} as any;
-          } else if (response.status >= 200 && response.status < 300) {
-            const buffer = await response.arrayBuffer();      
-            return tsproto.VoiceChannelUserList.decode(new Uint8Array(buffer)) as unknown as any;
-          } else {
-            throw response;
-          }
-        }),
-        new Promise((_, reject) =>
-          setTimeout(reject, this.timeoutMs, "Request timed out.")
-        ),
-      ]);
+      return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
+        this.handleResponse<any>(res, {
+          decode: (bytes) => tsproto.VoiceChannelUserList.decode(bytes)
+        })
+      );
     }
 
   /** Register streaming in channel ( for bot - get streaming key) */
@@ -503,9 +523,12 @@ export class MezonApi {
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
-      this.handleResponse(res)
+      this.handleResponse(res, {
+        decode: (bytes) => tsproto.RoleList.decode(bytes) as any
+      })
     );
   }
 
@@ -670,20 +693,9 @@ export class MezonApi {
       if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
       }
-      return Promise.race([
-        fetch(urlPath, fetchOptions).then((response) => {
-          if (response.status == 204) {
-            return response;
-          } else if (response.status >= 200 && response.status < 300) {
-            return response.json();
-          } else {
-            throw response;
-          }
-        }),
-        new Promise((_, reject) =>
-          setTimeout(reject, this.timeoutMs, "Request timed out.")
-        ),
-      ]);
+
+      return this.rateLimitFetch(urlPath, fetchOptions).then((res) =>
+        this.handleResponse(res)
+      );
   }
-  
 }

@@ -50,7 +50,7 @@ export class User {
   private async createDmChannel() {
     try {
       const dmChannel = await this.channelManager.createDMchannel(this.id);
-      return dmChannel ?? {};
+      return dmChannel;
     } catch (error) {
       console.log("Error createDmChannel User", error);
       return null;
