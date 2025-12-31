@@ -1,57 +1,80 @@
 import { ExtraInfo } from "mmn-client-js";
 import { Events } from "../constants/enum";
 import { ChannelMessageAck } from "./socket";
+import { ChannelMessageHeader } from "../api/api";
 
 export interface MMNExtraInfo extends ExtraInfo {}
 
 /**  */
 export interface ApiChannelDescription {
-  //
-  active?: number;
-  //
-  category_id?: string;
-  //
-  category_name?: string;
-  //
-  channel_avatar?: Array<string>;
-  //The channel this message belongs to.
-  channel_id?: string;
-  //
-  channel_label?: string;
-  //
-  channel_private?: number;
-  //
-  clan_id?: string;
-  //
-  count_mess_unread?: number;
-  //
-  create_time_seconds?: number;
-  //creator ID.
-  creator_id?: string;
-  //
-  creator_name?: string;
-  //
-  last_pin_message?: string;
-  //
-  last_seen_message?: ApiChannelMessageHeader;
-  //
-  last_sent_message?: ApiChannelMessageHeader;
-  //
-  meeting_code?: string;
-  //
-  meeting_uri?: string;
-  //The parrent channel this message belongs to.
-  parent_id?: string;
-  //
-  status?: number;
-  //The channel type.
-  type?: number;
-  //
-  update_time_seconds?: number;
-  //
-  user_id?: Array<string>;
-  //
-  usernames?: string;
+  /** The clan of this channel */
+  clan_id: string;
+  /** The parent channel this message belongs to. */
+  parent_id: string;
+  /** The channel this message belongs to. */
+  channel_id: string;
+  /** The category of channel */
+  category_id: string;
+  /** The category name */
+  category_name: string;
+  /** The channel type. */
+  type:
+    | number
+    | undefined;
+  /** creator ID. */
+  creator_id: string;
+  /** The channel lable */
+  channel_label: string;
+  /** The channel private */
+  channel_private: number;
+  /** DM avatars */
+  avatars: string[];
+  /** List DM user ids */
+  user_ids: string[];
+  /** last message id */
+  last_sent_message:
+    | ChannelMessageHeader
+    | undefined;
+  /** last seen message id */
+  last_seen_message:
+    | ChannelMessageHeader
+    | undefined;
+  /** DM status */
+  onlines: boolean[];
+  /** meeting code */
+  meeting_code: string;
+  /** count message unread */
+  count_mess_unread: number;
+  /** active channel */
+  active: number;
+  /** last pin message */
+  last_pin_message: string;
+  /** List DM usernames */
+  usernames: string[];
+  /** creator name */
+  creator_name: string;
+  /** create time ms */
+  create_time_seconds: number;
+  /** update time ms */
+  update_time_seconds: number;
+  /** List DM diplay names */
+  display_names: string[];
+  /** channel avatar */
+  channel_avatar: string;
+  /** clan_name */
+  clan_name: string;
+  /** app id */
+  app_id: string;
+  /** channel all message */
+  is_mute: boolean;
+  /** age restricted */
+  age_restricted: number;
+  /** channel description topic */
+  topic: string;
+  /** e2ee */
+  e2ee: number;
+  /** channel member count */
+  member_count: number;
 }
 
 export interface MessagePayLoad {
