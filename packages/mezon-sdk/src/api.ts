@@ -5,6 +5,7 @@ import { ApiAuthenticateLogoutRequest, ApiAuthenticateRefreshRequest, ApiAuthent
 import { buildFetchOptions } from './utils';
 import { encode } from 'js-base64';
 import { RateLimiter } from "./mezon-client/manager/rate-limit_manager"
+import * as tsproto from "./api/api";
 
 const GLOBAL_LIMITER = new RateLimiter(1024);
 export class MezonApi {
@@ -33,7 +34,8 @@ export class MezonApi {
     }
 
     if (response.status >= 200 && response.status < 300) {
-      return response.json() as Promise<T>;
+      const buffer = await response.arrayBuffer();      
+      return tsproto.VoiceChannelUserList.decode(new Uint8Array(buffer)) as unknown as any;
     }
     throw response;
   }
@@ -255,6 +257,7 @@ export class MezonApi {
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
       this.handleResponse(res)
@@ -285,6 +288,7 @@ export class MezonApi {
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
       this.handleResponse(res)
@@ -336,6 +340,7 @@ export class MezonApi {
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return this.rateLimitFetch(fullUrl, fetchOptions).then((res) =>
       this.handleResponse(res)
@@ -369,13 +374,15 @@ export class MezonApi {
       if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
       }
+      fetchOptions.headers["Accept"] = "application/x-protobuf";
   
       return Promise.race([
-        fetch(fullUrl, fetchOptions).then((response) => {
+        fetch(fullUrl, fetchOptions).then(async (response) => {
           if (response.status == 204) {
-            return response;
+            return {} as any;
           } else if (response.status >= 200 && response.status < 300) {
-            return response.json();
+            const buffer = await response.arrayBuffer();      
+            return tsproto.VoiceChannelUserList.decode(new Uint8Array(buffer)) as unknown as any;
           } else {
             throw response;
           }

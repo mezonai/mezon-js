@@ -2589,6 +2589,10 @@ export interface App {
   disable_time:
     | Date
     | undefined;
+  /** The UNIX time when the app was created */
+  create_time:
+    | Date
+    | undefined;
   /** string token */
   token: string;
   /** role */
@@ -3773,10 +3777,19 @@ export interface ReportMessageAbuseReqest {
 }
 
 export interface LogedDeviceList {
+  devices: LogedDevice[];
+}
+
+export interface LogedDevice {
+  device_id: string;
   device_name: string;
-  loged_time: Date | undefined;
+  login_at: Date | undefined;
   status: number;
   platform: string;
+  ip: string;
+  last_active: Date | undefined;
+  location: string;
+  is_current: boolean;
 }
 
 function createBaseAccount(): Account {
@@ -25762,6 +25775,7 @@ function createBaseApp(): App {
     applogo: "",
     is_shadow: false,
     disable_time: undefined,
+    create_time: undefined,
     token: "",
     role: 0,
     about: "",
@@ -25789,17 +25803,20 @@ export const App = {
     if (message.disable_time !== undefined) {
       Timestamp.encode(toTimestamp(message.disable_time), writer.uint32(50).fork()).ldelim();
     }
+    if (message.create_time !== undefined) {
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(58).fork()).ldelim();
+    }
     if (message.token !== "") {
-      writer.uint32(58).string(message.token);
+      writer.uint32(66).string(message.token);
     }
     if (message.role !== 0) {
-      writer.uint32(64).int32(message.role);
+      writer.uint32(72).int32(message.role);
     }
     if (message.about !== "") {
-      writer.uint32(74).string(message.about);
+      writer.uint32(82).string(message.about);
     }
     if (message.app_url !== "") {
-      writer.uint32(82).string(message.app_url);
+      writer.uint32(90).string(message.app_url);
     }
     return writer;
   },
@@ -25858,24 +25875,31 @@ export const App = {
             break;
           }
 
-          message.token = reader.string();
+          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 8:
-          if (tag !== 64) {
+          if (tag !== 66) {
+            break;
+          }
+
+          message.token = reader.string();
+          continue;
+        case 9:
+          if (tag !== 72) {
             break;
           }
 
           message.role = reader.int32();
           continue;
-        case 9:
-          if (tag !== 74) {
+        case 10:
+          if (tag !== 82) {
             break;
           }
 
           message.about = reader.string();
           continue;
-        case 10:
-          if (tag !== 82) {
+        case 11:
+          if (tag !== 90) {
             break;
           }
 
@@ -25898,6 +25922,7 @@ export const App = {
       applogo: isSet(object.applogo) ? globalThis.String(object.applogo) : "",
       is_shadow: isSet(object.is_shadow) ? globalThis.Boolean(object.is_shadow) : false,
       disable_time: isSet(object.disable_time) ? fromJsonTimestamp(object.disable_time) : undefined,
+      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       token: isSet(object.token) ? globalThis.String(object.token) : "",
       role: isSet(object.role) ? globalThis.Number(object.role) : 0,
       about: isSet(object.about) ? globalThis.String(object.about) : "",
@@ -25925,6 +25950,9 @@ export const App = {
     if (message.disable_time !== undefined) {
       obj.disable_time = message.disable_time.toISOString();
     }
+    if (message.create_time !== undefined) {
+      obj.create_time = message.create_time.toISOString();
+    }
     if (message.token !== "") {
       obj.token = message.token;
     }
@@ -25951,6 +25979,7 @@ export const App = {
     message.applogo = object.applogo ?? "";
     message.is_shadow = object.is_shadow ?? false;
     message.disable_time = object.disable_time ?? undefined;
+    message.create_time = object.create_time ?? undefined;
     message.token = object.token ?? "";
     message.role = object.role ?? 0;
     message.about = object.about ?? "";
@@ -38798,22 +38827,13 @@ export const ReportMessageAbuseReqest = {
 };
 
 function createBaseLogedDeviceList(): LogedDeviceList {
-  return { device_name: "", loged_time: undefined, status: 0, platform: "" };
+  return { devices: [] };
 }
 
 export const LogedDeviceList = {
   encode(message: LogedDeviceList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.device_name !== "") {
-      writer.uint32(10).string(message.device_name);
-    }
-    if (message.loged_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.loged_time), writer.uint32(18).fork()).ldelim();
-    }
-    if (message.status !== 0) {
-      writer.uint32(24).int32(message.status);
-    }
-    if (message.platform !== "") {
-      writer.uint32(34).string(message.platform);
+    for (const v of message.devices) {
+      LogedDevice.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -38830,28 +38850,7 @@ export const LogedDeviceList = {
             break;
           }
 
-          message.device_name = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.loged_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-        case 3:
-          if (tag !== 24) {
-            break;
-          }
-
-          message.status = reader.int32();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.platform = reader.string();
+          message.devices.push(LogedDevice.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -38864,26 +38863,14 @@ export const LogedDeviceList = {
 
   fromJSON(object: any): LogedDeviceList {
     return {
-      device_name: isSet(object.device_name) ? globalThis.String(object.device_name) : "",
-      loged_time: isSet(object.loged_time) ? fromJsonTimestamp(object.loged_time) : undefined,
-      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
-      platform: isSet(object.platform) ? globalThis.String(object.platform) : "",
+      devices: globalThis.Array.isArray(object?.devices) ? object.devices.map((e: any) => LogedDevice.fromJSON(e)) : [],
     };
   },
 
   toJSON(message: LogedDeviceList): unknown {
     const obj: any = {};
-    if (message.device_name !== "") {
-      obj.device_name = message.device_name;
-    }
-    if (message.loged_time !== undefined) {
-      obj.loged_time = message.loged_time.toISOString();
-    }
-    if (message.status !== 0) {
-      obj.status = Math.round(message.status);
-    }
-    if (message.platform !== "") {
-      obj.platform = message.platform;
+    if (message.devices?.length) {
+      obj.devices = message.devices.map((e) => LogedDevice.toJSON(e));
     }
     return obj;
   },
@@ -38893,10 +38880,196 @@ export const LogedDeviceList = {
   },
   fromPartial<I extends Exact<DeepPartial<LogedDeviceList>, I>>(object: I): LogedDeviceList {
     const message = createBaseLogedDeviceList();
+    message.devices = object.devices?.map((e) => LogedDevice.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseLogedDevice(): LogedDevice {
+  return {
+    device_id: "",
+    device_name: "",
+    login_at: undefined,
+    status: 0,
+    platform: "",
+    ip: "",
+    last_active: undefined,
+    location: "",
+    is_current: false,
+  };
+}
+
+export const LogedDevice = {
+  encode(message: LogedDevice, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.device_id !== "") {
+      writer.uint32(10).string(message.device_id);
+    }
+    if (message.device_name !== "") {
+      writer.uint32(18).string(message.device_name);
+    }
+    if (message.login_at !== undefined) {
+      Timestamp.encode(toTimestamp(message.login_at), writer.uint32(26).fork()).ldelim();
+    }
+    if (message.status !== 0) {
+      writer.uint32(32).int32(message.status);
+    }
+    if (message.platform !== "") {
+      writer.uint32(42).string(message.platform);
+    }
+    if (message.ip !== "") {
+      writer.uint32(50).string(message.ip);
+    }
+    if (message.last_active !== undefined) {
+      Timestamp.encode(toTimestamp(message.last_active), writer.uint32(58).fork()).ldelim();
+    }
+    if (message.location !== "") {
+      writer.uint32(66).string(message.location);
+    }
+    if (message.is_current !== false) {
+      writer.uint32(72).bool(message.is_current);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): LogedDevice {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseLogedDevice();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.device_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.device_name = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.login_at = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.status = reader.int32();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.platform = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.ip = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.last_active = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.location = reader.string();
+          continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.is_current = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): LogedDevice {
+    return {
+      device_id: isSet(object.device_id) ? globalThis.String(object.device_id) : "",
+      device_name: isSet(object.device_name) ? globalThis.String(object.device_name) : "",
+      login_at: isSet(object.login_at) ? fromJsonTimestamp(object.login_at) : undefined,
+      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
+      platform: isSet(object.platform) ? globalThis.String(object.platform) : "",
+      ip: isSet(object.ip) ? globalThis.String(object.ip) : "",
+      last_active: isSet(object.last_active) ? fromJsonTimestamp(object.last_active) : undefined,
+      location: isSet(object.location) ? globalThis.String(object.location) : "",
+      is_current: isSet(object.is_current) ? globalThis.Boolean(object.is_current) : false,
+    };
+  },
+
+  toJSON(message: LogedDevice): unknown {
+    const obj: any = {};
+    if (message.device_id !== "") {
+      obj.device_id = message.device_id;
+    }
+    if (message.device_name !== "") {
+      obj.device_name = message.device_name;
+    }
+    if (message.login_at !== undefined) {
+      obj.login_at = message.login_at.toISOString();
+    }
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
+    }
+    if (message.platform !== "") {
+      obj.platform = message.platform;
+    }
+    if (message.ip !== "") {
+      obj.ip = message.ip;
+    }
+    if (message.last_active !== undefined) {
+      obj.last_active = message.last_active.toISOString();
+    }
+    if (message.location !== "") {
+      obj.location = message.location;
+    }
+    if (message.is_current !== false) {
+      obj.is_current = message.is_current;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<LogedDevice>, I>>(base?: I): LogedDevice {
+    return LogedDevice.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<LogedDevice>, I>>(object: I): LogedDevice {
+    const message = createBaseLogedDevice();
+    message.device_id = object.device_id ?? "";
     message.device_name = object.device_name ?? "";
-    message.loged_time = object.loged_time ?? undefined;
+    message.login_at = object.login_at ?? undefined;
     message.status = object.status ?? 0;
     message.platform = object.platform ?? "";
+    message.ip = object.ip ?? "";
+    message.last_active = object.last_active ?? undefined;
+    message.location = object.location ?? "";
+    message.is_current = object.is_current ?? false;
     return message;
   },
 };
