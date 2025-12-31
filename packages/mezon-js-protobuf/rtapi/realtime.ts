@@ -452,7 +452,16 @@ export interface Envelope {
     | ActiveArchivedThread
     | undefined;
   /** Config Allow Anonymous */
-  allow_anonymous_event?: AllowAnonymousEvent | undefined;
+  allow_anonymous_event?:
+    | AllowAnonymousEvent
+    | undefined;
+  /** Message sending to another server for update localcache */
+  update_localcache_event?: UpdateLocalCacheEvent | undefined;
+}
+
+export interface UpdateLocalCacheEvent {
+  user_ids: string[];
+  channel_ids: string[];
 }
 
 export interface FollowEvent {
@@ -1874,6 +1883,7 @@ function createBaseEnvelope(): Envelope {
     ban_user_event: undefined,
     active_archived_thread: undefined,
     allow_anonymous_event: undefined,
+    update_localcache_event: undefined,
   };
 }
 
@@ -2152,6 +2162,9 @@ export const Envelope = {
     }
     if (message.allow_anonymous_event !== undefined) {
       AllowAnonymousEvent.encode(message.allow_anonymous_event, writer.uint32(730).fork()).ldelim();
+    }
+    if (message.update_localcache_event !== undefined) {
+      UpdateLocalCacheEvent.encode(message.update_localcache_event, writer.uint32(738).fork()).ldelim();
     }
     return writer;
   },
@@ -2800,6 +2813,13 @@ export const Envelope = {
 
           message.allow_anonymous_event = AllowAnonymousEvent.decode(reader, reader.uint32());
           continue;
+        case 92:
+          if (tag !== 738) {
+            break;
+          }
+
+          message.update_localcache_event = UpdateLocalCacheEvent.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3017,6 +3037,9 @@ export const Envelope = {
         : undefined,
       allow_anonymous_event: isSet(object.allow_anonymous_event)
         ? AllowAnonymousEvent.fromJSON(object.allow_anonymous_event)
+        : undefined,
+      update_localcache_event: isSet(object.update_localcache_event)
+        ? UpdateLocalCacheEvent.fromJSON(object.update_localcache_event)
         : undefined,
     };
   },
@@ -3297,6 +3320,9 @@ export const Envelope = {
     }
     if (message.allow_anonymous_event !== undefined) {
       obj.allow_anonymous_event = AllowAnonymousEvent.toJSON(message.allow_anonymous_event);
+    }
+    if (message.update_localcache_event !== undefined) {
+      obj.update_localcache_event = UpdateLocalCacheEvent.toJSON(message.update_localcache_event);
     }
     return obj;
   },
@@ -3600,6 +3626,86 @@ export const Envelope = {
       (object.allow_anonymous_event !== undefined && object.allow_anonymous_event !== null)
         ? AllowAnonymousEvent.fromPartial(object.allow_anonymous_event)
         : undefined;
+    message.update_localcache_event =
+      (object.update_localcache_event !== undefined && object.update_localcache_event !== null)
+        ? UpdateLocalCacheEvent.fromPartial(object.update_localcache_event)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseUpdateLocalCacheEvent(): UpdateLocalCacheEvent {
+  return { user_ids: [], channel_ids: [] };
+}
+
+export const UpdateLocalCacheEvent = {
+  encode(message: UpdateLocalCacheEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.user_ids) {
+      writer.uint32(10).string(v!);
+    }
+    for (const v of message.channel_ids) {
+      writer.uint32(18).string(v!);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateLocalCacheEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdateLocalCacheEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user_ids.push(reader.string());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_ids.push(reader.string());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpdateLocalCacheEvent {
+    return {
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      channel_ids: globalThis.Array.isArray(object?.channel_ids)
+        ? object.channel_ids.map((e: any) => globalThis.String(e))
+        : [],
+    };
+  },
+
+  toJSON(message: UpdateLocalCacheEvent): unknown {
+    const obj: any = {};
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
+    }
+    if (message.channel_ids?.length) {
+      obj.channel_ids = message.channel_ids;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdateLocalCacheEvent>, I>>(base?: I): UpdateLocalCacheEvent {
+    return UpdateLocalCacheEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UpdateLocalCacheEvent>, I>>(object: I): UpdateLocalCacheEvent {
+    const message = createBaseUpdateLocalCacheEvent();
+    message.user_ids = object.user_ids?.map((e) => e) || [];
+    message.channel_ids = object.channel_ids?.map((e) => e) || [];
     return message;
   },
 };

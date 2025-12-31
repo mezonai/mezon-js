@@ -2589,6 +2589,10 @@ export interface App {
   disable_time:
     | Date
     | undefined;
+  /** The UNIX time when the app was created */
+  create_time:
+    | Date
+    | undefined;
   /** string token */
   token: string;
   /** role */
@@ -3784,6 +3788,8 @@ export interface LogedDevice {
   platform: string;
   ip: string;
   last_active: Date | undefined;
+  location: string;
+  is_current: boolean;
 }
 
 function createBaseAccount(): Account {
@@ -25769,6 +25775,7 @@ function createBaseApp(): App {
     applogo: "",
     is_shadow: false,
     disable_time: undefined,
+    create_time: undefined,
     token: "",
     role: 0,
     about: "",
@@ -25796,17 +25803,20 @@ export const App = {
     if (message.disable_time !== undefined) {
       Timestamp.encode(toTimestamp(message.disable_time), writer.uint32(50).fork()).ldelim();
     }
+    if (message.create_time !== undefined) {
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(58).fork()).ldelim();
+    }
     if (message.token !== "") {
-      writer.uint32(58).string(message.token);
+      writer.uint32(66).string(message.token);
     }
     if (message.role !== 0) {
-      writer.uint32(64).int32(message.role);
+      writer.uint32(72).int32(message.role);
     }
     if (message.about !== "") {
-      writer.uint32(74).string(message.about);
+      writer.uint32(82).string(message.about);
     }
     if (message.app_url !== "") {
-      writer.uint32(82).string(message.app_url);
+      writer.uint32(90).string(message.app_url);
     }
     return writer;
   },
@@ -25865,24 +25875,31 @@ export const App = {
             break;
           }
 
-          message.token = reader.string();
+          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 8:
-          if (tag !== 64) {
+          if (tag !== 66) {
+            break;
+          }
+
+          message.token = reader.string();
+          continue;
+        case 9:
+          if (tag !== 72) {
             break;
           }
 
           message.role = reader.int32();
           continue;
-        case 9:
-          if (tag !== 74) {
+        case 10:
+          if (tag !== 82) {
             break;
           }
 
           message.about = reader.string();
           continue;
-        case 10:
-          if (tag !== 82) {
+        case 11:
+          if (tag !== 90) {
             break;
           }
 
@@ -25905,6 +25922,7 @@ export const App = {
       applogo: isSet(object.applogo) ? globalThis.String(object.applogo) : "",
       is_shadow: isSet(object.is_shadow) ? globalThis.Boolean(object.is_shadow) : false,
       disable_time: isSet(object.disable_time) ? fromJsonTimestamp(object.disable_time) : undefined,
+      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       token: isSet(object.token) ? globalThis.String(object.token) : "",
       role: isSet(object.role) ? globalThis.Number(object.role) : 0,
       about: isSet(object.about) ? globalThis.String(object.about) : "",
@@ -25932,6 +25950,9 @@ export const App = {
     if (message.disable_time !== undefined) {
       obj.disable_time = message.disable_time.toISOString();
     }
+    if (message.create_time !== undefined) {
+      obj.create_time = message.create_time.toISOString();
+    }
     if (message.token !== "") {
       obj.token = message.token;
     }
@@ -25958,6 +25979,7 @@ export const App = {
     message.applogo = object.applogo ?? "";
     message.is_shadow = object.is_shadow ?? false;
     message.disable_time = object.disable_time ?? undefined;
+    message.create_time = object.create_time ?? undefined;
     message.token = object.token ?? "";
     message.role = object.role ?? 0;
     message.about = object.about ?? "";
@@ -38872,6 +38894,8 @@ function createBaseLogedDevice(): LogedDevice {
     platform: "",
     ip: "",
     last_active: undefined,
+    location: "",
+    is_current: false,
   };
 }
 
@@ -38897,6 +38921,12 @@ export const LogedDevice = {
     }
     if (message.last_active !== undefined) {
       Timestamp.encode(toTimestamp(message.last_active), writer.uint32(58).fork()).ldelim();
+    }
+    if (message.location !== "") {
+      writer.uint32(66).string(message.location);
+    }
+    if (message.is_current !== false) {
+      writer.uint32(72).bool(message.is_current);
     }
     return writer;
   },
@@ -38957,6 +38987,20 @@ export const LogedDevice = {
 
           message.last_active = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.location = reader.string();
+          continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.is_current = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -38975,6 +39019,8 @@ export const LogedDevice = {
       platform: isSet(object.platform) ? globalThis.String(object.platform) : "",
       ip: isSet(object.ip) ? globalThis.String(object.ip) : "",
       last_active: isSet(object.last_active) ? fromJsonTimestamp(object.last_active) : undefined,
+      location: isSet(object.location) ? globalThis.String(object.location) : "",
+      is_current: isSet(object.is_current) ? globalThis.Boolean(object.is_current) : false,
     };
   },
 
@@ -39001,6 +39047,12 @@ export const LogedDevice = {
     if (message.last_active !== undefined) {
       obj.last_active = message.last_active.toISOString();
     }
+    if (message.location !== "") {
+      obj.location = message.location;
+    }
+    if (message.is_current !== false) {
+      obj.is_current = message.is_current;
+    }
     return obj;
   },
 
@@ -39016,6 +39068,8 @@ export const LogedDevice = {
     message.platform = object.platform ?? "";
     message.ip = object.ip ?? "";
     message.last_active = object.last_active ?? undefined;
+    message.location = object.location ?? "";
+    message.is_current = object.is_current ?? false;
     return message;
   },
 };
