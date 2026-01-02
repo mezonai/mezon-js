@@ -293,9 +293,7 @@ export interface ChannelMessage {
   /** The unique ID of this message. */
   message_id: string;
   /** The code representing a message type or category. */
-  code:
-    | number
-    | undefined;
+  code: number;
   /** Message sender, usually a user ID. */
   sender_id: string;
   /** The username of the message sender, if any. */
@@ -560,9 +558,7 @@ export interface Friend {
     | User
     | undefined;
   /** The friend status. */
-  state:
-    | number
-    | undefined;
+  state: number;
   /** Time of the latest relationship update. */
   update_time:
     | Date
@@ -1017,6 +1013,10 @@ export interface Session {
   user_id: string;
   /** Whether to enable "Remember Me" for extended session duration. */
   is_remember: boolean;
+  /** api url */
+  api_url: string;
+  /** id token for zklogin */
+  id_token: string;
 }
 
 /** Update username */
@@ -1528,9 +1528,7 @@ export interface ChannelDescription {
   /** The category name */
   category_name: string;
   /** The channel type. */
-  type:
-    | number
-    | undefined;
+  type: number;
   /** creator ID. */
   creator_id: string;
   /** The channel lable */
@@ -4963,7 +4961,7 @@ function createBaseChannelMessage(): ChannelMessage {
     clan_id: "",
     channel_id: "",
     message_id: "",
-    code: undefined,
+    code: 0,
     sender_id: "",
     username: "",
     avatar: "",
@@ -5001,8 +4999,8 @@ export const ChannelMessage = {
     if (message.message_id !== "") {
       writer.uint32(26).string(message.message_id);
     }
-    if (message.code !== undefined) {
-      Int32Value.encode({ value: message.code! }, writer.uint32(34).fork()).ldelim();
+    if (message.code !== 0) {
+      writer.uint32(32).int32(message.code);
     }
     if (message.sender_id !== "") {
       writer.uint32(42).string(message.sender_id);
@@ -5105,11 +5103,11 @@ export const ChannelMessage = {
           message.message_id = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.code = Int32Value.decode(reader, reader.uint32()).value;
+          message.code = reader.int32();
           continue;
         case 5:
           if (tag !== 42) {
@@ -5286,7 +5284,7 @@ export const ChannelMessage = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
-      code: isSet(object.code) ? Number(object.code) : undefined,
+      code: isSet(object.code) ? globalThis.Number(object.code) : 0,
       sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
@@ -5324,8 +5322,8 @@ export const ChannelMessage = {
     if (message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.code !== undefined) {
-      obj.code = message.code;
+    if (message.code !== 0) {
+      obj.code = Math.round(message.code);
     }
     if (message.sender_id !== "") {
       obj.sender_id = message.sender_id;
@@ -5407,7 +5405,7 @@ export const ChannelMessage = {
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.message_id = object.message_id ?? "";
-    message.code = object.code ?? undefined;
+    message.code = object.code ?? 0;
     message.sender_id = object.sender_id ?? "";
     message.username = object.username ?? "";
     message.avatar = object.avatar ?? "";
@@ -7213,7 +7211,7 @@ export const Event_PropertiesEntry = {
 };
 
 function createBaseFriend(): Friend {
-  return { user: undefined, state: undefined, update_time: undefined, source_id: "" };
+  return { user: undefined, state: 0, update_time: undefined, source_id: "" };
 }
 
 export const Friend = {
@@ -7221,8 +7219,8 @@ export const Friend = {
     if (message.user !== undefined) {
       User.encode(message.user, writer.uint32(10).fork()).ldelim();
     }
-    if (message.state !== undefined) {
-      Int32Value.encode({ value: message.state! }, writer.uint32(18).fork()).ldelim();
+    if (message.state !== 0) {
+      writer.uint32(16).int32(message.state);
     }
     if (message.update_time !== undefined) {
       Timestamp.encode(toTimestamp(message.update_time), writer.uint32(26).fork()).ldelim();
@@ -7248,11 +7246,11 @@ export const Friend = {
           message.user = User.decode(reader, reader.uint32());
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.state = Int32Value.decode(reader, reader.uint32()).value;
+          message.state = reader.int32();
           continue;
         case 3:
           if (tag !== 26) {
@@ -7280,7 +7278,7 @@ export const Friend = {
   fromJSON(object: any): Friend {
     return {
       user: isSet(object.user) ? User.fromJSON(object.user) : undefined,
-      state: isSet(object.state) ? Number(object.state) : undefined,
+      state: isSet(object.state) ? globalThis.Number(object.state) : 0,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
       source_id: isSet(object.source_id) ? globalThis.String(object.source_id) : "",
     };
@@ -7291,8 +7289,8 @@ export const Friend = {
     if (message.user !== undefined) {
       obj.user = User.toJSON(message.user);
     }
-    if (message.state !== undefined) {
-      obj.state = message.state;
+    if (message.state !== 0) {
+      obj.state = Math.round(message.state);
     }
     if (message.update_time !== undefined) {
       obj.update_time = message.update_time.toISOString();
@@ -7309,7 +7307,7 @@ export const Friend = {
   fromPartial<I extends Exact<DeepPartial<Friend>, I>>(object: I): Friend {
     const message = createBaseFriend();
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
-    message.state = object.state ?? undefined;
+    message.state = object.state ?? 0;
     message.update_time = object.update_time ?? undefined;
     message.source_id = object.source_id ?? "";
     return message;
@@ -10377,7 +10375,7 @@ export const Rpc = {
 };
 
 function createBaseSession(): Session {
-  return { created: false, token: "", refresh_token: "", user_id: "", is_remember: false };
+  return { created: false, token: "", refresh_token: "", user_id: "", is_remember: false, api_url: "", id_token: "" };
 }
 
 export const Session = {
@@ -10396,6 +10394,12 @@ export const Session = {
     }
     if (message.is_remember !== false) {
       writer.uint32(40).bool(message.is_remember);
+    }
+    if (message.api_url !== "") {
+      writer.uint32(50).string(message.api_url);
+    }
+    if (message.id_token !== "") {
+      writer.uint32(58).string(message.id_token);
     }
     return writer;
   },
@@ -10442,6 +10446,20 @@ export const Session = {
 
           message.is_remember = reader.bool();
           continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.api_url = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.id_token = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10458,6 +10476,8 @@ export const Session = {
       refresh_token: isSet(object.refresh_token) ? globalThis.String(object.refresh_token) : "",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
       is_remember: isSet(object.is_remember) ? globalThis.Boolean(object.is_remember) : false,
+      api_url: isSet(object.api_url) ? globalThis.String(object.api_url) : "",
+      id_token: isSet(object.id_token) ? globalThis.String(object.id_token) : "",
     };
   },
 
@@ -10478,6 +10498,12 @@ export const Session = {
     if (message.is_remember !== false) {
       obj.is_remember = message.is_remember;
     }
+    if (message.api_url !== "") {
+      obj.api_url = message.api_url;
+    }
+    if (message.id_token !== "") {
+      obj.id_token = message.id_token;
+    }
     return obj;
   },
 
@@ -10491,6 +10517,8 @@ export const Session = {
     message.refresh_token = object.refresh_token ?? "";
     message.user_id = object.user_id ?? "";
     message.is_remember = object.is_remember ?? false;
+    message.api_url = object.api_url ?? "";
+    message.id_token = object.id_token ?? "";
     return message;
   },
 };
@@ -14639,7 +14667,7 @@ function createBaseChannelDescription(): ChannelDescription {
     channel_id: "",
     category_id: "",
     category_name: "",
-    type: undefined,
+    type: 0,
     creator_id: "",
     channel_label: "",
     channel_private: 0,
@@ -14685,8 +14713,8 @@ export const ChannelDescription = {
     if (message.category_name !== "") {
       writer.uint32(42).string(message.category_name);
     }
-    if (message.type !== undefined) {
-      Int32Value.encode({ value: message.type! }, writer.uint32(50).fork()).ldelim();
+    if (message.type !== 0) {
+      writer.uint32(48).int32(message.type);
     }
     if (message.creator_id !== "") {
       writer.uint32(58).string(message.creator_id);
@@ -14811,11 +14839,11 @@ export const ChannelDescription = {
           message.category_name = reader.string();
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.type = Int32Value.decode(reader, reader.uint32()).value;
+          message.type = reader.int32();
           continue;
         case 7:
           if (tag !== 58) {
@@ -15018,7 +15046,7 @@ export const ChannelDescription = {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
       category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
-      type: isSet(object.type) ? Number(object.type) : undefined,
+      type: isSet(object.type) ? globalThis.Number(object.type) : 0,
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
@@ -15072,8 +15100,8 @@ export const ChannelDescription = {
     if (message.category_name !== "") {
       obj.category_name = message.category_name;
     }
-    if (message.type !== undefined) {
-      obj.type = message.type;
+    if (message.type !== 0) {
+      obj.type = Math.round(message.type);
     }
     if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
@@ -15163,7 +15191,7 @@ export const ChannelDescription = {
     message.channel_id = object.channel_id ?? "";
     message.category_id = object.category_id ?? "";
     message.category_name = object.category_name ?? "";
-    message.type = object.type ?? undefined;
+    message.type = object.type ?? 0;
     message.creator_id = object.creator_id ?? "";
     message.channel_label = object.channel_label ?? "";
     message.channel_private = object.channel_private ?? 0;

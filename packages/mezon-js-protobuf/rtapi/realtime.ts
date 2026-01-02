@@ -666,9 +666,7 @@ export interface ChannelMessageAck {
   /** The unique ID assigned to the message. */
   message_id: string;
   /** The code representing a message type or category. */
-  code:
-    | number
-    | undefined;
+  code: number;
   /** Username of the message sender. */
   username: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
@@ -1273,9 +1271,7 @@ export interface ChannelUpdatedEvent {
   /** channel label */
   channel_label: string;
   /** channel type */
-  channel_type:
-    | number
-    | undefined;
+  channel_type: number;
   /** status */
   status: number;
   /** meeting code */
@@ -5612,7 +5608,7 @@ function createBaseChannelMessageAck(): ChannelMessageAck {
   return {
     channel_id: "",
     message_id: "",
-    code: undefined,
+    code: 0,
     username: "",
     create_time: undefined,
     update_time: undefined,
@@ -5630,8 +5626,8 @@ export const ChannelMessageAck = {
     if (message.message_id !== "") {
       writer.uint32(18).string(message.message_id);
     }
-    if (message.code !== undefined) {
-      Int32Value.encode({ value: message.code! }, writer.uint32(26).fork()).ldelim();
+    if (message.code !== 0) {
+      writer.uint32(24).int32(message.code);
     }
     if (message.username !== "") {
       writer.uint32(34).string(message.username);
@@ -5676,11 +5672,11 @@ export const ChannelMessageAck = {
           message.message_id = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.code = Int32Value.decode(reader, reader.uint32()).value;
+          message.code = reader.int32();
           continue;
         case 4:
           if (tag !== 34) {
@@ -5737,7 +5733,7 @@ export const ChannelMessageAck = {
     return {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
-      code: isSet(object.code) ? Number(object.code) : undefined,
+      code: isSet(object.code) ? globalThis.Number(object.code) : 0,
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
@@ -5755,8 +5751,8 @@ export const ChannelMessageAck = {
     if (message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.code !== undefined) {
-      obj.code = message.code;
+    if (message.code !== 0) {
+      obj.code = Math.round(message.code);
     }
     if (message.username !== "") {
       obj.username = message.username;
@@ -5786,7 +5782,7 @@ export const ChannelMessageAck = {
     const message = createBaseChannelMessageAck();
     message.channel_id = object.channel_id ?? "";
     message.message_id = object.message_id ?? "";
-    message.code = object.code ?? undefined;
+    message.code = object.code ?? 0;
     message.username = object.username ?? "";
     message.create_time = object.create_time ?? undefined;
     message.update_time = object.update_time ?? undefined;
@@ -10405,7 +10401,7 @@ function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
     parent_id: "",
     channel_id: "",
     channel_label: "",
-    channel_type: undefined,
+    channel_type: 0,
     status: 0,
     meeting_code: "",
     is_error: false,
@@ -10442,8 +10438,8 @@ export const ChannelUpdatedEvent = {
     if (message.channel_label !== "") {
       writer.uint32(50).string(message.channel_label);
     }
-    if (message.channel_type !== undefined) {
-      Int32Value.encode({ value: message.channel_type! }, writer.uint32(58).fork()).ldelim();
+    if (message.channel_type !== 0) {
+      writer.uint32(56).int32(message.channel_type);
     }
     if (message.status !== 0) {
       writer.uint32(64).int32(message.status);
@@ -10537,11 +10533,11 @@ export const ChannelUpdatedEvent = {
           message.channel_label = reader.string();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.channel_type = Int32Value.decode(reader, reader.uint32()).value;
+          message.channel_type = reader.int32();
           continue;
         case 8:
           if (tag !== 64) {
@@ -10651,7 +10647,7 @@ export const ChannelUpdatedEvent = {
       parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
-      channel_type: isSet(object.channel_type) ? Number(object.channel_type) : undefined,
+      channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
       is_error: isSet(object.is_error) ? globalThis.Boolean(object.is_error) : false,
@@ -10688,8 +10684,8 @@ export const ChannelUpdatedEvent = {
     if (message.channel_label !== "") {
       obj.channel_label = message.channel_label;
     }
-    if (message.channel_type !== undefined) {
-      obj.channel_type = message.channel_type;
+    if (message.channel_type !== 0) {
+      obj.channel_type = Math.round(message.channel_type);
     }
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
@@ -10744,7 +10740,7 @@ export const ChannelUpdatedEvent = {
     message.parent_id = object.parent_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.channel_label = object.channel_label ?? "";
-    message.channel_type = object.channel_type ?? undefined;
+    message.channel_type = object.channel_type ?? 0;
     message.status = object.status ?? 0;
     message.meeting_code = object.meeting_code ?? "";
     message.is_error = object.is_error ?? false;
