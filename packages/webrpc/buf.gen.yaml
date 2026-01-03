@@ -1,0 +1,13 @@
+version: v2
+inputs:
+  - directory: .
+plugins:
+  # 1. Generates the base Message types (classes for your data)
+  - local: protoc-gen-es
+    out: frontend/src/gen
+    opt: target=ts
+  
+  # 2. Generates the Client service definitions
+  - local: protoc-gen-connect-es
+    out: frontend/src/gen
+    opt: target=ts

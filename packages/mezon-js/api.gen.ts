@@ -631,6 +631,8 @@ export interface ApiCategoryDescList {
 export interface ApiUpdateUsernameRequest {
   //
   username?: string;
+  //
+  display_name?: string;
 }
 
 /**  */
