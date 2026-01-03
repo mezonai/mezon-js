@@ -8,6 +8,6 @@ plugins:
     opt: target=ts
   
   # 2. Generates the Client service definitions
-  - local: protoc-gen-connect-es
-    out: frontend/src/gen
-    opt: target=ts
+  # - local: protoc-gen-connect-es
+  #   out: frontend/src/gen
+  #   opt: target=ts
