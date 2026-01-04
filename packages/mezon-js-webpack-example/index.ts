@@ -21,7 +21,7 @@ var useSSL = true; // Enable if server is run with an SSL certificate.
 var clientgw = new Client("defaultkey", "dev-mezon.nccsoft.vn", "8088", useSSL);
 var client = new Client("defaultkey", "dev-mezon.nccsoft.vn", "7305", useSSL);
 
-clientgw.authenticateEmail("pocolomos@gmail.com", "C0nandoiner123$").then(async session => {
+clientgw.authenticateEmail("pocolomos@gmail.com", "xxxxxxxx").then(async session => {
   console.log("authenticated.", session);
   
   const socket = client.createSocket(true, true, new WebSocketAdapterPb());
