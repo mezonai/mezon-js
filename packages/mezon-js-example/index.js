@@ -23,12 +23,17 @@ var client = new Client(
 	false
 );
 
-const session = {
-  token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aWQiOiIyMmNiOTFkYy1iMWNiLTQyYTItODhmZi02YWRlNDBkYTEzNTgiLCJ1aWQiOjE3NzU3MzAxNjk4Nzc2MzA5NzYsInVzbiI6Im5ndXllbnRyYW4iLCJleHAiOjE3Njc0OTc5NzV9.s7GgCBHZz_QBUBUflG--0chMUvgwlOW0Wb0OMunZ4Dw",
-  refresh_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aWQiOiIyMmNiOTFkYy1iMWNiLTQyYTItODhmZi02YWRlNDBkYTEzNTgiLCJ1aWQiOjE3NzU3MzAxNjk4Nzc2MzA5NzYsInVzbiI6Im5ndXllbnRyYW4iLCJleHAiOjE3Njc0OTc5NzV9.s7GgCBHZz_QBUBUflG--0chMUvgwlOW0Wb0OMunZ4Dw",
+function alwaysFalse() {
+  return false;
 }
 
-async function runTest() {
+const session = {
+  token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aWQiOiI4NDZlZTU0Mi0yODMxLTRlZGItOTc1My04OGI2MzY5ZjJiYjgiLCJ1aWQiOjE3NzU3MzAxNjk4Nzc2MzA5NzYsInVzbiI6Im5ndXllbnRyYW4iLCJleHAiOjE3Njc1MDIzNjZ9.JZdLE4Nv4A-Er8rK4Qiyj9SYQynwzghojVcI0LHnAoI",
+  refresh_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aWQiOiIyMmNiOTFkYy1iMWNiLTQyYTItODhmZi02YWRlNDBkYTEzNTgiLCJ1aWQiOjE3NzU3MzAxNjk4Nzc2MzA5NzYsInVzbiI6Im5ndXllbnRyYW4iLCJleHAiOjE3Njc0OTc5NzV9.s7GgCBHZz_QBUBUflG--0chMUvgwlOW0Wb0OMunZ4Dw",
+  isexpired: alwaysFalse 
+}
+
+async function runTest1() {
   try {
     console.log("Attempting to refresh session...");
     
@@ -41,4 +46,15 @@ async function runTest() {
   }
 }
 
-runTest();
+async function runTest2() {
+  try {
+    console.log("Attempting to get list loged device ...");
+    devices = await client.listLogedDevice(session)
+    console.log(devices)
+  } catch (error) {
+    console.error("Failed to get list device:", error.message);
+  }
+}
+
+runTest1();
+runTest2();
