@@ -15,7 +15,7 @@
  */
 
 import { create } from "@bufbuild/protobuf";
-import { createConnectTransport } from "@connectrpc/connect-web";
+import { createGrpcWebTransport } from "@connectrpc/connect-web";
 import {
   CallOptions,
   createClient,
@@ -321,8 +321,9 @@ export class Client {
     const scheme = useSSL ? "https://" : "http://";
     const basePath = `${scheme}${host}:${port}`;
 
-    const transport = createConnectTransport({
+    const transport = createGrpcWebTransport({
       baseUrl: basePath,
+      useBinaryFormat: true,
     });
 
     this.mezonClient = createClient(MezonService, transport);
@@ -1981,8 +1982,6 @@ export class Client {
 
         const options: CallOptions = {
           headers: {
-            "Content-Type": "application/x-protobuf",
-            Accept: "application/x-protobuf",
             Authorization: "Basic " + encode(this.serverkey + ":" + ""),
           },
         };
