@@ -6,6 +6,8 @@ plugins:
   - local: protoc-gen-es
     out: frontend/src/gen
     opt: target=ts
+    include_imports: true
+    include_wkt: true  
   
   # 2. Generates the Client service definitions
   # - local: protoc-gen-connect-es

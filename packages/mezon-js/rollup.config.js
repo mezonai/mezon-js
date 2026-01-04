@@ -1,42 +1,43 @@
-/*
- * Copyright 2020 Heroic Labs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-// Rollup is the legacy build system for mezon-js and is only used for cocos2d-x-js support.
-
 import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 
 export default {
     input: './index.ts',
-    output:  {
+    output: {
         format: 'umd',
         name: 'mezonjs',
         dir: "dist",
-        entryFileNames: "mezon-js.umd.js" // workaround for TS requirement that dir is specified in config
+        entryFileNames: "mezon-js.umd.js"
     },
     plugins: [
-        typescript({
-            include: ["**/*.ts"],
-            target: "es5"
-        }),
+        // 1. nodeResolve MUST be first to find the files in node_modules and gen folder
         nodeResolve({
-            browser: true
+            browser: true,
+            extensions: ['.ts', '.js'] 
         }),
-        commonjs()
+        
+        // 2. Only ONE typescript plugin. Use it to handle everything.
+        typescript({
+            // Ensure this covers your source, generated files, and connectrpc
+            include: [
+                "**/*.ts",
+                "../webrpc/frontend/src/gen/**/*.ts", 
+                "src/gen/**/*.ts", 
+                "node_modules/@connectrpc/**/*.ts"
+            ],
+            target: "es5", 
+            module: "esnext",
+            tsconfig: "./tsconfig.json",
+            rootDir: "../", 
+        }),
+
+        // 3. CommonJS converts the output so UMD works correctly
+        commonjs({
+            extensions: ['.ts', '.js'],
+            // If connectrpc uses commonjs internally, include it here
+            include: [/node_modules/]
+        }),
     ],
     moduleContext: {
         [require.resolve('whatwg-fetch')]: 'window'
