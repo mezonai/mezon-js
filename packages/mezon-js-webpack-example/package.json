@@ -4,7 +4,8 @@
     "description": "An example project that utilizes mezon-js and Webpack",
     "private": true,
     "license": "Apache-2.0",
-    "dependencies": {
+    "dependencies": {        
+        "mezon-js-protobuf": "file:../mezon-js-protobuf",
         "mezon-js": "file:../mezon-js",
         "ts-loader": "^8.0.14",
         "webpack": "^5.76.0",

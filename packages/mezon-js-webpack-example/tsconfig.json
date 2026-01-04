@@ -1,5 +1,12 @@
 {
     "compilerOptions": {
+        "target": "ESNext",         // or "ES2020" / "ES6"
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "useDefineForClassFields": true, 
+        "lib": ["ESNext", "DOM", "DOM.Iterable"],
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
     },
     "files": ["index.ts"]
 }
