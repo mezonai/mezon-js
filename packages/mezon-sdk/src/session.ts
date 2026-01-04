@@ -51,6 +51,8 @@ export class Session implements ISession {
   refresh_token: string;
   user_id?: string;
   vars?: object;
+  api_url?: string;
+  id_token?: string;
 
   constructor(apiSession : any) {
     const { token, refresh_token, user_id } = apiSession;
@@ -59,6 +61,8 @@ export class Session implements ISession {
     this.user_id = user_id;
     this.created_at = Math.floor(new Date().getTime() / 1000);
     this.update(token, refresh_token);
+    this.api_url = apiSession.api_url
+    this.id_token = apiSession?.id_token
   }
 
   isexpired(currenttime: number): boolean {

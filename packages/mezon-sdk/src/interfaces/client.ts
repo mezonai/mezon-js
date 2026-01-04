@@ -1,54 +1,80 @@
+import { ExtraInfo } from "mmn-client-js";
 import { Events } from "../constants/enum";
 import { ChannelMessageAck } from "./socket";
+import { ChannelMessageHeader } from "../api/api";
+
+export interface MMNExtraInfo extends ExtraInfo {}
 
 /**  */
 export interface ApiChannelDescription {
-  //
-  active?: number;
-  //
-  category_id?: string;
-  //
-  category_name?: string;
-  //
-  channel_avatar?: Array<string>;
-  //The channel this message belongs to.
-  channel_id?: string;
-  //
-  channel_label?: string;
-  //
-  channel_private?: number;
-  //
-  clan_id?: string;
-  //
-  count_mess_unread?: number;
-  //
-  create_time_seconds?: number;
-  //creator ID.
-  creator_id?: string;
-  //
-  creator_name?: string;
-  //
-  last_pin_message?: string;
-  //
-  last_seen_message?: ApiChannelMessageHeader;
-  //
-  last_sent_message?: ApiChannelMessageHeader;
-  //
-  meeting_code?: string;
-  //
-  meeting_uri?: string;
-  //The parrent channel this message belongs to.
-  parent_id?: string;
-  //
-  status?: number;
-  //The channel type.
-  type?: number;
-  //
-  update_time_seconds?: number;
-  //
-  user_id?: Array<string>;
-  //
-  usernames?: string;
+  /** The clan of this channel */
+  clan_id: string;
+  /** The parent channel this message belongs to. */
+  parent_id: string;
+  /** The channel this message belongs to. */
+  channel_id: string;
+  /** The category of channel */
+  category_id: string;
+  /** The category name */
+  category_name: string;
+  /** The channel type. */
+  type:
+    | number
+    | undefined;
+  /** creator ID. */
+  creator_id: string;
+  /** The channel lable */
+  channel_label: string;
+  /** The channel private */
+  channel_private: number;
+  /** DM avatars */
+  avatars: string[];
+  /** List DM user ids */
+  user_ids: string[];
+  /** last message id */
+  last_sent_message:
+    | ChannelMessageHeader
+    | undefined;
+  /** last seen message id */
+  last_seen_message:
+    | ChannelMessageHeader
+    | undefined;
+  /** DM status */
+  onlines: boolean[];
+  /** meeting code */
+  meeting_code: string;
+  /** count message unread */
+  count_mess_unread: number;
+  /** active channel */
+  active: number;
+  /** last pin message */
+  last_pin_message: string;
+  /** List DM usernames */
+  usernames: string[];
+  /** creator name */
+  creator_name: string;
+  /** create time ms */
+  create_time_seconds: number;
+  /** update time ms */
+  update_time_seconds: number;
+  /** List DM diplay names */
+  display_names: string[];
+  /** channel avatar */
+  channel_avatar: string;
+  /** clan_name */
+  clan_name: string;
+  /** app id */
+  app_id: string;
+  /** channel all message */
+  is_mute: boolean;
+  /** age restricted */
+  age_restricted: number;
+  /** channel description topic */
+  topic: string;
+  /** e2ee */
+  e2ee: number;
+  /** channel member count */
+  member_count: number;
 }
 
 export interface MessagePayLoad {
@@ -62,6 +88,24 @@ export interface MessagePayLoad {
   ref?: Array<ApiMessageRef>;
   hideEditted?: boolean;
   topic_id?: string;
+}
+
+export interface EphemeralMessageData {
+  receiver_id: string;
+  clan_id: string;
+  channel_id: string;
+  mode: number;
+  is_public: boolean;
+  content: any;
+  mentions?: Array<ApiMessageMention>;
+  attachments?: Array<ApiMessageAttachment>;
+  references?: Array<ApiMessageRef>;
+  anonymous_message?: boolean;
+  mention_everyone?: boolean;
+  avatar?: string;
+  code?: number;
+  topic_id?: string;
+  message_id?: string
 }
 
 export interface ReplyMessageData {
@@ -122,6 +166,7 @@ export interface RemoveMessageData {
   mode: number;
   is_public: boolean;
   message_id: string;
+  topic_id?: string;
 }
 
 export interface SendTokenData {
@@ -330,7 +375,7 @@ export interface ApiVoiceChannelUser {
   user_id?: string;
 }
 
-export interface IEmbedProps {
+export interface IInteractiveMessageProps {
   color?: string;
   title?: string;
   url?: string;
@@ -341,10 +386,46 @@ export interface IEmbedProps {
   };
   description?: string;
   thumbnail?: { url: string };
-  fields?: Array<{ name: string; value: string; inline?: boolean }>;
-  image?: { url: string };
+  fields?: Array<{
+    name: string;
+    value: string;
+    inline?: boolean;
+    options?: any[];
+    inputs?: {};
+    max_options?: number;
+  }>;
+  image?: { url: string; width?: string; height?: string };
   timestamp?: string;
   footer?: { text: string; icon_url?: string };
+}
+
+export interface InputFieldOption {
+  defaultValue?: string | number;
+  type?: string;
+  textarea?: boolean;
+  disabled?: boolean;
+}
+
+export interface SelectFieldOption {
+  label: string;
+  value: string;
+}
+
+export interface RadioFieldOption {
+  label: string;
+  value: string;
+  name?: string; // Apply when use mutiple choice
+  description?: string;
+  style?: EButtonMessageStyle;
+  disabled?: boolean;
+}
+
+export interface AnimationConfig {
+  url_image: string;
+  url_position: string;
+  pool: string[];
+  repeat?: number;
+  duration?: number;
 }
 
 export enum EButtonMessageStyle {
@@ -361,7 +442,8 @@ export enum EMessageComponentType {
   INPUT = 3,
   DATEPICKER = 4,
   RADIO = 5,
-  ANIMATION = 6
+  ANIMATION = 6,
+  GRID = 7,
 }
 
 export enum EMessageSelectType {
@@ -414,7 +496,7 @@ export interface ChannelMessageContent {
   lk?: LinkOnMessage[];
   mk?: MarkdownOnMessage[];
   vk?: LinkVoiceRoomOnMessage[];
-  embed?: IEmbedProps[];
+  embed?: IInteractiveMessageProps[];
   components?: IMessageActionRow[] | any;
 }
 
@@ -601,6 +683,30 @@ export interface ApiRegisterStreamingChannelResponse {
   streaming_url?: string;
 }
 
+/**  */
+export interface ApiGetZkProofRequest {
+  user_id: string;
+  ephemeral_public_key: string;
+  jwt: string;
+  address: string;
+}
+
+export interface BaseSentTokenRequest {
+  sender_name?: string;
+  sender_id?: string;
+  amount: number;
+  note?: string;
+  extra_attribute?: string;
+  mmn_extra_info?: MMNExtraInfo;
+  timestamp?: number;
+}
+
+export interface APISentTokenRequest extends BaseSentTokenRequest {
+  receiver_id: string;
+}
+
+export type APISentTokenRequestUser = BaseSentTokenRequest;
+
 export interface TokenSentEvent {
   sender_id?: string;
   sender_name?: string;
@@ -608,6 +714,7 @@ export interface TokenSentEvent {
   amount: number;
   note?: string;
   extra_attribute?: string;
+  transaction_id?: string;
 }
 
 export interface MezonUpdateRoleBody {
@@ -756,6 +863,17 @@ export interface DropdownBoxSelected {
   sender_id: string;
   user_id: string;
   values: string[];
+}
+
+export interface ClientConfigDto {
+  botId: string;
+  token: string;
+  host?: string;
+  port?: string;
+  useSSL?: boolean;
+  timeout?: number;
+  mmnApiUrl?: string;
+  zkApiUrl?: string;
 }
 
 export interface Client {

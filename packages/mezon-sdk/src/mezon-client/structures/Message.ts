@@ -1,5 +1,6 @@
 import {
   ApiMessageAttachment,
+  ApiMessageMention,
   ApiMessageReaction,
   ApiMessageRef,
   ChannelMessageContent,
@@ -20,7 +21,7 @@ export interface MessageInitData {
   channel_id: string;
   sender_id: string;
   content: ChannelMessageContent;
-  mentions?: ApiMessageAttachment[];
+  mentions?: ApiMessageMention[];
   attachments?: ApiMessageAttachment[];
   reactions?: ApiMessageReaction[];
   references?: ApiMessageRef[];
@@ -32,7 +33,7 @@ export class Message {
   public id: string;
   public sender_id: string;
   public content: ChannelMessageContent;
-  public mentions: ApiMessageAttachment[] | undefined;
+  public mentions: ApiMessageMention[] | undefined;
   public attachments: ApiMessageAttachment[] | undefined;
   public reactions: ApiMessageReaction[] | undefined;
   public references: ApiMessageRef[] | undefined;
@@ -65,41 +66,53 @@ export class Message {
   }
 
   async reply(
-    content: ChannelMessageContent,
-    code?: number,
-    topic_id?: string,
-    anonymous_message?: boolean,
-    mention_everyone?: boolean
-  ) {
-    return await this.messageQueue.enqueue(async () => {
-      const user = await this.channel.clan.users.fetch(this.sender_id);
-      const references: ApiMessageRef[] = [
-        {
-          message_ref_id: this.id,
-          message_sender_id: this.sender_id,
-          message_sender_username:
-            user.clan_nick || user.display_name || user.username,
-          mesages_sender_avatar: user.clan_avatar || user.avartar,
-          content: JSON.stringify(this.content),
-        },
-      ];
-      const dataReply: ReplyMessageData = {
-        clan_id: this.channel.clan.id,
-        mode: convertChanneltypeToChannelMode(this.channel.channel_type!),
-        is_public: !this.channel.is_private,
-        channel_id: this.channel.id!,
-        content,
-        references,
-        anonymous_message,
-        mention_everyone,
-        code,
-        topic_id: topic_id || this.topic_id,
-      };
-      return await this.socketManager.writeChatMessage(dataReply);
-    });
-  }
+  content: ChannelMessageContent,
+  mentions?: Array<ApiMessageMention>,
+  attachments?: Array<ApiMessageAttachment>,
+  mention_everyone?: boolean,
+  anonymous_message?: boolean,
+  topic_id?: string,
+  code?: number,
+) {
+  return await this.messageQueue.enqueue(async () => {
+    const client = this.channel.clan.getClient();
+    const user = await client.users.fetch(this.sender_id);
 
-  async update(content: ChannelMessageContent, topic_id?: string) {
+    const references: ApiMessageRef[] = [
+      {
+        message_ref_id: this.id,
+        message_sender_id: this.sender_id,
+        message_sender_username:
+          user.clan_nick || user.display_name || user.username,
+        mesages_sender_avatar: user.clan_avatar || user.avartar,
+        content: JSON.stringify(this.content),
+      },
+    ];
+
+    const dataReply: ReplyMessageData = {
+      clan_id: this.channel.clan.id,
+      mode: convertChanneltypeToChannelMode(this.channel.channel_type!),
+      is_public: !this.channel.is_private,
+      channel_id: this.channel.id!,
+      content,
+      mentions,
+      attachments,
+      references,
+      anonymous_message,
+      mention_everyone,
+      code,
+      topic_id: topic_id || this.topic_id,
+    };
+
+    return this.socketManager.writeChatMessage(dataReply);
+  });
+}
+
+  async update(
+    content: ChannelMessageContent,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>
+  ) {
     return await this.messageQueue.enqueue(() => {
       const dataUpdate: UpdateMessageData = {
         clan_id: this.channel.clan.id,
@@ -108,7 +121,10 @@ export class Message {
         is_public: !this.channel.is_private,
         message_id: this.id,
         content,
-        topic_id: topic_id || this.topic_id,
+        mentions,
+        attachments,
+        topic_id: this.topic_id,
+        is_update_msg_topic: !!this.topic_id,
       };
       return this.socketManager.updateChatMessage(dataUpdate);
     });
@@ -141,6 +157,7 @@ export class Message {
         mode: convertChanneltypeToChannelMode(this.channel.channel_type!),
         is_public: !this.channel.is_private,
         message_id: this.id,
+        topic_id: this.topic_id,
       };
       return this.socketManager.removeChatMessage(dataRemove);
     });

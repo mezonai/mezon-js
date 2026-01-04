@@ -18,6 +18,14 @@ export interface ApiClanDescList {
     logo?: string;
     //
     status?: number;
+    //
+    badge_count?: number;
+    // is onboarding.
+    is_onboarding?: boolean;
+    // welcome channel id.
+    welcome_channel_id?: string;
+    //Onboarding_banner.
+    onboarding_banner?: string;
   }
   
   /** A user's session used to authenticate messages. */
@@ -30,6 +38,8 @@ export interface ApiClanDescList {
     token?: string;
     // UserId
     user_id: string;
+    //
+    id_token?: string;
   }
   
   /** Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user. */

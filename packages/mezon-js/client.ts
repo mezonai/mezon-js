@@ -17,13 +17,7 @@
 import {
   ApiAccount,
   ApiAccountMezon,
-  ApiAccountDevice,
   ApiAccountEmail,
-  ApiAccountFacebook,
-  ApiAccountFacebookInstantGame,
-  ApiAccountGoogle,
-  ApiAccountGameCenter,
-  ApiAccountSteam,
   ApiChannelMessageList,
   ApiChannelDescList,
   ApiChannelDescription,
@@ -46,12 +40,8 @@ import {
   ApiNotificationList,
   ApiRpc,
   ApiUpdateAccountRequest,
-  ApiUsers,
   MezonApi,
   ApiSession,
-  ApiAccountApple,
-  ApiLinkSteamRequest,
-  ApiClanDescProfile,
   ApiClanProfile,
   ApiChannelUserList,
   ApiClanUserList,
@@ -73,7 +63,7 @@ import {
   ApiDeleteEventRequest,
   ApiSetDefaultNotificationRequest,
   ApiSetNotificationRequest,
-  ApiSetMuteNotificationRequest,
+  ApiSetMuteRequest,
   ApiSearchMessageRequest,
   ApiSearchMessageResponse,
   ApiPinMessageRequest,
@@ -101,7 +91,6 @@ import {
   MezonUpdateSystemMessageBody,
   ApiUpdateCategoryOrderRequest,
   ApiGiveCoffeeEvent,
-  ApiListStreamingChannelsResponse,
   ApiStreamingChannelUserList,
   ApiRegisterStreamingChannelRequest,
   ApiRegisterStreamingChannelResponse,
@@ -111,7 +100,6 @@ import {
   ApiNotificationUserChannel,
   ApiNotificationSetting,
   ApiNotifiReactMessage,
-  ApiHashtagDmList,
   ApiEmojiListedResponse,
   ApiStickerListedResponse,
   ApiAllUsersAddChannelResponse,
@@ -138,7 +126,6 @@ import {
   MezonapiListAuditLog,
   ApiTokenSentEvent,
   MezonDeleteWebhookByIdBody,
-  ApiWithdrawTokenRequest,
   ApiListOnboardingResponse,
   ApiCreateOnboardingRequest,
   MezonUpdateOnboardingBody,
@@ -152,25 +139,44 @@ import {
   ApiUserStatus,
   ApiListOnboardingStepResponse,
   MezonUpdateOnboardingStepByClanIdBody,
-  ApiWalletLedgerList,
   ApiSdTopicList,
   ApiSdTopicRequest,
   ApiSdTopic,
   MezonUpdateEventBody,
-  ApiTransactionDetail,
   MezonapiCreateRoomChannelApps,
   ApiGenerateMeetTokenRequest,
   ApiGenerateMeetTokenResponse,
   ApiMezonOauthClientList,
   ApiMezonOauthClient,
   ApiCreateHashChannelAppsResponse,
-  MezonapiEmojiRecentList,
+  ApiEmojiRecentList,
   ApiUserEventRequest,
   ApiUpdateRoleOrderRequest,
   ApiGenerateMezonMeetResponse,
   ApiGenerateMeetTokenExternalResponse,
   ApiUpdateClanOrderRequest,
   ApiMessage2InboxRequest,
+  ApiListClanDiscover,
+  ApiClanDiscoverRequest,
+  ApiQuickMenuAccessList,
+  ApiQuickMenuAccessRequest,
+  ApiUnlockedItemRequest,
+  ApiForSaleItemList,
+  ApiUnlockedItemResponse,
+  ApiIsFollowerResponse,
+  ApiIsFollowerRequest,
+  ApiTransferOwnershipRequest,
+  ApiMeetParticipantRequest,
+  ApiLinkAccountConfirmRequest,
+  ApiLinkAccountMezon,
+  ApiUser,
+  ApiFriend,
+  ApiListClanUnreadMsgIndicatorResponse,
+  ApiAddFriendsResponse,
+  ApiUpdateUsernameRequest,
+  ApiBannedUserList,
+  ApiIsBannedResponse,
+  ApiLogedDeviceList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -187,7 +193,6 @@ export enum ChannelType {
   CHANNEL_TYPE_CHANNEL = 1,
   CHANNEL_TYPE_GROUP = 2,
   CHANNEL_TYPE_DM = 3,
-  CHANNEL_TYPE_GMEET_VOICE = 4,
   CHANNEL_TYPE_FORUM = 5,
   CHANNEL_TYPE_STREAMING = 6,
   CHANNEL_TYPE_THREAD = 7,
@@ -307,132 +312,16 @@ export interface ChannelMessageList {
   prev_cursor?: string;
 }
 
-/** A user in the system. */
-export interface User {
-  /** A URL for an avatar image. */
-  avatar_url?: string;
-  /** The UNIX time when the user was created. */
-  create_time?: string;
-  /** The display name of the user. */
-  display_name?: string;
-  /** Number of related edges to this user. */
-  edge_count?: number;
-  /** The Facebook id in the user's account. */
-  facebook_id?: string;
-  /** The Facebook Instant Game ID in the user's account. */
-  facebook_instant_game_id?: string;
-  /** The Apple Game Center in of the user's account. */
-  gamecenter_id?: string;
-  /** The Google id in the user's account. */
-  google_id?: string;
-  /** The id of the user's account. */
-  id?: string;
-  /** The language expected to be a tag which follows the BCP-47 spec. */
-  lang_tag?: string;
-  /** The location set by the user. */
-  location?: string;
-  /** Additional information stored as a JSON object. */
-  metadata?: { status?: string; user_status?: string };
-  /** Indicates whether the user is currently online. */
-  online?: boolean;
-  /** The Steam id in the user's account. */
-  steam_id?: string;
-  /** The timezone set by the user. */
-  timezone?: string;
-  /** The UNIX time when the user was last updated. */
-  update_time?: string;
-  /** The username of the user's account. */
-  username?: string;
-  //
-  is_mobile?: boolean;
-}
-
 /** A collection of zero or more users. */
 export interface Users {
   /** The User objects. */
-  users?: Array<User>;
-}
-
-/** A friend of a user. */
-export interface Friend {
-  /** The friend status. */
-  state?: number;
-  /** The user object. */
-  user?: User;
+  users?: Array<ApiUser>;
 }
 
 /** A collection of zero or more friends of the user. */
 export interface Friends {
   /** The Friend objects. */
-  friends?: Array<Friend>;
-  /** Cursor for the next page of results, if any. */
-  cursor?: string;
-}
-
-/** A user-role pair representing the user's role in a group. */
-export interface GroupUser {
-  /** The user. */
-  user?: User;
-  /** Their role within the group. */
-  state?: number;
-}
-
-/** A list of users belonging to a group along with their role in it. */
-export interface GroupUserList {
-  /** The user-role pairs. */
-  group_users?: Array<GroupUser>;
-  /** Cursor for the next page of results, if any. */
-  cursor?: string;
-}
-
-/** A group in the server. */
-export interface Group {
-  /** A URL for an avatar image. */
-  avatar_url?: string;
-  /** The UNIX time when the group was created. */
-  create_time?: string;
-  /** The id of the user who created the group. */
-  creator_id?: string;
-  /** A description for the group. */
-  description?: string;
-  /** The current count of all members in the group. */
-  edge_count?: number;
-  /** The id of a group. */
-  id?: string;
-  /** The language expected to be a tag which follows the BCP-47 spec. */
-  lang_tag?: string;
-  /** The maximum number of members allowed. */
-  max_count?: number;
-  /** Additional information stored as a JSON object. */
-  metadata?: {};
-  /** The unique name of the group. */
-  name?: string;
-  /** Anyone can join open groups, otherwise only admins can accept members. */
-  open?: boolean;
-  /** The UNIX time when the group was last updated. */
-  update_time?: string;
-}
-
-/** One or more groups returned from a listing operation. */
-export interface GroupList {
-  /** A cursor used to get the next page. */
-  cursor?: string;
-  /** One or more groups. */
-  groups?: Array<Group>;
-}
-
-/** A group-role pair representing the user's groups and their role in each. */
-export interface UserGroup {
-  /** The group. */
-  group?: Group;
-  /** The user's role within the group. */
-  state?: number;
-}
-
-/** A list of groups belonging to a user along with their role in it. */
-export interface UserGroupList {
-  /** The group-role pairs. */
-  user_groups?: Array<UserGroup>;
+  friends?: Array<ApiFriend>;
   /** Cursor for the next page of results, if any. */
   cursor?: string;
 }
@@ -479,6 +368,8 @@ export interface ApiUpdateChannelDescRequest {
   topic?: string;
   //
   age_restricted?: number;
+  //
+  channel_avatar?: string;
 }
 
 /** Add users to a channel. */
@@ -501,19 +392,6 @@ export interface ApiKickChannelUsersRequest {
 export interface ApiLeaveChannelRequest {
   /** The channel ID to leave. */
   channel_id: string;
-}
-
-/** Update Clan information */
-export interface ApiUpdateClanDescRequest {
-  clan_id: string;
-  /** Clan creator */
-  creator_id: string;
-  /** Clan name */
-  clan_name: string;
-  /** Clan logo */
-  logo: string;
-  /** Clan banner */
-  banner: string;
 }
 
 /** Update Clan profile information */
@@ -569,86 +447,39 @@ export class Client {
 
   /** thre refreshTokenPromise */
   private refreshTokenPromise: Promise<Session> | null = null;
+  host: string;
+  port: string;
+  useSSL: boolean;
 
   constructor(
     readonly serverkey = DEFAULT_SERVER_KEY,
-    readonly host = DEFAULT_HOST,
-    readonly port = DEFAULT_PORT,
-    readonly useSSL = false,
+    host = DEFAULT_HOST,
+    port = DEFAULT_PORT,
+    useSSL = false,
     readonly timeout = DEFAULT_TIMEOUT_MS,
     readonly autoRefreshSession = true
   ) {
+    this.host = host;
+    this.port = port;
+    this.useSSL = useSSL;
     const scheme = useSSL ? "https://" : "http://";
     const basePath = `${scheme}${host}:${port}`;
 
-    this.apiClient = new MezonApi(serverkey, basePath, timeout);
+    this.apiClient = new MezonApi(serverkey, timeout, basePath);
   }
 
-  /** Add users to a channel, or accept their join requests. */
-  async addChannelUsers(
-    session: Session,
-    channelId: string,
-    ids?: Array<string>
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .addChannelUsers(session.token, channelId, ids)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+  /**
+   * Called when a token refresh is initiated.
+   * This is a placeholder method that subclasses or instances can override
+   * to perform actions before or after the refresh logic.
+   */
+  onRefreshSession(session: ApiSession): void {
+    console.log(`Token refresh occurred. Token: ${session.token}`);
   }
 
-  /** Add friends by ID or username to a user's account. */
-  async addFriends(
-    session: Session,
-    ids?: Array<string>,
-    usernames?: Array<string>
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .addFriends(session.token, ids, usernames)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Authenticate a user with an Apple ID against the server. */
-  async authenticateApple(
-    token: string,
-    create?: boolean,
-    username?: string,
-    vars: Record<string, string> = {},
-    options: any = {}
-  ) {
-    const request = {
-      token: token,
-      vars: vars,
-    };
-
-    return this.apiClient
-      .authenticateApple(this.serverkey, "", request, create, username, options)
-      .then((apiSession: ApiSession) => {
-        return new Session(
-          apiSession.token || "",
-          apiSession.refresh_token || "",
-          apiSession.created || false,
-          false
-        );
-      });
+  /** check session isexpired */
+  isexpired(session: Session): boolean {
+    return session.isexpired(Date.now() / 1000)
   }
 
   /** Authenticate a user with a custom id against the server. */
@@ -679,31 +510,68 @@ export class Client {
           apiSession.token || "",
           apiSession.refresh_token || "",
           apiSession.created || false,
-          false
+          apiSession.api_url || "",
+          apiSession.id_token || "",
+          apiSession.is_remember || false,
         );
       });
   }
 
-  /** Authenticate a user with a device id against the server. */
-  authenticateDevice(
-    id: string,
-    create?: boolean,
+  /** Authenticate a user with an email+otp against the server. */
+  authenticateSMSOTPRequest(
+    phoneno: string,
     username?: string,
     vars?: Record<string, string>
-  ): Promise<Session> {
+  ): Promise<ApiLinkAccountConfirmRequest> {
     const request = {
-      id: id,
-      vars: vars,
+      username: username,
+      account: {
+        phoneno: phoneno,
+        vars: vars,
+      }
     };
 
     return this.apiClient
-      .authenticateDevice(this.serverkey, "", request, create, username)
+      .AuthenticateSMSOTPRequest(this.serverkey, "", request, username)
+      .then((response: ApiLinkAccountConfirmRequest) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  /** Authenticate a user with an email+otp against the server. */
+  authenticateEmailOTPRequest(
+    email: string,
+    username?: string,
+    vars?: Record<string, string>
+  ): Promise<ApiLinkAccountConfirmRequest> {
+    const request = {
+      username: username,
+      account: {
+        email: email,
+        vars: vars,
+      }
+    };
+
+    return this.apiClient
+      .AuthenticateEmailOTPRequest(this.serverkey, "", request, username)
+      .then((response: ApiLinkAccountConfirmRequest) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async confirmAuthenticateOTP(
+    request:  ApiLinkAccountConfirmRequest,
+  ): Promise<Session> {    
+    return this.apiClient
+      .confirmAuthenticateOTP(this.serverkey, "", request)
       .then((apiSession: ApiSession) => {
         return new Session(
           apiSession.token || "",
           apiSession.refresh_token || "",
-          apiSession.created || false,
-          false
+          apiSession.created || false,          
+          apiSession.api_url || "",
+          apiSession.id_token || "",
+          apiSession.is_remember || false,
         );
       });
   }
@@ -730,172 +598,62 @@ export class Client {
         return new Session(
           apiSession.token || "",
           apiSession.refresh_token || "",
-          apiSession.created || false,
-          false
+          apiSession.created || false,          
+          apiSession.api_url || "",
+          apiSession.id_token || "",
+          apiSession.is_remember || false,
         );
       });
   }
 
-  /** Authenticate a user with a Facebook Instant Game token against the server. */
-  authenticateFacebookInstantGame(
-    signedPlayerInfo: string,
-    create?: boolean,
-    username?: string,
-    vars?: Record<string, string>,
-    options: any = {}
-  ): Promise<Session> {
-    const request = {
-      signed_player_info: signedPlayerInfo,
-      vars: vars,
-    };
+  /** set base path */
+  setBasePath(host: string, port: string, useSSL: boolean) {
+    this.host = host;
+    this.port = port;
+    this.useSSL = useSSL;
+    
+    const scheme = useSSL ? "https://" : "http://";
+    const basePath = `${scheme}${host}:${port}`;    
+    return this.apiClient
+      .setBasePath(basePath);
+  }
+
+  /** Add users to a channel, or accept their join requests. */
+  async addChannelUsers(
+    session: Session,
+    channelId: string,
+    ids?: Array<string>
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
 
     return this.apiClient
-      .authenticateFacebookInstantGame(
-        this.serverkey,
-        "",
-        { signed_player_info: request.signed_player_info, vars: request.vars },
-        create,
-        username,
-        options
-      )
-      .then((apiSession: ApiSession) => {
-        return new Session(
-          apiSession.token || "",
-          apiSession.refresh_token || "",
-          apiSession.created || false,
-          false
-        );
+      .addChannelUsers(session.token, channelId, ids)
+      .then((response: any) => {
+        return response !== undefined;
       });
   }
 
-  /** Authenticate a user with a Facebook OAuth token against the server. */
-  authenticateFacebook(
-    token: string,
-    create?: boolean,
-    username?: string,
-    sync?: boolean,
-    vars?: Record<string, string>,
-    options: any = {}
-  ): Promise<Session> {
-    const request = {
-      token: token,
-      vars: vars,
-    };
+  /** Add friends by ID or username to a user's account. */
+  async addFriends(
+    session: Session,
+    ids?: Array<string>,
+    usernames?: Array<string>
+  ): Promise<ApiAddFriendsResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
 
-    return this.apiClient
-      .authenticateFacebook(
-        this.serverkey,
-        "",
-        request,
-        create,
-        username,
-        sync,
-        options
-      )
-      .then((apiSession: ApiSession) => {
-        return new Session(
-          apiSession.token || "",
-          apiSession.refresh_token || "",
-          apiSession.created || false,
-          false
-        );
-      });
-  }
-
-  /** Authenticate a user with Google against the server. */
-  async authenticateGoogle(
-    token: string,
-    create?: boolean,
-    username?: string,
-    vars?: Record<string, string>,
-    options: any = {}
-  ): Promise<Session> {
-    const request: ApiAccountGoogle = {
-      token,
-      vars,
-    };
-
-    const apiSession = await this.apiClient.authenticateGoogle(
-      this.serverkey,
-      "",
-      request,
-      create,
-      username,
-      options
-    );
-
-    return new Session(
-      apiSession.token || "",
-      apiSession.refresh_token || "",
-      apiSession.created || false,
-      false
-    );
-  }
-
-  /** Authenticate a user with GameCenter against the server. */
-  async authenticateGameCenter(
-    bundleId: string,
-    playerId: string,
-    publicKeyUrl: string,
-    salt: string,
-    signature: string,
-    timestamp: number,
-    username?: string,
-    create?: boolean,
-    vars?: Record<string, string>,
-    options: any = {}
-  ): Promise<Session> {
-    const request: ApiAccountGameCenter = {
-      bundle_id: bundleId,
-      player_id: playerId,
-      public_key_url: publicKeyUrl,
-      salt,
-      signature,
-      timestamp_seconds: timestamp,
-      vars,
-    };
-
-    const apiSession = await this.apiClient.authenticateGameCenter(
-      this.serverkey,
-      "",
-      request,
-      create,
-      username,
-      options
-    );
-
-    return new Session(
-      apiSession.token || "",
-      apiSession.refresh_token || "",
-      apiSession.created || false,
-      false
-    );
-  }
-
-  /** Authenticate a user with Steam against the server. */
-  async authenticateSteam(
-    token: string,
-    create?: boolean,
-    username?: string,
-    sync?: boolean,
-    vars?: Record<string, string>
-  ): Promise<Session> {
-    const request = {
-      token: token,
-      vars: vars,
-      sync: sync,
-    };
-
-    return this.apiClient
-      .authenticateSteam(this.serverkey, "", request, create, username)
-      .then((apiSession: ApiSession) => {
-        return new Session(
-          apiSession.token || "",
-          apiSession.refresh_token || "",
-          apiSession.created || false,
-          false
-        );
-      });
+    return this.apiClient.addFriends(session.token, ids, usernames);
   }
 
   /** Block one or more users by ID or username. */
@@ -917,6 +675,43 @@ export class Client {
       .then((response: any) => {
         return Promise.resolve(response != undefined);
       });
+  }
+
+  /** Block one or more users by ID or username. */
+  async unblockFriends(
+    session: Session,
+    ids?: Array<string>,
+    usernames?: Array<string>
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .unblockFriends(session.token, ids, usernames)
+      .then((response: any) => {
+        return Promise.resolve(response != undefined);
+      });
+  }
+
+  /** Create a new group with the current user as the creator and superadmin. */
+  async uploadOauthFile(
+    session: Session,
+    request: ApiUploadAttachmentRequest
+  ): Promise<ApiUploadAttachment> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.uploadOauthFile(session.token, request);
   }
 
   /** Create a new group with the current user as the creator and superadmin. */
@@ -1132,6 +927,7 @@ export class Client {
   /** Delete a channel by ID. */
   async deleteChannelDesc(
     session: Session,
+    clanId: string,
     channelId: string
   ): Promise<boolean> {
     if (
@@ -1143,7 +939,7 @@ export class Client {
     }
 
     return this.apiClient
-      .deleteChannelDesc(session.token, channelId)
+      .deleteChannelDesc(session.token, clanId, channelId)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -1312,97 +1108,6 @@ export class Client {
     return this.apiClient.getAccount(session.token);
   }
 
-  /** Import Facebook friends and add them to a user's account. */
-  async importFacebookFriends(
-    session: Session,
-    request: ApiAccountFacebook
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .importFacebookFriends(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Import Steam friends and add them to a user's account. */
-  async importSteamFriends(
-    session: Session,
-    request: ApiAccountSteam,
-    reset: boolean
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .importSteamFriends(session.token, request, reset)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Fetch zero or more users by ID and/or username. */
-  async getUsers(
-    session: Session,
-    ids?: Array<string>,
-    usernames?: Array<string>,
-    facebookIds?: Array<string>
-  ): Promise<Users> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .getUsers(session.token, ids, usernames, facebookIds)
-      .then((response: ApiUsers) => {
-        var result: Users = {
-          users: [],
-        };
-
-        if (response.users == null) {
-          return Promise.resolve(result);
-        }
-
-        response.users!.forEach((u) => {
-          result.users!.push({
-            avatar_url: u.avatar_url,
-            create_time: u.create_time,
-            display_name: u.display_name,
-            edge_count: u.edge_count ? Number(u.edge_count) : 0,
-            facebook_id: u.facebook_id,
-            gamecenter_id: u.gamecenter_id,
-            google_id: u.google_id,
-            id: u.id,
-            lang_tag: u.lang_tag,
-            location: u.location,
-            online: u.online,
-            steam_id: u.steam_id,
-            timezone: u.timezone,
-            update_time: u.update_time,
-            username: u.username,
-            metadata: u.metadata ? safeJSONParse(u.metadata) : undefined,
-          });
-        });
-        return Promise.resolve(result);
-      });
-  }
-
   /** Kick a set of users from a clan. */
   async removeClanUsers(
     session: Session,
@@ -1419,6 +1124,75 @@ export class Client {
 
     return this.apiClient
       .removeClanUsers(session.token, clanId, ids)
+      .then((response: any) => {
+        return Promise.resolve(response != undefined);
+      });
+  }
+
+  async listBannedUsers(
+    session: Session,
+    clanId?:string,
+    channelId?:string,
+  ): Promise<ApiBannedUserList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listBannedUsers(
+        session.token,
+        clanId,
+        channelId,
+      )
+      .then((response: ApiBannedUserList) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  /** Ban a set of users from a clan. */
+  async unbanClanUsers(
+    session: Session,
+    clanId:string,
+    channelId?:string,
+    userIds?:Array<string>
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .unbanClanUsers(session.token, clanId, channelId, userIds)
+      .then((response: any) => {
+        return Promise.resolve(response != undefined);
+      });
+  }
+
+  /** Ban a set of users from a clan. */
+  async banClanUsers(
+    session: Session,
+    clanId:string,
+    channelId?:string,
+    userIds?:Array<string>,
+    banTime?:number
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .banClanUsers(session.token, clanId, channelId, userIds, banTime)
       .then((response: any) => {
         return Promise.resolve(response != undefined);
       });
@@ -1637,6 +1411,8 @@ export class Client {
             clan_nick: gu.clan_nick,
             id: gu.id,
             clan_id: gu.clan_id,
+            added_by: gu.added_by,
+            is_banned: gu.is_banned
           });
         });
         return Promise.resolve(result);
@@ -1651,7 +1427,8 @@ export class Client {
     fileType: string,
     state?: number,
     limit?: number,
-    cursor?: string
+    before?: number,
+    after?: number,
   ): Promise<ApiChannelAttachmentList> {
     if (
       this.autoRefreshSession &&
@@ -1664,12 +1441,13 @@ export class Client {
     return this.apiClient
       .listChannelAttachment(
         session.token,
-        clanId,
         channelId,
+        clanId,
         fileType,
         limit,
         state,
-        cursor
+        before,
+        after,
       )
       .then((response: ApiChannelAttachmentList) => {
         var result: ApiChannelAttachmentList = {
@@ -1731,21 +1509,20 @@ export class Client {
               create_time: gu.user!.create_time,
               display_name: gu.user!.display_name,
               edge_count: gu.user!.edge_count ? Number(gu.user!.edge_count) : 0,
-              facebook_id: gu.user!.facebook_id,
-              gamecenter_id: gu.user!.gamecenter_id,
-              google_id: gu.user!.google_id,
               id: gu.user!.id,
               lang_tag: gu.user!.lang_tag,
               location: gu.user!.location,
               online: gu.user!.online,
               is_mobile: gu.user?.is_mobile,
-              steam_id: gu.user!.steam_id,
               timezone: gu.user!.timezone,
               update_time: gu.user!.update_time,
               username: gu.user!.username,
-              metadata: gu.user!.metadata
-                ? safeJSONParse(gu.user!.metadata!)
-                : undefined,
+              user_status: gu.user!.user_status,
+              status: gu.user!.status,
+              about_me: gu.user!.about_me,
+              mezon_id: gu.user!.mezon_id,
+              list_nick_names: gu.user!.list_nick_names,
+              phone_number: gu.user!.phone_number
             },
             role_id: gu!.role_id,
             clan_nick: gu!.clan_nick,
@@ -1756,6 +1533,28 @@ export class Client {
       });
   }
 
+  async listChannelDetail(
+    session: Session,
+    channelId: string
+  ): Promise<ApiChannelDescription> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listChannelDetail(
+        session.token,
+        channelId
+      )
+      .then((response: ApiChannelDescription) => {
+        return Promise.resolve(response);
+      });
+  }
+
   /** List channels. */
   async listChannelDescs(
     session: Session,
@@ -1763,7 +1562,8 @@ export class Client {
     state?: number,
     cursor?: string,
     clanId?: string,
-    channelType?: number
+    channelType?: number,
+    isMobile?: boolean
   ): Promise<ApiChannelDescList> {
     if (
       this.autoRefreshSession &&
@@ -1780,7 +1580,8 @@ export class Client {
         state,
         cursor,
         clanId,
-        channelType
+        channelType,
+        isMobile
       )
       .then((response: ApiChannelDescList) => {
         var result: ApiChannelDescList = {
@@ -1796,6 +1597,26 @@ export class Client {
 
         result.channeldesc = response.channeldesc;
         return Promise.resolve(result);
+      });
+  }
+
+  /** List clans */
+  async listClanUnreadMsgIndicator(
+    session: Session,
+    clanId: string
+  ): Promise<ApiListClanUnreadMsgIndicatorResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listClanUnreadMsgIndicator(session.token, clanId)
+      .then((response: ApiListClanUnreadMsgIndicatorResponse) => {
+        return Promise.resolve(response);
       });
   }
 
@@ -1941,7 +1762,8 @@ export class Client {
     session: Session,
     tokenId: string,
     deviceId: string,
-    platform: string
+    platform: string,
+    voipToken?: string
   ): Promise<ApiRegistFcmDeviceTokenResponse> {
     if (
       this.autoRefreshSession &&
@@ -1952,28 +1774,8 @@ export class Client {
     }
 
     return this.apiClient
-      .registFCMDeviceToken(session.token, tokenId, deviceId, platform)
+      .registFCMDeviceToken(session.token, tokenId, deviceId, platform, voipToken)
       .then((response: any) => {
-        return Promise.resolve(response);
-      });
-  }
-
-  /** Get a clan desc profile */
-  async getClanDescProfile(
-    session: Session,
-    clanId: string
-  ): Promise<ApiClanDescProfile> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .getClanDescProfile(session.token, clanId)
-      .then((response: ApiClanDescProfile) => {
         return Promise.resolve(response);
       });
   }
@@ -1994,26 +1796,6 @@ export class Client {
       .getUserProfileOnClan(session.token, clanId)
       .then((response: ApiClanProfile) => {
         return Promise.resolve(response);
-      });
-  }
-
-  /** Add an Apple ID to the social profiles on the current user's account. */
-  async linkApple(
-    session: Session,
-    request: ApiAccountApple
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .linkApple(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
       });
   }
 
@@ -2056,11 +1838,27 @@ export class Client {
       });
   }
 
+  async confirmLinkMezonOTP(
+    session: Session,
+    request:  ApiLinkAccountConfirmRequest,
+  ): Promise<ApiSession>{
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .confirmLinkMezonOTP(session.token, request);
+  }
+
   /** Add a custom ID to the social profiles on the current user's account. */
   async linkMezon(
     session: Session,
-    request: ApiAccountMezon
-  ): Promise<boolean> {
+    request: ApiLinkAccountMezon
+  ): Promise<ApiLinkAccountConfirmRequest> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -2071,28 +1869,8 @@ export class Client {
 
     return this.apiClient
       .linkMezon(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Add a device ID to the social profiles on the current user's account. */
-  async linkDevice(
-    session: Session,
-    request: ApiAccountDevice
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .linkDevice(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
+      .then((response: ApiLinkAccountConfirmRequest) => {
+        return Promise.resolve(response);
       });
   }
 
@@ -2100,7 +1878,7 @@ export class Client {
   async linkEmail(
     session: Session,
     request: ApiAccountEmail
-  ): Promise<boolean> {
+  ): Promise<ApiLinkAccountConfirmRequest> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -2111,108 +1889,8 @@ export class Client {
 
     return this.apiClient
       .linkEmail(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Add Facebook to the social profiles on the current user's account. */
-  async linkFacebook(
-    session: Session,
-    request: ApiAccountFacebook
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .linkFacebook(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Add Facebook Instant to the social profiles on the current user's account. */
-  async linkFacebookInstantGame(
-    session: Session,
-    request: ApiAccountFacebookInstantGame
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .linkFacebookInstantGame(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Add Google to the social profiles on the current user's account. */
-  async linkGoogle(
-    session: Session,
-    request: ApiAccountGoogle
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .linkGoogle(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Add GameCenter to the social profiles on the current user's account. */
-  async linkGameCenter(
-    session: Session,
-    request: ApiAccountGameCenter
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .linkGameCenter(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Add Steam to the social profiles on the current user's account. */
-  async linkSteam(
-    session: Session,
-    request: ApiLinkSteamRequest
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .linkSteam(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
+      .then((response: ApiLinkAccountConfirmRequest) => {
+        return Promise.resolve(response);
       });
   }
 
@@ -2249,24 +1927,24 @@ export class Client {
               avatar_url: f.user!.avatar_url,
               create_time: f.user!.create_time,
               display_name: f.user!.display_name,
-              edge_count: f.user!.edge_count ? Number(f.user!.edge_count) : 0,
-              facebook_id: f.user!.facebook_id,
-              gamecenter_id: f.user!.gamecenter_id,
-              google_id: f.user!.google_id,
+              edge_count: f.user!.edge_count ? Number(f.user!.edge_count) : 0,              
               id: f.user!.id,
               lang_tag: f.user!.lang_tag,
               location: f.user!.location,
               online: f.user!.online,
-              steam_id: f.user!.steam_id,
               timezone: f.user!.timezone,
               update_time: f.user!.update_time,
               username: f.user!.username,
               is_mobile: f.user?.is_mobile,
-              metadata: f.user!.metadata
-                ? safeJSONParse(f.user!.metadata!)
-                : undefined,
+              user_status: f.user!.user_status,
+              status: f.user!.status,
+              mezon_id: f.user!.mezon_id,
+              list_nick_names: f.user!.list_nick_names,
+              phone_number: f.user!.phone_number,
+              about_me: f.user!.about_me
             },
             state: f.state,
+            source_id: f.source_id,
           });
         });
         return Promise.resolve(result);
@@ -2449,6 +2127,7 @@ export class Client {
           }
         );
         session.update(apiSession.token!, apiSession.refresh_token!, apiSession.is_remember || false);
+        this.onRefreshSession(apiSession);
         resolve(session);
       } catch (error) {
         console.error("Session refresh failed:", error);
@@ -2459,26 +2138,6 @@ export class Client {
     });
 
     return this.refreshTokenPromise;
-  }
-
-  /** Remove the Apple ID from the social profiles on the current user's account. */
-  async unlinkApple(
-    session: Session,
-    request: ApiAccountApple
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .unlinkApple(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
   }
 
   /** Remove custom ID from the social profiles on the current user's account. */
@@ -2496,26 +2155,6 @@ export class Client {
 
     return this.apiClient
       .unlinkMezon(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Remove a device ID from the social profiles on the current user's account. */
-  async unlinkDevice(
-    session: Session,
-    request: ApiAccountDevice
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .unlinkDevice(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2541,11 +2180,11 @@ export class Client {
       });
   }
 
-  /** Remove Facebook from the social profiles on the current user's account. */
-  async unlinkFacebook(
+  /** Update fields in the current user's account. */
+  async updateUsername(
     session: Session,
-    request: ApiAccountFacebook
-  ): Promise<boolean> {
+    request: ApiUpdateUsernameRequest
+  ): Promise<ApiSession> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -2555,88 +2194,9 @@ export class Client {
     }
 
     return this.apiClient
-      .unlinkFacebook(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Remove Facebook Instant social profiles from the current user's account. */
-  async unlinkFacebookInstantGame(
-    session: Session,
-    request: ApiAccountFacebookInstantGame
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .unlinkFacebookInstantGame(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Remove Google from the social profiles on the current user's account. */
-  async unlinkGoogle(
-    session: Session,
-    request: ApiAccountGoogle
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .unlinkGoogle(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Remove GameCenter from the social profiles on the current user's account. */
-  async unlinkGameCenter(
-    session: Session,
-    request: ApiAccountGameCenter
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .unlinkGameCenter(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Remove Steam from the social profiles on the current user's account. */
-  async unlinkSteam(
-    session: Session,
-    request: ApiAccountSteam
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-    return this.apiClient
-      .unlinkSteam(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
+      .updateUsername(session.token, request)
+      .then((response: ApiSession) => {
+        return Promise.resolve(response);
       });
   }
 
@@ -2718,27 +2278,6 @@ export class Client {
 
     return this.apiClient
       .updateCategory(session.token, clanId, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Update fields in a given clan profile. */
-  async updateClanDescProfile(
-    session: Session,
-    clanId: string,
-    request: ApiUpdateClanDescProfileRequest
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .updateClanDescProfile(session.token, clanId, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2849,19 +2388,10 @@ export class Client {
 
   /** Get link invite user */
   async getLinkInvite(
-    session: Session,
     inviteId: string
   ): Promise<ApiInviteUserRes> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
     return this.apiClient
-      .getLinkInvite(session.token, inviteId)
+      .getLinkInvite( this.serverkey, "", inviteId)
       .then((response: ApiInviteUserRes) => {
         return Promise.resolve(response);
       });
@@ -2948,9 +2478,9 @@ export class Client {
   }
 
   /** Set notification category*/
-  async setMuteNotificationCategory(
+  async setMuteCategory(
     session: Session,
-    request: ApiSetMuteNotificationRequest
+    request: ApiSetMuteRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -2961,16 +2491,16 @@ export class Client {
     }
 
     return this.apiClient
-      .setMuteNotificationCategory(session.token, request)
+      .setMuteCategory(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
   }
 
   /** Set notification channel*/
-  async setMuteNotificationChannel(
+  async setMuteChannel(
     session: Session,
-    request: ApiSetMuteNotificationRequest
+    request: ApiSetMuteRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -2981,7 +2511,7 @@ export class Client {
     }
 
     return this.apiClient
-      .setMuteNotificationChannel(session.token, request)
+      .setMuteChannel(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -3189,7 +2719,10 @@ export class Client {
   //** */
   async deletePinMessage(
     session: Session,
-    message_id: string
+    id?: string,
+    messageId?: string,
+    channelId?: string,
+    clanId?: string
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -3200,7 +2733,7 @@ export class Client {
     }
 
     return this.apiClient
-      .deletePinMessage(session.token, message_id)
+      .deletePinMessage(session.token, id, messageId, channelId, clanId)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -3659,7 +3192,7 @@ export class Client {
       });
   }
 
-  async givecoffee(session: Session, request: ApiGiveCoffeeEvent) {
+  async givecoffee(session: Session, request: ApiGiveCoffeeEvent): Promise<any> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -3670,12 +3203,12 @@ export class Client {
 
     return this.apiClient
       .giveMeACoffee(session.token, request)
-      .then((response: ApiAppList) => {
+      .then((response: any) => {
         return response !== undefined;
       });
   }
 
-  async sendToken(session: Session, request: ApiTokenSentEvent) {
+  async sendToken(session: Session, request: ApiTokenSentEvent): Promise<any> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -3686,43 +3219,8 @@ export class Client {
 
     return this.apiClient
       .sendToken(session.token, request)
-      .then((response: ApiTokenSentEvent) => {
-        return Promise.resolve(response);
-      });
-  }
-
-  async withdrawToken(session: Session, request: ApiWithdrawTokenRequest) {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .withdrawToken(session.token, request)
-      .then((response: ApiTokenSentEvent) => {
-        return Promise.resolve(response);
-      });
-  }
-
-  async listStreamingChannels(
-    session: Session,
-    clanId: string
-  ): Promise<ApiListStreamingChannelsResponse> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .listStreamingChannels(session.token, clanId)
-      .then((response: ApiListStreamingChannelsResponse) => {
-        return Promise.resolve(response);
+      .then((response: any) => {
+        return response !== undefined
       });
   }
 
@@ -3825,6 +3323,8 @@ export class Client {
             app_id: gu.app_id,
             clan_id: gu.clan_id,
             app_url: gu.app_url,
+            app_name: gu.app_name,
+            app_logo: gu.app_logo,
           });
         });
         return Promise.resolve(result);
@@ -3926,26 +3426,6 @@ export class Client {
       });
   }
 
-  async hashtagDMList(
-    session: Session,
-    userId: Array<string>,
-    limit: number
-  ): Promise<ApiHashtagDmList> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .hashtagDMList(session.token, userId, limit)
-      .then((response: ApiHashtagDmList) => {
-        return Promise.resolve(response);
-      });
-  }
-
   async listChannelByUserId(session: Session): Promise<ApiChannelDescList> {
     if (
       this.autoRefreshSession &&
@@ -4002,7 +3482,7 @@ export class Client {
 
   async emojiRecentList(
     session: Session
-  ): Promise<MezonapiEmojiRecentList> {
+  ): Promise<ApiEmojiRecentList> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4055,8 +3535,8 @@ export class Client {
   async listRoles(
     session: Session,
     clanId?: string,
-    limit?: string,
-    state?: string,
+    limit?: number,
+    state?: number,
     cursor?: string
   ): Promise<ApiRoleListEventResponse> {
     if (
@@ -4194,7 +3674,7 @@ export class Client {
       });
   }
 
-  async leaveThread(session: Session, channelId: string): Promise<any> {
+  async leaveThread(session: Session, clanId: string, channelId: string): Promise<any> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4204,7 +3684,7 @@ export class Client {
     }
 
     return this.apiClient
-      .leaveThread(session.token, channelId)
+      .leaveThread(session.token, clanId, channelId)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -4371,6 +3851,7 @@ export class Client {
 
   async removeFavoriteChannel(
     session: Session,
+    clanId: string,
     channelId: string
   ): Promise<any> {
     if (
@@ -4382,7 +3863,7 @@ export class Client {
     }
 
     return this.apiClient
-      .removeChannelFavorite(session.token, channelId)
+      .removeChannelFavorite(session.token, clanId, channelId)
       .then((response: any) => {
         return response;
       });
@@ -4465,12 +3946,15 @@ export class Client {
       apiSession.token || "",
       apiSession.refresh_token || "",
       apiSession.created || false,
+      apiSession.api_url || "",
+      apiSession.id_token || "",
       apiSession.is_remember || false
     );
   }
 
   async confirmLogin(
     session: Session,
+    basePath: string,
     body: ApiConfirmLoginRequest
   ): Promise<any> {
     if (
@@ -4482,7 +3966,7 @@ export class Client {
     }
 
     return this.apiClient
-      .confirmLogin(session.token, body)
+      .confirmLogin(session.token, basePath, body)
       .then((response: any) => {
         return response;
       });
@@ -4859,49 +4343,6 @@ export class Client {
       });
   }
 
-  /** list transaction detail */
-  async listTransactionDetail(
-    session: Session,
-    transId:string
-  ): Promise<ApiTransactionDetail> {  
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .listTransactionDetail(session.token, transId)
-      .then((response: ApiTransactionDetail) => {
-        return Promise.resolve(response);
-      });
-  }
-
-  //**list wallet ledger */
-  async listWalletLedger(
-    session: Session,
-    limit?: number,
-    cursor?: string,
-    transactionId?: string,
-    page?: number
-  ): Promise<ApiWalletLedgerList> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .listWalletLedger(session.token, limit, cursor, transactionId, page)
-      .then((response: ApiWalletLedgerList) => {
-        return Promise.resolve(response);
-      });
-  }
-
   //**list sd topic */
   async listSdTopic(
     session: Session,
@@ -5106,7 +4547,8 @@ export class Client {
   async registrationPassword(
     session: Session,
     email?: string,
-    password?: string
+    password?: string,
+    oldPassword?: string,
   ): Promise<ApiSession> {
     if (
       this.autoRefreshSession &&
@@ -5119,7 +4561,8 @@ export class Client {
     return this.apiClient
       .registrationEmail(session.token, {
         email: email,
-        password: password
+        password: password,
+        old_password: oldPassword
       })
       .then((response: ApiSession) => {
         return Promise.resolve(response);
@@ -5199,7 +4642,7 @@ export class Client {
 
     return this.apiClient
       .deleteAccount(session.token)
-      .then((response: ApiMezonOauthClientList) => {
+      .then((response: any) => {
         return Promise.resolve(response);
       });
   }
@@ -5223,13 +4666,52 @@ export class Client {
   }
 
   async generateMeetTokenExternal(
+    basePath: string,
     token:string,
     displayName?:string,
     isGuest?: boolean
   ): Promise<ApiGenerateMeetTokenExternalResponse> {
     return this.apiClient
-      .generateMeetTokenExternal("", token, displayName, isGuest)
+      .generateMeetTokenExternal("", basePath, token, displayName, isGuest)
       .then((response: ApiGenerateMeetTokenExternalResponse) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async removeMezonMeetParticipant(
+    session: Session,
+    request: ApiMeetParticipantRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .removeParticipantMezonMeet(session.token, request)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async muteMezonMeetParticipant(
+    session: Session,
+    request: ApiMeetParticipantRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .muteParticipantMezonMeet(session.token, request)
+      .then((response: any) => {
         return Promise.resolve(response);
       });
   }
@@ -5251,6 +4733,216 @@ export class Client {
       .updateClanOrder(session.token, request)
       .then((response: any) => {
         return response !== undefined;
+      });
+  }
+
+  /** list clan discover. */
+  async listClanDiscover(
+    basePath: string,
+    request: ApiClanDiscoverRequest
+  ): Promise<ApiListClanDiscover> {
+    return this.apiClient
+      .clanDiscover(this.serverkey, "", basePath, request)
+      .then((response: ApiListClanDiscover) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async listQuickMenuAccess(
+    session: Session,
+    botId: string,
+    channelId: string,
+    menuType: number
+  ): Promise<ApiQuickMenuAccessList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listQuickMenuAccess(session.token, botId, channelId, menuType)
+      .then((response: ApiQuickMenuAccessList) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async deleteQuickMenuAccess(
+    session: Session,
+    id: string,
+    clanId: string
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .deleteQuickMenuAccess(session.token, id, clanId)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
+
+  async addQuickMenuAccess(
+    session: Session,
+    request: ApiQuickMenuAccessRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .addQuickMenuAccess(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
+
+  async updateQuickMenuAccess(
+    session: Session,
+    request: ApiQuickMenuAccessRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .updateQuickMenuAccess(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
+
+  async unlockItem(session: Session, request: ApiUnlockedItemRequest): Promise<ApiUnlockedItemResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .unlockItem(session.token, request)
+      .then((response: ApiUnlockedItemResponse) => {
+         return Promise.resolve(response);
+      });
+  }
+
+  async listForSaleItems(session: Session, 
+    page?: number): Promise<ApiForSaleItemList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listForSaleItems(session.token, page)
+      .then((response: ApiForSaleItemList) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async isFollower(session: Session, 
+    req: ApiIsFollowerRequest): Promise<ApiIsFollowerResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .isFollower(session.token, req)
+      .then((response: ApiIsFollowerResponse) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async transferOwnership(session: Session, 
+    req: ApiTransferOwnershipRequest): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .transferOwnership(session.token, req)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
+
+  async isBanned(session: Session, 
+    channelId: string): Promise<ApiIsBannedResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .isBanned(session.token, channelId)
+      .then((response: ApiIsBannedResponse) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async reportMessageAbuse(session: Session,
+    messageId?:string,
+    abuseType?:string
+  ) : Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .reportMessageAbuse(session.token, messageId, abuseType)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
+
+  async listLogedDevice(session: Session): Promise<ApiLogedDeviceList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listLogedDevice(session.token)
+      .then((response: ApiLogedDeviceList) => {
+        return Promise.resolve(response);
       });
   }
 }

@@ -26,6 +26,8 @@ npx protoc --plugin="./node_modules/.bin/protoc-gen-ts_proto.cmd" --proto_path=.
 ```
 cd openapi-gen
 go run main.go "$GOPATH/src/github.com/nccasia/mezon-server/apigrpc/apigrpc.swagger.json" "Mezon" > ../packages/mezon-js/api.gen.ts
+
+go run main.go "../../mezon-server/apigrpc/apigrpc.swagger.json" "Mezon" > ../packages/mezon-js/api.gen1.ts
 ```
 
 ```

@@ -358,8 +358,6 @@ export class MezonClient implements Client {
       const channelDM = await this.createChannelDesc(request);
       
       if (channelDM) {
-        await this.sleep(100);
-
         await this.socket.joinChat(
           channelDM.clan_id!,
           channelDM.channel_id!,

@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./mezon-client/client/MezonClient" 
+export * from "./mezon-client/client/MezonClient";
 
 export * from "./constants";
 
 export * from "./interfaces";
+
+export * from "./mezon-client/structures/InteractiveMessage";
+
+export * from "./mezon-client/structures/ButtonBuilder";

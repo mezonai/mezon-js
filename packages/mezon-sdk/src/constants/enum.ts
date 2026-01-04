@@ -36,6 +36,8 @@ export enum InternalEventsSocket {
   StreamingLeavedEvent = "streaming_leaved_event",
   DropdownBoxSelected = "dropdown_box_selected",
   WebrtcSignalingFwd = "webrtc_signaling_fwd",
+  Notifications = "notifications",
+  QuickMenu = "quick_menu_event",
 }
 
 export enum Events {
@@ -95,6 +97,24 @@ export enum Events {
 
   /** Listen to user accepted call 1-1 */
   WebrtcSignalingFwd = InternalEventsSocket.WebrtcSignalingFwd,
+
+  /** Listen to start voice */
+  VoiceStartedEvent = InternalEventsSocket.VoiceStartedEvent,
+
+  /** Listen to end voice */
+  VoiceEndedEvent = InternalEventsSocket.VoiceEndedEvent,
+
+  /** Listen to user join voice room */
+  VoiceJoinedEvent = InternalEventsSocket.VoiceJoinedEvent,
+
+  /** Listen to user leave voice room */
+  VoiceLeavedEvent = InternalEventsSocket.VoiceLeavedEvent,
+
+  /** Listen to add friend */
+  Notifications = InternalEventsSocket.Notifications,
+
+  /** Listen to add quick menu */
+  QuickMenu = InternalEventsSocket.QuickMenu,
 }
 
 export enum ChannelType {
@@ -107,7 +127,7 @@ export enum ChannelType {
   CHANNEL_TYPE_THREAD = 7,
   CHANNEL_TYPE_APP = 8,
   CHANNEL_TYPE_ANNOUNCEMENT = 9,
-  CHANNEL_TYPE_MEZON_VOICE = 10
+  CHANNEL_TYPE_MEZON_VOICE = 10,
 }
 
 export enum ChannelStreamMode {
@@ -119,16 +139,20 @@ export enum ChannelStreamMode {
 }
 
 export enum TypeMessage {
-	Chat = 0,
-	ChatUpdate = 1,
-	ChatRemove = 2,
-	Typing = 3,
-	Indicator = 4,
-	Welcome = 5,
-	CreateThread = 6,
-	CreatePin = 7,
-	MessageBuzz = 8,
-	Topic = 9,
-	AuditLog = 10,
-	SendToken = 11
+  Chat = 0,
+  ChatUpdate = 1,
+  ChatRemove = 2,
+  Typing = 3,
+  Indicator = 4,
+  Welcome = 5,
+  CreateThread = 6,
+  CreatePin = 7,
+  MessageBuzz = 8,
+  Topic = 9,
+  AuditLog = 10,
+  SendToken = 11,
+  Ephemeral = 12,
+  UpcomingEvent = 13,
+  UpdateEphemeralMsg = 14,
+  DeleteEphemeralMsg = 15,
 }

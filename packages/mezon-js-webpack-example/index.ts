@@ -18,15 +18,25 @@ import {Client, Session} from "mezon-js";
 import {WebSocketAdapterPb} from "mezon-js-protobuf"
 
 var useSSL = true; // Enable if server is run with an SSL certificate.
-var client = new Client("defaultkey", "dev-mezon.nccsoft.vn", "7350", useSSL);
-//var client = new Client("defaultkey", "172.16.11.90", "7350", useSSL);
+var clientgw = new Client("defaultkey", "dev-mezon.nccsoft.vn", "8088", useSSL);
+var client = new Client("defaultkey", "dev-mezon.nccsoft.vn", "7305", useSSL);
 
-client.authenticateEmail("acc-test-100@gmail.com", "Ncc12345678").then(async session => {
+clientgw.authenticateEmail("pocolomos@gmail.com", "C0nandoiner123$").then(async session => {
   console.log("authenticated.", session);
   
-  const socket = client.createSocket(false, true, new WebSocketAdapterPb());
-  const session2 = await socket.connect(session, true);
+  const socket = client.createSocket(true, true, new WebSocketAdapterPb());
+  const session2 = await socket.connect(session, true, "desktop");
   console.log("session", session2);
+  const resp = await socket.listDataSocket(
+    { 
+      api_name: "ListClanDescs",
+      list_clan_req: { 
+        limit: 100,
+        state: 1
+      } 
+    }
+  );
+  console.log('resp', resp);
 
 }).catch(e => {
   console.log("error authenticating.");

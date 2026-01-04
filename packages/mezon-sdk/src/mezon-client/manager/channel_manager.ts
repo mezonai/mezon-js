@@ -22,12 +22,12 @@ export class ChannelManager {
       sessionToken,
       ChannelType.CHANNEL_TYPE_DM
     );
-    if (!channels?.channeldesc) return;
+    if (!channels?.channeldesc || !channels?.channeldesc?.length) return;
     this.allDmChannels = channels?.channeldesc
-      .map((channel: { user_id: string | string[]; channel_id: string }) => {
-        if (!channel?.user_id?.length) return;
+      .map((channel: { user_ids: string | string[]; channel_id: string; type?: number; }) => {
+        if (!channel?.user_ids?.length || channel?.type !== ChannelType.CHANNEL_TYPE_DM) return;
         return {
-          [channel.user_id[0]]: channel.channel_id,
+          [channel.user_ids[0]]: channel.channel_id,
         };
       })
       .filter(Boolean)
@@ -57,7 +57,6 @@ export class ChannelManager {
       );
 
       if (channelDM) {
-        await this.sleep(100);
         await socket.joinChat(
           channelDM.clan_id!,
           channelDM.channel_id!,
@@ -68,12 +67,7 @@ export class ChannelManager {
       }
       return null;
     } catch (e) {
-      console.log(e);
       return null;
     }
-  }
-
-  private sleep(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

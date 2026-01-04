@@ -4,36 +4,35 @@ import { Events } from "../../constants";
 import { DefaultSocket } from "../../socket";
 import { WebSocketAdapter } from "../../web_socket_adapter";
 import { WebSocketAdapterPb } from "../../web_socket_adapter_pb";
-import { SessionManager } from "./session_manager";
 import { Socket } from "../../interfaces/socket";
 import { Session } from "../../session";
-import { EventManager } from "./event_manager";
 import { Clan } from "../structures/Clan";
-import { MezonClient } from "../client/MezonClient";
 import {
+  EphemeralMessageData,
   ReactMessageData,
   RemoveMessageData,
   ReplyMessageData,
   UpdateMessageData,
 } from "../../interfaces";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
+import { MessageDatabase } from "../../sqlite/MessageDatabase";
+import { MezonClientCore } from "../client/MezonClientCore";
 import { sleep } from "../../utils/helper";
 
 export class SocketManager {
   [key: string]: any;
   private socket: Socket;
   private isHardDisconnect: boolean | undefined;
+  private isRetrying = false;
   constructor(
     private host: string,
     private port: string,
     private useSSL: boolean,
     private adapter: WebSocketAdapter,
-    private sessionManager: SessionManager,
     private apiClient: MezonApi,
-    private apiKey: string,
-    private eventManager: EventManager,
     private messageQueue: AsyncThrottleQueue,
-    private client: MezonClient
+    private client: MezonClientCore,
+    private messageDB: MessageDatabase
   ) {
     this.socket = new DefaultSocket(
       this.host,
@@ -60,15 +59,14 @@ export class SocketManager {
   }
 
   async connect(sockSession: Session) {
-    const session = await this.socket.connect(sockSession, true);
     this.isHardDisconnect = false;
+    const session = await this.socket.connect(sockSession, true);
     return session;
   }
 
   closeSocket() {
     this.isHardDisconnect = true;
     this.socket.close();
-    console.log("eventManager", this.eventManager);
   }
 
   isOpen(): boolean {
@@ -94,38 +92,44 @@ export class SocketManager {
   }
 
   async connectSocket(sessionToken: string) {
-    const clans = await this.apiClient.listClanDescs(sessionToken);
-    const clanList = clans?.clandesc ?? [];
-    clanList.push({ clan_id: "0", clan_name: "" });
-    clanList.forEach(async (clan) => {
-      await this.socket.joinClanChat(clan.clan_id || "");
-      if (!this.client.clans.get(clan.clan_id!)) {
-        const clanObj = new Clan(
-          {
-            id: clan.clan_id!,
-            name: clan?.clan_name ?? "unknown",
-          },
-          this.client,
-          this.apiClient,
-          this,
-          sessionToken,
-          this.messageQueue
-        );
-        this.client.clans.set(clan.clan_id!, clanObj);
+    try {
+      const clans = await this.apiClient.listClanDescs(sessionToken);
+      const clanList = clans?.clandesc ?? [];
+      clanList.push({ clan_id: "0", clan_name: "" });
+      for (const clan of clanList) {
+        await this.socket.joinClanChat(clan.clan_id || "");
+        await sleep(50);
+        if (!this.client.clans.get(clan.clan_id!)) {
+          const clanObj = new Clan(
+            {
+              id: clan.clan_id!,
+              name: clan?.clan_name ?? "unknown",
+              welcome_channel_id: clan?.welcome_channel_id ?? "",
+              clan_name: clan.clan_name ?? "",
+            },
+            this.client,
+            this.apiClient,
+            this,
+            sessionToken,
+            this.messageQueue,
+            this.messageDB
+          );
+          this.client.clans.set(clan.clan_id!, clanObj);
+        }
       }
-    });
 
-    // join direct message
-    await this.socket.joinClanChat("0");
-    ["ondisconnect", "onerror", "onheartbeattimeout"].forEach((event) => {
-      this.socket[event] = (this[event as keyof this] as Function).bind(this);
-    });
-
-    for (const event in Events) {
-      const key = Events[event as keyof typeof Events].toString();
-      this.socket.socketEvents.on(key, (...args: any[]) => {
-        this.client.emit(key, ...args);
+      ["ondisconnect", "onerror", "onheartbeattimeout"].forEach((event) => {
+        this.socket[event] = (this[event as keyof this] as Function).bind(this);
       });
+
+      for (const event in Events) {
+        const key = Events[event as keyof typeof Events].toString();
+        this.socket.socketEvents.on(key, (...args: any[]) => {
+          this.client.emit(key, ...args);
+        });
+      }
+    } catch (error) {
+      throw error;
     }
   }
 
@@ -135,70 +139,108 @@ export class SocketManager {
 
     console.log("Reconnecting...");
 
-    const interval = setInterval(async () => {
+    const retry = async () => {
+      if (this.isRetrying || this.isHardDisconnect) return;
+      this.isRetrying = true;
+
       try {
-        this.createSocket();
-        const sockSession = await this.sessionManager.authenticate(this.apiKey);
-        const sessionConnected = await this.connect(sockSession);
-        if (sessionConnected?.token) {
-          await this.connectSocket(sessionConnected.token);
-        }
+        await this.client.login();
+
+        this.isRetrying = false;
+        retryInterval = 5000;
         console.log("Connected successfully!");
-        clearInterval(interval);
       } catch (e) {
-        console.log("Connection failed:", e);
+        console.log("Connection failed!", e);
+        this.isRetrying = false;
         retryInterval = Math.min(retryInterval * 2, maxRetryInterval);
         console.log(`Retrying in ${retryInterval / 1000} seconds...`);
-        clearInterval(interval);
-        setTimeout(() => this.retriesConnect(), retryInterval);
+
+        setTimeout(retry, retryInterval);
       }
-    }, retryInterval);
+    };
+
+    setTimeout(retry, retryInterval);
   }
 
   async writeChatMessage(dataWriteMessage: ReplyMessageData) {
-    try {
-      const msgACK = await this.socket.writeChatMessage(
-        dataWriteMessage.clan_id,
-        dataWriteMessage.channel_id,
-        dataWriteMessage.mode,
-        dataWriteMessage.is_public,
-        dataWriteMessage.content,
-        dataWriteMessage?.mentions ?? [],
-        dataWriteMessage?.attachments ?? [],
-        dataWriteMessage?.references ?? [],
-        dataWriteMessage?.anonymous_message,
-        dataWriteMessage?.mention_everyone,
-        dataWriteMessage?.avatar,
-        dataWriteMessage?.code,
-        dataWriteMessage?.topic_id
+    const currentContentLength = JSON.stringify(
+      dataWriteMessage.content ?? {}
+    ).length;
+    if (currentContentLength > 8000)
+      throw new Error(
+        `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`
       );
-      return msgACK;
-    } catch (error) {
-      console.log("Error writeChatMessage", error);
-      throw error;
-    }
+
+    const msgACK = await this.socket.writeChatMessage(
+      dataWriteMessage.clan_id,
+      dataWriteMessage.channel_id,
+      dataWriteMessage.mode,
+      dataWriteMessage.is_public,
+      dataWriteMessage.content,
+      dataWriteMessage?.mentions ?? [],
+      dataWriteMessage?.attachments ?? [],
+      dataWriteMessage?.references ?? [],
+      dataWriteMessage?.anonymous_message,
+      dataWriteMessage?.mention_everyone,
+      dataWriteMessage?.avatar,
+      dataWriteMessage?.code,
+      dataWriteMessage?.topic_id
+    );
+    return msgACK;
+  }
+
+  async writeEphemeralMessage(dataWriteMessage: EphemeralMessageData) {
+    const currentContentLength = JSON.stringify(
+      dataWriteMessage.content ?? {}
+    ).length;
+    if (currentContentLength > 8000)
+      throw new Error(
+        `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`
+      );
+
+    const msgACK = await this.socket.writeEphemeralMessage(
+      dataWriteMessage.receiver_id,
+      dataWriteMessage.clan_id,
+      dataWriteMessage.channel_id,
+      dataWriteMessage.mode,
+      dataWriteMessage.is_public,
+      dataWriteMessage.content,
+      dataWriteMessage?.mentions ?? [],
+      dataWriteMessage?.attachments ?? [],
+      dataWriteMessage?.references ?? [],
+      dataWriteMessage?.anonymous_message,
+      dataWriteMessage?.mention_everyone,
+      dataWriteMessage?.avatar,
+      dataWriteMessage?.code,
+      dataWriteMessage?.topic_id,
+      dataWriteMessage?.message_id
+    );
+    return msgACK;
   }
 
   async updateChatMessage(dataUpdateMessage: UpdateMessageData) {
-    try {
-      await sleep(1000);
-      const msgACK = await this.socket.updateChatMessage(
-        dataUpdateMessage.clan_id,
-        dataUpdateMessage.channel_id,
-        dataUpdateMessage.mode,
-        dataUpdateMessage.is_public,
-        dataUpdateMessage.message_id,
-        dataUpdateMessage.content,
-        dataUpdateMessage?.mentions ?? [],
-        dataUpdateMessage?.attachments ?? [],
-        dataUpdateMessage?.hideEditted ?? false,
-        dataUpdateMessage?.topic_id
+    const currentContentLength = JSON.stringify(
+      dataUpdateMessage.content ?? {}
+    ).length;
+    if (currentContentLength > 8000)
+      throw new Error(
+        `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`
       );
-      return msgACK;
-    } catch (error) {
-      console.log("Error updateChatMessage", error);
-      throw error;
-    }
+
+    const msgACK = await this.socket.updateChatMessage(
+      dataUpdateMessage.clan_id,
+      dataUpdateMessage.channel_id,
+      dataUpdateMessage.mode,
+      dataUpdateMessage.is_public,
+      dataUpdateMessage.message_id,
+      dataUpdateMessage.content,
+      dataUpdateMessage?.mentions ?? [],
+      dataUpdateMessage?.attachments ?? [],
+      dataUpdateMessage?.hideEditted ?? false,
+      dataUpdateMessage?.topic_id,
+      dataUpdateMessage?.is_update_msg_topic
+    );
+    return msgACK;
   }
 
   async writeMessageReaction(dataReactionMessage: ReactMessageData) {
@@ -218,7 +260,6 @@ export class SocketManager {
       );
       return msgACK;
     } catch (error) {
-      console.log("Error writeMessageReaction", error);
       throw error;
     }
   }
@@ -230,11 +271,11 @@ export class SocketManager {
         dataRemoveMessage.channel_id,
         dataRemoveMessage.mode,
         dataRemoveMessage.is_public,
-        dataRemoveMessage.message_id
+        dataRemoveMessage.message_id,
+        dataRemoveMessage.topic_id
       );
       return msgACK;
     } catch (error) {
-      console.log("Error removeChatMessage", error);
       throw error;
     }
   }

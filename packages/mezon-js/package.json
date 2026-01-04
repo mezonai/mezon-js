@@ -1,8 +1,6 @@
 {
   "name": "mezon-js",
-
-  "version": "2.11.46",
-
+  "version": "2.13.74",
   "scripts": {
     "build": "npx tsc && npx rollup -c --bundleConfigAsCjs && node build.mjs"
   },
@@ -38,11 +36,12 @@
   "dependencies": {
     "@scarf/scarf": "^1.1.1",
     "base64-arraybuffer": "^1.0.2",
-    "esbuild": "^0.19.11",
+    "esbuild": "^0.25.5",
     "js-base64": "^3.7.4",
     "whatwg-fetch": "^3.6.2"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-typescript": "^11.0.0",
     "rollup": "^3.10.0",
