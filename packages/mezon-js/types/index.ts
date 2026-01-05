@@ -1399,7 +1399,7 @@ export interface ChannelMessage {
 /** A user with additional account details. Always the current user. */
 export interface ApiAccount {
   //The custom id in the user's account.
-  custom_id?: string;
+  customId?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user's account was disabled/banned.
   disableTime?: string;
   //The email address of the user.
@@ -1487,9 +1487,9 @@ export interface ApiEventManagement {
   //
   logo?: string;
   //
-  max_permission?: number;
+  maxPermission?: number;
   //
-  start_event?: number;
+  startEvent?: number;
   //
   startTime?: string;
   //
@@ -1613,21 +1613,21 @@ export interface ApiSearchMessageDocument {
 /** System message details. */
 export interface ApiSystemMessage {
   //
-  boost_message?: string;
+  boostMessage?: string;
   //
   channelId?: string;
   //
   clanId?: string;
   //
-  hide_audit_log?: string;
+  hideAuditLog?: string;
   //
   id?: string;
   //
-  setup_tips?: string;
+  setupTips?: string;
   //
-  welcome_random?: string;
+  welcomeRandom?: string;
   //
-  welcome_sticker?: string;
+  welcomeSticker?: string;
 }
 
 /** A single user-role pair. */
