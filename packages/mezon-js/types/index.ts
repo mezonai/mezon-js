@@ -3538,6 +3538,180 @@ export interface ApiTransferOwnershipRequest {
   newOwnerId?: string;
 }
 
+/** A message sent on a channel. */
+export interface ChannelMessage {
+  //The unique ID of this message.
+  id: string;
+  //
+  avatar?: string;
+  //The channel this message belongs to.
+  channelId: string;
+  //The name of the chat room, or an empty string if this message was not sent through a chat room.
+  channelLabel: string;
+  //The clan this message belong to.
+  clanId?: string;
+  //The code representing a message type or category.
+  code: number;
+  //The content payload.
+  content: string;
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
+  createTime: string;
+  //
+  reactions?: Array<ApiMessageReaction>;
+  //
+  mentions?: Array<ApiMessageMention>;
+  //
+  attachments?: Array<ApiMessageAttachment>;
+  //
+  references?: Array<ApiMessageRef>;
+  //
+  referencedMessage?: string[];
+  //True if the message was persisted to the channel's history, false otherwise.
+  persistent?: boolean;
+  //Message sender, usually a user ID.
+  senderId: string;
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
+  updateTime?: string;
+  //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
+  clanLogo?: string;
+  //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
+  categoryName?: string;
+  //The username of the message sender, if any.
+  username?: string;
+  // The clan nick name
+  clanNick?: string;
+  // The clan avatar
+  clanAvatar?: string;
+  //
+  displayName?: string;
+  //
+  createTimeSeconds?: number;
+  //
+  updateTimeSeconds?: number;
+  //
+  mode?: number;
+  //
+  messageId?: string;
+  //
+  hideEditted?: boolean;
+  //
+  isPublic?: boolean;
+  //
+  topicId?: string;
+}
+
+/** A list of channel messages, usually a result of a list operation. */
+export interface ChannelMessageList {
+  /** Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors. */
+  cacheableCursor?: string;
+  /**last seen message from user on channel */
+  lastSeenMessage?: ApiChannelMessageHeader;
+  /**last sent message from channel */
+  lastSentMessage?: ApiChannelMessageHeader;
+  /** A list of messages. */
+  messages?: Array<ChannelMessage>;
+  /** The cursor to send when retireving the next page, if any. */
+  nextCursor?: string;
+  /** The cursor to send when retrieving the previous page, if any. */
+  prevCursor?: string;
+}
+
+/** A collection of zero or more users. */
+export interface Users {
+  /** The User objects. */
+  users?: Array<ApiUser>;
+}
+
+/** A collection of zero or more friends of the user. */
+export interface Friends {
+  /** The Friend objects. */
+  friends?: Array<ApiFriend>;
+  /** Cursor for the next page of results, if any. */
+  cursor?: string;
+}
+
+/** A notification in the server. */
+export interface Notification {
+  /** Category code for this notification. */
+  code?: number;
+  /** Content of the notification in JSON. */
+  content?: {};
+  /** The UNIX time when the notification was created. */
+  createTime?: string;
+  /** ID of the Notification. */
+  id?: string;
+  /** True if this notification was persisted to the database. */
+  persistent?: boolean;
+  /** ID of the sender, if a user. Otherwise 'null'. */
+  senderId?: string;
+  /** Subject of the notification. */
+  subject?: string;
+}
+
+/** A collection of zero or more notifications. */
+export interface NotificationList {
+  /** Use this cursor to paginate notifications. Cache this to catch up to new notifications. */
+  cacheableCursor?: string;
+  /** Collection of notifications. */
+  notifications?: Array<Notification>;
+}
+
+/** Update fields in a given channel. */
+export interface ApiUpdateChannelDescRequest {
+  /** The ID of the channel to update. */
+  channelId: string;
+  /** The channel lable */
+  channelLabel: string | undefined;
+  /** The category of channel */
+  categoryId: string | undefined;
+  /** The app url of channel */
+  appId: string | undefined;
+  //
+  e2ee?: number;
+  //
+  topic?: string;
+  //
+  ageRestricted?: number;
+  //
+  channelAvatar?: string;
+}
+
+/** Add users to a channel. */
+export interface ApiAddChannelUsersRequest {
+  /** The channel to add users to. */
+  channelId: string;
+  /** The users to add. */
+  userIds: string[];
+}
+
+/** Kick a set of users from a channel. */
+export interface ApiKickChannelUsersRequest {
+  /** The channel ID to kick from. */
+  channelId: string;
+  /** The users to kick. */
+  userIds: string[];
+}
+
+/** Leave a channel. */
+export interface ApiLeaveChannelRequest {
+  /** The channel ID to leave. */
+  channelId: string;
+}
+
+/** Update Clan profile information */
+export interface ApiUpdateClanDescProfileRequest {
+  /** Clan id */
+  clanId: string;
+  /** Clan nick name */
+  nickName: string;
+  /** Clan profile banner */
+  profileBanner: string;
+  /** Clan profile theme */
+  profileTheme: string;
+  /** Clan profile avatar */
+  avatarUrl: string;
+}
+
 export interface ApiUpdateClanProfileRequest {
   /** Clan id*/
   clanId: string;
@@ -3545,6 +3719,29 @@ export interface ApiUpdateClanProfileRequest {
   nickName: string;
   /** Clan profile avatar */
   avatar: string;
+}
+
+/** Update fields in a given role. */
+export interface ApiUpdateRoleRequest {
+  /** The ID of the role to update. */
+  roleId: string;
+  /** The users to add. */
+  addUserIds: string[];
+  /** The permissions to add. */
+  activePermissionIds: string[];
+  /** The users to remove. */
+  removeUserIds: string[];
+  /** The permissions to remove. */
+  removePermissionIds: string[];
+  //
+  clanId: string;
+  maxPermissionId: string;
+  title?: string | undefined;
+  color?: string | undefined;
+  roleIcon?: string | undefined;
+  description?: string | undefined;
+  displayOnline?: number | undefined;
+  allowMention?: number | undefined;
 }
 
 type Builtin =

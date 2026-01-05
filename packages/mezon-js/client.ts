@@ -285,7 +285,6 @@ import {
   RegistFcmDeviceTokenRequestSchema,
   RegistFcmDeviceTokenResponse,
   RoleUserList,
-  RpcSchema,
   ClanProfileRequestSchema,
   ClanProfile,
   ListChannelDetailRequestSchema,
@@ -309,7 +308,6 @@ import {
 import { encode } from "js-base64";
 import { DefaultSocket, Socket } from "./socket";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
-import { safeJSONParse } from "./utils";
 import {
   ApiClanDiscoverRequest,
   ApiConfirmLoginRequest,
@@ -362,14 +360,6 @@ export enum WebrtcSignalingType {
   WEBRTC_SDP_NOT_AVAILABLE = 6,
   WEBRTC_SDP_JOINED_OTHER_CALL = 7,
   WEBRTC_SDP_STATUS_REMOTE_MEDIA = 8,
-}
-
-/** Response for an RPC function executed on the server. */
-export interface RpcResponse {
-  /** The identifier of the function. */
-  id?: string;
-  /** The payload of the function which must be a JSON object. */
-  payload?: object;
 }
 
 /** A client for Mezon server. */
@@ -2097,68 +2087,6 @@ export class Client {
     }
 
     return response;
-  }
-
-  /** Execute an RPC function on the server. */
-  async rpc(
-    session: Session,
-    basicAuthUsername: string,
-    basicAuthPassword: string,
-    id: string,
-    input: object
-  ): Promise<RpcResponse> {
-    if (
-      this.autoRefreshSession &&
-      session.refreshToken &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    const rpcRequest = create(RpcSchema, {
-      id: id,
-      payload: JSON.stringify(input),
-    });
-
-    const options: CallOptions = {
-      headers: [
-        ["Authorization", "Bearer " + session.token],
-        [
-          "Authorization",
-          "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword),
-        ],
-      ],
-    };
-
-    const response = await this.mezonClient.rpcFunc(rpcRequest, options);
-
-    return {
-      id: response.id,
-      payload: !response.payload ? undefined : safeJSONParse(response.payload),
-    };
-  }
-
-  /** Execute an RPC function on the server. */
-  async rpcHttpKey(
-    httpKey: string,
-    id: string,
-    input?: object
-  ): Promise<RpcResponse> {
-    const rpcRequest = create(RpcSchema, {
-      id: id,
-      payload: input ? JSON.stringify(input) : "",
-    });
-
-    const options: CallOptions = {
-      headers: [["X-HTTP-KEY", httpKey]],
-    };
-
-    const response = await this.mezonClient.rpcFunc(rpcRequest, options);
-
-    return {
-      id: response.id,
-      payload: !response.payload ? undefined : safeJSONParse(response.payload),
-    };
   }
 
   /** Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user. */
