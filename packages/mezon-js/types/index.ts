@@ -1401,37 +1401,37 @@ export interface ApiAccount {
   //The custom id in the user's account.
   custom_id?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user's account was disabled/banned.
-  disable_time?: string;
+  disableTime?: string;
   //The email address of the user.
   email?: string;
   //
-  encrypt_private_key?: string;
+  encryptPrivateKey?: string;
   //
   logo?: string;
   //
-  splash_screen?: string;
+  splashScreen?: string;
   //The user object.
   user?: ApiUser;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user's email was verified.
-  verify_time?: string;
+  verifyTime?: string;
   //The user's wallet data.
   wallet?: number;
   //Password is setted
-  password_setted?: boolean;
+  passwordSetted?: boolean;
 }
 
 /**  */
 export interface ApiAllUsersAddChannelResponse {
   //
-  channel_id?: string;
+  channelId?: string;
   //
   limit?: number;
   //
-  user_ids?: Array<string>;
+  userIds?: Array<string>;
   //
   usernames?: Array<string>;
   //
-  display_names?: Array<string>;
+  displayNames?: Array<string>;
   //
   avatars?: Array<string>;
   //
@@ -1441,15 +1441,15 @@ export interface ApiAllUsersAddChannelResponse {
 /**  */
 export interface ApiCategoryDesc {
   //
-  category_id?: string;
+  categoryId?: string;
   //
-  category_name?: string;
+  categoryName?: string;
   //
-  category_order?: number;
+  categoryOrder?: number;
   //
-  clan_id?: string;
+  clanId?: string;
   //
-  creator_id?: string;
+  creatorId?: string;
 }
 
 /** Get clan profile. */
@@ -1457,11 +1457,11 @@ export interface ApiClanProfile {
   //
   avatar?: string;
   //
-  clan_id?: string;
+  clanId?: string;
   //
-  nick_name?: string;
+  nickName?: string;
   //
-  user_id?: string;
+  userId?: string;
   //
   about?: string;
 }
@@ -1473,15 +1473,15 @@ export interface ApiEventManagement {
   //
   address?: string;
   //
-  channel_voice_id?: string;
+  channelVoiceId?: string;
   //
-  clan_id?: string;
+  clanId?: string;
   //
-  creator_id?: string;
+  creatorId?: string;
   //
   description?: string;
   //
-  end_time?: string;
+  endTime?: string;
   //
   id?: string;
   //
@@ -1491,23 +1491,23 @@ export interface ApiEventManagement {
   //
   start_event?: number;
   //
-  start_time?: string;
+  startTime?: string;
   //
   title?: string;
   //
-  user_ids?: Array<string>;
+  userIds?: Array<string>;
   //
-  create_time?: string;
+  createTime?: string;
   //
-  channel_id?: string;
+  channelId?: string;
   //
-  event_status?: number;
+  eventStatus?: number;
   //
-  repeat_type?: number;
+  repeatType?: number;
   //
-  is_private?: boolean;
+  isPrivate?: boolean;
   //
-  meet_room?: ApiGenerateMezonMeetResponse;
+  meetRoom?: ApiGenerateMezonMeetResponse;
 }
 
 /**  */
@@ -1515,19 +1515,19 @@ export interface ApiPinMessage {
   //
   avatar?: string;
   //
-  channel_id?: string;
+  channelId?: string;
   //
   content?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time?: string;
+  createTime?: string;
   //
-  create_time_seconds?: number;
+  createTimeSeconds?: number;
   //
   id?: string;
   //
-  message_id?: string;
+  messageId?: string;
   //
-  sender_id?: string;
+  senderId?: string;
   //
   username?: string;
   //
@@ -1539,37 +1539,37 @@ export interface ApiRole {
   //
   active?: number;
   //
-  allow_mention?: number;
+  allowMention?: number;
   //
-  channel_ids?: Array<string>;
+  channelIds?: Array<string>;
   //
-  clan_id?: string;
+  clanId?: string;
   //
   color?: string;
   //
-  creator_id?: string;
+  creatorId?: string;
   //
   description?: string;
   //
-  display_online?: number;
+  displayOnline?: number;
   //
   id?: string;
   //
-  max_level_permission?: number;
+  maxLevelPermission?: number;
   //
-  permission_list?: ApiPermissionList;
+  permissionList?: ApiPermissionList;
   //
-  role_channel_active?: number;
+  roleChannelActive?: number;
   //
-  role_icon?: string;
+  roleIcon?: string;
   //
-  role_user_list?: ApiRoleUserList;
+  roleUserList?: ApiRoleUserList;
   //
   slug?: string;
   //
   title?: string;
   //
-  order_role?: number;
+  orderRole?: number;
 }
 
 /**  */
@@ -1577,35 +1577,35 @@ export interface ApiSearchMessageDocument {
   //
   attachments?: Array<ApiMessageAttachment>;
   //
-  avatar_url?: string;
+  avatarUrl?: string;
   //The channel ID.
-  channel_id?: string;
+  channelId?: string;
   //
-  channel_label?: string;
+  channelLabel?: string;
   //
-  channel_type?: number;
+  channelType?: number;
   //The clan ID.
-  clan_id?: string;
+  clanId?: string;
   //
-  clan_name?: string;
+  clanName?: string;
   //
   content?: string;
   //
-  create_time?: string;
+  createTime?: string;
   //
-  display_name?: string;
+  displayName?: string;
   //
   mentions?: string;
   //The message ID.
-  message_id?: string;
+  messageId?: string;
   //
   reactions?: string;
   //
   references?: string;
   //The user ID of sender.
-  sender_id?: string;
+  senderId?: string;
   //
-  update_time?: string;
+  updateTime?: string;
   //
   username?: string;
 }
@@ -1615,9 +1615,9 @@ export interface ApiSystemMessage {
   //
   boost_message?: string;
   //
-  channel_id?: string;
+  channelId?: string;
   //
-  clan_id?: string;
+  clanId?: string;
   //
   hide_audit_log?: string;
   //
@@ -1632,14 +1632,14 @@ export interface ApiSystemMessage {
 
 /** A single user-role pair. */
 export interface ClanUserListClanUser {
-  //from the `avatar_url` field in the `clan_desc_profile` table.
-  clan_avatar?: string;
+  //from the `avatarUrl` field in the `clan_desc_profile` table.
+  clanAvatar?: string;
   //
-  clan_id?: string;
-  //from the `nick_name` field in the `clan_desc_profile` table.
-  clan_nick?: string;
+  clanId?: string;
+  //from the `nickName` field in the `clan_desc_profile` table.
+  clanNick?: string;
   //Their relationship to the role.
-  role_id?: Array<string>;
+  roleId?: Array<string>;
   //User.
   user?: ApiUser;
 }
@@ -1649,11 +1649,11 @@ export interface ApiWebhookCreateRequest {
   //
   avatar?: string;
   //
-  channel_id?: string;
+  channelId?: string;
   //
-  clan_id?: string;
+  clanId?: string;
   //
-  webhook_name?: string;
+  webhookName?: string;
 }
 
 type Builtin =
