@@ -451,11 +451,11 @@ export class Client {
     );
     return new Session(
       apiSession.token || "",
-      apiSession.refresh_token || "",
+      apiSession.refreshToken || "",
       apiSession.created || false,
-      apiSession.api_url || "",
+      apiSession.apiUrl || "",
       apiSession.id_token || "",
-      apiSession.is_remember || false
+      apiSession.isRemember || false
     );
   }
 
@@ -515,11 +515,11 @@ export class Client {
     );
     return new Session(
       apiSession.token || "",
-      apiSession.refresh_token || "",
+      apiSession.refreshToken || "",
       apiSession.created || false,
-      apiSession.api_url || "",
+      apiSession.apiUrl || "",
       apiSession.id_token || "",
-      apiSession.is_remember || false
+      apiSession.isRemember || false
     );
   }
 
@@ -547,11 +547,11 @@ export class Client {
     );
     return new Session(
       apiSession.token || "",
-      apiSession.refresh_token || "",
+      apiSession.refreshToken || "",
       apiSession.created || false,
-      apiSession.api_url || "",
+      apiSession.apiUrl || "",
       apiSession.id_token || "",
-      apiSession.is_remember || false
+      apiSession.isRemember || false
     );
   }
 
@@ -577,7 +577,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -608,7 +608,7 @@ export class Client {
   ): Promise<AddFriendsResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -634,7 +634,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -665,7 +665,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -695,7 +695,7 @@ export class Client {
   ): Promise<UploadAttachment> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -720,7 +720,7 @@ export class Client {
   ): Promise<UploadAttachment> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -745,7 +745,7 @@ export class Client {
   ): Promise<ChannelDescription> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -773,7 +773,7 @@ export class Client {
   ): Promise<ClanDesc> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -795,7 +795,7 @@ export class Client {
   ): Promise<CategoryDesc> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -823,7 +823,7 @@ export class Client {
   ): Promise<Role> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -845,7 +845,7 @@ export class Client {
   ): Promise<EventManagement> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -867,7 +867,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -894,7 +894,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -917,7 +917,7 @@ export class Client {
   async deleteApp(session: Session, appId: string): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -965,7 +965,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -996,7 +996,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1023,7 +1023,7 @@ export class Client {
   async deleteClanDesc(session: Session, clanDescId: string): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1054,7 +1054,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1086,7 +1086,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1121,7 +1121,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1157,7 +1157,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1187,7 +1187,7 @@ export class Client {
   async getAccount(session: Session): Promise<Account> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1208,7 +1208,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1238,7 +1238,7 @@ export class Client {
   ): Promise<BannedUserList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1268,7 +1268,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1302,7 +1302,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1335,7 +1335,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1370,7 +1370,7 @@ export class Client {
   ): Promise<ChannelMessageList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1410,7 +1410,7 @@ export class Client {
   ): Promise<VoiceChannelUserList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1453,7 +1453,7 @@ export class Client {
   ): Promise<ChannelUserList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1497,7 +1497,7 @@ export class Client {
   ): Promise<ChannelAttachmentList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1536,7 +1536,7 @@ export class Client {
   async listClanUsers(session: Session, clanId: string): Promise<ClanUserList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1567,7 +1567,7 @@ export class Client {
   ): Promise<ChannelDescription> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1599,7 +1599,7 @@ export class Client {
   ): Promise<ChannelDescList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1637,7 +1637,7 @@ export class Client {
   ): Promise<ListClanUnreadMsgIndicatorResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1669,7 +1669,7 @@ export class Client {
   ): Promise<ClanDescList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1706,7 +1706,7 @@ export class Client {
   ): Promise<CategoryDescList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1738,7 +1738,7 @@ export class Client {
   async listEvents(session: Session, clanId?: string): Promise<EventList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1759,7 +1759,7 @@ export class Client {
   async getListPermission(session: Session): Promise<PermissionList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1782,7 +1782,7 @@ export class Client {
   ): Promise<PermissionList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1811,7 +1811,7 @@ export class Client {
   ): Promise<RoleUserList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1839,7 +1839,7 @@ export class Client {
   ): Promise<RegistFcmDeviceTokenResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1871,7 +1871,7 @@ export class Client {
   ): Promise<ClanProfile> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1898,7 +1898,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1927,7 +1927,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1956,7 +1956,7 @@ export class Client {
   ): Promise<void> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -1984,7 +1984,7 @@ export class Client {
   ): Promise<ApiLinkAccountConfirmRequest> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2006,7 +2006,7 @@ export class Client {
   ): Promise<LinkAccountConfirmRequest> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2030,7 +2030,7 @@ export class Client {
   ): Promise<FriendList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2069,7 +2069,7 @@ export class Client {
   ): Promise<NotificationList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2109,7 +2109,7 @@ export class Client {
   ): Promise<RpcResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2171,7 +2171,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2228,9 +2228,9 @@ export class Client {
     this.refreshTokenPromise = new Promise<Session>(async (resolve, reject) => {
       try {
         const sessionRefreshRequest = create(SessionRefreshRequestSchema, {
-          token: session.refresh_token,
+          token: session.refreshToken,
           vars: vars,
-          isRemember: session.is_remember,
+          isRemember: session.isRemember,
         });
 
         const options: CallOptions = {
@@ -2270,7 +2270,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2294,7 +2294,7 @@ export class Client {
   async unlinkEmail(session: Session, request: AccountEmail): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2321,7 +2321,7 @@ export class Client {
   ): Promise<Session> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2355,7 +2355,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2383,7 +2383,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2414,7 +2414,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2445,7 +2445,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2475,7 +2475,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2506,7 +2506,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2537,7 +2537,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2568,7 +2568,7 @@ export class Client {
   ): Promise<App> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2593,7 +2593,7 @@ export class Client {
   ): Promise<LinkInviteUser> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2623,7 +2623,7 @@ export class Client {
   ): Promise<RoleList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2647,7 +2647,7 @@ export class Client {
   async inviteUser(session: Session, inviteId: string): Promise<InviteUserRes> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2671,7 +2671,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2701,7 +2701,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2731,7 +2731,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2758,7 +2758,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2785,7 +2785,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2815,7 +2815,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2840,18 +2840,18 @@ export class Client {
 
   async deleteNotificationCategory(
     session: Session,
-    category_id: string
+    categoryId: string
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
     const channelIdRequest = create(DefaultNotificationCategorySchema, {
-      categoryId: category_id,
+      categoryId: categoryId,
     });
 
     const options: CallOptions = {
@@ -2868,18 +2868,18 @@ export class Client {
 
   async deleteNotificationChannel(
     session: Session,
-    channel_id: string
+    channelId: string
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
     const channelIdRequest = create(NotificationChannelSchema, {
-      channelId: channel_id,
+      channelId: channelId,
     });
 
     const options: CallOptions = {
@@ -2901,7 +2901,7 @@ export class Client {
   ): Promise<SearchMessageResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2923,7 +2923,7 @@ export class Client {
   ): Promise<ChannelMessageHeader> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2948,7 +2948,7 @@ export class Client {
   ): Promise<ChannelMessageHeader> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -2971,7 +2971,7 @@ export class Client {
   ): Promise<PinMessagesList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3003,7 +3003,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3032,7 +3032,7 @@ export class Client {
   async createClanEmoji(session: Session, request: ClanEmojiCreateRequest) {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3063,7 +3063,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3090,12 +3090,12 @@ export class Client {
   async deleteByIdClanEmoji(
     session: Session,
     id: string,
-    clan_id: string,
+    clanId: string,
     emojiLabel?: string
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3103,7 +3103,7 @@ export class Client {
 
     const clanEmojiDeleteRequest = create(ClanEmojiDeleteRequestSchema, {
       id: id,
-      clanId: clan_id,
+      clanId: clanId,
       emojiLabel: emojiLabel,
     });
 
@@ -3126,7 +3126,7 @@ export class Client {
   ): Promise<WebhookGenerateResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3147,20 +3147,20 @@ export class Client {
   //**list webhook belong to the channel */
   async listWebhookByChannelId(
     session: Session,
-    channel_id: string,
-    clan_id: string
+    channelId: string,
+    clanId: string
   ): Promise<WebhookListResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
     const webhookListRequest = create(WebhookListRequestSchema, {
-      channelId: channel_id,
-      clanId: clan_id,
+      channelId: channelId,
+      clanId: clanId,
     });
 
     const options: CallOptions = {
@@ -3181,7 +3181,7 @@ export class Client {
   ) {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3212,7 +3212,7 @@ export class Client {
   ) {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3242,7 +3242,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3266,12 +3266,12 @@ export class Client {
   async deleteClanStickerById(
     session: Session,
     id: string,
-    clan_id: string,
+    clanId: string,
     stickerLabel?: string
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3279,7 +3279,7 @@ export class Client {
 
     const clanStickerDeleteRequest = create(ClanStickerDeleteRequestSchema, {
       id: id,
-      clanId: clan_id,
+      clanId: clanId,
       stickerLabel: stickerLabel,
     });
 
@@ -3303,7 +3303,7 @@ export class Client {
   ) {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3337,7 +3337,7 @@ export class Client {
   ) {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3370,7 +3370,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3396,7 +3396,7 @@ export class Client {
   async addApp(session: Session, request: AddAppRequest): Promise<App> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3414,7 +3414,7 @@ export class Client {
   async getApp(session: Session, id: string): Promise<App> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3434,7 +3434,7 @@ export class Client {
   async listApps(session: Session): Promise<AppList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3453,7 +3453,7 @@ export class Client {
   async addAppToClan(session: Session, appId: string, clanId: string) {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3482,7 +3482,7 @@ export class Client {
   ): Promise<SystemMessage> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3508,7 +3508,7 @@ export class Client {
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3533,7 +3533,7 @@ export class Client {
   ): Promise<void> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3557,7 +3557,7 @@ export class Client {
   async deleteSystemMessage(session: Session, clanId: string): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3583,7 +3583,7 @@ export class Client {
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3616,7 +3616,7 @@ export class Client {
   ): Promise<StreamingChannelUserList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3657,7 +3657,7 @@ export class Client {
   ): Promise<ListChannelAppsResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3689,7 +3689,7 @@ export class Client {
   ): Promise<NotificationChannelCategorySettingList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3715,7 +3715,7 @@ export class Client {
   ): Promise<NotificationUserChannel> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3744,7 +3744,7 @@ export class Client {
   ): Promise<NotificationUserChannel> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3770,7 +3770,7 @@ export class Client {
   ): Promise<NotificationSetting> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3793,7 +3793,7 @@ export class Client {
   async listChannelByUserId(session: Session): Promise<ChannelDescList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3811,19 +3811,19 @@ export class Client {
 
   async listChannelUsersUC(
     session: Session,
-    channel_id: string,
+    channelId: string,
     limit: number
   ): Promise<AllUsersAddChannelResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
     const listChannelUsersUCRequest = create(AllUsersAddChannelRequestSchema, {
-      channelId: channel_id,
+      channelId: channelId,
       limit: limit,
     });
 
@@ -3840,7 +3840,7 @@ export class Client {
   async getListEmojisByUserId(session: Session): Promise<EmojiListedResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3859,7 +3859,7 @@ export class Client {
   async emojiRecentList(session: Session): Promise<EmojiRecentList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3880,7 +3880,7 @@ export class Client {
   ): Promise<StickerListedResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3899,7 +3899,7 @@ export class Client {
   async listUserClansByUserId(session: Session): Promise<AllUserClans> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3924,7 +3924,7 @@ export class Client {
   ): Promise<RoleListEventResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3956,7 +3956,7 @@ export class Client {
   ): Promise<UserPermissionInChannelListResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -3990,7 +3990,7 @@ export class Client {
   ): Promise<PermissionRoleChannelListEventResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4020,7 +4020,7 @@ export class Client {
   async markAsRead(session: Session, request: MarkAsReadRequest): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4047,7 +4047,7 @@ export class Client {
   ): Promise<ChannelDescList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4085,7 +4085,7 @@ export class Client {
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4118,7 +4118,7 @@ export class Client {
   ): Promise<ChannelSettingListResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4156,7 +4156,7 @@ export class Client {
   ): Promise<ChannelCanvasListResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4193,7 +4193,7 @@ export class Client {
   ): Promise<ChannelCanvasDetailResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4224,7 +4224,7 @@ export class Client {
   ): Promise<EditChannelCanvasResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4254,7 +4254,7 @@ export class Client {
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4287,7 +4287,7 @@ export class Client {
   ): Promise<AddFavoriteChannelResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4315,7 +4315,7 @@ export class Client {
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4345,7 +4345,7 @@ export class Client {
   ): Promise<ListFavoriteChannelResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4371,7 +4371,7 @@ export class Client {
   async listActivity(session: Session): Promise<ListUserActivity> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4393,7 +4393,7 @@ export class Client {
   ): Promise<UserActivity> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4434,11 +4434,11 @@ export class Client {
     }
     return new Session(
       apiSession.token || "",
-      apiSession.refresh_token || "",
+      apiSession.refreshToken || "",
       apiSession.created || false,
-      apiSession.api_url || "",
+      apiSession.apiUrl || "",
       apiSession.id_token || "",
-      apiSession.is_remember || false
+      apiSession.isRemember || false
     );
   }
 
@@ -4449,7 +4449,7 @@ export class Client {
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4464,7 +4464,7 @@ export class Client {
   ): Promise<ChanEncryptionMethod> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4491,7 +4491,7 @@ export class Client {
   ): Promise<void> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4518,7 +4518,7 @@ export class Client {
   ): Promise<GetPubKeysResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4538,7 +4538,7 @@ export class Client {
   async pushPubKey(session: Session, PK: PubKey): Promise<void> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4558,7 +4558,7 @@ export class Client {
   async getKeyServer(session: Session): Promise<GetKeyServerResp> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4583,7 +4583,7 @@ export class Client {
   ): Promise<ListAuditLog> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4612,7 +4612,7 @@ export class Client {
   ): Promise<ListOnboardingResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4642,7 +4642,7 @@ export class Client {
   ): Promise<OnboardingItem> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4669,7 +4669,7 @@ export class Client {
   ): Promise<ListOnboardingResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4697,7 +4697,7 @@ export class Client {
   ) {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4726,7 +4726,7 @@ export class Client {
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4755,7 +4755,7 @@ export class Client {
   ): Promise<GenerateClanWebhookResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4779,18 +4779,18 @@ export class Client {
   //**list webhook belong to the clan */
   async listClanWebhook(
     session: Session,
-    clan_id: string
+    clanId: string
   ): Promise<ListClanWebhookResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
     const listClanWebhookRequest = create(ListClanWebhookRequestSchema, {
-      clanId: clan_id,
+      clanId: clanId,
     });
 
     const options: CallOptions = {
@@ -4804,10 +4804,10 @@ export class Client {
   }
 
   //**disabled webhook by id */
-  async deleteClanWebhookById(session: Session, id: string, clan_id: string) {
+  async deleteClanWebhookById(session: Session, id: string, clanId: string) {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4815,7 +4815,7 @@ export class Client {
 
     const deleteClanWebhookByIdRequest = create(ClanWebhookRequestSchema, {
       id: id,
-      clanId: clan_id,
+      clanId: clanId,
     });
 
     const options: CallOptions = {
@@ -4837,7 +4837,7 @@ export class Client {
   ) {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4865,20 +4865,20 @@ export class Client {
   //**list onboarding step */
   async listOnboardingStep(
     session: Session,
-    clan_id?: string,
+    clanId?: string,
     limit?: number,
     page?: number
   ): Promise<ListOnboardingStepResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
     const listOnboardingStepRequest = create(ListOnboardingStepRequestSchema, {
-      clanId: clan_id,
+      clanId: clanId,
       limit: limit,
       page: page,
     });
@@ -4896,12 +4896,12 @@ export class Client {
   //**update onboarding step by id */
   async updateOnboardingStepByClanId(
     session: Session,
-    clan_id: string,
+    clanId: string,
     request: UpdateOnboardingStepRequest
   ) {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4911,7 +4911,7 @@ export class Client {
       UpdateOnboardingStepRequestSchema,
       {
         ...request,
-        clanId: clan_id,
+        clanId: clanId,
       }
     );
 
@@ -4930,7 +4930,7 @@ export class Client {
   async updateUserStatus(session: Session, request: UserStatusUpdate) {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4953,7 +4953,7 @@ export class Client {
   async getUserStatus(session: Session): Promise<UserStatus> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -4977,7 +4977,7 @@ export class Client {
   ): Promise<SdTopicList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5002,7 +5002,7 @@ export class Client {
   ): Promise<SdTopic> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5021,7 +5021,7 @@ export class Client {
   async getTopicDetail(session: Session, topicId?: string): Promise<SdTopic> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5048,7 +5048,7 @@ export class Client {
   ): Promise<CreateRoomChannelApps> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5076,7 +5076,7 @@ export class Client {
   ): Promise<GenerateMeetTokenResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5104,7 +5104,7 @@ export class Client {
   ): Promise<MezonOauthClient> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5134,7 +5134,7 @@ export class Client {
   ): Promise<MezonOauthClient> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5161,7 +5161,7 @@ export class Client {
   ): Promise<ChannelDescList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5187,7 +5187,7 @@ export class Client {
   ): Promise<GenerateHashChannelAppsResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5218,7 +5218,7 @@ export class Client {
   ): Promise<Session> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5256,7 +5256,7 @@ export class Client {
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5283,7 +5283,7 @@ export class Client {
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5311,7 +5311,7 @@ export class Client {
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5335,7 +5335,7 @@ export class Client {
   async deleteAccount(session: Session): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5356,7 +5356,7 @@ export class Client {
   ): Promise<GenerateMezonMeetResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5393,7 +5393,7 @@ export class Client {
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5420,7 +5420,7 @@ export class Client {
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5448,7 +5448,7 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5491,7 +5491,7 @@ export class Client {
   ): Promise<QuickMenuAccessList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5523,7 +5523,7 @@ export class Client {
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5551,7 +5551,7 @@ export class Client {
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5576,7 +5576,7 @@ export class Client {
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5601,7 +5601,7 @@ export class Client {
   ): Promise<ForSaleItemList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5627,7 +5627,7 @@ export class Client {
   ): Promise<IsFollowerResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5650,7 +5650,7 @@ export class Client {
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5679,7 +5679,7 @@ export class Client {
   ): Promise<IsBannedResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5703,7 +5703,7 @@ export class Client {
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
@@ -5729,7 +5729,7 @@ export class Client {
   async listLogedDevice(session: Session): Promise<LogedDeviceList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
