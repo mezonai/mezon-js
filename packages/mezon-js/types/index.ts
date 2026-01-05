@@ -7,13 +7,13 @@ export interface Session {
   /** Authentication credentials. */
   token: string;
   /** Refresh token that can be used for session token renewal. */
-  refresh_token: string;
+  refreshToken: string;
   /** User id */
-  user_id: string;
+  userId: string;
   /** Whether to enable "Remember Me" for extended session duration. */
-  is_remember: boolean;
+  isRemember: boolean;
   /** api url */
-  api_url: string;
+  apiUrl: string;
   /** id token for zklogin */
   id_token: string;
 }
@@ -31,13 +31,13 @@ export interface ApiSession {
   /** True if the corresponding account was just created, false otherwise. */
   created?: boolean;
   /** Refresh token that can be used for session token renewal. */
-  refresh_token?: string;
+  refreshToken?: string;
   /** Authentication credentials. */
   token?: string;
   /** Whether to enable "Remember Me" for extended session duration. */
-  is_remember?: boolean;
+  isRemember?: boolean;
   /** Endpoint URL that belongs to the user. */
-  api_url?: string;
+  apiUrl?: string;
   /** ID token for zklogin. */
   id_token?: string;
 }
@@ -107,19 +107,19 @@ export interface ApiInviteUserRes {
   /** Channel description. */
   channel_desc?: ApiChannelDescription;
   /** Channel ID to add link to. */
-  channel_id?: string;
+  channelId?: string;
   /** Channel label. */
-  channel_label?: string;
+  channelLabel?: string;
   /** Clan ID to add link to. */
-  clan_id?: string;
+  clanId?: string;
   /** Clan name. */
   clan_name?: string;
   /** Whether the user has joined. */
-  user_joined?: boolean;
+  userJoined?: boolean;
   /** Expiry time. */
-  expiry_time?: string;
+  expiryTime?: string;
   /** Clan logo URL. */
-  clan_logo: string;
+  clanLogo: string;
   /** Member count. */
   member_count: number;
 }
@@ -131,25 +131,25 @@ export interface ApiChannelDescription {
   /** Age restriction flag. */
   age_restricted?: number;
   /** Category ID. */
-  category_id?: string;
+  categoryId?: string;
   /** Category name. */
-  category_name?: string;
+  categoryName?: string;
   /** The channel ID. */
-  channel_id?: string;
+  channelId?: string;
   /** Channel label. */
-  channel_label?: string;
+  channelLabel?: string;
   /** Private channel indicator. */
   channel_private?: number;
   /** Clan ID. */
-  clan_id?: string;
+  clanId?: string;
   /** Clan name. */
   clan_name?: string;
   /** Count of unread messages. */
   count_mess_unread?: number;
   /** Creation time in seconds. */
-  create_time_seconds?: number;
+  createTimeSeconds?: number;
   /** Creator ID. */
-  creator_id?: string;
+  creatorId?: string;
   /** Creator name. */
   creator_name?: string;
   /** End-to-end encryption flag. */
@@ -159,9 +159,9 @@ export interface ApiChannelDescription {
   /** Last pinned message. */
   last_pin_message?: string;
   /** Last seen message. */
-  last_seen_message?: ApiChannelMessageHeader;
+  lastSeenMessage?: ApiChannelMessageHeader;
   /** Last sent message. */
-  last_sent_message?: ApiChannelMessageHeader;
+  lastSentMessage?: ApiChannelMessageHeader;
   /** Meeting code. */
   meeting_code?: string;
   /** Channel avatar URL. */
@@ -171,13 +171,13 @@ export interface ApiChannelDescription {
   /** Channel type. */
   type?: number;
   /** Update time in seconds. */
-  update_time_seconds?: number;
+  updateTimeSeconds?: number;
   /** Application ID. */
   app_id?: string;
   /** Channel topic. */
   topic?: string;
   /** User IDs. */
-  user_ids?: Array<string>;
+  userIds?: Array<string>;
   /** Usernames. */
   usernames?: Array<string>;
   /** Display names. */
@@ -207,9 +207,9 @@ export interface ApiChannelMessageHeader {
   /** Replier user IDs. */
   repliers?: Array<string>;
   /** Sender ID. */
-  sender_id?: string;
+  senderId?: string;
   /** Timestamp in seconds. */
-  timestamp_seconds?: number;
+  timestampSeconds?: number;
 }
 
 /** Login request. */
@@ -233,7 +233,7 @@ export interface ApiLoginIDResponse {
   /** Status code. */
   status?: number;
   /** User ID. */
-  user_id?: string;
+  userId?: string;
   /** Username. */
   username?: string;
 }
@@ -241,7 +241,7 @@ export interface ApiLoginIDResponse {
 /** Clan discovery request. */
 export interface ApiClanDiscoverRequest {
   /** Clan ID. */
-  clan_id?: string;
+  clanId?: string;
   /** Items per page. */
   item_per_page?: number;
   /** Page number. */
@@ -251,7 +251,7 @@ export interface ApiClanDiscoverRequest {
 /** Confirm login request. */
 export interface ApiConfirmLoginRequest {
   /** Whether to enable "Remember Me" for extended session duration. */
-  is_remember?: boolean;
+  isRemember?: boolean;
   /** Login ID. */
   login_id?: string;
 }
@@ -273,15 +273,15 @@ export interface ApiClanDiscover {
   /** Banner image URL. */
   banner?: string;
   /** Clan ID. */
-  clan_id?: string;
+  clanId?: string;
   /** Clan logo URL. */
-  clan_logo?: string;
+  clanLogo?: string;
   /** Clan name. */
   clan_name?: string;
   /** Clan description. */
   description?: string;
   /** Invite ID. */
-  invite_id?: string;
+  inviteId?: string;
   /** Number of online members. */
   online_members?: number;
   /** Total number of members. */
@@ -289,18 +289,18 @@ export interface ApiClanDiscover {
   /** Whether the clan is verified. */
   verified?: boolean;
   /** Short URL. */
-  short_url?: string;
+  shortUrl?: string;
   /** Creation time. */
-  create_time?: string;
+  createTime?: string;
 }
 
 export interface ApiAllUsersAddChannelResponse {
   //
-  channel_id?: string;
+  channelId?: string;
   //
   limit?: number;
   //
-  user_ids?: Array<string>;
+  userIds?: Array<string>;
   //
   usernames?: Array<string>;
   //
@@ -314,7 +314,7 @@ export interface ApiAllUsersAddChannelResponse {
 /**  */
 export interface ApiChannelAttachment {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the group was created.
-  create_time?: string;
+  createTime?: string;
   //
   filename?: string;
   //
@@ -328,7 +328,7 @@ export interface ApiChannelAttachment {
   //
   url?: string;
   //message id.
-  message_id?: string;
+  messageId?: string;
   //width.
   width?: number;
   //height.
@@ -344,7 +344,7 @@ export interface ApiChannelAttachmentList {
 /** A list of channel description, usually a result of a list operation. */
 export interface ApiChannelDescList {
   //Cacheable cursor to list newer channel description. Durable and designed to be stored, unlike next/prev cursors.
-  cacheable_cursor?: string;
+  cacheableCursor?: string;
   //A list of channel.
   channeldesc?: Array<ApiChannelDescription>;
   //The cursor to send when retrieving the next page, if any.
@@ -364,61 +364,61 @@ export interface ApiChannelMessage {
   //
   avatar?: string;
   //
-  category_name?: string;
+  categoryName?: string;
   //The channel this message belongs to.
-  channel_id: string;
+  channelId: string;
   //The name of the chat room, or an empty string if this message was not sent through a chat room.
-  channel_label: string;
+  channelLabel: string;
   //The clan this message belong to.
-  clan_id?: string;
+  clanId?: string;
   //
-  clan_logo?: string;
+  clanLogo?: string;
   //
-  clan_nick?: string;
+  clanNick?: string;
   //
-  clan_avatar?: string;
+  clanAvatar?: string;
   //The code representing a message type or category.
   code: number;
   //The content payload.
   content: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time?: string;
+  createTime?: string;
   //
-  create_time_seconds?: number;
+  createTimeSeconds?: number;
   //
-  display_name?: string;
+  displayName?: string;
   //
   mentions?: string;
   //The unique ID of this message.
-  message_id: string;
+  messageId: string;
   //
   reactions?: string;
   //
-  referenced_message?: string;
+  referencedMessage?: string;
   //
   references?: string;
   //Message sender, usually a user ID.
-  sender_id: string;
+  senderId: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
-  update_time?: string;
+  updateTime?: string;
   //
-  update_time_seconds?: number;
+  updateTimeSeconds?: number;
   //The username of the message sender, if any.
   username?: string;
   // channel mode
   mode?: number;
   // hide editted
-  hide_editted?: boolean;
+  hideEditted?: boolean;
   //
-  topic_id?: string;
+  topicId?: string;
 }
 
 /** A list of channel messages, usually a result of a list operation. */
 export interface ApiChannelMessageList {
   //
-  last_seen_message?: ApiChannelMessageHeader;
+  lastSeenMessage?: ApiChannelMessageHeader;
   //
-  last_sent_message?: ApiChannelMessageHeader;
+  lastSentMessage?: ApiChannelMessageHeader;
   //A list of messages.
   messages?: Array<ApiChannelMessage>;
 }
@@ -428,19 +428,19 @@ export interface ApiChannelSettingItem {
   //
   active?: number;
   //
-  category_id?: string;
+  categoryId?: string;
   //
-  channel_label?: string;
+  channelLabel?: string;
   //
   channel_private?: number;
   //
-  channel_type?: number;
+  channelType?: number;
   //
-  creator_id?: string;
+  creatorId?: string;
   //
   id?: string;
   //
-  last_sent_message?: ApiChannelMessageHeader;
+  lastSentMessage?: ApiChannelMessageHeader;
   //
   meeting_code?: string;
   //
@@ -448,7 +448,7 @@ export interface ApiChannelSettingItem {
   //
   parent_id?: string;
   //
-  user_ids?: Array<string>;
+  userIds?: Array<string>;
 }
 
 /**  */
@@ -458,7 +458,7 @@ export interface ApiChannelSettingListResponse {
   //
   channel_setting_list?: Array<ApiChannelSettingItem>;
   //
-  clan_id?: string;
+  clanId?: string;
   //
   thread_count?: number;
 }
@@ -466,31 +466,31 @@ export interface ApiChannelSettingListResponse {
 /** A single user-role pair. */
 export interface ChannelUserListChannelUser {
   //
-  clan_avatar?: string;
+  clanAvatar?: string;
   //
-  clan_id?: string;
+  clanId?: string;
   //
-  clan_nick?: string;
+  clanNick?: string;
   //
   id?: string;
   //Their relationship to the role.
-  role_id?: Array<string>;
+  roleId?: Array<string>;
   //
-  thread_id?: string;
+  threadId?: string;
   //User.
-  user_id?: string;
+  userId?: string;
   //Added by
-  added_by?: string;
+  addedBy?: string;
   // is banned
-  is_banned?: boolean;
+  isBanned?: boolean;
   // expired time
-  expired_ban_time?: number;
+  expiredBanTime?: number;
 }
 
 /** A list of users belonging to a channel, along with their role. */
 export interface ApiChannelUserList {
   //
-  channel_id?: string;
+  channelId?: string;
   //User-role pairs for a channel.
   channel_users?: Array<ChannelUserListChannelUser>;
   //Cursor for the next page of results, if any.
@@ -502,11 +502,11 @@ export interface ApiClanDesc {
   //
   banner?: string;
   //
-  clan_id?: string;
+  clanId?: string;
   //
   clan_name?: string;
   //
-  creator_id?: string;
+  creatorId?: string;
   //
   logo?: string;
   //
@@ -514,25 +514,25 @@ export interface ApiClanDesc {
   //
   badge_count?: number;
   // is onboarding.
-  is_onboarding?: boolean;
+  isOnboarding?: boolean;
   // welcome channel id.
-  welcome_channel_id?: string;
+  welcomeChannelId?: string;
   //Onboarding_banner.
-  onboarding_banner?: string;
+  onboardingBanner?: string;
   // is community.
-  is_community?: boolean;
+  isCommunity?: boolean;
   // community banner
-  community_banner?: string;
+  communityBanner?: string;
   // description
   description?: string;
   // about
   about?: string;
   // short url for community
-  short_url?: string;
+  shortUrl?: string;
   // prevent anonymous
-  prevent_anonymous?: boolean;
+  preventAnonymous?: boolean;
   // has unread message
-  has_unread_message?: boolean;
+  hasUnreadMessage?: boolean;
 }
 
 /**  */
@@ -550,7 +550,7 @@ export interface ApiGenerateMezonMeetResponse {
   //
   external_link?: string;
   //
-  creator_id?: string;
+  creatorId?: string;
   //
   event_id?: string;
 }
@@ -562,7 +562,7 @@ export interface ApiCreateEventRequest {
   //
   channel_voice_id?: string;
   //
-  clan_id?: string;
+  clanId?: string;
   //
   description?: string;
   //
@@ -574,7 +574,7 @@ export interface ApiCreateEventRequest {
   //
   title?: string;
   //
-  channel_id?: string;
+  channelId?: string;
   //
   action?: number;
   //
@@ -582,9 +582,9 @@ export interface ApiCreateEventRequest {
   //
   repeat_type?: number;
   //
-  creator_id?: number;
+  creatorId?: number;
   //
-  user_id?: string;
+  userId?: string;
   //
   is_private?: boolean;
   //
@@ -596,11 +596,11 @@ export interface ApiClanEmoji {
   //
   category?: string;
   //
-  clan_id?: string;
+  clanId?: string;
   //
   clan_name?: string;
   //
-  creator_id?: string;
+  creatorId?: string;
   //
   id?: string;
   //
@@ -621,15 +621,15 @@ export interface ApiEmojiListedResponse {
 /**  */
 export interface ApiGiveCoffeeEvent {
   //
-  channel_id?: string;
+  channelId?: string;
   //
-  clan_id?: string;
+  clanId?: string;
   //
-  message_ref_id?: string;
+  messageRefId?: string;
   //
   receiver_id?: string;
   //
-  sender_id?: string;
+  senderId?: string;
   //
   token_count?: number;
 }
@@ -637,13 +637,13 @@ export interface ApiGiveCoffeeEvent {
 /**  */
 export interface ApiHashtagDm {
   //The channel id.
-  channel_id?: string;
+  channelId?: string;
   //
-  channel_label?: string;
+  channelLabel?: string;
   //
   channel_private?: number;
   //
-  clan_id?: string;
+  clanId?: string;
   //
   clan_name?: string;
   //
@@ -667,15 +667,15 @@ export interface ApiClanWebhook {
   //
   avatar?: string;
   //clan id.
-  clan_id?: string;
+  clanId?: string;
   //create time.
-  create_time?: string;
+  createTime?: string;
   //creator id.
-  creator_id?: string;
+  creatorId?: string;
   //id.
   id?: string;
   //update time.
-  update_time?: string;
+  updateTime?: string;
   //URL of the webhook, which is automatically generated and different from the avatar.
   url?: string;
   //webhook name.
@@ -711,15 +711,15 @@ export interface ApiMessageAttachment {
   //
   thumbnail?: string;
   // The channel this message belongs to.
-  channel_id?: string;
+  channelId?: string;
   // The mode
   mode?: number;
   // The channel label
-  channel_label?: string;
+  channelLabel?: string;
   // The message that user react
-  message_id?: string;
+  messageId?: string;
   // Message sender, usually a user ID.
-  sender_id?: string;
+  senderId?: string;
   // duration for video in seconds
   duration?: number;
 }
@@ -727,15 +727,15 @@ export interface ApiMessageAttachment {
 /**  */
 export interface ApiMessageMention {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time?: string;
+  createTime?: string;
   //
   id?: string;
   //
-  user_id?: string;
+  userId?: string;
   //
   username?: string;
   // role id
-  role_id?: string;
+  roleId?: string;
   // role name
   rolename?: string;
   // start position
@@ -743,15 +743,15 @@ export interface ApiMessageMention {
   // end position
   e?: number;
   /** The channel this message belongs to. */
-  channel_id?: string;
+  channelId?: string;
   // The mode
   mode?: number;
   // The channel label
-  channel_label?: string;
+  channelLabel?: string;
   /** The message that user react */
-  message_id?: string;
+  messageId?: string;
   /** Message sender, usually a user ID. */
-  sender_id?: string;
+  senderId?: string;
 }
 
 /**  */
@@ -759,93 +759,93 @@ export interface ApiMessageReaction {
   //
   action?: boolean;
   //
-  emoji_id: string;
+  emojiId: string;
   //
   emoji: string;
   //
   id?: string;
   //
-  sender_id?: string;
+  senderId?: string;
   //
-  sender_name?: string;
+  senderName?: string;
   //
-  sender_avatar?: string;
+  senderAvatar?: string;
   // count of emoji
   count: number;
   /** The channel this message belongs to. */
-  channel_id: string;
+  channelId: string;
   // The mode
   mode: number;
   // Is public
-  is_public: boolean;
+  isPublic: boolean;
   // The channel label
-  channel_label: string;
+  channelLabel: string;
   /** The message that user react */
-  message_id: string;
+  messageId: string;
   //
-  topic_id?: string;
+  topicId?: string;
   //
-  emoji_recent_id?: string;
+  emojiRecentId?: string;
 }
 
 /**  */
 export interface ApiMessageRef {
   //
-  message_id?: string;
+  messageId?: string;
   //
-  message_ref_id?: string;
+  messageRefId?: string;
   //
-  ref_type?: number;
+  refType?: number;
   //
-  message_sender_id?: string;
+  messageSenderId?: string;
   // original message sendre username
-  message_sender_username?: string;
+  messageSenderUsername?: string;
   // original message sender avatar
-  mesages_sender_avatar?: string;
+  mesagesSenderAvatar?: string;
   // original sender clan nick name
-  message_sender_clan_nick?: string;
+  messageSenderClanNick?: string;
   // original sender display name
-  message_sender_display_name?: string;
+  messageSenderDisplayName?: string;
   //
   content?: string;
   //
-  has_attachment: boolean;
+  hasAttachment: boolean;
   /** The channel this message belongs to. */
-  channel_id: string;
+  channelId: string;
   // The mode
   mode: number;
   // The channel label
-  channel_label: string;
+  channelLabel: string;
 }
 
 /** A notification in the server. */
 export interface ApiNotification {
   //
-  avatar_url?: string;
+  avatarUrl?: string;
   //
-  channel_id?: string;
+  channelId?: string;
   //
-  channel_type?: number;
+  channelType?: number;
   //
-  clan_id?: string;
+  clanId?: string;
   //Category code for this notification.
   code?: number;
   //Content of the notification in JSON.
   content?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the notification was created.
-  create_time?: string;
+  createTime?: string;
   //ID of the Notification.
   id?: string;
   //True if this notification was persisted to the database.
   persistent?: boolean;
   //ID of the sender, if a user. Otherwise 'null'.
-  sender_id?: string;
+  senderId?: string;
   //Subject of the notification.
   subject?: string;
   //category.
   category?: number;
   //
-  topic_id?: string;
+  topicId?: string;
   //
   channel?: ApiChannelDescription;
 }
@@ -853,7 +853,7 @@ export interface ApiNotification {
 /**  */
 export interface ApiNotificationChannel {
   //
-  channel_id?: string;
+  channelId?: string;
 }
 
 /**  */
@@ -879,7 +879,7 @@ export interface ApiNotificationChannelCategorySettingList {
 /** A collection of zero or more notifications. */
 export interface ApiNotificationList {
   //Use this cursor to paginate notifications. Cache this to catch up to new notifications.
-  cacheable_cursor?: string;
+  cacheableCursor?: string;
   //Collection of notifications.
   notifications?: Array<ApiNotification>;
 }
@@ -903,16 +903,16 @@ export interface ApiNotificationUserChannel {
   //
   time_mute?: string;
   //
-  channel_id?: string;
+  channelId?: string;
 }
 
 export interface ApiNotifiReactMessage {
   //
-  channel_id?: string;
+  channelId?: string;
   //
   id?: string;
   //
-  user_id?: string;
+  userId?: string;
 }
 
 /**  */
@@ -952,13 +952,13 @@ export interface ApiPermissionRoleChannel {
 /**  */
 export interface ApiPermissionRoleChannelListEventResponse {
   //
-  channel_id?: string;
+  channelId?: string;
   //
   permission_role_channel?: Array<ApiPermissionRoleChannel>;
   //
-  role_id?: string;
+  roleId?: string;
   //
-  user_id?: string;
+  userId?: string;
 }
 
 /**  */
@@ -974,7 +974,7 @@ export interface ApiPermissionUpdate {
 /**  */
 export interface ApiUpdateRoleOrderRequest {
   //
-  clan_id?: string;
+  clanId?: string;
   //
   roles?: Array<ApiRoleOrderUpdate>;
 }
@@ -984,7 +984,7 @@ export interface ApiRoleOrderUpdate {
   //
   order?: number;
   //
-  role_id?: string;
+  roleId?: string;
 }
 
 /**  */
@@ -996,11 +996,11 @@ export interface ApiRole {
   //
   channel_ids?: Array<string>;
   //
-  clan_id?: string;
+  clanId?: string;
   //
   color?: string;
   //
-  creator_id?: string;
+  creatorId?: string;
   //
   description?: string;
   //
@@ -1028,8 +1028,8 @@ export interface ApiRole {
 /**  */
 export interface ApiIsBannedResponse {
   //
-  is_banned?: boolean;
-  expired_ban_time?: number;
+  isBanned?: boolean;
+  expiredBanTime?: number;
 }
 
 /** A list of role description, usually a result of a list operation. */
@@ -1042,7 +1042,7 @@ export interface ApiRoleList {
 /**  */
 export interface ApiRoleListEventResponse {
   //
-  clan_id?: string;
+  clanId?: string;
   //
   cursor?: string;
   //
@@ -1064,13 +1064,13 @@ export interface ApiRoleUserList {
 /** A single user-role pair. */
 export interface RoleUserListRoleUser {
   //A URL for an avatar image.
-  avatar_url?: string;
+  avatarUrl?: string;
   //The display name of the user.
-  display_name?: string;
+  displayName?: string;
   //The id of the user's account.
   id?: string;
   //The language expected to be a tag which follows the BCP-47 spec.
-  lang_tag?: string;
+  langTag?: string;
   //The location set by the user.
   location?: string;
   //The timezone set by the user.
@@ -1093,13 +1093,13 @@ export interface ApiClanSticker {
   //
   category?: string;
   //
-  clan_id?: string;
+  clanId?: string;
   //
   clan_name?: string;
   //
-  create_time?: string;
+  createTime?: string;
   //
-  creator_id?: string;
+  creatorId?: string;
   //
   id?: string;
   //
@@ -1129,9 +1129,9 @@ export interface ApiTokenSentEvent {
   //
   receiver_id?: string;
   //
-  sender_id?: string;
+  senderId?: string;
   //
-  sender_name?: string;
+  senderName?: string;
   //
   extra_attribute?: string;
   //
@@ -1155,15 +1155,15 @@ export interface ApiUserActivity {
   //
   status?: number;
   //
-  user_id?: string;
+  userId?: string;
 }
 
 /**  */
 export interface ApiUserPermissionInChannelListResponse {
   //
-  channel_id?: string;
+  channelId?: string;
   //
-  clan_id?: string;
+  clanId?: string;
   //A list of permission.
   permissions?: ApiPermissionList;
 }
@@ -1173,17 +1173,17 @@ export interface ApiVoiceChannelUser {
   //Cursor for the next page of results, if any.
   id?: string;
   //
-  channel_id?: string;
+  channelId?: string;
   //
   participant?: string;
   //User for a channel.
-  user_id?: string;
+  userId?: string;
 }
 
 /** A list of users belonging to a channel, along with their role. */
 export interface ApiVoiceChannelUserList {
   //
-  voice_channel_users?: Array<ApiVoiceChannelUser>;
+  voiceChannelUsers?: Array<ApiVoiceChannelUser>;
 }
 
 /**  */
@@ -1193,23 +1193,23 @@ export interface ApiWebhook {
   //
   avatar?: string;
   //
-  channel_id?: string;
+  channelId?: string;
   //
-  create_time?: string;
+  createTime?: string;
   //
-  creator_id?: string;
+  creatorId?: string;
   //
   id?: string;
   //
   status?: number;
   //
-  update_time?: string;
+  updateTime?: string;
   //
   url?: string;
   //
   webhook_name?: string;
   //
-  clan_id?: string;
+  clanId?: string;
 }
 
 /**  */
@@ -1221,11 +1221,11 @@ export interface ApiWebhookListResponse {
 /**  */
 export interface ApiEmojiRecent {
   //ID of the emoji.
-  emoji_recents_id?: string;
+  emojiRecentsId?: string;
   //
-  emoji_id?: string;
+  emojiId?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the emoji was created.
-  update_time?: string;
+  updateTime?: string;
 }
 
 /** A collection of zero or more notifications. */
@@ -1239,27 +1239,27 @@ export interface ApiUser {
   //
   about_me?: string;
   //A URL for an avatar image.
-  avatar_url?: string;
+  avatarUrl?: string;
   //
   dob?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was created.
-  create_time?: string;
+  createTime?: string;
   //The display name of the user.
-  display_name?: string;
+  displayName?: string;
   //Number of related edges to this user.
-  edge_count?: number;
+  edgeCount?: number;
   //The id of the user's account.
   id?: string;
   //
-  is_mobile?: boolean;
+  isMobile?: boolean;
   //
-  join_time?: string;
+  joinTime?: string;
   //The language expected to be a tag which follows the BCP-47 spec.
-  lang_tag?: string;
+  langTag?: string;
   //The location set by the user.
   location?: string;
   //Additional information stored as a JSON object.
-  user_status?: string;
+  userStatus?: string;
   // online, offline, invisible, idle, do not disturb
   status?: string;
   //Indicates whether the user is currently online.
@@ -1267,13 +1267,13 @@ export interface ApiUser {
   //The timezone set by the user.
   timezone?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was last updated.
-  update_time?: string;
+  updateTime?: string;
   //The username of the user's account.
   username?: string;
-  // mezon_id
-  mezon_id?: string;
+  // mezonId
+  mezonId?: string;
   // list nick name
-  list_nick_names?: Array<string>;
+  listNickNames?: Array<string>;
   // phone number
   phone_number?: string;
 }
@@ -1283,11 +1283,11 @@ export interface ApiFriend {
   //The friend status.  one of "Friend.State".
   state?: number;
   //Time of the latest relationship update.
-  update_time?: string;
+  updateTime?: string;
   //The user object.
   user?: ApiUser;
   //Source ID
-  source_id?: string;
+  sourceId?: string;
 }
 
 /** A collection of zero or more friends of the user. */
@@ -1303,9 +1303,9 @@ export interface ApiChannelAppResponse {
   //
   app_id?: string;
   //
-  channel_id?: string;
+  channelId?: string;
   //
-  clan_id?: string;
+  clanId?: string;
   //
   id?: string;
   //
@@ -1331,7 +1331,7 @@ export interface ApiListUserActivity {
 /**  */
 export interface ApiListClanUnreadMsgIndicatorResponse {
   //
-  has_unread_message?: boolean;
+  hasUnreadMessage?: boolean;
 }
 
 /** A message sent on a channel. */
@@ -1341,17 +1341,17 @@ export interface ChannelMessage {
   //
   avatar?: string;
   //The channel this message belongs to.
-  channel_id: string;
+  channelId: string;
   //The name of the chat room, or an empty string if this message was not sent through a chat room.
-  channel_label: string;
+  channelLabel: string;
   //The clan this message belong to.
-  clan_id?: string;
+  clanId?: string;
   //The code representing a message type or category.
   code: number;
   //The content payload.
   content: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time: string;
+  createTime: string;
   //
   reactions?: Array<ApiMessageReaction>;
   //
@@ -1361,39 +1361,39 @@ export interface ChannelMessage {
   //
   references?: Array<ApiMessageRef>;
   //
-  referenced_message?: string[];
+  referencedMessage?: string[];
   //True if the message was persisted to the channel's history, false otherwise.
   persistent?: boolean;
   //Message sender, usually a user ID.
-  sender_id: string;
+  senderId: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
-  update_time?: string;
+  updateTime?: string;
   //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
-  clan_logo?: string;
+  clanLogo?: string;
   //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
-  category_name?: string;
+  categoryName?: string;
   //The username of the message sender, if any.
   username?: string;
   // The clan nick name
-  clan_nick?: string;
+  clanNick?: string;
   // The clan avatar
-  clan_avatar?: string;
+  clanAvatar?: string;
   //
-  display_name?: string;
+  displayName?: string;
   //
-  create_time_seconds?: number;
+  createTimeSeconds?: number;
   //
-  update_time_seconds?: number;
+  updateTimeSeconds?: number;
   //
   mode?: number;
   //
-  message_id?: string;
+  messageId?: string;
   //
-  hide_editted?: boolean;
+  hideEditted?: boolean;
   //
-  is_public?: boolean;
+  isPublic?: boolean;
   //
-  topic_id?: string;
+  topicId?: string;
 }
 
 type Builtin =
@@ -1426,10 +1426,10 @@ const createBaseSession = (): Session => {
   return {
     created: false,
     token: "",
-    refresh_token: "",
-    user_id: "",
-    is_remember: false,
-    api_url: "",
+    refreshToken: "",
+    userId: "",
+    isRemember: false,
+    apiUrl: "",
     id_token: "",
   };
 };
@@ -1449,17 +1449,17 @@ export const Session = {
     if (message.token !== "") {
       writer.uint32(18).string(message.token);
     }
-    if (message.refresh_token !== "") {
-      writer.uint32(26).string(message.refresh_token);
+    if (message.refreshToken !== "") {
+      writer.uint32(26).string(message.refreshToken);
     }
-    if (message.user_id !== "") {
-      writer.uint32(34).string(message.user_id);
+    if (message.userId !== "") {
+      writer.uint32(34).string(message.userId);
     }
-    if (message.is_remember !== false) {
-      writer.uint32(40).bool(message.is_remember);
+    if (message.isRemember !== false) {
+      writer.uint32(40).bool(message.isRemember);
     }
-    if (message.api_url !== "") {
-      writer.uint32(50).string(message.api_url);
+    if (message.apiUrl !== "") {
+      writer.uint32(50).string(message.apiUrl);
     }
     if (message.id_token !== "") {
       writer.uint32(58).string(message.id_token);
@@ -1494,28 +1494,28 @@ export const Session = {
             break;
           }
 
-          message.refresh_token = reader.string();
+          message.refreshToken = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.userId = reader.string();
           continue;
         case 5:
           if (tag !== 40) {
             break;
           }
 
-          message.is_remember = reader.bool();
+          message.isRemember = reader.bool();
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.api_url = reader.string();
+          message.apiUrl = reader.string();
           continue;
         case 7:
           if (tag !== 58) {
@@ -1539,14 +1539,14 @@ export const Session = {
         ? globalThis.Boolean(object.created)
         : false,
       token: isSet(object.token) ? globalThis.String(object.token) : "",
-      refresh_token: isSet(object.refresh_token)
-        ? globalThis.String(object.refresh_token)
+      refreshToken: isSet(object.refreshToken)
+        ? globalThis.String(object.refreshToken)
         : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      is_remember: isSet(object.is_remember)
-        ? globalThis.Boolean(object.is_remember)
+      userId: isSet(object.userId) ? globalThis.String(object.userId) : "",
+      isRemember: isSet(object.isRemember)
+        ? globalThis.Boolean(object.isRemember)
         : false,
-      api_url: isSet(object.api_url) ? globalThis.String(object.api_url) : "",
+      apiUrl: isSet(object.apiUrl) ? globalThis.String(object.apiUrl) : "",
       id_token: isSet(object.id_token)
         ? globalThis.String(object.id_token)
         : "",
@@ -1561,17 +1561,17 @@ export const Session = {
     if (message.token !== "") {
       obj.token = message.token;
     }
-    if (message.refresh_token !== "") {
-      obj.refresh_token = message.refresh_token;
+    if (message.refreshToken !== "") {
+      obj.refreshToken = message.refreshToken;
     }
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
+    if (message.userId !== "") {
+      obj.userId = message.userId;
     }
-    if (message.is_remember !== false) {
-      obj.is_remember = message.is_remember;
+    if (message.isRemember !== false) {
+      obj.isRemember = message.isRemember;
     }
-    if (message.api_url !== "") {
-      obj.api_url = message.api_url;
+    if (message.apiUrl !== "") {
+      obj.apiUrl = message.apiUrl;
     }
     if (message.id_token !== "") {
       obj.id_token = message.id_token;
@@ -1587,10 +1587,10 @@ export const Session = {
     const message = createBaseSession();
     message.created = object.created ?? false;
     message.token = object.token ?? "";
-    message.refresh_token = object.refresh_token ?? "";
-    message.user_id = object.user_id ?? "";
-    message.is_remember = object.is_remember ?? false;
-    message.api_url = object.api_url ?? "";
+    message.refreshToken = object.refreshToken ?? "";
+    message.userId = object.userId ?? "";
+    message.isRemember = object.isRemember ?? false;
+    message.apiUrl = object.apiUrl ?? "";
     message.id_token = object.id_token ?? "";
     return message;
   },
