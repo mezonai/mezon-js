@@ -22,7 +22,7 @@ import {
   Transport,
   type Client as RPCClient,
 } from "@connectrpc/connect";
-import { Mezon as MezonService } from "../webrpc/frontend/src/gen/apigrpc_pb";
+import { Mezon as MezonService } from "webrpc";
 import { Session } from "./session";
 import {
   Account,
@@ -304,8 +304,8 @@ import {
   UpdateRoleRequest,
   DeleteChannelDescRequest,
   ClanEmojiDeleteRequestSchema,
-} from "packages/webrpc/frontend/src/gen/api/api_pb";
-import { EmptySchema } from "@bufbuild/protobuf/wkt";
+  EmptySchema,
+} from "webrpc";
 import { encode } from "js-base64";
 import { DefaultSocket, Socket } from "./socket";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
@@ -319,7 +319,7 @@ import {
   ApiListClanDiscover,
   ApiLoginIDResponse,
   ApiLoginRequest,
-} from "./types/index";
+} from "./types";
 import { GatewayMezonApi } from "./gateway.api";
 
 const DEFAULT_HOST = "127.0.0.1";

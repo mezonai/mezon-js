@@ -63,7 +63,7 @@ import {
   ApiListUserActivity,
   ApiListClanUnreadMsgIndicatorResponse,
   ChannelMessage
-} from "./types/index";
+} from "./types";
 import { Session } from "./session";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
 import { safeJSONParse } from "./utils";

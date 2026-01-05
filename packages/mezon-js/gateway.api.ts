@@ -14,7 +14,7 @@ import {
   ApiSession,
   ApiClanDiscoverRequest,
   Session,
-} from "./types/index";
+} from "./types";
 
 export class GatewayMezonApi {
   basePath: string;

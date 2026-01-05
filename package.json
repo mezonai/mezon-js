@@ -31,7 +31,8 @@
     "packages/mezon-js-create-react-app-example",
     "packages/mezon-js-iife-example",
     "packages/mezon-js-protobuf",
-    "packages/mezon-js-webpack-example"
+    "packages/mezon-js-webpack-example",
+    "packages/webrpc"
   ],
   "dependencies": {
     "@bufbuild/protobuf": "^2.10.2",

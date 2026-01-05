@@ -21,5 +21,5 @@ export * from "./session";
 export * from "./socket";
 export * from "./web_socket_adapter";
 export * from "./utils"
-export * from "./types/index";
+export * from "./types";
 export { Session } from "./session";

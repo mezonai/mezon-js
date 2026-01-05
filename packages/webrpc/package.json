@@ -1,0 +1,26 @@
+{
+  "name": "webrpc",
+  "version": "1.0.0",
+  "description": "Generated protobuf and RPC client code for Mezon.",
+  "scripts": {
+    "clean": "rm -rf frontend/src/gen",
+    "generate": "buf generate",
+    "build": "npm run generate"
+  },
+  "main": "index.ts",
+  "types": "index.ts",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "files": [
+    "frontend/src/gen",
+    "index.ts"
+  ],
+  "dependencies": {
+    "@bufbuild/protobuf": "^2.10.2"
+  },
+  "devDependencies": {
+    "@bufbuild/buf": "^1.62.1",
+    "@bufbuild/protoc-gen-es": "^2.10.2"
+  }
+}
