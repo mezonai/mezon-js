@@ -319,8 +319,8 @@ import {
   ApiListClanDiscover,
   ApiLoginIDResponse,
   ApiLoginRequest,
-  MezonApi,
-} from "./api.gen";
+} from "./types/index";
+import { GatewayMezonApi } from "./gateway.api";
 
 const DEFAULT_HOST = "127.0.0.1";
 const DEFAULT_PORT = "7350";
@@ -375,7 +375,7 @@ export interface RpcResponse {
 /** A client for Mezon server. */
 export class Client {
   /** The low level API client for Mezon server. */
-  private readonly gatewayClient: MezonApi;
+  private readonly gatewayClient: GatewayMezonApi;
   private grpcTransport: Transport;
   private mezonClient: RPCClient<typeof MezonService>;
 
@@ -404,7 +404,7 @@ export class Client {
       useBinaryFormat: true,
     });
 
-    this.gatewayClient = new MezonApi(
+    this.gatewayClient = new GatewayMezonApi(
       DEFAULT_SERVER_KEY,
       DEFAULT_TIMEOUT_MS,
       basePath
