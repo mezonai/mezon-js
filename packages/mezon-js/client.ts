@@ -454,7 +454,7 @@ export class Client {
       apiSession.refreshToken || "",
       apiSession.created || false,
       apiSession.apiUrl || "",
-      apiSession.id_token || "",
+      apiSession.idToken || "",
       apiSession.isRemember || false
     );
   }
@@ -518,7 +518,7 @@ export class Client {
       apiSession.refreshToken || "",
       apiSession.created || false,
       apiSession.apiUrl || "",
-      apiSession.id_token || "",
+      apiSession.idToken || "",
       apiSession.isRemember || false
     );
   }
@@ -550,7 +550,7 @@ export class Client {
       apiSession.refreshToken || "",
       apiSession.created || false,
       apiSession.apiUrl || "",
-      apiSession.id_token || "",
+      apiSession.idToken || "",
       apiSession.isRemember || false
     );
   }
@@ -4415,8 +4415,8 @@ export class Client {
       requet
     );
     const response = {
-      login_id: apiSession.login_id,
-      create_time_second: apiSession.create_time_second,
+      loginId: apiSession.loginId,
+      createTimeSecond: apiSession.createTimeSecond,
     };
     return response;
   }
@@ -4437,7 +4437,7 @@ export class Client {
       apiSession.refreshToken || "",
       apiSession.created || false,
       apiSession.apiUrl || "",
-      apiSession.id_token || "",
+      apiSession.idToken || "",
       apiSession.isRemember || false
     );
   }

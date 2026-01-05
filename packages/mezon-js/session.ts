@@ -63,11 +63,11 @@ export class Session implements ISession {
     refreshToken: string,
     readonly created: boolean,
     readonly apiUrl: string,
-    readonly id_token: string,
+    readonly idToken: string,
     isRemember: boolean) {
     this.token = token;
     this.refreshToken = refreshToken;
-    this.id_token = id_token;
+    this.idToken = idToken;
     this.apiUrl = apiUrl;
     this.created_at = Math.floor(new Date().getTime() / 1000);
     this.isRemember = isRemember;

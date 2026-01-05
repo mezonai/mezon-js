@@ -78,7 +78,7 @@ export class GatewayMezonApi {
     const queryParams = new Map<string, any>();
     queryParams.set("create", create);
     queryParams.set("username", username);
-    queryParams.set("is_remember", isRemember);
+    queryParams.set("isRemember", isRemember);
 
     let bodyJson: string = "";
     bodyJson = JSON.stringify(account || {});
@@ -482,7 +482,7 @@ export class GatewayMezonApi {
       encodeURIComponent(String(token))
     );
     const queryParams = new Map<string, any>();
-    queryParams.set("display_name", displayName);
+    queryParams.set("displayName", displayName);
     queryParams.set("is_guest", isGuest);
 
     let bodyJson: string = "";

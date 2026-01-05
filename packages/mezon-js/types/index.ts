@@ -15,7 +15,7 @@ export interface Session {
   /** api url */
   apiUrl: string;
   /** id token for zklogin */
-  id_token: string;
+  idToken: string;
 }
 
 /** Send a Mezon token to the server. Used with authenticate/link/unlink. */
@@ -39,17 +39,17 @@ export interface ApiSession {
   /** Endpoint URL that belongs to the user. */
   apiUrl?: string;
   /** ID token for zklogin. */
-  id_token?: string;
+  idToken?: string;
 }
 
 /** Response for generating an external meeting token. */
 export interface ApiGenerateMeetTokenExternalResponse {
   /** Guest user ID. */
-  guest_user_id?: string;
+  guestUserId?: string;
   /** Meeting token. */
   token?: string;
   /** Guest access token. */
-  guest_access_token?: string;
+  guestAccessToken?: string;
 }
 
 /** Authenticate against the server with email+password. */
@@ -69,7 +69,7 @@ export interface ApiAccountEmail {
   /** A password for the user account. Ignored with unlink operations. */
   password?: string;
   /** Previous email address. */
-  prev_email?: string;
+  prevEmail?: string;
   /** Extra information that will be bundled in the session token. */
   vars?: Record<string, string>;
 }
@@ -95,9 +95,9 @@ export interface ApiAccountSMS {
 /** Request to confirm account linking. */
 export interface ApiLinkAccountConfirmRequest {
   /** One-time password code. */
-  otp_code?: string;
+  otpCode?: string;
   /** Request ID. */
-  req_id?: string;
+  reqId?: string;
   /** Status code. */
   status?: number;
 }
@@ -105,7 +105,7 @@ export interface ApiLinkAccountConfirmRequest {
 /** Invite user response. */
 export interface ApiInviteUserRes {
   /** Channel description. */
-  channel_desc?: ApiChannelDescription;
+  channelDesc?: ApiChannelDescription;
   /** Channel ID to add link to. */
   channelId?: string;
   /** Channel label. */
@@ -113,7 +113,7 @@ export interface ApiInviteUserRes {
   /** Clan ID to add link to. */
   clanId?: string;
   /** Clan name. */
-  clan_name?: string;
+  clanName?: string;
   /** Whether the user has joined. */
   userJoined?: boolean;
   /** Expiry time. */
@@ -121,7 +121,7 @@ export interface ApiInviteUserRes {
   /** Clan logo URL. */
   clanLogo: string;
   /** Member count. */
-  member_count: number;
+  memberCount: number;
 }
 
 /** Channel description with detailed metadata. */
@@ -129,7 +129,7 @@ export interface ApiChannelDescription {
   /** Active status indicator. */
   active?: number;
   /** Age restriction flag. */
-  age_restricted?: number;
+  ageRestricted?: number;
   /** Category ID. */
   categoryId?: string;
   /** Category name. */
@@ -139,41 +139,41 @@ export interface ApiChannelDescription {
   /** Channel label. */
   channelLabel?: string;
   /** Private channel indicator. */
-  channel_private?: number;
+  channelPrivate?: number;
   /** Clan ID. */
   clanId?: string;
   /** Clan name. */
-  clan_name?: string;
+  clanName?: string;
   /** Count of unread messages. */
-  count_mess_unread?: number;
+  countMessUnread?: number;
   /** Creation time in seconds. */
   createTimeSeconds?: number;
   /** Creator ID. */
   creatorId?: string;
   /** Creator name. */
-  creator_name?: string;
+  creatorName?: string;
   /** End-to-end encryption flag. */
   e2ee?: number;
   /** Whether the channel is muted. */
-  is_mute?: boolean;
+  isMute?: boolean;
   /** Last pinned message. */
-  last_pin_message?: string;
+  lastPinMessage?: string;
   /** Last seen message. */
   lastSeenMessage?: ApiChannelMessageHeader;
   /** Last sent message. */
   lastSentMessage?: ApiChannelMessageHeader;
   /** Meeting code. */
-  meeting_code?: string;
+  meetingCode?: string;
   /** Channel avatar URL. */
-  channel_avatar?: string;
+  channelAvatar?: string;
   /** Parent channel ID. */
-  parent_id?: string;
+  parentId?: string;
   /** Channel type. */
   type?: number;
   /** Update time in seconds. */
   updateTimeSeconds?: number;
   /** Application ID. */
-  app_id?: string;
+  appId?: string;
   /** Channel topic. */
   topic?: string;
   /** User IDs. */
@@ -181,13 +181,13 @@ export interface ApiChannelDescription {
   /** Usernames. */
   usernames?: Array<string>;
   /** Display names. */
-  display_names?: Array<string>;
+  displayNames?: Array<string>;
   /** Online status indicators. */
   onlines?: Array<boolean>;
   /** Avatar URLs. */
   avatars?: Array<string>;
   /** Member count. */
-  member_count?: number;
+  memberCount?: number;
 }
 
 /** Channel message header information. */
@@ -225,9 +225,9 @@ export interface ApiLoginIDResponse {
   /** User address. */
   address?: string;
   /** Creation time in seconds. */
-  create_time_second?: string;
+  createTimeSecond?: string;
   /** Login ID. */
-  login_id?: string;
+  loginId?: string;
   /** Platform identifier. */
   platform?: string;
   /** Status code. */
@@ -243,9 +243,9 @@ export interface ApiClanDiscoverRequest {
   /** Clan ID. */
   clanId?: string;
   /** Items per page. */
-  item_per_page?: number;
+  itemPerPage?: number;
   /** Page number. */
-  page_number?: number;
+  pageNumber?: number;
 }
 
 /** Confirm login request. */
@@ -253,17 +253,17 @@ export interface ApiConfirmLoginRequest {
   /** Whether to enable "Remember Me" for extended session duration. */
   isRemember?: boolean;
   /** Login ID. */
-  login_id?: string;
+  loginId?: string;
 }
 
 /** List of discoverable clans. */
 export interface ApiListClanDiscover {
   /** Array of clan discovery results. */
-  clan_discover?: Array<ApiClanDiscover>;
+  clanDiscover?: Array<ApiClanDiscover>;
   /** Current page number. */
   page?: number;
   /** Total page count. */
-  page_count?: number;
+  pageCount?: number;
 }
 
 /** Discoverable clan information. */
@@ -277,15 +277,15 @@ export interface ApiClanDiscover {
   /** Clan logo URL. */
   clanLogo?: string;
   /** Clan name. */
-  clan_name?: string;
+  clanName?: string;
   /** Clan description. */
   description?: string;
   /** Invite ID. */
   inviteId?: string;
   /** Number of online members. */
-  online_members?: number;
+  onlineMembers?: number;
   /** Total number of members. */
-  total_members?: number;
+  totalMembers?: number;
   /** Whether the clan is verified. */
   verified?: boolean;
   /** Short URL. */
@@ -304,7 +304,7 @@ export interface ApiAllUsersAddChannelResponse {
   //
   usernames?: Array<string>;
   //
-  display_names?: Array<string>;
+  displayNames?: Array<string>;
   //
   avatars?: Array<string>;
   //
@@ -348,11 +348,11 @@ export interface ApiChannelDescList {
   //A list of channel.
   channeldesc?: Array<ApiChannelDescription>;
   //The cursor to send when retrieving the next page, if any.
-  next_cursor?: string;
+  nextCursor?: string;
   //
   page?: number;
   //The cursor to send when retrieving the previous page, if any.
-  prev_cursor?: string;
+  prevCursor?: string;
 }
 
 /** A message sent on a channel. */
@@ -432,7 +432,7 @@ export interface ApiChannelSettingItem {
   //
   channelLabel?: string;
   //
-  channel_private?: number;
+  channelPrivate?: number;
   //
   channelType?: number;
   //
@@ -442,11 +442,11 @@ export interface ApiChannelSettingItem {
   //
   lastSentMessage?: ApiChannelMessageHeader;
   //
-  meeting_code?: string;
+  meetingCode?: string;
   //
-  message_count?: string;
+  messageCount?: string;
   //
-  parent_id?: string;
+  parentId?: string;
   //
   userIds?: Array<string>;
 }
@@ -454,13 +454,13 @@ export interface ApiChannelSettingItem {
 /**  */
 export interface ApiChannelSettingListResponse {
   //
-  channel_count?: number;
+  channelCount?: number;
   //
-  channel_setting_list?: Array<ApiChannelSettingItem>;
+  channelSettingList?: Array<ApiChannelSettingItem>;
   //
   clanId?: string;
   //
-  thread_count?: number;
+  threadCount?: number;
 }
 
 /** A single user-role pair. */
@@ -492,7 +492,7 @@ export interface ApiChannelUserList {
   //
   channelId?: string;
   //User-role pairs for a channel.
-  channel_users?: Array<ChannelUserListChannelUser>;
+  channelUsers?: Array<ChannelUserListChannelUser>;
   //Cursor for the next page of results, if any.
   cursor?: string;
 }
@@ -504,7 +504,7 @@ export interface ApiClanDesc {
   //
   clanId?: string;
   //
-  clan_name?: string;
+  clanName?: string;
   //
   creatorId?: string;
   //
@@ -512,7 +512,7 @@ export interface ApiClanDesc {
   //
   status?: number;
   //
-  badge_count?: number;
+  badgeCount?: number;
   // is onboarding.
   isOnboarding?: boolean;
   // welcome channel id.
@@ -544,15 +544,15 @@ export interface ApiClanDescList {
 /**  */
 export interface ApiGenerateMezonMeetResponse {
   //
-  meet_id?: string;
+  meetId?: string;
   //
-  room_name?: string;
+  roomName?: string;
   //
-  external_link?: string;
+  externalLink?: string;
   //
   creatorId?: string;
   //
-  event_id?: string;
+  eventId?: string;
 }
 
 /** Create a event within clan. */
@@ -560,17 +560,17 @@ export interface ApiCreateEventRequest {
   //
   address?: string;
   //
-  channel_voice_id?: string;
+  channelVoiceId?: string;
   //
   clanId?: string;
   //
   description?: string;
   //
-  end_time?: string;
+  endTime?: string;
   //
   logo?: string;
   //
-  start_time?: string;
+  startTime?: string;
   //
   title?: string;
   //
@@ -578,17 +578,17 @@ export interface ApiCreateEventRequest {
   //
   action?: number;
   //
-  event_status?: number;
+  eventStatus?: number;
   //
-  repeat_type?: number;
+  repeatType?: number;
   //
   creatorId?: number;
   //
   userId?: string;
   //
-  is_private?: boolean;
+  isPrivate?: boolean;
   //
-  meet_room?: ApiGenerateMezonMeetResponse;
+  meetRoom?: ApiGenerateMezonMeetResponse;
 }
 
 /**  */
@@ -598,7 +598,7 @@ export interface ApiClanEmoji {
   //
   clanId?: string;
   //
-  clan_name?: string;
+  clanName?: string;
   //
   creatorId?: string;
   //
@@ -610,12 +610,12 @@ export interface ApiClanEmoji {
   //
   src?: string;
   //
-  is_for_sale?: boolean;
+  isForSale?: boolean;
 }
 
 export interface ApiEmojiListedResponse {
   //
-  emoji_list?: Array<ApiClanEmoji>;
+  emojiList?: Array<ApiClanEmoji>;
 }
 
 /**  */
@@ -627,11 +627,11 @@ export interface ApiGiveCoffeeEvent {
   //
   messageRefId?: string;
   //
-  receiver_id?: string;
+  receiverId?: string;
   //
   senderId?: string;
   //
-  token_count?: number;
+  tokenCount?: number;
 }
 
 /**  */
@@ -641,15 +641,15 @@ export interface ApiHashtagDm {
   //
   channelLabel?: string;
   //
-  channel_private?: number;
+  channelPrivate?: number;
   //
   clanId?: string;
   //
-  clan_name?: string;
+  clanName?: string;
   //
-  meeting_code?: string;
+  meetingCode?: string;
   //
-  parent_id?: string;
+  parentId?: string;
   //
   type?: number;
 }
@@ -657,7 +657,7 @@ export interface ApiHashtagDm {
 /**  */
 export interface ApiHashtagDmList {
   //
-  hashtag_dm?: Array<ApiHashtagDm>;
+  hashtagDm?: Array<ApiHashtagDm>;
 }
 
 /**  */
@@ -679,19 +679,19 @@ export interface ApiClanWebhook {
   //URL of the webhook, which is automatically generated and different from the avatar.
   url?: string;
   //webhook name.
-  webhook_name?: string;
+  webhookName?: string;
 }
 
 /**  */
 export interface ApiListClanWebhookResponse {
   //list clan webhook.
-  list_clan_webhooks?: Array<ApiClanWebhook>;
+  listClanWebhooks?: Array<ApiClanWebhook>;
 }
 
 /**  */
 export interface ApiListFavoriteChannelResponse {
   //
-  channel_ids?: Array<string>;
+  channelIds?: Array<string>;
 }
 
 /**  */
@@ -861,19 +861,19 @@ export interface ApiNotificationChannelCategorySetting {
   //
   action?: number;
   //
-  channel_category_label?: string;
+  channelCategoryLabel?: string;
   //
-  channel_category_title?: string;
+  channelCategoryTitle?: string;
   //
   id?: string;
   //
-  notification_setting_type?: number;
+  notificationSettingType?: number;
 }
 
 /**  */
 export interface ApiNotificationChannelCategorySettingList {
   //
-  notification_channel_category_settings_list?: Array<ApiNotificationChannelCategorySetting>;
+  notificationChannelCategorySettingsList?: Array<ApiNotificationChannelCategorySetting>;
 }
 
 /** A collection of zero or more notifications. */
@@ -889,7 +889,7 @@ export interface ApiNotificationSetting {
   //
   id?: string;
   //
-  notification_setting_type?: number;
+  notificationSettingType?: number;
 }
 
 /**  */
@@ -899,9 +899,9 @@ export interface ApiNotificationUserChannel {
   //
   id?: string;
   //
-  notification_setting_type?: number;
+  notificationSettingType?: number;
   //
-  time_mute?: string;
+  timeMute?: string;
   //
   channelId?: string;
 }
@@ -936,7 +936,7 @@ export interface ApiPermission {
 /** A list of permission description, usually a result of a list operation. */
 export interface ApiPermissionList {
   //
-  max_level_permission?: number;
+  maxLevelPermission?: number;
   //A list of permission.
   permissions?: Array<ApiPermission>;
 }
@@ -946,7 +946,7 @@ export interface ApiPermissionRoleChannel {
   //
   active?: boolean;
   //
-  permission_id?: string;
+  permissionId?: string;
 }
 
 /**  */
@@ -954,7 +954,7 @@ export interface ApiPermissionRoleChannelListEventResponse {
   //
   channelId?: string;
   //
-  permission_role_channel?: Array<ApiPermissionRoleChannel>;
+  permissionRoleChannel?: Array<ApiPermissionRoleChannel>;
   //
   roleId?: string;
   //
@@ -964,7 +964,7 @@ export interface ApiPermissionRoleChannelListEventResponse {
 /**  */
 export interface ApiPermissionUpdate {
   //
-  permission_id?: string;
+  permissionId?: string;
   //
   slug?: string;
   //
@@ -992,9 +992,9 @@ export interface ApiRole {
   //
   active?: number;
   //
-  allow_mention?: number;
+  allowMention?: number;
   //
-  channel_ids?: Array<string>;
+  channelIds?: Array<string>;
   //
   clanId?: string;
   //
@@ -1004,25 +1004,25 @@ export interface ApiRole {
   //
   description?: string;
   //
-  display_online?: number;
+  displayOnline?: number;
   //
   id?: string;
   //
-  max_level_permission?: number;
+  maxLevelPermission?: number;
   //
-  permission_list?: ApiPermissionList;
+  permissionList?: ApiPermissionList;
   //
-  role_channel_active?: number;
+  roleChannelActive?: number;
   //
-  role_icon?: string;
+  roleIcon?: string;
   //
-  role_user_list?: ApiRoleUserList;
+  roleUserList?: ApiRoleUserList;
   //
   slug?: string;
   //
   title?: string;
   //
-  order_role?: number;
+  orderRole?: number;
 }
 
 /**  */
@@ -1034,7 +1034,7 @@ export interface ApiIsBannedResponse {
 
 /** A list of role description, usually a result of a list operation. */
 export interface ApiRoleList {
-  max_level_permission?: number;
+  maxLevelPermission?: number;
   //A list of role.
   roles?: Array<ApiRole>;
 }
@@ -1057,8 +1057,8 @@ export interface ApiRoleListEventResponse {
 export interface ApiRoleUserList {
   //Cursor for the next page of results, if any.
   cursor?: string;
-  //role_users pairs for a clan.
-  role_users?: Array<RoleUserListRoleUser>;
+  //roleUsers pairs for a clan.
+  roleUsers?: Array<RoleUserListRoleUser>;
 }
 
 /** A single user-role pair. */
@@ -1081,7 +1081,7 @@ export interface RoleUserListRoleUser {
 
 export interface ApiRpc {
   //The authentication key used when executed as a non-client HTTP request.
-  http_key?: string;
+  httpKey?: string;
   //The identifier of the function.
   id?: string;
   //The payload of the function which must be a JSON object.
@@ -1095,7 +1095,7 @@ export interface ApiClanSticker {
   //
   clanId?: string;
   //
-  clan_name?: string;
+  clanName?: string;
   //
   createTime?: string;
   //
@@ -1109,9 +1109,9 @@ export interface ApiClanSticker {
   //
   source?: string;
   //
-  media_type?: number;
+  mediaType?: number;
   //
-  is_for_sale?: boolean;
+  isForSale?: boolean;
 }
 
 /**  */
@@ -1127,31 +1127,31 @@ export interface ApiTokenSentEvent {
   //
   note?: string;
   //
-  receiver_id?: string;
+  receiverId?: string;
   //
   senderId?: string;
   //
   senderName?: string;
   //
-  extra_attribute?: string;
+  extraAttribute?: string;
   //
-  transaction_id?: string;
+  transactionId?: string;
 }
 
 /**  */
 export interface ApiUserActivity {
   //
-  activity_description?: string;
+  activityDescription?: string;
   //
-  activity_name?: string;
+  activityName?: string;
   //
-  activity_type?: number;
+  activityType?: number;
   //
-  application_id?: string;
+  applicationId?: string;
   //
-  end_time?: string;
+  endTime?: string;
   //
-  start_time?: string;
+  startTime?: string;
   //
   status?: number;
   //
@@ -1207,7 +1207,7 @@ export interface ApiWebhook {
   //
   url?: string;
   //
-  webhook_name?: string;
+  webhookName?: string;
   //
   clanId?: string;
 }
@@ -1231,13 +1231,13 @@ export interface ApiEmojiRecent {
 /** A collection of zero or more notifications. */
 export interface ApiEmojiRecentList {
   //Collection of emojiRecents.
-  emoji_recents?: Array<ApiEmojiRecent>;
+  emojiRecents?: Array<ApiEmojiRecent>;
 }
 
 /** A user in the server. */
 export interface ApiUser {
   //
-  about_me?: string;
+  aboutMe?: string;
   //A URL for an avatar image.
   avatarUrl?: string;
   //
@@ -1275,7 +1275,7 @@ export interface ApiUser {
   // list nick name
   listNickNames?: Array<string>;
   // phone number
-  phone_number?: string;
+  phoneNumber?: string;
 }
 
 /** A friend of a user. */
@@ -1301,7 +1301,7 @@ export interface ApiFriendList {
 /**  */
 export interface ApiChannelAppResponse {
   //
-  app_id?: string;
+  appId?: string;
   //
   channelId?: string;
   //
@@ -1309,17 +1309,17 @@ export interface ApiChannelAppResponse {
   //
   id?: string;
   //
-  app_url?: string;
+  appUrl?: string;
   //
-  app_name?: string;
+  appName?: string;
   //
-  app_logo?: string;
+  appLogo?: string;
 }
 
 /**  */
 export interface ApiListChannelAppsResponse {
   //
-  channel_apps?: Array<ApiChannelAppResponse>;
+  channelApps?: Array<ApiChannelAppResponse>;
 }
 
 /**  */
@@ -1430,7 +1430,7 @@ const createBaseSession = (): Session => {
     userId: "",
     isRemember: false,
     apiUrl: "",
-    id_token: "",
+    idToken: "",
   };
 };
 
@@ -1461,8 +1461,8 @@ export const Session = {
     if (message.apiUrl !== "") {
       writer.uint32(50).string(message.apiUrl);
     }
-    if (message.id_token !== "") {
-      writer.uint32(58).string(message.id_token);
+    if (message.idToken !== "") {
+      writer.uint32(58).string(message.idToken);
     }
     return writer;
   },
@@ -1522,7 +1522,7 @@ export const Session = {
             break;
           }
 
-          message.id_token = reader.string();
+          message.idToken = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1547,8 +1547,8 @@ export const Session = {
         ? globalThis.Boolean(object.isRemember)
         : false,
       apiUrl: isSet(object.apiUrl) ? globalThis.String(object.apiUrl) : "",
-      id_token: isSet(object.id_token)
-        ? globalThis.String(object.id_token)
+      idToken: isSet(object.idToken)
+        ? globalThis.String(object.idToken)
         : "",
     };
   },
@@ -1573,8 +1573,8 @@ export const Session = {
     if (message.apiUrl !== "") {
       obj.apiUrl = message.apiUrl;
     }
-    if (message.id_token !== "") {
-      obj.id_token = message.id_token;
+    if (message.idToken !== "") {
+      obj.idToken = message.idToken;
     }
     return obj;
   },
@@ -1591,7 +1591,7 @@ export const Session = {
     message.userId = object.userId ?? "";
     message.isRemember = object.isRemember ?? false;
     message.apiUrl = object.apiUrl ?? "";
-    message.id_token = object.id_token ?? "";
+    message.idToken = object.idToken ?? "";
     return message;
   },
 };
