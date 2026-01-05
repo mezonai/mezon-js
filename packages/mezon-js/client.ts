@@ -2206,7 +2206,7 @@ export class Client {
       return session;
     }
 
-    if (session.created && session.expires_at! - session.created_at < 70) {
+    if (session.created && session.expires_at! - session.createdAt < 70) {
       console.warn(
         "Session lifetime too short, please set '--session.token_expiry_sec' option. See the documentation for more info: https://mezon.vn/docs/mezon/getting-started/configuration/#session"
       );
@@ -2214,7 +2214,7 @@ export class Client {
 
     if (
       session.created &&
-      session.refresh_expires_at! - session.created_at < 3700
+      session.refresh_expires_at! - session.createdAt < 3700
     ) {
       console.warn(
         "Session refresh lifetime too short, please set '--session.refresh_token_expiry_sec' option. See the documentation for more info: https://mezon.vn/docs/mezon/getting-started/configuration/#session"
@@ -4579,7 +4579,7 @@ export class Client {
     actionLog?: string,
     userId?: string,
     clanId?: string,
-    date_log?: string
+    dateLog?: string
   ): Promise<ListAuditLog> {
     if (
       this.autoRefreshSession &&
@@ -4593,7 +4593,7 @@ export class Client {
       actionLog: actionLog,
       userId: userId,
       clanId: clanId,
-      dateLog: date_log,
+      dateLog: dateLog,
     });
 
     const options: CallOptions = {

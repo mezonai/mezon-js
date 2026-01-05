@@ -403,7 +403,7 @@ interface TransferOwnershipEvent {
 
 interface QuickMenuEvent {
   quick_menu_event: {
-    menu_name: string,
+    menuName: string,
     message: {
       /** Clan Id */
       clanId: string;
@@ -1521,7 +1521,7 @@ export interface Socket {
 
   /** Send a quick menu event to a chat channel on the server. */
   writeQuickMenuEvent(
-    menu_name: string,
+    menuName: string,
     clanId: string,
     channelId: string,
     mode: number,
@@ -2868,7 +2868,7 @@ export class DefaultSocket implements Socket {
   }
 
   async writeQuickMenuEvent(
-    menu_name: string,
+    menuName: string,
     clanId: string,
     channelId: string,
     mode: number,
@@ -2885,7 +2885,7 @@ export class DefaultSocket implements Socket {
   ): Promise<QuickMenuEvent> {
     const response = await this.send({
       quick_menu_event: {
-        menu_name: menu_name,
+        menuName: menuName,
         message: {
           clanId: clanId,
           channelId: channelId,

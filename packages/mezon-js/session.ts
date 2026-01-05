@@ -25,7 +25,7 @@ export interface ISession {
   /** If the user account for this session was just created. */
   created: boolean
   /** The UNIX timestamp when this session was created. */
-  readonly created_at: number;
+  readonly createdAt: number;
   /** The UNIX timestamp when this session will expire. */
   expires_at?: number;
   /** The UNIX timestamp when the refresh token will expire. */
@@ -49,7 +49,7 @@ export interface ISession {
 export class Session implements ISession {
 
   token : string;
-  readonly created_at: number;
+  readonly createdAt: number;
   expires_at?: number;
   refresh_expires_at?: number;
   refreshToken: string;
@@ -69,7 +69,7 @@ export class Session implements ISession {
     this.refreshToken = refreshToken;
     this.idToken = idToken;
     this.apiUrl = apiUrl;
-    this.created_at = Math.floor(new Date().getTime() / 1000);
+    this.createdAt = Math.floor(new Date().getTime() / 1000);
     this.isRemember = isRemember;
     this.update(token, refreshToken, isRemember);
   }
