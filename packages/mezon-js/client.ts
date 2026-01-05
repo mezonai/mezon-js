@@ -416,6 +416,22 @@ export class Client {
     return session.isexpired(Date.now() / 1000);
   }
 
+  /** set base path */
+  setBasePath(host: string, port: string, useSSL: boolean) {
+    this.host = host;
+    this.port = port;
+    this.useSSL = useSSL;
+
+    const scheme = useSSL ? "https://" : "http://";
+    const basePath = `${scheme}${host}:${port}`;
+    this.grpcTransport = createGrpcWebTransport({
+      baseUrl: basePath,
+    });
+    this.mezonClient = createClient(MezonService, this.grpcTransport);
+  }
+
+  //#region Mezon Gateway APIs
+
   /** Authenticate a user with a custom id against the server. */
   async authenticateMezon(
     token: string,
@@ -463,13 +479,12 @@ export class Client {
       },
     };
 
-    const response = await this.gatewayClient.AuthenticateSMSOTPRequest(
+    return await this.gatewayClient.AuthenticateSMSOTPRequest(
       this.serverkey,
       "",
       request,
       username
     );
-    return await Promise.resolve(response);
   }
 
   /** Authenticate a user with an email+otp against the server. */
@@ -486,13 +501,12 @@ export class Client {
       },
     };
 
-    const response = await this.gatewayClient.AuthenticateEmailOTPRequest(
+    return await this.gatewayClient.AuthenticateEmailOTPRequest(
       this.serverkey,
       "",
       request,
       username
     );
-    return await Promise.resolve(response);
   }
 
   async confirmAuthenticateOTP(
@@ -545,19 +559,89 @@ export class Client {
     );
   }
 
-  /** set base path */
-  setBasePath(host: string, port: string, useSSL: boolean) {
-    this.host = host;
-    this.port = port;
-    this.useSSL = useSSL;
-
-    const scheme = useSSL ? "https://" : "http://";
-    const basePath = `${scheme}${host}:${port}`;
-    this.grpcTransport = createGrpcWebTransport({
-      baseUrl: basePath,
-    });
-    this.mezonClient = createClient(MezonService, this.grpcTransport);
+  /** Get link invite user */
+  async getLinkInvite(inviteId: string): Promise<ApiInviteUserRes> {
+    return await this.gatewayClient.getLinkInvite(this.serverkey, "", inviteId);
   }
+
+  async createQRLogin(requet: ApiLoginRequest): Promise<ApiLoginIDResponse> {
+    const apiSession = await this.gatewayClient.createQRLogin(
+      this.serverkey,
+      "",
+      requet
+    );
+    return {
+      loginId: apiSession.loginId,
+      createTimeSecond: apiSession.createTimeSecond,
+    };
+  }
+
+  async checkLoginRequest(
+    requet: ApiConfirmLoginRequest
+  ): Promise<Session | null> {
+    const apiSession = await this.gatewayClient.checkLoginRequest(
+      this.serverkey,
+      "",
+      requet
+    );
+    if (!apiSession?.token) {
+      return null;
+    }
+    return new Session(
+      apiSession.token || "",
+      apiSession.refreshToken || "",
+      apiSession.created || false,
+      apiSession.apiUrl || "",
+      apiSession.idToken || "",
+      apiSession.isRemember || false
+    );
+  }
+
+  async confirmLogin(
+    session: Session,
+    basePath: string,
+    body: ApiConfirmLoginRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refreshToken &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return await this.gatewayClient.confirmLogin(session.token, basePath, body);
+  }
+
+  async generateMeetTokenExternal(
+    basePath: string,
+    token: string,
+    displayName?: string,
+    isGuest?: boolean
+  ): Promise<ApiGenerateMeetTokenExternalResponse> {
+    return await this.gatewayClient.generateMeetTokenExternal(
+      "",
+      basePath,
+      token,
+      displayName,
+      isGuest
+    );
+  }
+
+  /** list clan discover. */
+  async listClanDiscover(
+    basePath: string,
+    request: ApiClanDiscoverRequest
+  ): Promise<ApiListClanDiscover> {
+    return await this.gatewayClient.clanDiscover(
+      this.serverkey,
+      "",
+      basePath,
+      request
+    );
+  }
+
+  //#endregion
 
   /** Add users to a channel, or accept their join requests. */
   async addChannelUsers(
@@ -2539,11 +2623,6 @@ export class Client {
     );
   }
 
-  /** Get link invite user */
-  async getLinkInvite(inviteId: string): Promise<ApiInviteUserRes> {
-    return await this.gatewayClient.getLinkInvite(this.serverkey, "", inviteId);
-  }
-
   /** Get permission of user in the clan */
   async GetRoleOfUserInTheClan(
     session: Session,
@@ -4336,56 +4415,6 @@ export class Client {
     return await this.mezonClient.createActiviy(createActiviyRequest, options);
   }
 
-  async createQRLogin(requet: ApiLoginRequest): Promise<ApiLoginIDResponse> {
-    const apiSession = await this.gatewayClient.createQRLogin(
-      this.serverkey,
-      "",
-      requet
-    );
-    const response = {
-      loginId: apiSession.loginId,
-      createTimeSecond: apiSession.createTimeSecond,
-    };
-    return response;
-  }
-
-  async checkLoginRequest(
-    requet: ApiConfirmLoginRequest
-  ): Promise<Session | null> {
-    const apiSession = await this.gatewayClient.checkLoginRequest(
-      this.serverkey,
-      "",
-      requet
-    );
-    if (!apiSession?.token) {
-      return null;
-    }
-    return new Session(
-      apiSession.token || "",
-      apiSession.refreshToken || "",
-      apiSession.created || false,
-      apiSession.apiUrl || "",
-      apiSession.idToken || "",
-      apiSession.isRemember || false
-    );
-  }
-
-  async confirmLogin(
-    session: Session,
-    basePath: string,
-    body: ApiConfirmLoginRequest
-  ): Promise<any> {
-    if (
-      this.autoRefreshSession &&
-      session.refreshToken &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return await this.gatewayClient.confirmLogin(session.token, basePath, body);
-  }
-
   async getChanEncryptionMethod(
     session: Session,
     channelId: string
@@ -5300,21 +5329,6 @@ export class Client {
     );
   }
 
-  async generateMeetTokenExternal(
-    basePath: string,
-    token: string,
-    displayName?: string,
-    isGuest?: boolean
-  ): Promise<ApiGenerateMeetTokenExternalResponse> {
-    return await this.gatewayClient.generateMeetTokenExternal(
-      "",
-      basePath,
-      token,
-      displayName,
-      isGuest
-    );
-  }
-
   async removeMezonMeetParticipant(
     session: Session,
     request: MeetParticipantRequest
@@ -5396,19 +5410,6 @@ export class Client {
       options
     );
     return response !== undefined;
-  }
-
-  /** list clan discover. */
-  async listClanDiscover(
-    basePath: string,
-    request: ApiClanDiscoverRequest
-  ): Promise<ApiListClanDiscover> {
-    return await this.gatewayClient.clanDiscover(
-      this.serverkey,
-      "",
-      basePath,
-      request
-    );
   }
 
   async listQuickMenuAccess(
