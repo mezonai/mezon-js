@@ -1950,8 +1950,6 @@ export class DefaultSocket implements Socket {
     };
 
     this.adapter.onMessage = async (message: any) => {
-      console.log("message:", message);
-
       if (this.verbose && window && window.console) {
         console.log("Response: %o", JSON.stringify(message));
       }
@@ -2019,7 +2017,6 @@ export class DefaultSocket implements Socket {
         } else if (message.stream_data) {
           this.onstreamdata(mapToCamelCase(<StreamData>message.stream_data));
         } else if (message.channel_message) {
-          console.log("message.channel_message:", message.channel_message);
           const channelMessage = createChannelMessageFromEvent(message);
           this.onchannelmessage(mapToCamelCase(channelMessage));
         } else if (message.message_typing_event) {
@@ -2735,7 +2732,6 @@ export class DefaultSocket implements Socket {
       | QuickMenuEvent,
     sendTimeout = DefaultSocket.DefaultSendTimeoutMs
   ): Promise<any> {
-    console.log("Sending message:", message);
     const untypedMessage = message as any;
 
     return new Promise<void>((resolve, reject) => {
@@ -2743,15 +2739,7 @@ export class DefaultSocket implements Socket {
         reject("Socket connection has not been established yet.");
       } else {
         if (untypedMessage.channel_message_send) {
-          console.log(
-            "untypedMessage.channel_message_send:",
-            untypedMessage.channel_message_send
-          );
           untypedMessage.channel_message_send.content = JSON.stringify(
-            untypedMessage.channel_message_send.content
-          );
-          console.log(
-            "untypedMessage.channel_message_send.content:",
             untypedMessage.channel_message_send.content
           );
         } else if (untypedMessage.channel_message_update) {
@@ -2778,7 +2766,6 @@ export class DefaultSocket implements Socket {
         }
 
         untypedMessage.cid = cid;
-        console.log("untypedMessage:", untypedMessage);
         this.adapter.send(untypedMessage);
       }
     });
