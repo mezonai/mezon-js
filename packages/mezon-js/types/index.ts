@@ -951,68 +951,6 @@ export interface ApiChannelMessage {
   topicId?: string;
 }
 
-/** A message sent on a channel. */
-export interface ChannelMessage {
-  //The unique ID of this message.
-  id: string;
-  //
-  avatar?: string;
-  //The channel this message belongs to.
-  channelId: string;
-  //The name of the chat room, or an empty string if this message was not sent through a chat room.
-  channelLabel: string;
-  //The clan this message belong to.
-  clanId?: string;
-  //The code representing a message type or category.
-  code: number;
-  //The content payload.
-  content: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  createTime: string;
-  //
-  reactions?: Array<ApiMessageReaction>;
-  //
-  mentions?: Array<ApiMessageMention>;
-  //
-  attachments?: Array<ApiMessageAttachment>;
-  //
-  references?: Array<ApiMessageRef>;
-  //
-  referencedMessage?: string[];
-  //True if the message was persisted to the channel's history, false otherwise.
-  persistent?: boolean;
-  //Message sender, usually a user ID.
-  senderId: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
-  updateTime?: string;
-  //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
-  clanLogo?: string;
-  //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
-  categoryName?: string;
-  //The username of the message sender, if any.
-  username?: string;
-  // The clan nick name
-  clanNick?: string;
-  // The clan avatar
-  clanAvatar?: string;
-  //
-  displayName?: string;
-  //
-  createTimeSeconds?: number;
-  //
-  updateTimeSeconds?: number;
-  //
-  mode?: number;
-  //
-  messageId?: string;
-  //
-  hideEditted?: boolean;
-  //
-  isPublic?: boolean;
-  //
-  topicId?: string;
-}
-
 /**  */
 export interface ApiChannelMessageHeader {
   //

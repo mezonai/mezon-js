@@ -295,7 +295,6 @@ import {
   ChannelUserList,
   VoiceChannelUserList,
   ListChannelMessagesRequestSchema,
-  ChannelMessageList,
   NotificationList,
   FriendList,
   UpdateChannelDescRequest,
@@ -309,6 +308,7 @@ import { encode } from "js-base64";
 import { DefaultSocket, Socket } from "./socket";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
 import {
+  ChannelMessageList,
   ApiClanDiscoverRequest,
   ApiConfirmLoginRequest,
   ApiGenerateMeetTokenExternalResponse,
@@ -319,6 +319,7 @@ import {
   ApiLoginRequest,
 } from "./types";
 import { GatewayMezonApi } from "./gateway.api";
+import { safeJSONParse } from "./utils";
 
 const DEFAULT_HOST = "127.0.0.1";
 const DEFAULT_PORT = "7350";
@@ -1466,10 +1467,76 @@ export class Client {
       headers: [["Authorization", "Bearer " + session.token]],
     };
 
-    return await this.mezonClient.listChannelMessages(
+    const channelMessageList = await this.mezonClient.listChannelMessages(
       listChannelMessagesRequest,
       options
     );
+
+    var response: ChannelMessageList = {
+      messages: [],
+      lastSeenMessage: channelMessageList.lastSeenMessage,
+      lastSentMessage: channelMessageList.lastSentMessage,
+    };
+
+    if (channelMessageList.messages == null) {
+      return response;
+    }
+    channelMessageList.messages!.forEach((m) => {
+      var content, reactions, mentions, attachments, references;
+      try {
+        content = safeJSONParse(m.content);
+      } catch (e) {
+        console.log("error parse content", e);
+      }
+      try {
+        reactions = safeJSONParse(m.reactions || "[]");
+      } catch (e) {
+        console.log("error parse reactions", e);
+      }
+      try {
+        mentions = safeJSONParse(m.mentions || "[]");
+      } catch (e) {
+        console.log("error parse mentions", e);
+      }
+      try {
+        attachments = safeJSONParse(m.attachments || "[]");
+      } catch (e) {
+        console.log("error parse attachments", e);
+      }
+      try {
+        references = safeJSONParse(m.references || "[]");
+      } catch (e) {
+        console.log("error parse references", e);
+      }
+
+      response.messages!.push({
+        channelId: m.channelId,
+        code: m.code ? Number(m.code) : 0,
+        id: m.messageId,
+        senderId: m.senderId,
+        username: m.username,
+        displayName: m.displayName,
+        avatar: m.avatar,
+        content: content,
+        channelLabel: m.channelLabel,
+        clanLogo: m.clanLogo,
+        categoryName: m.categoryName,
+        clanNick: m.clanNick,
+        clanAvatar: m.clanAvatar,
+        attachments: attachments,
+        mentions: mentions,
+        reactions: reactions,
+        references: references,
+        clanId: m.clanId,
+        createTime: m.createTime?.seconds.toString() || "",
+        updateTime: m.updateTime?.seconds.toString() || "",
+        createTimeSeconds: m.createTimeSeconds,
+        updateTimeSeconds: m.updateTimeSeconds,
+        hideEditted: m.hideEditted,
+      });
+    });
+    
+    return response;
   }
 
   /** List a channel's users. */

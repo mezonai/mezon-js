@@ -62,11 +62,11 @@ import {
   ApiListChannelAppsResponse,
   ApiListUserActivity,
   ApiListClanUnreadMsgIndicatorResponse,
-  ChannelMessage
+  ChannelMessage,
 } from "./types";
 import { Session } from "./session";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
-import { safeJSONParse } from "./utils";
+import { mapToCamelCase, mapToSnakeCase, safeJSONParse } from "./utils";
 
 /** Stores function references for resolve/reject with a DOM Promise. */
 interface PromiseExecutor {
@@ -133,14 +133,14 @@ export interface Channel {
 }
 
 export interface ClanJoin {
-  clan_join: {
+  clanJoin: {
     clanId: string;
   };
 }
 
 /** Join a realtime chat channel. */
 interface ChannelJoin {
-  channel_join: {
+  channelJoin: {
     /** The id of the channel to join. */
     channelId: string;
     /** The name of the channel to join. */
@@ -158,7 +158,7 @@ interface ChannelJoin {
 
 /** Leave a realtime chat channel. */
 interface ChannelLeave {
-  channel_leave: {
+  channelLeave: {
     /** The id of the channel to leave. */
     channelId: string;
     // The mode
@@ -184,7 +184,7 @@ export interface BannedUserEvent {
   bannerId: string;
   channelId: string;
   clanId: string;
-  banTime: number
+  banTime: number;
 }
 
 export interface UserProfileRedis {
@@ -403,7 +403,7 @@ interface TransferOwnershipEvent {
 
 interface QuickMenuEvent {
   quick_menu_event: {
-    menuName: string,
+    menuName: string;
     message: {
       /** Clan Id */
       clanId: string;
@@ -431,13 +431,13 @@ interface QuickMenuEvent {
       code: number;
       //
       topicId?: string;
-    }
-  }
+    };
+  };
 }
 
 interface EphemeralMessageSend {
   ephemeral_message_send: {
-    receiverId: string,
+    receiverId: string;
     message: {
       /** Clan Id */
       clanId: string;
@@ -465,8 +465,8 @@ interface EphemeralMessageSend {
       code: number;
       //
       topicId?: string;
-    }
-  }
+    };
+  };
 }
 
 /** Update a message previously sent to a realtime chat channel. */
@@ -785,7 +785,7 @@ export interface ClanProfileUpdatedEvent {
   clanId: string;
 }
 
-export interface MeetParticipantEvent { 
+export interface MeetParticipantEvent {
   username: string;
   roomName: string;
   channelId: string;
@@ -1021,7 +1021,7 @@ export interface UserEmojiUsage {
 
 export interface AddFriend {
   //
-  userId: string;// user id
+  userId: string; // user id
   // username
   username: string;
   // display name
@@ -1206,7 +1206,7 @@ export interface VoiceReactionSend {
 }
 
 export interface MarkAsRead {
-   // channel id
+  // channel id
   channelId: string;
   // categoryId
   categoryId: string;
@@ -1242,8 +1242,8 @@ export interface UserStatusEvent {
 }
 
 export interface JoinChannelAppData {
-  userId : string;
-  username : string;
+  userId: string;
+  username: string;
   hash: string;
 }
 
@@ -1329,8 +1329,8 @@ export interface ListDataSocket {
   user_activity_list?: ApiListUserActivity;
 }
 
-function CreateChannelMessageFromEvent(message: any) {
-  var content, reactions, mentions, attachments, references, referencedMessags;
+function createChannelMessageFromEvent(message: any) {
+  var content, reactions, mentions, attachments, references, referencedMessage;
   try {
     content = safeJSONParse(message.channel_message.content);
   } catch (e) {
@@ -1357,42 +1357,44 @@ function CreateChannelMessageFromEvent(message: any) {
     console.log("references is invalid", e);
   }
   try {
-    referencedMessags = safeJSONParse(message.channel_message.referencedMessage);
+    referencedMessage = safeJSONParse(
+      message.channel_message.referenced_message
+    );
   } catch (e) {
     console.log("referenced messages is invalid", e);
   }
-  var e: ChannelMessage = {
-    id: message.id || message.channel_message.messageId,
+  var channelMessage: ChannelMessage = {
+    id: message.id || message.channel_message.message_id,
     avatar: message.channel_message.avatar,
-    channelId: message.channel_message.channelId,
+    channelId: message.channel_message.channel_id,
     mode: message.channel_message.mode,
-    channelLabel: message.channel_message.channelLabel,
-    clanId: message.channel_message.clanId,
+    channelLabel: message.channel_message.channel_label,
+    clanId: message.channel_message.clan_id,
     code: message.channel_message.code,
-    createTime: message.channel_message.createTime,
-    messageId: message.channel_message.messageId,
-    senderId: message.channel_message.senderId,
-    updateTime: message.channel_message.updateTime,
-    clanLogo: message.channel_message.clanLogo,
-    categoryName: message.channel_message.categoryName,
+    messageId: message.channel_message.message_id,
+    senderId: message.channel_message.sender_id,
+    clanLogo: message.channel_message.clan_logo,
+    categoryName: message.channel_message.category_name,
     username: message.channel_message.username,
-    clanNick: message.channel_message.clanNick,
-    clanAvatar: message.channel_message.clanAvatar,
-    displayName: message.channel_message.displayName,
+    clanNick: message.channel_message.clan_nick,
+    clanAvatar: message.channel_message.clan_avatar,
+    displayName: message.channel_message.display_name,
     content: content,
     reactions: reactions,
     mentions: mentions,
     attachments: attachments,
-    referencedMessage: referencedMessags,
+    referencedMessage: referencedMessage,
     references: references,
-    hideEditted: message.channel_message.hideEditted,
-    isPublic: message.channel_message.isPublic,
-    createTimeSeconds: message.channel_message.createTimeSeconds,
-    updateTimeSeconds: message.channel_message.updateTimeSeconds,
-    topicId: message.channel_message.topicId,
+    hideEditted: message.channel_message.hide_editted,
+    isPublic: message.channel_message.is_public,
+    createTime: message.channel_message.create_time,
+    updateTime: message.channel_message.update_time,
+    createTimeSeconds: message.channel_message.create_time_seconds,
+    updateTimeSeconds: message.channel_message.update_time_seconds,
+    topicId: message.channel_message.topic_id,
   };
 
-  return e;
+  return channelMessage;
 }
 
 /** A socket connection to Mezon server. */
@@ -1437,13 +1439,13 @@ export interface Socket {
   ): Promise<void>;
 
   /** handle user join/leave channel voice on the server. */
-  handleParticipantMeetState (
+  handleParticipantMeetState(
     clanId: string,
     channelId: string,
     displayName: string,
     state: number,
     roomName: string
-  ): Promise<void> 
+  ): Promise<void>;
 
   /** Remove a chat message from a chat channel on the server. */
   removeChatMessage(
@@ -1454,7 +1456,7 @@ export interface Socket {
     messageId: string,
     hasAttachment?: boolean,
     topicId?: string,
-    mentions?:string,
+    mentions?: string,
     references?: string
   ): Promise<ChannelMessageAck>;
 
@@ -1590,7 +1592,7 @@ export interface Socket {
     messageSenderUsername: string,
     messageContent: string,
     messageAttachment: string,
-    messageCreatedTime: string,
+    messageCreatedTime: string
   ): Promise<LastPinMessageEvent>;
 
   /** Send custom user status */
@@ -1601,10 +1603,7 @@ export interface Socket {
     noClear: boolean
   ): Promise<CustomStatusEvent>;
 
-  writeActiveArchivedThread(
-    clanId: string,
-    channelId: string
-  ): Promise<void>;
+  writeActiveArchivedThread(clanId: string, channelId: string): Promise<void>;
 
   /* Set the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   setHeartbeatTimeoutMs(ms: number): void;
@@ -1618,7 +1617,7 @@ export interface Socket {
     name: string,
     condition_id: string,
     type: number,
-    clanId: string,
+    clanId: string
   ): Promise<CheckNameExistedEvent>;
 
   handleMessageButtonClick: (
@@ -1642,7 +1641,7 @@ export interface Socket {
   writeVoiceReaction: (
     emojis: Array<string>,
     channelId: string
-  ) => Promise<VoiceReactionSend>
+  ) => Promise<VoiceReactionSend>;
 
   forwardWebrtcSignaling: (
     receiverId: string,
@@ -1665,9 +1664,7 @@ export interface Socket {
     action: number
   ) => Promise<ChannelAppEvent>;
 
-  listDataSocket(
-    request: ListDataSocket
-  ): Promise<any>;
+  listDataSocket(request: ListDataSocket): Promise<any>;
 
   /** Handle disconnect events received from the socket. */
   ondisconnect: (evt: Event) => void;
@@ -1799,7 +1796,9 @@ export interface Socket {
 
   oneventemoji: (event_emoji: EventEmoji) => void;
 
-  oneventnotiuserchannel: (noti_user_channel: ApiNotificationUserChannel) => void;
+  oneventnotiuserchannel: (
+    noti_user_channel: ApiNotificationUserChannel
+  ) => void;
 
   oneventwebhook: (webhook_event: ApiWebhook) => void;
 
@@ -1845,7 +1844,7 @@ export interface Socket {
 
   onjoinchannelappevent: (join_channel_app_data: JoinChannelAppData) => void;
 
-  onunpinmessageevent: (unpin_message_event: UnpinMessageEvent)=> void;
+  onunpinmessageevent: (unpin_message_event: UnpinMessageEvent) => void;
 
   onquickmenuevent: (event: QuickMenuEvent) => void;
 
@@ -1871,7 +1870,8 @@ export const ConnectionState = {
   CONNECTED: "connected",
 } as const;
 
-export type ConnectionStateType = typeof ConnectionState[keyof typeof ConnectionState];
+export type ConnectionStateType =
+  (typeof ConnectionState)[keyof typeof ConnectionState];
 
 export class DefaultSocket implements Socket {
   public static readonly DefaultHeartbeatTimeoutMs = 10000;
@@ -1921,7 +1921,10 @@ export class DefaultSocket implements Socket {
       return Promise.resolve(session);
     }
 
-    if (this._connectionState === ConnectionState.CONNECTING && this._connectPromise) {
+    if (
+      this._connectionState === ConnectionState.CONNECTING &&
+      this._connectPromise
+    ) {
       return this._connectPromise;
     }
 
@@ -1947,6 +1950,8 @@ export class DefaultSocket implements Socket {
     };
 
     this.adapter.onMessage = async (message: any) => {
+      console.log("message:", message);
+
       if (this.verbose && window && window.console) {
         console.log("Response: %o", JSON.stringify(message));
       }
@@ -1958,178 +1963,237 @@ export class DefaultSocket implements Socket {
             this.onnotification(n);
           });
         } else if (message.voice_started_event) {
-          this.onvoicestarted(message.voice_started_event);
+          this.onvoicestarted(mapToCamelCase(message.voice_started_event));
         } else if (message.voice_ended_event) {
-          this.onvoiceended(message.voice_ended_event);
+          this.onvoiceended(mapToCamelCase(message.voice_ended_event));
         } else if (message.voice_joined_event) {
-          this.onvoicejoined(message.voice_joined_event);
+          this.onvoicejoined(mapToCamelCase(message.voice_joined_event));
         } else if (message.voice_leaved_event) {
-          this.onvoiceleaved(message.voice_leaved_event);
+          this.onvoiceleaved(mapToCamelCase(message.voice_leaved_event));
         } else if (message.channel_created_event) {
-          this.onchannelcreated(message.channel_created_event);
+          this.onchannelcreated(mapToCamelCase(message.channel_created_event));
         } else if (message.category_event) {
-          this.oncategoryevent(message.category_event);
+          this.oncategoryevent(mapToCamelCase(message.category_event));
         } else if (message.role_event) {
-          this.onroleevent(message.role_event);
+          this.onroleevent(mapToCamelCase(message.role_event));
         } else if (message.event_emoji) {
-          this.oneventemoji(message.event_emoji);
+          this.oneventemoji(mapToCamelCase(message.event_emoji));
         } else if (message.noti_user_channel) {
-          this.oneventnotiuserchannel(message.noti_user_channel);
+          this.oneventnotiuserchannel(
+            mapToCamelCase(message.noti_user_channel)
+          );
         } else if (message.webhook_event) {
-          this.oneventwebhook(message.webhook_event);
+          this.oneventwebhook(mapToCamelCase(message.webhook_event));
         } else if (message.channel_deleted_event) {
-          this.onchanneldeleted(message.channel_deleted_event);
+          this.onchanneldeleted(mapToCamelCase(message.channel_deleted_event));
         } else if (message.clan_deleted_event) {
-          this.onclandeleted(message.clan_deleted_event);
+          this.onclandeleted(mapToCamelCase(message.clan_deleted_event));
         } else if (message.sticker_create_event) {
-          this.onstickercreated(message.sticker_create_event);
+          this.onstickercreated(mapToCamelCase(message.sticker_create_event));
         } else if (message.sticker_update_event) {
-          this.onstickerupdated(message.sticker_update_event);
+          this.onstickerupdated(mapToCamelCase(message.sticker_update_event));
         } else if (message.sticker_delete_event) {
-          this.onstickerdeleted(message.sticker_delete_event);
+          this.onstickerdeleted(mapToCamelCase(message.sticker_delete_event));
         } else if (message.channel_updated_event) {
-          this.onchannelupdated(message.channel_updated_event);
+          this.onchannelupdated(mapToCamelCase(message.channel_updated_event));
         } else if (message.delete_account_event) {
-          this.ondeleteaccount(message.delete_account_event);
+          this.ondeleteaccount(mapToCamelCase(message.delete_account_event));
         } else if (message.clan_profile_updated_event) {
-          this.onclanprofileupdated(message.clan_profile_updated_event);
+          this.onclanprofileupdated(
+            mapToCamelCase(message.clan_profile_updated_event)
+          );
         } else if (message.clan_updated_event) {
-          this.onclanupdated(message.clan_updated_event);
+          this.onclanupdated(mapToCamelCase(message.clan_updated_event));
         } else if (message.last_seen_message_event) {
-          this.onlastseenupdated(message.last_seen_message_event);
+          this.onlastseenupdated(
+            mapToCamelCase(message.last_seen_message_event)
+          );
         } else if (message.status_presence_event) {
           this.onstatuspresence(
-            <StatusPresenceEvent>message.status_presence_event
+            mapToCamelCase(<StatusPresenceEvent>message.status_presence_event)
           );
         } else if (message.stream_presence_event) {
           this.onstreampresence(
-            <StreamPresenceEvent>message.stream_presence_event
+            mapToCamelCase(<StreamPresenceEvent>message.stream_presence_event)
           );
         } else if (message.stream_data) {
-          this.onstreamdata(<StreamData>message.stream_data);
-        } else if (message.channel_message) {          
-          const channelMessage = CreateChannelMessageFromEvent(message);
-          this.onchannelmessage(channelMessage);
+          this.onstreamdata(mapToCamelCase(<StreamData>message.stream_data));
+        } else if (message.channel_message) {
+          console.log("message.channel_message:", message.channel_message);
+          const channelMessage = createChannelMessageFromEvent(message);
+          this.onchannelmessage(mapToCamelCase(channelMessage));
         } else if (message.message_typing_event) {
           this.onmessagetyping(
-            <MessageTypingEvent>message.message_typing_event
+            mapToCamelCase(<MessageTypingEvent>message.message_typing_event)
           );
         } else if (message.message_reaction_event) {
           this.onmessagereaction(
-            <ApiMessageReaction>message.message_reaction_event
+            mapToCamelCase(<ApiMessageReaction>message.message_reaction_event)
           );
         } else if (message.channel_presence_event) {
           this.onchannelpresence(
-            <ChannelPresenceEvent>message.channel_presence_event
+            mapToCamelCase(<ChannelPresenceEvent>message.channel_presence_event)
           );
         } else if (message.last_pin_message_event) {
           this.onpinmessage(
-            <LastPinMessageEvent>message.last_pin_message_event
+            mapToCamelCase(<LastPinMessageEvent>message.last_pin_message_event)
           );
         } else if (message.custom_status_event) {
-          this.oncustomstatus(<CustomStatusEvent>message.custom_status_event);
+          this.oncustomstatus(
+            mapToCamelCase(<CustomStatusEvent>message.custom_status_event)
+          );
         } else if (message.canvas_event) {
-          this.oncanvasevent(<ChannelCanvas>message.canvas_event);
+          this.oncanvasevent(
+            mapToCamelCase(<ChannelCanvas>message.canvas_event)
+          );
         } else if (message.user_channel_added_event) {
           this.onuserchanneladded(
-            <UserChannelAddedEvent>message.user_channel_added_event
+            mapToCamelCase(
+              <UserChannelAddedEvent>message.user_channel_added_event
+            )
           );
         } else if (message.add_clan_user_event) {
-          this.onuserclanadded(<AddClanUserEvent>message.add_clan_user_event);
+          this.onuserclanadded(
+            mapToCamelCase(<AddClanUserEvent>message.add_clan_user_event)
+          );
         } else if (message.user_profile_updated_event) {
           this.onuserprofileupdate(
-            <UserProfileUpdatedEvent>message.user_profile_updated_event
+            mapToCamelCase(
+              <UserProfileUpdatedEvent>message.user_profile_updated_event
+            )
           );
         } else if (message.user_channel_removed_event) {
           this.onuserchannelremoved(
-            <UserChannelRemovedEvent>message.user_channel_removed_event
+            mapToCamelCase(
+              <UserChannelRemovedEvent>message.user_channel_removed_event
+            )
           );
         } else if (message.block_friend) {
-          this.onblockfriend(<BlockFriend>message.block_friend);
+          this.onblockfriend(mapToCamelCase(<BlockFriend>message.block_friend));
         } else if (message.un_block_friend) {
-          this.onunblockfriend(<UnblockFriend>message.un_block_friend);
+          this.onunblockfriend(
+            mapToCamelCase(<UnblockFriend>message.un_block_friend)
+          );
         } else if (message.add_friend) {
-          this.onaddfriend(<AddFriend>message.add_friend);
+          this.onaddfriend(mapToCamelCase(<AddFriend>message.add_friend));
         } else if (message.remove_friend) {
-          this.onremovefriend(<RemoveFriend>message.remove_friend);
+          this.onremovefriend(
+            mapToCamelCase(<RemoveFriend>message.remove_friend)
+          );
         } else if (message.user_clan_removed_event) {
           this.onuserclanremoved(
-            <UserClanRemovedEvent>message.user_clan_removed_event
+            mapToCamelCase(
+              <UserClanRemovedEvent>message.user_clan_removed_event
+            )
           );
         } else if (message.clan_event_created) {
-          this.oneventcreated(message.clan_event_created);
+          this.oneventcreated(mapToCamelCase(message.clan_event_created));
         } else if (message.give_coffee_event) {
-          this.oncoffeegiven(<ApiGiveCoffeeEvent>message.give_coffee_event);
+          this.oncoffeegiven(
+            mapToCamelCase(<ApiGiveCoffeeEvent>message.give_coffee_event)
+          );
         } else if (message.role_assign_event) {
-          this.onroleassign(<RoleAssignedEvent>message.role_assign_event);
+          this.onroleassign(
+            mapToCamelCase(<RoleAssignedEvent>message.role_assign_event)
+          );
         } else if (message.streaming_started_event) {
           this.onstreamingchannelstarted(
-            <StreamingStartedEvent>message.streaming_started_event
+            mapToCamelCase(
+              <StreamingStartedEvent>message.streaming_started_event
+            )
           );
         } else if (message.streaming_ended_event) {
           this.onstreamingchannelended(
-            <StreamingEndedEvent>message.streaming_ended_event
+            mapToCamelCase(<StreamingEndedEvent>message.streaming_ended_event)
           );
         } else if (message.streaming_joined_event) {
           this.onstreamingchanneljoined(
-            <StreamingJoinedEvent>message.streaming_joined_event
+            mapToCamelCase(<StreamingJoinedEvent>message.streaming_joined_event)
           );
         } else if (message.streaming_leaved_event) {
           this.onstreamingchannelleaved(
-            <StreamingLeavedEvent>message.streaming_leaved_event
+            mapToCamelCase(<StreamingLeavedEvent>message.streaming_leaved_event)
           );
         } else if (message.permission_set_event) {
-          this.onpermissionset(<PermissionSet>message.permission_set_event);
+          this.onpermissionset(
+            mapToCamelCase(<PermissionSet>message.permission_set_event)
+          );
         } else if (message.permission_changed_event) {
           this.onpermissionchanged(
-            <PermissionChangedEvent>message.permission_changed_event
+            mapToCamelCase(
+              <PermissionChangedEvent>message.permission_changed_event
+            )
           );
         } else if (message.unmute_event) {
-          this.onunmuteevent(<UnmuteEvent>message.unmute_event);
+          this.onunmuteevent(mapToCamelCase(<UnmuteEvent>message.unmute_event));
         } else if (message.token_sent_event) {
-          this.ontokensent(<ApiTokenSentEvent>message.token_sent_event);
+          this.ontokensent(
+            mapToCamelCase(<ApiTokenSentEvent>message.token_sent_event)
+          );
         } else if (message.message_button_clicked) {
           this.onmessagebuttonclicked(
-            <MessageButtonClicked>message.message_button_clicked
+            mapToCamelCase(<MessageButtonClicked>message.message_button_clicked)
           );
         } else if (message.dropdown_box_selected) {
           this.onmessagedropdownboxselected(
-            <DropdownBoxSelected>message.dropdown_box_selected
+            mapToCamelCase(<DropdownBoxSelected>message.dropdown_box_selected)
           );
         } else if (message.mark_as_read) {
-          this.onmarkasread(
-            <MarkAsRead>message.mark_as_read
-          );
+          this.onmarkasread(mapToCamelCase(<MarkAsRead>message.mark_as_read));
         } else if (message.voice_reaction_send) {
           this.onvoicereactionmessage(
-            <VoiceReactionSend>message.voice_reaction_send
+            mapToCamelCase(<VoiceReactionSend>message.voice_reaction_send)
           );
         } else if (message.webrtc_signaling_fwd) {
           this.onwebrtcsignalingfwd(
-            <WebrtcSignalingFwd>message.webrtc_signaling_fwd
+            mapToCamelCase(<WebrtcSignalingFwd>message.webrtc_signaling_fwd)
           );
         } else if (message.list_activity) {
-          this.onactivityupdated(<ListActivity>message.list_activity);
+          this.onactivityupdated(
+            mapToCamelCase(<ListActivity>message.list_activity)
+          );
         } else if (message.sd_topic_event) {
-          this.onsdtopicevent(<SdTopicEvent>message.sd_topic_event);
+          this.onsdtopicevent(
+            mapToCamelCase(<SdTopicEvent>message.sd_topic_event)
+          );
         } else if (message.channel_app_event) {
-          this.onchannelappevent(<ChannelAppEvent>message.channel_app_event);
+          this.onchannelappevent(
+            mapToCamelCase(<ChannelAppEvent>message.channel_app_event)
+          );
         } else if (message.user_status_event) {
-          this.onuserstatusevent(<UserStatusEvent>message.user_status_event);
+          this.onuserstatusevent(
+            mapToCamelCase(<UserStatusEvent>message.user_status_event)
+          );
         } else if (message.join_channel_app_data) {
-          this.onjoinchannelappevent(<JoinChannelAppData>message.join_channel_app_data);
+          this.onjoinchannelappevent(
+            mapToCamelCase(<JoinChannelAppData>message.join_channel_app_data)
+          );
         } else if (message.unpin_message_event) {
-          this.onunpinmessageevent(<UnpinMessageEvent>message.unpin_message_event);
+          this.onunpinmessageevent(
+            mapToCamelCase(<UnpinMessageEvent>message.unpin_message_event)
+          );
         } else if (message.quick_menu_event) {
-          this.onquickmenuevent(<QuickMenuEvent>message.quick_menu_event);
+          this.onquickmenuevent(
+            mapToCamelCase(<QuickMenuEvent>message.quick_menu_event)
+          );
         } else if (message.meet_participant_event) {
-          this.onmeetparticipantevent(<MeetParticipantEvent>message.meet_participant_event);
+          this.onmeetparticipantevent(
+            mapToCamelCase(<MeetParticipantEvent>message.meet_participant_event)
+          );
         } else if (message.transfer_ownership_event) {
-          this.ontransferownership(<TransferOwnershipEvent>message.transfer_ownership_event);
+          this.ontransferownership(
+            mapToCamelCase(
+              <TransferOwnershipEvent>message.transfer_ownership_event
+            )
+          );
         } else if (message.ban_user_event) {
-          this.onbanneduser(<BannedUserEvent>message.ban_user_event);
+          this.onbanneduser(
+            mapToCamelCase(<BannedUserEvent>message.ban_user_event)
+          );
         } else if (message.allow_anonymous_event) {
-          this.onallowanonymousevent(<AllowAnonymousEvent>message.allow_anonymous_event);
+          this.onallowanonymousevent(
+            mapToCamelCase(<AllowAnonymousEvent>message.allow_anonymous_event)
+          );
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -2166,7 +2230,7 @@ export class DefaultSocket implements Socket {
         this._connectionState = ConnectionState.CONNECTED;
         this.startHeartbeatLoop();
         this._connectPromise = undefined;
-        
+
         resolve(session);
 
         if (isReconnect) {
@@ -2608,7 +2672,7 @@ export class DefaultSocket implements Socket {
       console.log(join_channel_app_data);
     }
   }
-  
+
   onunpinmessageevent(unpin_message_event: UnpinMessageEvent) {
     if (this.verbose && window && window.console) {
       console.log(unpin_message_event);
@@ -2629,7 +2693,7 @@ export class DefaultSocket implements Socket {
 
   onbanneduser(event: BannedUserEvent) {
     if (this.verbose && window && window.console) {
-      console.log(event)
+      console.log(event);
     }
   }
 
@@ -2671,6 +2735,7 @@ export class DefaultSocket implements Socket {
       | QuickMenuEvent,
     sendTimeout = DefaultSocket.DefaultSendTimeoutMs
   ): Promise<any> {
+    console.log("Sending message:", message);
     const untypedMessage = message as any;
 
     return new Promise<void>((resolve, reject) => {
@@ -2678,7 +2743,15 @@ export class DefaultSocket implements Socket {
         reject("Socket connection has not been established yet.");
       } else {
         if (untypedMessage.channel_message_send) {
+          console.log(
+            "untypedMessage.channel_message_send:",
+            untypedMessage.channel_message_send
+          );
           untypedMessage.channel_message_send.content = JSON.stringify(
+            untypedMessage.channel_message_send.content
+          );
+          console.log(
+            "untypedMessage.channel_message_send.content:",
             untypedMessage.channel_message_send.content
           );
         } else if (untypedMessage.channel_message_update) {
@@ -2686,13 +2759,14 @@ export class DefaultSocket implements Socket {
             untypedMessage.channel_message_update.content
           );
         } else if (untypedMessage.ephemeral_message_send) {
-          untypedMessage.ephemeral_message_send.message.content = JSON.stringify(
-            untypedMessage.ephemeral_message_send.message?.content
-          ); 
+          untypedMessage.ephemeral_message_send.message.content =
+            JSON.stringify(
+              untypedMessage.ephemeral_message_send.message?.content
+            );
         } else if (untypedMessage.quick_menu_event) {
           untypedMessage.quick_menu_event.message.content = JSON.stringify(
             untypedMessage.quick_menu_event.message?.content
-          ); 
+          );
         }
 
         const cid = this.generatecid();
@@ -2704,24 +2778,25 @@ export class DefaultSocket implements Socket {
         }
 
         untypedMessage.cid = cid;
+        console.log("untypedMessage:", untypedMessage);
         this.adapter.send(untypedMessage);
       }
     });
   }
 
   async followUsers(userIds: string[]): Promise<Status> {
-    const response = await this.send({ status_follow: { userIds: userIds } });
-    return response.status;
+    const response = await this.send({ status_follow: { user_ids: userIds } });
+    return mapToCamelCase(response.status);
   }
 
   async joinClanChat(clanId: string): Promise<ClanJoin> {
     const response = await this.send({
       clan_join: {
-        clanId: clanId,
+        clan_id: clanId,
       },
     });
 
-    return response.clan_join;
+    return mapToCamelCase(response.clanJoin);
   }
 
   async follower(): Promise<void> {
@@ -2729,7 +2804,7 @@ export class DefaultSocket implements Socket {
       follow_event: {},
     });
 
-    return response.follow_event;
+    return mapToCamelCase(response.followEvent);
   }
 
   async joinChat(
@@ -2740,34 +2815,34 @@ export class DefaultSocket implements Socket {
   ): Promise<Channel> {
     const response = await this.send({
       channel_join: {
-        clanId: clanId,
-        channelId: channelId,
-        channelType: channelType,
-        isPublic: isPublic,
+        clan_id: clanId,
+        channel_id: channelId,
+        channel_type: channelType,
+        is_public: isPublic,
       },
     });
 
-    return response.channel;
+    return mapToCamelCase(response.channel);
   }
 
-  async handleParticipantMeetState (
+  async handleParticipantMeetState(
     clanId: string,
     channelId: string,
     displayName: string,
     state: number,
-    roomName: string,
+    roomName: string
   ): Promise<void> {
     const response = await this.send({
       handle_participant_meet_state_event: {
-        clanId: clanId,
-        channelId: channelId,
-        displayName: displayName,
+        clan_id: clanId,
+        channel_id: channelId,
+        display_name: displayName,
         state: state,
-        roomName: roomName,
+        room_name: roomName,
       },
     });
 
-    return response.handle_participant_meet_state_event;
+    return mapToCamelCase(response.handleParticipantMeetStateEvent);
   }
 
   leaveChat(
@@ -2778,10 +2853,10 @@ export class DefaultSocket implements Socket {
   ): Promise<void> {
     return this.send({
       channel_leave: {
-        clanId: clanId,
-        channelId: channelId,
-        channelType: channelType,
-        isPublic: isPublic,
+        clan_id: clanId,
+        channel_id: channelId,
+        channel_type: channelType,
+        is_public: isPublic,
       },
     });
   }
@@ -2799,19 +2874,19 @@ export class DefaultSocket implements Socket {
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_remove: {
-        clanId: clanId,
-        channelId: channelId,
+        clan_id: clanId,
+        channel_id: channelId,
         mode: mode,
-        messageId: messageId,
-        isPublic: isPublic,
-        hasAttachment: hasAttachment,
-        topicId: topicId,
+        message_id: messageId,
+        is_public: isPublic,
+        has_attachment: hasAttachment,
+        topic_id: topicId,
         mentions: mentions,
-        references: references
+        references: references,
       },
     });
 
-    return response.channel_message_ack;
+    return mapToCamelCase(response.channel_message_ack);
   }
 
   async rpc(id?: string, payload?: string, httpKey?: string): Promise<ApiRpc> {
@@ -2819,15 +2894,15 @@ export class DefaultSocket implements Socket {
       rpc: {
         id: id,
         payload: payload,
-        httpKey: httpKey,
+        http_key: httpKey,
       },
     });
 
-    return response.rpc;
+    return mapToCamelCase(response.rpc);
   }
 
   unfollowUsers(userIds: string[]): Promise<void> {
-    return this.send({ statusUnfollow: { userIds: userIds } });
+    return this.send({ status_unfollow: { user_ids: userIds } });
   }
 
   async updateChatMessage(
@@ -2850,17 +2925,17 @@ export class DefaultSocket implements Socket {
         channelId: channelId,
         messageId: messageId,
         content: content,
-        mentions: mentions,
-        attachments: attachments,
+        mentions: mapToSnakeCase(mentions),
+        attachments: mapToSnakeCase(attachments),
         mode: mode,
         isPublic: isPublic,
         hideEditted: hideEditted,
         topicId: topicId,
         isUpdateMsgTopic: isUpdateMsgTopic,
-        oldMentions: oldMentions
+        oldMentions: oldMentions,
       },
     });
-    return response.channel_message_ack;
+    return mapToCamelCase(response.channel_message_ack);
   }
 
   updateStatus(status?: string): Promise<void> {
@@ -2887,23 +2962,23 @@ export class DefaultSocket implements Socket {
       quick_menu_event: {
         menuName: menuName,
         message: {
-          clanId: clanId,
-          channelId: channelId,
+          clan_id: clanId,
+          channel_id: channelId,
           mode: mode,
-          isPublic: isPublic,
+          is_public: isPublic,
           content: content,
-          mentions: mentions,
-          attachments: attachments,
-          references: references,
-          anonymousMessage: anonymousMessage,
-          mentionEveryone: mentionEveryone,
+          mentions: mapToSnakeCase(mentions),
+          attachments: mapToSnakeCase(attachments),
+          references: mapToSnakeCase(references),
+          anonymous_message: anonymousMessage,
+          mention_everyone: mentionEveryone,
           avatar: avatar,
           code: code,
-          topicId: topicId,
-        }
-      }
+          topic_id: topicId,
+        },
+      },
     });
-    return response.ephemeral_message_send;
+    return mapToCamelCase(response.quick_menu_event);
   }
 
   async writeEphemeralMessage(
@@ -2925,26 +3000,26 @@ export class DefaultSocket implements Socket {
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       ephemeral_message_send: {
-        receiverId: receiverId,
+        receiver_id: receiverId,
         message: {
-          clanId: clanId,
-          channelId: channelId,
+          clan_id: clanId,
+          channel_id: channelId,
           mode: mode,
-          isPublic: isPublic,
+          is_public: isPublic,
           content: content,
-          mentions: mentions,
-          attachments: attachments,
-          references: references,
-          anonymousMessage: anonymousMessage,
-          mentionEveryone: mentionEveryone,
+          mentions: mapToSnakeCase(mentions),
+          attachments: mapToSnakeCase(attachments),
+          references: mapToSnakeCase(references),
+          anonymous_message: anonymousMessage,
+          mention_everyone: mentionEveryone,
           avatar: avatar,
           code: code,
-          topicId: topicId,
+          topic_id: topicId,
           id: id,
-        }
-      }
+        },
+      },
     });
-    return response.ephemeral_message_send;
+    return mapToCamelCase(response.ephemeral_message_send);
   }
 
   async writeChatMessage(
@@ -2962,24 +3037,27 @@ export class DefaultSocket implements Socket {
     code?: number,
     topicId?: string
   ): Promise<ChannelMessageAck> {
-    const response = await this.send({
-      channel_message_send: {
-        clanId: clanId,
-        channelId: channelId,
-        mode: mode,
-        isPublic: isPublic,
-        content: content,
-        mentions: mentions,
-        attachments: attachments,
-        references: references,
-        anonymousMessage: anonymousMessage,
-        mentionEveryone: mentionEveryone,
-        avatar: avatar,
-        code: code,
-        topicId: topicId,
+    const response = await this.send(
+      {
+        channel_message_send: {
+          clan_id: clanId,
+          channel_id: channelId,
+          mode: mode,
+          is_public: isPublic,
+          content: content,
+          mentions: mapToSnakeCase(mentions),
+          attachments: mapToSnakeCase(attachments),
+          references: mapToSnakeCase(references),
+          anonymous_message: anonymousMessage,
+          mention_everyone: mentionEveryone,
+          avatar: avatar,
+          code: code,
+          topic_id: topicId,
+        },
       },
-    }, Infinity);
-    return response.channel_message_ack;
+      Infinity
+    );
+    return mapToCamelCase(response.channel_message_ack);
   }
 
   async writeMessageReaction(
@@ -3013,10 +3091,10 @@ export class DefaultSocket implements Socket {
         action: action_delete,
         topicId: topicId,
         emojiRecentId: emojiRecentId,
-        senderName: senderName
+        senderName: senderName,
       },
     });
-    return response.message_reaction_event;
+    return mapToCamelCase(response.message_reaction_event);
   }
 
   async writeMessageTyping(
@@ -3029,15 +3107,15 @@ export class DefaultSocket implements Socket {
   ): Promise<MessageTypingEvent> {
     const response = await this.send({
       message_typing_event: {
-        clanId: clanId,
-        channelId: channelId,
+        clan_id: clanId,
+        channel_id: channelId,
         mode: mode,
-        isPublic: isPublic,
-        senderDisplayName: senderDisplayName,
-        topicId: topicId
+        is_public: isPublic,
+        sender_display_name: senderDisplayName,
+        topic_id: topicId,
       },
     });
-    return response.message_typing_event;
+    return mapToCamelCase(response.message_typing_event);
   }
 
   async writeLastSeenMessage(
@@ -3050,15 +3128,15 @@ export class DefaultSocket implements Socket {
   ): Promise<LastSeenMessageEvent> {
     const response = await this.send({
       last_seen_message_event: {
-        clanId: clanId,
-        channelId: channelId,
+        clan_id: clanId,
+        channel_id: channelId,
         mode: mode,
-        messageId: messageId,
-        timestampSeconds: timestampSeconds,
-        badgeCount: badgeCount,
+        message_id: messageId,
+        timestamp_seconds: timestampSeconds,
+        badge_count: badgeCount,
       },
     });
-    return response.last_seen_message_event;
+    return mapToCamelCase(response.last_seen_message_event);
   }
 
   async writeLastPinMessage(
@@ -3074,26 +3152,26 @@ export class DefaultSocket implements Socket {
     messageSenderUsername: string,
     messageContent: string,
     messageAttachment: string,
-    messageCreatedTime: string,
+    messageCreatedTime: string
   ): Promise<LastPinMessageEvent> {
     const response = await this.send({
       last_pin_message_event: {
-        clanId: clanId,
-        channelId: channelId,
+        clan_id: clanId,
+        channel_id: channelId,
         mode: mode,
-        isPublic: isPublic,
-        messageId: messageId,
-        timestampSeconds: timestampSeconds,
+        is_public: isPublic,
+        message_id: messageId,
+        timestamp_seconds: timestampSeconds,
         operation: operation,
-        messageSenderAvatar: messageSenderAvatar,
-        messageSenderId: messageSenderId,
-        messageSenderUsername: messageSenderUsername,
-        messageContent: messageContent,
-        messageAttachment: messageAttachment,
-        messageCreatedTime: messageCreatedTime,
+        message_sender_avatar: messageSenderAvatar,
+        message_sender_id: messageSenderId,
+        message_sender_username: messageSenderUsername,
+        message_content: messageContent,
+        message_attachment: messageAttachment,
+        message_created_time: messageCreatedTime,
       },
     });
-    return response.last_pin_message_event;
+    return mapToCamelCase(response.last_pin_message_event);
   }
 
   async writeCustomStatus(
@@ -3104,13 +3182,13 @@ export class DefaultSocket implements Socket {
   ): Promise<CustomStatusEvent> {
     const response = await this.send({
       custom_status_event: {
-        clanId: clanId,
+        clan_id: clanId,
         status: status,
-        timeReset: timeReset,
-        noClear: noClear,
+        time_reset: timeReset,
+        no_clear: noClear,
       },
     });
-    return response.custom_status_event;
+    return mapToCamelCase(response.custom_status_event);
   }
 
   async writeActiveArchivedThread(
@@ -3119,8 +3197,8 @@ export class DefaultSocket implements Socket {
   ): Promise<void> {
     const response = await this.send({
       active_archived_thread: {
-        clanId: clanId,
-        channelId: channelId
+        clan_id: clanId,
+        channel_id: channelId,
       },
     });
     return response.active_archived_thread;
@@ -3130,17 +3208,17 @@ export class DefaultSocket implements Socket {
     name: string,
     condition_id: string,
     type: number,
-    clanId: string,
+    clanId: string
   ): Promise<CheckNameExistedEvent> {
     const response = await this.send({
       check_name_existed_event: {
         name: name,
         condition_id: condition_id,
         type: type,
-        clanId: clanId
+        clan_id: clanId,
       },
     });
-    return response.check_name_existed_event;
+    return mapToCamelCase(response.check_name_existed_event);
   }
 
   async writeVoiceReaction(
@@ -3150,10 +3228,10 @@ export class DefaultSocket implements Socket {
     const response = await this.send({
       voice_reaction_send: {
         emojis: emojis,
-        channelId: channelId
-      }
+        channel_id: channelId,
+      },
     });
-    return response.voice_reaction_send;
+    return mapToCamelCase(response.voice_reaction_send);
   }
 
   async forwardWebrtcSignaling(
@@ -3165,14 +3243,14 @@ export class DefaultSocket implements Socket {
   ): Promise<WebrtcSignalingFwd> {
     const response = await this.send({
       webrtc_signaling_fwd: {
-        receiverId: receiverId,
-        dataType: dataType,
-        jsonData: jsonData,
-        channelId: channelId,
-        callerId: callerId,
+        receiver_id: receiverId,
+        data_type: dataType,
+        json_data: jsonData,
+        channel_id: channelId,
+        caller_id: callerId,
       },
     });
-    return response.webrtc_signaling_fwd;
+    return mapToCamelCase(response.webrtc_signaling_fwd);
   }
 
   async makeCallPush(
@@ -3183,13 +3261,13 @@ export class DefaultSocket implements Socket {
   ): Promise<IncomingCallPush> {
     const response = await this.send({
       incoming_call_push: {
-        receiverId: receiverId,
-        jsonData: jsonData,
-        channelId: channelId,
-        callerId: callerId,
+        receiver_id: receiverId,
+        json_data: jsonData,
+        channel_id: channelId,
+        caller_id: callerId,
       },
     });
-    return response.incoming_call_push;
+    return mapToCamelCase(response.incoming_call_push);
   }
 
   async handleDropdownBoxSelected(
@@ -3202,15 +3280,15 @@ export class DefaultSocket implements Socket {
   ): Promise<DropdownBoxSelected> {
     const response = await this.send({
       dropdown_box_selected: {
-        messageId: messageId,
-        channelId: channelId,
-        selectboxId: selectboxId,
-        senderId: senderId,
-        userId: userId,
+        message_id: messageId,
+        channel_id: channelId,
+        selectbox_id: selectboxId,
+        sender_id: senderId,
+        user_id: userId,
         value: value,
       },
     });
-    return response.dropdown_box_selected;
+    return mapToCamelCase(response.dropdown_box_selected);
   }
 
   async handleMessageButtonClick(
@@ -3223,15 +3301,15 @@ export class DefaultSocket implements Socket {
   ): Promise<MessageButtonClicked> {
     const response = await this.send({
       message_button_clicked: {
-        messageId: messageId,
-        channelId: channelId,
-        buttonId: buttonId,
-        senderId: senderId,
-        userId: userId,
-        extraData: extraData,
+        message_id: messageId,
+        channel_id: channelId,
+        button_id: buttonId,
+        sender_id: senderId,
+        user_id: userId,
+        extra_data: extraData,
       },
     });
-    return response.webrtc_signaling_fwd;
+    return mapToCamelCase(response.webrtc_signaling_fwd);
   }
 
   async writeChannelAppEvent(
@@ -3241,21 +3319,19 @@ export class DefaultSocket implements Socket {
   ): Promise<ChannelAppEvent> {
     const response = await this.send({
       channel_app_event: {
-        clanId: clanId,
-        channelId: channelId,
+        clan_id: clanId,
+        channel_id: channelId,
         action: action,
       },
     });
-    return response.channel_app_event;
+    return mapToCamelCase(response.channel_app_event);
   }
 
-  async listDataSocket(
-    request: ListDataSocket
-  ): Promise<any> {
+  async listDataSocket(request: ListDataSocket): Promise<any> {
     const response = await this.send({
-      list_data_socket: request,
+      list_data_socket: mapToSnakeCase(request),
     });
-    return response.list_data_socket;
+    return mapToCamelCase(response.list_data_socket);
   }
 
   private async pingPong(): Promise<void> {
