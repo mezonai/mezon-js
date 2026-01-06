@@ -40,8 +40,7 @@ export default {
             // Ensure this covers your source, generated files, and connectrpc
             include: [
                 "**/*.ts",
-                "../webrpc/frontend/src/gen/**/*.ts", 
-                "src/gen/**/*.ts", 
+                "src/proto/gen/**/*.ts", 
                 "node_modules/@connectrpc/**/*.ts"
             ],
             target: "es5", 
