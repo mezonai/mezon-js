@@ -1227,72 +1227,6 @@ message ChannelMessageHeader {
 }
 
 // Channel description record
-message ChannelDescriptionOld {
-  // The clan of this channel
-  string clan_id = 1;
-  // The parent channel this message belongs to.
-  string parent_id = 2;
-  // The channel this message belongs to.
-  string channel_id = 3;
-  // The category of channel
-  string category_id = 4;
-  // The category name
-  string category_name = 5;
-  // The channel type.
-  google.protobuf.Int32Value type = 6;
-  // creator ID.
-  string creator_id = 7;
-  // The channel lable
-  string channel_label = 8;
-  // The channel private
-  int32 channel_private = 9;
-  // DM avatars
-  repeated string avatars = 10;
-  // List DM user ids
-  repeated string user_ids = 11;
-  // last message id
-  ChannelMessageHeader last_sent_message = 12;
-  // last seen message id
-  ChannelMessageHeader last_seen_message = 13;
-  // DM status
-  repeated bool onlines = 14;
-  // meeting code
-  string meeting_code = 15;
-  // count message unread
-  int32 count_mess_unread = 16;
-  // active channel
-  int32 active = 17;
-  // last pin message
-  string last_pin_message = 18;
-  // List DM usernames
-  repeated string usernames = 19;
-  // creator name
-  string creator_name = 20;
-  // create time ms
-  uint32 create_time_seconds = 21;
-  // update time ms
-  uint32 update_time_seconds = 22;
-  // List DM diplay names
-  repeated string display_names = 23;
-  // channel avatar
-  string channel_avatar = 24;
-  // clan_name
-  string clan_name = 25;
-  // app id
-  string app_id = 26;
-  // channel all message
-  bool is_mute = 27;
-  // age restricted
-  int32 age_restricted = 28;
-  // channel description topic
-  string topic = 29;
-  // e2ee
-  int32 e2ee = 30;
-  // channel member count
-  int32 member_count = 31;
-}
-
-// Channel description record
 message ChannelDescription {
   // The clan of this channel
   string clan_id = 1;
@@ -1360,6 +1294,12 @@ message ChannelDescription {
 
 // A list of channel description, usually a result of a list operation.
 message ChannelDescList {
+  // A list of channel.
+  repeated ChannelDescription channeldesc = 1;
+}
+
+// A list of channel description, usually a result of a list operation.
+message ChannelDescListNoPool {
   // A list of channel.
   repeated ChannelDescription channeldesc = 1;
   // Page thread
@@ -3488,3 +3428,30 @@ message LogedDevice {
   bool is_current = 9;
 }
 
+message DirectFcmProto {
+  string title = 1;
+  string link = 2;
+  string content = 3;
+  string channel_id = 4;
+  string sender_id = 5;
+  string avatar = 6;
+	string clan_id = 7;
+	string attachments = 8;
+	string display_name = 9;
+	int32 create_time_seconds = 10;
+	int32 update_time_seconds = 11;
+  string username = 12;
+  string mentions = 13;
+}
+
+message MessageMentionList {
+  repeated MessageMention mentions = 1;
+}
+
+message MessageAttachmentList {
+  repeated MessageAttachment attachments = 1;
+}
+
+message MessageRefList {
+  repeated MessageRef refs = 1;
+}
