@@ -2018,7 +2018,10 @@ export class DefaultSocket implements Socket {
           this.onstreamdata(mapToCamelCase(<StreamData>message.stream_data));
         } else if (message.channel_message) {
           const channelMessage = createChannelMessageFromEvent(message);
-          this.onchannelmessage(mapToCamelCase(channelMessage));
+          console.log("channelMessage", channelMessage);
+          const newMessage = mapToCamelCase(channelMessage);
+          console.log("newMessage", newMessage);
+          this.onchannelmessage(newMessage);
         } else if (message.message_typing_event) {
           this.onmessagetyping(
             mapToCamelCase(<MessageTypingEvent>message.message_typing_event)
