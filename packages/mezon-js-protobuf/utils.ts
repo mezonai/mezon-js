@@ -23,3 +23,11 @@ export function decodeRefs(data: any) {
 
   return refs
 }
+
+export function decodeNotificationFcm(data: any) {
+  const buffer: ArrayBuffer = data;
+  const uintBuffer: Uint8Array = new Uint8Array(buffer);
+  const noti = tsproto.DirectFcmProto.decode(uintBuffer);
+
+  return noti
+}
