@@ -304,7 +304,6 @@ import {
   ClanEmojiDeleteRequestSchema,
   ChannelDescListNoPool,
 } from "./proto/gen/api/api_pb";
-import { encode } from "js-base64";
 import { DefaultSocket, Socket } from "./socket";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
 import {
@@ -399,7 +398,8 @@ export class Client {
 
     this.grpcTransport = createConnectTransport({
       baseUrl: basePath,
-      useBinaryFormat: false,
+      useBinaryFormat: true,
+      useHttpGet: true
     });
     this.mezonClient = createClient(MezonService, this.grpcTransport);
   }
@@ -2305,15 +2305,13 @@ export class Client {
     this.refreshTokenPromise = new Promise<Session>(async (resolve, reject) => {
       try {
         const sessionRefreshRequest = create(SessionRefreshRequestSchema, {
-          token: session.refreshToken,
+          //token: session.refreshToken,
           vars: vars,
           isRemember: session.isRemember,
         });
 
         const options: CallOptions = {
-          headers: {
-            Authorization: "Basic " + encode(this.serverkey + ":" + ""),
-          },
+          headers: [["Authorization", session.refreshToken]],
         };
 
         const apiSession = await this.mezonClient.sessionRefresh(

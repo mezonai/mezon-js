@@ -78,7 +78,7 @@ export class GatewayMezonApi {
     const queryParams = new Map<string, any>();
     queryParams.set("create", create);
     queryParams.set("username", username);
-    queryParams.set("isRemember", isRemember);
+    queryParams.set("is_remember", isRemember);
 
     let bodyJson: string = "";
     bodyJson = JSON.stringify(account || {});
