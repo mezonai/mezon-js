@@ -67,6 +67,11 @@ import {
 import { Session } from "./session";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
 import { mapToCamelCase, mapToSnakeCase, safeJSONParse } from "./utils";
+import {
+  decodeMentions,
+  decodeAttachments,
+  decodeRefs,
+} from "mezon-js-protobuf";
 
 /** Stores function references for resolve/reject with a DOM Promise. */
 interface PromiseExecutor {
@@ -1342,17 +1347,24 @@ function createChannelMessageFromEvent(message: any) {
     console.log("reactions is invalid", e);
   }
   try {
-    mentions = safeJSONParse(message.channel_message.mentions);
+    mentions =
+      decodeMentions(message.channel_message.mentions)?.mentions ||
+      safeJSONParse(message.channel_message.mentions || "[]");
   } catch (e) {
     console.log("mentions is invalid", e);
   }
   try {
-    attachments = safeJSONParse(message.channel_message.attachments);
+    attachments =
+      decodeAttachments(message.channel_message.attachments)?.attachments ||
+      safeJSONParse(message.channel_message.attachments || "[]");
   } catch (e) {
     console.log("attachments is invalid", e);
   }
   try {
-    references = safeJSONParse(message.channel_message.references);
+    references =
+      (decodeRefs(message.channel_message.references)
+        ?.refs as unknown as ApiMessageRef[]) ||
+      safeJSONParse(message.channel_message.references || "[]");
   } catch (e) {
     console.log("references is invalid", e);
   }

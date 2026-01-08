@@ -316,10 +316,16 @@ import {
   ApiListClanDiscover,
   ApiLoginIDResponse,
   ApiLoginRequest,
+  ApiMessageRef,
 } from "./types";
 import { GatewayMezonApi } from "./gateway.api";
 import { safeJSONParse } from "./utils";
 import { EmptySchema } from "./proto/gen/google/protobuf/empty_pb";
+import {
+  decodeMentions,
+  decodeAttachments,
+  decodeRefs,
+} from "mezon-js-protobuf";
 
 const DEFAULT_HOST = "127.0.0.1";
 const DEFAULT_PORT = "7350";
@@ -389,7 +395,7 @@ export class Client {
     this.useSSL = useSSL;
     const scheme = useSSL ? "https://" : "http://";
     const basePath = `${scheme}${host}:${port}`;
-    
+
     this.gatewayClient = new GatewayMezonApi(
       DEFAULT_SERVER_KEY,
       DEFAULT_TIMEOUT_MS,
@@ -1491,17 +1497,23 @@ export class Client {
         console.log("error parse reactions", e);
       }
       try {
-        mentions = safeJSONParse(m.mentions || "[]");
+        mentions =
+          decodeMentions(m.mentions)?.mentions ||
+          safeJSONParse(m.mentions || "[]");
       } catch (e) {
         console.log("error parse mentions", e);
       }
       try {
-        attachments = safeJSONParse(m.attachments || "[]");
+        attachments =
+          decodeAttachments(m.attachments)?.attachments ||
+          safeJSONParse(m.attachments || "[]");
       } catch (e) {
         console.log("error parse attachments", e);
       }
       try {
-        references = safeJSONParse(m.references || "[]");
+        references =
+          (decodeRefs(m.references)?.refs as unknown as ApiMessageRef[]) ||
+          safeJSONParse(m.references || "[]");
       } catch (e) {
         console.log("error parse references", e);
       }
@@ -1532,7 +1544,7 @@ export class Client {
         hideEditted: m.hideEditted,
       });
     });
-    
+
     return response;
   }
 
