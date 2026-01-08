@@ -1172,21 +1172,29 @@ export type HashtagDm = Message<"mezon.realtime.HashtagDm"> & {
   clanName: string;
 
   /**
+   * 
+   *
    * @generated from field: string meeting_code = 5;
    */
   meetingCode: string;
 
   /**
+   * 
+   *
    * @generated from field: int32 type = 6;
    */
   type: number;
 
   /**
+   * 
+   *
    * @generated from field: int32 channel_private = 7;
    */
   channelPrivate: number;
 
   /**
+   * 
+   *
    * @generated from field: string parent_id = 8;
    */
   parentId: string;
@@ -1248,16 +1256,22 @@ export type ChannelDescription = Message<"mezon.realtime.ChannelDescription"> & 
   meetingCode: string;
 
   /**
+   * 
+   *
    * @generated from field: string clan_name = 7;
    */
   clanName: string;
 
   /**
+   * 
+   *
    * @generated from field: string parent_id = 8;
    */
   parentId: string;
 
   /**
+   * 
+   *
    * @generated from field: mezon.api.ChannelMessageHeader last_sent_message = 12;
    */
   lastSentMessage?: ChannelMessageHeader;
@@ -1950,6 +1964,8 @@ export type ChannelMessageRemove = Message<"mezon.realtime.ChannelMessageRemove"
   hasAttachment: boolean;
 
   /**
+   * 
+   *
    * @generated from field: string topic_id = 7;
    */
   topicId: string;
@@ -2202,6 +2218,8 @@ export const AddFriendSchema: GenMessage<AddFriend> = /*@__PURE__*/
  */
 export type RemoveFriend = Message<"mezon.realtime.RemoveFriend"> & {
   /**
+   * 
+   *
    * @generated from field: string user_id = 1;
    */
   userId: string;
@@ -2219,6 +2237,8 @@ export const RemoveFriendSchema: GenMessage<RemoveFriend> = /*@__PURE__*/
  */
 export type BlockFriend = Message<"mezon.realtime.BlockFriend"> & {
   /**
+   * 
+   *
    * @generated from field: string user_id = 1;
    */
   userId: string;
@@ -2236,31 +2256,43 @@ export const BlockFriendSchema: GenMessage<BlockFriend> = /*@__PURE__*/
  */
 export type UnblockFriend = Message<"mezon.realtime.UnblockFriend"> & {
   /**
+   * 
+   *
    * @generated from field: string user_id = 1;
    */
   userId: string;
 
   /**
+   * 
+   *
    * @generated from field: string username = 2;
    */
   username: string;
 
   /**
+   * 
+   *
    * @generated from field: string avatar = 3;
    */
   avatar: string;
 
   /**
+   * 
+   *
    * @generated from field: string display_name = 4;
    */
   displayName: string;
 
   /**
+   * 
+   *
    * @generated from field: string status = 5;
    */
   status: string;
 
   /**
+   * 
+   *
    * @generated from field: string user_status = 6;
    */
   userStatus: string;
@@ -2534,6 +2566,8 @@ export type LastSeenMessageEvent = Message<"mezon.realtime.LastSeenMessageEvent"
   timestampSeconds: number;
 
   /**
+   * 
+   *
    * @generated from field: int32 badge_count = 6;
    */
   badgeCount: number;
@@ -3095,11 +3129,15 @@ export type CategoryEvent = Message<"mezon.realtime.CategoryEvent"> & {
   categoryName: string;
 
   /**
+   * 
+   *
    * @generated from field: string id = 4;
    */
   id: string;
 
   /**
+   * 
+   *
    * @generated from field: int32 status = 5;
    */
   status: number;
@@ -3462,11 +3500,15 @@ export type ChannelUpdatedEvent = Message<"mezon.realtime.ChannelUpdatedEvent"> 
   topic: string;
 
   /**
+   * 
+   *
    * @generated from field: int32 age_restricted = 15;
    */
   ageRestricted: number;
 
   /**
+   * 
+   *
    * @generated from field: int32 active = 16;
    */
   active: number;
@@ -3493,6 +3535,8 @@ export type ChannelUpdatedEvent = Message<"mezon.realtime.ChannelUpdatedEvent"> 
   roleIds: string[];
 
   /**
+   * 
+   *
    * @generated from field: string channel_avatar = 20;
    */
   channelAvatar: string;
@@ -3701,6 +3745,8 @@ export type UserPresence = Message<"mezon.realtime.UserPresence"> & {
   status?: string;
 
   /**
+   * 
+   *
    * @generated from field: bool is_mobile = 5;
    */
   isMobile: boolean;
@@ -3811,16 +3857,22 @@ export type UserChannelAdded = Message<"mezon.realtime.UserChannelAdded"> & {
   clanId: string;
 
   /**
+   * 
+   *
    * @generated from field: mezon.realtime.UserProfileRedis caller = 5;
    */
   caller?: UserProfileRedis;
 
   /**
+   * 
+   *
    * @generated from field: uint32 create_time_second = 6;
    */
   createTimeSecond: number;
 
   /**
+   * 
+   *
    * @generated from field: int32 active = 7;
    */
   active: number;
@@ -3834,6 +3886,8 @@ export const UserChannelAddedSchema: GenMessage<UserChannelAdded> = /*@__PURE__*
   messageDesc(file_rtapi_realtime, 65);
 
 /**
+ * 
+ *
  * @generated from message mezon.realtime.UserChannelRemoved
  */
 export type UserChannelRemoved = Message<"mezon.realtime.UserChannelRemoved"> & {
@@ -3879,6 +3933,8 @@ export const UserChannelRemovedSchema: GenMessage<UserChannelRemoved> = /*@__PUR
   messageDesc(file_rtapi_realtime, 66);
 
 /**
+ * 
+ *
  * @generated from message mezon.realtime.UserClanRemoved
  */
 export type UserClanRemoved = Message<"mezon.realtime.UserClanRemoved"> & {
@@ -4342,6 +4398,8 @@ export type NotificationChannelCategorySetting = Message<"mezon.realtime.Notific
   id: string;
 
   /**
+   * 
+   *
    * @generated from field: string channel_category_label = 2;
    */
   channelCategoryLabel: string;
@@ -4354,11 +4412,15 @@ export type NotificationChannelCategorySetting = Message<"mezon.realtime.Notific
   notificationSettingType: number;
 
   /**
+   * 
+   *
    * @generated from field: string channel_category_title = 4;
    */
   channelCategoryTitle: string;
 
   /**
+   * 
+   *
    * @generated from field: int32 action = 5;
    */
   action: number;

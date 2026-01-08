@@ -15,7 +15,7 @@
  */
 
 import { create } from "@bufbuild/protobuf";
-import { createGrpcWebTransport } from "@connectrpc/connect-web";
+import { createConnectTransport, createGrpcWebTransport } from "@connectrpc/connect-web";
 import {
   CallOptions,
   createClient,
@@ -302,6 +302,7 @@ import {
   UpdateRoleRequest,
   DeleteChannelDescRequest,
   ClanEmojiDeleteRequestSchema,
+  ChannelDescListNoPool,
 } from "./proto/gen/api/api_pb";
 import { encode } from "js-base64";
 import { DefaultSocket, Socket } from "./socket";
@@ -390,9 +391,9 @@ export class Client {
     const scheme = useSSL ? "https://" : "http://";
     const basePath = `${scheme}${host}:${port}`;
 
-    this.grpcTransport = createGrpcWebTransport({
+    this.grpcTransport = createConnectTransport({
       baseUrl: basePath,
-      useBinaryFormat: true,
+      useBinaryFormat: false,
     });
 
     this.gatewayClient = new GatewayMezonApi(
@@ -3864,7 +3865,7 @@ export class Client {
     );
   }
 
-  async listChannelByUserId(session: Session): Promise<ChannelDescList> {
+  async listChannelByUserId(session: Session): Promise<ChannelDescListNoPool> {
     if (
       this.autoRefreshSession &&
       session.refreshToken &&
@@ -4118,7 +4119,7 @@ export class Client {
     clanId?: string,
     threadId?: string,
     page?: number
-  ): Promise<ChannelDescList> {
+  ): Promise<ChannelDescListNoPool> {
     if (
       this.autoRefreshSession &&
       session.refreshToken &&
@@ -5182,7 +5183,7 @@ export class Client {
     clanId?: string,
     channelId?: string,
     label?: string
-  ): Promise<ChannelDescList> {
+  ): Promise<ChannelDescListNoPool> {
     if (
       this.autoRefreshSession &&
       session.refreshToken &&
