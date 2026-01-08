@@ -15,7 +15,7 @@
  */
 
 import { create } from "@bufbuild/protobuf";
-import { createConnectTransport, createGrpcWebTransport } from "@connectrpc/connect-web";
+import { createConnectTransport } from "@connectrpc/connect-web";
 import {
   CallOptions,
   createClient,
@@ -368,8 +368,8 @@ export enum WebrtcSignalingType {
 export class Client {
   /** The low level API client for Mezon server. */
   private readonly gatewayClient: GatewayMezonApi;
-  private grpcTransport: Transport;
-  private mezonClient: RPCClient<typeof MezonService>;
+  private readonly grpcTransport: Transport;
+  private readonly mezonClient: RPCClient<typeof MezonService>;
 
   /** thre refreshTokenPromise */
   private refreshTokenPromise: Promise<Session> | null = null;
@@ -390,17 +390,17 @@ export class Client {
     this.useSSL = useSSL;
     const scheme = useSSL ? "https://" : "http://";
     const basePath = `${scheme}${host}:${port}`;
-
-    this.grpcTransport = createConnectTransport({
-      baseUrl: basePath,
-      useBinaryFormat: false,
-    });
-
+    
     this.gatewayClient = new GatewayMezonApi(
       DEFAULT_SERVER_KEY,
       DEFAULT_TIMEOUT_MS,
       basePath
     );
+
+    this.grpcTransport = createConnectTransport({
+      baseUrl: basePath,
+      useBinaryFormat: false,
+    });
     this.mezonClient = createClient(MezonService, this.grpcTransport);
   }
 
@@ -426,10 +426,7 @@ export class Client {
 
     const scheme = useSSL ? "https://" : "http://";
     const basePath = `${scheme}${host}:${port}`;
-    this.grpcTransport = createGrpcWebTransport({
-      baseUrl: basePath,
-    });
-    this.mezonClient = createClient(MezonService, this.grpcTransport);
+    return this.gatewayClient.setBasePath(basePath);
   }
 
   //#region Mezon Gateway APIs
