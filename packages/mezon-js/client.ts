@@ -15,7 +15,7 @@
  */
 
 import { create } from "@bufbuild/protobuf";
-import { createConnectTransport } from "@connectrpc/connect-web";
+import { createGrpcWebTransport } from "@connectrpc/connect-web";
 import {
   CallOptions,
   createClient,
@@ -396,10 +396,9 @@ export class Client {
       basePath
     );
 
-    this.grpcTransport = createConnectTransport({
+    this.grpcTransport = createGrpcWebTransport({
       baseUrl: basePath,
       useBinaryFormat: true,
-      useHttpGet: true
     });
     this.mezonClient = createClient(MezonService, this.grpcTransport);
   }
