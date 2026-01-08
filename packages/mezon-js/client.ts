@@ -14,175 +14,318 @@
  * limitations under the License.
  */
 
+import { create } from "@bufbuild/protobuf";
+import { createGrpcWebTransport } from "@connectrpc/connect-web";
 import {
-  ApiAccount,
-  ApiAccountMezon,
-  ApiAccountEmail,
-  ApiChannelMessageList,
-  ApiChannelDescList,
-  ApiChannelDescription,
-  ApiCreateChannelDescRequest,
-  ApiDeleteRoleRequest,
-  ApiClanDescList,
-  ApiCreateClanDescRequest,
-  ApiClanDesc,
-  ApiCategoryDesc,
-  ApiCategoryDescList,
-  ApiPermissionList,
-  ApiRoleUserList,
-  ApiRole,
-  ApiCreateRoleRequest,
-  ApiAddRoleChannelDescRequest,
-  ApiCreateCategoryDescRequest,
-  ApiUpdateCategoryDescRequest,
-  ApiEvent,
-  ApiFriendList,
-  ApiNotificationList,
-  ApiRpc,
-  ApiUpdateAccountRequest,
-  MezonApi,
-  ApiSession,
-  ApiClanProfile,
-  ApiChannelUserList,
-  ApiClanUserList,
-  ApiLinkInviteUserRequest,
-  ApiLinkInviteUser,
+  CallOptions,
+  createClient,
+  Transport,
+  type Client as RPCClient,
+} from "@connectrpc/connect";
+import { Mezon as MezonService } from "./proto/gen/apigrpc_pb";
+import { Session } from "./session";
+import {
+  Account,
+  AccountEmail,
+  AccountMezon,
+  AddAppRequest,
+  AddAppRequestSchema,
+  AddChannelUsersRequestSchema,
+  AllUsersAddChannelRequestSchema,
+  AllUsersAddChannelResponse,
+  AllUserClans,
+  AppList,
+  AddFriendsRequestSchema,
+  AddFriendsResponse,
+  AddRoleChannelDescRequest,
+  AddRoleChannelDescRequestSchema,
+  App,
+  BanClanUsersRequestSchema,
+  BannedUserList,
+  BlockFriendsRequestSchema,
+  CategoryDesc,
+  ChangeChannelCategoryRequestSchema,
+  ChangeChannelPrivateRequest,
+  ChangeChannelPrivateRequestSchema,
+  ChannelDescription,
+  ChannelDescList,
+  ChannelMessageHeader,
+  ClanDesc,
+  ClanEmojiCreateRequest,
+  ClanEmojiCreateRequestSchema,
+  ClanEmojiUpdateRequestSchema,
+  ClanStickerAddRequest,
+  ClanStickerAddRequestSchema,
+  ClanStickerDeleteRequestSchema,
+  ClanStickerUpdateByIdRequestSchema,
+  CreateCategoryDescRequest,
+  CreateCategoryDescRequestSchema,
+  CreateChannelDescRequest,
+  CreateChannelDescRequestSchema,
+  CreateClanDescRequest,
+  CreateClanDescRequestSchema,
+  CreateEventRequest,
+  CreateEventRequestSchema,
+  CreateRoleRequest,
+  CreateRoleRequestSchema,
+  DeleteCategoryDescRequestSchema,
+  DeleteChannelDescRequestSchema,
+  DeleteClanDescRequestSchema,
+  DeleteEventRequestSchema,
+  DeleteFriendsRequestSchema,
+  DeleteNotificationsRequestSchema,
+  DeleteRoleRequestSchema,
+  DeleteSystemMessageSchema,
+  EventManagement,
+  InviteUserRequestSchema,
+  InviteUserRes,
+  IsBannedRequestSchema,
+  IsBannedResponse,
+  IsFollowerRequest,
+  IsFollowerRequestSchema,
+  IsFollowerResponse,
+  LinkInviteUser,
+  LinkInviteUserRequest,
+  LinkInviteUserRequestSchema,
+  ListAppsRequestSchema,
+  ListChannelAppsRequestSchema,
+  ListChannelUsersRequestSchema,
+  ListThreadRequestSchema,
+  LeaveThreadRequestSchema,
+  DeleteChannelCanvasRequestSchema,
+  GetKeyServerResp,
+  ListAuditLogRequestSchema,
+  ListOnboardingRequestSchema,
+  ListOnboardingResponse,
+  OnboardingItem,
+  CreateOnboardingRequestSchema,
+  CreateOnboardingRequest,
+  UpdateOnboardingRequestSchema,
+  GenerateClanWebhookRequestSchema,
+  GenerateClanWebhookRequest,
+  GenerateClanWebhookResponse,
+  ListClanWebhookRequestSchema,
+  ListClanWebhookResponse,
+  ListOnboardingStepRequestSchema,
+  ListOnboardingStepResponse,
+  UserStatusUpdate,
+  UserStatus,
+  ListSdTopicRequestSchema,
+  SdTopicList,
+  SdTopicRequest,
+  SdTopic,
+  GenerateMeetTokenRequestSchema,
+  GenerateMeetTokenRequest,
+  GenerateMeetTokenResponse,
+  GetMezonOauthClientRequestSchema,
+  MezonOauthClient,
+  SearchThreadRequestSchema,
+  GenerateHashChannelAppsRequestSchema,
+  RegistrationEmailRequestSchema,
+  UserEventRequest,
+  UpdateRoleOrderRequestSchema,
+  UpdateRoleOrderRequest,
+  GenerateMezonMeetResponse,
+  MeetParticipantRequest,
+  UpdateClanOrderRequestSchema,
+  UpdateClanOrderRequest,
+  ListQuickMenuAccessRequestSchema,
+  QuickMenuAccessList,
+  ListForSaleItemsRequestSchema,
+  ForSaleItemList,
+  UserPermissionInChannelListRequestSchema,
+  CreateActivityRequestSchema,
+  CreateActivityRequest,
+  ListUserActivity,
+  UserActivity,
+  ChanEncryptionMethod,
+  GetPubKeysRequestSchema,
+  GetPubKeysResponse,
+  PubKey,
+  PushPubKeyRequestSchema,
+  AddFavoriteChannelResponse,
+  ChannelSettingListResponse,
+  ChannelCanvasListResponse,
+  EditChannelCanvasRequest,
+  LogedDeviceList,
+  MarkAsReadRequest,
+  MarkAsReadRequestSchema,
+  Message2InboxRequest,
+  Message2InboxRequestSchema,
+  PermissionRoleChannelListEventResponse,
+  PinMessageRequest,
+  PinMessageRequestSchema,
+  PinMessagesList,
+  RemoveChannelUsersRequestSchema,
+  RemoveClanUsersRequestSchema,
+  ReportMessageAbuseReqestSchema,
+  Role,
+  RoleList,
+  SearchMessageRequest,
+  SearchMessageRequestSchema,
+  SearchMessageResponse,
+  SessionLogoutRequestSchema,
+  SessionRefreshRequestSchema,
+  SetDefaultNotificationRequest,
+  SetDefaultNotificationRequestSchema,
+  SetMuteRequest,
+  SetMuteRequestSchema,
+  SetNotificationRequest,
+  SetNotificationRequestSchema,
+  SystemMessageRequestSchema,
+  TransferOwnershipRequest,
+  TransferOwnershipRequestSchema,
+  UpdateAccountRequest,
+  UpdateAccountRequestSchema,
+  UpdateAppRequestSchema,
+  UpdateCategoryDescRequest,
+  UpdateCategoryDescRequestSchema,
+  UpdateCategoryOrderRequestSchema,
+  UpdateChannelDescRequestSchema,
+  UpdateClanDescRequestSchema,
+  UpdateClanProfileRequestSchema,
+  UpdateEventRequest,
+  UpdateEventRequestSchema,
+  UpdateRoleRequestSchema,
+  UpdateUsernameRequest,
+  UpdateUsernameRequestSchema,
+  UploadAttachment,
+  UploadAttachmentRequest,
+  UploadAttachmentRequestSchema,
+  UserPermissionInChannelListResponse,
+  WebhookDeleteRequestByIdSchema,
+  WebhookUpdateRequestByIdSchema,
+  DeleteRoleRequest,
+  EmojiListedResponse,
+  EmojiRecentList,
+  ListChannelAppsResponse,
+  NotificationChannelCategorySettingList,
+  NotificationSetting,
+  NotificationUserChannel,
+  RoleListEventResponse,
+  StickerListedResponse,
+  StreamingChannelUserList,
+  SystemMessage,
+  SystemMessageRequest,
+  UpdateCategoryOrderRequest,
+  UpdateRoleChannelRequest,
+  WebhookCreateRequest,
+  WebhookGenerateResponse,
+  WebhookListResponse,
+  AppDeleteRequestSchema,
+  BannedUserListRequestSchema,
+  QuickMenuAccessSchema,
+  QuickMenuAccess,
+  MeetParticipantRequestSchema,
+  UserEventRequestSchema,
+  GenerateHashChannelAppsResponse,
+  MezonOauthClientSchema,
+  CreateRoomChannelAppsSchema,
+  CreateRoomChannelApps,
+  SdTopicDetailRequestSchema,
+  SdTopicRequestSchema,
+  UserStatusUpdateSchema,
+  UpdateOnboardingStepRequestSchema,
+  UpdateOnboardingStepRequest,
+  UpdateClanWebhookRequestSchema,
+  UpdateClanWebhookRequest,
+  ClanWebhookRequestSchema,
+  OnboardingRequestSchema,
+  UpdateOnboardingRequest,
+  ListAuditLog,
+  ChanEncryptionMethodSchema,
+  ListFavoriteChannelRequestSchema,
+  ListFavoriteChannelResponse,
+  RemoveFavoriteChannelRequestSchema,
+  AddFavoriteChannelRequestSchema,
+  EditChannelCanvasRequestSchema,
+  EditChannelCanvasResponse,
+  ChannelCanvasDetailRequestSchema,
+  ChannelCanvasDetailResponse,
+  ChannelCanvasListRequestSchema,
+  ChannelSettingListRequestSchema,
+  PermissionRoleChannelListEventRequestSchema,
+  RoleListEventRequestSchema,
+  NotificationClanSchema,
+  NotificationChannelSchema,
+  DefaultNotificationCategorySchema,
+  GetSystemMessageSchema,
+  AppClanSchema,
+  AppIdSchema,
+  UpdateRoleChannelRequestSchema,
+  WebhookListRequestSchema,
+  WebhookCreateRequestSchema,
+  DeletePinMessageSchema,
+  ListPermissionOfUsersRequestSchema,
+  UpdateAppRequest,
+  UpdateClanDescRequest,
+  AccountEmailSchema,
+  AccountMezonSchema,
+  WebhookUpdateRequestById,
+  WebhookDeleteRequestById,
+  ClanStickerUpdateByIdRequest,
+  ChangeChannelCategoryRequest,
+  ClanEmojiUpdateRequest,
+  ListChannelDescsRequestSchema,
+  ListClanUnreadMsgIndicatorRequestSchema,
+  ListClanUnreadMsgIndicatorResponse,
+  ListClanDescRequestSchema,
+  ClanDescList,
+  CategoryDescSchema,
+  CategoryDescList,
+  ListEventsRequestSchema,
+  EventList,
+  LinkAccountConfirmRequest,
+  LinkAccountConfirmRequestSchema,
+  ListFriendsRequestSchema,
+  ListNotificationsRequestSchema,
+  ListPermissionsRequestSchema,
+  ListRoleUsersRequestSchema,
+  PermissionList,
+  RegistFcmDeviceTokenRequestSchema,
+  RegistFcmDeviceTokenResponse,
+  RoleUserList,
+  ClanProfileRequestSchema,
+  ClanProfile,
+  ListChannelDetailRequestSchema,
+  ListClanUsersRequestSchema,
+  ClanUserList,
+  ListChannelAttachmentRequestSchema,
+  ChannelAttachmentList,
+  ChannelUserList,
+  VoiceChannelUserList,
+  ListChannelMessagesRequestSchema,
+  NotificationList,
+  FriendList,
+  UpdateChannelDescRequest,
+  UpdateClanProfileRequest,
+  UpdateRoleRequest,
+  DeleteChannelDescRequest,
+  ClanEmojiDeleteRequestSchema,
+  ChannelDescListNoPool,
+} from "./proto/gen/api/api_pb";
+import { DefaultSocket, Socket } from "./socket";
+import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
+import {
+  ChannelMessageList,
+  ApiClanDiscoverRequest,
+  ApiConfirmLoginRequest,
+  ApiGenerateMeetTokenExternalResponse,
   ApiInviteUserRes,
-  ApiUploadAttachmentRequest,
-  ApiUploadAttachment,
-  ApiMessageReaction,
-  ApiMessageMention,
-  ApiMessageAttachment,
-  ApiMessageRef,
-  ApiChannelMessageHeader,
-  ApiVoiceChannelUserList,
-  ApiChannelAttachmentList,
-  ApiCreateEventRequest,
-  ApiEventManagement,
-  ApiEventList,
-  ApiDeleteEventRequest,
-  ApiSetDefaultNotificationRequest,
-  ApiSetNotificationRequest,
-  ApiSetMuteRequest,
-  ApiSearchMessageRequest,
-  ApiSearchMessageResponse,
-  ApiPinMessageRequest,
-  ApiPinMessagesList,
-  ApiDeleteChannelDescRequest,
-  ApiChangeChannelPrivateRequest,
-  ApiClanEmojiCreateRequest,
-  MezonUpdateClanEmojiByIdBody,
-  ApiWebhookCreateRequest,
-  ApiWebhookListResponse,
-  MezonUpdateWebhookByIdBody,
-  ApiWebhookGenerateResponse,
-  ApiCheckDuplicateClanNameResponse,
-  ApiClanStickerAddRequest,
-  MezonUpdateClanStickerByIdBody,
-  MezonChangeChannelCategoryBody,
-  ApiUpdateRoleChannelRequest,
-  ApiAddAppRequest,
-  ApiAppList,
-  ApiApp,
-  MezonUpdateAppBody,
-  ApiSystemMessagesList,
-  ApiSystemMessage,
-  ApiSystemMessageRequest,
-  MezonUpdateSystemMessageBody,
-  ApiUpdateCategoryOrderRequest,
-  ApiGiveCoffeeEvent,
-  ApiStreamingChannelUserList,
-  ApiRegisterStreamingChannelRequest,
-  ApiRegisterStreamingChannelResponse,
-  ApiRoleList,
-  ApiListChannelAppsResponse,
-  ApiNotificationChannelCategorySettingList,
-  ApiNotificationUserChannel,
-  ApiNotificationSetting,
-  ApiNotifiReactMessage,
-  ApiEmojiListedResponse,
-  ApiStickerListedResponse,
-  ApiAllUsersAddChannelResponse,
-  ApiRoleListEventResponse,
-  ApiAllUserClans,
-  ApiUserPermissionInChannelListResponse,
-  ApiPermissionRoleChannelListEventResponse,
-  ApiMarkAsReadRequest,
-  ApiChannelCanvasListResponse,
-  ApiEditChannelCanvasRequest,
-  ApiChannelSettingListResponse,
-  ApiAddFavoriteChannelResponse,
-  ApiRegistFcmDeviceTokenResponse,
-  ApiListUserActivity,
-  ApiCreateActivityRequest,
+  ApiLinkAccountConfirmRequest,
+  ApiListClanDiscover,
   ApiLoginIDResponse,
   ApiLoginRequest,
-  ApiConfirmLoginRequest,
-  ApiUserActivity,
-  ApiChanEncryptionMethod,
-  ApiGetPubKeysResponse,
-  ApiPubKey,
-  ApiGetKeyServerResp,
-  MezonapiListAuditLog,
-  ApiTokenSentEvent,
-  MezonDeleteWebhookByIdBody,
-  ApiListOnboardingResponse,
-  ApiCreateOnboardingRequest,
-  MezonUpdateOnboardingBody,
-  ApiOnboardingItem,
-  ApiGenerateClanWebhookRequest,
-  ApiGenerateClanWebhookResponse,
-  ApiListClanWebhookResponse,
-  MezonUpdateClanWebhookByIdBody,
-  MezonUpdateClanDescBody,
-  ApiUserStatusUpdate,
-  ApiUserStatus,
-  ApiListOnboardingStepResponse,
-  MezonUpdateOnboardingStepByClanIdBody,
-  ApiSdTopicList,
-  ApiSdTopicRequest,
-  ApiSdTopic,
-  MezonUpdateEventBody,
-  MezonapiCreateRoomChannelApps,
-  ApiGenerateMeetTokenRequest,
-  ApiGenerateMeetTokenResponse,
-  ApiMezonOauthClientList,
-  ApiMezonOauthClient,
-  ApiCreateHashChannelAppsResponse,
-  ApiEmojiRecentList,
-  ApiUserEventRequest,
-  ApiUpdateRoleOrderRequest,
-  ApiGenerateMezonMeetResponse,
-  ApiGenerateMeetTokenExternalResponse,
-  ApiUpdateClanOrderRequest,
-  ApiMessage2InboxRequest,
-  ApiListClanDiscover,
-  ApiClanDiscoverRequest,
-  ApiQuickMenuAccessList,
-  ApiQuickMenuAccessRequest,
-  ApiUnlockedItemRequest,
-  ApiForSaleItemList,
-  ApiUnlockedItemResponse,
-  ApiIsFollowerResponse,
-  ApiIsFollowerRequest,
-  ApiTransferOwnershipRequest,
-  ApiMeetParticipantRequest,
-  ApiLinkAccountConfirmRequest,
-  ApiLinkAccountMezon,
-  ApiUser,
-  ApiFriend,
-  ApiListClanUnreadMsgIndicatorResponse,
-  ApiAddFriendsResponse,
-  ApiUpdateUsernameRequest,
-  ApiBannedUserList,
-  ApiIsBannedResponse,
-  ApiLogedDeviceList,
-} from "./api.gen";
-
-import { Session } from "./session";
-import { DefaultSocket, Socket } from "./socket";
+  ApiMessageRef,
+} from "./types";
+import { GatewayMezonApi } from "./gateway.api";
 import { safeJSONParse } from "./utils";
-import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
+import { EmptySchema } from "./proto/gen/google/protobuf/empty_pb";
+import {
+  decodeMentions,
+  decodeAttachments,
+  decodeRefs,
+} from "mezon-js-protobuf";
 
 const DEFAULT_HOST = "127.0.0.1";
 const DEFAULT_PORT = "7350";
@@ -198,7 +341,7 @@ export enum ChannelType {
   CHANNEL_TYPE_THREAD = 7,
   CHANNEL_TYPE_APP = 8,
   CHANNEL_TYPE_ANNOUNCEMENT = 9,
-  CHANNEL_TYPE_MEZON_VOICE = 10
+  CHANNEL_TYPE_MEZON_VOICE = 10,
 }
 export enum ChannelStreamMode {
   STREAM_MODE_CHANNEL = 2,
@@ -223,227 +366,15 @@ export enum WebrtcSignalingType {
   WEBRTC_SDP_TIMEOUT = 5,
   WEBRTC_SDP_NOT_AVAILABLE = 6,
   WEBRTC_SDP_JOINED_OTHER_CALL = 7,
-  WEBRTC_SDP_STATUS_REMOTE_MEDIA = 8
-}
-
-/** Response for an RPC function executed on the server. */
-export interface RpcResponse {
-  /** The identifier of the function. */
-  id?: string;
-  /** The payload of the function which must be a JSON object. */
-  payload?: object;
-}
-
-/** A message sent on a channel. */
-export interface ChannelMessage {
-  //The unique ID of this message.
-  id: string;
-  //
-  avatar?: string;
-  //The channel this message belongs to.
-  channel_id: string;
-  //The name of the chat room, or an empty string if this message was not sent through a chat room.
-  channel_label: string;
-  //The clan this message belong to.
-  clan_id?: string;
-  //The code representing a message type or category.
-  code: number;
-  //The content payload.
-  content: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time: string;
-  //
-  reactions?: Array<ApiMessageReaction>;
-  //
-  mentions?: Array<ApiMessageMention>;
-  //
-  attachments?: Array<ApiMessageAttachment>;
-  //
-  references?: Array<ApiMessageRef>;
-  //
-  referenced_message?: string[];
-  //True if the message was persisted to the channel's history, false otherwise.
-  persistent?: boolean;
-  //Message sender, usually a user ID.
-  sender_id: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
-  update_time?: string;
-  //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
-  clan_logo?: string;
-  //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
-  category_name?: string;
-  //The username of the message sender, if any.
-  username?: string;
-  // The clan nick name
-  clan_nick?: string;
-  // The clan avatar
-  clan_avatar?: string;
-  //
-  display_name?: string;
-  //
-  create_time_seconds?: number;
-  //
-  update_time_seconds?: number;
-  //
-  mode?: number;
-  //
-  message_id?: string;
-  //
-  hide_editted?: boolean;
-  //
-  is_public?: boolean;
-  //
-  topic_id?: string;
-}
-
-/** A list of channel messages, usually a result of a list operation. */
-export interface ChannelMessageList {
-  /** Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors. */
-  cacheable_cursor?: string;
-  /**last seen message from user on channel */
-  last_seen_message?: ApiChannelMessageHeader;
-  /**last sent message from channel */
-  last_sent_message?: ApiChannelMessageHeader;
-  /** A list of messages. */
-  messages?: Array<ChannelMessage>;
-  /** The cursor to send when retireving the next page, if any. */
-  next_cursor?: string;
-  /** The cursor to send when retrieving the previous page, if any. */
-  prev_cursor?: string;
-}
-
-/** A collection of zero or more users. */
-export interface Users {
-  /** The User objects. */
-  users?: Array<ApiUser>;
-}
-
-/** A collection of zero or more friends of the user. */
-export interface Friends {
-  /** The Friend objects. */
-  friends?: Array<ApiFriend>;
-  /** Cursor for the next page of results, if any. */
-  cursor?: string;
-}
-
-/** A notification in the server. */
-export interface Notification {
-  /** Category code for this notification. */
-  code?: number;
-  /** Content of the notification in JSON. */
-  content?: {};
-  /** The UNIX time when the notification was created. */
-  create_time?: string;
-  /** ID of the Notification. */
-  id?: string;
-  /** True if this notification was persisted to the database. */
-  persistent?: boolean;
-  /** ID of the sender, if a user. Otherwise 'null'. */
-  sender_id?: string;
-  /** Subject of the notification. */
-  subject?: string;
-}
-
-/** A collection of zero or more notifications. */
-export interface NotificationList {
-  /** Use this cursor to paginate notifications. Cache this to catch up to new notifications. */
-  cacheable_cursor?: string;
-  /** Collection of notifications. */
-  notifications?: Array<Notification>;
-}
-
-/** Update fields in a given channel. */
-export interface ApiUpdateChannelDescRequest {
-  /** The ID of the channel to update. */
-  channel_id: string;
-  /** The channel lable */
-  channel_label: string | undefined;
-  /** The category of channel */
-  category_id: string | undefined;
-  /** The app url of channel */
-  app_id: string | undefined;
-  //
-  e2ee?: number;
-  //
-  topic?: string;
-  //
-  age_restricted?: number;
-  //
-  channel_avatar?: string;
-}
-
-/** Add users to a channel. */
-export interface ApiAddChannelUsersRequest {
-  /** The channel to add users to. */
-  channel_id: string;
-  /** The users to add. */
-  user_ids: string[];
-}
-
-/** Kick a set of users from a channel. */
-export interface ApiKickChannelUsersRequest {
-  /** The channel ID to kick from. */
-  channel_id: string;
-  /** The users to kick. */
-  user_ids: string[];
-}
-
-/** Leave a channel. */
-export interface ApiLeaveChannelRequest {
-  /** The channel ID to leave. */
-  channel_id: string;
-}
-
-/** Update Clan profile information */
-export interface ApiUpdateClanDescProfileRequest {
-  /** Clan id */
-  clan_id: string;
-  /** Clan nick name */
-  nick_name: string;
-  /** Clan profile banner */
-  profile_banner: string;
-  /** Clan profile theme */
-  profile_theme: string;
-  /** Clan profile avatar */
-  avatar_url: string;
-}
-
-export interface ApiUpdateClanProfileRequest {
-  /** Clan id*/
-  clan_id: string;
-  /** Clan nick name */
-  nick_name: string;
-  /** Clan profile avatar */
-  avatar: string;
-}
-
-/** Update fields in a given role. */
-export interface ApiUpdateRoleRequest {
-  /** The ID of the role to update. */
-  role_id: string;
-  /** The users to add. */
-  add_user_ids: string[];
-  /** The permissions to add. */
-  active_permission_ids: string[];
-  /** The users to remove. */
-  remove_user_ids: string[];
-  /** The permissions to remove. */
-  remove_permission_ids: string[];
-  //
-  clan_id: string;
-  max_permission_id: string;
-  title?: string | undefined;
-  color?: string | undefined;
-  role_icon?: string | undefined;
-  description?: string | undefined;
-  display_online?: number | undefined;
-  allow_mention?: number | undefined;
+  WEBRTC_SDP_STATUS_REMOTE_MEDIA = 8,
 }
 
 /** A client for Mezon server. */
 export class Client {
   /** The low level API client for Mezon server. */
-  private readonly apiClient: MezonApi;
+  private readonly gatewayClient: GatewayMezonApi;
+  private readonly grpcTransport: Transport;
+  private readonly mezonClient: RPCClient<typeof MezonService>;
 
   /** thre refreshTokenPromise */
   private refreshTokenPromise: Promise<Session> | null = null;
@@ -465,7 +396,17 @@ export class Client {
     const scheme = useSSL ? "https://" : "http://";
     const basePath = `${scheme}${host}:${port}`;
 
-    this.apiClient = new MezonApi(serverkey, timeout, basePath);
+    this.gatewayClient = new GatewayMezonApi(
+      DEFAULT_SERVER_KEY,
+      DEFAULT_TIMEOUT_MS,
+      basePath
+    );
+
+    this.grpcTransport = createGrpcWebTransport({
+      baseUrl: basePath,
+      useBinaryFormat: true,
+    });
+    this.mezonClient = createClient(MezonService, this.grpcTransport);
   }
 
   /**
@@ -473,21 +414,34 @@ export class Client {
    * This is a placeholder method that subclasses or instances can override
    * to perform actions before or after the refresh logic.
    */
-  onRefreshSession(session: ApiSession): void {
+  onRefreshSession(session: Session): void {
     console.log(`Token refresh occurred. Token: ${session.token}`);
   }
 
   /** check session isexpired */
   isexpired(session: Session): boolean {
-    return session.isexpired(Date.now() / 1000)
+    return session.isexpired(Date.now() / 1000);
   }
 
+  /** set base path */
+  setBasePath(host: string, port: string, useSSL: boolean) {
+    this.host = host;
+    this.port = port;
+    this.useSSL = useSSL;
+
+    const scheme = useSSL ? "https://" : "http://";
+    const basePath = `${scheme}${host}:${port}`;
+    return this.gatewayClient.setBasePath(basePath);
+  }
+
+  //#region Mezon Gateway APIs
+
   /** Authenticate a user with a custom id against the server. */
-  authenticateMezon(
+  async authenticateMezon(
     token: string,
     create?: boolean,
     username?: string,
-    isRemember?:boolean,
+    isRemember?: boolean,
     vars: Record<string, string> = {},
     options: any = {}
   ): Promise<Session> {
@@ -495,30 +449,28 @@ export class Client {
       token: token,
       vars: vars,
     };
-    return this.apiClient
-      .authenticateMezon(
-        this.serverkey,
-        "",
-        request,
-        create,
-        username,
-        isRemember,
-        options
-      )
-      .then((apiSession: ApiSession) => {
-        return new Session(
-          apiSession.token || "",
-          apiSession.refresh_token || "",
-          apiSession.created || false,
-          apiSession.api_url || "",
-          apiSession.id_token || "",
-          apiSession.is_remember || false,
-        );
-      });
+
+    const apiSession = await this.gatewayClient.authenticateMezon(
+      this.serverkey,
+      "",
+      request,
+      create,
+      username,
+      isRemember,
+      options
+    );
+    return new Session(
+      apiSession.token || "",
+      apiSession.refreshToken || "",
+      apiSession.created || false,
+      apiSession.apiUrl || "",
+      apiSession.idToken || "",
+      apiSession.isRemember || false
+    );
   }
 
   /** Authenticate a user with an email+otp against the server. */
-  authenticateSMSOTPRequest(
+  async authenticateSMSOTPRequest(
     phoneno: string,
     username?: string,
     vars?: Record<string, string>
@@ -528,18 +480,19 @@ export class Client {
       account: {
         phoneno: phoneno,
         vars: vars,
-      }
+      },
     };
 
-    return this.apiClient
-      .AuthenticateSMSOTPRequest(this.serverkey, "", request, username)
-      .then((response: ApiLinkAccountConfirmRequest) => {
-        return Promise.resolve(response);
-      });
+    return await this.gatewayClient.AuthenticateSMSOTPRequest(
+      this.serverkey,
+      "",
+      request,
+      username
+    );
   }
 
   /** Authenticate a user with an email+otp against the server. */
-  authenticateEmailOTPRequest(
+  async authenticateEmailOTPRequest(
     email: string,
     username?: string,
     vars?: Record<string, string>
@@ -549,35 +502,37 @@ export class Client {
       account: {
         email: email,
         vars: vars,
-      }
+      },
     };
 
-    return this.apiClient
-      .AuthenticateEmailOTPRequest(this.serverkey, "", request, username)
-      .then((response: ApiLinkAccountConfirmRequest) => {
-        return Promise.resolve(response);
-      });
+    return await this.gatewayClient.AuthenticateEmailOTPRequest(
+      this.serverkey,
+      "",
+      request,
+      username
+    );
   }
 
   async confirmAuthenticateOTP(
-    request:  ApiLinkAccountConfirmRequest,
-  ): Promise<Session> {    
-    return this.apiClient
-      .confirmAuthenticateOTP(this.serverkey, "", request)
-      .then((apiSession: ApiSession) => {
-        return new Session(
-          apiSession.token || "",
-          apiSession.refresh_token || "",
-          apiSession.created || false,          
-          apiSession.api_url || "",
-          apiSession.id_token || "",
-          apiSession.is_remember || false,
-        );
-      });
+    request: LinkAccountConfirmRequest
+  ): Promise<Session> {
+    const apiSession = await this.gatewayClient.confirmAuthenticateOTP(
+      this.serverkey,
+      "",
+      request
+    );
+    return new Session(
+      apiSession.token || "",
+      apiSession.refreshToken || "",
+      apiSession.created || false,
+      apiSession.apiUrl || "",
+      apiSession.idToken || "",
+      apiSession.isRemember || false
+    );
   }
 
   /** Authenticate a user with an email+password against the server. */
-  authenticateEmail(
+  async authenticateEmail(
     email: string,
     password: string,
     username?: string,
@@ -589,34 +544,108 @@ export class Client {
         email: email,
         password: password,
         vars: vars,
-      }
+      },
     };
 
-    return this.apiClient
-      .authenticateEmail(this.serverkey, "", request, username)
-      .then((apiSession: ApiSession) => {
-        return new Session(
-          apiSession.token || "",
-          apiSession.refresh_token || "",
-          apiSession.created || false,          
-          apiSession.api_url || "",
-          apiSession.id_token || "",
-          apiSession.is_remember || false,
-        );
-      });
+    const apiSession = await this.gatewayClient.authenticateEmail(
+      this.serverkey,
+      "",
+      request,
+      username
+    );
+    return new Session(
+      apiSession.token || "",
+      apiSession.refreshToken || "",
+      apiSession.created || false,
+      apiSession.apiUrl || "",
+      apiSession.idToken || "",
+      apiSession.isRemember || false
+    );
   }
 
-  /** set base path */
-  setBasePath(host: string, port: string, useSSL: boolean) {
-    this.host = host;
-    this.port = port;
-    this.useSSL = useSSL;
-    
-    const scheme = useSSL ? "https://" : "http://";
-    const basePath = `${scheme}${host}:${port}`;    
-    return this.apiClient
-      .setBasePath(basePath);
+  /** Get link invite user */
+  async getLinkInvite(inviteId: string): Promise<ApiInviteUserRes> {
+    return await this.gatewayClient.getLinkInvite(this.serverkey, "", inviteId);
   }
+
+  async createQRLogin(requet: ApiLoginRequest): Promise<ApiLoginIDResponse> {
+    const apiSession = await this.gatewayClient.createQRLogin(
+      this.serverkey,
+      "",
+      requet
+    );
+    return {
+      loginId: apiSession.loginId,
+      createTimeSecond: apiSession.createTimeSecond,
+    };
+  }
+
+  async checkLoginRequest(
+    requet: ApiConfirmLoginRequest
+  ): Promise<Session | null> {
+    const apiSession = await this.gatewayClient.checkLoginRequest(
+      this.serverkey,
+      "",
+      requet
+    );
+    if (!apiSession?.token) {
+      return null;
+    }
+    return new Session(
+      apiSession.token || "",
+      apiSession.refreshToken || "",
+      apiSession.created || false,
+      apiSession.apiUrl || "",
+      apiSession.idToken || "",
+      apiSession.isRemember || false
+    );
+  }
+
+  async confirmLogin(
+    session: Session,
+    basePath: string,
+    body: ApiConfirmLoginRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refreshToken &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return await this.gatewayClient.confirmLogin(session.token, basePath, body);
+  }
+
+  async generateMeetTokenExternal(
+    basePath: string,
+    token: string,
+    displayName?: string,
+    isGuest?: boolean
+  ): Promise<ApiGenerateMeetTokenExternalResponse> {
+    return await this.gatewayClient.generateMeetTokenExternal(
+      "",
+      basePath,
+      token,
+      displayName,
+      isGuest
+    );
+  }
+
+  /** list clan discover. */
+  async listClanDiscover(
+    basePath: string,
+    request: ApiClanDiscoverRequest
+  ): Promise<ApiListClanDiscover> {
+    return await this.gatewayClient.clanDiscover(
+      this.serverkey,
+      "",
+      basePath,
+      request
+    );
+  }
+
+  //#endregion
 
   /** Add users to a channel, or accept their join requests. */
   async addChannelUsers(
@@ -626,17 +655,27 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .addChannelUsers(session.token, channelId, ids)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const addChannelUsersRequest = create(AddChannelUsersRequestSchema, {
+      channelId: channelId,
+      userIds: ids,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.addChannelUsers(
+      addChannelUsersRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Add friends by ID or username to a user's account. */
@@ -644,16 +683,25 @@ export class Client {
     session: Session,
     ids?: Array<string>,
     usernames?: Array<string>
-  ): Promise<ApiAddFriendsResponse> {
+  ): Promise<AddFriendsResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.addFriends(session.token, ids, usernames);
+    const addFriendsRequest = create(AddFriendsRequestSchema, {
+      ids: ids,
+      usernames: usernames,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.addFriends(addFriendsRequest, options);
   }
 
   /** Block one or more users by ID or username. */
@@ -664,17 +712,27 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .blockFriends(session.token, ids, usernames)
-      .then((response: any) => {
-        return Promise.resolve(response != undefined);
-      });
+    const blockFriendsRequest = create(BlockFriendsRequestSchema, {
+      ids: ids,
+      usernames: usernames,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.blockFriends(
+      blockFriendsRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Block one or more users by ID or username. */
@@ -685,205 +743,279 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .unblockFriends(session.token, ids, usernames)
-      .then((response: any) => {
-        return Promise.resolve(response != undefined);
-      });
+    const unblockFriendsRequest = create(BlockFriendsRequestSchema, {
+      ids: ids,
+      usernames: usernames,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.unblockFriends(
+      unblockFriendsRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Create a new group with the current user as the creator and superadmin. */
   async uploadOauthFile(
     session: Session,
-    request: ApiUploadAttachmentRequest
-  ): Promise<ApiUploadAttachment> {
+    request: UploadAttachmentRequest
+  ): Promise<UploadAttachment> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.uploadOauthFile(session.token, request);
+    const uploadRequest = create(UploadAttachmentRequestSchema, {
+      filename: request.filename,
+      filetype: request.filetype,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.uploadOauthFile(uploadRequest, options);
   }
 
   /** Create a new group with the current user as the creator and superadmin. */
   async uploadAttachmentFile(
     session: Session,
-    request: ApiUploadAttachmentRequest
-  ): Promise<ApiUploadAttachment> {
+    request: UploadAttachmentRequest
+  ): Promise<UploadAttachment> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.uploadAttachmentFile(session.token, request);
+    const uploadRequest = create(UploadAttachmentRequestSchema, {
+      filename: request.filename,
+      filetype: request.filetype,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.uploadAttachmentFile(uploadRequest, options);
   }
 
   /** Create a channel within clan */
   async createChannelDesc(
     session: Session,
-    request: ApiCreateChannelDescRequest
-  ): Promise<ApiChannelDescription> {
+    request: CreateChannelDescRequest
+  ): Promise<ChannelDescription> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .createChannelDesc(session.token, request)
-      .then((response: ApiChannelDescription) => {
-        return Promise.resolve(response);
-      });
+    const createChannelRequest = create(
+      CreateChannelDescRequestSchema,
+      request
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.createChannelDesc(
+      createChannelRequest,
+      options
+    );
   }
 
   /** Create a clan */
   async createClanDesc(
     session: Session,
-    request: ApiCreateClanDescRequest
-  ): Promise<ApiClanDesc> {
+    request: CreateClanDescRequest
+  ): Promise<ClanDesc> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .createClanDesc(session.token, request)
-      .then((response: ApiClanDesc) => {
-        return Promise.resolve(response);
-      });
+    const createClanRequest = create(CreateClanDescRequestSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.createClanDesc(createClanRequest, options);
   }
 
   /**  */
   async createCategoryDesc(
     session: Session,
-    request: ApiCreateCategoryDescRequest
-  ): Promise<ApiCategoryDesc> {
+    request: CreateCategoryDescRequest
+  ): Promise<CategoryDesc> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .createCategoryDesc(session.token, request)
-      .then((response: ApiCategoryDesc) => {
-        return Promise.resolve(response);
-      });
+    const createCategoryRequest = create(
+      CreateCategoryDescRequestSchema,
+      request
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.createCategoryDesc(
+      createCategoryRequest,
+      options
+    );
   }
 
   /** Create a new role for clan. */
   async createRole(
     session: Session,
-    request: ApiCreateRoleRequest
-  ): Promise<ApiRole> {
+    request: CreateRoleRequest
+  ): Promise<Role> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .createRole(session.token, request)
-      .then((response: ApiRole) => {
-        return Promise.resolve(response);
-      });
+    const createRoleRequest = create(CreateRoleRequestSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.createRole(createRoleRequest, options);
   }
 
   /** Create a new event for clan. */
   async createEvent(
     session: Session,
-    request: ApiCreateEventRequest
-  ): Promise<ApiEventManagement> {
+    request: CreateEventRequest
+  ): Promise<EventManagement> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .createEvent(session.token, request)
-      .then((response: ApiEventManagement) => {
-        return Promise.resolve(response);
-      });
+    const createEventRequest = create(CreateEventRequestSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.createEvent(createEventRequest, options);
   }
 
   /** add role for channel. */
   async addRolesChannelDesc(
     session: Session,
-    request: ApiAddRoleChannelDescRequest
+    request: AddRoleChannelDescRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .addRolesChannelDesc(session.token, request)
-      .then((response: ApiRole) => {
-        return response !== undefined;
-      });
+    const addRoleRequest = create(AddRoleChannelDescRequestSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.addRolesChannelDesc(
+      addRoleRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Update action role when delete role */
   async deleteRoleChannelDesc(
     session: Session,
-    request: ApiDeleteRoleRequest
+    request: DeleteRoleRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .deleteRoleChannelDesc(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const deleteRoleRequest = create(DeleteRoleRequestSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.deleteRoleChannelDesc(
+      deleteRoleRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   async deleteApp(session: Session, appId: string): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .deleteApp(session.token, appId)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const deleteAppRequest = create(AppDeleteRequestSchema, {
+      id: appId,
+      recordDeletion: true,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.deleteApp(
+      deleteAppRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** A socket created with the client's configuration. */
@@ -911,17 +1043,27 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .deleteFriends(session.token, ids, usernames)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const deleteFriendsRequest = create(DeleteFriendsRequestSchema, {
+      ids: ids,
+      usernames: usernames,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.deleteFriends(
+      deleteFriendsRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Delete a channel by ID. */
@@ -932,34 +1074,53 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .deleteChannelDesc(session.token, clanId, channelId)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const deleteChannelRequest = create(DeleteChannelDescRequestSchema, {
+      clanId: clanId,
+      channelId: channelId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.deleteChannelDesc(
+      deleteChannelRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Delete a clan desc by ID. */
   async deleteClanDesc(session: Session, clanDescId: string): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .deleteClanDesc(session.token, clanDescId)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const deleteClanRequest = create(DeleteClanDescRequestSchema, {
+      clanDescId: clanDescId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.deleteClanDesc(
+      deleteClanRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Delete a category by ID. */
@@ -971,17 +1132,28 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .deleteCategoryDesc(session.token, categoryId, clanId, categoryLabel)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const deleteCategoryRequest = create(DeleteCategoryDescRequestSchema, {
+      categoryId: categoryId,
+      clanId: clanId,
+      categoryLabel: categoryLabel,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.deleteCategoryDesc(
+      deleteCategoryRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Delete one or more notifications */
@@ -992,17 +1164,30 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .deleteNotifications(session.token, ids, category)
-      .then((response: any) => {
-        return Promise.resolve(response != undefined);
-      });
+    const deleteNotificationsRequest = create(
+      DeleteNotificationsRequestSchema,
+      {
+        ids: ids,
+        category: category,
+      }
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.deleteNotifications(
+      deleteNotificationsRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Delete a role by ID. */
@@ -1014,17 +1199,29 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .deleteRole(session.token, roleId, "", clanId, roleLabel)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const deleteRoleRequest = create(DeleteRoleRequestSchema, {
+      roleId: roleId,
+      clanId: clanId,
+      roleLabel: roleLabel,
+      channelId: "",
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.deleteRole(
+      deleteRoleRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Delete a event by ID. */
@@ -1038,74 +1235,47 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .deleteEvent(
-        session.token,
-        eventId,
-        clanId,
-        creatorId,
-        eventLabel,
-        channelId
-      )
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
+    const deleteEventRequest = create(DeleteEventRequestSchema, {
+      eventId: eventId,
+      clanId: clanId,
+      creatorId: creatorId,
+      eventLabel: eventLabel,
+      channelId: channelId,
+    });
 
-  /** update user a event by ID. */
-  async updateEventUser(
-    session: Session,
-    request: ApiDeleteEventRequest
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
 
-    return this.apiClient
-      .updateEventUser(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
+    const response = await this.mezonClient.deleteEvent(
+      deleteEventRequest,
+      options
+    );
 
-  /** Submit an event for processing in the server's registered runtime custom events handler. */
-  async emitEvent(session: Session, request: ApiEvent): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .event(session.token, request)
-      .then((response: any) => {
-        return Promise.resolve(response != undefined);
-      });
+    return response !== undefined;
   }
 
   /** Fetch the current user's account. */
-  async getAccount(session: Session): Promise<ApiAccount> {
+  async getAccount(session: Session): Promise<Account> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.getAccount(session.token);
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.getAccount(create(EmptySchema, {}), options);
   }
 
   /** Kick a set of users from a clan. */
@@ -1116,86 +1286,123 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .removeClanUsers(session.token, clanId, ids)
-      .then((response: any) => {
-        return Promise.resolve(response != undefined);
-      });
+    const removeClanUsersRequest = create(RemoveClanUsersRequestSchema, {
+      clanId: clanId,
+      userIds: ids,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.removeClanUsers(
+      removeClanUsersRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   async listBannedUsers(
     session: Session,
-    clanId?:string,
-    channelId?:string,
-  ): Promise<ApiBannedUserList> {
+    clanId?: string,
+    channelId?: string
+  ): Promise<BannedUserList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listBannedUsers(
-        session.token,
-        clanId,
-        channelId,
-      )
-      .then((response: ApiBannedUserList) => {
-        return Promise.resolve(response);
-      });
+    const listBannedUsersRequest = create(BannedUserListRequestSchema, {
+      clanId: clanId,
+      channelId: channelId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.listBannedUsers(
+      listBannedUsersRequest,
+      options
+    );
   }
 
   /** Ban a set of users from a clan. */
   async unbanClanUsers(
     session: Session,
-    clanId:string,
-    channelId?:string,
-    userIds?:Array<string>
+    clanId: string,
+    channelId?: string,
+    userIds?: Array<string>
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .unbanClanUsers(session.token, clanId, channelId, userIds)
-      .then((response: any) => {
-        return Promise.resolve(response != undefined);
-      });
+    const unbanClanUsersRequest = create(BanClanUsersRequestSchema, {
+      clanId: clanId,
+      channelId: channelId,
+      userIds: userIds,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.unbanClanUsers(
+      unbanClanUsersRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Ban a set of users from a clan. */
   async banClanUsers(
     session: Session,
-    clanId:string,
-    channelId?:string,
-    userIds?:Array<string>,
-    banTime?:number
+    clanId: string,
+    channelId?: string,
+    userIds?: Array<string>,
+    banTime?: number
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .banClanUsers(session.token, clanId, channelId, userIds, banTime)
-      .then((response: any) => {
-        return Promise.resolve(response != undefined);
-      });
+    const banClanUsersRequest = create(BanClanUsersRequestSchema, {
+      clanId: clanId,
+      channelId: channelId,
+      userIds: userIds,
+      banTime: banTime,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.banClanUsers(
+      banClanUsersRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Kick users from a channel, or decline their join requests. */
@@ -1206,17 +1413,27 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .removeChannelUsers(session.token, channelId, ids)
-      .then((response: any) => {
-        return Promise.resolve(response != undefined);
-      });
+    const removeChannelUsersRequest = create(RemoveChannelUsersRequestSchema, {
+      channelId: channelId,
+      userIds: ids,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.removeChannelUsers(
+      removeChannelUsersRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** List a channel's message history. */
@@ -1231,87 +1448,104 @@ export class Client {
   ): Promise<ChannelMessageList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listChannelMessages(
-        session.token,
-        clanId,
-        channelId,
-        messageId,
-        direction,
-        limit,
-        topicId
-      )
-      .then((response: ApiChannelMessageList) => {
-        var result: ChannelMessageList = {
-          messages: [],
-          last_seen_message: response.last_seen_message,
-          last_sent_message: response.last_sent_message,
-        };
+    const listChannelMessagesRequest = create(
+      ListChannelMessagesRequestSchema,
+      {
+        clanId: clanId,
+        channelId: channelId,
+        messageId: messageId,
+        direction: direction,
+        limit: limit,
+        topicId: topicId,
+      }
+    );
 
-        if (response.messages == null) {
-          return Promise.resolve(result);
-        }
-        response.messages!.forEach((m) => {
-          var content, reactions, mentions, attachments, references;
-          try {
-            content = safeJSONParse(m.content);
-          } catch (e) {
-            console.log("error parse content", e);
-          }
-          try {
-            reactions = safeJSONParse(m.reactions || "[]");
-          } catch (e) {
-            console.log("error parse reactions", e);
-          }
-          try {
-            mentions = safeJSONParse(m.mentions || "[]");
-          } catch (e) {
-            console.log("error parse mentions", e);
-          }
-          try {
-            attachments = safeJSONParse(m.attachments || "[]");
-          } catch (e) {
-            console.log("error parse attachments", e);
-          }
-          try {
-            references = safeJSONParse(m.references || "[]");
-          } catch (e) {
-            console.log("error parse references", e);
-          }
-          result.messages!.push({
-            channel_id: m.channel_id,
-            code: m.code ? Number(m.code) : 0,
-            create_time: m.create_time || "",
-            id: m.message_id,
-            sender_id: m.sender_id,
-            update_time: m.update_time,
-            username: m.username,
-            display_name: m.display_name,
-            avatar: m.avatar,
-            content: content,
-            channel_label: m.channel_label,
-            clan_logo: m.clan_logo,
-            category_name: m.category_name,
-            clan_nick: m.clan_nick,
-            clan_avatar: m.clan_avatar,
-            attachments: attachments,
-            mentions: mentions,
-            reactions: reactions,
-            references: references,
-            clan_id: m.clan_id,
-            create_time_seconds: m.create_time_seconds,
-            update_time_seconds: m.update_time_seconds,
-            hide_editted: m.hide_editted,
-          });
-        });
-        return Promise.resolve(result);
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const channelMessageList = await this.mezonClient.listChannelMessages(
+      listChannelMessagesRequest,
+      options
+    );
+
+    var response: ChannelMessageList = {
+      messages: [],
+      lastSeenMessage: channelMessageList.lastSeenMessage,
+      lastSentMessage: channelMessageList.lastSentMessage,
+    };
+
+    if (channelMessageList.messages == null) {
+      return response;
+    }
+    channelMessageList.messages!.forEach((m) => {
+      var content, reactions, mentions, attachments, references;
+      try {
+        content = safeJSONParse(m.content);
+      } catch (e) {
+        console.log("error parse content", e);
+      }
+      try {
+        reactions = safeJSONParse(m.reactions || "[]");
+      } catch (e) {
+        console.log("error parse reactions", e);
+      }
+      try {
+        mentions =
+          decodeMentions(m.mentions)?.mentions ||
+          safeJSONParse(m.mentions || "[]");
+      } catch (e) {
+        console.log("error parse mentions", e);
+      }
+      try {
+        attachments =
+          decodeAttachments(m.attachments)?.attachments ||
+          safeJSONParse(m.attachments || "[]");
+      } catch (e) {
+        console.log("error parse attachments", e);
+      }
+      try {
+        references =
+          (decodeRefs(m.references)?.refs as unknown as ApiMessageRef[]) ||
+          safeJSONParse(m.references || "[]");
+      } catch (e) {
+        console.log("error parse references", e);
+      }
+
+      response.messages!.push({
+        channelId: m.channelId,
+        code: m.code ? Number(m.code) : 0,
+        id: m.messageId,
+        senderId: m.senderId,
+        username: m.username,
+        displayName: m.displayName,
+        avatar: m.avatar,
+        content: content,
+        channelLabel: m.channelLabel,
+        clanLogo: m.clanLogo,
+        categoryName: m.categoryName,
+        clanNick: m.clanNick,
+        clanAvatar: m.clanAvatar,
+        attachments: attachments,
+        mentions: mentions,
+        reactions: reactions,
+        references: references,
+        clanId: m.clanId,
+        createTime: m.createTime?.seconds.toString() || "",
+        updateTime: m.updateTime?.seconds.toString() || "",
+        createTimeSeconds: m.createTimeSeconds,
+        updateTimeSeconds: m.updateTimeSeconds,
+        hideEditted: m.hideEditted,
       });
+    });
+
+    return response;
   }
 
   /** List a channel's users. */
@@ -1323,44 +1557,38 @@ export class Client {
     state?: number,
     limit?: number,
     cursor?: string
-  ): Promise<ApiVoiceChannelUserList> {
+  ): Promise<VoiceChannelUserList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listChannelVoiceUsers(
-        session.token,
-        clanId,
-        channelId,
-        channelType,
-        limit,
-        state,
-        cursor
-      )
-      .then((response: ApiVoiceChannelUserList) => {
-        var result: ApiVoiceChannelUserList = {
-          voice_channel_users: [],
-        };
+    const listChannelVoiceUsersRequest = create(ListChannelUsersRequestSchema, {
+      clanId: clanId,
+      channelId: channelId,
+      channelType: channelType,
+      limit: limit,
+      state: state,
+      cursor: cursor,
+    });
 
-        if (response.voice_channel_users == null) {
-          return Promise.resolve(result);
-        }
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
 
-        response.voice_channel_users!.forEach((gu) => {
-          result.voice_channel_users!.push({
-            id: gu.id,
-            channel_id: gu.channel_id,
-            user_id: gu.user_id,
-            participant: gu.participant,
-          });
-        });
-        return Promise.resolve(result);
-      });
+    const response = await this.mezonClient.listChannelVoiceUsers(
+      listChannelVoiceUsersRequest,
+      options
+    );
+
+    if (response.voiceChannelUsers == null) {
+      response.voiceChannelUsers = [];
+    }
+
+    return response;
   }
 
   /** List a channel's users. */
@@ -1372,51 +1600,38 @@ export class Client {
     state?: number,
     limit?: number,
     cursor?: string
-  ): Promise<ApiChannelUserList> {
+  ): Promise<ChannelUserList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listChannelUsers(
-        session.token,
-        clanId,
-        channelId,
-        channelType,
-        limit,
-        state,
-        cursor
-      )
-      .then((response: ApiChannelUserList) => {
-        var result: ApiChannelUserList = {
-          channel_users: [],
-          cursor: response.cursor,
-          channel_id: response.channel_id,
-        };
+    const listChannelUsersRequest = create(ListChannelUsersRequestSchema, {
+      clanId: clanId,
+      channelId: channelId,
+      channelType: channelType,
+      limit: limit,
+      state: state,
+      cursor: cursor,
+    });
 
-        if (response.channel_users == null) {
-          return Promise.resolve(result);
-        }
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
 
-        response.channel_users!.forEach((gu) => {
-          result.channel_users!.push({
-            user_id: gu.user_id,
-            role_id: gu!.role_id,
-            thread_id: gu.thread_id,
-            clan_avatar: gu.clan_avatar,
-            clan_nick: gu.clan_nick,
-            id: gu.id,
-            clan_id: gu.clan_id,
-            added_by: gu.added_by,
-            is_banned: gu.is_banned
-          });
-        });
-        return Promise.resolve(result);
-      });
+    const response = await this.mezonClient.listChannelUsers(
+      listChannelUsersRequest,
+      options
+    );
+
+    if (response.channelUsers == null) {
+      response.channelUsers = [];
+    }
+
+    return response;
   }
 
   /** List a channel's attachment. */
@@ -1428,134 +1643,101 @@ export class Client {
     state?: number,
     limit?: number,
     before?: number,
-    after?: number,
-  ): Promise<ApiChannelAttachmentList> {
+    after?: number
+  ): Promise<ChannelAttachmentList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listChannelAttachment(
-        session.token,
-        channelId,
-        clanId,
-        fileType,
-        limit,
-        state,
-        before,
-        after,
-      )
-      .then((response: ApiChannelAttachmentList) => {
-        var result: ApiChannelAttachmentList = {
-          attachments: [],
-        };
+    const listChannelAttachmentRequest = create(
+      ListChannelAttachmentRequestSchema,
+      {
+        channelId: channelId,
+        clanId: clanId,
+        fileType: fileType,
+        limit: limit,
+        state: state,
+        before: before,
+        after: after,
+      }
+    );
 
-        if (response.attachments == null) {
-          return Promise.resolve(result);
-        }
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
 
-        response.attachments!.forEach((at) => {
-          result.attachments!.push({
-            filename: at.filename,
-            filesize: at.filesize,
-            filetype: at.filetype,
-            id: at.id,
-            uploader: at.uploader,
-            url: at.url,
-            message_id: at.message_id,
-            create_time: at.create_time,
-            width: at.width,
-            height: at.height,
-          });
-        });
-        return Promise.resolve(result);
-      });
+    const response = await this.mezonClient.listChannelAttachment(
+      listChannelAttachmentRequest,
+      options
+    );
+
+    if (response.attachments == null) {
+      response.attachments = [];
+    }
+
+    return response;
   }
 
   /** List a channel's users. */
-  async listClanUsers(
-    session: Session,
-    clanId: string
-  ): Promise<ApiClanUserList> {
+  async listClanUsers(session: Session, clanId: string): Promise<ClanUserList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listClanUsers(session.token, clanId)
-      .then((response: ApiClanUserList) => {
-        var result: ApiClanUserList = {
-          clan_users: [],
-          cursor: response.cursor,
-          clan_id: response.clan_id,
-        };
+    const listClanUsersRequest = create(ListClanUsersRequestSchema, {
+      clanId: clanId,
+    });
 
-        if (response.clan_users == null) {
-          return Promise.resolve(result);
-        }
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
 
-        response.clan_users!.forEach((gu) => {
-          result.clan_users!.push({
-            user: {
-              avatar_url: gu.user!.avatar_url,
-              create_time: gu.user!.create_time,
-              display_name: gu.user!.display_name,
-              edge_count: gu.user!.edge_count ? Number(gu.user!.edge_count) : 0,
-              id: gu.user!.id,
-              lang_tag: gu.user!.lang_tag,
-              location: gu.user!.location,
-              online: gu.user!.online,
-              is_mobile: gu.user?.is_mobile,
-              timezone: gu.user!.timezone,
-              update_time: gu.user!.update_time,
-              username: gu.user!.username,
-              user_status: gu.user!.user_status,
-              status: gu.user!.status,
-              about_me: gu.user!.about_me,
-              mezon_id: gu.user!.mezon_id,
-              list_nick_names: gu.user!.list_nick_names,
-              phone_number: gu.user!.phone_number
-            },
-            role_id: gu!.role_id,
-            clan_nick: gu!.clan_nick,
-            clan_avatar: gu!.clan_avatar,
-          });
-        });
-        return Promise.resolve(result);
-      });
+    const response = await this.mezonClient.listClanUsers(
+      listClanUsersRequest,
+      options
+    );
+    if (response.clanUsers == null) {
+      response.clanUsers = [];
+    }
+
+    return response;
   }
 
   async listChannelDetail(
     session: Session,
     channelId: string
-  ): Promise<ApiChannelDescription> {
+  ): Promise<ChannelDescription> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listChannelDetail(
-        session.token,
-        channelId
-      )
-      .then((response: ApiChannelDescription) => {
-        return Promise.resolve(response);
-      });
+    const listChannelDetailRequest = create(ListChannelDetailRequestSchema, {
+      channelId: channelId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.listChannelDetail(
+      listChannelDetailRequest,
+      options
+    );
   }
 
-  /** List channels. */
+  // /** List channels. */
   async listChannelDescs(
     session: Session,
     limit?: number,
@@ -1564,91 +1746,105 @@ export class Client {
     clanId?: string,
     channelType?: number,
     isMobile?: boolean
-  ): Promise<ApiChannelDescList> {
+  ): Promise<ChannelDescList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listChannelDescs(
-        session.token,
-        limit,
-        state,
-        cursor,
-        clanId,
-        channelType,
-        isMobile
-      )
-      .then((response: ApiChannelDescList) => {
-        var result: ApiChannelDescList = {
-          channeldesc: [],
-          next_cursor: response.next_cursor,
-          prev_cursor: response.prev_cursor,
-          cacheable_cursor: response.cacheable_cursor,
-        };
+    const listChannelDescsRequest = create(ListChannelDescsRequestSchema, {
+      limit: limit,
+      state: state,
+      cursor: cursor,
+      clanId: clanId,
+      channelType: channelType,
+      isMobile: isMobile,
+    });
 
-        if (response.channeldesc == null) {
-          return Promise.resolve(result);
-        }
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
 
-        result.channeldesc = response.channeldesc;
-        return Promise.resolve(result);
-      });
+    const response = await this.mezonClient.listChannelDescs(
+      listChannelDescsRequest,
+      options
+    );
+
+    if (response.channeldesc == null) {
+      response.channeldesc = [];
+    }
+
+    return response;
   }
 
-  /** List clans */
+  // /** List clans */
   async listClanUnreadMsgIndicator(
     session: Session,
     clanId: string
-  ): Promise<ApiListClanUnreadMsgIndicatorResponse> {
+  ): Promise<ListClanUnreadMsgIndicatorResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listClanUnreadMsgIndicator(session.token, clanId)
-      .then((response: ApiListClanUnreadMsgIndicatorResponse) => {
-        return Promise.resolve(response);
-      });
+    const listClanUnreadMsgIndicatorRequest = create(
+      ListClanUnreadMsgIndicatorRequestSchema,
+      {
+        clanId: clanId,
+      }
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.listClanUnreadMsgIndicator(
+      listClanUnreadMsgIndicatorRequest,
+      options
+    );
   }
 
-  /** List clans */
+  // /** List clans */
   async listClanDescs(
     session: Session,
     limit?: number,
     state?: number,
     cursor?: string
-  ): Promise<ApiClanDescList> {
+  ): Promise<ClanDescList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listClanDescs(session.token, limit, state, cursor)
-      .then((response: ApiClanDescList) => {
-        var result: ApiClanDescList = {
-          clandesc: [],
-        };
+    const listClanDescsRequest = create(ListClanDescRequestSchema, {
+      limit: limit,
+      state: state,
+      cursor: cursor,
+    });
 
-        if (response.clandesc == null) {
-          return Promise.resolve(result);
-        }
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
 
-        result.clandesc = response.clandesc;
-        return Promise.resolve(result);
-      });
+    const response = await this.mezonClient.listClanDescs(
+      listClanDescsRequest,
+      options
+    );
+
+    if (response.clandesc == null) {
+      response.clandesc = [];
+    }
+
+    return response;
   }
 
   /** List categories. */
@@ -1657,83 +1853,103 @@ export class Client {
     clanId: string,
     creatorId?: string,
     categoryName?: string
-  ): Promise<ApiCategoryDescList> {
+  ): Promise<CategoryDescList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listCategoryDescs(session.token, clanId, creatorId, categoryName)
-      .then((response: ApiCategoryDescList) => {
-        var result: ApiCategoryDescList = {
-          categorydesc: [],
-        };
+    const listCategoryDescsRequest = create(CategoryDescSchema, {
+      clanId: clanId,
+      creatorId: creatorId,
+      categoryName: categoryName,
+    });
 
-        if (response.categorydesc == null) {
-          return Promise.resolve(result);
-        }
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
 
-        result.categorydesc = response.categorydesc;
-        return Promise.resolve(result);
-      });
+    const response = await this.mezonClient.listCategoryDescs(
+      listCategoryDescsRequest,
+      options
+    );
+
+    if (response.categorydesc == null) {
+      response.categorydesc = [];
+    }
+
+    return response;
   }
 
   /** List event */
-  async listEvents(session: Session, clanId?: string): Promise<ApiEventList> {
+  async listEvents(session: Session, clanId?: string): Promise<EventList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listEvents(session.token, clanId)
-      .then((response: ApiEventList) => {
-        return Promise.resolve(response);
-      });
+    const listEventsRequest = create(ListEventsRequestSchema, {
+      clanId: clanId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.listEvents(listEventsRequest, options);
   }
 
   /** List permission */
-  async getListPermission(session: Session): Promise<ApiPermissionList> {
+  async getListPermission(session: Session): Promise<PermissionList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getListPermission(session.token)
-      .then((response: ApiPermissionList) => {
-        return Promise.resolve(response);
-      });
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.getListPermission(
+      create(EmptySchema, {}),
+      options
+    );
   }
 
   /** List user roles */
   async listRolePermissions(
     session: Session,
     roleId: string
-  ): Promise<ApiPermissionList> {
+  ): Promise<PermissionList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listRolePermissions(session.token, roleId)
-      .then((response: ApiPermissionList) => {
-        return Promise.resolve(response);
-      });
+    const listPermissionsRequest = create(ListPermissionsRequestSchema, {
+      roleId: roleId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.listRolePermissions(
+      listPermissionsRequest,
+      options
+    );
   }
 
   /** List user roles */
@@ -1742,20 +1958,26 @@ export class Client {
     roleId: string,
     limit?: number,
     cursor?: string
-  ): Promise<ApiRoleUserList> {
+  ): Promise<RoleUserList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listRoleUsers(session.token, roleId, limit, cursor)
-      .then((response: ApiRoleUserList) => {
-        return Promise.resolve(response);
-      });
+    const listRoleUsersRequest = create(ListRoleUsersRequestSchema, {
+      roleId: roleId,
+      limit: limit,
+      cursor: cursor,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.listRoleUsers(listRoleUsersRequest, options);
   }
 
   async registFCMDeviceToken(
@@ -1764,134 +1986,189 @@ export class Client {
     deviceId: string,
     platform: string,
     voipToken?: string
-  ): Promise<ApiRegistFcmDeviceTokenResponse> {
+  ): Promise<RegistFcmDeviceTokenResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .registFCMDeviceToken(session.token, tokenId, deviceId, platform, voipToken)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
+    const registFCMDeviceTokenRequest = create(
+      RegistFcmDeviceTokenRequestSchema,
+      {
+        token: tokenId,
+        deviceId: deviceId,
+        platform: platform,
+        voipToken: voipToken,
+      }
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.registFCMDeviceToken(
+      registFCMDeviceTokenRequest,
+      options
+    );
   }
 
   async getUserProfileOnClan(
     session: Session,
     clanId: string
-  ): Promise<ApiClanProfile> {
+  ): Promise<ClanProfile> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getUserProfileOnClan(session.token, clanId)
-      .then((response: ApiClanProfile) => {
-        return Promise.resolve(response);
-      });
+    const getUserProfileOnClanRequest = create(ClanProfileRequestSchema, {
+      clanId: clanId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.getUserProfileOnClan(
+      getUserProfileOnClanRequest,
+      options
+    );
   }
 
   //
   async closeDirectMess(
     session: Session,
-    request: ApiDeleteChannelDescRequest
+    request: DeleteChannelDescRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .closeDirectMess(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const closeDirectMessRequest = create(
+      DeleteChannelDescRequestSchema,
+      request
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.closeDMByChannelId(
+      closeDirectMessRequest,
+      options
+    );
+
+    return response !== undefined;
   }
   //
   async openDirectMess(
     session: Session,
-    request: ApiDeleteChannelDescRequest
+    request: DeleteChannelDescRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .openDirectMess(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const openDirectMessRequest = create(
+      DeleteChannelDescRequestSchema,
+      request
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.closeDMByChannelId(
+      openDirectMessRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   async confirmLinkMezonOTP(
     session: Session,
-    request:  ApiLinkAccountConfirmRequest,
-  ): Promise<ApiSession>{
+    request: LinkAccountConfirmRequest
+  ): Promise<void> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .confirmLinkMezonOTP(session.token, request);
+    const confirmLinkMezonOTPRequest = create(
+      LinkAccountConfirmRequestSchema,
+      request
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    await this.mezonClient.confirmLinkMezonOTP(
+      confirmLinkMezonOTPRequest,
+      options
+    );
   }
 
   /** Add a custom ID to the social profiles on the current user's account. */
-  async linkMezon(
+  async linkSMS(
     session: Session,
-    request: ApiLinkAccountMezon
+    request: AccountMezon
   ): Promise<ApiLinkAccountConfirmRequest> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .linkMezon(session.token, request)
-      .then((response: ApiLinkAccountConfirmRequest) => {
-        return Promise.resolve(response);
-      });
+    const linkSMSRequest = create(AccountMezonSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.linkSMS(linkSMSRequest, options);
   }
 
   /** Add an email+password to the social profiles on the current user's account. */
   async linkEmail(
     session: Session,
-    request: ApiAccountEmail
-  ): Promise<ApiLinkAccountConfirmRequest> {
+    request: AccountEmail
+  ): Promise<LinkAccountConfirmRequest> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .linkEmail(session.token, request)
-      .then((response: ApiLinkAccountConfirmRequest) => {
-        return Promise.resolve(response);
-      });
+    const linkEmailRequest = create(AccountEmailSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.linkEmail(linkEmailRequest, options);
   }
 
   /** List all friends for the current user. */
@@ -1900,55 +2177,35 @@ export class Client {
     state?: number,
     limit?: number,
     cursor?: string
-  ): Promise<Friends> {
+  ): Promise<FriendList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listFriends(session.token, limit, state, cursor)
-      .then((response: ApiFriendList) => {
-        var result: Friends = {
-          friends: [],
-          cursor: response.cursor,
-        };
+    const listFriendsRequest = create(ListFriendsRequestSchema, {
+      limit: limit,
+      state: state,
+      cursor: cursor,
+    });
 
-        if (response.friends == null) {
-          return Promise.resolve(result);
-        }
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
 
-        response.friends!.forEach((f) => {
-          result.friends!.push({
-            user: {
-              avatar_url: f.user!.avatar_url,
-              create_time: f.user!.create_time,
-              display_name: f.user!.display_name,
-              edge_count: f.user!.edge_count ? Number(f.user!.edge_count) : 0,              
-              id: f.user!.id,
-              lang_tag: f.user!.lang_tag,
-              location: f.user!.location,
-              online: f.user!.online,
-              timezone: f.user!.timezone,
-              update_time: f.user!.update_time,
-              username: f.user!.username,
-              is_mobile: f.user?.is_mobile,
-              user_status: f.user!.user_status,
-              status: f.user!.status,
-              mezon_id: f.user!.mezon_id,
-              list_nick_names: f.user!.list_nick_names,
-              phone_number: f.user!.phone_number,
-              about_me: f.user!.about_me
-            },
-            state: f.state,
-            source_id: f.source_id,
-          });
-        });
-        return Promise.resolve(result);
-      });
+    const response = await this.mezonClient.listFriends(
+      listFriendsRequest,
+      options
+    );
+
+    if (response.friends == null) {
+      response.friends = [];
+    }
+
+    return response;
   }
 
   /** Fetch list of notifications. */
@@ -1959,103 +2216,37 @@ export class Client {
     notificationId?: string,
     category?: number,
     direction?: number
-  ): Promise<ApiNotificationList> {
+  ): Promise<NotificationList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listNotifications(
-        session.token,
-        limit,
-        clanId,
-        notificationId,
-        category,
-        direction
-      )
-      .then((response: ApiNotificationList) => {
-        var result: ApiNotificationList = {
-          cacheable_cursor: response.cacheable_cursor,
-          notifications: [],
-        };
+    const listNotificationsRequest = create(ListNotificationsRequestSchema, {
+      limit: limit,
+      clanId: clanId,
+      notificationId: notificationId,
+      category: category,
+      direction: direction,
+    });
 
-        if (response.notifications == null) {
-          return Promise.resolve(result);
-        }
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
 
-        response.notifications!.forEach((n) => {
-          result.notifications!.push({
-            id: n.id,
-            subject: n.subject,
-            content: n.content ? safeJSONParse(n.content) : undefined,
-            code: n.code ? Number(n.code) : 0,
-            sender_id: n.sender_id,
-            create_time: n.create_time,
-            persistent: n.persistent,
-            category: n.category,
-          });
-        });
-        return Promise.resolve(result);
-      });
-  }
+    const response = await this.mezonClient.listNotifications(
+      listNotificationsRequest,
+      options
+    );
 
-  /** Execute an RPC function on the server. */
-  async rpc(
-    session: Session,
-    basicAuthUsername: string,
-    basicAuthPassword: string,
-    id: string,
-    input: object
-  ): Promise<RpcResponse> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
+    if (response.notifications == null) {
+      response.notifications = [];
     }
 
-    return this.apiClient
-      .rpcFunc(
-        session.token,
-        basicAuthUsername,
-        basicAuthPassword,
-        id,
-        JSON.stringify(input)
-      )
-      .then((response: ApiRpc) => {
-        return Promise.resolve({
-          id: response.id,
-          payload: !response.payload
-            ? undefined
-            : safeJSONParse(response.payload),
-        });
-      });
-  }
-
-  /** Execute an RPC function on the server. */
-  async rpcHttpKey(
-    httpKey: string,
-    id: string,
-    input?: object
-  ): Promise<RpcResponse> {
-    return this.apiClient
-      .rpcFunc2("", id, (input && JSON.stringify(input)) || "", httpKey)
-      .then((response: ApiRpc) => {
-        return Promise.resolve({
-          id: response.id,
-          payload: !response.payload
-            ? undefined
-            : safeJSONParse(response.payload),
-        });
-      })
-      .catch((err: any) => {
-        throw err;
-      });
+    return response;
   }
 
   /** Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user. */
@@ -2068,22 +2259,29 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .sessionLogout(session.token, {
-        refresh_token: refreshToken,
-        token: token,
-        device_id: deviceId,
-        platform: platform
-      })
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const sessionLogoutRequest = create(SessionLogoutRequestSchema, {
+      refreshToken: refreshToken,
+      token: token,
+      deviceId: deviceId,
+      platform: platform,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.sessionLogout(
+      sessionLogoutRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Refresh a user's session using a refresh token retrieved from a previous authentication request. */
@@ -2096,7 +2294,7 @@ export class Client {
       return session;
     }
 
-    if (session.created && session.expires_at! - session.created_at < 70) {
+    if (session.created && session.expires_at! - session.createdAt < 70) {
       console.warn(
         "Session lifetime too short, please set '--session.token_expiry_sec' option. See the documentation for more info: https://mezon.vn/docs/mezon/getting-started/configuration/#session"
       );
@@ -2104,7 +2302,7 @@ export class Client {
 
     if (
       session.created &&
-      session.refresh_expires_at! - session.created_at < 3700
+      session.refresh_expires_at! - session.createdAt < 3700
     ) {
       console.warn(
         "Session refresh lifetime too short, please set '--session.refresh_token_expiry_sec' option. See the documentation for more info: https://mezon.vn/docs/mezon/getting-started/configuration/#session"
@@ -2117,17 +2315,28 @@ export class Client {
 
     this.refreshTokenPromise = new Promise<Session>(async (resolve, reject) => {
       try {
-        const apiSession = await this.apiClient.sessionRefresh(
-          this.serverkey,
-          "",
-          {
-            token: session.refresh_token,
-            vars: vars,
-            is_remember:session.is_remember
-          }
+        const sessionRefreshRequest = create(SessionRefreshRequestSchema, {
+          //token: session.refreshToken,
+          vars: vars,
+          isRemember: session.isRemember,
+        });
+
+        const options: CallOptions = {
+          headers: [["Authorization", session.refreshToken]],
+        };
+
+        const apiSession = await this.mezonClient.sessionRefresh(
+          sessionRefreshRequest,
+          options
         );
-        session.update(apiSession.token!, apiSession.refresh_token!, apiSession.is_remember || false);
-        this.onRefreshSession(apiSession);
+
+        session.update(
+          apiSession.token!,
+          apiSession.refreshToken!,
+          apiSession.isRemember || false
+        );
+
+        this.onRefreshSession(session);
         resolve(session);
       } catch (error) {
         console.error("Session refresh failed:", error);
@@ -2143,556 +2352,696 @@ export class Client {
   /** Remove custom ID from the social profiles on the current user's account. */
   async unlinkCustom(
     session: Session,
-    request: ApiAccountMezon
+    request: AccountMezon
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .unlinkMezon(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const unlinkMezonRequest = create(AccountMezonSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.unlinkMezon(
+      unlinkMezonRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Remove an email+password from the social profiles on the current user's account. */
-  async unlinkEmail(
-    session: Session,
-    request: ApiAccountEmail
-  ): Promise<boolean> {
+  async unlinkEmail(session: Session, request: AccountEmail): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .unlinkEmail(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const unlinkEmailRequest = create(AccountEmailSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.unlinkEmail(
+      unlinkEmailRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Update fields in the current user's account. */
   async updateUsername(
     session: Session,
-    request: ApiUpdateUsernameRequest
-  ): Promise<ApiSession> {
+    request: UpdateUsernameRequest
+  ): Promise<Session> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateUsername(session.token, request)
-      .then((response: ApiSession) => {
-        return Promise.resolve(response);
-      });
+    const updateUsernameRequest = create(UpdateUsernameRequestSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.updateUsername(
+      updateUsernameRequest,
+      options
+    );
+
+    return new Session(
+      response.token || "",
+      response.refreshToken || "",
+      response.created || false,
+      response.apiUrl || "",
+      response.idToken || "",
+      response.isRemember || false
+    );
   }
 
   /** Update fields in the current user's account. */
   async updateAccount(
     session: Session,
-    request: ApiUpdateAccountRequest
+    request: UpdateAccountRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateAccount(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const updateAccountRequest = create(UpdateAccountRequestSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.updateAccount(
+      updateAccountRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Update fields in a given channel */
   async updateChannelDesc(
     session: Session,
     channelId: string,
-    request: ApiUpdateChannelDescRequest
+    request: UpdateChannelDescRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateChannelDesc(session.token, channelId, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const updateChannelDescRequest = create(UpdateChannelDescRequestSchema, {
+      ...request,
+      channelId: channelId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.updateChannelDesc(
+      updateChannelDescRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Update fields in a given clan. */
   async updateClanDesc(
     session: Session,
     clanId: string,
-    request: MezonUpdateClanDescBody
+    request: UpdateClanDescRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateClanDesc(session.token, clanId, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const updateClanDescRequest = create(UpdateClanDescRequestSchema, {
+      ...request,
+      clanId: clanId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.updateClanDesc(
+      updateClanDescRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Update fields in a given category. */
   async updateCategory(
     session: Session,
     clanId: string,
-    request: ApiUpdateCategoryDescRequest
+    request: UpdateCategoryDescRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateCategory(session.token, clanId, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const updateCategoryDescRequest = create(UpdateCategoryDescRequestSchema, {
+      ...request,
+      clanId: clanId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.updateCategory(
+      updateCategoryDescRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   async updateUserProfileByClan(
     session: Session,
     clanId: string,
-    request: ApiUpdateClanProfileRequest
+    request: UpdateClanProfileRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateUserProfileByClan(session.token, clanId, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const updateClanProfileRequest = create(UpdateClanProfileRequestSchema, {
+      ...request,
+      clanId: clanId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.updateUserProfileByClan(
+      updateClanProfileRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Update fields in a given role. */
   async updateRole(
     session: Session,
     roleId: string,
-    request: ApiUpdateRoleRequest
+    request: UpdateRoleRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateRole(session.token, roleId, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const updateRoleRequest = create(UpdateRoleRequestSchema, {
+      ...request,
+      roleId: roleId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.updateRole(
+      updateRoleRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Update fields in a given event. */
   async updateEvent(
     session: Session,
-    roleId: string,
-    request: MezonUpdateEventBody
+    eventId: string,
+    request: UpdateEventRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateEvent(session.token, roleId, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const updateEventRequest = create(UpdateEventRequestSchema, {
+      ...request,
+      eventId: eventId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.updateEvent(
+      updateEventRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Update fields in a given event. */
   async updateApp(
     session: Session,
     roleId: string,
-    request: MezonUpdateAppBody
-  ): Promise<ApiApp> {
+    request: UpdateAppRequest
+  ): Promise<App> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateApp(session.token, roleId, request)
-      .then((response: ApiApp) => {
-        return Promise.resolve(response);
-      });
+    const updateAppRequest = create(UpdateAppRequestSchema, {
+      ...request,
+      id: roleId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.updateApp(updateAppRequest, options);
   }
 
   /** Update fields in a given clan profile. */
   async createLinkInviteUser(
     session: Session,
-    request: ApiLinkInviteUserRequest
-  ): Promise<ApiLinkInviteUser> {
+    request: LinkInviteUserRequest
+  ): Promise<LinkInviteUser> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .createLinkInviteUser(session.token, request)
-      .then((response: ApiLinkInviteUser) => {
-        return Promise.resolve(response);
-      });
-  }
+    const linkInviteUserRequest = create(LinkInviteUserRequestSchema, request);
 
-  /** Get link invite user */
-  async getLinkInvite(
-    inviteId: string
-  ): Promise<ApiInviteUserRes> {
-    return this.apiClient
-      .getLinkInvite( this.serverkey, "", inviteId)
-      .then((response: ApiInviteUserRes) => {
-        return Promise.resolve(response);
-      });
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.createLinkInviteUser(
+      linkInviteUserRequest,
+      options
+    );
   }
 
   /** Get permission of user in the clan */
   async GetRoleOfUserInTheClan(
     session: Session,
     clanId: string
-  ): Promise<ApiRoleList> {
+  ): Promise<RoleList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getRoleOfUserInTheClan(session.token, clanId)
-      .then((response: ApiRoleList) => {
-        return Promise.resolve(response);
-      });
+    const clanIdRequest = create(ListPermissionOfUsersRequestSchema, {
+      clanId: clanId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.getRoleOfUserInTheClan(
+      clanIdRequest,
+      options
+    );
   }
 
   /** invite user */
-  async inviteUser(
-    session: Session,
-    inviteId: string
-  ): Promise<ApiInviteUserRes> {
+  async inviteUser(session: Session, inviteId: string): Promise<InviteUserRes> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .inviteUser(session.token, inviteId)
-      .then((response: ApiInviteUserRes) => {
-        return Promise.resolve(response);
-      });
+    const inviteUserRequest = create(InviteUserRequestSchema, {
+      inviteId: inviteId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.inviteUser(inviteUserRequest, options);
   }
 
   /** Set default notification clan*/
   async setNotificationClan(
     session: Session,
-    request: ApiSetDefaultNotificationRequest
+    request: SetDefaultNotificationRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .setNotificationClanSetting(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const setNotificationClanRequest = create(
+      SetDefaultNotificationRequestSchema,
+      request
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.setNotificationClanSetting(
+      setNotificationClanRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Set notification channel*/
   async setNotificationChannel(
     session: Session,
-    request: ApiSetNotificationRequest
+    request: SetNotificationRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .setNotificationChannelSetting(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const setNotificationRequest = create(
+      SetNotificationRequestSchema,
+      request
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.setNotificationChannelSetting(
+      setNotificationRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Set notification category*/
   async setMuteCategory(
     session: Session,
-    request: ApiSetMuteRequest
+    request: SetMuteRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .setMuteCategory(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const setMuteRequest = create(SetMuteRequestSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.setMuteCategory(
+      setMuteRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Set notification channel*/
   async setMuteChannel(
     session: Session,
-    request: ApiSetMuteRequest
+    request: SetMuteRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .setMuteChannel(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const setMuteRequest = create(SetMuteRequestSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.setMuteChannel(
+      setMuteRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** update channel private*/
   async updateChannelPrivate(
     session: Session,
-    request: ApiChangeChannelPrivateRequest
+    request: ChangeChannelPrivateRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateChannelPrivate(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const changeChannelPrivateRequest = create(
+      ChangeChannelPrivateRequestSchema,
+      request
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.updateChannelPrivate(
+      changeChannelPrivateRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** Set default notification category*/
   async setNotificationCategory(
     session: Session,
-    request: ApiSetNotificationRequest
+    request: SetNotificationRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .setNotificationCategorySetting(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const setNotificationRequest = create(
+      SetNotificationRequestSchema,
+      request
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.setNotificationCategorySetting(
+      setNotificationRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   async deleteNotificationCategory(
     session: Session,
-    category_id: string
+    categoryId: string
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .deleteNotificationCategorySetting(session.token, category_id)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const channelIdRequest = create(DefaultNotificationCategorySchema, {
+      categoryId: categoryId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.deleteNotificationCategorySetting(
+      channelIdRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   async deleteNotificationChannel(
     session: Session,
-    channel_id: string
+    channelId: string
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .deleteNotificationChannel(session.token, channel_id)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
+    const channelIdRequest = create(NotificationChannelSchema, {
+      channelId: channelId,
+    });
 
-  /** */
-  async setNotificationReactMessage(
-    session: Session,
-    channel_id: string
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
 
-    return this.apiClient
-      .setNotificationReactMessage(session.token, { channel_id })
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
+    const response = await this.mezonClient.deleteNotificationChannel(
+      channelIdRequest,
+      options
+    );
 
-  //** */
-  async deleteNotiReactMessage(
-    session: Session,
-    channel_id: string
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .deleteNotiReactMessage(session.token, channel_id)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    return response !== undefined;
   }
 
   /** query message in elasticsearch */
   async searchMessage(
     session: Session,
-    request: ApiSearchMessageRequest
-  ): Promise<ApiSearchMessageResponse> {
+    request: SearchMessageRequest
+  ): Promise<SearchMessageResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .searchMessage(session.token, request)
-      .then((response: ApiSearchMessageResponse) => {
-        return Promise.resolve(response);
-      });
+    const searchMessageRequest = create(SearchMessageRequestSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.searchMessage(searchMessageRequest, options);
   }
 
   /** */
   async createMessage2Inbox(
     session: Session,
-    request: ApiMessage2InboxRequest
-  ): Promise<ApiChannelMessageHeader> {
+    request: Message2InboxRequest
+  ): Promise<ChannelMessageHeader> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .createMessage2Inbox(session.token, request)
-      .then((response: ApiChannelMessageHeader) => {
-        return Promise.resolve(response);
-      });
+    const message2InboxRequest = create(Message2InboxRequestSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.createMessage2Inbox(
+      message2InboxRequest,
+      options
+    );
   }
 
   /** */
   async createPinMessage(
     session: Session,
-    request: ApiPinMessageRequest
-  ): Promise<ApiChannelMessageHeader> {
+    request: PinMessageRequest
+  ): Promise<ChannelMessageHeader> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .createPinMessage(session.token, request)
-      .then((response: ApiChannelMessageHeader) => {
-        return Promise.resolve(response);
-      });
+    const pinMessageRequest = create(PinMessageRequestSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.createPinMessage(pinMessageRequest, options);
   }
 
   async pinMessagesList(
@@ -2700,20 +3049,29 @@ export class Client {
     messageId: string,
     channelId: string,
     clanId: string
-  ): Promise<ApiPinMessagesList> {
+  ): Promise<PinMessagesList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getPinMessagesList(session.token, messageId, channelId, clanId)
-      .then((response: ApiPinMessagesList) => {
-        return Promise.resolve(response);
-      });
+    const getPinMessagesListRequest = create(PinMessageRequestSchema, {
+      messageId: messageId,
+      channelId: channelId,
+      clanId: clanId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.getPinMessagesList(
+      getPinMessagesListRequest,
+      options
+    );
   }
 
   //** */
@@ -2726,502 +3084,605 @@ export class Client {
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .deletePinMessage(session.token, id, messageId, channelId, clanId)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const deletePinMessageRequest = create(DeletePinMessageSchema, {
+      id: id,
+      messageId: messageId,
+      channelId: channelId,
+      clanId: clanId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.deletePinMessage(
+      deletePinMessageRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** create clan emoji */
-  async createClanEmoji(session: Session, request: ApiClanEmojiCreateRequest) {
+  async createClanEmoji(session: Session, request: ClanEmojiCreateRequest) {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .createClanEmoji(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const clanEmojiCreateRequest = create(
+      ClanEmojiCreateRequestSchema,
+      request
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.createClanEmoji(
+      clanEmojiCreateRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   //**update clan emoji by id */
   async updateClanEmojiById(
     session: Session,
     id: string,
-    request: MezonUpdateClanEmojiByIdBody
-  ) {
+    request: ClanEmojiUpdateRequest
+  ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateClanEmojiById(session.token, id, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const clanEmojiUpdateRequest = create(ClanEmojiUpdateRequestSchema, {
+      ...request,
+      id: id,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.updateClanEmojiById(
+      clanEmojiUpdateRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   //**delete clan emoji by id */
   async deleteByIdClanEmoji(
     session: Session,
     id: string,
-    clan_id: string,
+    clanId: string,
     emojiLabel?: string
-  ) {
+  ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .deleteClanEmojiById(session.token, id, clan_id, emojiLabel)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const clanEmojiDeleteRequest = create(ClanEmojiDeleteRequestSchema, {
+      id: id,
+      clanId: clanId,
+      emojiLabel: emojiLabel,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.deleteByIdClanEmoji(
+      clanEmojiDeleteRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   //**create webhook for chaneel */
   async generateWebhookLink(
     session: Session,
-    request: ApiWebhookCreateRequest
-  ): Promise<ApiWebhookGenerateResponse> {
+    request: WebhookCreateRequest
+  ): Promise<WebhookGenerateResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .generateWebhook(session.token, request)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
+    const webhookCreateRequest = create(WebhookCreateRequestSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.generateWebhook(
+      webhookCreateRequest,
+      options
+    );
   }
 
   //**list webhook belong to the channel */
   async listWebhookByChannelId(
     session: Session,
-    channel_id: string,
-    clan_id: string
-  ): Promise<ApiWebhookListResponse> {
+    channelId: string,
+    clanId: string
+  ): Promise<WebhookListResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listWebhookByChannelId(session.token, channel_id, clan_id)
-      .then((response: ApiWebhookListResponse) => {
-        return Promise.resolve(response);
-      });
+    const webhookListRequest = create(WebhookListRequestSchema, {
+      channelId: channelId,
+      clanId: clanId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.listWebhookByChannelId(
+      webhookListRequest,
+      options
+    );
   }
 
   //**update webhook name by id */
   async updateWebhookById(
     session: Session,
     id: string,
-    request: MezonUpdateWebhookByIdBody
+    request: WebhookUpdateRequestById
   ) {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateWebhookById(session.token, id, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const webhookUpdateRequest = create(WebhookUpdateRequestByIdSchema, {
+      ...request,
+      id: id,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.updateWebhookById(
+      webhookUpdateRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   //**disabled webhook by id */
   async deleteWebhookById(
     session: Session,
     id: string,
-    request: MezonDeleteWebhookByIdBody
+    request: WebhookDeleteRequestById
   ) {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .deleteWebhookById(session.token, id, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
+    const webhookDeleteRequest = create(WebhookDeleteRequestByIdSchema, {
+      ...request,
+      id: id,
+    });
 
-  //**check duplicate clan name */
-  async checkDuplicateClanName(
-    session: Session,
-    clan_name: string
-  ): Promise<ApiCheckDuplicateClanNameResponse> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
 
-    return this.apiClient
-      .checkDuplicateClanName(session.token, clan_name)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
+    const response = await this.mezonClient.deleteWebhookById(
+      webhookDeleteRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   //**Add a new sticker */
-  async addClanSticker(session: Session, request: ApiClanStickerAddRequest) {
+  async addClanSticker(
+    session: Session,
+    request: ClanStickerAddRequest
+  ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .addClanSticker(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const clanStickerAddRequest = create(ClanStickerAddRequestSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.addClanSticker(
+      clanStickerAddRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   //**Delete a sticker by ID*/
   async deleteClanStickerById(
     session: Session,
     id: string,
-    clan_id: string,
+    clanId: string,
     stickerLabel?: string
-  ) {
+  ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .deleteClanStickerById(session.token, id, clan_id, stickerLabel)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const clanStickerDeleteRequest = create(ClanStickerDeleteRequestSchema, {
+      id: id,
+      clanId: clanId,
+      stickerLabel: stickerLabel,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.deleteClanStickerById(
+      clanStickerDeleteRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   //**Update a sticker by ID*/
   async updateClanStickerById(
     session: Session,
     id: string,
-    request: MezonUpdateClanStickerByIdBody
+    request: ClanStickerUpdateByIdRequest
   ) {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateClanStickerById(session.token, id, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const clanStickerUpdateRequest = create(
+      ClanStickerUpdateByIdRequestSchema,
+      {
+        ...request,
+        id: id,
+      }
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.updateClanStickerById(
+      clanStickerUpdateRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   //** update the category of a channel */
   async changeChannelCategory(
     session: Session,
     id: string,
-    request: MezonChangeChannelCategoryBody
+    request: ChangeChannelCategoryRequest
   ) {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .changeChannelCategory(session.token, id, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const changeChannelCategoryRequest = create(
+      ChangeChannelCategoryRequestSchema,
+      {
+        ...request,
+        channelId: id,
+      }
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.changeChannelCategory(
+      changeChannelCategoryRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   /** */
   async setRoleChannelPermission(
     session: Session,
-    request: ApiUpdateRoleChannelRequest
+    request: UpdateRoleChannelRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .setRoleChannelPermission(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const setRoleChannelPermissionRequest = create(
+      UpdateRoleChannelRequestSchema,
+      request
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.setRoleChannelPermission(
+      setRoleChannelPermissionRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
-  async addApp(session: Session, request: ApiAddAppRequest): Promise<ApiApp> {
+  async addApp(session: Session, request: AddAppRequest): Promise<App> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .addApp(session.token, request)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
+    const addAppRequest = create(AddAppRequestSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.addApp(addAppRequest, options);
   }
 
-  async getApp(session: Session, id: string): Promise<ApiApp> {
+  async getApp(session: Session, id: string): Promise<App> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.getApp(session.token, id).then((response: ApiApp) => {
-      return Promise.resolve(response);
+    const appIdRequest = create(AppIdSchema, {
+      id: id,
     });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.getApp(appIdRequest, options);
   }
 
-  async listApps(session: Session): Promise<ApiAppList> {
+  async listApps(session: Session): Promise<AppList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listApps(session.token)
-      .then((response: ApiAppList) => {
-        return Promise.resolve(response);
-      });
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.listApps(
+      create(ListAppsRequestSchema, {}),
+      options
+    );
   }
 
   async addAppToClan(session: Session, appId: string, clanId: string) {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .addAppToClan(session.token, appId, clanId)
-      .then((response: ApiAppList) => {
-        return response !== undefined;
-      });
-  }
+    const addAppToClanRequest = create(AppClanSchema, {
+      appId: appId,
+      clanId: clanId,
+    });
 
-  async getSystemMessagesList(
-    session: Session
-  ): Promise<ApiSystemMessagesList> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
 
-    return this.apiClient
-      .getSystemMessagesList(session.token)
-      .then((response: ApiSystemMessagesList) => {
-        return Promise.resolve(response);
-      });
+    const response = await this.mezonClient.addAppToClan(
+      addAppToClanRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
   async getSystemMessageByClanId(
     session: Session,
     clanId: string
-  ): Promise<ApiSystemMessage> {
+  ): Promise<SystemMessage> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getSystemMessageByClanId(session.token, clanId)
-      .then((response: ApiSystemMessage) => {
-        return Promise.resolve(response);
-      });
+    const clanIdRequest = create(GetSystemMessageSchema, {
+      clanId: clanId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.getSystemMessageByClanId(
+      clanIdRequest,
+      options
+    );
   }
 
   async createSystemMessage(
     session: Session,
-    request: ApiSystemMessageRequest
+    request: SystemMessageRequest
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .createSystemMessage(session.token, request)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
+    const systemMessageRequest = create(SystemMessageRequestSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.createSystemMessage(
+      systemMessageRequest,
+      options
+    );
   }
 
   async updateSystemMessage(
     session: Session,
     clanId: string,
-    request: MezonUpdateSystemMessageBody
-  ): Promise<any> {
+    request: SystemMessageRequest
+  ): Promise<void> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateSystemMessage(session.token, clanId, request)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
+    const updateSystemMessageRequest = create(SystemMessageRequestSchema, {
+      ...request,
+      clanId: clanId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    await this.mezonClient.updateSystemMessage(
+      updateSystemMessageRequest,
+      options
+    );
   }
 
   async deleteSystemMessage(session: Session, clanId: string): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .deleteSystemMessage(session.token, clanId)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
+    const deleteSystemMessageRequest = create(DeleteSystemMessageSchema, {
+      clanId: clanId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.deleteSystemMessage(
+      deleteSystemMessageRequest,
+      options
+    );
   }
 
   async updateCategoryOrder(
     session: Session,
-    request: ApiUpdateCategoryOrderRequest
+    request: UpdateCategoryOrderRequest
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateCategoryOrder(session.token, request)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
-  }
+    const updateCategoryOrderRequest = create(
+      UpdateCategoryOrderRequestSchema,
+      request
+    );
 
-  async deleteCategoryOrder(session: Session, clanId: string): Promise<any> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
 
-    return this.apiClient
-      .deleteCategoryOrder(session.token, clanId)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
-  }
-
-  async givecoffee(session: Session, request: ApiGiveCoffeeEvent): Promise<any> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .giveMeACoffee(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  async sendToken(session: Session, request: ApiTokenSentEvent): Promise<any> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .sendToken(session.token, request)
-      .then((response: any) => {
-        return response !== undefined
-      });
+    return await this.mezonClient.updateCategoryOrder(
+      updateCategoryOrderRequest,
+      options
+    );
   }
 
   /** List a channel's users. */
@@ -3233,303 +3694,306 @@ export class Client {
     state?: number,
     limit?: number,
     cursor?: string
-  ): Promise<ApiStreamingChannelUserList> {
+  ): Promise<StreamingChannelUserList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listStreamingChannelUsers(
-        session.token,
-        clanId,
-        channelId,
-        channelType,
-        limit,
-        state,
-        cursor
-      )
-      .then((response: ApiStreamingChannelUserList) => {
-        var result: ApiStreamingChannelUserList = {
-          streaming_channel_users: [],
-        };
+    const listStreamingChannelUsersRequest = create(
+      ListChannelUsersRequestSchema,
+      {
+        clanId: clanId,
+        channelId: channelId,
+        channelType: channelType,
+        limit: limit,
+        state: state,
+        cursor: cursor,
+      }
+    );
 
-        if (response.streaming_channel_users == null) {
-          return Promise.resolve(result);
-        }
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
 
-        response.streaming_channel_users!.forEach((gu) => {
-          result.streaming_channel_users!.push({
-            id: gu.id,
-            channel_id: gu.channel_id,
-            user_id: gu.user_id,
-            participant: gu.participant,
-          });
-        });
-        return Promise.resolve(result);
-      });
-  }
+    const response = await this.mezonClient.listStreamingChannelUsers(
+      listStreamingChannelUsersRequest,
+      options
+    );
 
-  async registerStreamingChannel(
-    session: Session,
-    request: ApiRegisterStreamingChannelRequest
-  ) {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
+    if (response.streamingChannelUsers == null) {
+      response.streamingChannelUsers = [];
     }
 
-    return this.apiClient
-      .registerStreamingChannel(session.token, request)
-      .then((response: ApiRegisterStreamingChannelResponse) => {
-        return response !== undefined;
-      });
+    return response;
   }
 
   /** List a channel's users. */
   async listChannelApps(
     session: Session,
     clanId: string
-  ): Promise<ApiListChannelAppsResponse> {
+  ): Promise<ListChannelAppsResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listChannelApps(session.token, clanId)
-      .then((response: ApiListChannelAppsResponse) => {
-        var result: ApiListChannelAppsResponse = {
-          channel_apps: [],
-        };
+    const listChannelAppsRequest = create(ListChannelAppsRequestSchema, {
+      clanId: clanId,
+    });
 
-        if (response.channel_apps == null) {
-          return Promise.resolve(result);
-        }
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
 
-        response.channel_apps!.forEach((gu) => {
-          result.channel_apps!.push({
-            id: gu.id,
-            channel_id: gu.channel_id,
-            app_id: gu.app_id,
-            clan_id: gu.clan_id,
-            app_url: gu.app_url,
-            app_name: gu.app_name,
-            app_logo: gu.app_logo,
-          });
-        });
-        return Promise.resolve(result);
-      });
+    const response = await this.mezonClient.listChannelApps(
+      listChannelAppsRequest,
+      options
+    );
+
+    if (response.channelApps == null) {
+      response.channelApps = [];
+    }
+
+    return response;
   }
 
   async getChannelCategoryNotiSettingsList(
     session: Session,
     clanId: string
-  ): Promise<ApiNotificationChannelCategorySettingList> {
+  ): Promise<NotificationChannelCategorySettingList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getChannelCategoryNotiSettingsList(session.token, clanId)
-      .then((response: ApiNotificationChannelCategorySettingList) => {
-        return Promise.resolve(response);
-      });
+    const notificationSettingRequest = create(NotificationClanSchema, {
+      clanId: clanId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.getChannelCategoryNotiSettingsList(
+      notificationSettingRequest,
+      options
+    );
   }
 
   async getNotificationCategory(
     session: Session,
     categoryId: string
-  ): Promise<ApiNotificationUserChannel> {
+  ): Promise<NotificationUserChannel> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getNotificationCategory(session.token, categoryId)
-      .then((response: ApiNotificationUserChannel) => {
-        return Promise.resolve(response);
-      });
+    const notificationCategoryRequest = create(
+      DefaultNotificationCategorySchema,
+      {
+        categoryId: categoryId,
+      }
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.getNotificationCategory(
+      notificationCategoryRequest,
+      options
+    );
   }
 
   async getNotificationChannel(
     session: Session,
     channelId: string
-  ): Promise<ApiNotificationUserChannel> {
+  ): Promise<NotificationUserChannel> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getNotificationChannel(session.token, channelId)
-      .then((response: ApiNotificationUserChannel) => {
-        return Promise.resolve(response);
-      });
+    const notificationChannelRequest = create(NotificationChannelSchema, {
+      channelId: channelId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.getNotificationChannel(
+      notificationChannelRequest,
+      options
+    );
   }
 
   async getNotificationClan(
     session: Session,
     clanId: string
-  ): Promise<ApiNotificationSetting> {
+  ): Promise<NotificationSetting> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getNotificationClan(session.token, clanId)
-      .then((response: ApiNotificationSetting) => {
-        return Promise.resolve(response);
-      });
+    const notificationClanRequest = create(NotificationClanSchema, {
+      clanId: clanId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.getNotificationClan(
+      notificationClanRequest,
+      options
+    );
   }
 
-  async getNotificationReactMessage(
-    session: Session,
-    channelId: string
-  ): Promise<ApiNotifiReactMessage> {
+  async listChannelByUserId(session: Session): Promise<ChannelDescListNoPool> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getNotificationReactMessage(session.token, channelId)
-      .then((response: ApiNotifiReactMessage) => {
-        return Promise.resolve(response);
-      });
-  }
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
 
-  async listChannelByUserId(session: Session): Promise<ApiChannelDescList> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .listChannelByUserId(session.token)
-      .then((response: ApiChannelDescList) => {
-        return Promise.resolve(response);
-      });
+    return await this.mezonClient.listChannelByUserId(
+      create(EmptySchema, {}),
+      options
+    );
   }
 
   async listChannelUsersUC(
     session: Session,
-    channel_id: string,
+    channelId: string,
     limit: number
-  ): Promise<ApiAllUsersAddChannelResponse> {
+  ): Promise<AllUsersAddChannelResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listChannelUsersUC(session.token, channel_id, limit)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
+    const listChannelUsersUCRequest = create(AllUsersAddChannelRequestSchema, {
+      channelId: channelId,
+      limit: limit,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.listChannelUsersUC(
+      listChannelUsersUCRequest,
+      options
+    );
   }
 
-  async getListEmojisByUserId(
-    session: Session
-  ): Promise<ApiEmojiListedResponse> {
+  async getListEmojisByUserId(session: Session): Promise<EmojiListedResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getListEmojisByUserId(session.token)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.getListEmojisByUserId(
+      create(EmptySchema, {}),
+      options
+    );
   }
 
-  async emojiRecentList(
-    session: Session
-  ): Promise<ApiEmojiRecentList> {
+  async emojiRecentList(session: Session): Promise<EmojiRecentList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .emojiRecentList(session.token)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.emojiRecentList(
+      create(EmptySchema, {}),
+      options
+    );
   }
 
   async getListStickersByUserId(
     session: Session
-  ): Promise<ApiStickerListedResponse> {
+  ): Promise<StickerListedResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getListStickersByUserId(session.token)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.getListStickersByUserId(
+      create(EmptySchema, {}),
+      options
+    );
   }
 
-  async listUserClansByUserId(session: Session): Promise<ApiAllUserClans> {
+  async listUserClansByUserId(session: Session): Promise<AllUserClans> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listUserClansByUserId(session.token)
-      .then((response: ApiAllUserClans) => {
-        return Promise.resolve(response);
-      });
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.listUserClansByUserId(
+      create(EmptySchema, {}),
+      options
+    );
   }
 
   async listRoles(
@@ -3538,51 +4002,65 @@ export class Client {
     limit?: number,
     state?: number,
     cursor?: string
-  ): Promise<ApiRoleListEventResponse> {
+  ): Promise<RoleListEventResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listRoles(session.token, clanId, limit, state, cursor)
-      .then((response: ApiRoleListEventResponse) => {
-        var result: ApiRoleListEventResponse = {
-          clan_id: clanId,
-          roles: response.roles,
-        };
+    const listRolesRequest = create(RoleListEventRequestSchema, {
+      clanId: clanId,
+      limit: limit,
+      state: state,
+      cursor: cursor,
+    });
 
-        return Promise.resolve(result);
-      });
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.listRoles(
+      listRolesRequest,
+      options
+    );
+
+    return response;
   }
 
   async listUserPermissionInChannel(
     session: Session,
     clanId?: string,
     channelId?: string
-  ): Promise<ApiUserPermissionInChannelListResponse> {
+  ): Promise<UserPermissionInChannelListResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listUserPermissionInChannel(session.token, clanId, channelId)
-      .then((response: ApiUserPermissionInChannelListResponse) => {
-        var result: ApiUserPermissionInChannelListResponse = {
-          clan_id: clanId,
-          channel_id: channelId,
-          permissions: response.permissions,
-        };
+    const listUserPermissionInChannelRequest = create(
+      UserPermissionInChannelListRequestSchema,
+      {
+        clanId: clanId,
+        channelId: channelId,
+      }
+    );
 
-        return Promise.resolve(result);
-      });
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.listUserPermissionInChannel(
+      listUserPermissionInChannelRequest,
+      options
+    );
+
+    return response;
   }
 
   async getPermissionByRoleIdChannelId(
@@ -3590,46 +4068,52 @@ export class Client {
     roleId?: string,
     channelId?: string,
     userId?: string
-  ): Promise<ApiPermissionRoleChannelListEventResponse> {
+  ): Promise<PermissionRoleChannelListEventResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getPermissionByRoleIdChannelId(session.token, roleId, channelId, userId)
-      .then((response: ApiPermissionRoleChannelListEventResponse) => {
-        var result: ApiPermissionRoleChannelListEventResponse = {
-          role_id: roleId,
-          channel_id: channelId,
-          permission_role_channel: response.permission_role_channel,
-          user_id: userId,
-        };
+    const getPermissionByRoleIdChannelIdRequest = create(
+      PermissionRoleChannelListEventRequestSchema,
+      {
+        roleId: roleId,
+        channelId: channelId,
+        userId: userId,
+      }
+    );
 
-        return Promise.resolve(result);
-      });
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.getPermissionByRoleIdChannelId(
+      getPermissionByRoleIdChannelIdRequest,
+      options
+    );
+
+    return response;
   }
 
-  async markAsRead(
-    session: Session,
-    request: ApiMarkAsReadRequest
-  ): Promise<any> {
+  async markAsRead(session: Session, request: MarkAsReadRequest): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .markAsRead(session.token, request)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
+    const markAsReadRequest = create(MarkAsReadRequestSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.markAsRead(markAsReadRequest, options);
   }
 
   /** List Threads. */
@@ -3641,53 +4125,63 @@ export class Client {
     clanId?: string,
     threadId?: string,
     page?: number
-  ): Promise<ApiChannelDescList> {
+  ): Promise<ChannelDescListNoPool> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listThreadDescs(
-        session.token,
-        channelId,
-        limit,
-        state,
-        clanId,
-        threadId,
-        page
-      )
-      .then((response: ApiChannelDescList) => {
-        var result: ApiChannelDescList = {
-          channeldesc: [],
-        };
+    const listThreadDescsRequest = create(ListThreadRequestSchema, {
+      channelId: channelId,
+      limit: limit,
+      state: state,
+      clanId: clanId,
+      threadId: threadId,
+      page: page,
+    });
 
-        if (response.channeldesc == null) {
-          return Promise.resolve(result);
-        }
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
 
-        result.channeldesc = response.channeldesc;
-        return Promise.resolve(result);
-      });
+    const response = await this.mezonClient.listThreadDescs(
+      listThreadDescsRequest,
+      options
+    );
+
+    if (response.channeldesc == null) {
+      response.channeldesc = [];
+    }
+
+    return response;
   }
 
-  async leaveThread(session: Session, clanId: string, channelId: string): Promise<any> {
+  async leaveThread(
+    session: Session,
+    clanId: string,
+    channelId: string
+  ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .leaveThread(session.token, clanId, channelId)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
+    const leaveThreadRequest = create(LeaveThreadRequestSchema, {
+      clanId: clanId,
+      channelId: channelId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.leaveThread(leaveThreadRequest, options);
   }
 
   async getChannelSettingInClan(
@@ -3702,32 +4196,36 @@ export class Client {
     limit?: number,
     page?: number,
     channelLabel?: string
-  ): Promise<ApiChannelSettingListResponse> {
+  ): Promise<ChannelSettingListResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listChannelSetting(
-        session.token,
-        clanId,
-        parentId,
-        categoryId,
-        privateChannel,
-        active,
-        status,
-        type,
-        limit,
-        page,
-        channelLabel
-      )
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
+    const listChannelSettingRequest = create(ChannelSettingListRequestSchema, {
+      clanId: clanId,
+      parentId: parentId,
+      categoryId: categoryId,
+      privateChannel: privateChannel,
+      active: active,
+      status: status,
+      type: type,
+      limit: limit,
+      page: page,
+      channelLabel: channelLabel,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.listChannelSetting(
+      listChannelSettingRequest,
+      options
+    );
   }
 
   async getChannelCanvasList(
@@ -3736,32 +4234,36 @@ export class Client {
     clanId?: string,
     limit?: number,
     page?: number
-  ): Promise<ApiChannelCanvasListResponse> {
+  ): Promise<ChannelCanvasListResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getChannelCanvasList(session.token, channelId, clanId, limit, page)
-      .then((response: ApiChannelCanvasListResponse) => {
-        var result: ApiChannelCanvasListResponse = {
-          channel_canvases: [],
-        };
+    const getChannelCanvasListRequest = create(ChannelCanvasListRequestSchema, {
+      channelId: channelId,
+      clanId: clanId,
+      limit: limit,
+      page: page,
+    });
 
-        if (response.channel_canvases == null) {
-          return Promise.resolve(result);
-        }
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
 
-        result.clan_id = response.clan_id;
-        result.channel_id = response.channel_id;
-        result.channel_canvases = response.channel_canvases;
-        result.count = response.count;
-        return Promise.resolve(result);
-      });
+    const response = await this.mezonClient.getChannelCanvasList(
+      getChannelCanvasListRequest,
+      options
+    );
+
+    if (response.channelCanvases == null) {
+      response.channelCanvases = [];
+    }
+
+    return response;
   }
 
   async getChannelCanvasDetail(
@@ -3769,39 +4271,59 @@ export class Client {
     id: string,
     clanId?: string,
     channelId?: string
-  ): Promise<any> {
+  ): Promise<ChannelCanvasDetailResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getChannelCanvasDetail(session.token, id, clanId, channelId)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
+    const getChannelCanvasDetailRequest = create(
+      ChannelCanvasDetailRequestSchema,
+      {
+        id: id,
+        clanId: clanId,
+        channelId: channelId,
+      }
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.getChannelCanvasDetail(
+      getChannelCanvasDetailRequest,
+      options
+    );
   }
 
   async editChannelCanvases(
     session: Session,
-    request: ApiEditChannelCanvasRequest
-  ): Promise<any> {
+    request: EditChannelCanvasRequest
+  ): Promise<EditChannelCanvasResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .editChannelCanvases(session.token, request)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
+    const editChannelCanvasesRequest = create(
+      EditChannelCanvasRequestSchema,
+      request
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.editChannelCanvases(
+      editChannelCanvasesRequest,
+      options
+    );
   }
 
   //** */
@@ -3813,40 +4335,58 @@ export class Client {
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .deleteChannelCanvas(session.token, canvasId, clanId, channelId)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const deleteChannelCanvasRequest = create(
+      DeleteChannelCanvasRequestSchema,
+      {
+        canvasId: canvasId,
+        clanId: clanId,
+        channelId: channelId,
+      }
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.deleteChannelCanvas(
+      deleteChannelCanvasRequest,
+      options
+    );
+    return response !== undefined;
   }
 
   async addFavoriteChannel(
     session: Session,
     channelId: string,
     clanId: string
-  ): Promise<ApiAddFavoriteChannelResponse> {
+  ): Promise<AddFavoriteChannelResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .addChannelFavorite(session.token, {
-        channel_id: channelId,
-        clan_id: clanId,
-      })
-      .then((response: ApiAddFavoriteChannelResponse) => {
-        return response;
-      });
+    const addChannelFavoriteRequest = create(AddFavoriteChannelRequestSchema, {
+      channelId: channelId,
+      clanId: clanId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.addChannelFavorite(
+      addChannelFavoriteRequest,
+      options
+    );
   }
 
   async removeFavoriteChannel(
@@ -3856,213 +4396,213 @@ export class Client {
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .removeChannelFavorite(session.token, clanId, channelId)
-      .then((response: any) => {
-        return response;
-      });
+    const removeChannelFavoriteRequest = create(
+      RemoveFavoriteChannelRequestSchema,
+      {
+        clanId: clanId,
+        channelId: channelId,
+      }
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    await this.mezonClient.removeChannelFavorite(
+      removeChannelFavoriteRequest,
+      options
+    );
   }
 
-  async getListFavoriteChannel(session: Session, clanId: string): Promise<any> {
+  async getListFavoriteChannel(
+    session: Session,
+    clanId: string
+  ): Promise<ListFavoriteChannelResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getListFavoriteChannel(session.token, clanId)
-      .then((response: any) => {
-        return response;
-      });
+    const getListFavoriteChannelRequest = create(
+      ListFavoriteChannelRequestSchema,
+      {
+        clanId: clanId,
+      }
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.getListFavoriteChannel(
+      getListFavoriteChannelRequest,
+      options
+    );
   }
   /** List activity */
-  async listActivity(session: Session): Promise<ApiListUserActivity> {
+  async listActivity(session: Session): Promise<ListUserActivity> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listActivity(session.token).then((response: any) => {
-      return response;
-    });
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.listActivity(
+      create(EmptySchema, {}),
+      options
+    );
   }
 
   async createActiviy(
     session: Session,
-    request: ApiCreateActivityRequest
-  ): Promise<ApiUserActivity> {
+    request: CreateActivityRequest
+  ): Promise<UserActivity> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .createActiviy(session.token, request)
-      .then((response: any) => {
-        return response;
-      });
-  }
+    const createActiviyRequest = create(CreateActivityRequestSchema, request);
 
-  async createQRLogin(requet: ApiLoginRequest): Promise<ApiLoginIDResponse> {
-    const apiSession = await this.apiClient.createQRLogin(
-      this.serverkey,
-      "",
-      requet
-    );
-    const response = {
-      login_id: apiSession.login_id,
-      create_time_second: apiSession.create_time_second,
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
     };
-    return response;
-  }
 
-  async checkLoginRequest(
-    requet: ApiConfirmLoginRequest
-  ): Promise<Session | null> {
-    const apiSession = await this.apiClient.checkLoginRequest(
-      this.serverkey,
-      "",
-      requet
-    );
-    if (!apiSession?.token) {
-      return null;
-    }
-    return new Session(
-      apiSession.token || "",
-      apiSession.refresh_token || "",
-      apiSession.created || false,
-      apiSession.api_url || "",
-      apiSession.id_token || "",
-      apiSession.is_remember || false
-    );
-  }
-
-  async confirmLogin(
-    session: Session,
-    basePath: string,
-    body: ApiConfirmLoginRequest
-  ): Promise<any> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .confirmLogin(session.token, basePath, body)
-      .then((response: any) => {
-        return response;
-      });
+    return await this.mezonClient.createActiviy(createActiviyRequest, options);
   }
 
   async getChanEncryptionMethod(
     session: Session,
     channelId: string
-  ): Promise<ApiChanEncryptionMethod> {
+  ): Promise<ChanEncryptionMethod> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getChanEncryptionMethod(session.token, channelId)
-      .then((response: ApiChanEncryptionMethod) => {
-        return response;
-      });
+    const getChanEncryptionMethodRequest = create(ChanEncryptionMethodSchema, {
+      channelId: channelId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.getChanEncryptionMethod(
+      getChanEncryptionMethodRequest,
+      options
+    );
   }
 
   async setChanEncryptionMethod(
     session: Session,
     channelId: string,
     method: string
-  ): Promise<any> {
+  ): Promise<void> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .setChanEncryptionMethod(session.token, channelId, { method: method })
-      .then((response: any) => {
-        return response;
-      });
+    const setChanEncryptionMethodRequest = create(ChanEncryptionMethodSchema, {
+      channelId: channelId,
+      method: method,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    await this.mezonClient.setChanEncryptionMethod(
+      setChanEncryptionMethodRequest,
+      options
+    );
   }
 
   async getPubKeys(
     session: Session,
     userIds: Array<string>
-  ): Promise<ApiGetPubKeysResponse> {
+  ): Promise<GetPubKeysResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getPubKeys(session.token, userIds)
-      .then((response: ApiGetPubKeysResponse) => {
-        return response;
-      });
+    const getPubKeysRequest = create(GetPubKeysRequestSchema, {
+      userIds: userIds,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.getPubKeys(getPubKeysRequest, options);
   }
 
-  async pushPubKey(
-    session: Session,
-    PK: ApiPubKey
-  ): Promise<ApiGetPubKeysResponse> {
+  async pushPubKey(session: Session, PK: PubKey): Promise<void> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .pushPubKey(session.token, { PK: PK })
-      .then((response: ApiGetPubKeysResponse) => {
-        return response;
-      });
+    const pushPubKeyRequest = create(PushPubKeyRequestSchema, {
+      PK: PK,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    await this.mezonClient.pushPubKey(pushPubKeyRequest, options);
   }
 
-  async getKeyServer(session: Session): Promise<ApiGetKeyServerResp> {
+  async getKeyServer(session: Session): Promise<GetKeyServerResp> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getKeyServer(session.token)
-      .then((response: ApiGetKeyServerResp) => {
-        return response;
-      });
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.getKeyServer(
+      create(EmptySchema, {}),
+      options
+    );
   }
 
   async listAuditLog(
@@ -4070,21 +4610,28 @@ export class Client {
     actionLog?: string,
     userId?: string,
     clanId?: string,
-    date_log?: string
-  ): Promise<MezonapiListAuditLog> {
+    dateLog?: string
+  ): Promise<ListAuditLog> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listAuditLog(session.token, actionLog, userId, clanId, date_log)
-      .then((response: MezonapiListAuditLog) => {
-        return response;
-      });
+    const listAuditLogRequest = create(ListAuditLogRequestSchema, {
+      actionLog: actionLog,
+      userId: userId,
+      clanId: clanId,
+      dateLog: dateLog,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.listAuditLog(listAuditLogRequest, options);
   }
 
   async listOnboarding(
@@ -4093,79 +4640,114 @@ export class Client {
     guideType?: number,
     limit?: number,
     page?: number
-  ): Promise<ApiListOnboardingResponse> {
+  ): Promise<ListOnboardingResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listOnboarding(session.token, clanId, guideType, limit, page)
-      .then((response: ApiListOnboardingResponse) => {
-        return response;
-      });
+    const listOnboardingRequest = create(ListOnboardingRequestSchema, {
+      clanId: clanId,
+      guideType: guideType,
+      limit: limit,
+      page: page,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.listOnboarding(
+      listOnboardingRequest,
+      options
+    );
   }
 
   async getOnboardingDetail(
     session: Session,
     id: string,
     clanId?: string
-  ): Promise<ApiOnboardingItem> {
+  ): Promise<OnboardingItem> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getOnboardingDetail(session.token, id, clanId)
-      .then((response: ApiOnboardingItem) => {
-        return Promise.resolve(response);
-      });
+    const getOnboardingDetailRequest = create(OnboardingRequestSchema, {
+      id: id,
+      clanId: clanId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.getOnboardingDetail(
+      getOnboardingDetailRequest,
+      options
+    );
   }
 
   async createOnboarding(
     session: Session,
-    request: ApiCreateOnboardingRequest
-  ): Promise<ApiListOnboardingResponse> {
+    request: CreateOnboardingRequest
+  ): Promise<ListOnboardingResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .createOnboarding(session.token, request)
-      .then((response: ApiListOnboardingResponse) => {
-        return response;
-      });
+    const createOnboardingRequest = create(
+      CreateOnboardingRequestSchema,
+      request
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.createOnboarding(
+      createOnboardingRequest,
+      options
+    );
   }
 
   async updateOnboarding(
     session: Session,
     id: string,
-    request: MezonUpdateOnboardingBody
+    request: UpdateOnboardingRequest
   ) {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateOnboarding(session.token, id, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const updateOnboardingRequest = create(UpdateOnboardingRequestSchema, {
+      ...request,
+      id: id,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.updateOnboarding(
+      updateOnboardingRequest,
+      options
+    );
+    return response !== undefined;
   }
 
   async deleteOnboarding(
@@ -4175,172 +4757,247 @@ export class Client {
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .deleteOnboarding(session.token, id, clanId)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const deleteOnboardingRequest = create(OnboardingRequestSchema, {
+      id: id,
+      clanId: clanId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.deleteOnboarding(
+      deleteOnboardingRequest,
+      options
+    );
+    return response !== undefined;
   }
 
   //**create webhook for clan */
   async generateClanWebhook(
     session: Session,
-    request: ApiGenerateClanWebhookRequest
-  ): Promise<ApiGenerateClanWebhookResponse> {
+    request: GenerateClanWebhookRequest
+  ): Promise<GenerateClanWebhookResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .generateClanWebhook(session.token, request)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
+    const generateClanWebhookRequest = create(
+      GenerateClanWebhookRequestSchema,
+      request
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.generateClanWebhook(
+      generateClanWebhookRequest,
+      options
+    );
   }
 
   //**list webhook belong to the clan */
   async listClanWebhook(
     session: Session,
-    clan_id: string
-  ): Promise<ApiListClanWebhookResponse> {
+    clanId: string
+  ): Promise<ListClanWebhookResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listClanWebhook(session.token, clan_id)
-      .then((response: ApiListClanWebhookResponse) => {
-        return Promise.resolve(response);
-      });
+    const listClanWebhookRequest = create(ListClanWebhookRequestSchema, {
+      clanId: clanId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.listClanWebhook(
+      listClanWebhookRequest,
+      options
+    );
   }
 
   //**disabled webhook by id */
-  async deleteClanWebhookById(session: Session, id: string, clan_id: string) {
+  async deleteClanWebhookById(session: Session, id: string, clanId: string) {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .deleteClanWebhookById(session.token, id, clan_id)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const deleteClanWebhookByIdRequest = create(ClanWebhookRequestSchema, {
+      id: id,
+      clanId: clanId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.deleteClanWebhookById(
+      deleteClanWebhookByIdRequest,
+      options
+    );
+    return response !== undefined;
   }
 
   //**update webhook name by id */
   async updateClanWebhookById(
     session: Session,
     id: string,
-    request: MezonUpdateClanWebhookByIdBody
+    request: UpdateClanWebhookRequest
   ) {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateClanWebhookById(session.token, id, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const updateClanWebhookByIdRequest = create(
+      UpdateClanWebhookRequestSchema,
+      {
+        ...request,
+        id: id,
+      }
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.updateClanWebhookById(
+      updateClanWebhookByIdRequest,
+      options
+    );
+    return response !== undefined;
   }
 
   //**list onboarding step */
   async listOnboardingStep(
     session: Session,
-    clan_id?: string,
+    clanId?: string,
     limit?: number,
     page?: number
-  ): Promise<ApiListOnboardingStepResponse> {
+  ): Promise<ListOnboardingStepResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listOnboardingStep(session.token, clan_id, limit, page)
-      .then((response: ApiListOnboardingStepResponse) => {
-        return Promise.resolve(response);
-      });
+    const listOnboardingStepRequest = create(ListOnboardingStepRequestSchema, {
+      clanId: clanId,
+      limit: limit,
+      page: page,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.listOnboardingStep(
+      listOnboardingStepRequest,
+      options
+    );
   }
 
   //**update onboarding step by id */
   async updateOnboardingStepByClanId(
     session: Session,
-    clan_id: string,
-    request: MezonUpdateOnboardingStepByClanIdBody
+    clanId: string,
+    request: UpdateOnboardingStepRequest
   ) {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateOnboardingStepByClanId(session.token, clan_id, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const updateOnboardingStepByClanIdRequest = create(
+      UpdateOnboardingStepRequestSchema,
+      {
+        ...request,
+        clanId: clanId,
+      }
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.updateOnboardingStep(
+      updateOnboardingStepByClanIdRequest,
+      options
+    );
+    return response !== undefined;
   }
 
   //**update status */
-  async updateUserStatus(session: Session, request: ApiUserStatusUpdate) {
+  async updateUserStatus(session: Session, request: UserStatusUpdate) {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateUserStatus(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const updateUserStatusRequest = create(UserStatusUpdateSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.updateUserStatus(
+      updateUserStatusRequest,
+      options
+    );
+    return response !== undefined;
   }
 
   //**get user status */
-  async getUserStatus(session: Session): Promise<ApiUserStatus> {
+  async getUserStatus(session: Session): Promise<UserStatus> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getUserStatus(session.token)
-      .then((response: ApiUserStatus) => {
-        return Promise.resolve(response);
-      });
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.getUserStatus(
+      create(EmptySchema, {}),
+      options
+    );
   }
 
   //**list sd topic */
@@ -4348,404 +5005,485 @@ export class Client {
     session: Session,
     clanId?: string,
     limit?: number
-  ): Promise<ApiSdTopicList> {
+  ): Promise<SdTopicList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listSdTopic(session.token, clanId, limit)
-      .then((response: ApiSdTopicList) => {
-        return Promise.resolve(response);
-      });
+    const listSdTopicRequest = create(ListSdTopicRequestSchema, {
+      clanId: clanId,
+      limit: limit,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.listSdTopic(listSdTopicRequest, options);
   }
 
   //**post sd topic */
   async createSdTopic(
     session: Session,
-    request: ApiSdTopicRequest
-  ): Promise<ApiSdTopic> {
+    request: SdTopicRequest
+  ): Promise<SdTopic> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .createSdTopic(session.token, request)
-      .then((response: ApiSdTopic) => {
-        return response;
-      });
+    const createSdTopicRequest = create(SdTopicRequestSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.createSdTopic(createSdTopicRequest, options);
   }
 
   //**list sd topic */
-  async getTopicDetail(
-    session: Session,
-    topicId?: string
-  ): Promise<ApiSdTopic> {
+  async getTopicDetail(session: Session, topicId?: string): Promise<SdTopic> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getTopicDetail(session.token, topicId)
-      .then((response: ApiSdTopic) => {
-        return Promise.resolve(response);
-      });
+    const getTopicDetailRequest = create(SdTopicDetailRequestSchema, {
+      topicId: topicId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.getTopicDetail(
+      getTopicDetailRequest,
+      options
+    );
   }
 
   //**create room channel apps */
   async createRoomChannelApps(
     session: Session,
-    body: MezonapiCreateRoomChannelApps
-  ): Promise<MezonapiCreateRoomChannelApps> {
+    body: CreateRoomChannelApps
+  ): Promise<CreateRoomChannelApps> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .createRoomChannelApps(session.token, body)
-      .then((response: MezonapiCreateRoomChannelApps) => {
-        return Promise.resolve(response);
-    });
+    const createRoomChannelAppsRequest = create(
+      CreateRoomChannelAppsSchema,
+      body
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.createRoomChannelApps(
+      createRoomChannelAppsRequest,
+      options
+    );
   }
 
   /** Generate Meet Token */
   async generateMeetToken(
     session: Session,
-    body: ApiGenerateMeetTokenRequest
-  ): Promise<ApiGenerateMeetTokenResponse> {
+    body: GenerateMeetTokenRequest
+  ): Promise<GenerateMeetTokenResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .generateMeetToken(session.token, body)
-      .then((response: ApiGenerateMeetTokenResponse) => {
-        return Promise.resolve(response);
-    });
-  }
+    const generateMeetTokenRequest = create(
+      GenerateMeetTokenRequestSchema,
+      body
+    );
 
-  //**list webhook belong to the clan */
-  async listMezonOauthClient(
-    session: Session
-  ): Promise<ApiMezonOauthClientList> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
 
-    return this.apiClient
-      .listMezonOauthClient(session.token)
-      .then((response: ApiMezonOauthClientList) => {
-        return Promise.resolve(response);
-      });
+    return await this.mezonClient.generateMeetToken(
+      generateMeetTokenRequest,
+      options
+    );
   }
 
   async getMezonOauthClient(
     session: Session,
-    clientId?:string,
-    clientName?:string,
-  ): Promise<ApiMezonOauthClient> {
+    clientId?: string,
+    clientName?: string
+  ): Promise<MezonOauthClient> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .getMezonOauthClient(session.token, clientId, clientName)
-      .then((response: ApiMezonOauthClient) => {
-        return Promise.resolve(response);
-      });
+    const getMezonOauthClientRequest = create(
+      GetMezonOauthClientRequestSchema,
+      {
+        clientId: clientId,
+        clientName: clientName,
+      }
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.getMezonOauthClient(
+      getMezonOauthClientRequest,
+      options
+    );
   }
 
   async updateMezonOauthClient(
     session: Session,
-    body:ApiMezonOauthClient,
-  ): Promise<ApiMezonOauthClient> {
+    body: MezonOauthClient
+  ): Promise<MezonOauthClient> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateMezonOauthClient(session.token, body)
-      .then((response: ApiMezonOauthClient) => {
-        return Promise.resolve(response);
-      });
+    const updateMezonOauthClientRequest = create(MezonOauthClientSchema, body);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.updateMezonOauthClient(
+      updateMezonOauthClientRequest,
+      options
+    );
   }
 
   //**search thread */
   async searchThread(
     session: Session,
-    clanId?:string,
-    channelId?:string,
-    label?:string,
-  ): Promise<ApiChannelDescList> {
+    clanId?: string,
+    channelId?: string,
+    label?: string
+  ): Promise<ChannelDescListNoPool> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .searchThread(session.token, clanId, channelId, label)
-      .then((response: ApiChannelDescList) => {
-        return Promise.resolve(response);
-      });
+    const searchThreadRequest = create(SearchThreadRequestSchema, {
+      clanId: clanId,
+      channelId: channelId,
+      label: label,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.searchThread(searchThreadRequest, options);
   }
 
   //**Generate Hash */
   async generateHashChannelApps(
     session: Session,
-    appId?:string,
-  ): Promise<ApiCreateHashChannelAppsResponse> {
+    appId?: string
+  ): Promise<GenerateHashChannelAppsResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .generateHashChannelApps(session.token, appId)
-      .then((response: ApiCreateHashChannelAppsResponse) => {
-        return Promise.resolve(response);
-      });
+    const generateHashChannelAppsRequest = create(
+      GenerateHashChannelAppsRequestSchema,
+      {
+        appId: appId,
+      }
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.generateHashChannelApps(
+      generateHashChannelAppsRequest,
+      options
+    );
   }
 
   async registrationPassword(
     session: Session,
     email?: string,
     password?: string,
-    oldPassword?: string,
-  ): Promise<ApiSession> {
+    oldPassword?: string
+  ): Promise<Session> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .registrationEmail(session.token, {
-        email: email,
-        password: password,
-        old_password: oldPassword
-      })
-      .then((response: ApiSession) => {
-        return Promise.resolve(response);
-      });
+    const registrationEmailRequest = create(RegistrationEmailRequestSchema, {
+      email: email,
+      password: password,
+      oldPassword: oldPassword,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.registrationEmail(
+      registrationEmailRequest,
+      options
+    );
+
+    return new Session(
+      response.token || "",
+      response.refreshToken || "",
+      response.created || false,
+      response.apiUrl || "",
+      response.idToken || "",
+      response.isRemember || false
+    );
   }
 
   /** Add user event */
   async addUserEvent(
     session: Session,
-    request: ApiUserEventRequest
+    request: UserEventRequest
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .addUserEvent(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const addUserEventRequest = create(UserEventRequestSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.addUserEvent(
+      addUserEventRequest,
+      options
+    );
+    return response !== undefined;
   }
 
   /** Delete user event */
   async deleteUserEvent(
     session: Session,
-    clanId?:string,
-    eventId?:string,
+    clanId?: string,
+    eventId?: string
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .deleteUserEvent(session.token, clanId, eventId)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const deleteUserEventRequest = create(UserEventRequestSchema, {
+      clanId: clanId,
+      eventId: eventId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.deleteUserEvent(
+      deleteUserEventRequest,
+      options
+    );
+    return response !== undefined;
   }
 
   async updateRoleOrder(
     session: Session,
-    request: ApiUpdateRoleOrderRequest
+    request: UpdateRoleOrderRequest
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateRoleOrder(session.token, request)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
+    const updateRoleOrderRequest = create(
+      UpdateRoleOrderRequestSchema,
+      request
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.updateRoleOrder(
+      updateRoleOrderRequest,
+      options
+    );
   }
-  
-  async deleteAccount(
-    session: Session
-  ): Promise<any> {
+
+  async deleteAccount(session: Session): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .deleteAccount(session.token)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.deleteAccount(
+      create(EmptySchema, {}),
+      options
+    );
   }
 
   async createExternalMezonMeet(
     session: Session
-  ): Promise<ApiGenerateMezonMeetResponse> {
+  ): Promise<GenerateMezonMeetResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .createExternalMezonMeet(session.token)
-      .then((response: ApiGenerateMezonMeetResponse) => {
-        return Promise.resolve(response);
-      });
-  }
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
 
-  async generateMeetTokenExternal(
-    basePath: string,
-    token:string,
-    displayName?:string,
-    isGuest?: boolean
-  ): Promise<ApiGenerateMeetTokenExternalResponse> {
-    return this.apiClient
-      .generateMeetTokenExternal("", basePath, token, displayName, isGuest)
-      .then((response: ApiGenerateMeetTokenExternalResponse) => {
-        return Promise.resolve(response);
-      });
+    return await this.mezonClient.createExternalMezonMeet(
+      create(EmptySchema, {}),
+      options
+    );
   }
 
   async removeMezonMeetParticipant(
     session: Session,
-    request: ApiMeetParticipantRequest
+    request: MeetParticipantRequest
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .removeParticipantMezonMeet(session.token, request)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
+    const removeParticipantMezonMeetRequest = create(
+      MeetParticipantRequestSchema,
+      request
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.removeParticipantMezonMeet(
+      removeParticipantMezonMeetRequest,
+      options
+    );
   }
 
   async muteMezonMeetParticipant(
     session: Session,
-    request: ApiMeetParticipantRequest
+    request: MeetParticipantRequest
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .muteParticipantMezonMeet(session.token, request)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
+    const muteParticipantMezonMeetRequest = create(
+      MeetParticipantRequestSchema,
+      request
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.muteParticipantMezonMeet(
+      muteParticipantMezonMeetRequest,
+      options
+    );
   }
 
   /** Update clan order to view. */
   async updateClanOrder(
     session: Session,
-    request: ApiUpdateClanOrderRequest
+    request: UpdateClanOrderRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateClanOrder(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
+    const updateClanOrderRequest = create(
+      UpdateClanOrderRequestSchema,
+      request
+    );
 
-  /** list clan discover. */
-  async listClanDiscover(
-    basePath: string,
-    request: ApiClanDiscoverRequest
-  ): Promise<ApiListClanDiscover> {
-    return this.apiClient
-      .clanDiscover(this.serverkey, "", basePath, request)
-      .then((response: ApiListClanDiscover) => {
-        return Promise.resolve(response);
-      });
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.updateClanOrder(
+      updateClanOrderRequest,
+      options
+    );
+    return response !== undefined;
   }
 
   async listQuickMenuAccess(
@@ -4753,20 +5491,32 @@ export class Client {
     botId: string,
     channelId: string,
     menuType: number
-  ): Promise<ApiQuickMenuAccessList> {
+  ): Promise<QuickMenuAccessList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listQuickMenuAccess(session.token, botId, channelId, menuType)
-      .then((response: ApiQuickMenuAccessList) => {
-        return Promise.resolve(response);
-      });
+    const listQuickMenuAccessRequest = create(
+      ListQuickMenuAccessRequestSchema,
+      {
+        botId: botId,
+        channelId: channelId,
+        menuType: menuType,
+      }
+    );
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.listQuickMenuAccess(
+      listQuickMenuAccessRequest,
+      options
+    );
   }
 
   async deleteQuickMenuAccess(
@@ -4776,173 +5526,227 @@ export class Client {
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .deleteQuickMenuAccess(session.token, id, clanId)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const deleteQuickMenuAccessRequest = create(QuickMenuAccessSchema, {
+      id: id,
+      clanId: clanId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.deleteQuickMenuAccess(
+      deleteQuickMenuAccessRequest,
+      options
+    );
+    return response !== undefined;
   }
 
   async addQuickMenuAccess(
     session: Session,
-    request: ApiQuickMenuAccessRequest
+    request: QuickMenuAccess
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .addQuickMenuAccess(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const addQuickMenuAccessRequest = create(QuickMenuAccessSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.addQuickMenuAccess(
+      addQuickMenuAccessRequest,
+      options
+    );
+    return response !== undefined;
   }
 
   async updateQuickMenuAccess(
     session: Session,
-    request: ApiQuickMenuAccessRequest
+    request: QuickMenuAccess
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .updateQuickMenuAccess(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const updateQuickMenuAccessRequest = create(QuickMenuAccessSchema, request);
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.updateQuickMenuAccess(
+      updateQuickMenuAccessRequest,
+      options
+    );
+    return response !== undefined;
   }
 
-  async unlockItem(session: Session, request: ApiUnlockedItemRequest): Promise<ApiUnlockedItemResponse> {
+  async listForSaleItems(
+    session: Session,
+    page?: number
+  ): Promise<ForSaleItemList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .unlockItem(session.token, request)
-      .then((response: ApiUnlockedItemResponse) => {
-         return Promise.resolve(response);
-      });
+    const listForSaleItemsRequest = create(ListForSaleItemsRequestSchema, {
+      page: page,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.listForSaleItems(
+      listForSaleItemsRequest,
+      options
+    );
   }
 
-  async listForSaleItems(session: Session, 
-    page?: number): Promise<ApiForSaleItemList> {
+  async isFollower(
+    session: Session,
+    req: IsFollowerRequest
+  ): Promise<IsFollowerResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listForSaleItems(session.token, page)
-      .then((response: ApiForSaleItemList) => {
-        return Promise.resolve(response);
-      });
+    const isFollowerRequest = create(IsFollowerRequestSchema, {
+      followId: req.followId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.isFollower(isFollowerRequest, options);
   }
 
-  async isFollower(session: Session, 
-    req: ApiIsFollowerRequest): Promise<ApiIsFollowerResponse> {
+  async transferOwnership(
+    session: Session,
+    req: TransferOwnershipRequest
+  ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .isFollower(session.token, req)
-      .then((response: ApiIsFollowerResponse) => {
-        return Promise.resolve(response);
-      });
+    const transferOwnershipRequest = create(TransferOwnershipRequestSchema, {
+      newOwnerId: req.newOwnerId,
+      clanId: req.clanId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.transferOwnership(
+      transferOwnershipRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
-  async transferOwnership(session: Session, 
-    req: ApiTransferOwnershipRequest): Promise<any> {
+  async isBanned(
+    session: Session,
+    channelId: string
+  ): Promise<IsBannedResponse> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .transferOwnership(session.token, req)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+    const isBannedRequest = create(IsBannedRequestSchema, {
+      channelId: channelId,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    return await this.mezonClient.isBanned(isBannedRequest, options);
   }
 
-  async isBanned(session: Session, 
-    channelId: string): Promise<ApiIsBannedResponse> {
+  async reportMessageAbuse(
+    session: Session,
+    messageId?: string,
+    abuseType?: string
+  ): Promise<any> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .isBanned(session.token, channelId)
-      .then((response: ApiIsBannedResponse) => {
-        return Promise.resolve(response);
-      });
+    const reportMessageAbuseRequest = create(ReportMessageAbuseReqestSchema, {
+      messageId: messageId,
+      abuseType: abuseType,
+    });
+
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
+
+    const response = await this.mezonClient.reportMessageAbuse(
+      reportMessageAbuseRequest,
+      options
+    );
+
+    return response !== undefined;
   }
 
-  async reportMessageAbuse(session: Session,
-    messageId?:string,
-    abuseType?:string
-  ) : Promise<any> {
+  async listLogedDevice(session: Session): Promise<LogedDeviceList> {
     if (
       this.autoRefreshSession &&
-      session.refresh_token &&
+      session.refreshToken &&
       session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .reportMessageAbuse(session.token, messageId, abuseType)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
+    const options: CallOptions = {
+      headers: [["Authorization", "Bearer " + session.token]],
+    };
 
-  async listLogedDevice(session: Session): Promise<ApiLogedDeviceList> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
+    const response = await this.mezonClient.listLogedDevice(
+      create(EmptySchema, {}),
+      options
+    );
 
-    return this.apiClient
-      .listLogedDevice(session.token)
-      .then((response: ApiLogedDeviceList) => {
-        return Promise.resolve(response);
-      });
+    return response;
   }
 }

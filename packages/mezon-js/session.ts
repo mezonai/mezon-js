@@ -25,17 +25,17 @@ export interface ISession {
   /** If the user account for this session was just created. */
   created: boolean
   /** The UNIX timestamp when this session was created. */
-  readonly created_at: number;
+  readonly createdAt: number;
   /** The UNIX timestamp when this session will expire. */
   expires_at?: number;
   /** The UNIX timestamp when the refresh token will expire. */
   refresh_expires_at?: number;
   /** Refresh token that can be used for session token renewal. */
-  refresh_token: string;
+  refreshToken: string;
   /** The username of the user who owns this session. */
   username?: string;
   /** The ID of the user who owns this session. */
-  user_id?: string;
+  userId?: string;
   /** Any custom properties associated with this session. */
   vars?: object;
 
@@ -49,29 +49,29 @@ export interface ISession {
 export class Session implements ISession {
 
   token : string;
-  readonly created_at: number;
+  readonly createdAt: number;
   expires_at?: number;
   refresh_expires_at?: number;
-  refresh_token: string;
+  refreshToken: string;
   username?: string;
-  user_id?: string;
+  userId?: string;
   vars?: object;
-  is_remember?: boolean;
+  isRemember?: boolean;
 
   constructor(
     token: string,
-    refresh_token: string,
+    refreshToken: string,
     readonly created: boolean,
-    readonly api_url: string,
-    readonly id_token: string,
-    is_remember: boolean) {
+    readonly apiUrl: string,
+    readonly idToken: string,
+    isRemember: boolean) {
     this.token = token;
-    this.refresh_token = refresh_token;
-    this.id_token = id_token;
-    this.api_url = api_url;
-    this.created_at = Math.floor(new Date().getTime() / 1000);
-    this.is_remember = is_remember;
-    this.update(token, refresh_token, is_remember);
+    this.refreshToken = refreshToken;
+    this.idToken = idToken;
+    this.apiUrl = apiUrl;
+    this.createdAt = Math.floor(new Date().getTime() / 1000);
+    this.isRemember = isRemember;
+    this.update(token, refreshToken, isRemember);
   }
 
   isexpired(currenttime: number): boolean {
@@ -105,18 +105,18 @@ export class Session implements ISession {
         const refreshTokenDecoded = JSON.parse(base64.atob(refreshTokenParts[1]))
         const refreshTokenExpiresAt = Math.floor(parseInt(refreshTokenDecoded['exp']));
         this.refresh_expires_at = refreshTokenExpiresAt;
-        this.refresh_token = refreshToken;
-        this.is_remember = isRemember;
+        this.refreshToken = refreshToken;
+        this.isRemember = isRemember;
     }
 
     this.token = token;
     this.expires_at = tokenExpiresAt;
     this.username = tokenDecoded['usn'];
-    this.user_id = tokenDecoded['uid'];
+    this.userId = tokenDecoded['uid'];
     this.vars = tokenDecoded['vrs'];
   }
 
-  static restore(token: string, refreshToken: string, api_url: string, isRemember: boolean): Session {
-    return new Session(token, refreshToken, false, api_url, "", isRemember);
+  static restore(token: string, refreshToken: string, apiUrl: string, isRemember: boolean): Session {
+    return new Session(token, refreshToken, false, apiUrl, "", isRemember);
   }
 }

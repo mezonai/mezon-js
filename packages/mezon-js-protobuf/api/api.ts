@@ -323,15 +323,15 @@ export interface ChannelMessage {
   /** The clan avatar */
   clan_avatar: string;
   /** Emoji reaction */
-  reactions: string;
+  reactions: Uint8Array;
   /** Message mention */
-  mentions: string;
+  mentions: Uint8Array;
   /** Message attachment */
-  attachments: string;
+  attachments: Uint8Array;
   /** Message reference */
-  references: string;
+  references: Uint8Array;
   /** referenced message */
-  referenced_message: string;
+  referenced_message: Uint8Array;
   /** create time in ms */
   create_time_seconds: number;
   /** update time in ms */
@@ -1022,6 +1022,7 @@ export interface Session {
 /** Update username */
 export interface UpdateUsernameRequest {
   username: string;
+  display_name: string;
 }
 
 /** Update a user's account details. */
@@ -1506,13 +1507,13 @@ export interface ChannelMessageHeader {
   /** the content */
   content: string;
   /** the attachment */
-  attachment: string;
+  attachment: Uint8Array;
   /** the reference */
-  reference: string;
+  reference: Uint8Array;
   /** the mention */
-  mention: string;
+  mention: Uint8Array;
   /** the reactions */
-  reaction: string;
+  reaction: Uint8Array;
 }
 
 /** Channel description record */
@@ -1587,6 +1588,12 @@ export interface ChannelDescription {
 
 /** A list of channel description, usually a result of a list operation. */
 export interface ChannelDescList {
+  /** A list of channel. */
+  channeldesc: ChannelDescription[];
+}
+
+/** A list of channel description, usually a result of a list operation. */
+export interface ChannelDescListNoPool {
   /** A list of channel. */
   channeldesc: ChannelDescription[];
   /** Page thread */
@@ -3672,10 +3679,10 @@ export interface Message2InboxRequest {
   clan_id: string;
   avatar: string;
   content: string;
-  mentions: string;
-  attachments: string;
-  reactions: string;
-  references: string;
+  mentions: Uint8Array;
+  attachments: Uint8Array;
+  reactions: Uint8Array;
+  references: Uint8Array;
 }
 
 /** Send an email with password to the server. Used with authenticate/link/unlink. */
@@ -3788,6 +3795,34 @@ export interface LogedDevice {
   last_active: Date | undefined;
   location: string;
   is_current: boolean;
+}
+
+export interface DirectFcmProto {
+  title: string;
+  link: string;
+  content: string;
+  channel_id: string;
+  sender_id: string;
+  avatar: string;
+  clan_id: string;
+  attachments: Uint8Array;
+  display_name: string;
+  create_time_seconds: number;
+  update_time_seconds: number;
+  username: string;
+  mentions: Uint8Array;
+}
+
+export interface MessageMentionList {
+  mentions: MessageMention[];
+}
+
+export interface MessageAttachmentList {
+  attachments: MessageAttachment[];
+}
+
+export interface MessageRefList {
+  refs: MessageRef[];
 }
 
 function createBaseAccount(): Account {
@@ -4974,11 +5009,11 @@ function createBaseChannelMessage(): ChannelMessage {
     display_name: "",
     clan_nick: "",
     clan_avatar: "",
-    reactions: "",
-    mentions: "",
-    attachments: "",
-    references: "",
-    referenced_message: "",
+    reactions: new Uint8Array(0),
+    mentions: new Uint8Array(0),
+    attachments: new Uint8Array(0),
+    references: new Uint8Array(0),
+    referenced_message: new Uint8Array(0),
     create_time_seconds: 0,
     update_time_seconds: 0,
     mode: 0,
@@ -5038,20 +5073,20 @@ export const ChannelMessage = {
     if (message.clan_avatar !== "") {
       writer.uint32(130).string(message.clan_avatar);
     }
-    if (message.reactions !== "") {
-      writer.uint32(138).string(message.reactions);
+    if (message.reactions.length !== 0) {
+      writer.uint32(138).bytes(message.reactions);
     }
-    if (message.mentions !== "") {
-      writer.uint32(146).string(message.mentions);
+    if (message.mentions.length !== 0) {
+      writer.uint32(146).bytes(message.mentions);
     }
-    if (message.attachments !== "") {
-      writer.uint32(154).string(message.attachments);
+    if (message.attachments.length !== 0) {
+      writer.uint32(154).bytes(message.attachments);
     }
-    if (message.references !== "") {
-      writer.uint32(162).string(message.references);
+    if (message.references.length !== 0) {
+      writer.uint32(162).bytes(message.references);
     }
-    if (message.referenced_message !== "") {
-      writer.uint32(170).string(message.referenced_message);
+    if (message.referenced_message.length !== 0) {
+      writer.uint32(170).bytes(message.referenced_message);
     }
     if (message.create_time_seconds !== 0) {
       writer.uint32(176).uint32(message.create_time_seconds);
@@ -5198,35 +5233,35 @@ export const ChannelMessage = {
             break;
           }
 
-          message.reactions = reader.string();
+          message.reactions = reader.bytes();
           continue;
         case 18:
           if (tag !== 146) {
             break;
           }
 
-          message.mentions = reader.string();
+          message.mentions = reader.bytes();
           continue;
         case 19:
           if (tag !== 154) {
             break;
           }
 
-          message.attachments = reader.string();
+          message.attachments = reader.bytes();
           continue;
         case 20:
           if (tag !== 162) {
             break;
           }
 
-          message.references = reader.string();
+          message.references = reader.bytes();
           continue;
         case 21:
           if (tag !== 170) {
             break;
           }
 
-          message.referenced_message = reader.string();
+          message.referenced_message = reader.bytes();
           continue;
         case 22:
           if (tag !== 176) {
@@ -5297,11 +5332,13 @@ export const ChannelMessage = {
       display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
       clan_nick: isSet(object.clan_nick) ? globalThis.String(object.clan_nick) : "",
       clan_avatar: isSet(object.clan_avatar) ? globalThis.String(object.clan_avatar) : "",
-      reactions: isSet(object.reactions) ? globalThis.String(object.reactions) : "",
-      mentions: isSet(object.mentions) ? globalThis.String(object.mentions) : "",
-      attachments: isSet(object.attachments) ? globalThis.String(object.attachments) : "",
-      references: isSet(object.references) ? globalThis.String(object.references) : "",
-      referenced_message: isSet(object.referenced_message) ? globalThis.String(object.referenced_message) : "",
+      reactions: isSet(object.reactions) ? bytesFromBase64(object.reactions) : new Uint8Array(0),
+      mentions: isSet(object.mentions) ? bytesFromBase64(object.mentions) : new Uint8Array(0),
+      attachments: isSet(object.attachments) ? bytesFromBase64(object.attachments) : new Uint8Array(0),
+      references: isSet(object.references) ? bytesFromBase64(object.references) : new Uint8Array(0),
+      referenced_message: isSet(object.referenced_message)
+        ? bytesFromBase64(object.referenced_message)
+        : new Uint8Array(0),
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
@@ -5361,20 +5398,20 @@ export const ChannelMessage = {
     if (message.clan_avatar !== "") {
       obj.clan_avatar = message.clan_avatar;
     }
-    if (message.reactions !== "") {
-      obj.reactions = message.reactions;
+    if (message.reactions.length !== 0) {
+      obj.reactions = base64FromBytes(message.reactions);
     }
-    if (message.mentions !== "") {
-      obj.mentions = message.mentions;
+    if (message.mentions.length !== 0) {
+      obj.mentions = base64FromBytes(message.mentions);
     }
-    if (message.attachments !== "") {
-      obj.attachments = message.attachments;
+    if (message.attachments.length !== 0) {
+      obj.attachments = base64FromBytes(message.attachments);
     }
-    if (message.references !== "") {
-      obj.references = message.references;
+    if (message.references.length !== 0) {
+      obj.references = base64FromBytes(message.references);
     }
-    if (message.referenced_message !== "") {
-      obj.referenced_message = message.referenced_message;
+    if (message.referenced_message.length !== 0) {
+      obj.referenced_message = base64FromBytes(message.referenced_message);
     }
     if (message.create_time_seconds !== 0) {
       obj.create_time_seconds = Math.round(message.create_time_seconds);
@@ -5418,11 +5455,11 @@ export const ChannelMessage = {
     message.display_name = object.display_name ?? "";
     message.clan_nick = object.clan_nick ?? "";
     message.clan_avatar = object.clan_avatar ?? "";
-    message.reactions = object.reactions ?? "";
-    message.mentions = object.mentions ?? "";
-    message.attachments = object.attachments ?? "";
-    message.references = object.references ?? "";
-    message.referenced_message = object.referenced_message ?? "";
+    message.reactions = object.reactions ?? new Uint8Array(0);
+    message.mentions = object.mentions ?? new Uint8Array(0);
+    message.attachments = object.attachments ?? new Uint8Array(0);
+    message.references = object.references ?? new Uint8Array(0);
+    message.referenced_message = object.referenced_message ?? new Uint8Array(0);
     message.create_time_seconds = object.create_time_seconds ?? 0;
     message.update_time_seconds = object.update_time_seconds ?? 0;
     message.mode = object.mode ?? 0;
@@ -10524,13 +10561,16 @@ export const Session = {
 };
 
 function createBaseUpdateUsernameRequest(): UpdateUsernameRequest {
-  return { username: "" };
+  return { username: "", display_name: "" };
 }
 
 export const UpdateUsernameRequest = {
   encode(message: UpdateUsernameRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.username !== "") {
       writer.uint32(10).string(message.username);
+    }
+    if (message.display_name !== "") {
+      writer.uint32(18).string(message.display_name);
     }
     return writer;
   },
@@ -10549,6 +10589,13 @@ export const UpdateUsernameRequest = {
 
           message.username = reader.string();
           continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.display_name = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10559,13 +10606,19 @@ export const UpdateUsernameRequest = {
   },
 
   fromJSON(object: any): UpdateUsernameRequest {
-    return { username: isSet(object.username) ? globalThis.String(object.username) : "" };
+    return {
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
+    };
   },
 
   toJSON(message: UpdateUsernameRequest): unknown {
     const obj: any = {};
     if (message.username !== "") {
       obj.username = message.username;
+    }
+    if (message.display_name !== "") {
+      obj.display_name = message.display_name;
     }
     return obj;
   },
@@ -10576,6 +10629,7 @@ export const UpdateUsernameRequest = {
   fromPartial<I extends Exact<DeepPartial<UpdateUsernameRequest>, I>>(object: I): UpdateUsernameRequest {
     const message = createBaseUpdateUsernameRequest();
     message.username = object.username ?? "";
+    message.display_name = object.display_name ?? "";
     return message;
   },
 };
@@ -14493,10 +14547,10 @@ function createBaseChannelMessageHeader(): ChannelMessageHeader {
     timestamp_seconds: 0,
     sender_id: "",
     content: "",
-    attachment: "",
-    reference: "",
-    mention: "",
-    reaction: "",
+    attachment: new Uint8Array(0),
+    reference: new Uint8Array(0),
+    mention: new Uint8Array(0),
+    reaction: new Uint8Array(0),
   };
 }
 
@@ -14514,17 +14568,17 @@ export const ChannelMessageHeader = {
     if (message.content !== "") {
       writer.uint32(34).string(message.content);
     }
-    if (message.attachment !== "") {
-      writer.uint32(42).string(message.attachment);
+    if (message.attachment.length !== 0) {
+      writer.uint32(42).bytes(message.attachment);
     }
-    if (message.reference !== "") {
-      writer.uint32(50).string(message.reference);
+    if (message.reference.length !== 0) {
+      writer.uint32(50).bytes(message.reference);
     }
-    if (message.mention !== "") {
-      writer.uint32(58).string(message.mention);
+    if (message.mention.length !== 0) {
+      writer.uint32(58).bytes(message.mention);
     }
-    if (message.reaction !== "") {
-      writer.uint32(66).string(message.reaction);
+    if (message.reaction.length !== 0) {
+      writer.uint32(66).bytes(message.reaction);
     }
     return writer;
   },
@@ -14569,28 +14623,28 @@ export const ChannelMessageHeader = {
             break;
           }
 
-          message.attachment = reader.string();
+          message.attachment = reader.bytes();
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.reference = reader.string();
+          message.reference = reader.bytes();
           continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          message.mention = reader.string();
+          message.mention = reader.bytes();
           continue;
         case 8:
           if (tag !== 66) {
             break;
           }
 
-          message.reaction = reader.string();
+          message.reaction = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -14607,10 +14661,10 @@ export const ChannelMessageHeader = {
       timestamp_seconds: isSet(object.timestamp_seconds) ? globalThis.Number(object.timestamp_seconds) : 0,
       sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
-      attachment: isSet(object.attachment) ? globalThis.String(object.attachment) : "",
-      reference: isSet(object.reference) ? globalThis.String(object.reference) : "",
-      mention: isSet(object.mention) ? globalThis.String(object.mention) : "",
-      reaction: isSet(object.reaction) ? globalThis.String(object.reaction) : "",
+      attachment: isSet(object.attachment) ? bytesFromBase64(object.attachment) : new Uint8Array(0),
+      reference: isSet(object.reference) ? bytesFromBase64(object.reference) : new Uint8Array(0),
+      mention: isSet(object.mention) ? bytesFromBase64(object.mention) : new Uint8Array(0),
+      reaction: isSet(object.reaction) ? bytesFromBase64(object.reaction) : new Uint8Array(0),
     };
   },
 
@@ -14628,17 +14682,17 @@ export const ChannelMessageHeader = {
     if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.attachment !== "") {
-      obj.attachment = message.attachment;
+    if (message.attachment.length !== 0) {
+      obj.attachment = base64FromBytes(message.attachment);
     }
-    if (message.reference !== "") {
-      obj.reference = message.reference;
+    if (message.reference.length !== 0) {
+      obj.reference = base64FromBytes(message.reference);
     }
-    if (message.mention !== "") {
-      obj.mention = message.mention;
+    if (message.mention.length !== 0) {
+      obj.mention = base64FromBytes(message.mention);
     }
-    if (message.reaction !== "") {
-      obj.reaction = message.reaction;
+    if (message.reaction.length !== 0) {
+      obj.reaction = base64FromBytes(message.reaction);
     }
     return obj;
   },
@@ -14652,10 +14706,10 @@ export const ChannelMessageHeader = {
     message.timestamp_seconds = object.timestamp_seconds ?? 0;
     message.sender_id = object.sender_id ?? "";
     message.content = object.content ?? "";
-    message.attachment = object.attachment ?? "";
-    message.reference = object.reference ?? "";
-    message.mention = object.mention ?? "";
-    message.reaction = object.reaction ?? "";
+    message.attachment = object.attachment ?? new Uint8Array(0);
+    message.reference = object.reference ?? new Uint8Array(0);
+    message.mention = object.mention ?? new Uint8Array(0);
+    message.reaction = object.reaction ?? new Uint8Array(0);
     return message;
   },
 };
@@ -15226,11 +15280,72 @@ export const ChannelDescription = {
 };
 
 function createBaseChannelDescList(): ChannelDescList {
-  return { channeldesc: [], page: 0 };
+  return { channeldesc: [] };
 }
 
 export const ChannelDescList = {
   encode(message: ChannelDescList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.channeldesc) {
+      ChannelDescription.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelDescList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelDescList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channeldesc.push(ChannelDescription.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelDescList {
+    return {
+      channeldesc: globalThis.Array.isArray(object?.channeldesc)
+        ? object.channeldesc.map((e: any) => ChannelDescription.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ChannelDescList): unknown {
+    const obj: any = {};
+    if (message.channeldesc?.length) {
+      obj.channeldesc = message.channeldesc.map((e) => ChannelDescription.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelDescList>, I>>(base?: I): ChannelDescList {
+    return ChannelDescList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ChannelDescList>, I>>(object: I): ChannelDescList {
+    const message = createBaseChannelDescList();
+    message.channeldesc = object.channeldesc?.map((e) => ChannelDescription.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseChannelDescListNoPool(): ChannelDescListNoPool {
+  return { channeldesc: [], page: 0 };
+}
+
+export const ChannelDescListNoPool = {
+  encode(message: ChannelDescListNoPool, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.channeldesc) {
       ChannelDescription.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -15240,10 +15355,10 @@ export const ChannelDescList = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelDescList {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelDescListNoPool {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseChannelDescList();
+    const message = createBaseChannelDescListNoPool();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -15270,7 +15385,7 @@ export const ChannelDescList = {
     return message;
   },
 
-  fromJSON(object: any): ChannelDescList {
+  fromJSON(object: any): ChannelDescListNoPool {
     return {
       channeldesc: globalThis.Array.isArray(object?.channeldesc)
         ? object.channeldesc.map((e: any) => ChannelDescription.fromJSON(e))
@@ -15279,7 +15394,7 @@ export const ChannelDescList = {
     };
   },
 
-  toJSON(message: ChannelDescList): unknown {
+  toJSON(message: ChannelDescListNoPool): unknown {
     const obj: any = {};
     if (message.channeldesc?.length) {
       obj.channeldesc = message.channeldesc.map((e) => ChannelDescription.toJSON(e));
@@ -15290,11 +15405,11 @@ export const ChannelDescList = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ChannelDescList>, I>>(base?: I): ChannelDescList {
-    return ChannelDescList.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<ChannelDescListNoPool>, I>>(base?: I): ChannelDescListNoPool {
+    return ChannelDescListNoPool.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ChannelDescList>, I>>(object: I): ChannelDescList {
-    const message = createBaseChannelDescList();
+  fromPartial<I extends Exact<DeepPartial<ChannelDescListNoPool>, I>>(object: I): ChannelDescListNoPool {
+    const message = createBaseChannelDescListNoPool();
     message.channeldesc = object.channeldesc?.map((e) => ChannelDescription.fromPartial(e)) || [];
     message.page = object.page ?? 0;
     return message;
@@ -37366,10 +37481,10 @@ function createBaseMessage2InboxRequest(): Message2InboxRequest {
     clan_id: "",
     avatar: "",
     content: "",
-    mentions: "",
-    attachments: "",
-    reactions: "",
-    references: "",
+    mentions: new Uint8Array(0),
+    attachments: new Uint8Array(0),
+    reactions: new Uint8Array(0),
+    references: new Uint8Array(0),
   };
 }
 
@@ -37390,17 +37505,17 @@ export const Message2InboxRequest = {
     if (message.content !== "") {
       writer.uint32(42).string(message.content);
     }
-    if (message.mentions !== "") {
-      writer.uint32(50).string(message.mentions);
+    if (message.mentions.length !== 0) {
+      writer.uint32(50).bytes(message.mentions);
     }
-    if (message.attachments !== "") {
-      writer.uint32(58).string(message.attachments);
+    if (message.attachments.length !== 0) {
+      writer.uint32(58).bytes(message.attachments);
     }
-    if (message.reactions !== "") {
-      writer.uint32(66).string(message.reactions);
+    if (message.reactions.length !== 0) {
+      writer.uint32(66).bytes(message.reactions);
     }
-    if (message.references !== "") {
-      writer.uint32(74).string(message.references);
+    if (message.references.length !== 0) {
+      writer.uint32(74).bytes(message.references);
     }
     return writer;
   },
@@ -37452,28 +37567,28 @@ export const Message2InboxRequest = {
             break;
           }
 
-          message.mentions = reader.string();
+          message.mentions = reader.bytes();
           continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          message.attachments = reader.string();
+          message.attachments = reader.bytes();
           continue;
         case 8:
           if (tag !== 66) {
             break;
           }
 
-          message.reactions = reader.string();
+          message.reactions = reader.bytes();
           continue;
         case 9:
           if (tag !== 74) {
             break;
           }
 
-          message.references = reader.string();
+          message.references = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -37491,10 +37606,10 @@ export const Message2InboxRequest = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
-      mentions: isSet(object.mentions) ? globalThis.String(object.mentions) : "",
-      attachments: isSet(object.attachments) ? globalThis.String(object.attachments) : "",
-      reactions: isSet(object.reactions) ? globalThis.String(object.reactions) : "",
-      references: isSet(object.references) ? globalThis.String(object.references) : "",
+      mentions: isSet(object.mentions) ? bytesFromBase64(object.mentions) : new Uint8Array(0),
+      attachments: isSet(object.attachments) ? bytesFromBase64(object.attachments) : new Uint8Array(0),
+      reactions: isSet(object.reactions) ? bytesFromBase64(object.reactions) : new Uint8Array(0),
+      references: isSet(object.references) ? bytesFromBase64(object.references) : new Uint8Array(0),
     };
   },
 
@@ -37515,17 +37630,17 @@ export const Message2InboxRequest = {
     if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.mentions !== "") {
-      obj.mentions = message.mentions;
+    if (message.mentions.length !== 0) {
+      obj.mentions = base64FromBytes(message.mentions);
     }
-    if (message.attachments !== "") {
-      obj.attachments = message.attachments;
+    if (message.attachments.length !== 0) {
+      obj.attachments = base64FromBytes(message.attachments);
     }
-    if (message.reactions !== "") {
-      obj.reactions = message.reactions;
+    if (message.reactions.length !== 0) {
+      obj.reactions = base64FromBytes(message.reactions);
     }
-    if (message.references !== "") {
-      obj.references = message.references;
+    if (message.references.length !== 0) {
+      obj.references = base64FromBytes(message.references);
     }
     return obj;
   },
@@ -37540,10 +37655,10 @@ export const Message2InboxRequest = {
     message.clan_id = object.clan_id ?? "";
     message.avatar = object.avatar ?? "";
     message.content = object.content ?? "";
-    message.mentions = object.mentions ?? "";
-    message.attachments = object.attachments ?? "";
-    message.reactions = object.reactions ?? "";
-    message.references = object.references ?? "";
+    message.mentions = object.mentions ?? new Uint8Array(0);
+    message.attachments = object.attachments ?? new Uint8Array(0);
+    message.reactions = object.reactions ?? new Uint8Array(0);
+    message.references = object.references ?? new Uint8Array(0);
     return message;
   },
 };
@@ -39102,9 +39217,441 @@ export const LogedDevice = {
   },
 };
 
+function createBaseDirectFcmProto(): DirectFcmProto {
+  return {
+    title: "",
+    link: "",
+    content: "",
+    channel_id: "",
+    sender_id: "",
+    avatar: "",
+    clan_id: "",
+    attachments: new Uint8Array(0),
+    display_name: "",
+    create_time_seconds: 0,
+    update_time_seconds: 0,
+    username: "",
+    mentions: new Uint8Array(0),
+  };
+}
+
+export const DirectFcmProto = {
+  encode(message: DirectFcmProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.title !== "") {
+      writer.uint32(10).string(message.title);
+    }
+    if (message.link !== "") {
+      writer.uint32(18).string(message.link);
+    }
+    if (message.content !== "") {
+      writer.uint32(26).string(message.content);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(34).string(message.channel_id);
+    }
+    if (message.sender_id !== "") {
+      writer.uint32(42).string(message.sender_id);
+    }
+    if (message.avatar !== "") {
+      writer.uint32(50).string(message.avatar);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(58).string(message.clan_id);
+    }
+    if (message.attachments.length !== 0) {
+      writer.uint32(66).bytes(message.attachments);
+    }
+    if (message.display_name !== "") {
+      writer.uint32(74).string(message.display_name);
+    }
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(80).int32(message.create_time_seconds);
+    }
+    if (message.update_time_seconds !== 0) {
+      writer.uint32(88).int32(message.update_time_seconds);
+    }
+    if (message.username !== "") {
+      writer.uint32(98).string(message.username);
+    }
+    if (message.mentions.length !== 0) {
+      writer.uint32(106).bytes(message.mentions);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DirectFcmProto {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDirectFcmProto();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.title = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.link = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.content = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.sender_id = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.avatar = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.attachments = reader.bytes();
+          continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.display_name = reader.string();
+          continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.create_time_seconds = reader.int32();
+          continue;
+        case 11:
+          if (tag !== 88) {
+            break;
+          }
+
+          message.update_time_seconds = reader.int32();
+          continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.username = reader.string();
+          continue;
+        case 13:
+          if (tag !== 106) {
+            break;
+          }
+
+          message.mentions = reader.bytes();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DirectFcmProto {
+    return {
+      title: isSet(object.title) ? globalThis.String(object.title) : "",
+      link: isSet(object.link) ? globalThis.String(object.link) : "",
+      content: isSet(object.content) ? globalThis.String(object.content) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
+      avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      attachments: isSet(object.attachments) ? bytesFromBase64(object.attachments) : new Uint8Array(0),
+      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
+      update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      mentions: isSet(object.mentions) ? bytesFromBase64(object.mentions) : new Uint8Array(0),
+    };
+  },
+
+  toJSON(message: DirectFcmProto): unknown {
+    const obj: any = {};
+    if (message.title !== "") {
+      obj.title = message.title;
+    }
+    if (message.link !== "") {
+      obj.link = message.link;
+    }
+    if (message.content !== "") {
+      obj.content = message.content;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.sender_id !== "") {
+      obj.sender_id = message.sender_id;
+    }
+    if (message.avatar !== "") {
+      obj.avatar = message.avatar;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.attachments.length !== 0) {
+      obj.attachments = base64FromBytes(message.attachments);
+    }
+    if (message.display_name !== "") {
+      obj.display_name = message.display_name;
+    }
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
+    }
+    if (message.update_time_seconds !== 0) {
+      obj.update_time_seconds = Math.round(message.update_time_seconds);
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.mentions.length !== 0) {
+      obj.mentions = base64FromBytes(message.mentions);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DirectFcmProto>, I>>(base?: I): DirectFcmProto {
+    return DirectFcmProto.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<DirectFcmProto>, I>>(object: I): DirectFcmProto {
+    const message = createBaseDirectFcmProto();
+    message.title = object.title ?? "";
+    message.link = object.link ?? "";
+    message.content = object.content ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.sender_id = object.sender_id ?? "";
+    message.avatar = object.avatar ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.attachments = object.attachments ?? new Uint8Array(0);
+    message.display_name = object.display_name ?? "";
+    message.create_time_seconds = object.create_time_seconds ?? 0;
+    message.update_time_seconds = object.update_time_seconds ?? 0;
+    message.username = object.username ?? "";
+    message.mentions = object.mentions ?? new Uint8Array(0);
+    return message;
+  },
+};
+
+function createBaseMessageMentionList(): MessageMentionList {
+  return { mentions: [] };
+}
+
+export const MessageMentionList = {
+  encode(message: MessageMentionList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.mentions) {
+      MessageMention.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MessageMentionList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMessageMentionList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.mentions.push(MessageMention.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MessageMentionList {
+    return {
+      mentions: globalThis.Array.isArray(object?.mentions)
+        ? object.mentions.map((e: any) => MessageMention.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: MessageMentionList): unknown {
+    const obj: any = {};
+    if (message.mentions?.length) {
+      obj.mentions = message.mentions.map((e) => MessageMention.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MessageMentionList>, I>>(base?: I): MessageMentionList {
+    return MessageMentionList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MessageMentionList>, I>>(object: I): MessageMentionList {
+    const message = createBaseMessageMentionList();
+    message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseMessageAttachmentList(): MessageAttachmentList {
+  return { attachments: [] };
+}
+
+export const MessageAttachmentList = {
+  encode(message: MessageAttachmentList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.attachments) {
+      MessageAttachment.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MessageAttachmentList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMessageAttachmentList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MessageAttachmentList {
+    return {
+      attachments: globalThis.Array.isArray(object?.attachments)
+        ? object.attachments.map((e: any) => MessageAttachment.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: MessageAttachmentList): unknown {
+    const obj: any = {};
+    if (message.attachments?.length) {
+      obj.attachments = message.attachments.map((e) => MessageAttachment.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MessageAttachmentList>, I>>(base?: I): MessageAttachmentList {
+    return MessageAttachmentList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MessageAttachmentList>, I>>(object: I): MessageAttachmentList {
+    const message = createBaseMessageAttachmentList();
+    message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseMessageRefList(): MessageRefList {
+  return { refs: [] };
+}
+
+export const MessageRefList = {
+  encode(message: MessageRefList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.refs) {
+      MessageRef.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MessageRefList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMessageRefList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.refs.push(MessageRef.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MessageRefList {
+    return { refs: globalThis.Array.isArray(object?.refs) ? object.refs.map((e: any) => MessageRef.fromJSON(e)) : [] };
+  },
+
+  toJSON(message: MessageRefList): unknown {
+    const obj: any = {};
+    if (message.refs?.length) {
+      obj.refs = message.refs.map((e) => MessageRef.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MessageRefList>, I>>(base?: I): MessageRefList {
+    return MessageRefList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MessageRefList>, I>>(object: I): MessageRefList {
+    const message = createBaseMessageRefList();
+    message.refs = object.refs?.map((e) => MessageRef.fromPartial(e)) || [];
+    return message;
+  },
+};
+
 function bytesFromBase64(b64: string): Uint8Array {
   if ((globalThis as any).Buffer) {
-    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
+    return Uint8Array.from((globalThis as any).Buffer.from(b64, "base64"));
   } else {
     const bin = globalThis.atob(b64);
     const arr = new Uint8Array(bin.length);
@@ -39117,7 +39664,7 @@ function bytesFromBase64(b64: string): Uint8Array {
 
 function base64FromBytes(arr: Uint8Array): string {
   if ((globalThis as any).Buffer) {
-    return globalThis.Buffer.from(arr).toString("base64");
+    return (globalThis as any).Buffer.from(arr).toString("base64");
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {

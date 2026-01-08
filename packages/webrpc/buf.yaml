@@ -1,6 +1,6 @@
 # For details on buf.yaml configuration, visit https://buf.build/docs/configuration/v2/buf-yaml
 version: v2
-name: buf.build/nguyentran/mezon  # Replace with any name
+name: buf.build/nguyentran/mezon
 deps:
   - buf.build/googleapis/googleapis
   - buf.build/grpc-ecosystem/grpc-gateway

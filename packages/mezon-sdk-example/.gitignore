@@ -1,0 +1,6 @@
+
+# Mezon cache
+/mezon-cache
+**/dist/
+**/out/
+**/bin/

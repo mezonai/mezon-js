@@ -1,0 +1,20 @@
+{
+  "name": "mezon-js-example",
+  "version": "1.0.0",
+  "description": "mezon js example",
+  "main": "dist/index.js",
+  "dependencies": {
+    "csv-parser": "^3.2.0",
+    "mezon-js": "file:../mezon-js",
+    "net": "^1.0.2",
+    "pg": "^8.12.0",
+    "wake_on_lan": "^1.0.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --fix"
+  },
+  "author": "",
+  "license": "ISC"
+}

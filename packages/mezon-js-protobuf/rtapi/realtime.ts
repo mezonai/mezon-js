@@ -794,9 +794,9 @@ export interface ChannelMessageRemove {
   /**  */
   topic_id: string;
   /** Message mention */
-  mentions: string;
+  mentions: Uint8Array;
   /** Message reference */
-  references: string;
+  references: Uint8Array;
 }
 
 /** A set of joins and leaves on a particular channel. */
@@ -6663,8 +6663,8 @@ function createBaseChannelMessageRemove(): ChannelMessageRemove {
     is_public: false,
     has_attachment: false,
     topic_id: "",
-    mentions: "",
-    references: "",
+    mentions: new Uint8Array(0),
+    references: new Uint8Array(0),
   };
 }
 
@@ -6691,11 +6691,11 @@ export const ChannelMessageRemove = {
     if (message.topic_id !== "") {
       writer.uint32(58).string(message.topic_id);
     }
-    if (message.mentions !== "") {
-      writer.uint32(66).string(message.mentions);
+    if (message.mentions.length !== 0) {
+      writer.uint32(66).bytes(message.mentions);
     }
-    if (message.references !== "") {
-      writer.uint32(74).string(message.references);
+    if (message.references.length !== 0) {
+      writer.uint32(74).bytes(message.references);
     }
     return writer;
   },
@@ -6761,14 +6761,14 @@ export const ChannelMessageRemove = {
             break;
           }
 
-          message.mentions = reader.string();
+          message.mentions = reader.bytes();
           continue;
         case 9:
           if (tag !== 74) {
             break;
           }
 
-          message.references = reader.string();
+          message.references = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -6788,8 +6788,8 @@ export const ChannelMessageRemove = {
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
       has_attachment: isSet(object.has_attachment) ? globalThis.Boolean(object.has_attachment) : false,
       topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
-      mentions: isSet(object.mentions) ? globalThis.String(object.mentions) : "",
-      references: isSet(object.references) ? globalThis.String(object.references) : "",
+      mentions: isSet(object.mentions) ? bytesFromBase64(object.mentions) : new Uint8Array(0),
+      references: isSet(object.references) ? bytesFromBase64(object.references) : new Uint8Array(0),
     };
   },
 
@@ -6816,11 +6816,11 @@ export const ChannelMessageRemove = {
     if (message.topic_id !== "") {
       obj.topic_id = message.topic_id;
     }
-    if (message.mentions !== "") {
-      obj.mentions = message.mentions;
+    if (message.mentions.length !== 0) {
+      obj.mentions = base64FromBytes(message.mentions);
     }
-    if (message.references !== "") {
-      obj.references = message.references;
+    if (message.references.length !== 0) {
+      obj.references = base64FromBytes(message.references);
     }
     return obj;
   },
@@ -6837,8 +6837,8 @@ export const ChannelMessageRemove = {
     message.is_public = object.is_public ?? false;
     message.has_attachment = object.has_attachment ?? false;
     message.topic_id = object.topic_id ?? "";
-    message.mentions = object.mentions ?? "";
-    message.references = object.references ?? "";
+    message.mentions = object.mentions ?? new Uint8Array(0);
+    message.references = object.references ?? new Uint8Array(0);
     return message;
   },
 };
@@ -16582,6 +16582,31 @@ export const FcmDataPayload = {
     return message;
   },
 };
+
+function bytesFromBase64(b64: string): Uint8Array {
+  if ((globalThis as any).Buffer) {
+    return Uint8Array.from((globalThis as any).Buffer.from(b64, "base64"));
+  } else {
+    const bin = globalThis.atob(b64);
+    const arr = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; ++i) {
+      arr[i] = bin.charCodeAt(i);
+    }
+    return arr;
+  }
+}
+
+function base64FromBytes(arr: Uint8Array): string {
+  if ((globalThis as any).Buffer) {
+    return (globalThis as any).Buffer.from(arr).toString("base64");
+  } else {
+    const bin: string[] = [];
+    arr.forEach((byte) => {
+      bin.push(globalThis.String.fromCharCode(byte));
+    });
+    return globalThis.btoa(bin.join(""));
+  }
+}
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

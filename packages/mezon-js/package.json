@@ -1,6 +1,6 @@
 {
   "name": "mezon-js",
-  "version": "2.13.79",
+  "version": "2.13.86",
   "scripts": {
     "build": "npx tsc && npx rollup -c --bundleConfigAsCjs && node build.mjs"
   },
@@ -34,10 +34,15 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
+    "@bufbuild/protobuf": "^2.10.2",
+    "@connectrpc/connect": "^2.1.1",
+    "@connectrpc/connect-web": "^2.1.1",
     "@scarf/scarf": "^1.1.1",
     "base64-arraybuffer": "^1.0.2",
     "esbuild": "^0.25.5",
     "js-base64": "^3.7.4",
+    "mezon-js-protobuf": "^1.8.76",
+    "protobufjs": "^8.0.0",
     "whatwg-fetch": "^3.6.2"
   },
   "devDependencies": {

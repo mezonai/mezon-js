@@ -4,10 +4,12 @@ inputs:
 plugins:
   # 1. Generates the base Message types (classes for your data)
   - local: protoc-gen-es
-    out: frontend/src/gen
+    out: ../mezon-js/proto/gen
     opt: target=ts
+    include_imports: true
+    include_wkt: true  
   
   # 2. Generates the Client service definitions
-  - local: protoc-gen-connect-es
-    out: frontend/src/gen
-    opt: target=ts
+  # - local: protoc-gen-connect-es
+  #   out: frontend/src/gen
+  #   opt: target=ts

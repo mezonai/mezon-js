@@ -7,8 +7,7 @@
 // http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// distributed under the License is distributed on an "AS IS" BASIS,// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
@@ -101,15 +100,6 @@ service Mezon {
   rpc SessionRefresh (api.SessionRefreshRequest) returns (api.Session) {
     option (google.api.http) = {
       post: "/v2/account/session/refresh",
-      body: "*"
-    };
-    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      security: {
-        security_requirement: {
-          key: "BasicAuth";
-          value: {};
-        }
-      }
     };
   }
 
@@ -117,7 +107,6 @@ service Mezon {
   rpc SessionLogout (api.SessionLogoutRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/session/logout",
-      body: "*"
     };
   }
 
@@ -125,7 +114,6 @@ service Mezon {
   rpc RegistrationEmail (api.RegistrationEmailRequest) returns (api.Session) {
     option (google.api.http) = {
       post: "/v2/account/registry",
-      body: "*"
     };
   }
 
@@ -147,7 +135,6 @@ service Mezon {
   rpc UploadAttachmentFile (api.UploadAttachmentRequest) returns (api.UploadAttachment) {
     option (google.api.http) = {
       post: "/v2/uploadattachmentfile",
-      body: "*"
     };
   }
 
@@ -155,21 +142,18 @@ service Mezon {
   rpc UploadOauthFile (api.UploadAttachmentRequest) returns (api.UploadAttachment) {
     option (google.api.http) = {
       post: "/v2/uploadoauthfile",
-      body: "*"
     };
   }
 
   rpc AddRolesChannelDesc (api.AddRoleChannelDescRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/rolechannel/addrole",
-      body: "*"
     };
   }
 
   rpc CreateCategoryDesc (api.CreateCategoryDescRequest) returns (api.CategoryDesc) {
     option (google.api.http) = {
       post: "/v2/createcategory",
-      body: "*"
     };
   }
 
@@ -177,7 +161,6 @@ service Mezon {
   rpc CreateChannelDesc (api.CreateChannelDescRequest) returns (api.ChannelDescription) {
     option (google.api.http) = {
       post: "/v2/channeldesc",
-      body: "*"
     };
   }
 
@@ -185,7 +168,6 @@ service Mezon {
   rpc CreateRole (api.CreateRoleRequest) returns (api.Role) {
     option (google.api.http) = {
       post: "/v2/roles",
-      body: "*"
     };
   }
 
@@ -193,7 +175,6 @@ service Mezon {
   rpc CreateEvent (api.CreateEventRequest) returns (api.EventManagement) {
     option (google.api.http) = {
       post: "/v2/eventmanagement/create",
-      body: "*"
     };
   }
 
@@ -211,8 +192,7 @@ service Mezon {
   rpc DeleteRoleChannelDesc (api.DeleteRoleRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       put : "/v2/rolechannel/delete",
-      body: "*"
-      };
+    };
   }
 
   // Get permission list
@@ -229,7 +209,6 @@ service Mezon {
   rpc CloseDMByChannelId (api.DeleteChannelDescRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       put: "/v2/direct/close",
-      body: "*"
     };
   }
 
@@ -237,7 +216,6 @@ service Mezon {
   rpc OpenDMByChannelId (api.DeleteChannelDescRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       put: "/v2/direct/open",
-      body: "*"
     };
   }
 
@@ -273,7 +251,6 @@ service Mezon {
   rpc UpdateUser (api.UpdateUsersRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       put: "/v2/user/update",
-      body: "*"
     };
   }
 
@@ -287,15 +264,13 @@ service Mezon {
 
   rpc UpdateUserProfileByClan (api.UpdateClanProfileRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-    put : "/v2/updateclanprofile/{clan_id}",
-    body: "*"
+    put : "/v2/updateclanprofile/{clan_id}",    body: "*"
     };
   }
 
   rpc UpdateClanOrder (api.UpdateClanOrderRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-    put : "/v2/updateclanorder",
-    body: "*"
+    put : "/v2/updateclanorder",    body: "*"
     };
   }
 
@@ -323,14 +298,12 @@ service Mezon {
   rpc LinkSMS (api.AccountMezon) returns (api.LinkAccountConfirmRequest) {
     option (google.api.http) = {
       post: "/v2/account/link/mezon",
-      body: "*"
     };
   }
 
   rpc ConfirmLinkMezonOTP (api.LinkAccountConfirmRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/account/link/confirm",
-      body: "*"
     };
   }
 
@@ -338,7 +311,6 @@ service Mezon {
   rpc LinkEmail (api.AccountEmail) returns (api.LinkAccountConfirmRequest) {
     option (google.api.http) = {
       post: "/v2/account/link/email",
-      body: "*"
     };
   }
 
@@ -346,7 +318,6 @@ service Mezon {
   rpc CreateClanDesc (api.CreateClanDescRequest) returns (api.ClanDesc) {
     option (google.api.http) = {
       post: "/v2/clandesc",
-      body: "*"
     };
   }
 
@@ -374,7 +345,6 @@ service Mezon {
   rpc CreateLinkInviteUser (api.LinkInviteUserRequest) returns (api.LinkInviteUser) {
     option (google.api.http) = {
       post: "/v2/invite",
-      body: "*"
     };
   }
 
@@ -404,7 +374,7 @@ service Mezon {
   }
 
   // List user channels
-  rpc ListThreadDescs (api.ListThreadRequest) returns (api.ChannelDescList) {
+  rpc ListThreadDescs (api.ListThreadRequest) returns (api.ChannelDescListNoPool) {
     option (google.api.http).get = "/v2/thread/{channel_id}";
   }
 
@@ -419,7 +389,7 @@ service Mezon {
   }
 
   // List HashtagDMList
-  rpc ListChannelByUserId (google.protobuf.Empty) returns (api.ChannelDescList) {
+  rpc ListChannelByUserId (google.protobuf.Empty) returns (api.ChannelDescListNoPool) {
     option (google.api.http).get = "/v2/listchannelbyuserid";
   }
 
@@ -447,7 +417,6 @@ service Mezon {
   rpc SetRoleChannelPermission (api.UpdateRoleChannelRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/permissionrolechannel/set",
-      body: "*"
     };
   }
 
@@ -455,7 +424,6 @@ service Mezon {
   rpc SetNotificationChannelSetting (api.SetNotificationRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/notificationchannel/set",
-      body: "*"
     };
   }
 
@@ -463,7 +431,6 @@ service Mezon {
   rpc SetMuteChannel (api.SetMuteRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/mutenotificationchannel/set",
-      body: "*"
     };
   }
 
@@ -471,7 +438,6 @@ service Mezon {
   rpc SetMuteCategory (api.SetMuteRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/mutenotificationcategory/set",
-      body: "*"
     };
   }
 
@@ -479,7 +445,6 @@ service Mezon {
    rpc SetNotificationClanSetting (api.SetDefaultNotificationRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/notificationclan/set",
-      body: "*"
     };
   }
 
@@ -487,7 +452,6 @@ service Mezon {
   rpc SetNotificationCategorySetting (api.SetNotificationRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/notificationucategory/set",
-      body: "*"
     };
   }
 
@@ -537,7 +501,6 @@ service Mezon {
   rpc CreatePinMessage (api.PinMessageRequest) returns (api.ChannelMessageHeader) {
     option (google.api.http) = {
       post: "/v2/pinmessage/set",
-      body: "*"
     };
   }
 
@@ -545,7 +508,6 @@ service Mezon {
   rpc CreateMessage2Inbox (api.Message2InboxRequest) returns (api.ChannelMessageHeader) {
     option (google.api.http) = {
       post: "/v2/pinmessage/inbox",
-      body: "*"
     };
   }
 
@@ -582,9 +544,7 @@ service Mezon {
   // Execute a Lua function on the server.
   rpc RpcFunc (api.Rpc) returns (api.Rpc) {
     option (google.api.http) = {
-      post: "/v2/rpc/{id}",
-      body: "payload",
-      additional_bindings {
+      post: "/v2/rpc/{id}",      body: "payload",      additional_bindings {
         get: "/v2/rpc/{id}"
       }
     };
@@ -607,7 +567,6 @@ service Mezon {
   rpc UnlinkMezon (api.AccountMezon) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/account/unlink/mezon",
-      body: "*"
     };
   }
 
@@ -615,7 +574,6 @@ service Mezon {
   rpc UnlinkEmail (api.AccountEmail) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/account/unlink/email",
-      body: "*"
     };
   }
 
@@ -623,7 +581,6 @@ service Mezon {
   rpc UpdateAccount (api.UpdateAccountRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       put: "/v2/account",
-      body: "*"
     };
   }
 
@@ -631,7 +588,6 @@ service Mezon {
   rpc UpdateUsername (api.UpdateUsernameRequest) returns (api.Session) {
     option (google.api.http) = {
       put: "/v2/username",
-      body: "*"
     };
   }
 
@@ -639,21 +595,18 @@ service Mezon {
   rpc UpdateCategory (api.UpdateCategoryDescRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       put: "/v2/updatecategory/{clan_id}",
-      body: "*"
     };
   }
 
   rpc UpdateCategoryOrder (api.UpdateCategoryOrderRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       put:"/v2/category/orders",
-      body: "*"
     };
   }
 
   rpc UpdateRoleOrder (api.UpdateRoleOrderRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       put:"/v2/role/orders",
-      body: "*"
     };
   }
 
@@ -661,7 +614,6 @@ service Mezon {
   rpc UpdateClanDesc (api.UpdateClanDescRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       put: "/v2/clandesc/{clan_id}",
-      body: "*"
     };
   }
 
@@ -669,7 +621,6 @@ service Mezon {
   rpc UpdateChannelDesc (api.UpdateChannelDescRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       put: "/v2/channeldesc/{channel_id}",
-      body: "*"
     };
   }
 
@@ -677,7 +628,6 @@ service Mezon {
   rpc UpdateChannelPrivate (api.ChangeChannelPrivateRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       put: "/v2/updatechannelprivate",
-      body: "*"
     };
   }
 
@@ -685,14 +635,13 @@ service Mezon {
   rpc UpdateRole (api.UpdateRoleRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       put: "/v2/roles/{role_id}",
-      body: "*"
     };
   }
 
   // list user add channel by channel ids
   rpc ListChannelUsersUC(api.AllUsersAddChannelRequest) returns (api.AllUsersAddChannelResponse) {
     option (google.api.http) = {
-        get: "/v2/channeldesc/users"
+      get: "/v2/channeldesc/users"
     };
   }
 
@@ -715,7 +664,6 @@ service Mezon {
   rpc UpdateEvent (api.UpdateEventRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       put: "/v2/eventmanagement/{event_id}",
-      body: "*"
     };
   }
 
@@ -723,7 +671,6 @@ service Mezon {
   rpc SearchMessage (api.SearchMessageRequest) returns (api.SearchMessageResponse) {
     option (google.api.http) = {
       post: "/v2/es/search",
-      body: "*"
     };
   }
 
@@ -731,7 +678,6 @@ service Mezon {
   rpc CreateClanEmoji(api.ClanEmojiCreateRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post:"/v2/emoji/create",
-      body:"*"
     };
   }
 
@@ -744,7 +690,6 @@ service Mezon {
   rpc UpdateClanEmojiById(api.ClanEmojiUpdateRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       patch: "/v2/emoji/{id}",
-      body: "*"
     };
   }
 
@@ -752,7 +697,6 @@ service Mezon {
   rpc GenerateWebhook(api.WebhookCreateRequest) returns (api.WebhookGenerateResponse) {
     option (google.api.http) = {
       post:"/v2/webhooks/generate",
-      body:"*"
     };
   }
 
@@ -765,7 +709,6 @@ service Mezon {
   rpc UpdateWebhookById(api.WebhookUpdateRequestById) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       patch: "/v2/webhooks/update/{id}",
-      body: "*"
     };
   }
 
@@ -773,7 +716,6 @@ service Mezon {
   rpc DeleteWebhookById(api.WebhookDeleteRequestById) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       patch: "/v2/webhooks/{id}",
-      body: "*"
     };
   }
 
@@ -789,7 +731,6 @@ service Mezon {
   rpc AddClanSticker(api.ClanStickerAddRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
         post: "/v2/sticker",
-        body: "*"
     };
   }
 
@@ -797,7 +738,6 @@ service Mezon {
   rpc UpdateClanStickerById(api.ClanStickerUpdateByIdRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
         patch: "/v2/sticker/{id}",
-        body: "*"
     };
   }
 
@@ -812,7 +752,7 @@ service Mezon {
   rpc ChangeChannelCategory (api.ChangeChannelCategoryRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       patch: "/v2/channel/category/{new_category_id}"
-      body: "*"
+
     };
   }
 
@@ -820,7 +760,6 @@ service Mezon {
   rpc AddApp (api.AddAppRequest) returns (App) {
     option (google.api.http) = {
       post: "/v2/apps/add",
-      body: "*"
     };
   }
 
@@ -843,7 +782,6 @@ service Mezon {
   rpc UpdateApp (api.UpdateAppRequest) returns (App) {
     option (google.api.http) = {
       put: "/v2/apps/app/{id}",
-      body: "*"
     };
   }
 
@@ -856,7 +794,7 @@ service Mezon {
   rpc CreateSystemMessage (api.SystemMessageRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/systemmessages"
-      body: "*"
+
     };
   }
 
@@ -864,7 +802,7 @@ service Mezon {
   rpc UpdateSystemMessage (api.SystemMessageRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       put: "/v2/systemmessages/{clan_id}"
-      body: "*"
+
     };
   }
 
@@ -886,7 +824,6 @@ service Mezon {
   rpc StreamingServerCallback (api.StreamHttpCallbackRequest) returns (api.StreamHttpCallbackResponse) {
     option (google.api.http) = {
       post: "/v2/stream/callback",
-      body: "*"
     };
   }
 
@@ -946,7 +883,7 @@ service Mezon {
   rpc MarkAsRead (api.MarkAsReadRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/markasread"
-      body: "*"
+
     };
   }
 
@@ -954,7 +891,6 @@ service Mezon {
   rpc EditChannelCanvases (api.EditChannelCanvasRequest) returns (api.EditChannelCanvasResponse) {
     option (google.api.http) = {
       post: "/v2/canvases/editor",
-      body: "*"
     };
   }
 
@@ -985,7 +921,6 @@ service Mezon {
   rpc AddChannelFavorite (api.AddFavoriteChannelRequest) returns (api.AddFavoriteChannelResponse) {
     option (google.api.http) = {
       post: "/v2/channel/favorite",
-      body: "*"
     };
   }
 
@@ -1004,7 +939,7 @@ service Mezon {
   rpc CreateActiviy (CreateActivityRequest) returns (UserActivity) {
     option (google.api.http) = {
       post: "/v2/activity"
-      body: "*"
+
     };
   }
 
@@ -1019,7 +954,6 @@ service Mezon {
   rpc PushPubKey (api.PushPubKeyRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/pubkey/push",
-      body: "*"
     };
   }
 
@@ -1034,7 +968,6 @@ service Mezon {
   rpc SetChanEncryptionMethod (api.ChanEncryptionMethod) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/channel/{channel_id}/encrypt_method",
-      body: "*"
     };
   }
 
@@ -1065,7 +998,6 @@ service Mezon {
   rpc CreateOnboarding (api.CreateOnboardingRequest) returns (api.ListOnboardingResponse) {
     option (google.api.http) = {
       post: "/v2/onboarding",
-      body: "*"
     };
   }
 
@@ -1073,7 +1005,6 @@ service Mezon {
   rpc UpdateOnboarding (api.UpdateOnboardingRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       put: "/v2/onboarding/{id}",
-      body: "*"
     };
   }
 
@@ -1091,7 +1022,6 @@ service Mezon {
   rpc UpdateOnboardingStep (api.UpdateOnboardingStepRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       put: "/v2/onboardingsteps/{clan_id}",
-      body: "*"
     };
   }
 
@@ -1099,7 +1029,6 @@ service Mezon {
   rpc GenerateClanWebhook(api.GenerateClanWebhookRequest) returns (api.GenerateClanWebhookResponse) {
     option (google.api.http) = {
       post:"/v2/clanwebhooks",
-      body:"*"
     };
   }
 
@@ -1112,7 +1041,6 @@ service Mezon {
   rpc UpdateClanWebhookById(api.UpdateClanWebhookRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       put: "/v2/clanwebhooks/{id}",
-      body: "*"
     };
   }
 
@@ -1140,7 +1068,6 @@ service Mezon {
   rpc UpdateUserStatus(api.UserStatusUpdate) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       put: "/v2/userstatus",
-      body: "*"
     };
   }
 
@@ -1162,7 +1089,7 @@ service Mezon {
   rpc CreateSdTopic(api.SdTopicRequest) returns (api.SdTopic) {
     option (google.api.http) = {
       post: "/v2/sdmtopic"
-      body: "*"
+
     };
   }
 
@@ -1177,7 +1104,7 @@ service Mezon {
   rpc CreateExternalMezonMeet (google.protobuf.Empty) returns (api.GenerateMezonMeetResponse) {
     option (google.api.http) = {
       post: "/v2/meet/external/create"
-      body: "*"
+
     };
   }
 
@@ -1185,7 +1112,7 @@ service Mezon {
   rpc GenerateMeetToken(api.GenerateMeetTokenRequest) returns (api.GenerateMeetTokenResponse) {
     option (google.api.http) = {
       post: "/v2/meet/generate"
-      body: "*"
+
     };
   }
 
@@ -1193,7 +1120,7 @@ service Mezon {
   rpc RemoveParticipantMezonMeet (api.MeetParticipantRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/meet/participant/remove"
-      body: "*"
+
     };
   }
 
@@ -1201,7 +1128,7 @@ service Mezon {
   rpc MuteParticipantMezonMeet (api.MeetParticipantRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/meet/participant/mute"
-      body: "*"
+
     };
   }
 
@@ -1209,7 +1136,6 @@ service Mezon {
   rpc CreateRoomChannelApps(api.CreateRoomChannelApps) returns (api.CreateRoomChannelApps) {
     option (google.api.http) = {
       post: "/v2/channel-apps/createroom",
-      body: "*"
     };
   }
 
@@ -1231,11 +1157,11 @@ service Mezon {
   rpc UpdateMezonOauthClient(api.MezonOauthClient) returns (api.MezonOauthClient) {
     option (google.api.http) = {
       patch: "/v2/mznoauthclient"
-      body: "*"
+
     };
   }
 
-  rpc SearchThread(api.SearchThreadRequest) returns (api.ChannelDescList) {
+  rpc SearchThread(api.SearchThreadRequest) returns (api.ChannelDescListNoPool) {
     option (google.api.http) = {
       get: "/v2/searchthread"
     };
@@ -1258,7 +1184,7 @@ service Mezon {
   rpc AddUserEvent(api.UserEventRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/userevent"
-      body: "*"
+
     };
   }
 
@@ -1266,7 +1192,7 @@ service Mezon {
   rpc UpdateUserProfileRedis(realtime.UserProfileRedis) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       put: "/v2/user/profile"
-      body: "*"
+
     };
   }
 
@@ -1279,14 +1205,14 @@ service Mezon {
   rpc AddQuickMenuAccess(api.QuickMenuAccess) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/quickmenuaccess"
-      body: "*"
+
     };
   }
 
   rpc UpdateQuickMenuAccess(api.QuickMenuAccess) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       put: "/v2/quickmenuaccess"
-      body: "*"
+
     };
   }
 
@@ -1299,28 +1225,25 @@ service Mezon {
   rpc IsFollower(api.IsFollowerRequest) returns (api.IsFollowerResponse) {
     option (google.api.http) = {
       post: "/v2/follower"
-      body: "*"
+
     };
   }
 
   rpc TransferOwnership (api.TransferOwnershipRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/transfer/ownership",
-      body: "*"
     };
   }
 
   rpc SendSystemMessageExternal (api.ChannelMessage) returns (api.ChannelMessage) {
     option (google.api.http) = {
       post: "/v2/message/systemmessage",
-      body: "*"
     };
   }
 
   rpc UpdateSystemMessageExternal (api.ChannelMessage) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       put: "/v2/message/systemmessage",
-      body: "*"
     };
   }
 
