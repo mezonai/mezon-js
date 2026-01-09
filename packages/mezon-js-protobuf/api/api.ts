@@ -914,9 +914,7 @@ export interface Notification {
   /** ID of the sender, if a user. Otherwise 'null'. */
   sender_id: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the notification was created. */
-  create_time:
-    | Date
-    | undefined;
+  create_time_seconds: number;
   /** True if this notification was persisted to the database. */
   persistent: boolean;
   /** ID of clan */
@@ -1492,14 +1490,6 @@ export interface ChannelMessageHeader {
   sender_id: string;
   /** the content */
   content: string;
-  /** the attachment */
-  attachment: Uint8Array;
-  /** the reference */
-  reference: Uint8Array;
-  /** the mention */
-  mention: Uint8Array;
-  /** the reactions */
-  reaction: Uint8Array;
 }
 
 /** Channel description record */
@@ -9641,7 +9631,7 @@ function createBaseNotification(): Notification {
     content: new Uint8Array(0),
     code: 0,
     sender_id: "",
-    create_time: undefined,
+    create_time_seconds: 0,
     persistent: false,
     clan_id: "",
     channel_id: "",
@@ -9670,8 +9660,8 @@ export const Notification = {
     if (message.sender_id !== "") {
       writer.uint32(42).string(message.sender_id);
     }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(50).fork()).ldelim();
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(48).uint32(message.create_time_seconds);
     }
     if (message.persistent !== false) {
       writer.uint32(56).bool(message.persistent);
@@ -9743,11 +9733,11 @@ export const Notification = {
           message.sender_id = reader.string();
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.create_time_seconds = reader.uint32();
           continue;
         case 7:
           if (tag !== 56) {
@@ -9821,7 +9811,7 @@ export const Notification = {
       content: isSet(object.content) ? bytesFromBase64(object.content) : new Uint8Array(0),
       code: isSet(object.code) ? globalThis.Number(object.code) : 0,
       sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       persistent: isSet(object.persistent) ? globalThis.Boolean(object.persistent) : false,
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
@@ -9850,8 +9840,8 @@ export const Notification = {
     if (message.sender_id !== "") {
       obj.sender_id = message.sender_id;
     }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
     if (message.persistent !== false) {
       obj.persistent = message.persistent;
@@ -9890,7 +9880,7 @@ export const Notification = {
     message.content = object.content ?? new Uint8Array(0);
     message.code = object.code ?? 0;
     message.sender_id = object.sender_id ?? "";
-    message.create_time = object.create_time ?? undefined;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
     message.persistent = object.persistent ?? false;
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
@@ -14499,16 +14489,7 @@ export const ListCategoryDescsRequest = {
 };
 
 function createBaseChannelMessageHeader(): ChannelMessageHeader {
-  return {
-    id: "",
-    timestamp_seconds: 0,
-    sender_id: "",
-    content: "",
-    attachment: new Uint8Array(0),
-    reference: new Uint8Array(0),
-    mention: new Uint8Array(0),
-    reaction: new Uint8Array(0),
-  };
+  return { id: "", timestamp_seconds: 0, sender_id: "", content: "" };
 }
 
 export const ChannelMessageHeader = {
@@ -14524,18 +14505,6 @@ export const ChannelMessageHeader = {
     }
     if (message.content !== "") {
       writer.uint32(34).string(message.content);
-    }
-    if (message.attachment.length !== 0) {
-      writer.uint32(42).bytes(message.attachment);
-    }
-    if (message.reference.length !== 0) {
-      writer.uint32(50).bytes(message.reference);
-    }
-    if (message.mention.length !== 0) {
-      writer.uint32(58).bytes(message.mention);
-    }
-    if (message.reaction.length !== 0) {
-      writer.uint32(66).bytes(message.reaction);
     }
     return writer;
   },
@@ -14575,34 +14544,6 @@ export const ChannelMessageHeader = {
 
           message.content = reader.string();
           continue;
-        case 5:
-          if (tag !== 42) {
-            break;
-          }
-
-          message.attachment = reader.bytes();
-          continue;
-        case 6:
-          if (tag !== 50) {
-            break;
-          }
-
-          message.reference = reader.bytes();
-          continue;
-        case 7:
-          if (tag !== 58) {
-            break;
-          }
-
-          message.mention = reader.bytes();
-          continue;
-        case 8:
-          if (tag !== 66) {
-            break;
-          }
-
-          message.reaction = reader.bytes();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -14618,10 +14559,6 @@ export const ChannelMessageHeader = {
       timestamp_seconds: isSet(object.timestamp_seconds) ? globalThis.Number(object.timestamp_seconds) : 0,
       sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
-      attachment: isSet(object.attachment) ? bytesFromBase64(object.attachment) : new Uint8Array(0),
-      reference: isSet(object.reference) ? bytesFromBase64(object.reference) : new Uint8Array(0),
-      mention: isSet(object.mention) ? bytesFromBase64(object.mention) : new Uint8Array(0),
-      reaction: isSet(object.reaction) ? bytesFromBase64(object.reaction) : new Uint8Array(0),
     };
   },
 
@@ -14639,18 +14576,6 @@ export const ChannelMessageHeader = {
     if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.attachment.length !== 0) {
-      obj.attachment = base64FromBytes(message.attachment);
-    }
-    if (message.reference.length !== 0) {
-      obj.reference = base64FromBytes(message.reference);
-    }
-    if (message.mention.length !== 0) {
-      obj.mention = base64FromBytes(message.mention);
-    }
-    if (message.reaction.length !== 0) {
-      obj.reaction = base64FromBytes(message.reaction);
-    }
     return obj;
   },
 
@@ -14663,10 +14588,6 @@ export const ChannelMessageHeader = {
     message.timestamp_seconds = object.timestamp_seconds ?? 0;
     message.sender_id = object.sender_id ?? "";
     message.content = object.content ?? "";
-    message.attachment = object.attachment ?? new Uint8Array(0);
-    message.reference = object.reference ?? new Uint8Array(0);
-    message.mention = object.mention ?? new Uint8Array(0);
-    message.reaction = object.reaction ?? new Uint8Array(0);
     return message;
   },
 };

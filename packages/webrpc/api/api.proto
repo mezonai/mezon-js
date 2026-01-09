@@ -683,7 +683,7 @@ message Notification {
   // ID of the sender, if a user. Otherwise 'null'.
   string sender_id = 5;
   // The UNIX time (for gRPC clients) or ISO string (for REST clients) when the notification was created.
-  google.protobuf.Timestamp create_time = 6;
+  uint32 create_time_seconds = 6;
   // True if this notification was persisted to the database.
   bool persistent = 7;
   // ID of clan
@@ -1212,14 +1212,6 @@ message ChannelMessageHeader {
   string sender_id = 3;
   // the content
   string content = 4;
-  // the attachment
-  bytes attachment = 5;
-  // the reference
-  bytes reference = 6;
-  // the mention
-  bytes mention = 7;
-  // the reactions
-  bytes reaction = 8;
 }
 
 // Channel description record

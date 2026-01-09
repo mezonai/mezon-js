@@ -505,7 +505,7 @@ service Mezon {
   }
 
   // create message to inbox.
-  rpc CreateMessage2Inbox (api.Message2InboxRequest) returns (api.ChannelMessageHeader) {
+  rpc CreateMessage2Inbox (api.Message2InboxRequest) returns (api.ChannelMessage) {
     option (google.api.http) = {
       post: "/v2/pinmessage/inbox",
     };
