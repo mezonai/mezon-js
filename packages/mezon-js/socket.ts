@@ -68,6 +68,7 @@ import { Session } from "./session";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
 import { mapToCamelCase, mapToSnakeCase, safeJSONParse } from "./utils";
 import {
+  decodeReactions,
   decodeMentions,
   decodeAttachments,
   decodeRefs,
@@ -1342,7 +1343,10 @@ function createChannelMessageFromEvent(message: any) {
     console.log("content is invalid", e);
   }
   try {
-    reactions = safeJSONParse(message.channel_message.reactions);
+    reactions =
+      (decodeReactions(message.channel_message.reactions)
+        ?.reactions as unknown as ApiMessageReaction[]) ||
+      safeJSONParse(message.channel_message.reactions);
   } catch (e) {
     console.log("reactions is invalid", e);
   }
@@ -1968,6 +1972,7 @@ export class DefaultSocket implements Socket {
       /** Inbound message from server. */
       if (!message.cid) {
         if (message.notifications) {
+          console.log("Received notifications: %o", message.notifications);
           message.notifications.notifications.forEach((n: ApiNotification) => {
             n.content = n.content ? safeJSONParse(n.content) : undefined;
             this.onnotification(n);
@@ -2030,10 +2035,7 @@ export class DefaultSocket implements Socket {
           this.onstreamdata(mapToCamelCase(<StreamData>message.stream_data));
         } else if (message.channel_message) {
           const channelMessage = createChannelMessageFromEvent(message);
-          console.log("channelMessage", channelMessage);
-          const newMessage = mapToCamelCase(channelMessage);
-          console.log("newMessage", newMessage);
-          this.onchannelmessage(newMessage);
+          this.onchannelmessage(mapToCamelCase(channelMessage));
         } else if (message.message_typing_event) {
           this.onmessagetyping(
             mapToCamelCase(<MessageTypingEvent>message.message_typing_event)

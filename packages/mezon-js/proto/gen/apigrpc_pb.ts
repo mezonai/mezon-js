@@ -769,8 +769,6 @@ export const Mezon: GenService<{
     output: typeof ChannelMessageHeaderSchema;
   },
   /**
-   * 
-   *
    * @generated from rpc mezon.api.Mezon.GetPinMessagesList
    */
   getPinMessagesList: {
@@ -779,8 +777,6 @@ export const Mezon: GenService<{
     output: typeof PinMessagesListSchema;
   },
   /**
-   * 
-   *
    * @generated from rpc mezon.api.Mezon.DeletePinMessage
    */
   deletePinMessage: {
