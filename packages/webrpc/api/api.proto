@@ -152,44 +152,40 @@ message ChannelMessage {
   string avatar = 7;
   // The content payload.
   string content = 8;
-  // The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  google.protobuf.Timestamp create_time = 9;
-  // The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
-  google.protobuf.Timestamp update_time = 10;
   // The name of the chat room, or an empty string if this message was not sent through a chat room.
-  string channel_label = 11;
+  string channel_label = 9;
   // The clan logo
-  string clan_logo = 12;
+  string clan_logo = 10;
   // The category name
-  string category_name = 13;
+  string category_name = 11;
   // The clan nick name
-  string display_name = 14;
+  string display_name = 12;
   // The clan nick name
-  string clan_nick = 15;
+  string clan_nick = 13;
   // The clan avatar
-  string clan_avatar = 16;
+  string clan_avatar = 14;
   // Emoji reaction
-	bytes reactions = 17;
+	bytes reactions = 15;
   // Message mention
-  bytes mentions = 18;
+  bytes mentions = 16;
   // Message attachment
-  bytes attachments = 19;
+  bytes attachments = 17;
   // Message reference
-  bytes references = 20;
+  bytes references = 18;
   // referenced message
-  bytes referenced_message = 21;
+  bytes referenced_message = 19;
   // create time in ms
-  uint32 create_time_seconds = 22;
+  uint32 create_time_seconds = 20;
   // update time in ms
-  uint32 update_time_seconds = 23;
+  uint32 update_time_seconds = 21;
   // channel mode
-  int32 mode = 24;
+  int32 mode = 22;
   // hide editted
-  bool hide_editted = 25;
+  bool hide_editted = 23;
   // is public
-  bool is_public = 26;
+  bool is_public = 24;
   // topic
-  string topic_id = 27;
+  string topic_id = 25;
 }
 
 // Mention to message
