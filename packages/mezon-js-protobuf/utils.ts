@@ -27,22 +27,22 @@ export function decodeRefs(data: any) {
 export function decodeReactions(data: any) {
   const buffer: ArrayBuffer = data;
   const uintBuffer: Uint8Array = new Uint8Array(buffer);
-  const noti = tsproto.MessageReactionList.decode(uintBuffer);
-  return noti;
-}
-
-export function decodeChannelMessageHeader(data: any) {
-  const buffer: ArrayBuffer = data;
-  const uintBuffer: Uint8Array = new Uint8Array(buffer);
-  const noti = tsproto.ChannelMessageHeader.decode(uintBuffer);
-
-  return noti;
+  const reactions = tsproto.MessageReactionList.decode(uintBuffer);
+  return reactions;
 }
 
 export function decodeNotificationFcm(data: any) {
   const buffer: ArrayBuffer = data;
   const uintBuffer: Uint8Array = new Uint8Array(buffer);
-  const noti = tsproto.DirectFcmProto.decode(uintBuffer);
+  const noti = tsproto.Notification.decode(uintBuffer);
 
   return noti;
+}
+
+export function decodeNotificationContent(data: any) {
+  const uint8Array = new Uint8Array(data);
+  const decoder = new TextDecoder("utf-8");
+  const notiContent = decoder.decode(uint8Array);
+
+  return notiContent;
 }

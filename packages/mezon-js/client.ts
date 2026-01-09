@@ -328,7 +328,7 @@ import {
   decodeAttachments,
   decodeRefs,
   decodeReactions,
-  decodeNotificationFcm,
+  decodeNotificationContent,
 } from "mezon-js-protobuf";
 
 const DEFAULT_HOST = "127.0.0.1";
@@ -2263,7 +2263,7 @@ export class Client {
       var content;
       try {
         content =
-          decodeNotificationFcm(n.content) ||
+          decodeNotificationContent(n.content) ||
           safeJSONParse((n.content as unknown as string) || "{}");
       } catch (e) {
         console.log("error parse content", e);
@@ -5059,7 +5059,9 @@ export class Client {
       headers: [["Authorization", "Bearer " + session.token]],
     };
 
-    return await this.mezonClient.listSdTopic(listSdTopicRequest, options);
+    const response = this.mezonClient.listSdTopic(listSdTopicRequest, options);
+    console.log("listSdTopicresponse", response);
+    return response;
   }
 
   //**post sd topic */

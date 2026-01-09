@@ -18,6 +18,132 @@ export interface Session {
   idToken: string;
 }
 
+/** A message sent on a channel. */
+export interface ChannelMessage {
+  //The unique ID of this message.
+  id: string;
+  //
+  avatar?: string;
+  //The channel this message belongs to.
+  channelId: string;
+  //The name of the chat room, or an empty string if this message was not sent through a chat room.
+  channelLabel: string;
+  //The clan this message belong to.
+  clanId?: string;
+  //The code representing a message type or category.
+  code: number;
+  //The content payload.
+  content: string;
+  //
+  reactions?: Array<ApiMessageReaction>;
+  //
+  mentions?: Array<ApiMessageMention>;
+  //
+  attachments?: Array<ApiMessageAttachment>;
+  //
+  references?: Array<ApiMessageRef>;
+  //
+  referencedMessage?: string[];
+  //True if the message was persisted to the channel's history, false otherwise.
+  persistent?: boolean;
+  //Message sender, usually a user ID.
+  senderId: string;
+  //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
+  clanLogo?: string;
+  //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
+  categoryName?: string;
+  //The username of the message sender, if any.
+  username?: string;
+  // The clan nick name
+  clanNick?: string;
+  // The clan avatar
+  clanAvatar?: string;
+  //
+  displayName?: string;
+  //
+  createTimeSeconds?: number;
+  //
+  updateTimeSeconds?: number;
+  //
+  mode?: number;
+  //
+  messageId?: string;
+  //
+  hideEditted?: boolean;
+  //
+  isPublic?: boolean;
+  //
+  topicId?: string;
+}
+
+/** A list of channel messages, usually a result of a list operation. */
+export interface ChannelMessageList {
+  /** Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors. */
+  cacheableCursor?: string;
+  /**last seen message from user on channel */
+  lastSeenMessage?: ApiChannelMessageHeader;
+  /**last sent message from channel */
+  lastSentMessage?: ApiChannelMessageHeader;
+  /** A list of messages. */
+  messages?: Array<ChannelMessage>;
+  /** The cursor to send when retireving the next page, if any. */
+  nextCursor?: string;
+  /** The cursor to send when retrieving the previous page, if any. */
+  prevCursor?: string;
+}
+
+/** A collection of zero or more users. */
+export interface Users {
+  /** The User objects. */
+  users?: Array<ApiUser>;
+}
+
+/** A collection of zero or more friends of the user. */
+export interface Friends {
+  /** The Friend objects. */
+  friends?: Array<ApiFriend>;
+  /** Cursor for the next page of results, if any. */
+  cursor?: string;
+}
+
+/** A notification in the server. */
+export interface Notification {
+  /** Category code for this notification. */
+  code?: number;
+  /** Content of the notification in string. */
+  content?: string;
+  /** The UNIX time when the notification was created. */
+  createTimeSeconds?: number;
+  /** ID of the Notification. */
+  id?: string;
+  /** True if this notification was persisted to the database. */
+  persistent?: boolean;
+  /** ID of the sender, if a user. Otherwise 'null'. */
+  senderId?: string;
+  /** Subject of the notification. */
+  subject?: string;
+  /** The clan ID related to this notification, if any. */
+  clanId: string;
+  /** The channel ID related to this notification, if any. */
+  channelId: string;
+  /** The type of channel related to this notification, if any. */
+  channelType: number;
+  /** URL of the avatar related to this notification, if any. */
+  avatarUrl: string;
+  /** The topic ID related to this notification, if any. */
+  topicId: string;
+  /** The category of this notification. */
+  category: number;
+}
+
+/** A collection of zero or more notifications. */
+export interface NotificationList {
+  /** Use this cursor to paginate notifications. Cache this to catch up to new notifications. */
+  cacheableCursor?: string;
+  /** Collection of notifications. */
+  notifications?: Array<Notification>;
+}
+
 /** A single user-role pair. */
 export interface ChannelUserListChannelUser {
   //
@@ -40,26 +166,6 @@ export interface ChannelUserListChannelUser {
   isBanned?: boolean;
   // expired time
   expiredBanTime?: number;
-}
-
-/**  */
-export interface ApiBannedUser {
-  //
-  banTime?: number;
-  //The banned user.
-  bannedId?: string;
-  //
-  bannerId?: string;
-  //
-  channelId?: string;
-  //
-  reason?: string;
-}
-
-/**  */
-export interface ApiBannedUserList {
-  //
-  bannedUsers?: Array<ApiBannedUser>;
 }
 
 /** A single user-role pair. */
@@ -254,18 +360,6 @@ export interface MezonUpdateClanDescBody {
 }
 
 /**  */
-export interface MezonUpdateClanDescProfileBody {
-  //
-  avatarUrl?: string;
-  //
-  nickName?: string;
-  //
-  profileBanner?: string;
-  //
-  profileTheme?: string;
-}
-
-/**  */
 export interface MezonUpdateClanEmojiByIdBody {
   //
   category?: string;
@@ -319,40 +413,6 @@ export interface MezonUpdateEventBody {
   repeatType?: number;
 }
 
-/** Update fields in a given role. */
-export interface MezonUpdateRoleBody {
-  //The permissions to add.
-  activePermissionIds?: Array<string>;
-  //The users to add.
-  addUserIds?: Array<string>;
-  //
-  allowMention?: number;
-  //
-  clanId?: string;
-  //
-  color?: string;
-  //
-  description?: string;
-  //
-  displayOnline?: number;
-  //
-  maxPermissionId: string;
-  //The permissions to remove.
-  removePermissionIds?: Array<string>;
-  //The users to remove.
-  removeUserIds?: Array<string>;
-  //
-  roleIcon?: string;
-  //
-  title?: string;
-}
-
-/** Delete a role the user has access to. */
-export interface MezonUpdateRoleDeleteBody {
-  //
-  clanId?: string;
-}
-
 /** Request to get system message by clan and channel IDs. */
 export interface MezonUpdateSystemMessageBody {
   //
@@ -367,14 +427,6 @@ export interface MezonUpdateSystemMessageBody {
   welcomeRandom?: string;
   //
   welcomeSticker?: string;
-}
-
-/**  */
-export interface MezonUpdateUserProfileByClanBody {
-  //
-  avatar?: string;
-  //
-  nickName?: string;
 }
 
 /**  */
@@ -407,20 +459,6 @@ export interface RoleUserListRoleUser {
   online?: boolean;
   //The username of the user's account.
   username?: string;
-}
-
-/**  */
-export interface UpdateClanOrderRequestClanOrder {
-  //
-  clanId?: string;
-  //
-  order?: number;
-}
-
-/**  */
-export interface ApiUpdateClanOrderRequest {
-  //
-  clansOrder?: Array<UpdateClanOrderRequestClanOrder>;
 }
 
 /** A user with additional account details. Always the current user. */
@@ -2003,7 +2041,7 @@ export interface ApiNotification {
   //Content of the notification in JSON.
   content?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the notification was created.
-  createTime?: string;
+  createTimeSeconds?: number;
   //ID of the Notification.
   id?: string;
   //True if this notification was persisted to the database.
@@ -3479,132 +3517,6 @@ export interface ApiTransferOwnershipRequest {
   clanId?: string;
   //
   newOwnerId?: string;
-}
-
-/** A message sent on a channel. */
-export interface ChannelMessage {
-  //The unique ID of this message.
-  id: string;
-  //
-  avatar?: string;
-  //The channel this message belongs to.
-  channelId: string;
-  //The name of the chat room, or an empty string if this message was not sent through a chat room.
-  channelLabel: string;
-  //The clan this message belong to.
-  clanId?: string;
-  //The code representing a message type or category.
-  code: number;
-  //The content payload.
-  content: string;
-  //
-  reactions?: Array<ApiMessageReaction>;
-  //
-  mentions?: Array<ApiMessageMention>;
-  //
-  attachments?: Array<ApiMessageAttachment>;
-  //
-  references?: Array<ApiMessageRef>;
-  //
-  referencedMessage?: string[];
-  //True if the message was persisted to the channel's history, false otherwise.
-  persistent?: boolean;
-  //Message sender, usually a user ID.
-  senderId: string;
-  //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
-  clanLogo?: string;
-  //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
-  categoryName?: string;
-  //The username of the message sender, if any.
-  username?: string;
-  // The clan nick name
-  clanNick?: string;
-  // The clan avatar
-  clanAvatar?: string;
-  //
-  displayName?: string;
-  //
-  createTimeSeconds?: number;
-  //
-  updateTimeSeconds?: number;
-  //
-  mode?: number;
-  //
-  messageId?: string;
-  //
-  hideEditted?: boolean;
-  //
-  isPublic?: boolean;
-  //
-  topicId?: string;
-}
-
-/** A list of channel messages, usually a result of a list operation. */
-export interface ChannelMessageList {
-  /** Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors. */
-  cacheableCursor?: string;
-  /**last seen message from user on channel */
-  lastSeenMessage?: ApiChannelMessageHeader;
-  /**last sent message from channel */
-  lastSentMessage?: ApiChannelMessageHeader;
-  /** A list of messages. */
-  messages?: Array<ChannelMessage>;
-  /** The cursor to send when retireving the next page, if any. */
-  nextCursor?: string;
-  /** The cursor to send when retrieving the previous page, if any. */
-  prevCursor?: string;
-}
-
-/** A collection of zero or more users. */
-export interface Users {
-  /** The User objects. */
-  users?: Array<ApiUser>;
-}
-
-/** A collection of zero or more friends of the user. */
-export interface Friends {
-  /** The Friend objects. */
-  friends?: Array<ApiFriend>;
-  /** Cursor for the next page of results, if any. */
-  cursor?: string;
-}
-
-/** A notification in the server. */
-export interface Notification {
-  /** Category code for this notification. */
-  code?: number;
-  /** Content of the notification in JSON. */
-  content?: {};
-  /** The UNIX time when the notification was created. */
-  createTimeSeconds?: number;
-  /** ID of the Notification. */
-  id?: string;
-  /** True if this notification was persisted to the database. */
-  persistent?: boolean;
-  /** ID of the sender, if a user. Otherwise 'null'. */
-  senderId?: string;
-  /** Subject of the notification. */
-  subject?: string;
-  /** The clan ID related to this notification, if any. */
-  clanId: string;
-  /** The channel ID related to this notification, if any. */
-  channelId: string;
-  /** The type of channel related to this notification, if any. */
-  channelType: number;
-  /** URL of the avatar related to this notification, if any. */
-  avatarUrl: string;
-  /** The topic ID related to this notification, if any. */
-  topicId: string;
-  /** The category of this notification. */
-  category: number;
-}
-
-/** A collection of zero or more notifications. */
-export interface NotificationList {
-  /** Use this cursor to paginate notifications. Cache this to catch up to new notifications. */
-  cacheableCursor?: string;
-  /** Collection of notifications. */
-  notifications?: Array<Notification>;
 }
 
 /** Update fields in a given channel. */
