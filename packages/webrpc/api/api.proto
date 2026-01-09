@@ -488,8 +488,8 @@ message ChannelAttachment {
   string url = 5;
   // uploader
   string uploader = 6;
-  // The UNIX time (for gRPC clients) or ISO string (for REST clients) when the group was created.
-  google.protobuf.Timestamp create_time = 7;
+  // timestamp
+  uint32 create_time_seconds = 7;
   // message id.
   string message_id = 8;
   // width
@@ -627,9 +627,9 @@ message ListChannelAttachmentRequest {
   // The channel type
   string file_type = 3;
   // Max number of records to return. Between 1 and 100.
-  google.protobuf.Int32Value limit = 4;
+  int32 limit = 4;
   // The group user state to list.
-  google.protobuf.Int32Value state = 5;
+  int32 state = 5;
   // An optional previous id for page.
   uint32 before = 6;
   // An optional next id for page.

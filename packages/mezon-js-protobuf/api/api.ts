@@ -691,10 +691,8 @@ export interface ChannelAttachment {
   url: string;
   /** uploader */
   uploader: string;
-  /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the group was created. */
-  create_time:
-    | Date
-    | undefined;
+  /** timestamp */
+  create_time_seconds: number;
   /** message id. */
   message_id: string;
   /** width */
@@ -854,13 +852,9 @@ export interface ListChannelAttachmentRequest {
   /** The channel type */
   file_type: string;
   /** Max number of records to return. Between 1 and 100. */
-  limit:
-    | number
-    | undefined;
+  limit: number;
   /** The group user state to list. */
-  state:
-    | number
-    | undefined;
+  state: number;
   /** An optional previous id for page. */
   before: number;
   /** An optional next id for page. */
@@ -7940,7 +7934,7 @@ function createBaseChannelAttachment(): ChannelAttachment {
     filesize: "",
     url: "",
     uploader: "",
-    create_time: undefined,
+    create_time_seconds: 0,
     message_id: "",
     width: 0,
     height: 0,
@@ -7967,8 +7961,8 @@ export const ChannelAttachment = {
     if (message.uploader !== "") {
       writer.uint32(50).string(message.uploader);
     }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(58).fork()).ldelim();
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(56).uint32(message.create_time_seconds);
     }
     if (message.message_id !== "") {
       writer.uint32(66).string(message.message_id);
@@ -8032,11 +8026,11 @@ export const ChannelAttachment = {
           message.uploader = reader.string();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.create_time_seconds = reader.uint32();
           continue;
         case 8:
           if (tag !== 66) {
@@ -8076,7 +8070,7 @@ export const ChannelAttachment = {
       filesize: isSet(object.filesize) ? globalThis.String(object.filesize) : "",
       url: isSet(object.url) ? globalThis.String(object.url) : "",
       uploader: isSet(object.uploader) ? globalThis.String(object.uploader) : "",
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
       width: isSet(object.width) ? globalThis.Number(object.width) : 0,
       height: isSet(object.height) ? globalThis.Number(object.height) : 0,
@@ -8103,8 +8097,8 @@ export const ChannelAttachment = {
     if (message.uploader !== "") {
       obj.uploader = message.uploader;
     }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
     if (message.message_id !== "") {
       obj.message_id = message.message_id;
@@ -8129,7 +8123,7 @@ export const ChannelAttachment = {
     message.filesize = object.filesize ?? "";
     message.url = object.url ?? "";
     message.uploader = object.uploader ?? "";
-    message.create_time = object.create_time ?? undefined;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
     message.message_id = object.message_id ?? "";
     message.width = object.width ?? 0;
     message.height = object.height ?? 0;
@@ -9197,16 +9191,7 @@ export const ListChannelUsersRequest = {
 };
 
 function createBaseListChannelAttachmentRequest(): ListChannelAttachmentRequest {
-  return {
-    clan_id: "",
-    channel_id: "",
-    file_type: "",
-    limit: undefined,
-    state: undefined,
-    before: 0,
-    after: 0,
-    around: 0,
-  };
+  return { clan_id: "", channel_id: "", file_type: "", limit: 0, state: 0, before: 0, after: 0, around: 0 };
 }
 
 export const ListChannelAttachmentRequest = {
@@ -9220,11 +9205,11 @@ export const ListChannelAttachmentRequest = {
     if (message.file_type !== "") {
       writer.uint32(26).string(message.file_type);
     }
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(34).fork()).ldelim();
+    if (message.limit !== 0) {
+      writer.uint32(32).int32(message.limit);
     }
-    if (message.state !== undefined) {
-      Int32Value.encode({ value: message.state! }, writer.uint32(42).fork()).ldelim();
+    if (message.state !== 0) {
+      writer.uint32(40).int32(message.state);
     }
     if (message.before !== 0) {
       writer.uint32(48).uint32(message.before);
@@ -9267,18 +9252,18 @@ export const ListChannelAttachmentRequest = {
           message.file_type = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          message.limit = reader.int32();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.state = Int32Value.decode(reader, reader.uint32()).value;
+          message.state = reader.int32();
           continue;
         case 6:
           if (tag !== 48) {
@@ -9315,8 +9300,8 @@ export const ListChannelAttachmentRequest = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       file_type: isSet(object.file_type) ? globalThis.String(object.file_type) : "",
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      state: isSet(object.state) ? Number(object.state) : undefined,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      state: isSet(object.state) ? globalThis.Number(object.state) : 0,
       before: isSet(object.before) ? globalThis.Number(object.before) : 0,
       after: isSet(object.after) ? globalThis.Number(object.after) : 0,
       around: isSet(object.around) ? globalThis.Number(object.around) : 0,
@@ -9334,11 +9319,11 @@ export const ListChannelAttachmentRequest = {
     if (message.file_type !== "") {
       obj.file_type = message.file_type;
     }
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
-    if (message.state !== undefined) {
-      obj.state = message.state;
+    if (message.state !== 0) {
+      obj.state = Math.round(message.state);
     }
     if (message.before !== 0) {
       obj.before = Math.round(message.before);
@@ -9360,8 +9345,8 @@ export const ListChannelAttachmentRequest = {
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.file_type = object.file_type ?? "";
-    message.limit = object.limit ?? undefined;
-    message.state = object.state ?? undefined;
+    message.limit = object.limit ?? 0;
+    message.state = object.state ?? 0;
     message.before = object.before ?? 0;
     message.after = object.after ?? 0;
     message.around = object.around ?? 0;
