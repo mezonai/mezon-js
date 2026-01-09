@@ -498,7 +498,7 @@ service Mezon {
   }
 
   // set notification user channel.
-  rpc CreatePinMessage (api.PinMessageRequest) returns (api.ChannelMessageHeader) {
+  rpc CreatePinMessage (api.PinMessageRequest) returns (api.ChannelMessage) {
     option (google.api.http) = {
       post: "/v2/pinmessage/set",
     };
