@@ -3825,6 +3825,10 @@ export interface MessageRefList {
   refs: MessageRef[];
 }
 
+export interface MessageReactionList {
+  reactions: MessageReaction[];
+}
+
 export interface ListClanBadgeCountRequest {
   clan_id: string;
 }
@@ -39653,6 +39657,67 @@ export const MessageRefList = {
   fromPartial<I extends Exact<DeepPartial<MessageRefList>, I>>(object: I): MessageRefList {
     const message = createBaseMessageRefList();
     message.refs = object.refs?.map((e) => MessageRef.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseMessageReactionList(): MessageReactionList {
+  return { reactions: [] };
+}
+
+export const MessageReactionList = {
+  encode(message: MessageReactionList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.reactions) {
+      MessageReaction.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MessageReactionList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMessageReactionList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.reactions.push(MessageReaction.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MessageReactionList {
+    return {
+      reactions: globalThis.Array.isArray(object?.reactions)
+        ? object.reactions.map((e: any) => MessageReaction.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: MessageReactionList): unknown {
+    const obj: any = {};
+    if (message.reactions?.length) {
+      obj.reactions = message.reactions.map((e) => MessageReaction.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MessageReactionList>, I>>(base?: I): MessageReactionList {
+    return MessageReactionList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MessageReactionList>, I>>(object: I): MessageReactionList {
+    const message = createBaseMessageReactionList();
+    message.reactions = object.reactions?.map((e) => MessageReaction.fromPartial(e)) || [];
     return message;
   },
 };
