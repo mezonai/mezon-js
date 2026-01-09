@@ -49,7 +49,6 @@ import {
   ChangeChannelPrivateRequestSchema,
   ChannelDescription,
   ChannelDescList,
-  ChannelMessageHeader,
   ClanDesc,
   ClanEmojiCreateRequest,
   ClanEmojiCreateRequestSchema,
@@ -295,7 +294,6 @@ import {
   ChannelUserList,
   VoiceChannelUserList,
   ListChannelMessagesRequestSchema,
-  NotificationList,
   FriendList,
   UpdateChannelDescRequest,
   UpdateClanProfileRequest,
@@ -303,6 +301,7 @@ import {
   DeleteChannelDescRequest,
   ClanEmojiDeleteRequestSchema,
   ChannelDescListNoPool,
+  ChannelMessage,
 } from "./proto/gen/api/api_pb";
 import { DefaultSocket, Socket } from "./socket";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
@@ -319,6 +318,7 @@ import {
   ApiMessageRef,
   ApiChannelMessageHeader,
   ApiMessageReaction,
+  NotificationList,
 } from "./types";
 import { GatewayMezonApi } from "./gateway.api";
 import { safeJSONParse } from "./utils";
@@ -328,6 +328,7 @@ import {
   decodeAttachments,
   decodeRefs,
   decodeReactions,
+  decodeNotificationFcm,
 } from "mezon-js-protobuf";
 
 const DEFAULT_HOST = "127.0.0.1";
@@ -1546,8 +1547,6 @@ export class Client {
         reactions: reactions,
         references: references,
         clanId: m.clanId,
-        createTime: "",
-        updateTime: "",
         createTimeSeconds: m.createTimeSeconds,
         updateTimeSeconds: m.updateTimeSeconds,
         hideEditted: m.hideEditted,
@@ -2246,14 +2245,42 @@ export class Client {
       headers: [["Authorization", "Bearer " + session.token]],
     };
 
-    const response = await this.mezonClient.listNotifications(
+    const notificationList = await this.mezonClient.listNotifications(
       listNotificationsRequest,
       options
     );
 
-    if (response.notifications == null) {
-      response.notifications = [];
+    const response: NotificationList = {
+      notifications: [],
+      cacheableCursor: notificationList.cacheableCursor,
+    };
+
+    if (notificationList.notifications == null) {
+      notificationList.notifications = [];
     }
+
+    notificationList.notifications!.forEach((n) => {
+      var content;
+      try {
+        content =
+          decodeNotificationFcm(n.content) ||
+          safeJSONParse((n.content as unknown as string) || "{}");
+      } catch (e) {
+        console.log("error parse content", e);
+      }
+
+      response.notifications!.push({
+        id: n.id,
+        clanId: n.clanId,
+        category: n.category,
+        content: content,
+        createTimeSeconds: n.createTimeSeconds,
+        channelId: n.channelId,
+        channelType: n.channelType,
+        avatarUrl: n.avatarUrl,
+        topicId: n.topicId,
+      });
+    });
 
     return response;
   }
@@ -3010,7 +3037,7 @@ export class Client {
   async createMessage2Inbox(
     session: Session,
     request: Message2InboxRequest
-  ): Promise<ChannelMessageHeader> {
+  ): Promise<ChannelMessage> {
     if (
       this.autoRefreshSession &&
       session.refreshToken &&
@@ -3035,7 +3062,7 @@ export class Client {
   async createPinMessage(
     session: Session,
     request: PinMessageRequest
-  ): Promise<ChannelMessageHeader> {
+  ): Promise<ChannelMessage> {
     if (
       this.autoRefreshSession &&
       session.refreshToken &&

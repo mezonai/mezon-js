@@ -3497,8 +3497,6 @@ export interface ChannelMessage {
   code: number;
   //The content payload.
   content: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  createTime: string;
   //
   reactions?: Array<ApiMessageReaction>;
   //
@@ -3513,8 +3511,6 @@ export interface ChannelMessage {
   persistent?: boolean;
   //Message sender, usually a user ID.
   senderId: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
-  updateTime?: string;
   //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
   clanLogo?: string;
   //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
@@ -3580,7 +3576,7 @@ export interface Notification {
   /** Content of the notification in JSON. */
   content?: {};
   /** The UNIX time when the notification was created. */
-  createTime?: string;
+  createTimeSeconds?: number;
   /** ID of the Notification. */
   id?: string;
   /** True if this notification was persisted to the database. */
@@ -3589,6 +3585,18 @@ export interface Notification {
   senderId?: string;
   /** Subject of the notification. */
   subject?: string;
+  /** The clan ID related to this notification, if any. */
+  clanId: string;
+  /** The channel ID related to this notification, if any. */
+  channelId: string;
+  /** The type of channel related to this notification, if any. */
+  channelType: number;
+  /** URL of the avatar related to this notification, if any. */
+  avatarUrl: string;
+  /** The topic ID related to this notification, if any. */
+  topicId: string;
+  /** The category of this notification. */
+  category: number;
 }
 
 /** A collection of zero or more notifications. */

@@ -31,6 +31,14 @@ export function decodeReactions(data: any) {
   return noti;
 }
 
+export function decodeChannelMessageHeader(data: any) {
+  const buffer: ArrayBuffer = data;
+  const uintBuffer: Uint8Array = new Uint8Array(buffer);
+  const noti = tsproto.ChannelMessageHeader.decode(uintBuffer);
+
+  return noti;
+}
+
 export function decodeNotificationFcm(data: any) {
   const buffer: ArrayBuffer = data;
   const uintBuffer: Uint8Array = new Uint8Array(buffer);

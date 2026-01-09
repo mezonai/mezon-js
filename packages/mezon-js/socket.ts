@@ -1403,8 +1403,6 @@ function createChannelMessageFromEvent(message: any) {
     references: references,
     hideEditted: message.channel_message.hide_editted,
     isPublic: message.channel_message.is_public,
-    createTime: message.channel_message.create_time,
-    updateTime: message.channel_message.update_time,
     createTimeSeconds: message.channel_message.create_time_seconds,
     updateTimeSeconds: message.channel_message.update_time_seconds,
     topicId: message.channel_message.topic_id,
