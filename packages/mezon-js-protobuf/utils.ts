@@ -5,7 +5,7 @@ export function decodeMentions(data: any) {
   const uintBuffer: Uint8Array = new Uint8Array(buffer);
   const mentions = tsproto.MessageMentionList.decode(uintBuffer);
 
-  return mentions
+  return mentions;
 }
 
 export function decodeAttachments(data: any) {
@@ -13,7 +13,7 @@ export function decodeAttachments(data: any) {
   const uintBuffer: Uint8Array = new Uint8Array(buffer);
   const attachments = tsproto.MessageAttachmentList.decode(uintBuffer);
 
-  return attachments
+  return attachments;
 }
 
 export function decodeRefs(data: any) {
@@ -21,7 +21,14 @@ export function decodeRefs(data: any) {
   const uintBuffer: Uint8Array = new Uint8Array(buffer);
   const refs = tsproto.MessageRefList.decode(uintBuffer);
 
-  return refs
+  return refs;
+}
+
+export function decodeReactions(data: any) {
+  const buffer: ArrayBuffer = data;
+  const uintBuffer: Uint8Array = new Uint8Array(buffer);
+  const noti = tsproto.MessageReactionList.decode(uintBuffer);
+  return noti;
 }
 
 export function decodeNotificationFcm(data: any) {
@@ -29,5 +36,5 @@ export function decodeNotificationFcm(data: any) {
   const uintBuffer: Uint8Array = new Uint8Array(buffer);
   const noti = tsproto.DirectFcmProto.decode(uintBuffer);
 
-  return noti
+  return noti;
 }

@@ -317,6 +317,8 @@ import {
   ApiLoginIDResponse,
   ApiLoginRequest,
   ApiMessageRef,
+  ApiChannelMessageHeader,
+  ApiMessageReaction,
 } from "./types";
 import { GatewayMezonApi } from "./gateway.api";
 import { safeJSONParse } from "./utils";
@@ -325,6 +327,8 @@ import {
   decodeMentions,
   decodeAttachments,
   decodeRefs,
+  decodeReactions,
+  decodeMention,
 } from "mezon-js-protobuf";
 
 const DEFAULT_HOST = "127.0.0.1";
@@ -1477,13 +1481,16 @@ export class Client {
 
     var response: ChannelMessageList = {
       messages: [],
-      lastSeenMessage: channelMessageList.lastSeenMessage,
-      lastSentMessage: channelMessageList.lastSentMessage,
+      lastSeenMessage:
+        channelMessageList.lastSeenMessage as unknown as ApiChannelMessageHeader,
+      lastSentMessage:
+        channelMessageList.lastSentMessage as unknown as ApiChannelMessageHeader,
     };
 
     if (channelMessageList.messages == null) {
       return response;
     }
+
     channelMessageList.messages!.forEach((m) => {
       var content, reactions, mentions, attachments, references;
       try {
@@ -1492,28 +1499,31 @@ export class Client {
         console.log("error parse content", e);
       }
       try {
-        reactions = safeJSONParse(m.reactions || "[]");
+        reactions =
+          (decodeReactions(m.reactions)
+            ?.reactions as unknown as ApiMessageReaction[]) ||
+          safeJSONParse((m.reactions as unknown as string) || "[]");
       } catch (e) {
         console.log("error parse reactions", e);
       }
       try {
         mentions =
           decodeMentions(m.mentions)?.mentions ||
-          safeJSONParse(m.mentions || "[]");
+          safeJSONParse((m.mentions as unknown as string) || "[]");
       } catch (e) {
         console.log("error parse mentions", e);
       }
       try {
         attachments =
           decodeAttachments(m.attachments)?.attachments ||
-          safeJSONParse(m.attachments || "[]");
+          safeJSONParse((m.attachments as unknown as string) || "[]");
       } catch (e) {
         console.log("error parse attachments", e);
       }
       try {
         references =
           (decodeRefs(m.references)?.refs as unknown as ApiMessageRef[]) ||
-          safeJSONParse(m.references || "[]");
+          safeJSONParse((m.references as unknown as string) || "[]");
       } catch (e) {
         console.log("error parse references", e);
       }
@@ -1537,8 +1547,8 @@ export class Client {
         reactions: reactions,
         references: references,
         clanId: m.clanId,
-        createTime: m.createTime?.seconds.toString() || "",
-        updateTime: m.updateTime?.seconds.toString() || "",
+        createTime: "",
+        updateTime: "",
         createTimeSeconds: m.createTimeSeconds,
         updateTimeSeconds: m.updateTimeSeconds,
         hideEditted: m.hideEditted,
