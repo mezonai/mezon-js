@@ -922,7 +922,7 @@ export interface Notification {
   /** Subject of the notification. */
   subject: string;
   /** Content of the notification in JSON. */
-  content: string;
+  content: Uint8Array;
   /** Category code for this notification. */
   code: number;
   /** ID of the sender, if a user. Otherwise 'null'. */
@@ -3823,6 +3823,14 @@ export interface MessageAttachmentList {
 
 export interface MessageRefList {
   refs: MessageRef[];
+}
+
+export interface ListClanBadgeCountRequest {
+  clan_id: string;
+}
+
+export interface ListClanBadgeCountResponse {
+  badge_count: number;
 }
 
 function createBaseAccount(): Account {
@@ -9681,7 +9689,7 @@ function createBaseNotification(): Notification {
   return {
     id: "",
     subject: "",
-    content: "",
+    content: new Uint8Array(0),
     code: 0,
     sender_id: "",
     create_time: undefined,
@@ -9704,8 +9712,8 @@ export const Notification = {
     if (message.subject !== "") {
       writer.uint32(18).string(message.subject);
     }
-    if (message.content !== "") {
-      writer.uint32(26).string(message.content);
+    if (message.content.length !== 0) {
+      writer.uint32(26).bytes(message.content);
     }
     if (message.code !== 0) {
       writer.uint32(32).int32(message.code);
@@ -9769,7 +9777,7 @@ export const Notification = {
             break;
           }
 
-          message.content = reader.string();
+          message.content = reader.bytes();
           continue;
         case 4:
           if (tag !== 32) {
@@ -9861,7 +9869,7 @@ export const Notification = {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       subject: isSet(object.subject) ? globalThis.String(object.subject) : "",
-      content: isSet(object.content) ? globalThis.String(object.content) : "",
+      content: isSet(object.content) ? bytesFromBase64(object.content) : new Uint8Array(0),
       code: isSet(object.code) ? globalThis.Number(object.code) : 0,
       sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
@@ -9884,8 +9892,8 @@ export const Notification = {
     if (message.subject !== "") {
       obj.subject = message.subject;
     }
-    if (message.content !== "") {
-      obj.content = message.content;
+    if (message.content.length !== 0) {
+      obj.content = base64FromBytes(message.content);
     }
     if (message.code !== 0) {
       obj.code = Math.round(message.code);
@@ -9930,7 +9938,7 @@ export const Notification = {
     const message = createBaseNotification();
     message.id = object.id ?? "";
     message.subject = object.subject ?? "";
-    message.content = object.content ?? "";
+    message.content = object.content ?? new Uint8Array(0);
     message.code = object.code ?? 0;
     message.sender_id = object.sender_id ?? "";
     message.create_time = object.create_time ?? undefined;
@@ -39649,9 +39657,123 @@ export const MessageRefList = {
   },
 };
 
+function createBaseListClanBadgeCountRequest(): ListClanBadgeCountRequest {
+  return { clan_id: "" };
+}
+
+export const ListClanBadgeCountRequest = {
+  encode(message: ListClanBadgeCountRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListClanBadgeCountRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListClanBadgeCountRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListClanBadgeCountRequest {
+    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+  },
+
+  toJSON(message: ListClanBadgeCountRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListClanBadgeCountRequest>, I>>(base?: I): ListClanBadgeCountRequest {
+    return ListClanBadgeCountRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListClanBadgeCountRequest>, I>>(object: I): ListClanBadgeCountRequest {
+    const message = createBaseListClanBadgeCountRequest();
+    message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
+function createBaseListClanBadgeCountResponse(): ListClanBadgeCountResponse {
+  return { badge_count: 0 };
+}
+
+export const ListClanBadgeCountResponse = {
+  encode(message: ListClanBadgeCountResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.badge_count !== 0) {
+      writer.uint32(8).int32(message.badge_count);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListClanBadgeCountResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListClanBadgeCountResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.badge_count = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListClanBadgeCountResponse {
+    return { badge_count: isSet(object.badge_count) ? globalThis.Number(object.badge_count) : 0 };
+  },
+
+  toJSON(message: ListClanBadgeCountResponse): unknown {
+    const obj: any = {};
+    if (message.badge_count !== 0) {
+      obj.badge_count = Math.round(message.badge_count);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListClanBadgeCountResponse>, I>>(base?: I): ListClanBadgeCountResponse {
+    return ListClanBadgeCountResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListClanBadgeCountResponse>, I>>(object: I): ListClanBadgeCountResponse {
+    const message = createBaseListClanBadgeCountResponse();
+    message.badge_count = object.badge_count ?? 0;
+    return message;
+  },
+};
+
 function bytesFromBase64(b64: string): Uint8Array {
   if ((globalThis as any).Buffer) {
-    return Uint8Array.from((globalThis as any).Buffer.from(b64, "base64"));
+    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
   } else {
     const bin = globalThis.atob(b64);
     const arr = new Uint8Array(bin.length);
@@ -39664,7 +39786,7 @@ function bytesFromBase64(b64: string): Uint8Array {
 
 function base64FromBytes(arr: Uint8Array): string {
   if ((globalThis as any).Buffer) {
-    return (globalThis as any).Buffer.from(arr).toString("base64");
+    return globalThis.Buffer.from(arr).toString("base64");
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {

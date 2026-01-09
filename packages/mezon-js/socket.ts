@@ -3331,7 +3331,7 @@ export class DefaultSocket implements Socket {
 
   async listDataSocket(request: ListDataSocket): Promise<any> {
     const response = await this.send({
-      list_data_socket: mapToSnakeCase(request),
+      list_data_socket: request,
     });
     return mapToCamelCase(response.list_data_socket);
   }

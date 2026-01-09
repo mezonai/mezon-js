@@ -3426,6 +3426,11 @@ export interface ApiListClanUnreadMsgIndicatorResponse {
   hasUnreadMessage?: boolean;
 }
 
+export interface ApiListClanBadgeCountResponse {
+  //
+  badgeCount?: number;
+}
+
 /**  */
 export interface ApiClanDiscoverRequest {
   //

@@ -38,6 +38,8 @@ import {
   ListChannelDetailRequest,
   ListChannelMessagesRequest,
   ListChannelUsersRequest,
+  ListClanBadgeCountRequest,
+  ListClanBadgeCountResponse,
   ListClanDescRequest,
   ListClanUnreadMsgIndicatorRequest,
   ListClanUnreadMsgIndicatorResponse,
@@ -1743,6 +1745,8 @@ export interface ListDataSocket {
   stream_user_list: StreamingChannelUserList | undefined;
   list_unread_msg_indicator_req: ListClanUnreadMsgIndicatorRequest | undefined;
   unread_msg_indicator: ListClanUnreadMsgIndicatorResponse | undefined;
+  list_clan_badge_count_req: ListClanBadgeCountRequest | undefined;
+  clan_badge_count: ListClanBadgeCountResponse | undefined;
 }
 
 export interface MeetParticipantEvent {
@@ -1773,7 +1777,7 @@ export interface FcmDataPayload {
   command_type: number;
   receiver_id: string;
   title: string;
-  body: string;
+  body: Uint8Array;
   user_role_ids: string[];
   user_sent_ids: string[];
   priority: number;
@@ -14673,6 +14677,8 @@ function createBaseListDataSocket(): ListDataSocket {
     stream_user_list: undefined,
     list_unread_msg_indicator_req: undefined,
     unread_msg_indicator: undefined,
+    list_clan_badge_count_req: undefined,
+    clan_badge_count: undefined,
   };
 }
 
@@ -14877,6 +14883,12 @@ export const ListDataSocket = {
     }
     if (message.unread_msg_indicator !== undefined) {
       ListClanUnreadMsgIndicatorResponse.encode(message.unread_msg_indicator, writer.uint32(530).fork()).ldelim();
+    }
+    if (message.list_clan_badge_count_req !== undefined) {
+      ListClanBadgeCountRequest.encode(message.list_clan_badge_count_req, writer.uint32(538).fork()).ldelim();
+    }
+    if (message.clan_badge_count !== undefined) {
+      ListClanBadgeCountResponse.encode(message.clan_badge_count, writer.uint32(546).fork()).ldelim();
     }
     return writer;
   },
@@ -15353,6 +15365,20 @@ export const ListDataSocket = {
 
           message.unread_msg_indicator = ListClanUnreadMsgIndicatorResponse.decode(reader, reader.uint32());
           continue;
+        case 67:
+          if (tag !== 538) {
+            break;
+          }
+
+          message.list_clan_badge_count_req = ListClanBadgeCountRequest.decode(reader, reader.uint32());
+          continue;
+        case 68:
+          if (tag !== 546) {
+            break;
+          }
+
+          message.clan_badge_count = ListClanBadgeCountResponse.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -15517,6 +15543,12 @@ export const ListDataSocket = {
         : undefined,
       unread_msg_indicator: isSet(object.unread_msg_indicator)
         ? ListClanUnreadMsgIndicatorResponse.fromJSON(object.unread_msg_indicator)
+        : undefined,
+      list_clan_badge_count_req: isSet(object.list_clan_badge_count_req)
+        ? ListClanBadgeCountRequest.fromJSON(object.list_clan_badge_count_req)
+        : undefined,
+      clan_badge_count: isSet(object.clan_badge_count)
+        ? ListClanBadgeCountResponse.fromJSON(object.clan_badge_count)
         : undefined,
     };
   },
@@ -15724,6 +15756,12 @@ export const ListDataSocket = {
     }
     if (message.unread_msg_indicator !== undefined) {
       obj.unread_msg_indicator = ListClanUnreadMsgIndicatorResponse.toJSON(message.unread_msg_indicator);
+    }
+    if (message.list_clan_badge_count_req !== undefined) {
+      obj.list_clan_badge_count_req = ListClanBadgeCountRequest.toJSON(message.list_clan_badge_count_req);
+    }
+    if (message.clan_badge_count !== undefined) {
+      obj.clan_badge_count = ListClanBadgeCountResponse.toJSON(message.clan_badge_count);
     }
     return obj;
   },
@@ -15941,6 +15979,13 @@ export const ListDataSocket = {
         : undefined;
     message.unread_msg_indicator = (object.unread_msg_indicator !== undefined && object.unread_msg_indicator !== null)
       ? ListClanUnreadMsgIndicatorResponse.fromPartial(object.unread_msg_indicator)
+      : undefined;
+    message.list_clan_badge_count_req =
+      (object.list_clan_badge_count_req !== undefined && object.list_clan_badge_count_req !== null)
+        ? ListClanBadgeCountRequest.fromPartial(object.list_clan_badge_count_req)
+        : undefined;
+    message.clan_badge_count = (object.clan_badge_count !== undefined && object.clan_badge_count !== null)
+      ? ListClanBadgeCountResponse.fromPartial(object.clan_badge_count)
       : undefined;
     return message;
   },
@@ -16307,7 +16352,7 @@ function createBaseFcmDataPayload(): FcmDataPayload {
     command_type: 0,
     receiver_id: "",
     title: "",
-    body: "",
+    body: new Uint8Array(0),
     user_role_ids: [],
     user_sent_ids: [],
     priority: 0,
@@ -16332,8 +16377,8 @@ export const FcmDataPayload = {
     if (message.title !== "") {
       writer.uint32(26).string(message.title);
     }
-    if (message.body !== "") {
-      writer.uint32(34).string(message.body);
+    if (message.body.length !== 0) {
+      writer.uint32(34).bytes(message.body);
     }
     for (const v of message.user_role_ids) {
       writer.uint32(42).string(v!);
@@ -16401,7 +16446,7 @@ export const FcmDataPayload = {
             break;
           }
 
-          message.body = reader.string();
+          message.body = reader.bytes();
           continue;
         case 5:
           if (tag !== 42) {
@@ -16487,7 +16532,7 @@ export const FcmDataPayload = {
       command_type: isSet(object.command_type) ? globalThis.Number(object.command_type) : 0,
       receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
       title: isSet(object.title) ? globalThis.String(object.title) : "",
-      body: isSet(object.body) ? globalThis.String(object.body) : "",
+      body: isSet(object.body) ? bytesFromBase64(object.body) : new Uint8Array(0),
       user_role_ids: globalThis.Array.isArray(object?.user_role_ids)
         ? object.user_role_ids.map((e: any) => globalThis.String(e))
         : [],
@@ -16522,8 +16567,8 @@ export const FcmDataPayload = {
     if (message.title !== "") {
       obj.title = message.title;
     }
-    if (message.body !== "") {
-      obj.body = message.body;
+    if (message.body.length !== 0) {
+      obj.body = base64FromBytes(message.body);
     }
     if (message.user_role_ids?.length) {
       obj.user_role_ids = message.user_role_ids;
@@ -16566,7 +16611,7 @@ export const FcmDataPayload = {
     message.command_type = object.command_type ?? 0;
     message.receiver_id = object.receiver_id ?? "";
     message.title = object.title ?? "";
-    message.body = object.body ?? "";
+    message.body = object.body ?? new Uint8Array(0);
     message.user_role_ids = object.user_role_ids?.map((e) => e) || [];
     message.user_sent_ids = object.user_sent_ids?.map((e) => e) || [];
     message.priority = object.priority ?? 0;
@@ -16585,7 +16630,7 @@ export const FcmDataPayload = {
 
 function bytesFromBase64(b64: string): Uint8Array {
   if ((globalThis as any).Buffer) {
-    return Uint8Array.from((globalThis as any).Buffer.from(b64, "base64"));
+    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
   } else {
     const bin = globalThis.atob(b64);
     const arr = new Uint8Array(bin.length);
@@ -16598,7 +16643,7 @@ function bytesFromBase64(b64: string): Uint8Array {
 
 function base64FromBytes(arr: Uint8Array): string {
   if ((globalThis as any).Buffer) {
-    return (globalThis as any).Buffer.from(arr).toString("base64");
+    return globalThis.Buffer.from(arr).toString("base64");
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {
