@@ -1516,10 +1516,10 @@ message EventManagement {
   string clan_id = 8;
   string channel_voice_id = 9;
   string address = 10;
-  google.protobuf.Timestamp start_time = 11;
-  google.protobuf.Timestamp end_time = 12;
+  uint32 start_time_seconds = 11;
+  uint32 end_time_seconds = 12;
   repeated string user_ids = 13;
-  google.protobuf.Timestamp create_time = 14;
+  uint32 create_time_seconds = 14;
   int32 max_permission = 15;
   string channel_id = 16;
   int32 event_status = 17;

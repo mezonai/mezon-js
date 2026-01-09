@@ -1813,10 +1813,10 @@ export interface EventManagement {
   clan_id: string;
   channel_voice_id: string;
   address: string;
-  start_time: Date | undefined;
-  end_time: Date | undefined;
+  start_time_seconds: number;
+  end_time_seconds: number;
   user_ids: string[];
-  create_time: Date | undefined;
+  create_time_seconds: number;
   max_permission: number;
   channel_id: string;
   event_status: number;
@@ -17347,10 +17347,10 @@ function createBaseEventManagement(): EventManagement {
     clan_id: "",
     channel_voice_id: "",
     address: "",
-    start_time: undefined,
-    end_time: undefined,
+    start_time_seconds: 0,
+    end_time_seconds: 0,
     user_ids: [],
-    create_time: undefined,
+    create_time_seconds: 0,
     max_permission: 0,
     channel_id: "",
     event_status: 0,
@@ -17392,17 +17392,17 @@ export const EventManagement = {
     if (message.address !== "") {
       writer.uint32(82).string(message.address);
     }
-    if (message.start_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.start_time), writer.uint32(90).fork()).ldelim();
+    if (message.start_time_seconds !== 0) {
+      writer.uint32(88).uint32(message.start_time_seconds);
     }
-    if (message.end_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.end_time), writer.uint32(98).fork()).ldelim();
+    if (message.end_time_seconds !== 0) {
+      writer.uint32(96).uint32(message.end_time_seconds);
     }
     for (const v of message.user_ids) {
       writer.uint32(106).string(v!);
     }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(114).fork()).ldelim();
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(112).uint32(message.create_time_seconds);
     }
     if (message.max_permission !== 0) {
       writer.uint32(120).int32(message.max_permission);
@@ -17503,18 +17503,18 @@ export const EventManagement = {
           message.address = reader.string();
           continue;
         case 11:
-          if (tag !== 90) {
+          if (tag !== 88) {
             break;
           }
 
-          message.start_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.start_time_seconds = reader.uint32();
           continue;
         case 12:
-          if (tag !== 98) {
+          if (tag !== 96) {
             break;
           }
 
-          message.end_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.end_time_seconds = reader.uint32();
           continue;
         case 13:
           if (tag !== 106) {
@@ -17524,11 +17524,11 @@ export const EventManagement = {
           message.user_ids.push(reader.string());
           continue;
         case 14:
-          if (tag !== 114) {
+          if (tag !== 112) {
             break;
           }
 
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.create_time_seconds = reader.uint32();
           continue;
         case 15:
           if (tag !== 120) {
@@ -17593,10 +17593,10 @@ export const EventManagement = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_voice_id: isSet(object.channel_voice_id) ? globalThis.String(object.channel_voice_id) : "",
       address: isSet(object.address) ? globalThis.String(object.address) : "",
-      start_time: isSet(object.start_time) ? fromJsonTimestamp(object.start_time) : undefined,
-      end_time: isSet(object.end_time) ? fromJsonTimestamp(object.end_time) : undefined,
+      start_time_seconds: isSet(object.start_time_seconds) ? globalThis.Number(object.start_time_seconds) : 0,
+      end_time_seconds: isSet(object.end_time_seconds) ? globalThis.Number(object.end_time_seconds) : 0,
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       max_permission: isSet(object.max_permission) ? globalThis.Number(object.max_permission) : 0,
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       event_status: isSet(object.event_status) ? globalThis.Number(object.event_status) : 0,
@@ -17638,17 +17638,17 @@ export const EventManagement = {
     if (message.address !== "") {
       obj.address = message.address;
     }
-    if (message.start_time !== undefined) {
-      obj.start_time = message.start_time.toISOString();
+    if (message.start_time_seconds !== 0) {
+      obj.start_time_seconds = Math.round(message.start_time_seconds);
     }
-    if (message.end_time !== undefined) {
-      obj.end_time = message.end_time.toISOString();
+    if (message.end_time_seconds !== 0) {
+      obj.end_time_seconds = Math.round(message.end_time_seconds);
     }
     if (message.user_ids?.length) {
       obj.user_ids = message.user_ids;
     }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
     if (message.max_permission !== 0) {
       obj.max_permission = Math.round(message.max_permission);
@@ -17686,10 +17686,10 @@ export const EventManagement = {
     message.clan_id = object.clan_id ?? "";
     message.channel_voice_id = object.channel_voice_id ?? "";
     message.address = object.address ?? "";
-    message.start_time = object.start_time ?? undefined;
-    message.end_time = object.end_time ?? undefined;
+    message.start_time_seconds = object.start_time_seconds ?? 0;
+    message.end_time_seconds = object.end_time_seconds ?? 0;
     message.user_ids = object.user_ids?.map((e) => e) || [];
-    message.create_time = object.create_time ?? undefined;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
     message.max_permission = object.max_permission ?? 0;
     message.channel_id = object.channel_id ?? "";
     message.event_status = object.event_status ?? 0;
