@@ -384,11 +384,6 @@ service Mezon {
   }
 
   // List HashtagDMList
-  rpc HashtagDMList (api.HashtagDmListRequest) returns (api.HashtagDmList) {
-    option (google.api.http).get = "/v2/hashtagdmlist";
-  }
-
-  // List HashtagDMList
   rpc ListChannelByUserId (google.protobuf.Empty) returns (api.ChannelDescListNoPool) {
     option (google.api.http).get = "/v2/listchannelbyuserid";
   }
