@@ -3478,7 +3478,7 @@ export interface SdTopic {
   status: number;
   create_time_seconds: number;
   update_time_seconds: number;
-  message: ChannelMessage | undefined;
+  content: string;
   last_sent_message: ChannelMessageHeader | undefined;
 }
 
@@ -35085,7 +35085,7 @@ function createBaseSdTopic(): SdTopic {
     status: 0,
     create_time_seconds: 0,
     update_time_seconds: 0,
-    message: undefined,
+    content: "",
     last_sent_message: undefined,
   };
 }
@@ -35116,8 +35116,8 @@ export const SdTopic = {
     if (message.update_time_seconds !== 0) {
       writer.uint32(64).uint32(message.update_time_seconds);
     }
-    if (message.message !== undefined) {
-      ChannelMessage.encode(message.message, writer.uint32(74).fork()).ldelim();
+    if (message.content !== "") {
+      writer.uint32(74).string(message.content);
     }
     if (message.last_sent_message !== undefined) {
       ChannelMessageHeader.encode(message.last_sent_message, writer.uint32(82).fork()).ldelim();
@@ -35193,7 +35193,7 @@ export const SdTopic = {
             break;
           }
 
-          message.message = ChannelMessage.decode(reader, reader.uint32());
+          message.content = reader.string();
           continue;
         case 10:
           if (tag !== 82) {
@@ -35221,7 +35221,7 @@ export const SdTopic = {
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
-      message: isSet(object.message) ? ChannelMessage.fromJSON(object.message) : undefined,
+      content: isSet(object.content) ? globalThis.String(object.content) : "",
       last_sent_message: isSet(object.last_sent_message)
         ? ChannelMessageHeader.fromJSON(object.last_sent_message)
         : undefined,
@@ -35254,8 +35254,8 @@ export const SdTopic = {
     if (message.update_time_seconds !== 0) {
       obj.update_time_seconds = Math.round(message.update_time_seconds);
     }
-    if (message.message !== undefined) {
-      obj.message = ChannelMessage.toJSON(message.message);
+    if (message.content !== "") {
+      obj.content = message.content;
     }
     if (message.last_sent_message !== undefined) {
       obj.last_sent_message = ChannelMessageHeader.toJSON(message.last_sent_message);
@@ -35276,9 +35276,7 @@ export const SdTopic = {
     message.status = object.status ?? 0;
     message.create_time_seconds = object.create_time_seconds ?? 0;
     message.update_time_seconds = object.update_time_seconds ?? 0;
-    message.message = (object.message !== undefined && object.message !== null)
-      ? ChannelMessage.fromPartial(object.message)
-      : undefined;
+    message.content = object.content ?? "";
     message.last_sent_message = (object.last_sent_message !== undefined && object.last_sent_message !== null)
       ? ChannelMessageHeader.fromPartial(object.last_sent_message)
       : undefined;

@@ -3167,7 +3167,7 @@ message SdTopic {
   int32 status = 6;
   uint32 create_time_seconds = 7;
   uint32 update_time_seconds = 8;
-  ChannelMessage message = 9;
+  string content = 9;
   ChannelMessageHeader last_sent_message = 10;
 }
 
