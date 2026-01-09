@@ -19,7 +19,6 @@ syntax = "proto3";
 
 package mezon.realtime;
 
-import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 import "api/api.proto";
 
@@ -424,9 +423,9 @@ message ChannelMessageAck {
   // Username of the message sender.
   string username = 4;
   // The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  google.protobuf.Timestamp create_time = 5;
+  uint32 create_time_seconds = 5;
   // The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
-  google.protobuf.Timestamp update_time = 6;
+  uint32 update_time_seconds = 6;
   // True if the message was persisted to the channel's history, false otherwise.
   google.protobuf.BoolValue persistent = 7;
   // The clan logo

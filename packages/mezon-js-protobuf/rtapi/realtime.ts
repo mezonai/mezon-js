@@ -90,7 +90,6 @@ import {
   WebhookListRequest,
   WebhookListResponse,
 } from "../api/api";
-import { Timestamp } from "../google/protobuf/timestamp";
 import { BoolValue, Int32Value, StringValue } from "../google/protobuf/wrappers";
 
 export const protobufPackage = "mezon.realtime";
@@ -672,13 +671,9 @@ export interface ChannelMessageAck {
   /** Username of the message sender. */
   username: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
-  create_time:
-    | Date
-    | undefined;
+  create_time_seconds: number;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated. */
-  update_time:
-    | Date
-    | undefined;
+  update_time_seconds: number;
   /** True if the message was persisted to the channel's history, false otherwise. */
   persistent:
     | boolean
@@ -5614,8 +5609,8 @@ function createBaseChannelMessageAck(): ChannelMessageAck {
     message_id: "",
     code: 0,
     username: "",
-    create_time: undefined,
-    update_time: undefined,
+    create_time_seconds: 0,
+    update_time_seconds: 0,
     persistent: undefined,
     clan_logo: "",
     category_name: "",
@@ -5636,11 +5631,11 @@ export const ChannelMessageAck = {
     if (message.username !== "") {
       writer.uint32(34).string(message.username);
     }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(42).fork()).ldelim();
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(40).uint32(message.create_time_seconds);
     }
-    if (message.update_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(50).fork()).ldelim();
+    if (message.update_time_seconds !== 0) {
+      writer.uint32(48).uint32(message.update_time_seconds);
     }
     if (message.persistent !== undefined) {
       BoolValue.encode({ value: message.persistent! }, writer.uint32(58).fork()).ldelim();
@@ -5690,18 +5685,18 @@ export const ChannelMessageAck = {
           message.username = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.create_time_seconds = reader.uint32();
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.update_time_seconds = reader.uint32();
           continue;
         case 7:
           if (tag !== 58) {
@@ -5739,8 +5734,8 @@ export const ChannelMessageAck = {
       message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
       code: isSet(object.code) ? globalThis.Number(object.code) : 0,
       username: isSet(object.username) ? globalThis.String(object.username) : "",
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
-      update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
+      update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
       persistent: isSet(object.persistent) ? Boolean(object.persistent) : undefined,
       clan_logo: isSet(object.clan_logo) ? globalThis.String(object.clan_logo) : "",
       category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
@@ -5761,11 +5756,11 @@ export const ChannelMessageAck = {
     if (message.username !== "") {
       obj.username = message.username;
     }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
-    if (message.update_time !== undefined) {
-      obj.update_time = message.update_time.toISOString();
+    if (message.update_time_seconds !== 0) {
+      obj.update_time_seconds = Math.round(message.update_time_seconds);
     }
     if (message.persistent !== undefined) {
       obj.persistent = message.persistent;
@@ -5788,8 +5783,8 @@ export const ChannelMessageAck = {
     message.message_id = object.message_id ?? "";
     message.code = object.code ?? 0;
     message.username = object.username ?? "";
-    message.create_time = object.create_time ?? undefined;
-    message.update_time = object.update_time ?? undefined;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
+    message.update_time_seconds = object.update_time_seconds ?? 0;
     message.persistent = object.persistent ?? undefined;
     message.clan_logo = object.clan_logo ?? "";
     message.category_name = object.category_name ?? "";
@@ -16664,28 +16659,6 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
-
-function toTimestamp(date: Date): Timestamp {
-  const seconds = Math.trunc(date.getTime() / 1_000);
-  const nanos = (date.getTime() % 1_000) * 1_000_000;
-  return { seconds, nanos };
-}
-
-function fromTimestamp(t: Timestamp): Date {
-  let millis = (t.seconds || 0) * 1_000;
-  millis += (t.nanos || 0) / 1_000_000;
-  return new globalThis.Date(millis);
-}
-
-function fromJsonTimestamp(o: any): Date {
-  if (o instanceof globalThis.Date) {
-    return o;
-  } else if (typeof o === "string") {
-    return new globalThis.Date(o);
-  } else {
-    return fromTimestamp(Timestamp.fromJSON(o));
-  }
-}
 
 function isObject(value: any): boolean {
   return typeof value === "object" && value !== null;
