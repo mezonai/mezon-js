@@ -542,9 +542,9 @@ message ChannelMessageRemove {
   //
   string topic_id = 7;
   // Message mention
-  string mentions = 8;
+  bytes mentions = 8;
   // Message reference
-  string references = 9;
+  bytes references = 9;
 }
 
 // A set of joins and leaves on a particular channel.
@@ -1413,6 +1413,8 @@ message ListDataSocket {
   api.StreamingChannelUserList stream_user_list = 64;
   api.ListClanUnreadMsgIndicatorRequest list_unread_msg_indicator_req = 65;
   api.ListClanUnreadMsgIndicatorResponse unread_msg_indicator = 66;
+  api.ListClanBadgeCountRequest list_clan_badge_count_req = 67;
+  api.ListClanBadgeCountResponse clan_badge_count = 68;
 }
 
 message MeetParticipantEvent {
@@ -1443,7 +1445,7 @@ message FcmDataPayload {
 	int32 command_type = 1;
 	string receiver_id = 2;
 	string title = 3;
-	string body = 4;
+	bytes body = 4;
 	repeated string user_role_ids = 5;
 	repeated string user_sent_ids = 6;
 	int32 priority = 7;

@@ -169,15 +169,15 @@ message ChannelMessage {
   // The clan avatar
   string clan_avatar = 16;
   // Emoji reaction
-	string reactions = 17;
+	bytes reactions = 17;
   // Message mention
-  string mentions = 18;
+  bytes mentions = 18;
   // Message attachment
-  string attachments = 19;
+  bytes attachments = 19;
   // Message reference
-  string references = 20;
+  bytes references = 20;
   // referenced message
-  string referenced_message = 21;
+  bytes referenced_message = 21;
   // create time in ms
   uint32 create_time_seconds = 22;
   // update time in ms
@@ -681,7 +681,7 @@ message Notification {
   // Subject of the notification.
   string subject = 2;
   // Content of the notification in JSON.
-  string content = 3;
+  bytes content = 3;
   // Category code for this notification.
   int32 code = 4;
   // ID of the sender, if a user. Otherwise 'null'.
@@ -1217,13 +1217,13 @@ message ChannelMessageHeader {
   // the content
   string content = 4;
   // the attachment
-  string attachment = 5;
+  bytes attachment = 5;
   // the reference
-  string reference = 6;
+  bytes reference = 6;
   // the mention
-  string mention = 7;
+  bytes mention = 7;
   // the reactions
-  string reaction = 8;
+  bytes reaction = 8;
 }
 
 // Channel description record
@@ -3320,10 +3320,10 @@ message Message2InboxRequest {
   string clan_id = 3;
   string avatar = 4;
   string content = 5;
-  string mentions = 6;
-  string attachments = 7;
-  string reactions = 8;
-  string references = 9;
+  bytes mentions = 6;
+  bytes attachments = 7;
+  bytes reactions = 8;
+  bytes references = 9;
 }
 
 // Send an email with password to the server. Used with authenticate/link/unlink.
@@ -3436,12 +3436,12 @@ message DirectFcmProto {
   string sender_id = 5;
   string avatar = 6;
 	string clan_id = 7;
-	string attachments = 8;
+	bytes attachments = 8;
 	string display_name = 9;
 	int32 create_time_seconds = 10;
 	int32 update_time_seconds = 11;
   string username = 12;
-  string mentions = 13;
+  bytes mentions = 13;
 }
 
 message MessageMentionList {
@@ -3454,4 +3454,16 @@ message MessageAttachmentList {
 
 message MessageRefList {
   repeated MessageRef refs = 1;
+}
+
+message MessageReactionList {
+  repeated MessageReaction reactions = 1;
+}
+
+message ListClanBadgeCountRequest {
+  string clan_id = 1;
+}
+
+message ListClanBadgeCountResponse {
+  int32 badge_count = 1;
 }
