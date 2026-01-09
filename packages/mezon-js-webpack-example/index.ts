@@ -19,12 +19,12 @@ import {WebSocketAdapterPb} from "mezon-js-protobuf"
 
 var useSSL = true; // Enable if server is run with an SSL certificate.
 var clientgw = new Client("defaultkey", "dev-mezon.nccsoft.vn", "8088", useSSL);
-var client = new Client("defaultkey", "dev-mezon.nccsoft.vn", "7305", useSSL);
+var client = new Client("defaultkey", "172.16.11.90", "7350", false);
 
 clientgw.authenticateEmail("pocolomos@gmail.com", "xxxxxxxx").then(async session => {
   console.log("authenticated.", session);
   
-  const socket = client.createSocket(true, true, new WebSocketAdapterPb());
+  const socket = client.createSocket(false, true, new WebSocketAdapterPb());
   const session2 = await socket.connect(session, true, "desktop");
   console.log("session", session2);
   const resp = await socket.listDataSocket(
@@ -36,7 +36,10 @@ clientgw.authenticateEmail("pocolomos@gmail.com", "xxxxxxxx").then(async session
       } 
     }
   );
-  console.log('resp', resp);
+  //console.log('resp', resp);
+  //await client.listChannelByUserId(session)
+  const sessionC = await client.sessionRefresh(session);
+  console.log(sessionC);
 
 }).catch(e => {
   console.log("error authenticating.");

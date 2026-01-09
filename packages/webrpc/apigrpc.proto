@@ -1,0 +1,1268 @@
+// Copyright 2024 The Mezon Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/**
+ * The Mezon server RPC protocol for games and apps.
+ */
+syntax = "proto3";
+
+package mezon.api;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "api/api.proto";
+import "rtapi/realtime.proto";
+
+option go_package = "mezon/v2/apigrpc";
+
+option java_multiple_files = true;
+option java_outer_classname = "MezonApiGrpc";
+option java_package = "com.mezon.api.grpc";
+
+option csharp_namespace = "Mezon.Protobuf";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Mezon API v2";
+    version: "2.0";
+    contact: {
+      name: "The Mezon Authors & Contributors";
+      url: "https://github.com/mezon/mezon";
+      email: "hello@mezon.ai";
+    };
+  };
+  host: "127.0.0.1:7350";
+  external_docs: {
+    url: "https://mezon.ai/docs";
+    description: "Mezon server documentation";
+  }
+  schemes: HTTP;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BasicAuth";
+      value: {
+        type: TYPE_BASIC;
+      }
+    }
+    security: {
+      // Made up security so we can apply "Bearer <JWT_TOKEN>"
+      key: "BearerJwt";
+      value: {
+        type: TYPE_INVALID;
+      }
+    }
+    security: {
+      key: "HttpKeyAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "http_key";
+      }
+    }
+  }
+  // Default security definition.
+  security: {
+    security_requirement: {
+      key: "BearerJwt";
+      value: {};
+    }
+  }
+};
+
+/**
+ * The Mezon RPC protocol service built with GRPC.
+ */
+service Mezon {
+  // Add friends by ID or username to a user's account.
+  rpc AddFriends (api.AddFriendsRequest) returns (api.AddFriendsResponse) {
+    option (google.api.http).post = "/v2/friend";
+  }
+
+  // Add users to a channel.
+  rpc AddChannelUsers (api.AddChannelUsersRequest) returns (google.protobuf.Empty) {
+    option (google.api.http).post = "/v2/channel/{channel_id}/add";
+  }
+
+  // Refresh a user's session using a refresh token retrieved from a previous authentication request.
+  rpc SessionRefresh (api.SessionRefreshRequest) returns (api.Session) {
+    option (google.api.http) = {
+      post: "/v2/account/session/refresh",
+    };
+  }
+
+  // Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user.
+  rpc SessionLogout (api.SessionLogoutRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/session/logout",
+    };
+  }
+
+  // Authenticate a user with an email+password against the server.
+  rpc RegistrationEmail (api.RegistrationEmailRequest) returns (api.Session) {
+    option (google.api.http) = {
+      post: "/v2/account/registry",
+    };
+  }
+
+  // Block one or more users by ID or username.
+  rpc BlockFriends (api.BlockFriendsRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/friend/block"
+    };
+  }
+
+  // Block one or more users by ID or username.
+  rpc UnblockFriends (api.BlockFriendsRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/friend/unblock"
+    };
+  }
+
+  // Upload attachment
+  rpc UploadAttachmentFile (api.UploadAttachmentRequest) returns (api.UploadAttachment) {
+    option (google.api.http) = {
+      post: "/v2/uploadattachmentfile",
+    };
+  }
+
+  // Upload attachment
+  rpc UploadOauthFile (api.UploadAttachmentRequest) returns (api.UploadAttachment) {
+    option (google.api.http) = {
+      post: "/v2/uploadoauthfile",
+    };
+  }
+
+  rpc AddRolesChannelDesc (api.AddRoleChannelDescRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/rolechannel/addrole",
+    };
+  }
+
+  rpc CreateCategoryDesc (api.CreateCategoryDescRequest) returns (api.CategoryDesc) {
+    option (google.api.http) = {
+      post: "/v2/createcategory",
+    };
+  }
+
+  // Create a new channel with the current user as the owner.
+  rpc CreateChannelDesc (api.CreateChannelDescRequest) returns (api.ChannelDescription) {
+    option (google.api.http) = {
+      post: "/v2/channeldesc",
+    };
+  }
+
+  // Create a new role for clan.
+  rpc CreateRole (api.CreateRoleRequest) returns (api.Role) {
+    option (google.api.http) = {
+      post: "/v2/roles",
+    };
+  }
+
+  // Create a new event for clan.
+  rpc CreateEvent (api.CreateEventRequest) returns (api.EventManagement) {
+    option (google.api.http) = {
+      post: "/v2/eventmanagement/create",
+    };
+  }
+
+  // Delete a role by ID.
+  rpc DeleteRole (api.DeleteRoleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http).delete = "/v2/roles/{role_id}";
+  }
+
+  // Delete a event by ID.
+  rpc DeleteEvent (api.DeleteEventRequest) returns (google.protobuf.Empty) {
+    option (google.api.http).delete = "/v2/eventmanagement/{event_id}";
+  }
+
+  // Update a role when Delete a role by ID.
+  rpc DeleteRoleChannelDesc (api.DeleteRoleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put : "/v2/rolechannel/delete",
+    };
+  }
+
+  // Get permission list
+  rpc GetListPermission (google.protobuf.Empty) returns (api.PermissionList) {
+    option (google.api.http).get = "/v2/permissions";
+  }
+
+  // Delete a channel by ID.
+  rpc DeleteChannelDesc (api.DeleteChannelDescRequest) returns (google.protobuf.Empty) {
+    option (google.api.http).delete = "/v2/channeldesc/{channel_id}";
+  }
+
+  // close direct message.
+  rpc CloseDMByChannelId (api.DeleteChannelDescRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v2/direct/close",
+    };
+  }
+
+  // open direct message.
+  rpc OpenDMByChannelId (api.DeleteChannelDescRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v2/direct/open",
+    };
+  }
+
+  // Delete the current user's account.
+  rpc DeleteAccount (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http).delete = "/v2/account";
+  }
+
+  // Delete one or more users by ID or username.
+  rpc DeleteFriends (api.DeleteFriendsRequest) returns (google.protobuf.Empty) {
+    option (google.api.http).delete = "/v2/friend";
+  }
+
+  rpc DeleteCategoryDesc (api.DeleteCategoryDescRequest) returns (google.protobuf.Empty) {
+    option (google.api.http).delete = "/v2/deletecategory/category_id/{category_id}/clan_id/{clan_id}";
+  }
+
+  // Delete one or more notifications for the current user.
+  rpc DeleteNotifications (api.DeleteNotificationsRequest) returns (google.protobuf.Empty) {
+    option (google.api.http).delete = "/v2/notification";
+  }
+
+  // Delete a clan desc by ID.
+  rpc DeleteClanDesc (api.DeleteClanDescRequest) returns (google.protobuf.Empty) {
+    option (google.api.http).delete = "/v2/clandesc/{clan_desc_id}";
+  }
+
+  // Fetch the current user's account.
+  rpc GetAccount (google.protobuf.Empty) returns (api.Account) {
+    option (google.api.http).get = "/v2/account";
+  }
+
+  rpc UpdateUser (api.UpdateUsersRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v2/user/update",
+    };
+  }
+
+  rpc ListCategoryDescs (api.CategoryDesc) returns (api.CategoryDescList) {
+    option (google.api.http).get = "/v2/categorydesc/{clan_id}";
+  }
+
+  rpc GetUserProfileOnClan (api.ClanProfileRequest) returns (api.ClanProfile) {
+    option (google.api.http).get = "/v2/getclanprofile/{clan_id}";
+  }
+
+  rpc UpdateUserProfileByClan (api.UpdateClanProfileRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+    put : "/v2/updateclanprofile/{clan_id}",    body: "*"
+    };
+  }
+
+  rpc UpdateClanOrder (api.UpdateClanOrderRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+    put : "/v2/updateclanorder",    body: "*"
+    };
+  }
+
+  // A healthcheck which load balancers can use to check the service.
+  rpc Healthcheck (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http).get = "/healthcheck";
+  }
+
+  // regist fcm device token
+  rpc RegistFCMDeviceToken (api.RegistFcmDeviceTokenRequest) returns (api.RegistFcmDeviceTokenResponse) {
+    option (google.api.http).post = "/v2/devicetoken";
+  }
+
+  // Kick a set of users from a channel.
+  rpc RemoveChannelUsers (api.RemoveChannelUsersRequest) returns (google.protobuf.Empty) {
+    option (google.api.http).post = "/v2/channel/{channel_id}/remove";
+  }
+
+  // Leave a channel the user is a member of.
+  rpc LeaveThread (api.LeaveThreadRequest) returns (google.protobuf.Empty) {
+    option (google.api.http).post = "/v2/channel/{channel_id}/leave";
+  }
+
+  // Add a mezon ID to the social profiles on the current user's account.
+  rpc LinkSMS (api.AccountMezon) returns (api.LinkAccountConfirmRequest) {
+    option (google.api.http) = {
+      post: "/v2/account/link/mezon",
+    };
+  }
+
+  rpc ConfirmLinkMezonOTP (api.LinkAccountConfirmRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/account/link/confirm",
+    };
+  }
+
+  // Add an email+password to the social profiles on the current user's account.
+  rpc LinkEmail (api.AccountEmail) returns (api.LinkAccountConfirmRequest) {
+    option (google.api.http) = {
+      post: "/v2/account/link/email",
+    };
+  }
+
+  // Create a clan
+  rpc CreateClanDesc (api.CreateClanDescRequest) returns (api.ClanDesc) {
+    option (google.api.http) = {
+      post: "/v2/clandesc",
+    };
+  }
+
+  // Kick a set of users from a clan.
+  rpc RemoveClanUsers (api.RemoveClanUsersRequest) returns (google.protobuf.Empty) {
+    option (google.api.http).post = "/v2/clandesc/{clan_id}/kick";
+  }
+
+  // Ban a set of users from a channel.
+  rpc BanClanUsers (api.BanClanUsersRequest) returns (google.protobuf.Empty) {
+    option (google.api.http).post = "/v2/clandesc/{clan_id}/ban";
+  }
+
+  // Ban a set of users from a channel.
+  rpc UnbanClanUsers (api.BanClanUsersRequest) returns (google.protobuf.Empty) {
+    option (google.api.http).post = "/v2/clandesc/{clan_id}/unban";
+  }
+
+  // Ban a set of users from a channel.
+  rpc IsBanned (api.IsBannedRequest) returns (api.IsBannedResponse) {
+    option (google.api.http).get = "/v2/channel/{channel_id}/isban";
+  }
+
+  // Add users to a channel.
+  rpc CreateLinkInviteUser (api.LinkInviteUserRequest) returns (api.LinkInviteUser) {
+    option (google.api.http) = {
+      post: "/v2/invite",
+    };
+  }
+
+  // Add users to a channel.
+  rpc InviteUser (api.InviteUserRequest) returns (api.InviteUserRes) {
+    option (google.api.http).post = "/v2/invite/{invite_id}";
+  }
+
+  // List clans
+  rpc ListClanDescs (api.ListClanDescRequest) returns (api.ClanDescList) {
+    option (google.api.http).get = "/v2/clandesc";
+  }
+
+  // List banned user
+  rpc ListBannedUsers (api.BannedUserListRequest) returns (api.BannedUserList) {
+    option (google.api.http).get = "/v2/banned";
+  }
+
+  // List clans
+  rpc ListClanUnreadMsgIndicator (api.ListClanUnreadMsgIndicatorRequest) returns (api.ListClanUnreadMsgIndicatorResponse) {
+    option (google.api.http).get = "/v2/{clan_id}/indicator";
+  }
+
+  // List user channels
+  rpc ListChannelDescs (api.ListChannelDescsRequest) returns (api.ChannelDescList) {
+    option (google.api.http).get = "/v2/channeldesc";
+  }
+
+  // List user channels
+  rpc ListThreadDescs (api.ListThreadRequest) returns (api.ChannelDescListNoPool) {
+    option (google.api.http).get = "/v2/thread/{channel_id}";
+  }
+
+  // List channels detail
+  rpc ListChannelDetail (api.ListChannelDetailRequest) returns (api.ChannelDescription) {
+    option (google.api.http).get = "/v2/channeldesc/{channel_id}";
+  }
+
+  // List HashtagDMList
+  rpc HashtagDMList (api.HashtagDmListRequest) returns (api.HashtagDmList) {
+    option (google.api.http).get = "/v2/hashtagdmlist";
+  }
+
+  // List HashtagDMList
+  rpc ListChannelByUserId (google.protobuf.Empty) returns (api.ChannelDescListNoPool) {
+    option (google.api.http).get = "/v2/listchannelbyuserid";
+  }
+
+  // List GetNotificationChannel
+  rpc GetNotificationChannel (api.NotificationChannel) returns (api.NotificationUserChannel) {
+    option (google.api.http).get = "/v2/getnotificationchannel";
+  }
+
+  // List GetNotificationChannel
+  rpc GetNotificationCategory (api.DefaultNotificationCategory) returns (api.NotificationUserChannel) {
+    option (google.api.http).get = "/v2/getnotificationcategory";
+  }
+
+  // List GetNotificationClan
+  rpc GetNotificationClan (api.NotificationClan) returns (api.NotificationSetting) {
+    option (google.api.http).get = "/v2/getnotificationclan";
+  }
+
+  // List GetChannelCategoryNotiSettingsList
+  rpc GetChannelCategoryNotiSettingsList (api.NotificationClan) returns (api.NotificationChannelCategorySettingList) {
+    option (google.api.http).get = "/v2/getchannelcategorynotisettingslist";
+  }
+
+  // set permission role channel.
+  rpc SetRoleChannelPermission (api.UpdateRoleChannelRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/permissionrolechannel/set",
+    };
+  }
+
+  // set notification user channel.
+  rpc SetNotificationChannelSetting (api.SetNotificationRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/notificationchannel/set",
+    };
+  }
+
+  // set mute user channel.
+  rpc SetMuteChannel (api.SetMuteRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/mutenotificationchannel/set",
+    };
+  }
+
+  // set mute user channel.
+  rpc SetMuteCategory (api.SetMuteRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/mutenotificationcategory/set",
+    };
+  }
+
+   // set notification user channel.
+   rpc SetNotificationClanSetting (api.SetDefaultNotificationRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/notificationclan/set",
+    };
+  }
+
+  // set notification user channel.
+  rpc SetNotificationCategorySetting (api.SetNotificationRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/notificationucategory/set",
+    };
+  }
+
+  rpc DeleteNotificationCategorySetting (api.DefaultNotificationCategory) returns (google.protobuf.Empty) {
+    option (google.api.http).delete = "/v2/notificationusercategory/delete";
+  }
+
+  rpc DeleteNotificationChannel (api.NotificationChannel) returns (google.protobuf.Empty) {
+    option (google.api.http).delete = "/v2/notificationuserchannel/delete";
+  }
+
+  // List user events
+  rpc ListEvents (api.ListEventsRequest) returns (api.EventList) {
+    option (google.api.http).get = "/v2/eventmanagement";
+  }
+
+  // List role permissions
+  rpc ListRolePermissions (api.ListPermissionsRequest) returns (api.PermissionList) {
+    option (google.api.http).get = "/v2/roles/{role_id}/permissions";
+  }
+
+  // List role permissions
+  rpc ListRoleUsers (api.ListRoleUsersRequest) returns (api.RoleUserList) {
+    option (google.api.http).get = "/v2/roles/{role_id}/users";
+  }
+
+  rpc GetRoleOfUserInTheClan (api.ListPermissionOfUsersRequest) returns (api.RoleList) {
+    option (google.api.http).get = "/v2/roleuserinclan/{clan_id}";
+  }
+
+  // List a channel's message history.
+  rpc ListChannelMessages (api.ListChannelMessagesRequest) returns (api.ChannelMessageList) {
+    option (google.api.http).get = "/v2/channel/{channel_id}";
+  }
+
+  // List all friends for the current user.
+  rpc ListFriends (api.ListFriendsRequest) returns (api.FriendList) {
+    option (google.api.http).get = "/v2/friend";
+  }
+
+  // List all users that are part of a channel.
+  rpc ListChannelUsers (api.ListChannelUsersRequest) returns (api.ChannelUserList) {
+    option (google.api.http).get = "/v2/channel/{channel_id}/user";
+  }
+
+  // set notification user channel.
+  rpc CreatePinMessage (api.PinMessageRequest) returns (api.ChannelMessageHeader) {
+    option (google.api.http) = {
+      post: "/v2/pinmessage/set",
+    };
+  }
+
+  // create message to inbox.
+  rpc CreateMessage2Inbox (api.Message2InboxRequest) returns (api.ChannelMessageHeader) {
+    option (google.api.http) = {
+      post: "/v2/pinmessage/inbox",
+    };
+  }
+
+  //
+  rpc GetPinMessagesList (api.PinMessageRequest) returns (api.PinMessagesList) {
+    option (google.api.http).get = "/v2/pinmessage/get";
+  }
+
+  //
+  rpc DeletePinMessage (api.DeletePinMessage) returns (google.protobuf.Empty) {
+    option (google.api.http).delete = "/v2/pinmessage/delete";
+  }
+
+  // List all attachment that are part of a channel.
+  rpc ListChannelAttachment (api.ListChannelAttachmentRequest) returns (api.ChannelAttachmentList) {
+    option (google.api.http).get = "/v2/channel/{channel_id}/attachment";
+  }
+
+  // List all users that are part of a channel.
+  rpc ListChannelVoiceUsers (api.ListChannelUsersRequest) returns (api.VoiceChannelUserList) {
+    option (google.api.http).get = "/v2/channelvoice";
+  }
+
+  // List all users that are part of a clan.
+  rpc ListClanUsers (api.ListClanUsersRequest) returns (api.ClanUserList) {
+    option (google.api.http).get = "/v2/clandesc/{clan_id}/user";
+  }
+
+  // Fetch list of notifications.
+  rpc ListNotifications (api.ListNotificationsRequest) returns (api.NotificationList) {
+    option (google.api.http).get = "/v2/notification";
+  }
+
+  // Execute a Lua function on the server.
+  rpc RpcFunc (api.Rpc) returns (api.Rpc) {
+    option (google.api.http) = {
+      post: "/v2/rpc/{id}",      body: "payload",      additional_bindings {
+        get: "/v2/rpc/{id}"
+      }
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      // Either HTTP key in query param or Bearer authentication.
+      security: {
+        security_requirement: {
+          key: "HttpKeyAuth";
+          value: {};
+        }
+        security_requirement: {
+          key: "BearerJwt";
+          value: {};
+        }
+      }
+    };
+  }
+
+  // Remove the mezon ID from the social profiles on the current user's account.
+  rpc UnlinkMezon (api.AccountMezon) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/account/unlink/mezon",
+    };
+  }
+
+  // Remove the email+password from the social profiles on the current user's account.
+  rpc UnlinkEmail (api.AccountEmail) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/account/unlink/email",
+    };
+  }
+
+  // Update fields in the current user's account.
+  rpc UpdateAccount (api.UpdateAccountRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v2/account",
+    };
+  }
+
+  // Update username
+  rpc UpdateUsername (api.UpdateUsernameRequest) returns (api.Session) {
+    option (google.api.http) = {
+      put: "/v2/username",
+    };
+  }
+
+  // Update fields in a given category.
+  rpc UpdateCategory (api.UpdateCategoryDescRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v2/updatecategory/{clan_id}",
+    };
+  }
+
+  rpc UpdateCategoryOrder (api.UpdateCategoryOrderRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put:"/v2/category/orders",
+    };
+  }
+
+  rpc UpdateRoleOrder (api.UpdateRoleOrderRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put:"/v2/role/orders",
+    };
+  }
+
+  // Update fields in a given clan.
+  rpc UpdateClanDesc (api.UpdateClanDescRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v2/clandesc/{clan_id}",
+    };
+  }
+
+  // Update fields in a given channel.
+  rpc UpdateChannelDesc (api.UpdateChannelDescRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v2/channeldesc/{channel_id}",
+    };
+  }
+
+  // Update channel private.
+  rpc UpdateChannelPrivate (api.ChangeChannelPrivateRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v2/updatechannelprivate",
+    };
+  }
+
+  // Update fields in a given role.
+  rpc UpdateRole (api.UpdateRoleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v2/roles/{role_id}",
+    };
+  }
+
+  // list user add channel by channel ids
+  rpc ListChannelUsersUC(api.AllUsersAddChannelRequest) returns (api.AllUsersAddChannelResponse) {
+    option (google.api.http) = {
+      get: "/v2/channeldesc/users"
+    };
+  }
+
+  //get list sticker by user id
+  rpc GetListStickersByUserId(google.protobuf.Empty) returns (api.StickerListedResponse) {
+    option (google.api.http).get = "/v2/stickers";
+  }
+
+  //get list emoji by user id
+  rpc GetListEmojisByUserId (google.protobuf.Empty) returns (api.EmojiListedResponse) {
+    option (google.api.http).get = "/v2/emojis";
+  }
+
+  //get list emoji recent by user id
+  rpc EmojiRecentList (google.protobuf.Empty) returns (api.EmojiRecentList) {
+    option (google.api.http).get = "/v2/emojirecents";
+  }
+
+  // Update fields in a given event.
+  rpc UpdateEvent (api.UpdateEventRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v2/eventmanagement/{event_id}",
+    };
+  }
+
+  // Search message from elasticsearch service.
+  rpc SearchMessage (api.SearchMessageRequest) returns (api.SearchMessageResponse) {
+    option (google.api.http) = {
+      post: "/v2/es/search",
+    };
+  }
+
+  // Post clan Emoji  /v2/emoji/create
+  rpc CreateClanEmoji(api.ClanEmojiCreateRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post:"/v2/emoji/create",
+    };
+  }
+
+  // Delete a emoji by ID.
+  rpc DeleteByIdClanEmoji (api.ClanEmojiDeleteRequest) returns (google.protobuf.Empty) {
+      option (google.api.http).delete = "/v2/emoji/{id}";
+  }
+
+  // Update ClanEmoj By id
+  rpc UpdateClanEmojiById(api.ClanEmojiUpdateRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/v2/emoji/{id}",
+    };
+  }
+
+  // create webhook
+  rpc GenerateWebhook(api.WebhookCreateRequest) returns (api.WebhookGenerateResponse) {
+    option (google.api.http) = {
+      post:"/v2/webhooks/generate",
+    };
+  }
+
+  // list webhook belong to the channel
+  rpc ListWebhookByChannelId(api.WebhookListRequest) returns (api.WebhookListResponse) {
+    option (google.api.http).get = "/v2/webhooks/{channel_id}";
+  }
+
+  // update webhook name by id
+  rpc UpdateWebhookById(api.WebhookUpdateRequestById) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/v2/webhooks/update/{id}",
+    };
+  }
+
+  // disabled webhook
+  rpc DeleteWebhookById(api.WebhookDeleteRequestById) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/v2/webhooks/{id}",
+    };
+  }
+
+  // webhook
+  rpc HandleWebhook(api.WebhookHandlerRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/webhooks/{channel_id}/{token}"
+      body: "body"
+    };
+  }
+
+  // Add a new sticker
+  rpc AddClanSticker(api.ClanStickerAddRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+        post: "/v2/sticker",
+    };
+  }
+
+  // Update a sticker by ID
+  rpc UpdateClanStickerById(api.ClanStickerUpdateByIdRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+        patch: "/v2/sticker/{id}",
+    };
+  }
+
+  // Delete a sticker by ID
+  rpc DeleteClanStickerById(api.ClanStickerDeleteRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+        delete: "/v2/sticker/{id}"
+    };
+  }
+
+  // update the category of a channel
+  rpc ChangeChannelCategory (api.ChangeChannelCategoryRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/v2/channel/category/{new_category_id}"
+
+    };
+  }
+
+  // Add a new apps.
+  rpc AddApp (api.AddAppRequest) returns (App) {
+    option (google.api.http) = {
+      post: "/v2/apps/add",
+    };
+  }
+
+  // Delete all information stored for an app.
+  rpc DeleteApp (api.AppDeleteRequest) returns (google.protobuf.Empty) {
+    option (google.api.http).delete = "/v2/apps/app/{id}";
+  }
+
+  // Get detailed app information.
+  rpc GetApp (AppId) returns (App) {
+    option (google.api.http).get = "/v2/apps/app/{id}";
+  }
+
+  // List (and optionally filter) accounts.
+  rpc ListApps (api.ListAppsRequest) returns (AppList) {
+    option (google.api.http).get = "/v2/apps/app";
+  }
+
+  // Update one or more fields on a app.
+  rpc UpdateApp (api.UpdateAppRequest) returns (App) {
+    option (google.api.http) = {
+      put: "/v2/apps/app/{id}",
+    };
+  }
+
+  // Add an app to clan.
+  rpc AddAppToClan (api.AppClan) returns (google.protobuf.Empty) {
+    option (google.api.http).post = "/v2/apps/app/{app_id}/clan/{clan_id}";
+  }
+
+  // Create a system messages.
+  rpc CreateSystemMessage (api.SystemMessageRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/systemmessages"
+
+    };
+  }
+
+  // Update a system messages.
+  rpc UpdateSystemMessage (api.SystemMessageRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v2/systemmessages/{clan_id}"
+
+    };
+  }
+
+  // Get details of a specific system messages.
+  rpc GetSystemMessageByClanId (api.GetSystemMessage) returns (api.SystemMessage) {
+    option (google.api.http) = {
+      get: "/v2/systemmessages/{clan_id}"
+    };
+  }
+
+  // Delete a specific system messages.
+  rpc DeleteSystemMessage (api.DeleteSystemMessage) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v2/systemmessages/{clan_id}"
+    };
+  }
+
+  // Stream http callback.
+  rpc StreamingServerCallback (api.StreamHttpCallbackRequest) returns (api.StreamHttpCallbackResponse) {
+    option (google.api.http) = {
+      post: "/v2/stream/callback",
+    };
+  }
+
+  // For sale items
+  rpc ListForSaleItems (api.ListForSaleItemsRequest) returns (api.ForSaleItemList) {
+    option (google.api.http) = {
+      get: "/v2/forsale"
+    };
+  }
+
+  // List all users that are part of a channel.
+  rpc ListStreamingChannelUsers (api.ListChannelUsersRequest) returns (api.StreamingChannelUserList) {
+    option (google.api.http).get = "/v2/streaming-channels/users";
+  }
+
+  // List channel apps.
+  rpc ListChannelApps (api.ListChannelAppsRequest) returns (api.ListChannelAppsResponse) {
+    option (google.api.http).get = "/v2/channel-apps";
+  }
+
+  // ListUserClansByUserId
+  rpc ListUserClansByUserId (google.protobuf.Empty) returns (AllUserClans) {
+    option (google.api.http) = {
+      get: "/v2/users/clans"
+    };
+  }
+
+  // ListRoles
+  rpc ListRoles (RoleListEventRequest) returns (RoleListEventResponse) {
+    option (google.api.http) = {
+      get: "/v2/roles"
+    };
+  }
+
+  // GetPermissionByRoleIdChannelId
+  rpc GetPermissionByRoleIdChannelId (PermissionRoleChannelListEventRequest) returns (PermissionRoleChannelListEventResponse) {
+    option (google.api.http) = {
+      get: "/v2/permissions/roles/channels/users"
+    };
+  }
+
+  // ListUserPermissionInChannel
+  rpc ListUserPermissionInChannel (UserPermissionInChannelListRequest) returns (UserPermissionInChannelListResponse) {
+    option (google.api.http) = {
+      get: "/v2/users/clans/channels"
+    };
+  }
+
+  // List channel setting
+  rpc ListChannelSetting (api.ChannelSettingListRequest) returns (ChannelSettingListResponse) {
+    option (google.api.http) = {
+      get: "/v2/channelsetting/{clan_id}"
+    };
+  }
+
+  // Mark as read
+  rpc MarkAsRead (api.MarkAsReadRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/markasread"
+
+    };
+  }
+
+  // Channel canvas editor
+  rpc EditChannelCanvases (api.EditChannelCanvasRequest) returns (api.EditChannelCanvasResponse) {
+    option (google.api.http) = {
+      post: "/v2/canvases/editor",
+    };
+  }
+
+  rpc GetChannelCanvasList (api.ChannelCanvasListRequest) returns (api.ChannelCanvasListResponse) {
+    option (google.api.http) = {
+      get: "/v2/channel-canvases/{channel_id}"
+    };
+  }
+
+  rpc GetChannelCanvasDetail (api.ChannelCanvasDetailRequest) returns (api.ChannelCanvasDetailResponse) {
+    option (google.api.http) = {
+      get: "/v2/canvases/{id}"
+    };
+  }
+
+  rpc DeleteChannelCanvas (api.DeleteChannelCanvasRequest) returns (google.protobuf.Empty) {
+     option (google.api.http) = {
+      delete: "/v2/canvases/{canvas_id}"
+    };
+  }
+
+  rpc GetListFavoriteChannel (api.ListFavoriteChannelRequest) returns (api.ListFavoriteChannelResponse) {
+    option (google.api.http) = {
+      get: "/v2/channel/favorite/{clan_id}"
+    };
+  }
+
+  rpc AddChannelFavorite (api.AddFavoriteChannelRequest) returns (api.AddFavoriteChannelResponse) {
+    option (google.api.http) = {
+      post: "/v2/channel/favorite",
+    };
+  }
+
+  rpc RemoveChannelFavorite (api.RemoveFavoriteChannelRequest) returns (google.protobuf.Empty) {
+    option (google.api.http).delete = "/v2/channel/favorite/{channel_id}";
+  }
+
+  //List activity
+  rpc ListActivity (google.protobuf.Empty) returns (ListUserActivity) {
+    option (google.api.http) = {
+      get: "/v2/activity"
+    };
+  }
+
+  // Create user activity
+  rpc CreateActiviy (CreateActivityRequest) returns (UserActivity) {
+    option (google.api.http) = {
+      post: "/v2/activity"
+
+    };
+  }
+
+  // get pubkey
+  rpc GetPubKeys (api.GetPubKeysRequest) returns (api.GetPubKeysResponse) {
+    option (google.api.http) = {
+      get: "/v2/pubkey"
+    };
+  }
+
+  // store pubkey for e2ee
+  rpc PushPubKey (api.PushPubKeyRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/pubkey/push",
+    };
+  }
+
+  // get channel encryption method
+  rpc GetChanEncryptionMethod (api.ChanEncryptionMethod) returns (api.ChanEncryptionMethod) {
+    option (google.api.http) = {
+      get: "/v2/channel/{channel_id}/encrypt_method"
+    };
+  }
+
+  // store channel encryption method
+  rpc SetChanEncryptionMethod (api.ChanEncryptionMethod) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/channel/{channel_id}/encrypt_method",
+    };
+  }
+
+  // get key server
+  rpc GetKeyServer (google.protobuf.Empty) returns (api.GetKeyServerResp) {
+    option (google.api.http) = {
+      get: "/v2/e2ee/key_server"
+    };
+  }
+
+  rpc ListAuditLog (api.ListAuditLogRequest) returns (api.ListAuditLog){
+    option (google.api.http) = {
+      get: "/v2/audit_log"
+    };
+  }
+
+  // get detailed onboarding information.
+  rpc GetOnboardingDetail (api.OnboardingRequest) returns (api.OnboardingItem) {
+    option (google.api.http).get = "/v2/onboarding/{id}";
+  }
+
+  // list onboarding.
+  rpc ListOnboarding (api.ListOnboardingRequest) returns (api.ListOnboardingResponse) {
+    option (google.api.http).get = "/v2/onboarding";
+  }
+
+  // create onboarding.
+  rpc CreateOnboarding (api.CreateOnboardingRequest) returns (api.ListOnboardingResponse) {
+    option (google.api.http) = {
+      post: "/v2/onboarding",
+    };
+  }
+
+  // update onboarding.
+  rpc UpdateOnboarding (api.UpdateOnboardingRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v2/onboarding/{id}",
+    };
+  }
+
+  // delete onboarding.
+  rpc DeleteOnboarding (api.OnboardingRequest) returns (google.protobuf.Empty) {
+    option (google.api.http).delete = "/v2/onboarding/{id}";
+  }
+
+  // List onboarding step.
+  rpc ListOnboardingStep(api.ListOnboardingStepRequest) returns (api.ListOnboardingStepResponse) {
+    option (google.api.http).get = "/v2/onboardingsteps";
+  }
+
+  // Update onboarding step.
+  rpc UpdateOnboardingStep (api.UpdateOnboardingStepRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v2/onboardingsteps/{clan_id}",
+    };
+  }
+
+  // Generate clan webhook.
+  rpc GenerateClanWebhook(api.GenerateClanWebhookRequest) returns (api.GenerateClanWebhookResponse) {
+    option (google.api.http) = {
+      post:"/v2/clanwebhooks",
+    };
+  }
+
+  // List clan webhook.
+  rpc ListClanWebhook(api.ListClanWebhookRequest) returns (api.ListClanWebhookResponse) {
+    option (google.api.http).get = "/v2/clanwebhooks/{clan_id}";
+  }
+
+  // Update clan webhook by id.
+  rpc UpdateClanWebhookById(api.UpdateClanWebhookRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v2/clanwebhooks/{id}",
+    };
+  }
+
+  // Disabled clan webhook.
+  rpc DeleteClanWebhookById(api.ClanWebhookRequest) returns (google.protobuf.Empty) {
+    option (google.api.http).delete = "/v2/clanwebhooks/{id}";
+  }
+
+  // Handler clan webhook.
+  rpc HandleClanWebhook(api.ClanWebhookHandlerRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/clanwebhooks/{token}/{username}"
+      body: "body"
+    };
+  }
+
+  // Get user status
+  rpc GetUserStatus(google.protobuf.Empty) returns (api.UserStatus) {
+    option (google.api.http) = {
+      get: "/v2/userstatus"
+    };
+  }
+
+  // Update user status
+  rpc UpdateUserStatus(api.UserStatusUpdate) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v2/userstatus",
+    };
+  }
+
+  // List Sd Topic
+  rpc ListSdTopic(api.ListSdTopicRequest) returns (api.SdTopicList) {
+    option (google.api.http) = {
+      get: "/v2/sdmtopic"
+    };
+  }
+
+  // Sd Topic
+  rpc GetTopicDetail(api.SdTopicDetailRequest) returns (api.SdTopic) {
+    option (google.api.http) = {
+      get: "/v2/sdmtopic/detail"
+    };
+  }
+
+  // Create Sd Topic
+  rpc CreateSdTopic(api.SdTopicRequest) returns (api.SdTopic) {
+    option (google.api.http) = {
+      post: "/v2/sdmtopic"
+
+    };
+  }
+
+  // Delete Sd Topic
+  rpc DeleteSdTopic(api.DeleteSdTopicRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v2/sdmtopic"
+    };
+  }
+
+  // Create external Mezon meet
+  rpc CreateExternalMezonMeet (google.protobuf.Empty) returns (api.GenerateMezonMeetResponse) {
+    option (google.api.http) = {
+      post: "/v2/meet/external/create"
+
+    };
+  }
+
+  // Generate Meet Token
+  rpc GenerateMeetToken(api.GenerateMeetTokenRequest) returns (api.GenerateMeetTokenResponse) {
+    option (google.api.http) = {
+      post: "/v2/meet/generate"
+
+    };
+  }
+
+  // Remove participant out the room
+  rpc RemoveParticipantMezonMeet (api.MeetParticipantRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/meet/participant/remove"
+
+    };
+  }
+
+  // mute participant in the room
+  rpc MuteParticipantMezonMeet (api.MeetParticipantRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/meet/participant/mute"
+
+    };
+  }
+
+  // create meeting room
+  rpc CreateRoomChannelApps(api.CreateRoomChannelApps) returns (api.CreateRoomChannelApps) {
+    option (google.api.http) = {
+      post: "/v2/channel-apps/createroom",
+    };
+  }
+
+  // Create mezon OAuth client
+  rpc GetMezonOauthClient(api.GetMezonOauthClientRequest) returns (api.MezonOauthClient) {
+    option (google.api.http) = {
+      get: "/v2/mznoauthclient"
+    };
+  }
+
+  // Delete mezon OAuth client
+  rpc DeleteMezonOauthClient(api.MezonOauthClient) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v2/mznoauthclient"
+    };
+  }
+
+  // update mezon OAuth
+  rpc UpdateMezonOauthClient(api.MezonOauthClient) returns (api.MezonOauthClient) {
+    option (google.api.http) = {
+      patch: "/v2/mznoauthclient"
+
+    };
+  }
+
+  rpc SearchThread(api.SearchThreadRequest) returns (api.ChannelDescListNoPool) {
+    option (google.api.http) = {
+      get: "/v2/searchthread"
+    };
+  }
+
+  rpc GenerateHashChannelApps(api.GenerateHashChannelAppsRequest) returns (api.GenerateHashChannelAppsResponse) {
+    option (google.api.http) = {
+      get: "/v2/channel-apps/hash"
+    };
+  }
+
+  // Delete user event
+  rpc DeleteUserEvent(api.UserEventRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v2/userevent"
+    };
+  }
+
+  // Add user event
+  rpc AddUserEvent(api.UserEventRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/userevent"
+
+    };
+  }
+
+  // Block one or more users by ID or username.
+  rpc UpdateUserProfileRedis(realtime.UserProfileRedis) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v2/user/profile"
+
+    };
+  }
+
+  rpc DeleteQuickMenuAccess(api.QuickMenuAccess) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v2/quickmenuaccess"
+    };
+  }
+
+  rpc AddQuickMenuAccess(api.QuickMenuAccess) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/quickmenuaccess"
+
+    };
+  }
+
+  rpc UpdateQuickMenuAccess(api.QuickMenuAccess) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v2/quickmenuaccess"
+
+    };
+  }
+
+  rpc ListQuickMenuAccess(api.ListQuickMenuAccessRequest) returns (api.QuickMenuAccessList) {
+    option (google.api.http) = {
+      get: "/v2/quickmenuaccess"
+    };
+  }
+
+  rpc IsFollower(api.IsFollowerRequest) returns (api.IsFollowerResponse) {
+    option (google.api.http) = {
+      post: "/v2/follower"
+
+    };
+  }
+
+  rpc TransferOwnership (api.TransferOwnershipRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/transfer/ownership",
+    };
+  }
+
+  rpc SendSystemMessageExternal (api.ChannelMessage) returns (api.ChannelMessage) {
+    option (google.api.http) = {
+      post: "/v2/message/systemmessage",
+    };
+  }
+
+  rpc UpdateSystemMessageExternal (api.ChannelMessage) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v2/message/systemmessage",
+    };
+  }
+
+  rpc DeleteSystemMessageExternal (api.ChannelMessage) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v2/message/systemmessage"
+    };
+  }
+
+  rpc ReportMessageAbuse(api.ReportMessageAbuseReqest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/message/report"
+    };
+  }
+
+  rpc ListLogedDevice(google.protobuf.Empty) returns (api.LogedDeviceList) {
+    option (google.api.http) = {
+      get: "/v2/loged/device"
+    };
+  }
+
+}

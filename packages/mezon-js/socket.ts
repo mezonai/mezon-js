@@ -62,11 +62,16 @@ import {
   ApiListChannelAppsResponse,
   ApiListUserActivity,
   ApiListClanUnreadMsgIndicatorResponse,
-} from "./api.gen";
+  ChannelMessage,
+} from "./types";
 import { Session } from "./session";
-import { ChannelMessage } from "./client";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
-import { safeJSONParse } from "./utils";
+import { mapToCamelCase, mapToSnakeCase, safeJSONParse } from "./utils";
+import {
+  decodeMentions,
+  decodeAttachments,
+  decodeRefs,
+} from "mezon-js-protobuf";
 
 /** Stores function references for resolve/reject with a DOM Promise. */
 interface PromiseExecutor {
@@ -76,9 +81,9 @@ interface PromiseExecutor {
 /** An object which represents a connected user in the server. */
 export interface Presence {
   /** The id of the user. */
-  user_id: string;
+  userId: string;
   /** The session id of the user. */
-  session_id: string;
+  sessionId: string;
   /** The username of the user. */
   username: string;
   /** The node the user is connected to. */
@@ -86,9 +91,9 @@ export interface Presence {
   /** The status of the user */
   status: string;
   // User Mobile
-  is_mobile: boolean;
+  isMobile: boolean;
   // user status
-  user_status: string;
+  userStatus: string;
 }
 
 export interface NotificationInfo {
@@ -97,23 +102,23 @@ export interface NotificationInfo {
   /** Content of the notification in JSON. */
   content?: {};
   /** The UNIX time when the notification was created. */
-  create_time?: string;
+  createTime?: string;
   /** ID of the Notification. */
   id?: string;
   /** True if this notification was persisted to the database. */
   persistent?: boolean;
   /** ID of the sender, if a user. Otherwise 'null'. */
-  sender_id?: string;
+  senderId?: string;
   /** Subject of the notification. */
   subject?: string;
   //
-  channel_id?: string;
+  channelId?: string;
   //
-  clan_id?: string;
+  clanId?: string;
   //
   channel?: ApiChannelDescription;
   //
-  topic_id?: string;
+  topicId?: string;
 }
 
 /** A response from a channel join operation. */
@@ -121,30 +126,30 @@ export interface Channel {
   /** The server-assigned channel id. */
   id: string;
   // label
-  chanel_label: string;
+  channelLabel: string;
   /** The presences visible on the chat channel. */
   presences: Presence[];
   /** The presence of the current user, i.e. yourself. */
   self: Presence;
   // The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
-  clan_logo: string;
+  clanLogo: string;
   // The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
-  category_name: string;
+  categoryName: string;
 }
 
 export interface ClanJoin {
-  clan_join: {
-    clan_id: string;
+  clanJoin: {
+    clanId: string;
   };
 }
 
 /** Join a realtime chat channel. */
 interface ChannelJoin {
-  channel_join: {
+  channelJoin: {
     /** The id of the channel to join. */
-    channel_id: string;
+    channelId: string;
     /** The name of the channel to join. */
-    channel_label: string;
+    channelLabel: string;
     /** The channel type: 1 = Channel, 2 = Direct Message, 3 = Group. */
     type: number;
     /** Whether channel messages are persisted in the database. */
@@ -152,213 +157,213 @@ interface ChannelJoin {
     /** Whether the user's channel presence is hidden when joining. */
     hidden: boolean;
     // is public
-    is_public: boolean;
+    isPublic: boolean;
   };
 }
 
 /** Leave a realtime chat channel. */
 interface ChannelLeave {
-  channel_leave: {
+  channelLeave: {
     /** The id of the channel to leave. */
-    channel_id: string;
+    channelId: string;
     // The mode
     mode: number;
     // The channel label
-    channel_label: string;
+    channelLabel: string;
     // Is public
-    is_public: boolean;
+    isPublic: boolean;
   };
 }
 
 export interface AddClanUserEvent {
   //the clan id
-  clan_id: string;
+  clanId: string;
   // the user
   user: UserProfileRedis;
   invitor: string;
 }
 
 export interface BannedUserEvent {
-  user_ids: Array<string>;
+  userIds: Array<string>;
   action: number;
-  banner_id: string;
-  channel_id: string;
-  clan_id: string;
-  ban_time: number
+  bannerId: string;
+  channelId: string;
+  clanId: string;
+  banTime: number;
 }
 
 export interface UserProfileRedis {
   /** User IDs to follow. */
-  user_id: string;
+  userId: string;
   /** Username to follow. */
   username: string;
   /** Avatar to follow. */
   avatar: string;
   /** Display name */
-  display_name: string;
+  displayName: string;
   /** custom status */
-  custom_status: string;
+  customStatus: string;
   /** online */
   online: boolean;
   // create time
-  create_time_second: number;
+  createTimeSecond: number;
   /** clans */
-  joined_clans: number[];
+  joinedClans: number[];
   // app url
-  app_url: string;
+  appUrl: string;
   // is bot
-  is_bot: boolean;
+  isBot: boolean;
 }
 
 /** UserChannelAddedEvent */
 export interface UserChannelAddedEvent {
   // the channel id
-  channel_desc: ChannelDescription;
+  channelDesc: ChannelDescription;
   // the user
   users: UserProfileRedis[];
   // the custom status
   status: string;
   // the clan id
-  clan_id: string;
+  clanId: string;
   //
   caller: UserProfileRedis;
   //
-  create_time_second: number;
+  createTimeSecond: number;
   //
   active: number;
 }
 
 export interface UserChannelRemovedEvent {
   // the channel id
-  channel_id: string;
-  // the user_id
-  user_ids: string[];
+  channelId: string;
+  // the userId
+  userIds: string[];
   // the channel type
-  channel_type: number;
+  channelType: number;
   // the clan id
-  clan_id: string;
-  // badge_count
-  badge_counts: number[];
+  clanId: string;
+  // badgeCount
+  badgeCounts: number[];
 }
 
 export interface UserClanRemovedEvent {
   // the clan id
-  clan_id: string;
-  // the user_id
-  user_ids: string[];
+  clanId: string;
+  // the userId
+  userIds: string[];
 }
 
 /** Last seen message by user */
 export interface LastPinMessageEvent {
   /** The channel this message belongs to. */
-  channel_id: string;
+  channelId: string;
   // The mode
   mode: number;
   // The channel label
-  channel_label: string;
+  channelLabel: string;
   /** The unique ID of this message. */
-  message_id: string;
+  messageId: string;
   /** user id */
-  user_id: string;
+  userId: string;
   /** operation */
   operation: number;
   // Is public
-  is_public: boolean;
+  isPublic: boolean;
   // clan Id
-  clan_id: string;
+  clanId: string;
   // avatar
-  message_sender_avatar: string;
+  messageSenderAvatar: string;
   // message sender id
-  message_sender_id: string;
+  messageSenderId: string;
   // message sender username
-  message_sender_username: string;
+  messageSenderUsername: string;
   // message content
-  message_content: string;
+  messageContent: string;
   // attachment
-  message_attachment: string;
+  messageAttachment: string;
   // create time
-  message_created_time: string;
+  messageCreatedTime: string;
 }
 
 export interface UnmuteEvent {
   // channel id
-  channel_id: string;
-  // category_id
-  category_id: string;
-  // clan_id
-  clan_id: string;
+  channelId: string;
+  // categoryId
+  categoryId: string;
+  // clanId
+  clanId: string;
 }
 
 /** Last seen message by user */
 export interface LastSeenMessageEvent {
   // The clan id
-  clan_id: string;
+  clanId: string;
   /** The channel this message belongs to. */
-  channel_id: string;
+  channelId: string;
   // The mode
   mode: number;
   // The channel label
-  channel_label: string;
+  channelLabel: string;
   /** The unique ID of this message. */
-  message_id: string;
+  messageId: string;
   //
-  badge_count: number;
+  badgeCount: number;
 }
 
 /** User is typing */
 export interface MessageTypingEvent {
   /** The channel this message belongs to. */
-  channel_id: string;
+  channelId: string;
   // The mode
   mode: number;
   // The channel label
-  channel_label: string;
+  channelLabel: string;
   /** Message sender, usually a user ID. */
-  sender_id: string;
+  senderId: string;
   // Is public
-  is_public: boolean;
+  isPublic: boolean;
   // sender username
-  sender_username: string;
+  senderUsername: string;
   // sender display name
-  sender_display_name: string;
+  senderDisplayName: string;
   // topic id
-  topic_id?: string;
+  topicId?: string;
 }
 
 // user profile updated event
 export interface UserProfileUpdatedEvent {
   // the user id
-  user_id: string;
-  // the display_name
-  display_name: string;
+  userId: string;
+  // the displayName
+  displayName: string;
   // the avatar
   avatar: string;
-  // the about_me
-  about_me: string;
-  // the channel_id
-  channel_id: string;
-  // the clan_id
-  clan_id: string;
-  // the encrypt_private_key
-  encrypt_private_key: string;
+  // the aboutMe
+  aboutMe: string;
+  // the channelId
+  channelId: string;
+  // the clanId
+  clanId: string;
+  // the encryptPrivateKey
+  encryptPrivateKey: string;
 }
 
 /** An acknowledgement received in response to sending a message on a chat channel. */
 export interface ChannelMessageAck {
   /** The server-assigned channel ID. */
-  channel_id: string;
+  channelId: string;
   // The mode
   mode: number;
   /** A unique ID for the chat message. */
-  message_id: string;
+  messageId: string;
   /** A user-defined code for the chat message. */
   code: number;
   /** The username of the sender of the message. */
   username: string;
   /** The UNIX time when the message was created. */
-  create_time: string;
+  createTime: string;
   /** The UNIX time when the message was updated. */
-  update_time: string;
+  updateTime: string;
   /** True if the chat message has been stored in history. */
   persistence: boolean;
 }
@@ -367,13 +372,13 @@ export interface ChannelMessageAck {
 interface ChannelMessageSend {
   channel_message_send: {
     /** Clan Id */
-    clan_id: string;
+    clanId: string;
     /** The server-assigned channel ID. */
-    channel_id: string;
+    channelId: string;
     // The mode
     mode: number;
     // channel label
-    channel_label: string;
+    channelLabel: string;
     /** The content payload. */
     content: any;
     //
@@ -381,38 +386,38 @@ interface ChannelMessageSend {
     //
     attachments?: Array<ApiMessageAttachment>;
     //
-    anonymous_message?: boolean;
+    anonymousMessage?: boolean;
     //
-    mention_everyone?: boolean;
+    mentionEveryone?: boolean;
     //
     avatar: string;
     // Is public
-    is_public: boolean;
+    isPublic: boolean;
     // code
     code: number;
     //
-    topic_id?: string;
+    topicId?: string;
   };
 }
 
 interface TransferOwnershipEvent {
-  clan_id: string;
-  prev_owner: string;
-  curr_owner: string;
+  clanId: string;
+  prevOwner: string;
+  currOwner: string;
 }
 
 interface QuickMenuEvent {
   quick_menu_event: {
-    menu_name: string,
+    menuName: string;
     message: {
       /** Clan Id */
-      clan_id: string;
+      clanId: string;
       /** The server-assigned channel ID. */
-      channel_id: string;
+      channelId: string;
       // The mode
       mode: number;
       // channel label
-      channel_label: string;
+      channelLabel: string;
       /** The content payload. */
       content: any;
       //
@@ -420,33 +425,33 @@ interface QuickMenuEvent {
       //
       attachments?: Array<ApiMessageAttachment>;
       //
-      anonymous_message?: boolean;
+      anonymousMessage?: boolean;
       //
-      mention_everyone?: boolean;
+      mentionEveryone?: boolean;
       //
       avatar: string;
       // Is public
-      is_public: boolean;
+      isPublic: boolean;
       // code
       code: number;
       //
-      topic_id?: string;
-    }
-  }
+      topicId?: string;
+    };
+  };
 }
 
 interface EphemeralMessageSend {
   ephemeral_message_send: {
-    receiver_id: string,
+    receiverId: string;
     message: {
       /** Clan Id */
-      clan_id: string;
+      clanId: string;
       /** The server-assigned channel ID. */
-      channel_id: string;
+      channelId: string;
       // The mode
       mode: number;
       // channel label
-      channel_label: string;
+      channelLabel: string;
       /** The content payload. */
       content: any;
       //
@@ -454,28 +459,28 @@ interface EphemeralMessageSend {
       //
       attachments?: Array<ApiMessageAttachment>;
       //
-      anonymous_message?: boolean;
+      anonymousMessage?: boolean;
       //
-      mention_everyone?: boolean;
+      mentionEveryone?: boolean;
       //
       avatar: string;
       // Is public
-      is_public: boolean;
+      isPublic: boolean;
       // code
       code: number;
       //
-      topic_id?: string;
-    }
-  }
+      topicId?: string;
+    };
+  };
 }
 
 /** Update a message previously sent to a realtime chat channel. */
 interface ChannelMessageUpdate {
   channel_message_update: {
     /** The server-assigned channel ID. */
-    channel_id: string;
+    channelId: string;
     /** A unique ID for the chat message to be updated. */
-    message_id: string;
+    messageId: string;
     /** The content payload. */
     content: any;
     /** mentions */
@@ -485,13 +490,13 @@ interface ChannelMessageUpdate {
     /** The mode payload. */
     mode: number;
     // Is public
-    is_public: boolean;
+    isPublic: boolean;
     //
-    topic_id?: string;
+    topicId?: string;
     //
-    is_update_msg_topic?: boolean;
+    isUpdateMsgTopic?: boolean;
     //
-    old_mentions?: string;
+    oldMentions?: string;
   };
 }
 
@@ -499,21 +504,21 @@ interface ChannelMessageUpdate {
 interface ChannelMessageRemove {
   channel_message_remove: {
     /** The clan id */
-    clan_id: string;
+    clanId: string;
     /** The server-assigned channel ID. */
-    channel_id: string;
+    channelId: string;
     // The mode
     mode: number;
     // The channel label
-    channel_label: string;
+    channelLabel: string;
     /** A unique ID for the chat message to be removed. */
-    message_id: string;
+    messageId: string;
     // Is public
-    is_public: boolean;
+    isPublic: boolean;
     /** attachments */
-    has_attachment?: boolean;
+    hasAttachment?: boolean;
     //
-    topic_id?: string;
+    topicId?: string;
     // mentions
     mentions: string;
     // references
@@ -524,9 +529,9 @@ interface ChannelMessageRemove {
 /** Presence update for a particular realtime chat channel. */
 export interface ChannelPresenceEvent {
   /** The unique identifier of the chat channel. */
-  channel_id: string;
+  channelId: string;
   // The channel name
-  channel_label: string;
+  channelLabel: string;
   // The mode
   mode: number;
   /** Presences of the users who joined the channel. */
@@ -539,192 +544,192 @@ export interface VoiceEndedEvent {
   // id voice
   id: string;
   // The unique identifier of the chat clan.
-  clan_id: string;
+  clanId: string;
   // voice channel name
-  voice_channel_id: string;
+  voiceChannelId: string;
 }
 
 export interface VoiceStartedEvent {
   // id voice
   id: string;
   // The unique identifier of the chat clan.
-  clan_id: string;
+  clanId: string;
   // voice channel name
-  voice_channel_id: string;
+  voiceChannelId: string;
 }
 
 export interface VoiceLeavedEvent {
   // event id
   id: string;
   // clan id
-  clan_id: string;
+  clanId: string;
   // voice channel name
-  voice_channel_id: string;
+  voiceChannelId: string;
   // voice user id
-  voice_user_id: string;
+  voiceUserId: string;
 }
 
 export interface VoiceJoinedEvent {
   /** The unique identifier of the chat channel. */
-  clan_id: string;
+  clanId: string;
   // The channel name
-  clan_name: string;
+  clanName: string;
   // id voice
   id: string;
   // voice participant
   participant: string;
   // user id
-  user_id: string;
+  userId: string;
   // voice channel label
-  voice_channel_label: string;
+  voiceChannelLabel: string;
   // voice channel id
-  voice_channel_id: string;
+  voiceChannelId: string;
   // last screenshot
-  last_screenshot: string;
+  lastScreenshot: string;
 }
 
 export interface CustomStatusEvent {
   // the clan id
-  clan_id: string;
+  clanId: string;
   // the user id
-  user_id: string;
+  userId: string;
   // username
   username: string;
   // the status
   status: string;
   /** time reset */
-  time_reset: number;
+  timeReset: number;
   /** no clear */
-  no_clear: boolean;
+  noClear: boolean;
 }
 
 export interface UnpinMessageEvent {
   id: string;
-  message_id: string;
-  channel_id: string;
-  clan_id: string;
+  messageId: string;
+  channelId: string;
+  clanId: string;
 }
 
 export interface ChannelUpdatedEvent {
   // clan id
-  clan_id: string;
+  clanId: string;
   // category
-  category_id: string;
+  categoryId: string;
   // creator
-  creator_id: string;
-  // parent_id
-  parent_id: string;
+  creatorId: string;
+  // parentId
+  parentId: string;
   // channel id
-  channel_id: string;
+  channelId: string;
   // channel label
-  channel_label: string;
+  channelLabel: string;
   // channel type
-  channel_type: number;
+  channelType: number;
   // status
   status: number;
   // meeting code
-  meeting_code: string;
+  meetingCode: string;
   // channel private
-  channel_private: number;
+  channelPrivate: number;
   // is error
-  is_error: boolean;
+  isError: boolean;
   // app url
-  app_id: string;
+  appId: string;
   // e2ee
   e2ee: number;
   //
   topic: string;
   //
-  age_restricted: number;
+  ageRestricted: number;
   //
-  is_active_thread: boolean;
+  isActiveThread: boolean;
   //
   active: number;
   //
-  count_mess_unread: number;
+  countMessUnread: number;
   //
-  role_ids?: Array<string>;
+  roleIds?: Array<string>;
   // The users to add.
-  user_ids?: Array<string>;
+  userIds?: Array<string>;
   // channel avatar
-  channel_avatar: string;
+  channelAvatar: string;
 }
 
 export interface DeleteAccountEvent {
   // user id
-  user_id: string;
+  userId: string;
 }
 
 export interface ChannelCreatedEvent {
   // clan id
-  clan_id: string;
+  clanId: string;
   // category
-  category_id: string;
+  categoryId: string;
   // creator
-  creator_id: string;
-  // parent_id
-  parent_id: string;
+  creatorId: string;
+  // parentId
+  parentId: string;
   // channel id
-  channel_id: string;
+  channelId: string;
   // channel label
-  channel_label: string;
+  channelLabel: string;
   // channel private
-  channel_private: number;
+  channelPrivate: number;
   // channel type
-  channel_type: number;
+  channelType: number;
   // status
   status: number;
   // app url
-  app_id: string;
-  // clan_name
-  clan_name: string;
+  appId: string;
+  // clanName
+  clanName: string;
   // channel avatar
-  channel_avatar: string;
+  channelAvatar: string;
 }
 
 export interface CategoryEvent {
   // clan id
-  clan_id: string;
+  clanId: string;
   // category
   id: string;
   // creator
-  creator_id: string;
-  // category_name
-  category_name: string;
+  creatorId: string;
+  // categoryName
+  categoryName: string;
   // status
   status: number;
 }
 
 export interface ChannelDeletedEvent {
   // clan id
-  clan_id: string;
+  clanId: string;
   // category
-  category_id: string;
+  categoryId: string;
   // channel id
-  channel_id: string;
+  channelId: string;
   // deletor
   deletor: string;
   // parent id
-  parent_id: string;
+  parentId: string;
 }
 
 export interface StickerCreateEvent {
   // clan id
-  clan_id: string;
+  clanId: string;
   // source
   source: string;
   // shortname
   shortname: string;
   // category
   category: string;
-  // creator_id
-  creator_id: string;
+  // creatorId
+  creatorId: string;
   // sticker id
   sticker_id: string;
   // logo
   logo: string;
   // clan name
-  clan_name: string;
+  clanName: string;
 }
 
 export interface StickerUpdateEvent {
@@ -733,19 +738,19 @@ export interface StickerUpdateEvent {
   // sticker id
   sticker_id: string;
   // user id update
-  user_id: string;
+  userId: string;
 }
 
 export interface StickerDeleteEvent {
   // sticker id
   sticker_id: string;
   // user id delete
-  user_id: string;
+  userId: string;
 }
 
 export interface ClanDeletedEvent {
   // clan id
-  clan_id: string;
+  clanId: string;
   // deletor
   deletor: string;
 }
@@ -753,9 +758,9 @@ export interface ClanDeletedEvent {
 // clan updated event
 export interface ClanUpdatedEvent {
   // clan id
-  clan_id: string;
+  clanId: string;
   // clan name
-  clan_name: string;
+  clanName: string;
   // logo
   logo: string;
   // banner
@@ -763,38 +768,38 @@ export interface ClanUpdatedEvent {
   // status
   status: number;
   // is onboarding
-  is_onboarding: boolean;
+  isOnboarding: boolean;
   // welcome channel id
-  welcome_channel_id: string;
-  // onboarding_banner.
-  onboarding_banner: string;
+  welcomeChannelId: string;
+  // onboardingBanner.
+  onboardingBanner: string;
   // about
   about: string;
   // prevent anonymous
-  prevent_anonymous: boolean;
+  preventAnonymous: boolean;
 }
 
 export interface ClanProfileUpdatedEvent {
   // the user id
-  user_id: string;
-  // the clan_nick
-  clan_nick: string;
+  userId: string;
+  // the clanNick
+  clanNick: string;
   // the avatar
-  clan_avatar: string;
-  // the clan_id
-  clan_id: string;
+  clanAvatar: string;
+  // the clanId
+  clanId: string;
 }
 
-export interface MeetParticipantEvent { 
+export interface MeetParticipantEvent {
   username: string;
-  room_name: string;
-  channel_id: string;
-  clan_id: string;
+  roomName: string;
+  channelId: string;
+  clanId: string;
   action: number;
 }
 
 export interface AllowAnonymousEvent {
-  clan_id: string;
+  clanId: string;
   allow: boolean;
 }
 
@@ -849,7 +854,7 @@ export interface Status {
 /** Start receiving status updates for some set of users. */
 interface StatusFollow {
   /** The IDs of the users to follow. */
-  status_follow: { user_ids: string[] };
+  status_follow: { userIds: string[] };
 }
 
 /** A batch of status updates for a given user. */
@@ -863,7 +868,7 @@ export interface StatusPresenceEvent {
 /** Stop receiving status updates for some set of users. */
 interface StatusUnfollow {
   /** The IDs of user to unfollow. */
-  status_unfollow: { user_ids: string[] };
+  statusUnfollow: { userIds: string[] };
 }
 
 /** Set the user's own status. */
@@ -872,11 +877,11 @@ interface StatusUpdate {
   status_update: { status?: string };
 }
 export interface CheckNameExistedEvent {
-  clan_name: string;
+  clanName: string;
   exist: boolean;
   condition_id: string;
   type: number;
-  clan_id: string;
+  clanId: string;
 }
 
 /**  */
@@ -884,11 +889,11 @@ export interface ClanSticker {
   //
   category?: string;
   //
-  clan_id?: string;
+  clanId?: string;
   //
-  create_time?: string;
+  createTime?: string;
   //
-  creator_id?: string;
+  creatorId?: string;
   //
   id?: string;
   //
@@ -898,32 +903,32 @@ export interface ClanSticker {
   //
   logo?: string;
   //
-  clan_name?: string;
+  clanName?: string;
   //
-  is_for_sale?: boolean;
+  isForSale?: boolean;
 }
 
 export interface RoleEvent {
   role: ApiRole;
   status: number;
-  user_id: string;
-  user_add_ids: Array<string>;
-  user_remove_ids: Array<string>;
-  active_permission_ids: Array<string>;
-  remove_permission_ids: Array<string>;
+  userId: string;
+  userAddIds: Array<string>;
+  userRemoveIds: Array<string>;
+  activePermissionIds: Array<string>;
+  removePermissionIds: Array<string>;
 }
 
 export interface EventEmoji {
   id: string;
-  clan_id: string;
-  short_name: string;
+  clanId: string;
+  shortName: string;
   source: string;
   category: string;
   action: number;
-  user_id: string;
+  userId: string;
   logo: string;
-  clan_name: string;
-  is_for_sale: boolean;
+  clanName: string;
+  isForSale: boolean;
 }
 
 /**  */
@@ -931,7 +936,7 @@ export interface ClanEmoji {
   //
   category?: string;
   //
-  creator_id?: string;
+  creatorId?: string;
   //
   id?: string;
   //
@@ -941,128 +946,128 @@ export interface ClanEmoji {
   //
   logo?: string;
   //
-  clan_name?: string;
+  clanName?: string;
   //
-  clan_id?: string;
+  clanId?: string;
   //
-  is_for_sale?: boolean;
+  isForSale?: boolean;
 }
 
 /**  */
 export interface ChannelDescription {
   // The clan of this channel
-  clan_id?: string;
+  clanId?: string;
   // The channel this message belongs to.
-  channel_id?: string;
+  channelId?: string;
   // The channel type.
   type?: number;
   // The channel lable
-  channel_label?: string;
+  channelLabel?: string;
   // The app url
-  app_url?: string;
+  appUrl?: string;
   // The channel private
-  channel_private?: number;
+  channelPrivate?: number;
   // meeting code
-  meeting_code?: string;
+  meetingCode?: string;
   //
-  clan_name?: string;
+  clanName?: string;
   //
-  parent_id?: string;
+  parentId?: string;
   //
-  last_sent_message?: ApiChannelMessageHeader;
+  lastSentMessage?: ApiChannelMessageHeader;
 }
 
 // hashtagDM
 export interface HashtagDm {
   // The channel id.
-  channel_id?: string;
+  channelId?: string;
   // The channel lable
-  channel_label?: string;
+  channelLabel?: string;
   // The clan of this channel
-  clan_id?: string;
+  clanId?: string;
   // The clan name
-  clan_name?: string;
+  clanName?: string;
   //
-  meeting_code?: string;
+  meetingCode?: string;
   //
   type?: number;
   //
-  channel_private?: number;
+  channelPrivate?: number;
   //
-  parent_id?: string;
+  parentId?: string;
 }
 
 export interface NotificationSetting {
   //
   id?: string;
   //
-  notification_setting_type?: number;
+  notificationSettingType?: number;
 }
 
 export interface NotificationChannelCategorySetting {
   // Notification id
   id: string;
   //
-  channel_category_label: string;
+  channelCategoryLabel: string;
   // Notification title
-  notification_setting_type: number;
+  notificationSettingType: number;
   //
-  channel_category_title: string;
+  channelCategoryTitle: string;
   //
   action: number;
 }
 
 export interface UserEmojiUsage {
-  user_id: string;
-  emoji_id: string;
-  clan_id: string;
-  create_time: string;
+  userId: string;
+  emojiId: string;
+  clanId: string;
+  createTime: string;
 }
 
 export interface AddFriend {
   //
-  user_id: string;// user id
+  userId: string; // user id
   // username
   username: string;
   // display name
-  display_name: string;
+  displayName: string;
   // avatar
   avatar: string;
 }
 export interface RemoveFriend {
   //
-  user_id: string;
+  userId: string;
 }
 
 export interface BlockFriend {
   //
-  user_id: string;
+  userId: string;
 }
 
 export interface UnblockFriend {
   //
-  user_id: string;
+  userId: string;
   //
   username: string;
   //
   avatar: string;
   //
-  display_name: string;
+  displayName: string;
   //
   status: string;
   //
-  user_status: string;
+  userStatus: string;
 }
 
 export interface AddUserEmojiUsageEvent {
-  emoji_id: string;
-  clan_id: string;
+  emojiId: string;
+  clanId: string;
 }
 
 /** Response cho ListUserEmojiUsage */
 export interface GetUserEmojiUsageEvent {
   clanId: string;
-  user_emoji_usage: Array<UserEmojiUsage>;
+  userEmojiUsage: Array<UserEmojiUsage>;
 }
 
 /** On role assign */
@@ -1070,11 +1075,11 @@ export interface RoleAssignedEvent {
   /** The clan of this role */
   ClanId: string;
   /** Role ID */
-  role_id: string;
+  roleId: string;
   /** UserIds Assigned */
-  user_ids_assigned: string[];
+  userIdsAssigned: string[];
   /** UserIds Removed */
-  user_ids_removed: string[];
+  userIdsRemoved: string[];
 }
 
 /** Streaming Joined event */
@@ -1082,144 +1087,144 @@ export interface StreamingLeavedEvent {
   /** id */
   id: string;
   /** The unique identifier of the chat clan. */
-  clan_id: string;
+  clanId: string;
   /** streaming channel name */
-  streaming_channel_id: string;
-  /** streaming user_id */
-  streaming_user_id: string;
+  streamingChannelId: string;
+  /** streaming userId */
+  streamingUserId: string;
 }
 
 /** Streaming Joined event */
 export interface StreamingJoinedEvent {
   /** The unique identifier of the chat clan. */
-  clan_id: string;
+  clanId: string;
   /** The channel name */
-  clan_name: string;
+  clanName: string;
   /** id streaming */
   id: string;
   /** streaming participant */
   participant: string;
   /** user id */
-  user_id: string;
+  userId: string;
   /** streaming channel label */
-  streaming_channel_label: string;
+  streamingChannelLabel: string;
   /** streaming channel id */
-  streaming_channel_id: string;
+  streamingChannelId: string;
 }
 
 /** Streaming start event */
 export interface StreamingStartedEvent {
   /** clan id */
-  clan_id: string;
+  clanId: string;
   /** channel id */
-  channel_id: string;
+  channelId: string;
   /** stream url */
-  streaming_url: string;
+  streamingUrl: string;
   /** status */
-  is_streaming: boolean;
+  isStreaming: boolean;
 }
 
 /** Streaming start event */
 export interface StreamingEndedEvent {
   /** clan id */
-  clan_id: string;
+  clanId: string;
   /** channel id */
-  channel_id: string;
+  channelId: string;
 }
 
 export interface ChannelAppEvent {
-  user_id: string;
+  userId: string;
   username: string;
-  clan_id: string;
-  channel_id: string;
+  clanId: string;
+  channelId: string;
   action: number;
 }
 
 export interface HandleParticipantMeetStateEvent {
   /** clan id */
-  clan_id: string;
+  clanId: string;
   /** channel id */
-  channel_id: string;
+  channelId: string;
   /** display name */
-  display_name: string;
+  displayName: string;
   /** state (0: join, 1: leave) */
   state: number;
   /** room name */
-  room_name: string;
+  roomName: string;
 }
 
 export interface PermissionSet {
   /** Role ID */
-  role_id: string;
+  roleId: string;
   /** User ID */
-  user_id: string;
+  userId: string;
   /** Channel ID */
-  channel_id: string;
+  channelId: string;
   /** List permission update */
-  permission_updates: ApiPermissionUpdate[];
+  permissionUpdates: ApiPermissionUpdate[];
   /**  */
   caller: string;
 }
 
 export interface PermissionChangedEvent {
-  user_id: string;
-  channel_id: string;
-  add_permissions: ApiPermissionUpdate[];
-  remove_permissions: ApiPermissionUpdate[];
-  default_permissions: ApiPermissionUpdate[];
+  userId: string;
+  channelId: string;
+  addPermissions: ApiPermissionUpdate[];
+  removePermissions: ApiPermissionUpdate[];
+  defaultPermissions: ApiPermissionUpdate[];
 }
 
 export interface DropdownBoxSelected {
-  message_id: string;
-  channel_id: string;
-  selectbox_id: string;
-  sender_id: string;
-  user_id: string;
+  messageId: string;
+  channelId: string;
+  selectboxId: string;
+  senderId: string;
+  userId: string;
   value: Array<string>;
 }
 
 export interface MessageButtonClicked {
-  message_id: string;
-  channel_id: string;
-  button_id: string;
-  sender_id: string;
-  user_id: string;
-  extra_data: string;
+  messageId: string;
+  channelId: string;
+  buttonId: string;
+  senderId: string;
+  userId: string;
+  extraData: string;
 }
 
 export interface IncomingCallPush {
-  receiver_id: string;
-  json_data: string;
-  channel_id: string;
-  caller_id: string;
+  receiverId: string;
+  jsonData: string;
+  channelId: string;
+  callerId: string;
 }
 
 export interface VoiceReactionSend {
   // list emojis
   emojis: Array<string>;
-  // channel_id
-  channel_id: string;
+  // channelId
+  channelId: string;
   // sender id
-  sender_id: string;
+  senderId: string;
   // media type
-  media_type: number;
+  mediaType: number;
 }
 
 export interface MarkAsRead {
-   // channel id
-  channel_id: string;
-  // category_id
-  category_id: string;
+  // channel id
+  channelId: string;
+  // categoryId
+  categoryId: string;
   // clan id
-  clan_id: string;
+  clanId: string;
 }
 
 export interface WebrtcSignalingFwd {
-  receiver_id: string;
-  data_type: number;
-  json_data: string;
-  channel_id: string;
-  caller_id: string;
+  receiverId: string;
+  dataType: number;
+  jsonData: string;
+  channelId: string;
+  callerId: string;
 }
 
 export interface ListActivity {
@@ -1228,22 +1233,22 @@ export interface ListActivity {
 
 export interface SdTopicEvent {
   id: string;
-  clan_id: string;
-  channel_id: string;
-  message_id: string;
-  user_id: string;
-  last_sent_message?: ApiChannelMessageHeader;
+  clanId: string;
+  channelId: string;
+  messageId: string;
+  userId: string;
+  lastSentMessage?: ApiChannelMessageHeader;
   message?: ApiChannelMessage;
 }
 
 export interface UserStatusEvent {
-  user_id: string;
-  custom_status: string;
+  userId: string;
+  customStatus: string;
 }
 
 export interface JoinChannelAppData {
-  user_id : string;
-  username : string;
+  userId: string;
+  username: string;
   hash: string;
 }
 
@@ -1252,17 +1257,17 @@ export interface ChannelCanvas {
   //
   content?: string;
   //
-  creator_id?: string;
+  creatorId?: string;
   //
-  editor_id?: string;
+  editorId?: string;
   //
   id?: string;
   //
-  is_default?: boolean;
+  isDefault?: boolean;
   //
   title?: string;
   //
-  channel_id?: string;
+  channelId?: string;
   //
   status?: number;
 }
@@ -1278,7 +1283,7 @@ export interface ListDataSocket {
   list_channel_users_uc_req?: any;
   channel_users_uc_list?: ApiAllUsersAddChannelResponse;
   list_channel_detail_req?: any;
-  channel_desc?: ApiChannelDescription;
+  channelDesc?: ApiChannelDescription;
   list_channel_req?: any;
   list_channel_message_req?: any;
   channel_message_list?: ApiChannelMessageList;
@@ -1290,7 +1295,7 @@ export interface ListDataSocket {
   hashtag_dm_req?: any;
   hashtag_dm_list?: ApiHashtagDmList;
   channel_setting_req?: any;
-  channel_setting_list?: ApiChannelSettingListResponse;
+  channelSettingList?: ApiChannelSettingListResponse;
   favorite_channel_req?: any;
   favorite_channel_list?: ApiListFavoriteChannelResponse;
   search_thread_req?: any;
@@ -1310,9 +1315,9 @@ export interface ListDataSocket {
   webhook_list_req?: any;
   webhook_list?: ApiWebhookListResponse;
   permission_list_req?: any;
-  permission_list?: ApiPermissionList;
+  permissionList?: ApiPermissionList;
   role_user_req?: any;
-  role_user_list?: ApiRoleUserList;
+  roleUserList?: ApiRoleUserList;
   permission_user_req?: any;
   role_list?: ApiRoleList;
   role_list_event_req?: any;
@@ -1321,7 +1326,7 @@ export interface ListDataSocket {
   user_permission_list?: ApiUserPermissionInChannelListResponse;
   permission_role_req?: any;
   permission_role_list?: ApiPermissionRoleChannelListEventResponse;
-  emoji_list?: ApiEmojiListedResponse;
+  emojiList?: ApiEmojiListedResponse;
   list_friend_req?: any;
   friend_list?: ApiFriendList;
   list_apps_req?: any;
@@ -1329,8 +1334,8 @@ export interface ListDataSocket {
   user_activity_list?: ApiListUserActivity;
 }
 
-function CreateChannelMessageFromEvent(message: any) {
-  var content, reactions, mentions, attachments, references, referencedMessags;
+function createChannelMessageFromEvent(message: any) {
+  var content, reactions, mentions, attachments, references, referencedMessage;
   try {
     content = safeJSONParse(message.channel_message.content);
   } catch (e) {
@@ -1342,57 +1347,66 @@ function CreateChannelMessageFromEvent(message: any) {
     console.log("reactions is invalid", e);
   }
   try {
-    mentions = safeJSONParse(message.channel_message.mentions);
+    mentions =
+      decodeMentions(message.channel_message.mentions)?.mentions ||
+      safeJSONParse(message.channel_message.mentions || "[]");
   } catch (e) {
     console.log("mentions is invalid", e);
   }
   try {
-    attachments = safeJSONParse(message.channel_message.attachments);
+    attachments =
+      decodeAttachments(message.channel_message.attachments)?.attachments ||
+      safeJSONParse(message.channel_message.attachments || "[]");
   } catch (e) {
     console.log("attachments is invalid", e);
   }
   try {
-    references = safeJSONParse(message.channel_message.references);
+    references =
+      (decodeRefs(message.channel_message.references)
+        ?.refs as unknown as ApiMessageRef[]) ||
+      safeJSONParse(message.channel_message.references || "[]");
   } catch (e) {
     console.log("references is invalid", e);
   }
   try {
-    referencedMessags = safeJSONParse(message.channel_message.referenced_message);
+    referencedMessage = safeJSONParse(
+      message.channel_message.referenced_message
+    );
   } catch (e) {
     console.log("referenced messages is invalid", e);
   }
-  var e: ChannelMessage = {
+  var channelMessage: ChannelMessage = {
     id: message.id || message.channel_message.message_id,
     avatar: message.channel_message.avatar,
-    channel_id: message.channel_message.channel_id,
+    channelId: message.channel_message.channel_id,
     mode: message.channel_message.mode,
-    channel_label: message.channel_message.channel_label,
-    clan_id: message.channel_message.clan_id,
+    channelLabel: message.channel_message.channel_label,
+    clanId: message.channel_message.clan_id,
     code: message.channel_message.code,
-    create_time: message.channel_message.create_time,
-    message_id: message.channel_message.message_id,
-    sender_id: message.channel_message.sender_id,
-    update_time: message.channel_message.update_time,
-    clan_logo: message.channel_message.clan_logo,
-    category_name: message.channel_message.category_name,
+    messageId: message.channel_message.message_id,
+    senderId: message.channel_message.sender_id,
+    clanLogo: message.channel_message.clan_logo,
+    categoryName: message.channel_message.category_name,
     username: message.channel_message.username,
-    clan_nick: message.channel_message.clan_nick,
-    clan_avatar: message.channel_message.clan_avatar,
-    display_name: message.channel_message.display_name,
+    clanNick: message.channel_message.clan_nick,
+    clanAvatar: message.channel_message.clan_avatar,
+    displayName: message.channel_message.display_name,
     content: content,
     reactions: reactions,
     mentions: mentions,
     attachments: attachments,
-    referenced_message: referencedMessags,
+    referencedMessage: referencedMessage,
     references: references,
-    hide_editted: message.channel_message.hide_editted,
-    is_public: message.channel_message.is_public,
-    create_time_seconds: message.channel_message.create_time_seconds,
-    update_time_seconds: message.channel_message.update_time_seconds,
-    topic_id: message.channel_message.topic_id,
+    hideEditted: message.channel_message.hide_editted,
+    isPublic: message.channel_message.is_public,
+    createTime: message.channel_message.create_time,
+    updateTime: message.channel_message.update_time,
+    createTimeSeconds: message.channel_message.create_time_seconds,
+    updateTimeSeconds: message.channel_message.update_time_seconds,
+    topicId: message.channel_message.topic_id,
   };
 
-  return e;
+  return channelMessage;
 }
 
 /** A socket connection to Mezon server. */
@@ -1413,71 +1427,71 @@ export interface Socket {
   disconnect(fireDisconnectEvent: boolean): void;
 
   /** Subscribe to one or more users for their status updates. */
-  followUsers(user_ids: string[]): Promise<Status>;
+  followUsers(userIds: string[]): Promise<Status>;
 
   /** Join clan chat */
-  joinClanChat(clan_id: string): Promise<ClanJoin>;
+  joinClanChat(clanId: string): Promise<ClanJoin>;
 
   follower(): Promise<void>;
 
   /** Join a chat channel on the server. */
   joinChat(
-    clan_id: string,
-    channel_id: string,
-    channel_type: number,
-    is_public: boolean
+    clanId: string,
+    channelId: string,
+    channelType: number,
+    isPublic: boolean
   ): Promise<Channel>;
 
   /** Leave a chat channel on the server. */
   leaveChat(
-    clan_id: string,
-    channel_id: string,
-    channel_type: number,
-    is_public: boolean
+    clanId: string,
+    channelId: string,
+    channelType: number,
+    isPublic: boolean
   ): Promise<void>;
 
   /** handle user join/leave channel voice on the server. */
-  handleParticipantMeetState (
-    clan_id: string,
-    channel_id: string,
-    display_name: string,
+  handleParticipantMeetState(
+    clanId: string,
+    channelId: string,
+    displayName: string,
     state: number,
-    room_name: string
-  ): Promise<void> 
+    roomName: string
+  ): Promise<void>;
 
   /** Remove a chat message from a chat channel on the server. */
   removeChatMessage(
-    clan_id: string,
-    channel_id: string,
+    clanId: string,
+    channelId: string,
     mode: number,
-    is_public: boolean,
-    message_id: string,
-    has_attachment?: boolean,
-    topic_id?: string,
-    mentions?:string,
+    isPublic: boolean,
+    messageId: string,
+    hasAttachment?: boolean,
+    topicId?: string,
+    mentions?: string,
     references?: string
   ): Promise<ChannelMessageAck>;
 
   /** Execute an RPC function to the server. */
-  rpc(id?: string, payload?: string, http_key?: string): Promise<ApiRpc>;
+  rpc(id?: string, payload?: string, httpKey?: string): Promise<ApiRpc>;
 
   /** Unfollow one or more users from their status updates. */
-  unfollowUsers(user_ids: string[]): Promise<void>;
+  unfollowUsers(userIds: string[]): Promise<void>;
 
   /** Update a chat message on a chat channel in the server. */
   updateChatMessage(
-    clan_id: string,
-    channel_id: string,
+    clanId: string,
+    channelId: string,
     mode: number,
-    is_public: boolean,
-    message_id: string,
+    isPublic: boolean,
+    messageId: string,
     content: any,
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
     hideEditted?: boolean,
-    topic_id?: string,
-    is_update_msg_topic?: boolean,
-    old_mentions?: string
+    topicId?: string,
+    isUpdateMsgTopic?: boolean,
+    oldMentions?: string
   ): Promise<ChannelMessageAck>;
 
   /** Update the status for the current user online. */
@@ -1485,126 +1499,123 @@ export interface Socket {
 
   /** Send a chat message to a chat channel on the server. */
   writeChatMessage(
-    clan_id: string,
-    channel_id: string,
+    clanId: string,
+    channelId: string,
     mode: number,
-    is_public: boolean,
+    isPublic: boolean,
     content?: any,
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
     references?: Array<ApiMessageRef>,
-    anonymous_message?: boolean,
-    mention_everyone?: boolean,
+    anonymousMessage?: boolean,
+    mentionEveryone?: boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string,
+    topicId?: string,
     id?: string
   ): Promise<ChannelMessageAck>;
 
   /** Send a chat message to a chat channel on the server. */
   writeEphemeralMessage(
-    receiver_id: string,
-    clan_id: string,
-    channel_id: string,
+    receiverId: string,
+    clanId: string,
+    channelId: string,
     mode: number,
-    is_public: boolean,
+    isPublic: boolean,
     content?: any,
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
     references?: Array<ApiMessageRef>,
-    anonymous_message?: boolean,
-    mention_everyone?: boolean,
+    anonymousMessage?: boolean,
+    mentionEveryone?: boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string
+    topicId?: string
   ): Promise<ChannelMessageAck>;
 
   /** Send a quick menu event to a chat channel on the server. */
   writeQuickMenuEvent(
-    menu_name: string,
-    clan_id: string,
-    channel_id: string,
+    menuName: string,
+    clanId: string,
+    channelId: string,
     mode: number,
-    is_public: boolean,
+    isPublic: boolean,
     content?: any,
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
     references?: Array<ApiMessageRef>,
-    anonymous_message?: boolean,
-    mention_everyone?: boolean,
+    anonymousMessage?: boolean,
+    mentionEveryone?: boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string,
+    topicId?: string,
     id?: string
   ): Promise<QuickMenuEvent>;
 
   /** Send message typing */
   writeMessageTyping(
-    clan_id: string,
-    channel_id: string,
+    clanId: string,
+    channelId: string,
     mode: number,
-    is_public: boolean,
-    sender_display_name: string,
-    topic_id?: string
+    isPublic: boolean,
+    senderDisplayName: string,
+    topicId?: string
   ): Promise<MessageTypingEvent>;
 
   /** Send message reaction */
   writeMessageReaction(
     id: string,
-    clan_id: string,
-    channel_id: string,
+    clanId: string,
+    channelId: string,
     mode: number,
-    is_public: boolean,
-    message_id: string,
-    emoji_id: string,
+    isPublic: boolean,
+    messageId: string,
+    emojiId: string,
     emoji: string,
     count: number,
-    message_sender_id: string,
+    messageSenderId: string,
     action_delete: boolean,
-    topic_id?: string,
-    emoji_recent_id?: string,
-    sender_name?: string
+    topicId?: string,
+    emojiRecentId?: string,
+    senderName?: string
   ): Promise<ApiMessageReaction>;
 
   /** Send last seen message */
   writeLastSeenMessage(
-    clan_id: string,
-    channel_id: string,
+    clanId: string,
+    channelId: string,
     mode: number,
-    message_id: string,
-    timestamp_seconds: number,
-    badge_count: number
+    messageId: string,
+    timestampSeconds: number,
+    badgeCount: number
   ): Promise<LastSeenMessageEvent>;
 
   /** Send last pin message */
   writeLastPinMessage(
-    clan_id: string,
-    channel_id: string,
+    clanId: string,
+    channelId: string,
     mode: number,
-    is_public: boolean,
-    message_id: string,
-    timestamp_seconds: number,
+    isPublic: boolean,
+    messageId: string,
+    timestampSeconds: number,
     operation: number,
-    message_sender_avatar: string,
-    message_sender_id: string,
-    message_sender_username: string,
-    message_content: string,
-    message_attachment: string,
-    message_created_time: string,
+    messageSenderAvatar: string,
+    messageSenderId: string,
+    messageSenderUsername: string,
+    messageContent: string,
+    messageAttachment: string,
+    messageCreatedTime: string
   ): Promise<LastPinMessageEvent>;
 
   /** Send custom user status */
   writeCustomStatus(
-    clan_id: string,
+    clanId: string,
     status: string,
-    time_reset: number,
-    no_clear: boolean
+    timeReset: number,
+    noClear: boolean
   ): Promise<CustomStatusEvent>;
 
-  writeActiveArchivedThread(
-    clan_id: string,
-    channel_id: string
-  ): Promise<void>;
+  writeActiveArchivedThread(clanId: string, channelId: string): Promise<void>;
 
   /* Set the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   setHeartbeatTimeoutMs(ms: number): void;
@@ -1618,56 +1629,54 @@ export interface Socket {
     name: string,
     condition_id: string,
     type: number,
-    clan_id: string,
+    clanId: string
   ): Promise<CheckNameExistedEvent>;
 
   handleMessageButtonClick: (
-    message_id: string,
-    channel_id: string,
-    button_id: string,
-    sender_id: string,
-    user_id: string,
-    extra_data: string
+    messageId: string,
+    channelId: string,
+    buttonId: string,
+    senderId: string,
+    userId: string,
+    extraData: string
   ) => Promise<MessageButtonClicked>;
 
   handleDropdownBoxSelected: (
-    message_id: string,
-    channel_id: string,
-    selectbox_id: string,
-    sender_id: string,
-    user_id: string,
+    messageId: string,
+    channelId: string,
+    selectboxId: string,
+    senderId: string,
+    userId: string,
     value: Array<string>
   ) => Promise<DropdownBoxSelected>;
 
   writeVoiceReaction: (
     emojis: Array<string>,
-    channel_id: string
-  ) => Promise<VoiceReactionSend>
+    channelId: string
+  ) => Promise<VoiceReactionSend>;
 
   forwardWebrtcSignaling: (
     receiverId: string,
     dataType: number,
     jsonData: string,
     channelId: string,
-    caller_id: string
+    callerId: string
   ) => Promise<WebrtcSignalingFwd>;
 
   makeCallPush: (
     receiverId: string,
     jsonData: string,
     channelId: string,
-    caller_id: string
+    callerId: string
   ) => Promise<IncomingCallPush>;
 
   writeChannelAppEvent: (
-    clan_id: string,
-    channel_id: string,
+    clanId: string,
+    channelId: string,
     action: number
   ) => Promise<ChannelAppEvent>;
 
-  listDataSocket(
-    request: ListDataSocket
-  ): Promise<any>;
+  listDataSocket(request: ListDataSocket): Promise<any>;
 
   /** Handle disconnect events received from the socket. */
   ondisconnect: (evt: Event) => void;
@@ -1799,7 +1808,9 @@ export interface Socket {
 
   oneventemoji: (event_emoji: EventEmoji) => void;
 
-  oneventnotiuserchannel: (noti_user_channel: ApiNotificationUserChannel) => void;
+  oneventnotiuserchannel: (
+    noti_user_channel: ApiNotificationUserChannel
+  ) => void;
 
   oneventwebhook: (webhook_event: ApiWebhook) => void;
 
@@ -1845,7 +1856,7 @@ export interface Socket {
 
   onjoinchannelappevent: (join_channel_app_data: JoinChannelAppData) => void;
 
-  onunpinmessageevent: (unpin_message_event: UnpinMessageEvent)=> void;
+  onunpinmessageevent: (unpin_message_event: UnpinMessageEvent) => void;
 
   onquickmenuevent: (event: QuickMenuEvent) => void;
 
@@ -1871,7 +1882,8 @@ export const ConnectionState = {
   CONNECTED: "connected",
 } as const;
 
-export type ConnectionStateType = typeof ConnectionState[keyof typeof ConnectionState];
+export type ConnectionStateType =
+  (typeof ConnectionState)[keyof typeof ConnectionState];
 
 export class DefaultSocket implements Socket {
   public static readonly DefaultHeartbeatTimeoutMs = 10000;
@@ -1921,7 +1933,10 @@ export class DefaultSocket implements Socket {
       return Promise.resolve(session);
     }
 
-    if (this._connectionState === ConnectionState.CONNECTING && this._connectPromise) {
+    if (
+      this._connectionState === ConnectionState.CONNECTING &&
+      this._connectPromise
+    ) {
       return this._connectPromise;
     }
 
@@ -1958,178 +1973,239 @@ export class DefaultSocket implements Socket {
             this.onnotification(n);
           });
         } else if (message.voice_started_event) {
-          this.onvoicestarted(message.voice_started_event);
+          this.onvoicestarted(mapToCamelCase(message.voice_started_event));
         } else if (message.voice_ended_event) {
-          this.onvoiceended(message.voice_ended_event);
+          this.onvoiceended(mapToCamelCase(message.voice_ended_event));
         } else if (message.voice_joined_event) {
-          this.onvoicejoined(message.voice_joined_event);
+          this.onvoicejoined(mapToCamelCase(message.voice_joined_event));
         } else if (message.voice_leaved_event) {
-          this.onvoiceleaved(message.voice_leaved_event);
+          this.onvoiceleaved(mapToCamelCase(message.voice_leaved_event));
         } else if (message.channel_created_event) {
-          this.onchannelcreated(message.channel_created_event);
+          this.onchannelcreated(mapToCamelCase(message.channel_created_event));
         } else if (message.category_event) {
-          this.oncategoryevent(message.category_event);
+          this.oncategoryevent(mapToCamelCase(message.category_event));
         } else if (message.role_event) {
-          this.onroleevent(message.role_event);
+          this.onroleevent(mapToCamelCase(message.role_event));
         } else if (message.event_emoji) {
-          this.oneventemoji(message.event_emoji);
+          this.oneventemoji(mapToCamelCase(message.event_emoji));
         } else if (message.noti_user_channel) {
-          this.oneventnotiuserchannel(message.noti_user_channel);
+          this.oneventnotiuserchannel(
+            mapToCamelCase(message.noti_user_channel)
+          );
         } else if (message.webhook_event) {
-          this.oneventwebhook(message.webhook_event);
+          this.oneventwebhook(mapToCamelCase(message.webhook_event));
         } else if (message.channel_deleted_event) {
-          this.onchanneldeleted(message.channel_deleted_event);
+          this.onchanneldeleted(mapToCamelCase(message.channel_deleted_event));
         } else if (message.clan_deleted_event) {
-          this.onclandeleted(message.clan_deleted_event);
+          this.onclandeleted(mapToCamelCase(message.clan_deleted_event));
         } else if (message.sticker_create_event) {
-          this.onstickercreated(message.sticker_create_event);
+          this.onstickercreated(mapToCamelCase(message.sticker_create_event));
         } else if (message.sticker_update_event) {
-          this.onstickerupdated(message.sticker_update_event);
+          this.onstickerupdated(mapToCamelCase(message.sticker_update_event));
         } else if (message.sticker_delete_event) {
-          this.onstickerdeleted(message.sticker_delete_event);
+          this.onstickerdeleted(mapToCamelCase(message.sticker_delete_event));
         } else if (message.channel_updated_event) {
-          this.onchannelupdated(message.channel_updated_event);
+          this.onchannelupdated(mapToCamelCase(message.channel_updated_event));
         } else if (message.delete_account_event) {
-          this.ondeleteaccount(message.delete_account_event);
+          this.ondeleteaccount(mapToCamelCase(message.delete_account_event));
         } else if (message.clan_profile_updated_event) {
-          this.onclanprofileupdated(message.clan_profile_updated_event);
+          this.onclanprofileupdated(
+            mapToCamelCase(message.clan_profile_updated_event)
+          );
         } else if (message.clan_updated_event) {
-          this.onclanupdated(message.clan_updated_event);
+          this.onclanupdated(mapToCamelCase(message.clan_updated_event));
         } else if (message.last_seen_message_event) {
-          this.onlastseenupdated(message.last_seen_message_event);
+          this.onlastseenupdated(
+            mapToCamelCase(message.last_seen_message_event)
+          );
         } else if (message.status_presence_event) {
           this.onstatuspresence(
-            <StatusPresenceEvent>message.status_presence_event
+            mapToCamelCase(<StatusPresenceEvent>message.status_presence_event)
           );
         } else if (message.stream_presence_event) {
           this.onstreampresence(
-            <StreamPresenceEvent>message.stream_presence_event
+            mapToCamelCase(<StreamPresenceEvent>message.stream_presence_event)
           );
         } else if (message.stream_data) {
-          this.onstreamdata(<StreamData>message.stream_data);
-        } else if (message.channel_message) {          
-          const channelMessage = CreateChannelMessageFromEvent(message);
-          this.onchannelmessage(channelMessage);
+          this.onstreamdata(mapToCamelCase(<StreamData>message.stream_data));
+        } else if (message.channel_message) {
+          const channelMessage = createChannelMessageFromEvent(message);
+          console.log("channelMessage", channelMessage);
+          const newMessage = mapToCamelCase(channelMessage);
+          console.log("newMessage", newMessage);
+          this.onchannelmessage(newMessage);
         } else if (message.message_typing_event) {
           this.onmessagetyping(
-            <MessageTypingEvent>message.message_typing_event
+            mapToCamelCase(<MessageTypingEvent>message.message_typing_event)
           );
         } else if (message.message_reaction_event) {
           this.onmessagereaction(
-            <ApiMessageReaction>message.message_reaction_event
+            mapToCamelCase(<ApiMessageReaction>message.message_reaction_event)
           );
         } else if (message.channel_presence_event) {
           this.onchannelpresence(
-            <ChannelPresenceEvent>message.channel_presence_event
+            mapToCamelCase(<ChannelPresenceEvent>message.channel_presence_event)
           );
         } else if (message.last_pin_message_event) {
           this.onpinmessage(
-            <LastPinMessageEvent>message.last_pin_message_event
+            mapToCamelCase(<LastPinMessageEvent>message.last_pin_message_event)
           );
         } else if (message.custom_status_event) {
-          this.oncustomstatus(<CustomStatusEvent>message.custom_status_event);
+          this.oncustomstatus(
+            mapToCamelCase(<CustomStatusEvent>message.custom_status_event)
+          );
         } else if (message.canvas_event) {
-          this.oncanvasevent(<ChannelCanvas>message.canvas_event);
+          this.oncanvasevent(
+            mapToCamelCase(<ChannelCanvas>message.canvas_event)
+          );
         } else if (message.user_channel_added_event) {
           this.onuserchanneladded(
-            <UserChannelAddedEvent>message.user_channel_added_event
+            mapToCamelCase(
+              <UserChannelAddedEvent>message.user_channel_added_event
+            )
           );
         } else if (message.add_clan_user_event) {
-          this.onuserclanadded(<AddClanUserEvent>message.add_clan_user_event);
+          this.onuserclanadded(
+            mapToCamelCase(<AddClanUserEvent>message.add_clan_user_event)
+          );
         } else if (message.user_profile_updated_event) {
           this.onuserprofileupdate(
-            <UserProfileUpdatedEvent>message.user_profile_updated_event
+            mapToCamelCase(
+              <UserProfileUpdatedEvent>message.user_profile_updated_event
+            )
           );
         } else if (message.user_channel_removed_event) {
           this.onuserchannelremoved(
-            <UserChannelRemovedEvent>message.user_channel_removed_event
+            mapToCamelCase(
+              <UserChannelRemovedEvent>message.user_channel_removed_event
+            )
           );
         } else if (message.block_friend) {
-          this.onblockfriend(<BlockFriend>message.block_friend);
+          this.onblockfriend(mapToCamelCase(<BlockFriend>message.block_friend));
         } else if (message.un_block_friend) {
-          this.onunblockfriend(<UnblockFriend>message.un_block_friend);
+          this.onunblockfriend(
+            mapToCamelCase(<UnblockFriend>message.un_block_friend)
+          );
         } else if (message.add_friend) {
-          this.onaddfriend(<AddFriend>message.add_friend);
+          this.onaddfriend(mapToCamelCase(<AddFriend>message.add_friend));
         } else if (message.remove_friend) {
-          this.onremovefriend(<RemoveFriend>message.remove_friend);
+          this.onremovefriend(
+            mapToCamelCase(<RemoveFriend>message.remove_friend)
+          );
         } else if (message.user_clan_removed_event) {
           this.onuserclanremoved(
-            <UserClanRemovedEvent>message.user_clan_removed_event
+            mapToCamelCase(
+              <UserClanRemovedEvent>message.user_clan_removed_event
+            )
           );
         } else if (message.clan_event_created) {
-          this.oneventcreated(message.clan_event_created);
+          this.oneventcreated(mapToCamelCase(message.clan_event_created));
         } else if (message.give_coffee_event) {
-          this.oncoffeegiven(<ApiGiveCoffeeEvent>message.give_coffee_event);
+          this.oncoffeegiven(
+            mapToCamelCase(<ApiGiveCoffeeEvent>message.give_coffee_event)
+          );
         } else if (message.role_assign_event) {
-          this.onroleassign(<RoleAssignedEvent>message.role_assign_event);
+          this.onroleassign(
+            mapToCamelCase(<RoleAssignedEvent>message.role_assign_event)
+          );
         } else if (message.streaming_started_event) {
           this.onstreamingchannelstarted(
-            <StreamingStartedEvent>message.streaming_started_event
+            mapToCamelCase(
+              <StreamingStartedEvent>message.streaming_started_event
+            )
           );
         } else if (message.streaming_ended_event) {
           this.onstreamingchannelended(
-            <StreamingEndedEvent>message.streaming_ended_event
+            mapToCamelCase(<StreamingEndedEvent>message.streaming_ended_event)
           );
         } else if (message.streaming_joined_event) {
           this.onstreamingchanneljoined(
-            <StreamingJoinedEvent>message.streaming_joined_event
+            mapToCamelCase(<StreamingJoinedEvent>message.streaming_joined_event)
           );
         } else if (message.streaming_leaved_event) {
           this.onstreamingchannelleaved(
-            <StreamingLeavedEvent>message.streaming_leaved_event
+            mapToCamelCase(<StreamingLeavedEvent>message.streaming_leaved_event)
           );
         } else if (message.permission_set_event) {
-          this.onpermissionset(<PermissionSet>message.permission_set_event);
+          this.onpermissionset(
+            mapToCamelCase(<PermissionSet>message.permission_set_event)
+          );
         } else if (message.permission_changed_event) {
           this.onpermissionchanged(
-            <PermissionChangedEvent>message.permission_changed_event
+            mapToCamelCase(
+              <PermissionChangedEvent>message.permission_changed_event
+            )
           );
         } else if (message.unmute_event) {
-          this.onunmuteevent(<UnmuteEvent>message.unmute_event);
+          this.onunmuteevent(mapToCamelCase(<UnmuteEvent>message.unmute_event));
         } else if (message.token_sent_event) {
-          this.ontokensent(<ApiTokenSentEvent>message.token_sent_event);
+          this.ontokensent(
+            mapToCamelCase(<ApiTokenSentEvent>message.token_sent_event)
+          );
         } else if (message.message_button_clicked) {
           this.onmessagebuttonclicked(
-            <MessageButtonClicked>message.message_button_clicked
+            mapToCamelCase(<MessageButtonClicked>message.message_button_clicked)
           );
         } else if (message.dropdown_box_selected) {
           this.onmessagedropdownboxselected(
-            <DropdownBoxSelected>message.dropdown_box_selected
+            mapToCamelCase(<DropdownBoxSelected>message.dropdown_box_selected)
           );
         } else if (message.mark_as_read) {
-          this.onmarkasread(
-            <MarkAsRead>message.mark_as_read
-          );
+          this.onmarkasread(mapToCamelCase(<MarkAsRead>message.mark_as_read));
         } else if (message.voice_reaction_send) {
           this.onvoicereactionmessage(
-            <VoiceReactionSend>message.voice_reaction_send
+            mapToCamelCase(<VoiceReactionSend>message.voice_reaction_send)
           );
         } else if (message.webrtc_signaling_fwd) {
           this.onwebrtcsignalingfwd(
-            <WebrtcSignalingFwd>message.webrtc_signaling_fwd
+            mapToCamelCase(<WebrtcSignalingFwd>message.webrtc_signaling_fwd)
           );
         } else if (message.list_activity) {
-          this.onactivityupdated(<ListActivity>message.list_activity);
+          this.onactivityupdated(
+            mapToCamelCase(<ListActivity>message.list_activity)
+          );
         } else if (message.sd_topic_event) {
-          this.onsdtopicevent(<SdTopicEvent>message.sd_topic_event);
+          this.onsdtopicevent(
+            mapToCamelCase(<SdTopicEvent>message.sd_topic_event)
+          );
         } else if (message.channel_app_event) {
-          this.onchannelappevent(<ChannelAppEvent>message.channel_app_event);
+          this.onchannelappevent(
+            mapToCamelCase(<ChannelAppEvent>message.channel_app_event)
+          );
         } else if (message.user_status_event) {
-          this.onuserstatusevent(<UserStatusEvent>message.user_status_event);
+          this.onuserstatusevent(
+            mapToCamelCase(<UserStatusEvent>message.user_status_event)
+          );
         } else if (message.join_channel_app_data) {
-          this.onjoinchannelappevent(<JoinChannelAppData>message.join_channel_app_data);
+          this.onjoinchannelappevent(
+            mapToCamelCase(<JoinChannelAppData>message.join_channel_app_data)
+          );
         } else if (message.unpin_message_event) {
-          this.onunpinmessageevent(<UnpinMessageEvent>message.unpin_message_event);
+          this.onunpinmessageevent(
+            mapToCamelCase(<UnpinMessageEvent>message.unpin_message_event)
+          );
         } else if (message.quick_menu_event) {
-          this.onquickmenuevent(<QuickMenuEvent>message.quick_menu_event);
+          this.onquickmenuevent(
+            mapToCamelCase(<QuickMenuEvent>message.quick_menu_event)
+          );
         } else if (message.meet_participant_event) {
-          this.onmeetparticipantevent(<MeetParticipantEvent>message.meet_participant_event);
+          this.onmeetparticipantevent(
+            mapToCamelCase(<MeetParticipantEvent>message.meet_participant_event)
+          );
         } else if (message.transfer_ownership_event) {
-          this.ontransferownership(<TransferOwnershipEvent>message.transfer_ownership_event);
+          this.ontransferownership(
+            mapToCamelCase(
+              <TransferOwnershipEvent>message.transfer_ownership_event
+            )
+          );
         } else if (message.ban_user_event) {
-          this.onbanneduser(<BannedUserEvent>message.ban_user_event);
+          this.onbanneduser(
+            mapToCamelCase(<BannedUserEvent>message.ban_user_event)
+          );
         } else if (message.allow_anonymous_event) {
-          this.onallowanonymousevent(<AllowAnonymousEvent>message.allow_anonymous_event);
+          this.onallowanonymousevent(
+            mapToCamelCase(<AllowAnonymousEvent>message.allow_anonymous_event)
+          );
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -2166,7 +2242,7 @@ export class DefaultSocket implements Socket {
         this._connectionState = ConnectionState.CONNECTED;
         this.startHeartbeatLoop();
         this._connectPromise = undefined;
-        
+
         resolve(session);
 
         if (isReconnect) {
@@ -2608,7 +2684,7 @@ export class DefaultSocket implements Socket {
       console.log(join_channel_app_data);
     }
   }
-  
+
   onunpinmessageevent(unpin_message_event: UnpinMessageEvent) {
     if (this.verbose && window && window.console) {
       console.log(unpin_message_event);
@@ -2629,7 +2705,7 @@ export class DefaultSocket implements Socket {
 
   onbanneduser(event: BannedUserEvent) {
     if (this.verbose && window && window.console) {
-      console.log(event)
+      console.log(event);
     }
   }
 
@@ -2686,13 +2762,14 @@ export class DefaultSocket implements Socket {
             untypedMessage.channel_message_update.content
           );
         } else if (untypedMessage.ephemeral_message_send) {
-          untypedMessage.ephemeral_message_send.message.content = JSON.stringify(
-            untypedMessage.ephemeral_message_send.message?.content
-          ); 
+          untypedMessage.ephemeral_message_send.message.content =
+            JSON.stringify(
+              untypedMessage.ephemeral_message_send.message?.content
+            );
         } else if (untypedMessage.quick_menu_event) {
           untypedMessage.quick_menu_event.message.content = JSON.stringify(
             untypedMessage.quick_menu_event.message?.content
-          ); 
+          );
         }
 
         const cid = this.generatecid();
@@ -2711,17 +2788,17 @@ export class DefaultSocket implements Socket {
 
   async followUsers(userIds: string[]): Promise<Status> {
     const response = await this.send({ status_follow: { user_ids: userIds } });
-    return response.status;
+    return mapToCamelCase(response.status);
   }
 
-  async joinClanChat(clan_id: string): Promise<ClanJoin> {
+  async joinClanChat(clanId: string): Promise<ClanJoin> {
     const response = await this.send({
       clan_join: {
-        clan_id: clan_id,
+        clan_id: clanId,
       },
     });
 
-    return response.clan_join;
+    return mapToCamelCase(response.clanJoin);
   }
 
   async follower(): Promise<void> {
@@ -2729,138 +2806,138 @@ export class DefaultSocket implements Socket {
       follow_event: {},
     });
 
-    return response.follow_event;
+    return mapToCamelCase(response.followEvent);
   }
 
   async joinChat(
-    clan_id: string,
-    channel_id: string,
-    channel_type: number,
-    is_public: boolean
+    clanId: string,
+    channelId: string,
+    channelType: number,
+    isPublic: boolean
   ): Promise<Channel> {
     const response = await this.send({
       channel_join: {
-        clan_id: clan_id,
-        channel_id: channel_id,
-        channel_type: channel_type,
-        is_public: is_public,
+        clan_id: clanId,
+        channel_id: channelId,
+        channel_type: channelType,
+        is_public: isPublic,
       },
     });
 
-    return response.channel;
+    return mapToCamelCase(response.channel);
   }
 
-  async handleParticipantMeetState (
-    clan_id: string,
-    channel_id: string,
-    display_name: string,
+  async handleParticipantMeetState(
+    clanId: string,
+    channelId: string,
+    displayName: string,
     state: number,
-    room_name: string,
+    roomName: string
   ): Promise<void> {
     const response = await this.send({
       handle_participant_meet_state_event: {
-        clan_id: clan_id,
-        channel_id: channel_id,
-        display_name: display_name,
+        clan_id: clanId,
+        channel_id: channelId,
+        display_name: displayName,
         state: state,
-        room_name: room_name,
+        room_name: roomName,
       },
     });
 
-    return response.handle_participant_meet_state_event;
+    return mapToCamelCase(response.handleParticipantMeetStateEvent);
   }
 
   leaveChat(
-    clan_id: string,
-    channel_id: string,
-    channel_type: number,
-    is_public: boolean
+    clanId: string,
+    channelId: string,
+    channelType: number,
+    isPublic: boolean
   ): Promise<void> {
     return this.send({
       channel_leave: {
-        clan_id: clan_id,
-        channel_id: channel_id,
-        channel_type: channel_type,
-        is_public: is_public,
+        clan_id: clanId,
+        channel_id: channelId,
+        channel_type: channelType,
+        is_public: isPublic,
       },
     });
   }
 
   async removeChatMessage(
-    clan_id: string,
-    channel_id: string,
+    clanId: string,
+    channelId: string,
     mode: number,
-    is_public: boolean,
-    message_id: string,
-    has_attachment?: boolean,
-    topic_id?: string,
+    isPublic: boolean,
+    messageId: string,
+    hasAttachment?: boolean,
+    topicId?: string,
     mentions?: string,
     references?: string
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_remove: {
-        clan_id: clan_id,
-        channel_id: channel_id,
+        clan_id: clanId,
+        channel_id: channelId,
         mode: mode,
-        message_id: message_id,
-        is_public: is_public,
-        has_attachment: has_attachment,
-        topic_id: topic_id,
+        message_id: messageId,
+        is_public: isPublic,
+        has_attachment: hasAttachment,
+        topic_id: topicId,
         mentions: mentions,
-        references: references
+        references: references,
       },
     });
 
-    return response.channel_message_ack;
+    return mapToCamelCase(response.channel_message_ack);
   }
 
-  async rpc(id?: string, payload?: string, http_key?: string): Promise<ApiRpc> {
+  async rpc(id?: string, payload?: string, httpKey?: string): Promise<ApiRpc> {
     const response = await this.send({
       rpc: {
         id: id,
         payload: payload,
-        http_key: http_key,
+        http_key: httpKey,
       },
     });
 
-    return response.rpc;
+    return mapToCamelCase(response.rpc);
   }
 
-  unfollowUsers(user_ids: string[]): Promise<void> {
-    return this.send({ status_unfollow: { user_ids: user_ids } });
+  unfollowUsers(userIds: string[]): Promise<void> {
+    return this.send({ status_unfollow: { user_ids: userIds } });
   }
 
   async updateChatMessage(
-    clan_id: string,
-    channel_id: string,
+    clanId: string,
+    channelId: string,
     mode: number,
-    is_public: boolean,
-    message_id: string,
+    isPublic: boolean,
+    messageId: string,
     content: any,
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
     hideEditted?: boolean,
-    topic_id?: string,
-    is_update_msg_topic?: boolean,
-    old_mentions?: string
+    topicId?: string,
+    isUpdateMsgTopic?: boolean,
+    oldMentions?: string
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_update: {
-        clan_id: clan_id,
-        channel_id: channel_id,
-        message_id: message_id,
+        clanId: clanId,
+        channelId: channelId,
+        messageId: messageId,
         content: content,
-        mentions: mentions,
-        attachments: attachments,
+        mentions: mapToSnakeCase(mentions),
+        attachments: mapToSnakeCase(attachments),
         mode: mode,
-        is_public: is_public,
-        hide_editted: hideEditted,
-        topic_id: topic_id,
-        is_update_msg_topic: is_update_msg_topic,
-        old_mentions: old_mentions
+        isPublic: isPublic,
+        hideEditted: hideEditted,
+        topicId: topicId,
+        isUpdateMsgTopic: isUpdateMsgTopic,
+        oldMentions: oldMentions,
       },
     });
-    return response.channel_message_ack;
+    return mapToCamelCase(response.channel_message_ack);
   }
 
   updateStatus(status?: string): Promise<void> {
@@ -2868,259 +2945,262 @@ export class DefaultSocket implements Socket {
   }
 
   async writeQuickMenuEvent(
-    menu_name: string,
-    clan_id: string,
-    channel_id: string,
+    menuName: string,
+    clanId: string,
+    channelId: string,
     mode: number,
-    is_public: boolean,
+    isPublic: boolean,
     content: any,
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
     references?: Array<ApiMessageRef>,
-    anonymous_message?: boolean,
-    mention_everyone?: Boolean,
+    anonymousMessage?: boolean,
+    mentionEveryone?: Boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string
+    topicId?: string
   ): Promise<QuickMenuEvent> {
     const response = await this.send({
       quick_menu_event: {
-        menu_name: menu_name,
+        menuName: menuName,
         message: {
-          clan_id: clan_id,
-          channel_id: channel_id,
+          clan_id: clanId,
+          channel_id: channelId,
           mode: mode,
-          is_public: is_public,
+          is_public: isPublic,
           content: content,
-          mentions: mentions,
-          attachments: attachments,
-          references: references,
-          anonymous_message: anonymous_message,
-          mention_everyone: mention_everyone,
+          mentions: mapToSnakeCase(mentions),
+          attachments: mapToSnakeCase(attachments),
+          references: mapToSnakeCase(references),
+          anonymous_message: anonymousMessage,
+          mention_everyone: mentionEveryone,
           avatar: avatar,
           code: code,
-          topic_id: topic_id,
-        }
-      }
+          topic_id: topicId,
+        },
+      },
     });
-    return response.ephemeral_message_send;
+    return mapToCamelCase(response.quick_menu_event);
   }
 
   async writeEphemeralMessage(
-    receiver_id: string,
-    clan_id: string,
-    channel_id: string,
+    receiverId: string,
+    clanId: string,
+    channelId: string,
     mode: number,
-    is_public: boolean,
+    isPublic: boolean,
     content: any,
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
     references?: Array<ApiMessageRef>,
-    anonymous_message?: boolean,
-    mention_everyone?: Boolean,
+    anonymousMessage?: boolean,
+    mentionEveryone?: Boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string,
+    topicId?: string,
     id?: string
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       ephemeral_message_send: {
-        receiver_id: receiver_id,
+        receiver_id: receiverId,
         message: {
-          clan_id: clan_id,
-          channel_id: channel_id,
+          clan_id: clanId,
+          channel_id: channelId,
           mode: mode,
-          is_public: is_public,
+          is_public: isPublic,
           content: content,
-          mentions: mentions,
-          attachments: attachments,
-          references: references,
-          anonymous_message: anonymous_message,
-          mention_everyone: mention_everyone,
+          mentions: mapToSnakeCase(mentions),
+          attachments: mapToSnakeCase(attachments),
+          references: mapToSnakeCase(references),
+          anonymous_message: anonymousMessage,
+          mention_everyone: mentionEveryone,
           avatar: avatar,
           code: code,
-          topic_id: topic_id,
+          topic_id: topicId,
           id: id,
-        }
-      }
+        },
+      },
     });
-    return response.ephemeral_message_send;
+    return mapToCamelCase(response.ephemeral_message_send);
   }
 
   async writeChatMessage(
-    clan_id: string,
-    channel_id: string,
+    clanId: string,
+    channelId: string,
     mode: number,
-    is_public: boolean,
+    isPublic: boolean,
     content: any,
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
     references?: Array<ApiMessageRef>,
-    anonymous_message?: boolean,
-    mention_everyone?: Boolean,
+    anonymousMessage?: boolean,
+    mentionEveryone?: Boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string
+    topicId?: string
   ): Promise<ChannelMessageAck> {
-    const response = await this.send({
-      channel_message_send: {
-        clan_id: clan_id,
-        channel_id: channel_id,
-        mode: mode,
-        is_public: is_public,
-        content: content,
-        mentions: mentions,
-        attachments: attachments,
-        references: references,
-        anonymous_message: anonymous_message,
-        mention_everyone: mention_everyone,
-        avatar: avatar,
-        code: code,
-        topic_id: topic_id,
+    const response = await this.send(
+      {
+        channel_message_send: {
+          clan_id: clanId,
+          channel_id: channelId,
+          mode: mode,
+          is_public: isPublic,
+          content: content,
+          mentions: mapToSnakeCase(mentions),
+          attachments: mapToSnakeCase(attachments),
+          references: mapToSnakeCase(references),
+          anonymous_message: anonymousMessage,
+          mention_everyone: mentionEveryone,
+          avatar: avatar,
+          code: code,
+          topic_id: topicId,
+        },
       },
-    }, Infinity);
-    return response.channel_message_ack;
+      Infinity
+    );
+    return mapToCamelCase(response.channel_message_ack);
   }
 
   async writeMessageReaction(
     id: string,
-    clan_id: string,
-    channel_id: string,
+    clanId: string,
+    channelId: string,
     mode: number,
-    is_public: boolean,
-    message_id: string,
-    emoji_id: string,
+    isPublic: boolean,
+    messageId: string,
+    emojiId: string,
     emoji: string,
     count: number,
-    message_sender_id: string,
+    messageSenderId: string,
     action_delete: boolean,
-    topic_id?: string,
-    emoji_recent_id?: string,
-    sender_name?: string
+    topicId?: string,
+    emojiRecentId?: string,
+    senderName?: string
   ): Promise<ApiMessageReaction> {
     const response = await this.send({
       message_reaction_event: {
         id: id,
-        clan_id: clan_id,
-        channel_id: channel_id,
+        clanId: clanId,
+        channelId: channelId,
         mode: mode,
-        is_public: is_public,
-        message_id: message_id,
-        emoji_id: emoji_id,
+        isPublic: isPublic,
+        messageId: messageId,
+        emojiId: emojiId,
         emoji: emoji,
         count: count,
-        message_sender_id: message_sender_id,
+        messageSenderId: messageSenderId,
         action: action_delete,
-        topic_id: topic_id,
-        emoji_recent_id: emoji_recent_id,
-        sender_name: sender_name
+        topicId: topicId,
+        emojiRecentId: emojiRecentId,
+        senderName: senderName,
       },
     });
-    return response.message_reaction_event;
+    return mapToCamelCase(response.message_reaction_event);
   }
 
   async writeMessageTyping(
-    clan_id: string,
-    channel_id: string,
+    clanId: string,
+    channelId: string,
     mode: number,
-    is_public: boolean,
-    sender_display_name: string,
-    topic_id?: string
+    isPublic: boolean,
+    senderDisplayName: string,
+    topicId?: string
   ): Promise<MessageTypingEvent> {
     const response = await this.send({
       message_typing_event: {
-        clan_id: clan_id,
-        channel_id: channel_id,
+        clan_id: clanId,
+        channel_id: channelId,
         mode: mode,
-        is_public: is_public,
-        sender_display_name: sender_display_name,
-        topic_id: topic_id
+        is_public: isPublic,
+        sender_display_name: senderDisplayName,
+        topic_id: topicId,
       },
     });
-    return response.message_typing_event;
+    return mapToCamelCase(response.message_typing_event);
   }
 
   async writeLastSeenMessage(
-    clan_id: string,
-    channel_id: string,
+    clanId: string,
+    channelId: string,
     mode: number,
-    message_id: string,
-    timestamp_seconds: number,
-    badge_count: number
+    messageId: string,
+    timestampSeconds: number,
+    badgeCount: number
   ): Promise<LastSeenMessageEvent> {
     const response = await this.send({
       last_seen_message_event: {
-        clan_id: clan_id,
-        channel_id: channel_id,
+        clan_id: clanId,
+        channel_id: channelId,
         mode: mode,
-        message_id: message_id,
-        timestamp_seconds: timestamp_seconds,
-        badge_count: badge_count,
+        message_id: messageId,
+        timestamp_seconds: timestampSeconds,
+        badge_count: badgeCount,
       },
     });
-    return response.last_seen_message_event;
+    return mapToCamelCase(response.last_seen_message_event);
   }
 
   async writeLastPinMessage(
-    clan_id: string,
-    channel_id: string,
+    clanId: string,
+    channelId: string,
     mode: number,
-    is_public: boolean,
-    message_id: string,
-    timestamp_seconds: number,
+    isPublic: boolean,
+    messageId: string,
+    timestampSeconds: number,
     operation: number,
-    message_sender_avatar: string,
-    message_sender_id: string,
-    message_sender_username: string,
-    message_content: string,
-    message_attachment: string,
-    message_created_time: string,
+    messageSenderAvatar: string,
+    messageSenderId: string,
+    messageSenderUsername: string,
+    messageContent: string,
+    messageAttachment: string,
+    messageCreatedTime: string
   ): Promise<LastPinMessageEvent> {
     const response = await this.send({
       last_pin_message_event: {
-        clan_id: clan_id,
-        channel_id: channel_id,
+        clan_id: clanId,
+        channel_id: channelId,
         mode: mode,
-        is_public: is_public,
-        message_id: message_id,
-        timestamp_seconds: timestamp_seconds,
+        is_public: isPublic,
+        message_id: messageId,
+        timestamp_seconds: timestampSeconds,
         operation: operation,
-        message_sender_avatar: message_sender_avatar,
-        message_sender_id: message_sender_id,
-        message_sender_username: message_sender_username,
-        message_content: message_content,
-        message_attachment: message_attachment,
-        message_created_time: message_created_time,
+        message_sender_avatar: messageSenderAvatar,
+        message_sender_id: messageSenderId,
+        message_sender_username: messageSenderUsername,
+        message_content: messageContent,
+        message_attachment: messageAttachment,
+        message_created_time: messageCreatedTime,
       },
     });
-    return response.last_pin_message_event;
+    return mapToCamelCase(response.last_pin_message_event);
   }
 
   async writeCustomStatus(
-    clan_id: string,
+    clanId: string,
     status: string,
-    time_reset: number,
-    no_clear: boolean
+    timeReset: number,
+    noClear: boolean
   ): Promise<CustomStatusEvent> {
     const response = await this.send({
       custom_status_event: {
-        clan_id: clan_id,
+        clan_id: clanId,
         status: status,
-        time_reset: time_reset,
-        no_clear: no_clear,
+        time_reset: timeReset,
+        no_clear: noClear,
       },
     });
-    return response.custom_status_event;
+    return mapToCamelCase(response.custom_status_event);
   }
 
   async writeActiveArchivedThread(
-    clan_id: string,
-    channel_id: string
+    clanId: string,
+    channelId: string
   ): Promise<void> {
     const response = await this.send({
       active_archived_thread: {
-        clan_id: clan_id,
-        channel_id: channel_id
+        clan_id: clanId,
+        channel_id: channelId,
       },
     });
     return response.active_archived_thread;
@@ -3130,132 +3210,130 @@ export class DefaultSocket implements Socket {
     name: string,
     condition_id: string,
     type: number,
-    clan_id: string,
+    clanId: string
   ): Promise<CheckNameExistedEvent> {
     const response = await this.send({
       check_name_existed_event: {
         name: name,
         condition_id: condition_id,
         type: type,
-        clan_id: clan_id
+        clan_id: clanId,
       },
     });
-    return response.check_name_existed_event;
+    return mapToCamelCase(response.check_name_existed_event);
   }
 
   async writeVoiceReaction(
     emojis: Array<string>,
-    channel_id: string
+    channelId: string
   ): Promise<VoiceReactionSend> {
     const response = await this.send({
       voice_reaction_send: {
         emojis: emojis,
-        channel_id: channel_id
-      }
+        channel_id: channelId,
+      },
     });
-    return response.voice_reaction_send;
+    return mapToCamelCase(response.voice_reaction_send);
   }
 
   async forwardWebrtcSignaling(
-    receiver_id: string,
-    data_type: number,
-    json_data: string,
-    channel_id: string,
-    caller_id: string
+    receiverId: string,
+    dataType: number,
+    jsonData: string,
+    channelId: string,
+    callerId: string
   ): Promise<WebrtcSignalingFwd> {
     const response = await this.send({
       webrtc_signaling_fwd: {
-        receiver_id: receiver_id,
-        data_type: data_type,
-        json_data: json_data,
-        channel_id: channel_id,
-        caller_id: caller_id,
+        receiver_id: receiverId,
+        data_type: dataType,
+        json_data: jsonData,
+        channel_id: channelId,
+        caller_id: callerId,
       },
     });
-    return response.webrtc_signaling_fwd;
+    return mapToCamelCase(response.webrtc_signaling_fwd);
   }
 
   async makeCallPush(
-    receiver_id: string,
-    json_data: string,
-    channel_id: string,
-    caller_id: string
+    receiverId: string,
+    jsonData: string,
+    channelId: string,
+    callerId: string
   ): Promise<IncomingCallPush> {
     const response = await this.send({
       incoming_call_push: {
-        receiver_id: receiver_id,
-        json_data: json_data,
-        channel_id: channel_id,
-        caller_id: caller_id,
+        receiver_id: receiverId,
+        json_data: jsonData,
+        channel_id: channelId,
+        caller_id: callerId,
       },
     });
-    return response.incoming_call_push;
+    return mapToCamelCase(response.incoming_call_push);
   }
 
   async handleDropdownBoxSelected(
-    message_id: string,
-    channel_id: string,
-    selectbox_id: string,
-    sender_id: string,
-    user_id: string,
+    messageId: string,
+    channelId: string,
+    selectboxId: string,
+    senderId: string,
+    userId: string,
     value: Array<string>
   ): Promise<DropdownBoxSelected> {
     const response = await this.send({
       dropdown_box_selected: {
-        message_id: message_id,
-        channel_id: channel_id,
-        selectbox_id: selectbox_id,
-        sender_id: sender_id,
-        user_id: user_id,
+        message_id: messageId,
+        channel_id: channelId,
+        selectbox_id: selectboxId,
+        sender_id: senderId,
+        user_id: userId,
         value: value,
       },
     });
-    return response.dropdown_box_selected;
+    return mapToCamelCase(response.dropdown_box_selected);
   }
 
   async handleMessageButtonClick(
-    message_id: string,
-    channel_id: string,
-    button_id: string,
-    sender_id: string,
-    user_id: string,
-    extra_data: string
+    messageId: string,
+    channelId: string,
+    buttonId: string,
+    senderId: string,
+    userId: string,
+    extraData: string
   ): Promise<MessageButtonClicked> {
     const response = await this.send({
       message_button_clicked: {
-        message_id: message_id,
-        channel_id: channel_id,
-        button_id: button_id,
-        sender_id: sender_id,
-        user_id: user_id,
-        extra_data: extra_data,
+        message_id: messageId,
+        channel_id: channelId,
+        button_id: buttonId,
+        sender_id: senderId,
+        user_id: userId,
+        extra_data: extraData,
       },
     });
-    return response.webrtc_signaling_fwd;
+    return mapToCamelCase(response.webrtc_signaling_fwd);
   }
 
   async writeChannelAppEvent(
-    clan_id: string,
-    channel_id: string,
+    clanId: string,
+    channelId: string,
     action: number
   ): Promise<ChannelAppEvent> {
     const response = await this.send({
       channel_app_event: {
-        clan_id: clan_id,
-        channel_id: channel_id,
+        clan_id: clanId,
+        channel_id: channelId,
         action: action,
       },
     });
-    return response.channel_app_event;
+    return mapToCamelCase(response.channel_app_event);
   }
 
-  async listDataSocket(
-    request: ListDataSocket
-  ): Promise<any> {
+  async listDataSocket(request: ListDataSocket): Promise<any> {
     const response = await this.send({
-      list_data_socket: request,
+      list_data_socket: mapToSnakeCase(request),
     });
-    return response.list_data_socket;
+    return mapToCamelCase(response.list_data_socket);
   }
 
   private async pingPong(): Promise<void> {
@@ -3306,4 +3384,3 @@ export class DefaultSocket implements Socket {
     }
   }
 }
-
