@@ -328,7 +328,6 @@ import {
   decodeAttachments,
   decodeRefs,
   decodeReactions,
-  decodeMention,
 } from "mezon-js-protobuf";
 
 const DEFAULT_HOST = "127.0.0.1";
