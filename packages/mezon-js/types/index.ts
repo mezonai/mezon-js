@@ -110,20 +110,21 @@ export interface NotificationFcmContent {
   title?: string;
   link?: string;
   content?: string;
-  channel_id?: string;
-  sender_id?: string;
+  channelId?: string;
+  senderId?: string;
   avatar?: string;
-  clan_id?: string;
-  attachment_link?: string;
-  display_name?: string;
-  create_time_seconds?: number;
-  update_time_seconds?: number;
+  clanId?: string;
+  attachmentLink?: string;
+  displayName?: string;
+  createTimeSeconds?: number;
+  updateTimeSeconds?: number;
   username?: string;
-  mention_ids?: string[];
-  position_s?: number[];
-  position_e?: number[];
-  attachment_type?: string;
-  has_more_attachment?: boolean;
+  mentionIds?: string[];
+  positionS?: number[];
+  positionE?: number[];
+  isMentionRole?: boolean[]
+  attachmentType?: string;
+  hasMoreAttachment?: boolean;
 }
 
 /** A notification in the server. */
