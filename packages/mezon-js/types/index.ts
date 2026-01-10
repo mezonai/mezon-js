@@ -122,9 +122,11 @@ export interface NotificationFcmContent {
   mentionIds?: string[];
   positionS?: number[];
   positionE?: number[];
-  isMentionRole?: boolean[]
+  isMentionRole?: boolean[];
   attachmentType?: string;
   hasMoreAttachment?: boolean;
+  /** The unique ID of the message related to this notification, if any. */
+  messageId?: string;
 }
 
 /** A notification in the server. */

@@ -2276,7 +2276,7 @@ export class Client {
         id: n.id,
         clanId: n.clanId,
         category: n.category,
-        content:{
+        content: {
           title: content?.title,
           link: content?.link,
           content: content?.content,
@@ -2295,12 +2295,17 @@ export class Client {
           isMentionRole: content?.is_mention_role,
           attachmentType: content?.attachment_type,
           hasMoreAttachment: content?.has_more_attachment,
+          messageId: content?.message_id,
         },
         createTimeSeconds: n.createTimeSeconds,
         channelId: n.channelId,
         channelType: n.channelType,
         avatarUrl: n.avatarUrl,
         topicId: n.topicId,
+        code: n.code,
+        persistent: n.persistent,
+        senderId: n.senderId,
+        subject: n.subject,
       });
     });
 
