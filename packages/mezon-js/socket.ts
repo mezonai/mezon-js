@@ -2033,7 +2033,7 @@ export class DefaultSocket implements Socket {
           this.onstreamdata(mapToCamelCase(<StreamData>message.stream_data));
         } else if (message.channel_message) {
           const channelMessage = createChannelMessageFromEvent(message);
-          this.onchannelmessage(mapToCamelCase(channelMessage));
+          this.onchannelmessage(channelMessage);
         } else if (message.message_typing_event) {
           this.onmessagetyping(
             mapToCamelCase(<MessageTypingEvent>message.message_typing_event)
@@ -2923,18 +2923,18 @@ export class DefaultSocket implements Socket {
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_update: {
-        clanId: clanId,
-        channelId: channelId,
-        messageId: messageId,
+        clan_id: clanId,
+        channel_id: channelId,
+        message_id: messageId,
         content: content,
         mentions: mapToSnakeCase(mentions),
         attachments: mapToSnakeCase(attachments),
         mode: mode,
-        isPublic: isPublic,
-        hideEditted: hideEditted,
-        topicId: topicId,
-        isUpdateMsgTopic: isUpdateMsgTopic,
-        oldMentions: oldMentions,
+        is_public: isPublic,
+        hide_editted: hideEditted,
+        topic_id: topicId,
+        is_update_msg_topic: isUpdateMsgTopic,
+        old_mentions: oldMentions,
       },
     });
     return mapToCamelCase(response.channel_message_ack);
