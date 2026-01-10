@@ -376,8 +376,8 @@ export enum WebrtcSignalingType {
 export class Client {
   /** The low level API client for Mezon server. */
   private readonly gatewayClient: GatewayMezonApi;
-  private readonly grpcTransport: Transport;
-  private readonly mezonClient: RPCClient<typeof MezonService>;
+  private grpcTransport: Transport;
+  private mezonClient: RPCClient<typeof MezonService>;
 
   /** thre refreshTokenPromise */
   private refreshTokenPromise: Promise<Session> | null = null;
@@ -434,7 +434,13 @@ export class Client {
 
     const scheme = useSSL ? "https://" : "http://";
     const basePath = `${scheme}${host}:${port}`;
-    return this.gatewayClient.setBasePath(basePath);
+    
+    this.gatewayClient.setBasePath(basePath);
+    this.grpcTransport = createGrpcWebTransport({
+      baseUrl: basePath,
+      useBinaryFormat: true,
+    });
+    this.mezonClient = createClient(MezonService, this.grpcTransport);
   }
 
   //#region Mezon Gateway APIs
