@@ -1755,15 +1755,15 @@ export interface ApiMessageAttachment {
   //
   thumbnail?: string;
   // The channel this message belongs to.
-  channelId?: string;
+  channel_id?: string;
   // The mode
   mode?: number;
   // The channel label
-  channelLabel?: string;
+  channel_label?: string;
   // The message that user react
-  messageId?: string;
+  message_id?: string;
   // Message sender, usually a user ID.
-  senderId?: string;
+  sender_id?: string;
   // duration for video in seconds
   duration?: number;
 }
@@ -1812,15 +1812,15 @@ export interface ApiMarkAsReadRequest {
 /**  */
 export interface ApiMessageMention {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  createTime?: string;
+  create_time?: string;
   //
   id?: string;
   //
-  userId?: string;
+  user_id?: string;
   //
   username?: string;
   // role id
-  roleId?: string;
+  role_id?: string;
   // role name
   rolename?: string;
   // start position
@@ -1828,15 +1828,15 @@ export interface ApiMessageMention {
   // end position
   e?: number;
   /** The channel this message belongs to. */
-  channelId?: string;
+  channel_id?: string;
   // The mode
   mode?: number;
   // The channel label
-  channelLabel?: string;
+  channel_label?: string;
   /** The message that user react */
-  messageId?: string;
+  message_id?: string;
   /** Message sender, usually a user ID. */
-  senderId?: string;
+  sender_id?: string;
 }
 
 /**  */
@@ -1852,33 +1852,33 @@ export interface ApiMessageReaction {
   //
   action?: boolean;
   //
-  emojiId: string;
+  emoji_id: string;
   //
   emoji: string;
   //
   id?: string;
   //
-  senderId?: string;
+  sender_id?: string;
   //
-  senderName?: string;
+  sender_name?: string;
   //
-  senderAvatar?: string;
+  sender_avatar?: string;
   // count of emoji
   count: number;
   /** The channel this message belongs to. */
-  channelId: string;
+  channel_id: string;
   // The mode
   mode: number;
   // Is public
-  isPublic: boolean;
+  is_public: boolean;
   // The channel label
-  channelLabel: string;
+  channel_label: string;
   /** The message that user react */
-  messageId: string;
+  message_id: string;
   //
-  topicId?: string;
+  topic_id?: string;
   //
-  emojiRecentId?: string;
+  emoji_recent_id?: string;
 }
 
 export interface ApiListChannelAppsResponse {
@@ -1999,31 +1999,31 @@ export interface ApiMezonOauthClientList {
 /**  */
 export interface ApiMessageRef {
   //
-  messageId?: string;
+  message_id?: string;
   //
-  messageRefId?: string;
+  message_ref_id?: string;
   //
-  refType?: number;
+  ref_type?: number;
   //
-  messageSenderId?: string;
+  message_sender_id?: string;
   // original message sendre username
-  messageSenderUsername?: string;
+  message_sender_username?: string;
   // original message sender avatar
-  mesagesSenderAvatar?: string;
+  mesages_sender_avatar?: string;
   // original sender clan nick name
-  messageSenderClanNick?: string;
+  message_sender_clan_nick?: string;
   // original sender display name
-  messageSenderDisplayName?: string;
+  message_sender_display_name?: string;
   //
   content?: string;
   //
-  hasAttachment: boolean;
+  has_attachment: boolean;
   /** The channel this message belongs to. */
-  channelId: string;
+  channel_id: string;
   // The mode
   mode: number;
   // The channel label
-  channelLabel: string;
+  channel_label: string;
 }
 
 /** A notification in the server. */
