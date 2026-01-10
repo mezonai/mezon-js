@@ -327,7 +327,7 @@ import {
   decodeAttachments,
   decodeRefs,
   decodeReactions,
-  decodeNotificationContent,
+  decodeNotificationFcm,
 } from "mezon-js-protobuf";
 
 const DEFAULT_HOST = "127.0.0.1";
@@ -2266,7 +2266,7 @@ export class Client {
       var content;
       try {
         content =
-          decodeNotificationContent(n.content) ||
+          decodeNotificationFcm(n.content) ||
           safeJSONParse((n.content as unknown as string) || "{}");
       } catch (e) {
         console.log("error parse content", e);

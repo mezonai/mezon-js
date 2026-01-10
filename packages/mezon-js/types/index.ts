@@ -106,12 +106,32 @@ export interface Friends {
   cursor?: string;
 }
 
+export interface NotificationFcmContent {
+  title?: string;
+  link?: string;
+  content?: string;
+  channel_id?: string;
+  sender_id?: string;
+  avatar?: string;
+  clan_id?: string;
+  attachment_link?: string;
+  display_name?: string;
+  create_time_seconds?: number;
+  update_time_seconds?: number;
+  username?: string;
+  mention_ids?: string[];
+  position_s?: number[];
+  position_e?: number[];
+  attachment_type?: string;
+  has_more_attachment?: boolean;
+}
+
 /** A notification in the server. */
 export interface Notification {
   /** Category code for this notification. */
   code?: number;
   /** Content of the notification in string. */
-  content?: string;
+  content?: NotificationFcmContent;
   /** The UNIX time when the notification was created. */
   createTimeSeconds?: number;
   /** ID of the Notification. */
@@ -1530,6 +1550,12 @@ export interface ApiEventManagement {
   //
   isPrivate?: boolean;
   //
+  startTimeSeconds?: number;
+  //
+  endTimeSeconds?: number;
+  //
+  createTimeSeconds?: number;
+  //
   meetRoom?: ApiGenerateMezonMeetResponse;
 }
 
@@ -2009,7 +2035,7 @@ export interface ApiMessageRef {
   // original message sendre username
   message_sender_username?: string;
   // original message sender avatar
-  mesages_sender_avatar?: string;
+  message_sender_avatar?: string;
   // original sender clan nick name
   message_sender_clan_nick?: string;
   // original sender display name

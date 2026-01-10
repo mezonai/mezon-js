@@ -3081,19 +3081,19 @@ export class DefaultSocket implements Socket {
     const response = await this.send({
       message_reaction_event: {
         id: id,
-        clanId: clanId,
-        channelId: channelId,
+        clan_id: clanId,
+        channel_id: channelId,
         mode: mode,
-        isPublic: isPublic,
-        messageId: messageId,
-        emojiId: emojiId,
+        is_public: isPublic,
+        message_id: messageId,
+        emoji_id: emojiId,
         emoji: emoji,
         count: count,
-        messageSenderId: messageSenderId,
+        message_sender_id: messageSenderId,
         action: action_delete,
-        topicId: topicId,
-        emojiRecentId: emojiRecentId,
-        senderName: senderName,
+        topic_id: topicId,
+        emoji_recent_id: emojiRecentId,
+        sender_name: senderName,
       },
     });
     return mapToCamelCase(response.message_reaction_event);
