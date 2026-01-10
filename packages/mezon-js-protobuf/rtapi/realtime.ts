@@ -1398,7 +1398,7 @@ export interface UserChannelAdded {
     | UserProfileRedis
     | undefined;
   /**  */
-  create_time_second: number;
+  create_time_seconds: number;
   /**  */
   active: number;
 }
@@ -11449,7 +11449,7 @@ function createBaseUserChannelAdded(): UserChannelAdded {
     status: "",
     clan_id: "",
     caller: undefined,
-    create_time_second: 0,
+    create_time_seconds: 0,
     active: 0,
   };
 }
@@ -11471,8 +11471,8 @@ export const UserChannelAdded = {
     if (message.caller !== undefined) {
       UserProfileRedis.encode(message.caller, writer.uint32(42).fork()).ldelim();
     }
-    if (message.create_time_second !== 0) {
-      writer.uint32(48).uint32(message.create_time_second);
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(48).uint32(message.create_time_seconds);
     }
     if (message.active !== 0) {
       writer.uint32(56).int32(message.active);
@@ -11527,7 +11527,7 @@ export const UserChannelAdded = {
             break;
           }
 
-          message.create_time_second = reader.uint32();
+          message.create_time_seconds = reader.uint32();
           continue;
         case 7:
           if (tag !== 56) {
@@ -11552,7 +11552,7 @@ export const UserChannelAdded = {
       status: isSet(object.status) ? globalThis.String(object.status) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       caller: isSet(object.caller) ? UserProfileRedis.fromJSON(object.caller) : undefined,
-      create_time_second: isSet(object.create_time_second) ? globalThis.Number(object.create_time_second) : 0,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
     };
   },
@@ -11574,8 +11574,8 @@ export const UserChannelAdded = {
     if (message.caller !== undefined) {
       obj.caller = UserProfileRedis.toJSON(message.caller);
     }
-    if (message.create_time_second !== 0) {
-      obj.create_time_second = Math.round(message.create_time_second);
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
     if (message.active !== 0) {
       obj.active = Math.round(message.active);
@@ -11597,7 +11597,7 @@ export const UserChannelAdded = {
     message.caller = (object.caller !== undefined && object.caller !== null)
       ? UserProfileRedis.fromPartial(object.caller)
       : undefined;
-    message.create_time_second = object.create_time_second ?? 0;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
     message.active = object.active ?? 0;
     return message;
   },

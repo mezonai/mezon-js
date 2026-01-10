@@ -1072,7 +1072,7 @@ message UserChannelAdded {
   //
   UserProfileRedis caller = 5;
   //
-  uint32 create_time_second = 6;
+  uint32 create_time_seconds = 6;
   //
   int32 active = 7;
 }

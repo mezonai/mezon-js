@@ -200,7 +200,7 @@ message MessageMention {
   // role name
   string rolename = 5;
   // The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  uint32 create_time_second = 6;
+  uint32 create_time_seconds = 6;
   // start position from text
   int32 s = 7;
   // end position from text
@@ -2818,7 +2818,7 @@ message LoginIDResponse {
   // status login
   int32 status = 2;
   // create time
-  int64 create_time_second = 3;
+  int64 create_time_seconds = 3;
   // platform
   string platform = 4;
   // user_id

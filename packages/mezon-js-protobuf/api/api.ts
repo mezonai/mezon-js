@@ -346,7 +346,7 @@ export interface MessageMention {
   /** role name */
   rolename: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
-  create_time_second: number;
+  create_time_seconds: number;
   /** start position from text */
   s: number;
   /** end position from text */
@@ -3116,7 +3116,7 @@ export interface LoginIDResponse {
   /** status login */
   status: number;
   /** create time */
-  create_time_second: number;
+  create_time_seconds: number;
   /** platform */
   platform: string;
   /** user_id */
@@ -5390,7 +5390,7 @@ export const ChannelMessage = {
 };
 
 function createBaseMessageMention(): MessageMention {
-  return { id: "", user_id: "", username: "", role_id: "", rolename: "", create_time_second: 0, s: 0, e: 0 };
+  return { id: "", user_id: "", username: "", role_id: "", rolename: "", create_time_seconds: 0, s: 0, e: 0 };
 }
 
 export const MessageMention = {
@@ -5410,8 +5410,8 @@ export const MessageMention = {
     if (message.rolename !== "") {
       writer.uint32(42).string(message.rolename);
     }
-    if (message.create_time_second !== 0) {
-      writer.uint32(48).uint32(message.create_time_second);
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(48).uint32(message.create_time_seconds);
     }
     if (message.s !== 0) {
       writer.uint32(56).int32(message.s);
@@ -5469,7 +5469,7 @@ export const MessageMention = {
             break;
           }
 
-          message.create_time_second = reader.uint32();
+          message.create_time_seconds = reader.uint32();
           continue;
         case 7:
           if (tag !== 56) {
@@ -5501,7 +5501,7 @@ export const MessageMention = {
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "",
       rolename: isSet(object.rolename) ? globalThis.String(object.rolename) : "",
-      create_time_second: isSet(object.create_time_second) ? globalThis.Number(object.create_time_second) : 0,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       s: isSet(object.s) ? globalThis.Number(object.s) : 0,
       e: isSet(object.e) ? globalThis.Number(object.e) : 0,
     };
@@ -5524,8 +5524,8 @@ export const MessageMention = {
     if (message.rolename !== "") {
       obj.rolename = message.rolename;
     }
-    if (message.create_time_second !== 0) {
-      obj.create_time_second = Math.round(message.create_time_second);
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
     if (message.s !== 0) {
       obj.s = Math.round(message.s);
@@ -5546,7 +5546,7 @@ export const MessageMention = {
     message.username = object.username ?? "";
     message.role_id = object.role_id ?? "";
     message.rolename = object.rolename ?? "";
-    message.create_time_second = object.create_time_second ?? 0;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
     message.s = object.s ?? 0;
     message.e = object.e ?? 0;
     return message;
@@ -31318,7 +31318,7 @@ export const CreateActivityRequest = {
 };
 
 function createBaseLoginIDResponse(): LoginIDResponse {
-  return { login_id: "", status: 0, create_time_second: 0, platform: "", user_id: 0, username: "", address: "" };
+  return { login_id: "", status: 0, create_time_seconds: 0, platform: "", user_id: 0, username: "", address: "" };
 }
 
 export const LoginIDResponse = {
@@ -31329,8 +31329,8 @@ export const LoginIDResponse = {
     if (message.status !== 0) {
       writer.uint32(16).int32(message.status);
     }
-    if (message.create_time_second !== 0) {
-      writer.uint32(24).int64(message.create_time_second);
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(24).int64(message.create_time_seconds);
     }
     if (message.platform !== "") {
       writer.uint32(34).string(message.platform);
@@ -31373,7 +31373,7 @@ export const LoginIDResponse = {
             break;
           }
 
-          message.create_time_second = longToNumber(reader.int64() as Long);
+          message.create_time_seconds = longToNumber(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -31416,7 +31416,7 @@ export const LoginIDResponse = {
     return {
       login_id: isSet(object.login_id) ? globalThis.String(object.login_id) : "",
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
-      create_time_second: isSet(object.create_time_second) ? globalThis.Number(object.create_time_second) : 0,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       platform: isSet(object.platform) ? globalThis.String(object.platform) : "",
       user_id: isSet(object.user_id) ? globalThis.Number(object.user_id) : 0,
       username: isSet(object.username) ? globalThis.String(object.username) : "",
@@ -31432,8 +31432,8 @@ export const LoginIDResponse = {
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
-    if (message.create_time_second !== 0) {
-      obj.create_time_second = Math.round(message.create_time_second);
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
     if (message.platform !== "") {
       obj.platform = message.platform;
@@ -31457,7 +31457,7 @@ export const LoginIDResponse = {
     const message = createBaseLoginIDResponse();
     message.login_id = object.login_id ?? "";
     message.status = object.status ?? 0;
-    message.create_time_second = object.create_time_second ?? 0;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
     message.platform = object.platform ?? "";
     message.user_id = object.user_id ?? 0;
     message.username = object.username ?? "";
