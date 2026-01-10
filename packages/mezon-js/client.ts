@@ -15,7 +15,7 @@
  */
 
 import { create } from "@bufbuild/protobuf";
-import { createGrpcWebTransport } from "@connectrpc/connect-web";
+import { createConnectTransport } from "@connectrpc/connect-web";
 import {
   CallOptions,
   createClient,
@@ -405,7 +405,7 @@ export class Client {
       basePath
     );
 
-    this.grpcTransport = createGrpcWebTransport({
+    this.grpcTransport = createConnectTransport({
       baseUrl: basePath,
       useBinaryFormat: true,
     });
@@ -436,7 +436,7 @@ export class Client {
     const basePath = `${scheme}${host}:${port}`;
     
     this.gatewayClient.setBasePath(basePath);
-    this.grpcTransport = createGrpcWebTransport({
+    this.grpcTransport = createConnectTransport({
       baseUrl: basePath,
       useBinaryFormat: true,
     });
