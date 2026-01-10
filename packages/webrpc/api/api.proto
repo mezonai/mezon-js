@@ -3431,6 +3431,7 @@ message DirectFcmProto {
   repeated int32 position_e = 15;
   string attachment_type = 16;
   bool has_more_attachment = 17;
+  repeated bool is_mention_role = 18;
 }
 
 message MessageMentionList {

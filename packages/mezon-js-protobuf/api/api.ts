@@ -3750,6 +3750,7 @@ export interface DirectFcmProto {
   position_e: number[];
   attachment_type: string;
   has_more_attachment: boolean;
+  is_mention_role: boolean[];
 }
 
 export interface MessageMentionList {
@@ -39059,6 +39060,7 @@ function createBaseDirectFcmProto(): DirectFcmProto {
     position_e: [],
     attachment_type: "",
     has_more_attachment: false,
+    is_mention_role: [],
   };
 }
 
@@ -39119,6 +39121,11 @@ export const DirectFcmProto = {
     if (message.has_more_attachment !== false) {
       writer.uint32(136).bool(message.has_more_attachment);
     }
+    writer.uint32(146).fork();
+    for (const v of message.is_mention_role) {
+      writer.bool(v);
+    }
+    writer.ldelim();
     return writer;
   },
 
@@ -39268,6 +39275,23 @@ export const DirectFcmProto = {
 
           message.has_more_attachment = reader.bool();
           continue;
+        case 18:
+          if (tag === 144) {
+            message.is_mention_role.push(reader.bool());
+
+            continue;
+          }
+
+          if (tag === 146) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.is_mention_role.push(reader.bool());
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -39302,6 +39326,9 @@ export const DirectFcmProto = {
         : [],
       attachment_type: isSet(object.attachment_type) ? globalThis.String(object.attachment_type) : "",
       has_more_attachment: isSet(object.has_more_attachment) ? globalThis.Boolean(object.has_more_attachment) : false,
+      is_mention_role: globalThis.Array.isArray(object?.is_mention_role)
+        ? object.is_mention_role.map((e: any) => globalThis.Boolean(e))
+        : [],
     };
   },
 
@@ -39358,6 +39385,9 @@ export const DirectFcmProto = {
     if (message.has_more_attachment !== false) {
       obj.has_more_attachment = message.has_more_attachment;
     }
+    if (message.is_mention_role?.length) {
+      obj.is_mention_role = message.is_mention_role;
+    }
     return obj;
   },
 
@@ -39383,6 +39413,7 @@ export const DirectFcmProto = {
     message.position_e = object.position_e?.map((e) => e) || [];
     message.attachment_type = object.attachment_type ?? "";
     message.has_more_attachment = object.has_more_attachment ?? false;
+    message.is_mention_role = object.is_mention_role?.map((e) => e) || [];
     return message;
   },
 };
