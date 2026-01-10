@@ -316,7 +316,6 @@ import {
   ApiLoginIDResponse,
   ApiLoginRequest,
   ApiMessageRef,
-  ApiChannelMessageHeader,
   ApiMessageReaction,
   NotificationList,
 } from "./types";
@@ -1481,10 +1480,8 @@ export class Client {
 
     var response: ChannelMessageList = {
       messages: [],
-      lastSeenMessage:
-        channelMessageList.lastSeenMessage as unknown as ApiChannelMessageHeader,
-      lastSentMessage:
-        channelMessageList.lastSentMessage as unknown as ApiChannelMessageHeader,
+      lastSeenMessage: channelMessageList.lastSeenMessage,
+      lastSentMessage: channelMessageList.lastSentMessage,
     };
 
     if (channelMessageList.messages == null) {
