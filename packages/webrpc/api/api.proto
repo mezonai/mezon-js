@@ -3420,13 +3420,17 @@ message DirectFcmProto {
   string channel_id = 4;
   string sender_id = 5;
   string avatar = 6;
-	string clan_id = 7;
-	bytes attachments = 8;
-	string display_name = 9;
-	int32 create_time_seconds = 10;
-	int32 update_time_seconds = 11;
+  string clan_id = 7;
+  string attachment_link = 8;
+  string display_name = 9;
+  int32 create_time_seconds = 10;
+  int32 update_time_seconds = 11;
   string username = 12;
-  bytes mentions = 13;
+  repeated string mention_ids = 13;
+  repeated int32 position_s = 14;
+  repeated int32 positiin_e = 15;
+  string attachment_type = 16;
+  bool has_more_attachment = 17;
 }
 
 message MessageMentionList {
