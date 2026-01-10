@@ -1615,9 +1615,7 @@ export interface CreateChannelDescRequest {
   /** The category of channel */
   category_id: string;
   /** The channel type. */
-  type:
-    | number
-    | undefined;
+  type: number;
   /** The channel lable */
   channel_label: string;
   /** The channel private */
@@ -1841,7 +1839,7 @@ export interface PinMessage {
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
   create_time_seconds: number;
   /** attachment */
-  attachment: string;
+  attachment: Uint8Array;
 }
 
 export interface PinMessagesList {
@@ -15660,7 +15658,7 @@ function createBaseCreateChannelDescRequest(): CreateChannelDescRequest {
     parent_id: "",
     channel_id: "",
     category_id: "",
-    type: undefined,
+    type: 0,
     channel_label: "",
     channel_private: 0,
     user_ids: [],
@@ -15682,8 +15680,8 @@ export const CreateChannelDescRequest = {
     if (message.category_id !== "") {
       writer.uint32(34).string(message.category_id);
     }
-    if (message.type !== undefined) {
-      Int32Value.encode({ value: message.type! }, writer.uint32(42).fork()).ldelim();
+    if (message.type !== 0) {
+      writer.uint32(40).int32(message.type);
     }
     if (message.channel_label !== "") {
       writer.uint32(50).string(message.channel_label);
@@ -15736,11 +15734,11 @@ export const CreateChannelDescRequest = {
           message.category_id = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.type = Int32Value.decode(reader, reader.uint32()).value;
+          message.type = reader.int32();
           continue;
         case 6:
           if (tag !== 50) {
@@ -15785,7 +15783,7 @@ export const CreateChannelDescRequest = {
       parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
-      type: isSet(object.type) ? Number(object.type) : undefined,
+      type: isSet(object.type) ? globalThis.Number(object.type) : 0,
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
@@ -15807,8 +15805,8 @@ export const CreateChannelDescRequest = {
     if (message.category_id !== "") {
       obj.category_id = message.category_id;
     }
-    if (message.type !== undefined) {
-      obj.type = message.type;
+    if (message.type !== 0) {
+      obj.type = Math.round(message.type);
     }
     if (message.channel_label !== "") {
       obj.channel_label = message.channel_label;
@@ -15834,7 +15832,7 @@ export const CreateChannelDescRequest = {
     message.parent_id = object.parent_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.category_id = object.category_id ?? "";
-    message.type = object.type ?? undefined;
+    message.type = object.type ?? 0;
     message.channel_label = object.channel_label ?? "";
     message.channel_private = object.channel_private ?? 0;
     message.user_ids = object.user_ids?.map((e) => e) || [];
@@ -17923,7 +17921,7 @@ function createBasePinMessage(): PinMessage {
     username: "",
     avatar: "",
     create_time_seconds: 0,
-    attachment: "",
+    attachment: new Uint8Array(0),
   };
 }
 
@@ -17953,8 +17951,8 @@ export const PinMessage = {
     if (message.create_time_seconds !== 0) {
       writer.uint32(64).uint32(message.create_time_seconds);
     }
-    if (message.attachment !== "") {
-      writer.uint32(74).string(message.attachment);
+    if (message.attachment.length !== 0) {
+      writer.uint32(74).bytes(message.attachment);
     }
     return writer;
   },
@@ -18027,7 +18025,7 @@ export const PinMessage = {
             break;
           }
 
-          message.attachment = reader.string();
+          message.attachment = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -18048,7 +18046,7 @@ export const PinMessage = {
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
-      attachment: isSet(object.attachment) ? globalThis.String(object.attachment) : "",
+      attachment: isSet(object.attachment) ? bytesFromBase64(object.attachment) : new Uint8Array(0),
     };
   },
 
@@ -18078,8 +18076,8 @@ export const PinMessage = {
     if (message.create_time_seconds !== 0) {
       obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
-    if (message.attachment !== "") {
-      obj.attachment = message.attachment;
+    if (message.attachment.length !== 0) {
+      obj.attachment = base64FromBytes(message.attachment);
     }
     return obj;
   },
@@ -18097,7 +18095,7 @@ export const PinMessage = {
     message.username = object.username ?? "";
     message.avatar = object.avatar ?? "";
     message.create_time_seconds = object.create_time_seconds ?? 0;
-    message.attachment = object.attachment ?? "";
+    message.attachment = object.attachment ?? new Uint8Array(0);
     return message;
   },
 };

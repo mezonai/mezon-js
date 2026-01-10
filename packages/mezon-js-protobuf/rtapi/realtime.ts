@@ -1163,9 +1163,7 @@ export interface ChannelCreatedEvent {
   /** channel private */
   channel_private: number;
   /** channel type */
-  channel_type:
-    | number
-    | undefined;
+  channel_type: number;
   /** status */
   status: number;
   /** app id */
@@ -9351,7 +9349,7 @@ function createBaseChannelCreatedEvent(): ChannelCreatedEvent {
     channel_id: "",
     channel_label: "",
     channel_private: 0,
-    channel_type: undefined,
+    channel_type: 0,
     status: 0,
     app_id: "",
     clan_name: "",
@@ -9382,8 +9380,8 @@ export const ChannelCreatedEvent = {
     if (message.channel_private !== 0) {
       writer.uint32(56).int32(message.channel_private);
     }
-    if (message.channel_type !== undefined) {
-      Int32Value.encode({ value: message.channel_type! }, writer.uint32(66).fork()).ldelim();
+    if (message.channel_type !== 0) {
+      writer.uint32(64).int32(message.channel_type);
     }
     if (message.status !== 0) {
       writer.uint32(72).int32(message.status);
@@ -9457,11 +9455,11 @@ export const ChannelCreatedEvent = {
           message.channel_private = reader.int32();
           continue;
         case 8:
-          if (tag !== 66) {
+          if (tag !== 64) {
             break;
           }
 
-          message.channel_type = Int32Value.decode(reader, reader.uint32()).value;
+          message.channel_type = reader.int32();
           continue;
         case 9:
           if (tag !== 72) {
@@ -9509,7 +9507,7 @@ export const ChannelCreatedEvent = {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
-      channel_type: isSet(object.channel_type) ? Number(object.channel_type) : undefined,
+      channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
@@ -9540,8 +9538,8 @@ export const ChannelCreatedEvent = {
     if (message.channel_private !== 0) {
       obj.channel_private = Math.round(message.channel_private);
     }
-    if (message.channel_type !== undefined) {
-      obj.channel_type = message.channel_type;
+    if (message.channel_type !== 0) {
+      obj.channel_type = Math.round(message.channel_type);
     }
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
@@ -9570,7 +9568,7 @@ export const ChannelCreatedEvent = {
     message.channel_id = object.channel_id ?? "";
     message.channel_label = object.channel_label ?? "";
     message.channel_private = object.channel_private ?? 0;
-    message.channel_type = object.channel_type ?? undefined;
+    message.channel_type = object.channel_type ?? 0;
     message.status = object.status ?? 0;
     message.app_id = object.app_id ?? "";
     message.clan_name = object.clan_name ?? "";

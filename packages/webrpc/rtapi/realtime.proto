@@ -849,7 +849,7 @@ message ChannelCreatedEvent {
   // channel private
   int32 channel_private = 7;
   // channel type
-  google.protobuf.Int32Value channel_type = 8;
+  int32 channel_type = 8;
   // status
   int32 status = 9;
   // app id

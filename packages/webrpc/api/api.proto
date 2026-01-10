@@ -1349,7 +1349,7 @@ message CreateChannelDescRequest {
   // The category of channel
   string category_id = 4;
   // The channel type.
-  google.protobuf.Int32Value type = 5;
+  int32 type = 5;
   // The channel lable
   string channel_label = 6;
   // The channel private
@@ -1570,7 +1570,7 @@ message PinMessage {
   // The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   uint32 create_time_seconds = 8;
   // attachment
-  string attachment = 9;
+  bytes attachment = 9;
 }
 
 message PinMessagesList {
