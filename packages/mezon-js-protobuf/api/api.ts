@@ -3747,7 +3747,7 @@ export interface DirectFcmProto {
   username: string;
   mention_ids: string[];
   position_s: number[];
-  positiin_e: number[];
+  position_e: number[];
   attachment_type: string;
   has_more_attachment: boolean;
 }
@@ -39056,7 +39056,7 @@ function createBaseDirectFcmProto(): DirectFcmProto {
     username: "",
     mention_ids: [],
     position_s: [],
-    positiin_e: [],
+    position_e: [],
     attachment_type: "",
     has_more_attachment: false,
   };
@@ -39109,7 +39109,7 @@ export const DirectFcmProto = {
     }
     writer.ldelim();
     writer.uint32(122).fork();
-    for (const v of message.positiin_e) {
+    for (const v of message.position_e) {
       writer.int32(v);
     }
     writer.ldelim();
@@ -39239,7 +39239,7 @@ export const DirectFcmProto = {
           break;
         case 15:
           if (tag === 120) {
-            message.positiin_e.push(reader.int32());
+            message.position_e.push(reader.int32());
 
             continue;
           }
@@ -39247,7 +39247,7 @@ export const DirectFcmProto = {
           if (tag === 122) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.positiin_e.push(reader.int32());
+              message.position_e.push(reader.int32());
             }
 
             continue;
@@ -39297,8 +39297,8 @@ export const DirectFcmProto = {
       position_s: globalThis.Array.isArray(object?.position_s)
         ? object.position_s.map((e: any) => globalThis.Number(e))
         : [],
-      positiin_e: globalThis.Array.isArray(object?.positiin_e)
-        ? object.positiin_e.map((e: any) => globalThis.Number(e))
+      position_e: globalThis.Array.isArray(object?.position_e)
+        ? object.position_e.map((e: any) => globalThis.Number(e))
         : [],
       attachment_type: isSet(object.attachment_type) ? globalThis.String(object.attachment_type) : "",
       has_more_attachment: isSet(object.has_more_attachment) ? globalThis.Boolean(object.has_more_attachment) : false,
@@ -39349,8 +39349,8 @@ export const DirectFcmProto = {
     if (message.position_s?.length) {
       obj.position_s = message.position_s.map((e) => Math.round(e));
     }
-    if (message.positiin_e?.length) {
-      obj.positiin_e = message.positiin_e.map((e) => Math.round(e));
+    if (message.position_e?.length) {
+      obj.position_e = message.position_e.map((e) => Math.round(e));
     }
     if (message.attachment_type !== "") {
       obj.attachment_type = message.attachment_type;
@@ -39380,7 +39380,7 @@ export const DirectFcmProto = {
     message.username = object.username ?? "";
     message.mention_ids = object.mention_ids?.map((e) => e) || [];
     message.position_s = object.position_s?.map((e) => e) || [];
-    message.positiin_e = object.positiin_e?.map((e) => e) || [];
+    message.position_e = object.position_e?.map((e) => e) || [];
     message.attachment_type = object.attachment_type ?? "";
     message.has_more_attachment = object.has_more_attachment ?? false;
     return message;

@@ -3428,7 +3428,7 @@ message DirectFcmProto {
   string username = 12;
   repeated string mention_ids = 13;
   repeated int32 position_s = 14;
-  repeated int32 positiin_e = 15;
+  repeated int32 position_e = 15;
   string attachment_type = 16;
   bool has_more_attachment = 17;
 }
