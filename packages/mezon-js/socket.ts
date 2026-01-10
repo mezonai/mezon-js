@@ -1470,8 +1470,8 @@ export interface Socket {
     messageId: string,
     hasAttachment?: boolean,
     topicId?: string,
-    mentions?: string,
-    references?: string
+    mentions?: Uint8Array,
+    references?: Uint8Array
   ): Promise<ChannelMessageAck>;
 
   /** Execute an RPC function to the server. */
@@ -2871,8 +2871,8 @@ export class DefaultSocket implements Socket {
     messageId: string,
     hasAttachment?: boolean,
     topicId?: string,
-    mentions?: string,
-    references?: string
+    mentions?: Uint8Array,
+    references?: Uint8Array
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_remove: {
