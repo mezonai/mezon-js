@@ -3740,12 +3740,16 @@ export interface DirectFcmProto {
   sender_id: string;
   avatar: string;
   clan_id: string;
-  attachments: Uint8Array;
+  attachment_link: string;
   display_name: string;
   create_time_seconds: number;
   update_time_seconds: number;
   username: string;
-  mentions: Uint8Array;
+  mention_ids: string[];
+  position_s: number[];
+  positiin_e: number[];
+  attachment_type: string;
+  has_more_attachment: boolean;
 }
 
 export interface MessageMentionList {
@@ -39045,12 +39049,16 @@ function createBaseDirectFcmProto(): DirectFcmProto {
     sender_id: "",
     avatar: "",
     clan_id: "",
-    attachments: new Uint8Array(0),
+    attachment_link: "",
     display_name: "",
     create_time_seconds: 0,
     update_time_seconds: 0,
     username: "",
-    mentions: new Uint8Array(0),
+    mention_ids: [],
+    position_s: [],
+    positiin_e: [],
+    attachment_type: "",
+    has_more_attachment: false,
   };
 }
 
@@ -39077,8 +39085,8 @@ export const DirectFcmProto = {
     if (message.clan_id !== "") {
       writer.uint32(58).string(message.clan_id);
     }
-    if (message.attachments.length !== 0) {
-      writer.uint32(66).bytes(message.attachments);
+    if (message.attachment_link !== "") {
+      writer.uint32(66).string(message.attachment_link);
     }
     if (message.display_name !== "") {
       writer.uint32(74).string(message.display_name);
@@ -39092,8 +39100,24 @@ export const DirectFcmProto = {
     if (message.username !== "") {
       writer.uint32(98).string(message.username);
     }
-    if (message.mentions.length !== 0) {
-      writer.uint32(106).bytes(message.mentions);
+    for (const v of message.mention_ids) {
+      writer.uint32(106).string(v!);
+    }
+    writer.uint32(114).fork();
+    for (const v of message.position_s) {
+      writer.int32(v);
+    }
+    writer.ldelim();
+    writer.uint32(122).fork();
+    for (const v of message.positiin_e) {
+      writer.int32(v);
+    }
+    writer.ldelim();
+    if (message.attachment_type !== "") {
+      writer.uint32(130).string(message.attachment_type);
+    }
+    if (message.has_more_attachment !== false) {
+      writer.uint32(136).bool(message.has_more_attachment);
     }
     return writer;
   },
@@ -39159,7 +39183,7 @@ export const DirectFcmProto = {
             break;
           }
 
-          message.attachments = reader.bytes();
+          message.attachment_link = reader.string();
           continue;
         case 9:
           if (tag !== 74) {
@@ -39194,7 +39218,55 @@ export const DirectFcmProto = {
             break;
           }
 
-          message.mentions = reader.bytes();
+          message.mention_ids.push(reader.string());
+          continue;
+        case 14:
+          if (tag === 112) {
+            message.position_s.push(reader.int32());
+
+            continue;
+          }
+
+          if (tag === 114) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.position_s.push(reader.int32());
+            }
+
+            continue;
+          }
+
+          break;
+        case 15:
+          if (tag === 120) {
+            message.positiin_e.push(reader.int32());
+
+            continue;
+          }
+
+          if (tag === 122) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.positiin_e.push(reader.int32());
+            }
+
+            continue;
+          }
+
+          break;
+        case 16:
+          if (tag !== 130) {
+            break;
+          }
+
+          message.attachment_type = reader.string();
+          continue;
+        case 17:
+          if (tag !== 136) {
+            break;
+          }
+
+          message.has_more_attachment = reader.bool();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -39214,12 +39286,22 @@ export const DirectFcmProto = {
       sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      attachments: isSet(object.attachments) ? bytesFromBase64(object.attachments) : new Uint8Array(0),
+      attachment_link: isSet(object.attachment_link) ? globalThis.String(object.attachment_link) : "",
       display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
       username: isSet(object.username) ? globalThis.String(object.username) : "",
-      mentions: isSet(object.mentions) ? bytesFromBase64(object.mentions) : new Uint8Array(0),
+      mention_ids: globalThis.Array.isArray(object?.mention_ids)
+        ? object.mention_ids.map((e: any) => globalThis.String(e))
+        : [],
+      position_s: globalThis.Array.isArray(object?.position_s)
+        ? object.position_s.map((e: any) => globalThis.Number(e))
+        : [],
+      positiin_e: globalThis.Array.isArray(object?.positiin_e)
+        ? object.positiin_e.map((e: any) => globalThis.Number(e))
+        : [],
+      attachment_type: isSet(object.attachment_type) ? globalThis.String(object.attachment_type) : "",
+      has_more_attachment: isSet(object.has_more_attachment) ? globalThis.Boolean(object.has_more_attachment) : false,
     };
   },
 
@@ -39246,8 +39328,8 @@ export const DirectFcmProto = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.attachments.length !== 0) {
-      obj.attachments = base64FromBytes(message.attachments);
+    if (message.attachment_link !== "") {
+      obj.attachment_link = message.attachment_link;
     }
     if (message.display_name !== "") {
       obj.display_name = message.display_name;
@@ -39261,8 +39343,20 @@ export const DirectFcmProto = {
     if (message.username !== "") {
       obj.username = message.username;
     }
-    if (message.mentions.length !== 0) {
-      obj.mentions = base64FromBytes(message.mentions);
+    if (message.mention_ids?.length) {
+      obj.mention_ids = message.mention_ids;
+    }
+    if (message.position_s?.length) {
+      obj.position_s = message.position_s.map((e) => Math.round(e));
+    }
+    if (message.positiin_e?.length) {
+      obj.positiin_e = message.positiin_e.map((e) => Math.round(e));
+    }
+    if (message.attachment_type !== "") {
+      obj.attachment_type = message.attachment_type;
+    }
+    if (message.has_more_attachment !== false) {
+      obj.has_more_attachment = message.has_more_attachment;
     }
     return obj;
   },
@@ -39279,12 +39373,16 @@ export const DirectFcmProto = {
     message.sender_id = object.sender_id ?? "";
     message.avatar = object.avatar ?? "";
     message.clan_id = object.clan_id ?? "";
-    message.attachments = object.attachments ?? new Uint8Array(0);
+    message.attachment_link = object.attachment_link ?? "";
     message.display_name = object.display_name ?? "";
     message.create_time_seconds = object.create_time_seconds ?? 0;
     message.update_time_seconds = object.update_time_seconds ?? 0;
     message.username = object.username ?? "";
-    message.mentions = object.mentions ?? new Uint8Array(0);
+    message.mention_ids = object.mention_ids?.map((e) => e) || [];
+    message.position_s = object.position_s?.map((e) => e) || [];
+    message.positiin_e = object.positiin_e?.map((e) => e) || [];
+    message.attachment_type = object.attachment_type ?? "";
+    message.has_more_attachment = object.has_more_attachment ?? false;
     return message;
   },
 };
