@@ -5254,7 +5254,7 @@ export class Client {
     clanId?: string,
     channelId?: string,
     label?: string
-  ): Promise<ChannelDescListNoPool> {
+  ): Promise<ChannelDescList> {
     if (
       this.autoRefreshSession &&
       session.refreshToken &&

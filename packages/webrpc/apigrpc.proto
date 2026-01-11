@@ -1156,7 +1156,7 @@ service Mezon {
     };
   }
 
-  rpc SearchThread(api.SearchThreadRequest) returns (api.ChannelDescListNoPool) {
+  rpc SearchThread(api.SearchThreadRequest) returns (api.ChannelDescList) {
     option (google.api.http) = {
       get: "/v2/searchthread"
     };
