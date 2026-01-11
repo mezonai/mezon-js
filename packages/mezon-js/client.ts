@@ -1504,29 +1504,23 @@ export class Client {
       try {
         reactions =
           (decodeReactions(m.reactions)
-            ?.reactions as unknown as ApiMessageReaction[]) ||
-          safeJSONParse((m.reactions as unknown as string) || "[]");
+            ?.reactions as unknown as ApiMessageReaction[]) ?? [];
       } catch (e) {
         console.log("error parse reactions", e);
       }
       try {
-        mentions =
-          decodeMentions(m.mentions)?.mentions ||
-          safeJSONParse((m.mentions as unknown as string) || "[]");
+        mentions = decodeMentions(m.mentions)?.mentions ?? [];
       } catch (e) {
         console.log("error parse mentions", e);
       }
       try {
-        attachments =
-          decodeAttachments(m.attachments)?.attachments ||
-          safeJSONParse((m.attachments as unknown as string) || "[]");
+        attachments = decodeAttachments(m.attachments)?.attachments ?? [];
       } catch (e) {
         console.log("error parse attachments", e);
       }
       try {
         references =
-          (decodeRefs(m.references)?.refs as unknown as ApiMessageRef[]) ||
-          safeJSONParse((m.references as unknown as string) || "[]");
+          (decodeRefs(m.references)?.refs as unknown as ApiMessageRef[]) ?? [];
       } catch (e) {
         console.log("error parse references", e);
       }
@@ -2265,9 +2259,7 @@ export class Client {
     notificationList.notifications!.forEach((n) => {
       var content;
       try {
-        content =
-          decodeNotificationFcm(n.content) ||
-          safeJSONParse((n.content as unknown as string) || "{}");
+        content = decodeNotificationFcm(n.content) ?? {};
       } catch (e) {
         console.log("error parse content", e);
       }
