@@ -1336,7 +1336,7 @@ export interface ListDataSocket {
 }
 
 function createChannelMessageFromEvent(message: any) {
-  var content, reactions, mentions, attachments, references, referencedMessage;
+  var content, reactions, mentions, attachments, references;
   try {
     content = safeJSONParse(message.channel_message.content);
   } catch (e) {
@@ -1345,40 +1345,29 @@ function createChannelMessageFromEvent(message: any) {
   try {
     reactions =
       (decodeReactions(message.channel_message.reactions)
-        ?.reactions as unknown as ApiMessageReaction[]) ||
-      safeJSONParse(message.channel_message.reactions);
+        ?.reactions as unknown as ApiMessageReaction[]) ?? [];
   } catch (e) {
     console.log("reactions is invalid", e);
   }
   try {
-    mentions =
-      decodeMentions(message.channel_message.mentions)?.mentions ||
-      safeJSONParse(message.channel_message.mentions || "[]");
+    mentions = decodeMentions(message.channel_message.mentions)?.mentions ?? [];
   } catch (e) {
     console.log("mentions is invalid", e);
   }
   try {
     attachments =
-      decodeAttachments(message.channel_message.attachments)?.attachments ||
-      safeJSONParse(message.channel_message.attachments || "[]");
+      decodeAttachments(message.channel_message.attachments)?.attachments ?? [];
   } catch (e) {
     console.log("attachments is invalid", e);
   }
   try {
     references =
       (decodeRefs(message.channel_message.references)
-        ?.refs as unknown as ApiMessageRef[]) ||
-      safeJSONParse(message.channel_message.references || "[]");
+        ?.refs as unknown as ApiMessageRef[]) ?? [];
   } catch (e) {
     console.log("references is invalid", e);
   }
-  try {
-    referencedMessage = safeJSONParse(
-      message.channel_message.referenced_message
-    );
-  } catch (e) {
-    console.log("referenced messages is invalid", e);
-  }
+
   var channelMessage: ChannelMessage = {
     id: message.id || message.channel_message.message_id,
     avatar: message.channel_message.avatar,
@@ -1399,7 +1388,7 @@ function createChannelMessageFromEvent(message: any) {
     reactions: reactions,
     mentions: mentions,
     attachments: attachments,
-    referencedMessage: referencedMessage,
+    referencedMessage: [],
     references: references,
     hideEditted: message.channel_message.hide_editted,
     isPublic: message.channel_message.is_public,
