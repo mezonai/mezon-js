@@ -2011,176 +2011,98 @@ export class DefaultSocket implements Socket {
             message.last_seen_message_event
           );
         } else if (message.status_presence_event) {
-          this.onstatuspresence(
-            <StatusPresenceEvent>message.status_presence_event
-          );
+          this.onstatuspresence(message.status_presence_event);
         } else if (message.stream_presence_event) {
-          this.onstreampresence(
-            <StreamPresenceEvent>message.stream_presence_event
-          );
+          this.onstreampresence(message.stream_presence_event);
         } else if (message.stream_data) {
-          this.onstreamdata(<StreamData>message.stream_data);
+          this.onstreamdata(message.stream_data);
         } else if (message.channel_message) {
           const channelMessage = createChannelMessageFromEvent(message);
           this.onchannelmessage(channelMessage);
         } else if (message.message_typing_event) {
-          this.onmessagetyping(
-            <MessageTypingEvent>message.message_typing_event
-          );
+          this.onmessagetyping(message.message_typing_event);
         } else if (message.message_reaction_event) {
-          this.onmessagereaction(
-            <ApiMessageReaction>message.message_reaction_event
-          );
+          this.onmessagereaction(message.message_reaction_event);
         } else if (message.channel_presence_event) {
-          this.onchannelpresence(
-            <ChannelPresenceEvent>message.channel_presence_event
-          );
+          this.onchannelpresence(message.channel_presence_event);
         } else if (message.last_pin_message_event) {
-          this.onpinmessage(
-            <LastPinMessageEvent>message.last_pin_message_event
-          );
+          this.onpinmessage(message.last_pin_message_event);
         } else if (message.custom_status_event) {
-          this.oncustomstatus(
-            <CustomStatusEvent>message.custom_status_event
-          );
+          this.oncustomstatus(message.custom_status_event);
         } else if (message.canvas_event) {
-          this.oncanvasevent(
-            <ChannelCanvas>message.canvas_event
-          );
+          this.oncanvasevent(message.canvas_event);
         } else if (message.user_channel_added_event) {
-          this.onuserchanneladded(
-            <UserChannelAddedEvent>message.user_channel_added_event
-          );
+          this.onuserchanneladded(message.user_channel_added_event);
         } else if (message.add_clan_user_event) {
-          this.onuserclanadded(
-            <AddClanUserEvent>message.add_clan_user_event
-          );
+          this.onuserclanadded(message.add_clan_user_event);
         } else if (message.user_profile_updated_event) {
-          this.onuserprofileupdate(
-            <UserProfileUpdatedEvent>message.user_profile_updated_event
-          );
+          this.onuserprofileupdate(message.user_profile_updated_event);
         } else if (message.user_channel_removed_event) {
-          this.onuserchannelremoved(
-            <UserChannelRemovedEvent>message.user_channel_removed_event
-          );
+          this.onuserchannelremoved(message.user_channel_removed_event);
         } else if (message.block_friend) {
-          this.onblockfriend(<BlockFriend>message.block_friend);
+          this.onblockfriend(message.block_friend);
         } else if (message.un_block_friend) {
-          this.onunblockfriend(
-            <UnblockFriend>message.un_block_friend
-          );
+          this.onunblockfriend(message.un_block_friend);
         } else if (message.add_friend) {
-          this.onaddfriend(<AddFriend>message.add_friend);
+          this.onaddfriend(message.add_friend);
         } else if (message.remove_friend) {
-          this.onremovefriend(
-            <RemoveFriend>message.remove_friend
-          );
+          this.onremovefriend(message.remove_friend);
         } else if (message.user_clan_removed_event) {
-          this.onuserclanremoved(
-            <UserClanRemovedEvent>message.user_clan_removed_event
-          );
+          this.onuserclanremoved(message.user_clan_removed_event);
         } else if (message.clan_event_created) {
           this.oneventcreated(message.clan_event_created);
         } else if (message.give_coffee_event) {
-          this.oncoffeegiven(
-            <ApiGiveCoffeeEvent>message.give_coffee_event
-          );
+          this.oncoffeegiven(message.give_coffee_event);
         } else if (message.role_assign_event) {
-          this.onroleassign(
-            <RoleAssignedEvent>message.role_assign_event
-          );
+          this.onroleassign(message.role_assign_event);
         } else if (message.streaming_started_event) {
-          this.onstreamingchannelstarted(
-            <StreamingStartedEvent>message.streaming_started_event
-          );
+          this.onstreamingchannelstarted(message.streaming_started_event);
         } else if (message.streaming_ended_event) {
-          this.onstreamingchannelended(
-            <StreamingEndedEvent>message.streaming_ended_event
-          );
+          this.onstreamingchannelended(message.streaming_ended_event);
         } else if (message.streaming_joined_event) {
-          this.onstreamingchanneljoined(
-            <StreamingJoinedEvent>message.streaming_joined_event
-          );
+          this.onstreamingchanneljoined(message.streaming_joined_event);
         } else if (message.streaming_leaved_event) {
-          this.onstreamingchannelleaved(
-            <StreamingLeavedEvent>message.streaming_leaved_event
-          );
+          this.onstreamingchannelleaved(message.streaming_leaved_event);
         } else if (message.permission_set_event) {
-          this.onpermissionset(
-            <PermissionSet>message.permission_set_event
-          );
+          this.onpermissionset(message.permission_set_event);
         } else if (message.permission_changed_event) {
-          this.onpermissionchanged(
-            <PermissionChangedEvent>message.permission_changed_event
-          );
+          this.onpermissionchanged(message.permission_changed_event);
         } else if (message.unmute_event) {
-          this.onunmuteevent(<UnmuteEvent>message.unmute_event);
+          this.onunmuteevent(message.unmute_event);
         } else if (message.token_sent_event) {
-          this.ontokensent(
-            <ApiTokenSentEvent>message.token_sent_event
-          );
+          this.ontokensent(message.token_sent_event);
         } else if (message.message_button_clicked) {
-          this.onmessagebuttonclicked(
-            <MessageButtonClicked>message.message_button_clicked
-          );
+          this.onmessagebuttonclicked(message.message_button_clicked);
         } else if (message.dropdown_box_selected) {
-          this.onmessagedropdownboxselected(
-            <DropdownBoxSelected>message.dropdown_box_selected
-          );
+          this.onmessagedropdownboxselected(message.dropdown_box_selected);
         } else if (message.mark_as_read) {
-          this.onmarkasread(<MarkAsRead>message.mark_as_read);
+          this.onmarkasread(message.mark_as_read);
         } else if (message.voice_reaction_send) {
-          this.onvoicereactionmessage(
-            <VoiceReactionSend>message.voice_reaction_send
-          );
+          this.onvoicereactionmessage(message.voice_reaction_send);
         } else if (message.webrtc_signaling_fwd) {
-          this.onwebrtcsignalingfwd(
-            <WebrtcSignalingFwd>message.webrtc_signaling_fwd
-          );
+          this.onwebrtcsignalingfwd(message.webrtc_signaling_fwd);
         } else if (message.list_activity) {
-          this.onactivityupdated(
-            <ListActivity>message.list_activity
-          );
+          this.onactivityupdated(message.list_activity);
         } else if (message.sd_topic_event) {
-          this.onsdtopicevent(
-            <SdTopicEvent>message.sd_topic_event
-          );
+          this.onsdtopicevent(message.sd_topic_event);
         } else if (message.channel_app_event) {
-          this.onchannelappevent(
-            <ChannelAppEvent>message.channel_app_event
-          );
+          this.onchannelappevent(message.channel_app_event);
         } else if (message.user_status_event) {
-          this.onuserstatusevent(
-            <UserStatusEvent>message.user_status_event
-          );
+          this.onuserstatusevent(message.user_status_event);
         } else if (message.join_channel_app_data) {
-          this.onjoinchannelappevent(
-            <JoinChannelAppData>message.join_channel_app_data
-          );
+          this.onjoinchannelappevent(message.join_channel_app_data);
         } else if (message.unpin_message_event) {
-          this.onunpinmessageevent(
-            <UnpinMessageEvent>message.unpin_message_event
-          );
+          this.onunpinmessageevent(message.unpin_message_event);
         } else if (message.quick_menu_event) {
-          this.onquickmenuevent(
-            <QuickMenuEvent>message.quick_menu_event
-          );
+          this.onquickmenuevent(message.quick_menu_event);
         } else if (message.meet_participant_event) {
-          this.onmeetparticipantevent(
-            <MeetParticipantEvent>message.meet_participant_event
-          );
+          this.onmeetparticipantevent(message.meet_participant_event);
         } else if (message.transfer_ownership_event) {
-          this.ontransferownership(
-            <TransferOwnershipEvent>message.transfer_ownership_event
-          );
+          this.ontransferownership(message.transfer_ownership_event);
         } else if (message.ban_user_event) {
-          this.onbanneduser(
-            <BannedUserEvent>message.ban_user_event
-          );
+          this.onbanneduser(message.ban_user_event);
         } else if (message.allow_anonymous_event) {
-          this.onallowanonymousevent(
-            <AllowAnonymousEvent>message.allow_anonymous_event
-          );
+          this.onallowanonymousevent(message.allow_anonymous_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
