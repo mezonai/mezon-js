@@ -66,7 +66,7 @@ import {
 } from "./types";
 import { Session } from "./session";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
-import { mapToCamelCase, mapToSnakeCase, safeJSONParse } from "./utils";
+import { safeJSONParse } from "./utils";
 import {
   decodeReactions,
   decodeMentions,
@@ -1976,235 +1976,221 @@ export class DefaultSocket implements Socket {
             this.onnotification(n);
           });
         } else if (message.voice_started_event) {
-          this.onvoicestarted(mapToCamelCase(message.voice_started_event));
+          this.onvoicestarted(message.voice_started_event);
         } else if (message.voice_ended_event) {
-          this.onvoiceended(mapToCamelCase(message.voice_ended_event));
+          this.onvoiceended(message.voice_ended_event);
         } else if (message.voice_joined_event) {
-          this.onvoicejoined(mapToCamelCase(message.voice_joined_event));
+          this.onvoicejoined(message.voice_joined_event);
         } else if (message.voice_leaved_event) {
-          this.onvoiceleaved(mapToCamelCase(message.voice_leaved_event));
+          this.onvoiceleaved(message.voice_leaved_event);
         } else if (message.channel_created_event) {
-          this.onchannelcreated(mapToCamelCase(message.channel_created_event));
+          this.onchannelcreated(message.channel_created_event);
         } else if (message.category_event) {
-          this.oncategoryevent(mapToCamelCase(message.category_event));
+          this.oncategoryevent(message.category_event);
         } else if (message.role_event) {
-          this.onroleevent(mapToCamelCase(message.role_event));
+          this.onroleevent(message.role_event);
         } else if (message.event_emoji) {
-          this.oneventemoji(mapToCamelCase(message.event_emoji));
+          this.oneventemoji(message.event_emoji);
         } else if (message.noti_user_channel) {
           this.oneventnotiuserchannel(
-            mapToCamelCase(message.noti_user_channel)
+            message.noti_user_channel
           );
         } else if (message.webhook_event) {
-          this.oneventwebhook(mapToCamelCase(message.webhook_event));
+          this.oneventwebhook(message.webhook_event);
         } else if (message.channel_deleted_event) {
-          this.onchanneldeleted(mapToCamelCase(message.channel_deleted_event));
+          this.onchanneldeleted(message.channel_deleted_event);
         } else if (message.clan_deleted_event) {
-          this.onclandeleted(mapToCamelCase(message.clan_deleted_event));
+          this.onclandeleted(message.clan_deleted_event);
         } else if (message.sticker_create_event) {
-          this.onstickercreated(mapToCamelCase(message.sticker_create_event));
+          this.onstickercreated(message.sticker_create_event);
         } else if (message.sticker_update_event) {
-          this.onstickerupdated(mapToCamelCase(message.sticker_update_event));
+          this.onstickerupdated(message.sticker_update_event);
         } else if (message.sticker_delete_event) {
-          this.onstickerdeleted(mapToCamelCase(message.sticker_delete_event));
+          this.onstickerdeleted(message.sticker_delete_event);
         } else if (message.channel_updated_event) {
-          this.onchannelupdated(mapToCamelCase(message.channel_updated_event));
+          this.onchannelupdated(message.channel_updated_event);
         } else if (message.delete_account_event) {
-          this.ondeleteaccount(mapToCamelCase(message.delete_account_event));
+          this.ondeleteaccount(message.delete_account_event);
         } else if (message.clan_profile_updated_event) {
           this.onclanprofileupdated(
-            mapToCamelCase(message.clan_profile_updated_event)
+            message.clan_profile_updated_event
           );
         } else if (message.clan_updated_event) {
-          this.onclanupdated(mapToCamelCase(message.clan_updated_event));
+          this.onclanupdated(message.clan_updated_event);
         } else if (message.last_seen_message_event) {
           this.onlastseenupdated(
-            mapToCamelCase(message.last_seen_message_event)
+            message.last_seen_message_event
           );
         } else if (message.status_presence_event) {
           this.onstatuspresence(
-            mapToCamelCase(<StatusPresenceEvent>message.status_presence_event)
+            <StatusPresenceEvent>message.status_presence_event
           );
         } else if (message.stream_presence_event) {
           this.onstreampresence(
-            mapToCamelCase(<StreamPresenceEvent>message.stream_presence_event)
+            <StreamPresenceEvent>message.stream_presence_event
           );
         } else if (message.stream_data) {
-          this.onstreamdata(mapToCamelCase(<StreamData>message.stream_data));
+          this.onstreamdata(<StreamData>message.stream_data);
         } else if (message.channel_message) {
           const channelMessage = createChannelMessageFromEvent(message);
           this.onchannelmessage(channelMessage);
         } else if (message.message_typing_event) {
           this.onmessagetyping(
-            mapToCamelCase(<MessageTypingEvent>message.message_typing_event)
+            <MessageTypingEvent>message.message_typing_event
           );
         } else if (message.message_reaction_event) {
           this.onmessagereaction(
-            mapToCamelCase(<ApiMessageReaction>message.message_reaction_event)
+            <ApiMessageReaction>message.message_reaction_event
           );
         } else if (message.channel_presence_event) {
           this.onchannelpresence(
-            mapToCamelCase(<ChannelPresenceEvent>message.channel_presence_event)
+            <ChannelPresenceEvent>message.channel_presence_event
           );
         } else if (message.last_pin_message_event) {
           this.onpinmessage(
-            mapToCamelCase(<LastPinMessageEvent>message.last_pin_message_event)
+            <LastPinMessageEvent>message.last_pin_message_event
           );
         } else if (message.custom_status_event) {
           this.oncustomstatus(
-            mapToCamelCase(<CustomStatusEvent>message.custom_status_event)
+            <CustomStatusEvent>message.custom_status_event
           );
         } else if (message.canvas_event) {
           this.oncanvasevent(
-            mapToCamelCase(<ChannelCanvas>message.canvas_event)
+            <ChannelCanvas>message.canvas_event
           );
         } else if (message.user_channel_added_event) {
           this.onuserchanneladded(
-            mapToCamelCase(
-              <UserChannelAddedEvent>message.user_channel_added_event
-            )
+            <UserChannelAddedEvent>message.user_channel_added_event
           );
         } else if (message.add_clan_user_event) {
           this.onuserclanadded(
-            mapToCamelCase(<AddClanUserEvent>message.add_clan_user_event)
+            <AddClanUserEvent>message.add_clan_user_event
           );
         } else if (message.user_profile_updated_event) {
           this.onuserprofileupdate(
-            mapToCamelCase(
-              <UserProfileUpdatedEvent>message.user_profile_updated_event
-            )
+            <UserProfileUpdatedEvent>message.user_profile_updated_event
           );
         } else if (message.user_channel_removed_event) {
           this.onuserchannelremoved(
-            mapToCamelCase(
-              <UserChannelRemovedEvent>message.user_channel_removed_event
-            )
+            <UserChannelRemovedEvent>message.user_channel_removed_event
           );
         } else if (message.block_friend) {
-          this.onblockfriend(mapToCamelCase(<BlockFriend>message.block_friend));
+          this.onblockfriend(<BlockFriend>message.block_friend);
         } else if (message.un_block_friend) {
           this.onunblockfriend(
-            mapToCamelCase(<UnblockFriend>message.un_block_friend)
+            <UnblockFriend>message.un_block_friend
           );
         } else if (message.add_friend) {
-          this.onaddfriend(mapToCamelCase(<AddFriend>message.add_friend));
+          this.onaddfriend(<AddFriend>message.add_friend);
         } else if (message.remove_friend) {
           this.onremovefriend(
-            mapToCamelCase(<RemoveFriend>message.remove_friend)
+            <RemoveFriend>message.remove_friend
           );
         } else if (message.user_clan_removed_event) {
           this.onuserclanremoved(
-            mapToCamelCase(
-              <UserClanRemovedEvent>message.user_clan_removed_event
-            )
+            <UserClanRemovedEvent>message.user_clan_removed_event
           );
         } else if (message.clan_event_created) {
-          this.oneventcreated(mapToCamelCase(message.clan_event_created));
+          this.oneventcreated(message.clan_event_created);
         } else if (message.give_coffee_event) {
           this.oncoffeegiven(
-            mapToCamelCase(<ApiGiveCoffeeEvent>message.give_coffee_event)
+            <ApiGiveCoffeeEvent>message.give_coffee_event
           );
         } else if (message.role_assign_event) {
           this.onroleassign(
-            mapToCamelCase(<RoleAssignedEvent>message.role_assign_event)
+            <RoleAssignedEvent>message.role_assign_event
           );
         } else if (message.streaming_started_event) {
           this.onstreamingchannelstarted(
-            mapToCamelCase(
-              <StreamingStartedEvent>message.streaming_started_event
-            )
+            <StreamingStartedEvent>message.streaming_started_event
           );
         } else if (message.streaming_ended_event) {
           this.onstreamingchannelended(
-            mapToCamelCase(<StreamingEndedEvent>message.streaming_ended_event)
+            <StreamingEndedEvent>message.streaming_ended_event
           );
         } else if (message.streaming_joined_event) {
           this.onstreamingchanneljoined(
-            mapToCamelCase(<StreamingJoinedEvent>message.streaming_joined_event)
+            <StreamingJoinedEvent>message.streaming_joined_event
           );
         } else if (message.streaming_leaved_event) {
           this.onstreamingchannelleaved(
-            mapToCamelCase(<StreamingLeavedEvent>message.streaming_leaved_event)
+            <StreamingLeavedEvent>message.streaming_leaved_event
           );
         } else if (message.permission_set_event) {
           this.onpermissionset(
-            mapToCamelCase(<PermissionSet>message.permission_set_event)
+            <PermissionSet>message.permission_set_event
           );
         } else if (message.permission_changed_event) {
           this.onpermissionchanged(
-            mapToCamelCase(
-              <PermissionChangedEvent>message.permission_changed_event
-            )
+            <PermissionChangedEvent>message.permission_changed_event
           );
         } else if (message.unmute_event) {
-          this.onunmuteevent(mapToCamelCase(<UnmuteEvent>message.unmute_event));
+          this.onunmuteevent(<UnmuteEvent>message.unmute_event);
         } else if (message.token_sent_event) {
           this.ontokensent(
-            mapToCamelCase(<ApiTokenSentEvent>message.token_sent_event)
+            <ApiTokenSentEvent>message.token_sent_event
           );
         } else if (message.message_button_clicked) {
           this.onmessagebuttonclicked(
-            mapToCamelCase(<MessageButtonClicked>message.message_button_clicked)
+            <MessageButtonClicked>message.message_button_clicked
           );
         } else if (message.dropdown_box_selected) {
           this.onmessagedropdownboxselected(
-            mapToCamelCase(<DropdownBoxSelected>message.dropdown_box_selected)
+            <DropdownBoxSelected>message.dropdown_box_selected
           );
         } else if (message.mark_as_read) {
-          this.onmarkasread(mapToCamelCase(<MarkAsRead>message.mark_as_read));
+          this.onmarkasread(<MarkAsRead>message.mark_as_read);
         } else if (message.voice_reaction_send) {
           this.onvoicereactionmessage(
-            mapToCamelCase(<VoiceReactionSend>message.voice_reaction_send)
+            <VoiceReactionSend>message.voice_reaction_send
           );
         } else if (message.webrtc_signaling_fwd) {
           this.onwebrtcsignalingfwd(
-            mapToCamelCase(<WebrtcSignalingFwd>message.webrtc_signaling_fwd)
+            <WebrtcSignalingFwd>message.webrtc_signaling_fwd
           );
         } else if (message.list_activity) {
           this.onactivityupdated(
-            mapToCamelCase(<ListActivity>message.list_activity)
+            <ListActivity>message.list_activity
           );
         } else if (message.sd_topic_event) {
           this.onsdtopicevent(
-            mapToCamelCase(<SdTopicEvent>message.sd_topic_event)
+            <SdTopicEvent>message.sd_topic_event
           );
         } else if (message.channel_app_event) {
           this.onchannelappevent(
-            mapToCamelCase(<ChannelAppEvent>message.channel_app_event)
+            <ChannelAppEvent>message.channel_app_event
           );
         } else if (message.user_status_event) {
           this.onuserstatusevent(
-            mapToCamelCase(<UserStatusEvent>message.user_status_event)
+            <UserStatusEvent>message.user_status_event
           );
         } else if (message.join_channel_app_data) {
           this.onjoinchannelappevent(
-            mapToCamelCase(<JoinChannelAppData>message.join_channel_app_data)
+            <JoinChannelAppData>message.join_channel_app_data
           );
         } else if (message.unpin_message_event) {
           this.onunpinmessageevent(
-            mapToCamelCase(<UnpinMessageEvent>message.unpin_message_event)
+            <UnpinMessageEvent>message.unpin_message_event
           );
         } else if (message.quick_menu_event) {
           this.onquickmenuevent(
-            mapToCamelCase(<QuickMenuEvent>message.quick_menu_event)
+            <QuickMenuEvent>message.quick_menu_event
           );
         } else if (message.meet_participant_event) {
           this.onmeetparticipantevent(
-            mapToCamelCase(<MeetParticipantEvent>message.meet_participant_event)
+            <MeetParticipantEvent>message.meet_participant_event
           );
         } else if (message.transfer_ownership_event) {
           this.ontransferownership(
-            mapToCamelCase(
-              <TransferOwnershipEvent>message.transfer_ownership_event
-            )
+            <TransferOwnershipEvent>message.transfer_ownership_event
           );
         } else if (message.ban_user_event) {
           this.onbanneduser(
-            mapToCamelCase(<BannedUserEvent>message.ban_user_event)
+            <BannedUserEvent>message.ban_user_event
           );
         } else if (message.allow_anonymous_event) {
           this.onallowanonymousevent(
-            mapToCamelCase(<AllowAnonymousEvent>message.allow_anonymous_event)
+            <AllowAnonymousEvent>message.allow_anonymous_event
           );
         } else {
           if (this.verbose && window && window.console) {
@@ -2788,7 +2774,7 @@ export class DefaultSocket implements Socket {
 
   async followUsers(userIds: string[]): Promise<Status> {
     const response = await this.send({ status_follow: { user_ids: userIds } });
-    return mapToCamelCase(response.status);
+    return response.status;
   }
 
   async joinClanChat(clanId: string): Promise<ClanJoin> {
@@ -2798,7 +2784,7 @@ export class DefaultSocket implements Socket {
       },
     });
 
-    return mapToCamelCase(response.clanJoin);
+    return response.clanJoin;
   }
 
   async follower(): Promise<void> {
@@ -2806,7 +2792,7 @@ export class DefaultSocket implements Socket {
       follow_event: {},
     });
 
-    return mapToCamelCase(response.followEvent);
+    return response.followEvent;
   }
 
   async joinChat(
@@ -2824,7 +2810,7 @@ export class DefaultSocket implements Socket {
       },
     });
 
-    return mapToCamelCase(response.channel);
+    return response.channel;
   }
 
   async handleParticipantMeetState(
@@ -2844,7 +2830,7 @@ export class DefaultSocket implements Socket {
       },
     });
 
-    return mapToCamelCase(response.handleParticipantMeetStateEvent);
+    return response.handleParticipantMeetStateEvent;
   }
 
   leaveChat(
@@ -2888,7 +2874,7 @@ export class DefaultSocket implements Socket {
       },
     });
 
-    return mapToCamelCase(response.channel_message_ack);
+    return response.channel_message_ack;
   }
 
   async rpc(id?: string, payload?: string, httpKey?: string): Promise<ApiRpc> {
@@ -2900,7 +2886,7 @@ export class DefaultSocket implements Socket {
       },
     });
 
-    return mapToCamelCase(response.rpc);
+    return response.rpc;
   }
 
   unfollowUsers(userIds: string[]): Promise<void> {
@@ -2927,8 +2913,8 @@ export class DefaultSocket implements Socket {
         channel_id: channelId,
         message_id: messageId,
         content: content,
-        mentions: mapToSnakeCase(mentions),
-        attachments: mapToSnakeCase(attachments),
+        mentions: mentions,
+        attachments: attachments,
         mode: mode,
         is_public: isPublic,
         hide_editted: hideEditted,
@@ -2937,7 +2923,7 @@ export class DefaultSocket implements Socket {
         old_mentions: oldMentions,
       },
     });
-    return mapToCamelCase(response.channel_message_ack);
+    return response.channel_message_ack;
   }
 
   updateStatus(status?: string): Promise<void> {
@@ -2969,9 +2955,9 @@ export class DefaultSocket implements Socket {
           mode: mode,
           is_public: isPublic,
           content: content,
-          mentions: mapToSnakeCase(mentions),
-          attachments: mapToSnakeCase(attachments),
-          references: mapToSnakeCase(references),
+          mentions: mentions,
+          attachments: attachments,
+          references: references,
           anonymous_message: anonymousMessage,
           mention_everyone: mentionEveryone,
           avatar: avatar,
@@ -2980,7 +2966,7 @@ export class DefaultSocket implements Socket {
         },
       },
     });
-    return mapToCamelCase(response.quick_menu_event);
+    return response.quick_menu_event;
   }
 
   async writeEphemeralMessage(
@@ -3009,9 +2995,9 @@ export class DefaultSocket implements Socket {
           mode: mode,
           is_public: isPublic,
           content: content,
-          mentions: mapToSnakeCase(mentions),
-          attachments: mapToSnakeCase(attachments),
-          references: mapToSnakeCase(references),
+          mentions: mentions,
+          attachments: attachments,
+          references: references,
           anonymous_message: anonymousMessage,
           mention_everyone: mentionEveryone,
           avatar: avatar,
@@ -3021,7 +3007,7 @@ export class DefaultSocket implements Socket {
         },
       },
     });
-    return mapToCamelCase(response.ephemeral_message_send);
+    return response.ephemeral_message_send;
   }
 
   async writeChatMessage(
@@ -3047,9 +3033,9 @@ export class DefaultSocket implements Socket {
           mode: mode,
           is_public: isPublic,
           content: content,
-          mentions: mapToSnakeCase(mentions),
-          attachments: mapToSnakeCase(attachments),
-          references: mapToSnakeCase(references),
+          mentions: mentions,
+          attachments: attachments,
+          references: references,
           anonymous_message: anonymousMessage,
           mention_everyone: mentionEveryone,
           avatar: avatar,
@@ -3059,7 +3045,7 @@ export class DefaultSocket implements Socket {
       },
       Infinity
     );
-    return mapToCamelCase(response.channel_message_ack);
+    return response.channel_message_ack;
   }
 
   async writeMessageReaction(
@@ -3096,7 +3082,7 @@ export class DefaultSocket implements Socket {
         sender_name: senderName,
       },
     });
-    return mapToCamelCase(response.message_reaction_event);
+    return response.message_reaction_event;
   }
 
   async writeMessageTyping(
@@ -3117,7 +3103,7 @@ export class DefaultSocket implements Socket {
         topic_id: topicId,
       },
     });
-    return mapToCamelCase(response.message_typing_event);
+    return response.message_typing_event;
   }
 
   async writeLastSeenMessage(
@@ -3138,7 +3124,7 @@ export class DefaultSocket implements Socket {
         badge_count: badgeCount,
       },
     });
-    return mapToCamelCase(response.last_seen_message_event);
+    return response.last_seen_message_event;
   }
 
   async writeLastPinMessage(
@@ -3173,7 +3159,7 @@ export class DefaultSocket implements Socket {
         message_created_time: messageCreatedTime,
       },
     });
-    return mapToCamelCase(response.last_pin_message_event);
+    return response.last_pin_message_event;
   }
 
   async writeCustomStatus(
@@ -3190,7 +3176,7 @@ export class DefaultSocket implements Socket {
         no_clear: noClear,
       },
     });
-    return mapToCamelCase(response.custom_status_event);
+    return response.custom_status_event;
   }
 
   async writeActiveArchivedThread(
@@ -3220,7 +3206,7 @@ export class DefaultSocket implements Socket {
         clan_id: clanId,
       },
     });
-    return mapToCamelCase(response.check_name_existed_event);
+    return response.check_name_existed_event;
   }
 
   async writeVoiceReaction(
@@ -3233,7 +3219,7 @@ export class DefaultSocket implements Socket {
         channel_id: channelId,
       },
     });
-    return mapToCamelCase(response.voice_reaction_send);
+    return response.voice_reaction_send;
   }
 
   async forwardWebrtcSignaling(
@@ -3252,7 +3238,7 @@ export class DefaultSocket implements Socket {
         caller_id: callerId,
       },
     });
-    return mapToCamelCase(response.webrtc_signaling_fwd);
+    return response.webrtc_signaling_fwd;
   }
 
   async makeCallPush(
@@ -3269,7 +3255,7 @@ export class DefaultSocket implements Socket {
         caller_id: callerId,
       },
     });
-    return mapToCamelCase(response.incoming_call_push);
+    return response.incoming_call_push;
   }
 
   async handleDropdownBoxSelected(
@@ -3290,7 +3276,7 @@ export class DefaultSocket implements Socket {
         value: value,
       },
     });
-    return mapToCamelCase(response.dropdown_box_selected);
+    return response.dropdown_box_selected;
   }
 
   async handleMessageButtonClick(
@@ -3311,7 +3297,7 @@ export class DefaultSocket implements Socket {
         extra_data: extraData,
       },
     });
-    return mapToCamelCase(response.webrtc_signaling_fwd);
+    return response.webrtc_signaling_fwd;
   }
 
   async writeChannelAppEvent(
@@ -3326,14 +3312,14 @@ export class DefaultSocket implements Socket {
         action: action,
       },
     });
-    return mapToCamelCase(response.channel_app_event);
+    return response.channel_app_event;
   }
 
   async listDataSocket(request: ListDataSocket): Promise<any> {
     const response = await this.send({
       list_data_socket: request,
     });
-    return mapToCamelCase(response.list_data_socket);
+    return response.list_data_socket;
   }
 
   private async pingPong(): Promise<void> {
