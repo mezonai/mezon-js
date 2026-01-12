@@ -1910,115 +1910,6 @@ export interface ApiMessageReaction {
   emoji_recent_id?: string;
 }
 
-export interface ApiListChannelAppsResponse {
-  //
-  channelApps?: Array<ApiChannelAppResponse>;
-}
-
-/**  */
-export interface ApiListStreamingChannelsResponse {
-  //
-  streamingChannels?: Array<ApiStreamingChannelResponse>;
-}
-
-/**  */
-export interface ApiMezonOauthClient {
-  //
-  accessTokenStrategy?: string;
-  //
-  allowedCorsOrigins?: Array<string>;
-  //
-  audience?: Array<string>;
-  //
-  authorizationCodeGrantAccessTokenLifespan?: string;
-  //
-  authorizationCodeGrantIdTokenLifespan?: string;
-  //
-  authorizationCodeGrantRefreshTokenLifespan?: string;
-  //
-  backchannelLogoutSessionRequired?: boolean;
-  //
-  backchannelLogoutUri?: string;
-  //
-  clientCredentialsGrantAccessTokenLifespan?: string;
-  //
-  clientId?: string;
-  //
-  clientName?: string;
-  //
-  clientSecret?: string;
-  //
-  clientSecretExpiresAt?: number;
-  //
-  clientUri?: string;
-  //
-  contacts?: Array<string>;
-  //
-  createdAt?: string;
-  //
-  frontchannelLogoutSessionRequired?: boolean;
-  //
-  frontchannelLogoutUri?: string;
-  //
-  grantTypes?: Array<string>;
-  //
-  implicitGrantAccessTokenLifespan?: string;
-  //
-  implicitGrantIdTokenLifespan?: string;
-  //
-  jwks?: Array<string>;
-  //
-  jwksUri?: string;
-  //
-  jwtBearerGrantAccessTokenLifespan?: string;
-  //
-  logoUri?: string;
-  //
-  owner?: string;
-  //
-  policyUri?: string;
-  //
-  postLogoutRedirectUris?: Array<string>;
-  //
-  redirectUris?: Array<string>;
-  //
-  refreshTokenGrantAccessTokenLifespan?: string;
-  //
-  refreshTokenGrantIdTokenLifespan?: string;
-  //
-  refreshTokenGrantRefreshTokenLifespan?: string;
-  //
-  registrationAccessToken?: string;
-  //
-  registrationClientUri?: string;
-  //
-  requestObjectSigningAlg?: string;
-  //
-  requestUris?: Array<string>;
-  //
-  responseTypes?: Array<string>;
-  //
-  scope?: string;
-  //
-  sectorIdentifierUri?: string;
-  //
-  skipConsent?: boolean;
-  //
-  skipLogoutConsent?: boolean;
-  //
-  subjectType?: string;
-  //
-  tokenEndpointAuthMethod?: string;
-  //
-  tokenEndpointAuthSigningAlg?: string;
-  //
-  tosUri?: string;
-  //
-  updatedAt?: string;
-  //
-  userinfoSignedResponseAlg?: string;
-}
-
 /**  */
 export interface ApiMezonOauthClientList {
   //
@@ -3530,14 +3421,6 @@ export interface ApiIsFollowerResponse {
   isFollower?: boolean;
   //
   followId?: string;
-}
-
-/**  */
-export interface ApiTransferOwnershipRequest {
-  //
-  clanId?: string;
-  //
-  newOwnerId?: string;
 }
 
 /**  */
