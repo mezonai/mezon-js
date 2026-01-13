@@ -5,6 +5,7 @@ import { buildFetchOptions } from "./utils";
 import { encode } from "js-base64";
 import * as tsproto from "./api/api";
 import { ApiUpdateChannelDescRequest } from "./client";
+import { ChannelMessage } from "./api/api";
 
 /** A single user-role pair. */
 export interface ChannelUserListChannelUser {
@@ -264,6 +265,7 @@ export interface MezonUpdateClanEmojiByIdBody {
   id: string;
   shortname: string;
   clan_id: string;
+  source: string
 }
 
 /**  */
@@ -295,11 +297,11 @@ export interface MezonUpdateEventBody {
   //
   description?: string;
   //
-  //end_time?: Date;
+  end_time_seconds?: number;
   //
   logo?: string;
   //
-  //start_time?: Date;
+start_time_seconds?: number;
   //
   title?: string;
   //
@@ -882,78 +884,20 @@ export interface ApiChannelDescription {
   member_count?: number;
 }
 
-/** A message sent on a channel. */
-export interface ApiChannelMessage {
-  // id
-  id: string;
-  //
-  attachments?: string;
-  //
-  avatar?: string;
-  //
-  category_name?: string;
-  //The channel this message belongs to.
-  channel_id: string;
-  //The name of the chat room, or an empty string if this message was not sent through a chat room.
-  channel_label: string;
-  //The clan this message belong to.
-  clan_id?: string;
-  //
-  clan_logo?: string;
-  //
-  clan_nick?: string;
-  //
-  clan_avatar?: string;
-  //The code representing a message type or category.
-  code: number;
-  //The content payload.
-  content: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time?: string;
-  //
-  create_time_seconds?: number;
-  //
-  display_name?: string;
-  //
-  mentions?: string;
-  //The unique ID of this message.
-  message_id: string;
-  //
-  reactions?: string;
-  //
-  referenced_message?: string;
-  //
-  references?: string;
-  //Message sender, usually a user ID.
-  sender_id: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
-  update_time?: string;
-  //
-  update_time_seconds?: number;
-  //The username of the message sender, if any.
-  username?: string;
-  // channel mode
-  mode?: number;
-  // hide editted
-  hide_editted?: boolean;
-  //
-  topic_id?: string;
-}
-
 /**  */
 export interface ApiChannelMessageHeader {
   //
-  attachment?: string;
+  attachment?: Uint8Array;
   //
   content?: string;
   //
   id?: string;
   //
-  mention?: string;
+  mention?: Uint8Array;
   //
-  reaction?: string;
+  reaction?: Uint8Array;
   //
-  reference?: string;
+  reference?: Uint8Array;
   //
   repliers?: Array<string>;
   //
@@ -969,7 +913,7 @@ export interface ApiChannelMessageList {
   //
   last_sent_message?: ApiChannelMessageHeader;
   //A list of messages.
-  messages?: Array<ApiChannelMessage>;
+  messages?: Array<ChannelMessage>;
 }
 
 /**  */
@@ -1255,11 +1199,11 @@ export interface ApiCreateEventRequest {
   //
   description?: string;
   //
-  //end_time?: string;
+  end_time_seconds?: number;
   //
   logo?: string;
   //
-  //start_time?: string;
+  start_time_seconds?: number;
   //
   title?: string;
   //
@@ -1455,7 +1399,7 @@ export interface ApiEventManagement {
   //
   description?: string;
   //
-  //end_time?: Date;
+  end_time_seconds?: number;
   //
   id?: string;
   //
@@ -1465,7 +1409,7 @@ export interface ApiEventManagement {
   //
   start_event?: number;
   //
-  start_time?: Date;
+  start_time_seconds?: number;
   //
   title?: string;
   //
@@ -1819,7 +1763,7 @@ export interface ApiMessageReaction {
   // Is public
   is_public: boolean;
   // The channel label
-  channel_label: string;
+  channel_label?: string;
   /** The message that user react */
   message_id: string;
   //
@@ -1966,11 +1910,11 @@ export interface ApiMessageRef {
   //
   has_attachment: boolean;
   /** The channel this message belongs to. */
-  channel_id: string;
+  channel_id?: string;
   // The mode
-  mode: number;
+  mode?: number;
   // The channel label
-  channel_label: string;
+  channel_label?: string;
 }
 
 /** A notification in the server. */
@@ -2392,7 +2336,7 @@ export interface ApiSdTopic {
   //
   update_time?: string;
   //
-  message?: ApiChannelMessage;
+  message?: ChannelMessage;
 }
 
 /**  */
@@ -2678,7 +2622,7 @@ export interface ApiUpdateAccountRequest {
   //The display name of the user.
   display_name?: string;
   //
-  //dob?: string;
+  dob_seconds?: number;
   //The email of the user's account.
   email?: string;
   //
@@ -2813,9 +2757,9 @@ export interface ApiUserActivity {
   //
   application_id?: string;
   //
-  end_time?: string;
+  end_time_seconds?: number;
   //
-  start_time?: Date;
+  start_time_seconds?: number;
   //
   status?: number;
   //
@@ -6431,7 +6375,11 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ClanEmojiUpdateRequest.encode(
-      tsproto.ClanEmojiUpdateRequest.fromPartial(body)
+      tsproto.ClanEmojiUpdateRequest.fromPartial({
+        id: body.id,
+        shortname: body.shortname,
+        clan_id: body.clan_id
+      })
     );
     const encodedBody = bodyWriter.finish();
 

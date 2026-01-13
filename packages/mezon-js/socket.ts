@@ -19,7 +19,6 @@ import {
   ApiChannelAttachmentList,
   ApiChannelDescList,
   ApiChannelDescription,
-  ApiChannelMessage,
   ApiChannelMessageHeader,
   ApiChannelMessageList,
   ApiChannelSettingListResponse,
@@ -1233,7 +1232,7 @@ export interface SdTopicEvent {
   message_id: string;
   user_id: string;
   last_sent_message?: ApiChannelMessageHeader;
-  message?: ApiChannelMessage;
+  message?: ChannelMessage;
 }
 
 export interface UserStatusEvent {
@@ -1369,7 +1368,6 @@ function CreateChannelMessageFromEvent(message: any) {
     channel_label: message.channel_message.channel_label,
     clan_id: message.channel_message.clan_id,
     code: message.channel_message.code,
-    create_time: message.channel_message.create_time,
     message_id: message.channel_message.message_id,
     sender_id: message.channel_message.sender_id,
     update_time: message.channel_message.update_time,
