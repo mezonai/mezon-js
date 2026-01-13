@@ -2140,26 +2140,6 @@ export class Client {
     return this.refreshTokenPromise;
   }
 
-  /** Remove custom ID from the social profiles on the current user's account. */
-  async unlinkCustom(
-    session: Session,
-    request: ApiAccountMezon
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .unlinkMezon(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
   /** Remove an email+password from the social profiles on the current user's account. */
   async unlinkEmail(
     session: Session,
@@ -4824,22 +4804,6 @@ export class Client {
       .updateQuickMenuAccess(session.token, request)
       .then((response: any) => {
         return response !== undefined;
-      });
-  }
-
-  async unlockItem(session: Session, request: ApiUnlockedItemRequest): Promise<ApiUnlockedItemResponse> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .unlockItem(session.token, request)
-      .then((response: ApiUnlockedItemResponse) => {
-         return Promise.resolve(response);
       });
   }
 

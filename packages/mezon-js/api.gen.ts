@@ -2066,7 +2066,7 @@ export interface ApiNotificationUserChannel {
 /**  */
 export interface ApiStreamHttpCallbackRequest {
   //
-  action?: string;
+  action?: number;
   //
   app?: string;
   //
@@ -2819,7 +2819,7 @@ export interface ApiUserActivity {
   //
   end_time?: string;
   //
-  start_time?: string;
+  start_time?: Date;
   //
   status?: number;
   //
@@ -4180,45 +4180,6 @@ export class MezonApi {
     ]);
   }
 
-  /** Remove the mezon ID from the social profiles on the current user's account. */
-    unlinkMezon(bearerToken: string,
-        body:ApiAccountMezon,
-        options: any = {}): Promise<any> {
-      
-      if (body === null || body === undefined) {
-        throw new Error("'body' is a required parameter but is null or undefined.");
-      }
-      const urlPath = "/mezon.api.Mezon/UnlinkMezon";
-      const queryParams = new Map<string, any>();
-  
-      const bodyWriter = tsproto.AccountMezon.encode(
-        tsproto.AccountMezon.fromPartial(body)
-      );
-      const encodedBody = bodyWriter.finish();
-  
-      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-      const fetchOptions = buildFetchOptions("POST", options, '');
-      fetchOptions.body = encodedBody;
-      if (bearerToken) {
-          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-      }
-  
-      return Promise.race([
-        fetch(fullUrl, fetchOptions).then((response) => {
-          if (response.status == 204) {
-            return response;
-          } else if (response.status >= 200 && response.status < 300) {
-            return response.json();
-          } else {
-            throw response;
-          }
-        }),
-        new Promise((_, reject) =>
-          setTimeout(reject, this.timeoutMs, "Request timed out.")
-        ),
-      ]);
-  }
-
   /** List activity */
   listActivity(
     bearerToken: string,
@@ -4288,8 +4249,8 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -4331,8 +4292,8 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -4484,8 +4445,8 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -4529,8 +4490,8 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -4561,8 +4522,8 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -5106,8 +5067,8 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -7943,7 +7904,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -7980,7 +7941,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -8017,7 +7978,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -8059,49 +8020,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
-
-  /** Stream http callback. */
-  streamingServerCallback(
-    bearerToken: string,
-    body: ApiStreamHttpCallbackRequest,
-    options: any = {}
-  ): Promise<ApiStreamHttpCallbackResponse> {
-    if (body === null || body === undefined) {
-      throw new Error(
-        "'body' is a required parameter but is null or undefined."
-      );
-    }
-    const urlPath = "/mezon.api.Mezon/StreamingServerCallback";
-    const queryParams = new Map<string, any>();
-
-    const bodyWriter = tsproto.StreamHttpCallbackRequest.encode(
-      tsproto.StreamHttpCallbackRequest.fromPartial(body)
-    );
-    const encodedBody = bodyWriter.finish();
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, '');
-    fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
           return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
         } else {
           throw response;
         }
@@ -8143,7 +8062,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -8263,7 +8182,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -11027,8 +10946,8 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -11167,8 +11086,8 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -11209,8 +11128,8 @@ export class MezonApi {
             throw response;
           }
         }),
-        new Promise((_, reject) =>
-          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
         ),
       ]);
     }
@@ -11253,8 +11172,8 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -11294,8 +11213,8 @@ export class MezonApi {
             throw response;
           }
         }),
-        new Promise((_, reject) =>
-          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
         ),
       ]);
     }
@@ -11335,8 +11254,8 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -11489,8 +11408,8 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -11908,46 +11827,6 @@ export class MezonApi {
       ]);
     }
 
-  /** UnlockItem */
-  unlockItem(bearerToken: string,
-        body:ApiUnlockedItemRequest,
-        options: any = {}): Promise<ApiUnlockedItemResponse> {
-      
-      if (body === null || body === undefined) {
-        throw new Error("'body' is a required parameter but is null or undefined.");
-      }
-      const urlPath = "/mezon.api.Mezon/UnlockItem";
-      const queryParams = new Map<string, any>();
-  
-      const bodyWriter = tsproto.UnlockItemRequest.encode(
-        tsproto.UnlockItemRequest.fromPartial(body)
-      );
-      const encodedBody = bodyWriter.finish();
-  
-      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-      const fetchOptions = buildFetchOptions("POST", options, '');
-      fetchOptions.body = encodedBody;
-      if (bearerToken) {
-          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-      }
-  
-      return Promise.race([
-        fetch(fullUrl, fetchOptions).then(async (response) => {
-          if (response.status == 204) {
-            return {} as ApiUnlockedItemResponse;
-          } else if (response.status >= 200 && response.status < 300) {
-            const buffer = await response.arrayBuffer();
-            return tsproto.UnlockItemResponse.decode(new Uint8Array(buffer)) as unknown as ApiUnlockedItemResponse;
-          } else {
-            throw response;
-          }
-        }),
-        new Promise((_, reject) =>
-          setTimeout(reject, this.timeoutMs, "Request timed out.")
-        ),
-      ]);
-    }
-
   /** For sale items */
     listForSaleItems(bearerToken: string,
         page?:number,
@@ -11983,8 +11862,8 @@ export class MezonApi {
             throw response;
           }
         }),
-        new Promise((_, reject) =>
-          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
         ),
       ]);
   }
