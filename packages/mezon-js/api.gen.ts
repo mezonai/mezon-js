@@ -4,6 +4,7 @@
 import { buildFetchOptions } from "./utils";
 import { encode } from "js-base64";
 import * as tsproto from "./api/api";
+import { ApiUpdateChannelDescRequest } from "./client";
 
 /** A single user-role pair. */
 export interface ChannelUserListChannelUser {
@@ -168,8 +169,6 @@ export interface MezonUpdateChannelDescBody {
   //
   age_restricted?: number;
   //
-  app_url?: string;
-  //
   category_id?: string;
   //
   channel_label?: string;
@@ -177,6 +176,14 @@ export interface MezonUpdateChannelDescBody {
   e2ee?: number;
   //
   topic?: string;
+  /** The clan ID */
+  clan_id: string;
+  /** The ID of the channel to update. */
+  channel_id: string;
+  /** app url for channel type app */
+  app_id: string;
+  /** channel avatar */
+  channel_avatar: string | undefined;
 }
 
 
@@ -254,14 +261,9 @@ export interface MezonUpdateClanDescProfileBody {
 
 /**  */
 export interface MezonUpdateClanEmojiByIdBody {
-  //
-  category?: string;
-  //
-  clan_id?: string;
-  //
-  shortname?: string;
-  //
-  source?: string;
+  id: string;
+  shortname: string;
+  clan_id: string;
 }
 
 /**  */
@@ -293,11 +295,11 @@ export interface MezonUpdateEventBody {
   //
   description?: string;
   //
-  end_time?: string;
+  end_time?: Date;
   //
   logo?: string;
   //
-  start_time?: string;
+  start_time?: Date;
   //
   title?: string;
   //
@@ -1874,7 +1876,7 @@ export interface ApiMezonOauthClient {
   //
   contacts?: Array<string>;
   //
-  created_at?: string;
+  created_at?: Date;
   //
   frontchannel_logout_session_required?: boolean;
   //
@@ -3270,7 +3272,7 @@ export interface ApiMezonOauthClient {
   //
   contacts?: Array<string>;
   //
-  created_at?: string;
+  created_at?: Date;
   //
   frontchannel_logout_session_required?: boolean;
   //
@@ -4369,8 +4371,7 @@ export class MezonApi {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return buffer.byteLength > 0 ? tsproto.Empty.decode(new Uint8Array(buffer)) : {};
+          return response;
         } else {
           throw response;
         }
@@ -4407,8 +4408,7 @@ export class MezonApi {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return buffer.byteLength > 0 ? tsproto.Empty.decode(new Uint8Array(buffer)) : {};
+          return response;
         } else {
           throw response;
         }
@@ -4516,8 +4516,7 @@ export class MezonApi {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return buffer.byteLength > 0 ? tsproto.Empty.decode(new Uint8Array(buffer)) : {};
+          return response;
         } else {
           throw response;
         }
@@ -4548,8 +4547,7 @@ export class MezonApi {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return buffer.byteLength > 0 ? tsproto.Empty.decode(new Uint8Array(buffer)) : {};
+          return response;
         } else {
           throw response;
         }
@@ -4630,8 +4628,7 @@ export class MezonApi {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return buffer.byteLength > 0 ? tsproto.Empty.decode(new Uint8Array(buffer)) : {};
+          return response;
         } else {
           throw response;
         }
@@ -4836,8 +4833,7 @@ export class MezonApi {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return buffer.byteLength > 0 ? tsproto.Empty.decode(new Uint8Array(buffer)) : {};
+          return response;
         } else {
           throw response;
         }
@@ -4971,8 +4967,7 @@ export class MezonApi {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return buffer.byteLength > 0 ? tsproto.Empty.decode(new Uint8Array(buffer)) : {};
+          return response;
         } else {
           throw response;
         }
@@ -5111,8 +5106,7 @@ export class MezonApi {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return buffer.byteLength > 0 ? tsproto.Empty.decode(new Uint8Array(buffer)) : {};
+          return response;
         } else {
           throw response;
         }
@@ -5148,8 +5142,7 @@ export class MezonApi {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return buffer.byteLength > 0 ? tsproto.Empty.decode(new Uint8Array(buffer)) : {};
+          return response;
         } else {
           throw response;
         }
@@ -5188,8 +5181,7 @@ export class MezonApi {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return buffer.byteLength > 0 ? tsproto.Empty.decode(new Uint8Array(buffer)) : {};
+          return response;
         } else {
           throw response;
         }
@@ -5434,7 +5426,7 @@ export class MezonApi {
   /** Update fields in a given channel. */
   updateChannelDesc(bearerToken: string,
       channelId:string,
-      body:MezonUpdateChannelDescBody,
+      body:ApiUpdateChannelDescRequest,
       options: any = {}): Promise<any> {
     
     if (channelId === null || channelId === undefined) {
@@ -5447,7 +5439,7 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.UpdateChannelDescRequest.encode(
-      tsproto.UpdateChannelDescRequest.fromPartial({ channel_id: channelId, ...body })
+      tsproto.UpdateChannelDescRequest.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 
@@ -5502,7 +5494,6 @@ export class MezonApi {
         clan_id: clanId,
         parent_id: parentId,
         category_id: categoryId,
-        private_channel: privateChannel,
         active: active,
         status: status,
         type: type,
@@ -5683,7 +5674,11 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.CreateClanDescRequest.encode(
-      tsproto.CreateClanDescRequest.fromPartial(body)
+      tsproto.CreateClanDescRequest.fromPartial({
+        clan_name: body.clan_name,
+        logo: body.logo,
+        banner: body.banner,
+      })
     );
     const encodedBody = bodyWriter.finish();
 
@@ -6444,7 +6439,7 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ClanEmojiUpdateRequest.encode(
-      tsproto.ClanEmojiUpdateRequest.fromPartial({ id, ...body })
+      tsproto.ClanEmojiUpdateRequest.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 
@@ -6813,7 +6808,7 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.UpdateEventRequest.encode(
-      tsproto.UpdateEventRequest.fromPartial({ ...body, event_id: eventId })
+      tsproto.UpdateEventRequest.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 
@@ -11902,8 +11897,8 @@ export class MezonApi {
             throw response;
           }
         }),
-        new Promise((_, reject) =>
-          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
         ),
       ]);
     }
