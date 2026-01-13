@@ -14,12 +14,14 @@ export function buildFetchOptions(method: string, options: any, bodyJson: string
         }
     }
 
+    //fetchOptions.headers["connect-protocol-version"] = "1";
+
     if(!Object.keys(fetchOptions.headers).includes("Accept")) {
-      fetchOptions.headers["Accept"] = "application/json";
+      fetchOptions.headers["Accept"] = "application/proto";
     }
 
     if(!Object.keys(fetchOptions.headers).includes("Content-Type")) {
-      fetchOptions.headers["Content-Type"] = "application/json";
+      fetchOptions.headers["Content-Type"] = "application/proto";
     }
 
 	Object.keys(fetchOptions.headers).forEach((key: string) => {

@@ -4090,13 +4090,14 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/account/session/refresh";
+    const urlPath = "/mezon.api.Mezon/SessionRefresh";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.SessionRefreshRequest.encode(
       tsproto.SessionRefreshRequest.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
+
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
@@ -4104,9 +4105,7 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] =
         "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
-    fetchOptions.headers["Content-Type"] = "application/x-protobuf";
-    fetchOptions.headers["Accept"] = "application/x-protobuf";
-
+    
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
