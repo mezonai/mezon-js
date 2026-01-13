@@ -24,7 +24,7 @@ var client = new Client("defaultkey", "172.16.11.90", "7350", false);
 clientgw.authenticateEmail("pocolomos@gmail.com", "C0nandoiner123$").then(async session => {
   console.log("authenticated.", session);
 
-  console.log(await client.sessionRefresh(session))
+  console.log(await client.listLogedDevice(session))
   
   const socket = client.createSocket(false, true, new WebSocketAdapterPb());
   const session2 = await socket.connect(session, true, "desktop");
