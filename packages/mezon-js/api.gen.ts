@@ -3622,6 +3622,7 @@ export class MezonApi {
         "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
     fetchOptions.headers["Accept"] = "application/x-protobuf";
+    fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
@@ -3663,6 +3664,8 @@ export class MezonApi {
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
+    fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -3704,6 +3707,8 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] =
         "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
+    fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -3742,6 +3747,8 @@ export class MezonApi {
     if (basicAuthUsername) {
       fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
+    fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -3780,6 +3787,8 @@ export class MezonApi {
     if (basicAuthUsername) {
       fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
+    fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -3819,6 +3828,7 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
     fetchOptions.headers["Accept"] = "application/x-protobuf";
+    fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
@@ -4019,6 +4029,7 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
     fetchOptions.headers["Accept"] = "application/x-protobuf";
+    fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async(response) => {
