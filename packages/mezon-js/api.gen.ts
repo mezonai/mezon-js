@@ -3500,7 +3500,7 @@ export class MezonApi {
 
   /** Delete the current user's account. */
   deleteAccount(bearerToken: string, options: any = {}): Promise<any> {
-    const urlPath = "/v2/account";
+    const urlPath = "/mezon.api.Mezon/DeleteAccount ";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -3529,7 +3529,7 @@ export class MezonApi {
 
   /** Fetch the current user's account. */
   getAccount(bearerToken: string, options: any = {}): Promise<ApiAccount> {
-    const urlPath = "/v2/account";
+    const urlPath = "/mezon.api.Mezon/GetAccount ";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -3569,7 +3569,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/account";
+    const urlPath = "/mezon.api.Mezon/UpdateAccount ";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -3895,7 +3895,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/account/link/email";
+    const urlPath = "/mezon.api.Mezon/LinkEmail";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -3931,7 +3931,7 @@ export class MezonApi {
       if (body === null || body === undefined) {
         throw new Error("'body' is a required parameter but is null or undefined.");
       }
-      const urlPath = "/v2/account/link/mezon";
+      const urlPath = "/mezon.api.Mezon/LinkSMS";
       const queryParams = new Map<string, any>();
   
       let bodyJson : string = "";
@@ -3967,7 +3967,7 @@ export class MezonApi {
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/account/link/confirm";
+    const urlPath = "/mezon.api.Mezon/ConfirmLinkMezonOTP ";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -4048,7 +4048,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/account/registry";
+    const urlPath = "/mezon.api.Mezon/RegistrationEmail";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -4134,7 +4134,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/account/unlink/email";
+    const urlPath = "/mezon.api.Mezon/UnlinkEmail";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -4170,7 +4170,7 @@ export class MezonApi {
       if (body === null || body === undefined) {
         throw new Error("'body' is a required parameter but is null or undefined.");
       }
-      const urlPath = "/v2/account/unlink/mezon";
+      const urlPath = "/mezon.api.Mezon/UnlinkMezon";
       const queryParams = new Map<string, any>();
   
       let bodyJson : string = "";
@@ -4203,7 +4203,7 @@ export class MezonApi {
     bearerToken: string,
     options: any = {}
   ): Promise<ApiListUserActivity> {
-    const urlPath = "/v2/activity";
+    const urlPath = "/mezon.api.Mezon/ListActivity";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -4243,7 +4243,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/activity";
+    const urlPath = "/mezon.api.Mezon/CreateActiviy";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -4282,7 +4282,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/apps/add";
+    const urlPath = "/mezon.api.Mezon/AddApp";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -4318,7 +4318,7 @@ export class MezonApi {
     cursor?: string,
     options: any = {}
   ): Promise<ApiAppList> {
-    const urlPath = "/v2/apps/app";
+    const urlPath = "/mezon.api.Mezon/ListApps";
     const queryParams = new Map<string, any>();
     queryParams.set("filter", filter);
     queryParams.set("tombstones", tombstones);
@@ -4367,7 +4367,7 @@ export class MezonApi {
         "'clanId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/apps/app/{appId}/clan/{clanId}"
+    const urlPath = "/mezon.api.Mezon/AddAppToClan"
       .replace("{appId}", encodeURIComponent(String(appId)))
       .replace("{clanId}", encodeURIComponent(String(clanId)));
     const queryParams = new Map<string, any>();
@@ -4406,10 +4406,7 @@ export class MezonApi {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/apps/app/{id}".replace(
-      "{id}",
-      encodeURIComponent(String(id))
-    );
+    const urlPath = "/mezon.api.Mezon/DeleteApp";
     const queryParams = new Map<string, any>();
     queryParams.set("record_deletion", recordDeletion);
 
@@ -4442,10 +4439,7 @@ export class MezonApi {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/apps/app/{id}".replace(
-      "{id}",
-      encodeURIComponent(String(id))
-    );
+    const urlPath = "/mezon.api.Mezon/GetApp";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -4484,8 +4478,7 @@ export class MezonApi {
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/apps/app/{id}"
-        .replace("{id}", encodeURIComponent(String(id)));
+    const urlPath = "/mezon.api.Mezon/UpdateApp";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -4592,7 +4585,7 @@ export class MezonApi {
     dateLog?: string,
     options: any = {}
   ): Promise<MezonapiListAuditLog> {
-    const urlPath = "/v2/audit_log";
+    const urlPath = "/mezon.api.Mezon/ListAuditLog";
     const queryParams = new Map<string, any>();
     queryParams.set("action_log", actionLog);
     queryParams.set("user_id", userId);
@@ -4635,7 +4628,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/category/orders";
+    const urlPath = "/mezon.api.Mezon/UpdateCategoryOrder";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -4678,10 +4671,7 @@ export class MezonApi {
         "'clanId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/categorydesc/{clanId}".replace(
-      "{clanId}",
-      encodeURIComponent(String(clanId))
-    );
+    const urlPath = "/mezon.api.Mezon/ListCategoryDescs";
     const queryParams = new Map<string, any>();
     queryParams.set("creator_id", creatorId);
     queryParams.set("category_name", categoryName);
@@ -4720,7 +4710,7 @@ export class MezonApi {
     clanId?: string,
     options: any = {}
   ): Promise<ApiListChannelAppsResponse> {
-    const urlPath = "/v2/channel-apps";
+    const urlPath = "/mezon.api.Mezon/ListChannelApps";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
 
@@ -4764,10 +4754,7 @@ export class MezonApi {
         "'channelId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/channel-canvases/{channelId}".replace(
-      "{channelId}",
-      encodeURIComponent(String(channelId))
-    );
+    const urlPath = "/mezon.api.Mezon/GetChannelCanvasList";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("limit", limit);
@@ -4810,7 +4797,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/channel/favorite";
+    const urlPath = "/mezon.api.Mezon/AddChannelFavorite";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -4847,8 +4834,7 @@ export class MezonApi {
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channel/favorite/{channelId}"
-        .replace("{channelId}", encodeURIComponent(String(channelId)));
+    const urlPath = "/mezon.api.Mezon/RemoveChannelFavorite";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
 
@@ -4887,10 +4873,7 @@ export class MezonApi {
         "'clanId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/channel/favorite/{clanId}".replace(
-      "{clanId}",
-      encodeURIComponent(String(clanId))
-    );
+    const urlPath = "/mezon.api.Mezon/GetListFavoriteChannel";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -4935,10 +4918,7 @@ export class MezonApi {
         "'channelId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/channel/{channelId}".replace(
-      "{channelId}",
-      encodeURIComponent(String(channelId))
-    );
+    const urlPath = "/mezon.api.Mezon/ListChannelMessages";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("message_id", messageId);
@@ -4984,10 +4964,7 @@ export class MezonApi {
         "'channelId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/channel/{channelId}/add".replace(
-      "{channelId}",
-      encodeURIComponent(String(channelId))
-    );
+    const urlPath = "/mezon.api.Mezon/AddChannelUsers";
     const queryParams = new Map<string, any>();
     queryParams.set("user_ids", userIds);
 
@@ -5030,8 +5007,7 @@ export class MezonApi {
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channel/{channelId}/attachment"
-        .replace("{channelId}", encodeURIComponent(String(channelId)));
+    const urlPath = "/mezon.api.Mezon/ListChannelAttachment";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("file_type", fileType);
@@ -5079,10 +5055,7 @@ export class MezonApi {
         "'channelId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/channel/{channelId}/encrypt_method".replace(
-      "{channelId}",
-      encodeURIComponent(String(channelId))
-    );
+    const urlPath = "/mezon.api.Mezon/GetChanEncryptionMethod";
     const queryParams = new Map<string, any>();
     queryParams.set("method", method);
 
@@ -5127,10 +5100,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/channel/{channelId}/encrypt_method".replace(
-      "{channelId}",
-      encodeURIComponent(String(channelId))
-    );
+    const urlPath = "/mezon.api.Mezon/SetChanEncryptionMethod";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -5167,8 +5137,7 @@ export class MezonApi {
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channel/{channelId}/leave"
-        .replace("{channelId}", encodeURIComponent(String(channelId)));
+    const urlPath = "/mezon.api.Mezon/LeaveThread";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
 
@@ -5208,10 +5177,7 @@ export class MezonApi {
         "'channelId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/channel/{channelId}/remove".replace(
-      "{channelId}",
-      encodeURIComponent(String(channelId))
-    );
+    const urlPath = "/mezon.api.Mezon/RemoveChannelUsers";
     const queryParams = new Map<string, any>();
     queryParams.set("user_ids", userIds);
 
@@ -5255,10 +5221,7 @@ export class MezonApi {
         "'channelId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/channel/{channelId}/user".replace(
-      "{channelId}",
-      encodeURIComponent(String(channelId))
-    );
+    const urlPath = "/mezon.api.Mezon/ListChannelUsers";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("channel_type", channelType);
@@ -5303,7 +5266,7 @@ export class MezonApi {
     isMobile?: boolean,
     options: any = {}
   ): Promise<ApiChannelDescList> {
-    const urlPath = "/v2/channeldesc";
+    const urlPath = "/mezon.api.Mezon/ListChannelDescs";
     const queryParams = new Map<string, any>();
     queryParams.set("limit", limit);
     queryParams.set("state", state);
@@ -5349,7 +5312,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/channeldesc";
+    const urlPath = "/mezon.api.Mezon/CreateChannelDesc";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -5384,7 +5347,7 @@ export class MezonApi {
     limit?: number,
     options: any = {}
   ): Promise<ApiAllUsersAddChannelResponse> {
-    const urlPath = "/v2/channeldesc/users";
+    const urlPath = "/mezon.api.Mezon/ListChannelUsersUC";
     const queryParams = new Map<string, any>();
     queryParams.set("channel_id", channelId);
     queryParams.set("limit", limit);
@@ -5424,7 +5387,7 @@ export class MezonApi {
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channeldesc/{channelId}"
+    const urlPath = "/mezon.api.Mezon/DeleteChannelDesc"
         .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
@@ -5465,7 +5428,7 @@ export class MezonApi {
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channeldesc/{channelId}"
+    const urlPath = "/mezon.api.Mezon/UpdateChannelDesc"
         .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
 
@@ -5514,10 +5477,7 @@ export class MezonApi {
         "'clanId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/channelsetting/{clanId}".replace(
-      "{clanId}",
-      encodeURIComponent(String(clanId))
-    );
+    const urlPath = "/mezon.api.Mezon/ListChannelSetting";
     const queryParams = new Map<string, any>();
     queryParams.set("parent_id", parentId);
     queryParams.set("category_id", categoryId);
@@ -5566,7 +5526,7 @@ export class MezonApi {
     cursor?: string,
     options: any = {}
   ): Promise<ApiVoiceChannelUserList> {
-    const urlPath = "/v2/channelvoice";
+    const urlPath = "/mezon.api.Mezon/ListChannelVoiceUsers";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("channel_id", channelId);
@@ -5609,7 +5569,7 @@ export class MezonApi {
     if (clanId === null || clanId === undefined) {
       throw new Error("'clanId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/{clanId}/indicator"
+    const urlPath = "/mezon.api.Mezon/ListClanUnreadMsgIndicator"
         .replace("{clanId}", encodeURIComponent(String(clanId)));
     const queryParams = new Map<string, any>();
 
@@ -5647,7 +5607,7 @@ export class MezonApi {
     cursor?: string,
     options: any = {}
   ): Promise<ApiClanDescList> {
-    const urlPath = "/v2/clandesc";
+    const urlPath = "/mezon.api.Mezon/ListClanDescs";
     const queryParams = new Map<string, any>();
     queryParams.set("limit", limit);
     queryParams.set("state", state);
@@ -5690,7 +5650,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/clandesc";
+    const urlPath = "/mezon.api.Mezon/CreateClanDesc";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -5729,10 +5689,7 @@ export class MezonApi {
         "'clanDescId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/clandesc/{clanDescId}".replace(
-      "{clanDescId}",
-      encodeURIComponent(String(clanDescId))
-    );
+    const urlPath = "/mezon.api.Mezon/DeleteClanDesc";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -5776,10 +5733,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/clandesc/{clanId}".replace(
-      "{clanId}",
-      encodeURIComponent(String(clanId))
-    );
+    const urlPath = "/mezon.api.Mezon/UpdateClanDesc";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -5819,10 +5773,7 @@ export class MezonApi {
         "'clanId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/clandesc/{clanId}/kick".replace(
-      "{clanId}",
-      encodeURIComponent(String(clanId))
-    );
+    const urlPath = "/mezon.api.Mezon/RemoveClanUsers";
     const queryParams = new Map<string, any>();
     queryParams.set("user_ids", userIds);
 
@@ -5856,7 +5807,7 @@ export class MezonApi {
       channelId?:string,
       options: any = {}): Promise<ApiBannedUserList> {
     
-    const urlPath = "/v2/banned";
+    const urlPath = "/mezon.api.Mezon/ListBannedUsers";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("channel_id", channelId);
@@ -5898,8 +5849,7 @@ export class MezonApi {
     if (clanId === null || clanId === undefined) {
       throw new Error("'clanId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/clandesc/{clanId}/unban"
-        .replace("{clanId}", encodeURIComponent(String(clanId)));
+    const urlPath = "/mezon.api.Mezon/UnbanClanUsers";
     const queryParams = new Map<string, any>();
     queryParams.set("channel_id", channelId);
     queryParams.set("user_ids", userIds);
@@ -5940,8 +5890,7 @@ export class MezonApi {
     if (clanId === null || clanId === undefined) {
       throw new Error("'clanId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/clandesc/{clanId}/ban"
-        .replace("{clanId}", encodeURIComponent(String(clanId)));
+    const urlPath = "/mezon.api.Mezon/BanClanUsers";
     const queryParams = new Map<string, any>();
     queryParams.set("channel_id", channelId);
     queryParams.set("user_ids", userIds);
@@ -5982,10 +5931,7 @@ export class MezonApi {
         "'clanId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/clandesc/{clanId}/user".replace(
-      "{clanId}",
-      encodeURIComponent(String(clanId))
-    );
+    const urlPath = "/mezon.api.Mezon/ListClanUsers";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -6066,7 +6012,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/createcategory";
+    const urlPath = "/mezon.api.Mezon/CreateCategoryDesc";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -6193,7 +6139,7 @@ export class MezonApi {
     voipToken?: string,
     options: any = {}
   ): Promise<ApiRegistFcmDeviceTokenResponse> {
-    const urlPath = "/v2/devicetoken";
+    const urlPath = "/mezon.api.Mezon/RegistFCMDeviceToken";
     const queryParams = new Map<string, any>();
     queryParams.set("token", token);
     queryParams.set("device_id", deviceId);
@@ -6237,7 +6183,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/direct/close";
+    const urlPath = "/mezon.api.Mezon/CloseDMByChannelId";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -6276,7 +6222,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/direct/open";
+    const urlPath = "/mezon.api.Mezon/OpenDMByChannelId";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -6315,7 +6261,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/emoji/create";
+    const urlPath = "/mezon.api.Mezon/CreateClanEmoji";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -6354,10 +6300,7 @@ export class MezonApi {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/emoji/{id}".replace(
-      "{id}",
-      encodeURIComponent(String(id))
-    );
+    const urlPath = "/mezon.api.Mezon/DeleteByIdClanEmoji";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("emoji_label", emojiLabel);
@@ -6402,10 +6345,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/emoji/{id}".replace(
-      "{id}",
-      encodeURIComponent(String(id))
-    );
+    const urlPath = "/mezon.api.Mezon/UpdateClanEmojiById";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -6437,7 +6377,7 @@ export class MezonApi {
   emojiRecentList(bearerToken: string,
       options: any = {}): Promise<ApiEmojiRecentList> {
     
-    const urlPath = "/v2/emojirecents";
+    const urlPath = "/mezon.api.Mezon/EmojiRecentList";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -6471,7 +6411,7 @@ export class MezonApi {
     bearerToken: string,
     options: any = {}
   ): Promise<ApiEmojiListedResponse> {
-    const urlPath = "/v2/emojis";
+    const urlPath = "/mezon.api.Mezon/GetListEmojisByUserId";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -6511,7 +6451,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/es/search";
+    const urlPath = "/mezon.api.Mezon/SearchMessage";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -6580,7 +6520,7 @@ export class MezonApi {
     clanId?: string,
     options: any = {}
   ): Promise<ApiEventList> {
-    const urlPath = "/v2/eventmanagement";
+    const urlPath = "/mezon.api.Mezon/ListEvents";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
 
@@ -6621,7 +6561,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/eventmanagement/create";
+    const urlPath = "/mezon.api.Mezon/CreateEvent";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -6650,43 +6590,7 @@ export class MezonApi {
   }
 
   /** Update fields in a given event. */
-  updateEventUser(
-    bearerToken: string,
-    body: ApiDeleteEventRequest,
-    options: any = {}
-  ): Promise<any> {
-    if (body === null || body === undefined) {
-      throw new Error(
-        "'body' is a required parameter but is null or undefined."
-      );
-    }
-    const urlPath = "/v2/eventmanagement/user";
-    const queryParams = new Map<string, any>();
 
-    let bodyJson: string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
 
   /** Delete a event by ID. */
   deleteEvent(
@@ -6703,10 +6607,7 @@ export class MezonApi {
         "'eventId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/eventmanagement/{eventId}".replace(
-      "{eventId}",
-      encodeURIComponent(String(eventId))
-    );
+    const urlPath = "/mezon.api.Mezon/DeleteEvent";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("creator_id", creatorId);
@@ -6754,10 +6655,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/eventmanagement/{eventId}".replace(
-      "{eventId}",
-      encodeURIComponent(String(eventId))
-    );
+    const urlPath = "/mezon.api.Mezon/UpdateEvent";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -6792,7 +6690,7 @@ export class MezonApi {
     usernames?: Array<string>,
     options: any = {}
   ): Promise<any> {
-    const urlPath = "/v2/friend";
+    const urlPath = "/mezon.api.Mezon/DeleteFriends";
     const queryParams = new Map<string, any>();
     queryParams.set("ids", ids);
     queryParams.set("usernames", usernames);
@@ -6829,7 +6727,7 @@ export class MezonApi {
     cursor?: string,
     options: any = {}
   ): Promise<ApiFriendList> {
-    const urlPath = "/v2/friend";
+    const urlPath = "/mezon.api.Mezon/ListFriends";
     const queryParams = new Map<string, any>();
     queryParams.set("limit", limit);
     queryParams.set("state", state);
@@ -6868,7 +6766,7 @@ export class MezonApi {
     usernames?: Array<string>,
     options: any = {}
   ): Promise<ApiAddFriendsResponse> {
-    const urlPath = "/v2/friend";
+    const urlPath = "/mezon.api.Mezon/AddFriends";
     const queryParams = new Map<string, any>();
     queryParams.set("ids", ids);
     queryParams.set("usernames", usernames);
@@ -6904,7 +6802,7 @@ export class MezonApi {
     usernames?: Array<string>,
     options: any = {}
   ): Promise<any> {
-    const urlPath = "/v2/friend/block";
+    const urlPath = "/mezon.api.Mezon/BlockFriends";
     const queryParams = new Map<string, any>();
     queryParams.set("ids", ids);
     queryParams.set("usernames", usernames);
@@ -6939,7 +6837,7 @@ export class MezonApi {
       usernames?:Array<string>,
       options: any = {}): Promise<any> {
     
-    const urlPath = "/v2/friend/unblock";
+    const urlPath = "/mezon.api.Mezon/UnblockFriends";
     const queryParams = new Map<string, any>();
     queryParams.set("ids", ids);
     queryParams.set("usernames", usernames);
@@ -6974,7 +6872,7 @@ export class MezonApi {
     clanId?: string,
     options: any = {}
   ): Promise<ApiNotificationChannelCategorySettingList> {
-    const urlPath = "/v2/getchannelcategorynotisettingslist";
+    const urlPath = "/mezon.api.Mezon/GetChannelCategoryNotiSettingsList";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
 
@@ -7015,10 +6913,7 @@ export class MezonApi {
         "'clanId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/getclanprofile/{clanId}".replace(
-      "{clanId}",
-      encodeURIComponent(String(clanId))
-    );
+    const urlPath = "/mezon.api.Mezon/GetUserProfileOnClan";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -7051,7 +6946,7 @@ export class MezonApi {
     categoryId?: string,
     options: any = {}
   ): Promise<ApiNotificationUserChannel> {
-    const urlPath = "/v2/getnotificationcategory";
+    const urlPath = "/mezon.api.Mezon/GetNotificationCategory";
     const queryParams = new Map<string, any>();
     queryParams.set("category_id", categoryId);
 
@@ -7087,7 +6982,7 @@ export class MezonApi {
     channelId?: string,
     options: any = {}
   ): Promise<ApiNotificationUserChannel> {
-    const urlPath = "/v2/getnotificationchannel";
+    const urlPath = "/mezon.api.Mezon/GetNotificationChannel";
     const queryParams = new Map<string, any>();
     queryParams.set("channel_id", channelId);
 
@@ -7123,7 +7018,7 @@ export class MezonApi {
     clanId?: string,
     options: any = {}
   ): Promise<ApiNotificationSetting> {
-    const urlPath = "/v2/getnotificationclan";
+    const urlPath = "/mezon.api.Mezon/v2/GetNotificationClan";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
 
@@ -7154,86 +7049,13 @@ export class MezonApi {
   }
 
   /** List GetNotificationReactMessage */
-  getNotificationReactMessage(
-    bearerToken: string,
-    channelId?: string,
-    options: any = {}
-  ): Promise<ApiNotifiReactMessage> {
-    const urlPath = "/v2/getnotificationreactmessage";
-    const queryParams = new Map<string, any>();
-    queryParams.set("channel_id", channelId);
-
-    let bodyJson: string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    fetchOptions.headers["Accept"] = "application/x-protobuf";
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async(response) => {
-        if (response.status == 204) {
-          return {} as ApiNotifiReactMessage;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();      
-          return tsproto.NotifiReactMessage.decode(new Uint8Array(buffer)) as unknown as ApiNotifiReactMessage;
-        } else {
-          throw response;
-        }
-      }),
-      new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
-      ),
-    ]);
-  }
-
-  /** Give a coffee */
-  giveMeACoffee(
-    bearerToken: string,
-    body: ApiGiveCoffeeEvent,
-    options: any = {}
-  ): Promise<any> {
-    if (body === null || body === undefined) {
-      throw new Error(
-        "'body' is a required parameter but is null or undefined."
-      );
-    }
-    const urlPath = "/v2/givecoffee";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson: string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
 
   /** get key server */
   getKeyServer(
     bearerToken: string,
     options: any = {}
   ): Promise<ApiGetKeyServerResp> {
-    const urlPath = "/v2/e2ee/key_server";
+    const urlPath = "/mezon.api.Mezon/GetKeyServer";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -7271,7 +7093,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/invite";
+    const urlPath = "/mezon.api.Mezon/CreateLinkInviteUser";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -7353,10 +7175,7 @@ export class MezonApi {
         "'inviteId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/invite/{inviteId}".replace(
-      "{inviteId}",
-      encodeURIComponent(String(inviteId))
-    );
+    const urlPath = "/mezon.api.Mezon/InviteUser";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -7388,7 +7207,7 @@ export class MezonApi {
     bearerToken: string,
     options: any = {}
   ): Promise<ApiChannelDescList> {
-    const urlPath = "/v2/listchannelbyuserid";
+    const urlPath = "/mezon.api.Mezon/ListChannelByUserId";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -7428,7 +7247,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/markasread";
+    const urlPath = "/mezon.api.Mezon/MarkAsRead";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -7460,7 +7279,7 @@ export class MezonApi {
   listMezonOauthClient(bearerToken: string,
       options: any = {}): Promise<ApiMezonOauthClientList> {
     
-    const urlPath = "/v2/mznoauthclient";
+    const urlPath = "/mezon.api.Mezon/GetMezonOauthClient";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -7500,7 +7319,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/mutenotificationcategory/set";
+    const urlPath = "/mezon.api.Mezon/SetMuteCategory";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -7539,7 +7358,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/mutenotificationchannel/set";
+    const urlPath = "/mezon.api.Mezon/SetMuteChannel";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -7574,7 +7393,7 @@ export class MezonApi {
     category?: number,
     options: any = {}
   ): Promise<any> {
-    const urlPath = "/v2/notification";
+    const urlPath = "/mezon.api.Mezon/DeleteNotifications";
     const queryParams = new Map<string, any>();
     queryParams.set("ids", ids);
     queryParams.set("category", category);
@@ -7613,7 +7432,7 @@ export class MezonApi {
     direction?: number,
     options: any = {}
   ): Promise<ApiNotificationList> {
-    const urlPath = "/v2/notification";
+    const urlPath = "/mezon.api.Mezon/ListNotifications";
     const queryParams = new Map<string, any>();
     queryParams.set("limit", limit);
     queryParams.set("clan_id", clanId);
@@ -7658,7 +7477,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/notificationchannel/set";
+    const urlPath = "/mezon.api.Mezon/SetNotificationChannelSetting";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -7697,7 +7516,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/notificationclan/set";
+    const urlPath = "/mezon.api.Mezon/SetNotificationClanSetting";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -7736,7 +7555,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/notificationucategory/set";
+    const urlPath = "/mezon.api.Mezon/SetNotificationCategorySetting";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -7770,7 +7589,7 @@ export class MezonApi {
     categoryId?: string,
     options: any = {}
   ): Promise<any> {
-    const urlPath = "/v2/notificationusercategory/delete";
+    const urlPath = "/mezon.api.Mezon/DeleteNotificationCategorySetting";
     const queryParams = new Map<string, any>();
     queryParams.set("category_id", categoryId);
 
@@ -7804,7 +7623,7 @@ export class MezonApi {
     channelId?: string,
     options: any = {}
   ): Promise<any> {
-    const urlPath = "/v2/notificationuserchannel/delete";
+    const urlPath = "/mezon.api.Mezon/DeleteNotificationChannel";
     const queryParams = new Map<string, any>();
     queryParams.set("channel_id", channelId);
 
@@ -7832,78 +7651,6 @@ export class MezonApi {
     ]);
   }
 
-  /**  */
-  deleteNotiReactMessage(
-    bearerToken: string,
-    channelId?: string,
-    options: any = {}
-  ): Promise<any> {
-    const urlPath = "/v2/notifireactmessage/delete";
-    const queryParams = new Map<string, any>();
-    queryParams.set("channel_id", channelId);
-
-    let bodyJson: string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
-
-  /**  */
-  setNotificationReactMessage(
-    bearerToken: string,
-    body: ApiNotificationChannel,
-    options: any = {}
-  ): Promise<any> {
-    if (body === null || body === undefined) {
-      throw new Error(
-        "'body' is a required parameter but is null or undefined."
-      );
-    }
-    const urlPath = "/v2/notifireactmessage/set";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson: string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
 
   /** Stream http callback. */
   streamingServerCallback(
@@ -7916,7 +7663,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/stream/callback";
+    const urlPath = "/mezon.api.Mezon/StreamingServerCallback";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -7955,7 +7702,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/permissionrolechannel/set";
+    const urlPath = "/mezon.api.Mezon/SetRoleChannelPermission";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -7988,7 +7735,7 @@ export class MezonApi {
     bearerToken: string,
     options: any = {}
   ): Promise<ApiPermissionList> {
-    const urlPath = "/v2/permissions";
+    const urlPath = "/mezon.api.Mezon/GetListPermission";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -8025,7 +7772,7 @@ export class MezonApi {
     userId?: string,
     options: any = {}
   ): Promise<ApiPermissionRoleChannelListEventResponse> {
-    const urlPath = "/v2/permissions/roles/channels/users";
+    const urlPath = "/mezon.api.Mezon/GetPermissionByRoleIdChannelId";
     const queryParams = new Map<string, any>();
     queryParams.set("role_id", roleId);
     queryParams.set("channel_id", channelId);
@@ -8066,7 +7813,7 @@ export class MezonApi {
     clanId?: string,
     options: any = {}
   ): Promise<any> {
-    const urlPath = "/v2/pinmessage/delete";
+    const urlPath = "/mezon.api.Mezon/DeletePinMessage";
     const queryParams = new Map<string, any>();
     queryParams.set("id", id);
     queryParams.set("message_id", messageId);
@@ -8105,7 +7852,7 @@ export class MezonApi {
     clanId?: string,
     options: any = {}
   ): Promise<ApiPinMessagesList> {
-    const urlPath = "/v2/pinmessage/get";
+    const urlPath = "/mezon.api.Mezon/GetPinMessagesList";
     const queryParams = new Map<string, any>();
     queryParams.set("message_id", messageId);
     queryParams.set("channel_id", channelId);
@@ -8145,7 +7892,7 @@ export class MezonApi {
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/pinmessage/inbox";
+    const urlPath = "/mezon.api.Mezon/CreateMessage2Inbox";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -8184,7 +7931,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/pinmessage/set";
+    const urlPath = "/mezon.api.Mezon/CreatePinMessage";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -8218,7 +7965,7 @@ export class MezonApi {
     userIds?: Array<string>,
     options: any = {}
   ): Promise<ApiGetPubKeysResponse> {
-    const urlPath = "/v2/pubkey";
+    const urlPath = "/mezon.api.Mezon/GetPubKeys";
     const queryParams = new Map<string, any>();
     queryParams.set("user_ids", userIds);
 
@@ -8257,7 +8004,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/pubkey/push";
+    const urlPath = "/mezon.api.Mezon/PushPubKey";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -8296,7 +8043,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/rolechannel/addrole";
+    const urlPath = "/mezon.api.Mezon/AddRolesChannelDesc";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -8341,10 +8088,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/channel/category/{newCategoryId}".replace(
-      "{newCategoryId}",
-      encodeURIComponent(String(newCategoryId))
-    );
+    const urlPath = "/mezon.api.Mezon/ChangeChannelCategory";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -8383,7 +8127,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/rolechannel/delete";
+    const urlPath = "/mezon.api.Mezon/DeleteRoleChannelDesc";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -8420,7 +8164,7 @@ export class MezonApi {
     cursor?: string,
     options: any = {}
   ): Promise<ApiRoleListEventResponse> {
-    const urlPath = "/v2/roles";
+    const urlPath = "/mezon.api.Mezon/ListRoles";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("limit", limit);
@@ -8464,7 +8208,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/roles";
+    const urlPath = "/mezon.api.Mezon/CreateRole";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -8492,53 +8236,6 @@ export class MezonApi {
     ]);
   }
 
-  /** Update a role when Delete a role by ID. */
-  updateRoleDelete(
-    bearerToken: string,
-    roleId: string,
-    body: MezonUpdateRoleDeleteBody,
-    options: any = {}
-  ): Promise<any> {
-    if (roleId === null || roleId === undefined) {
-      throw new Error(
-        "'roleId' is a required parameter but is null or undefined."
-      );
-    }
-    if (body === null || body === undefined) {
-      throw new Error(
-        "'body' is a required parameter but is null or undefined."
-      );
-    }
-    const urlPath = "/v2/roles/delete/{roleId}".replace(
-      "{roleId}",
-      encodeURIComponent(String(roleId))
-    );
-    const queryParams = new Map<string, any>();
-
-    let bodyJson: string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
 
   /** Delete a role by ID. */
   deleteRole(
@@ -8554,10 +8251,7 @@ export class MezonApi {
         "'roleId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/roles/{roleId}".replace(
-      "{roleId}",
-      encodeURIComponent(String(roleId))
-    );
+    const urlPath = "/mezon.api.Mezon/DeleteRole";
     const queryParams = new Map<string, any>();
     queryParams.set("channel_id", channelId);
     queryParams.set("clan_id", clanId);
@@ -8604,10 +8298,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/roles/{roleId}".replace(
-      "{roleId}",
-      encodeURIComponent(String(roleId))
-    );
+    const urlPath = "/mezon.api.Mezon/UpdateRole";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -8646,10 +8337,7 @@ export class MezonApi {
         "'roleId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/roles/{roleId}/permissions".replace(
-      "{roleId}",
-      encodeURIComponent(String(roleId))
-    );
+    const urlPath = "/mezon.api.Mezon/ListRolePermissions";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -8691,10 +8379,7 @@ export class MezonApi {
         "'roleId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/roles/{roleId}/users".replace(
-      "{roleId}",
-      encodeURIComponent(String(roleId))
-    );
+    const urlPath = "/mezon.api.Mezon/ListRoleUsers";
     const queryParams = new Map<string, any>();
     queryParams.set("limit", limit);
     queryParams.set("cursor", cursor);
@@ -8737,10 +8422,7 @@ export class MezonApi {
         "'clanId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/roleuserinclan/{clanId}".replace(
-      "{clanId}",
-      encodeURIComponent(String(clanId))
-    );
+    const urlPath = "/mezon.api.Mezon/GetRoleOfUserInTheClan";
     const queryParams = new Map<string, any>();
     queryParams.set("channel_id", channelId);
 
@@ -8837,10 +8519,7 @@ export class MezonApi {
         "'payload' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/rpc/{id}".replace(
-      "{id}",
-      encodeURIComponent(String(id))
-    );
+    const urlPath = "/mezon.api.Mezon/RpcFunc";
     const queryParams = new Map<string, any>();
     queryParams.set("http_key", httpKey);
 
@@ -8880,7 +8559,7 @@ export class MezonApi {
     label?:string,
     options: any = {}): Promise<ApiChannelDescList> {
   
-  const urlPath = "/v2/searchthread";
+  const urlPath = "/mezon.api.Mezon/SearchThread";
   const queryParams = new Map<string, any>();
   queryParams.set("clan_id", clanId);
   queryParams.set("channel_id", channelId);
@@ -8912,45 +8591,6 @@ export class MezonApi {
   ]);
 }
 
-  /** UpdateWallets */
-  sendToken(
-    bearerToken: string,
-    body: ApiTokenSentEvent,
-    options: any = {}
-  ): Promise<any> {
-    if (body === null || body === undefined) {
-      throw new Error(
-        "'body' is a required parameter but is null or undefined."
-      );
-    }
-    const urlPath = "/v2/sendtoken";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson: string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
-
   /** Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user. */
   sessionLogout(
     bearerToken: string,
@@ -8962,7 +8602,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/session/logout";
+    const urlPath = "/mezon.api.Mezon/SessionLogout";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -9001,7 +8641,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/sticker";
+    const urlPath = "/mezon.api.Mezon/AddClanSticker";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -9040,10 +8680,7 @@ export class MezonApi {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/sticker/{id}".replace(
-      "{id}",
-      encodeURIComponent(String(id))
-    );
+    const urlPath = "/mezon.api.Mezon/DeleteClanStickerById";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("sticker_label", stickerLabel);
@@ -9087,10 +8724,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/sticker/{id}".replace(
-      "{id}",
-      encodeURIComponent(String(id))
-    );
+    const urlPath = "/mezon.api.Mezon/UpdateClanStickerById";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -9123,7 +8757,7 @@ export class MezonApi {
     bearerToken: string,
     options: any = {}
   ): Promise<ApiStickerListedResponse> {
-    const urlPath = "/v2/stickers";
+    const urlPath = "/mezon.api.Mezon/GetListStickersByUserId";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -9202,7 +8836,7 @@ export class MezonApi {
     cursor?: string,
     options: any = {}
   ): Promise<ApiStreamingChannelUserList> {
-    const urlPath = "/v2/streaming-channels/users";
+    const urlPath = "/mezon.api.Mezon/ListStreamingChannelUsers";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("channel_id", channelId);
@@ -9237,39 +8871,6 @@ export class MezonApi {
     ]);
   }
 
-  /** Get the list of system messages. */
-  getSystemMessagesList(
-    bearerToken: string,
-    options: any = {}
-  ): Promise<ApiSystemMessagesList> {
-    const urlPath = "/v2/systemmessages";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson: string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    fetchOptions.headers["Accept"] = "application/x-protobuf";
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiSystemMessagesList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();      
-          return tsproto.SystemMessagesList.decode(new Uint8Array(buffer)) as unknown as ApiSystemMessagesList;
-        } else {
-          throw response;
-        }
-      }),
-      new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
-      ),
-    ]);
-  }
 
   /** Create a system messages. */
   createSystemMessage(
@@ -9282,7 +8883,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/systemmessages";
+    const urlPath = "/mezon.api.Mezon/CreateSystemMessage";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -9317,7 +8918,7 @@ export class MezonApi {
     limit?: number,
     options: any = {}
   ): Promise<ApiSdTopicList> {
-    const urlPath = "/v2/sdmtopic";
+    const urlPath = "/mezon.api.Mezon/ListSdTopic";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("limit", limit);
@@ -9359,7 +8960,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/sdmtopic";
+    const urlPath = "/mezon.api.Mezon/CreateSdTopic";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -9398,10 +8999,7 @@ export class MezonApi {
         "'clanId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/systemmessages/{clanId}".replace(
-      "{clanId}",
-      encodeURIComponent(String(clanId))
-    );
+    const urlPath = "/mezon.api.Mezon/DeleteSystemMessage";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -9439,10 +9037,7 @@ export class MezonApi {
         "'clanId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/systemmessages/{clanId}".replace(
-      "{clanId}",
-      encodeURIComponent(String(clanId))
-    );
+    const urlPath = "/mezon.api.Mezon/GetSystemMessageByClanId";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -9486,10 +9081,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/systemmessages/{clanId}".replace(
-      "{clanId}",
-      encodeURIComponent(String(clanId))
-    );
+    const urlPath = "/mezon.api.Mezon/UpdateSystemMessage";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -9533,10 +9125,7 @@ export class MezonApi {
         "'channelId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/thread/{channelId}".replace(
-      "{channelId}",
-      encodeURIComponent(String(channelId))
-    );
+    const urlPath = "/mezon.api.Mezon/ListThreadDescs";
     const queryParams = new Map<string, any>();
     queryParams.set("limit", limit);
     queryParams.set("state", state);
@@ -9586,10 +9175,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/updatecategory/{clanId}".replace(
-      "{clanId}",
-      encodeURIComponent(String(clanId))
-    );
+    const urlPath = "/mezon.api.Mezon/UpdateCategory";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -9628,7 +9214,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/updatechannelprivate";
+    const urlPath = "/mezon.api.Mezon/UpdateChannelPrivate";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -9673,10 +9259,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/updateclanprofile/{clanId}".replace(
-      "{clanId}",
-      encodeURIComponent(String(clanId))
-    );
+    const urlPath = "/mezon.api.Mezon/UpdateUserProfileByClan";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -9712,7 +9295,7 @@ export class MezonApi {
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/uploadoauthfile";
+    const urlPath = "/mezon.api.Mezon/UploadOauthFile";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -9751,7 +9334,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/uploadattachmentfile";
+    const urlPath = "/mezon.api.Mezon/UploadAttachmentFile";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -9790,7 +9373,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/user/update";
+    const urlPath = "/mezon.api.Mezon/UpdateUser";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -9823,7 +9406,7 @@ export class MezonApi {
     bearerToken: string,
     options: any = {}
   ): Promise<ApiAllUserClans> {
-    const urlPath = "/v2/users/clans";
+    const urlPath = "/mezon.api.Mezon/ListUserClansByUserId";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -9859,7 +9442,7 @@ export class MezonApi {
     channelId?: string,
     options: any = {}
   ): Promise<ApiUserPermissionInChannelListResponse> {
-    const urlPath = "/v2/users/clans/channels";
+    const urlPath = "/mezon.api.Mezon/ListUserPermissionInChannel";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("channel_id", channelId);
@@ -9895,7 +9478,7 @@ export class MezonApi {
     bearerToken: string,
     options: any = {}
   ): Promise<ApiUserStatus> {
-    const urlPath = "/v2/userstatus";
+    const urlPath = "/mezon.api.Mezon/GetUserStatus";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -9933,7 +9516,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/userstatus";
+    const urlPath = "/mezon.api.Mezon/UpdateUserStatus";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -9972,7 +9555,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/webhooks/generate";
+    const urlPath = "/mezon.api.Mezon/GenerateWebhook";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -10015,10 +9598,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/webhooks/update/{id}".replace(
-      "{id}",
-      encodeURIComponent(String(id))
-    );
+    const urlPath = "/mezon.api.Mezon/UpdateWebhookById";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -10058,10 +9638,7 @@ export class MezonApi {
         "'channelId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/webhooks/{channelId}".replace(
-      "{channelId}",
-      encodeURIComponent(String(channelId))
-    );
+    const urlPath = "/mezon.api.Mezon/ListWebhookByChannelId";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
 
@@ -10106,10 +9683,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/webhooks/{id}".replace(
-      "{id}",
-      encodeURIComponent(String(id))
-    );
+    const urlPath = "/mezon.api.Mezon/DeleteWebhookById";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -10172,7 +9746,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/canvases/editor";
+    const urlPath = "/mezon.api.Mezon/EditChannelCanvases";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -10211,10 +9785,7 @@ export class MezonApi {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/canvases/{id}".replace(
-      "{id}",
-      encodeURIComponent(String(id))
-    );
+    const urlPath = "/mezon.api.Mezon/GetChannelCanvasDetail";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("channel_id", channelId);
@@ -10256,10 +9827,7 @@ export class MezonApi {
         "'canvasId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/canvases/{canvasId}".replace(
-      "{canvasId}",
-      encodeURIComponent(String(canvasId))
-    );
+    const urlPath = "/mezon.api.Mezon/DeleteChannelCanvas";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("channel_id", channelId);
@@ -10297,7 +9865,7 @@ export class MezonApi {
     page?: number,
     options: any = {}
   ): Promise<ApiListOnboardingResponse> {
-    const urlPath = "/v2/onboarding";
+    const urlPath = "/mezon.api.Mezon/ListOnboarding";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("guide_type", guideType);
@@ -10341,7 +9909,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/onboarding";
+    const urlPath = "/mezon.api.Mezon/CreateOnboarding";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -10379,10 +9947,7 @@ export class MezonApi {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/onboarding/{id}".replace(
-      "{id}",
-      encodeURIComponent(String(id))
-    );
+    const urlPath = "/mezon.api.Mezon/DeleteOnboarding";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
 
@@ -10420,10 +9985,7 @@ export class MezonApi {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/onboarding/{id}".replace(
-      "{id}",
-      encodeURIComponent(String(id))
-    );
+    const urlPath = "/mezon.api.Mezon/GetOnboardingDetail";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
 
@@ -10466,10 +10028,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/onboarding/{id}".replace(
-      "{id}",
-      encodeURIComponent(String(id))
-    );
+    const urlPath = "/mezon.api.Mezon/UpdateOnboarding";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -10508,7 +10067,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/clanwebhooks";
+    const urlPath = "/mezon.api.Mezon/GenerateClanWebhook";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -10547,10 +10106,7 @@ export class MezonApi {
         "'clanId' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/clanwebhooks/{clanId}".replace(
-      "{clanId}",
-      encodeURIComponent(String(clanId))
-    );
+    const urlPath = "/mezon.api.Mezon/ListClanWebhook";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -10589,10 +10145,7 @@ export class MezonApi {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/clanwebhooks/{id}".replace(
-      "{id}",
-      encodeURIComponent(String(id))
-    );
+    const urlPath = "/mezon.api.Mezon/DeleteClanWebhookById";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
 
@@ -10635,10 +10188,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/clanwebhooks/{id}".replace(
-      "{id}",
-      encodeURIComponent(String(id))
-    );
+    const urlPath = "/mezon.api.Mezon/UpdateClanWebhookById";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -10672,7 +10222,7 @@ export class MezonApi {
     topicId?: string,
     options: any = {}
   ): Promise<ApiSdTopic> {
-    const urlPath = "/v2/sdmtopic/detail";
+    const urlPath = "/mezon.api.Mezon/GetTopicDetail";
     const queryParams = new Map<string, any>();
     queryParams.set("topic_id", topicId);
 
@@ -10708,7 +10258,7 @@ export class MezonApi {
     page?: number,
     options: any = {}
   ): Promise<ApiListOnboardingStepResponse> {
-    const urlPath = "/v2/onboardingsteps";
+    const urlPath = "/mezon.api.Mezon/ListOnboardingStep";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("limit", limit);
@@ -10796,7 +10346,7 @@ export class MezonApi {
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channel-apps/createroom";
+    const urlPath = "/mezon.api.Mezon/CreateRoomChannelApps";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -10834,7 +10384,7 @@ export class MezonApi {
       if (body === null || body === undefined) {
         throw new Error("'body' is a required parameter but is null or undefined.");
       }
-      const urlPath = "/v2/meet/generate";
+      const urlPath = "/mezon.api.Mezon/GenerateMeetToken";
       const queryParams = new Map<string, any>();
 
       let bodyJson : string = "";
@@ -10869,7 +10419,7 @@ export class MezonApi {
     options: any = {}
   ): Promise<ApiMezonOauthClient> {
 
-    const urlPath = "/v2/mznoauthclient";
+    const urlPath = "/mezon.api.Mezon/GetMezonOauthClient";
     const queryParams = new Map<string, any>();
     queryParams.set("client_id", clientId);
     queryParams.set("client_name", clientName);
@@ -10906,7 +10456,7 @@ export class MezonApi {
       if (body === null || body === undefined) {
         throw new Error("'body' is a required parameter but is null or undefined.");
       }
-      const urlPath = "/v2/mznoauthclient";
+      const urlPath = "/mezon.api.Mezon/UpdateMezonOauthClient";
       const queryParams = new Map<string, any>();
 
       let bodyJson : string = "";
@@ -10939,7 +10489,7 @@ export class MezonApi {
     options: any = {}
   ): Promise<ApiCreateHashChannelAppsResponse> {
   
-    const urlPath = "/v2/channel-apps/hash";
+    const urlPath = "/mezon.api.Mezon/GenerateHashChannelApps";
     const queryParams = new Map<string, any>();
     queryParams.set("app_id", appId);
 
@@ -10977,7 +10527,7 @@ export class MezonApi {
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/userevent";
+    const urlPath = "/mezon.api.Mezon/AddUserEvent";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -11013,7 +10563,7 @@ export class MezonApi {
     options: any = {}
   ): Promise<any> {
     
-    const urlPath = "/v2/userevent";
+    const urlPath = "/mezon.api.Mezon/DeleteUserEvent";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("event_id", eventId);
@@ -11050,7 +10600,7 @@ export class MezonApi {
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/role/orders";
+    const urlPath = "/mezon.api.Mezon/UpdateRoleOrder";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -11082,7 +10632,7 @@ export class MezonApi {
   createExternalMezonMeet(bearerToken: string,
       options: any = {}): Promise<ApiGenerateMezonMeetResponse> {
 
-    const urlPath = "/v2/meet/external/create";
+    const urlPath = "/mezon.api.Mezon/CreateExternalMezonMeet";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -11157,7 +10707,7 @@ export class MezonApi {
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/meet/participant/mute";
+    const urlPath = "/mezon.api.Mezon/MuteParticipantMezonMeet";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -11193,7 +10743,7 @@ export class MezonApi {
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/meet/participant/remove";
+    const urlPath = "/mezon.api.Mezon/RemoveParticipantMezonMeet";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -11229,7 +10779,7 @@ export class MezonApi {
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channeldesc/{channelId}"
+    const urlPath = "/mezon.api.Mezon/ListChannelDetail"
         .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
 
@@ -11267,7 +10817,7 @@ export class MezonApi {
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/updateclanorder";
+    const urlPath = "/mezon.api.Mezon/UpdateClanOrder";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -11343,7 +10893,7 @@ export class MezonApi {
       actionMsg?:string,
       options: any = {}): Promise<any> {
     
-    const urlPath = "/v2/quickmenuaccess";
+    const urlPath = "/mezon.api.Mezon/DeleteQuickMenuAccess";
     const queryParams = new Map<string, any>();
     queryParams.set("id", id);
     queryParams.set("clan_id", clanId);
@@ -11383,7 +10933,7 @@ export class MezonApi {
         menuType?:number,
         options: any = {}): Promise<ApiQuickMenuAccessList> {
       
-      const urlPath = "/v2/quickmenuaccess";
+      const urlPath = "/mezon.api.Mezon/ListQuickMenuAccess";
       const queryParams = new Map<string, any>();
       queryParams.set("bot_id", botId);
       queryParams.set("channel_id", channelId);
@@ -11423,7 +10973,7 @@ export class MezonApi {
       if (body === null || body === undefined) {
         throw new Error("'body' is a required parameter but is null or undefined.");
       }
-      const urlPath = "/v2/quickmenuaccess";
+      const urlPath = "/mezon.api.Mezon/AddQuickMenuAccess";
       const queryParams = new Map<string, any>();
   
       let bodyJson : string = "";
@@ -11459,7 +11009,7 @@ export class MezonApi {
       if (body === null || body === undefined) {
         throw new Error("'body' is a required parameter but is null or undefined.");
       }
-      const urlPath = "/v2/quickmenuaccess";
+      const urlPath = "/mezon.api.Mezon/UpdateQuickMenuAccess";
       const queryParams = new Map<string, any>();
   
       let bodyJson : string = "";
@@ -11487,48 +11037,13 @@ export class MezonApi {
       ]);
   }
 
-  /** UnlockItem */
-    unlockItem(bearerToken: string,
-        body:ApiUnlockedItemRequest,
-        options: any = {}): Promise<ApiUnlockedItemResponse> {
-      
-      if (body === null || body === undefined) {
-        throw new Error("'body' is a required parameter but is null or undefined.");
-      }
-      const urlPath = "/v2/unlockitem";
-      const queryParams = new Map<string, any>();
-  
-      let bodyJson : string = "";
-      bodyJson = JSON.stringify(body || {});
-  
-      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-      const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-      if (bearerToken) {
-          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-      }
-  
-      return Promise.race([
-        fetch(fullUrl, fetchOptions).then((response) => {
-          if (response.status == 204) {
-            return response;
-          } else if (response.status >= 200 && response.status < 300) {
-            return response.json();
-          } else {
-            throw response;
-          }
-        }),
-        new Promise((_, reject) =>
-          setTimeout(reject, this.timeoutMs, "Request timed out.")
-        ),
-      ]);
-  }
 
   /** For sale items */
     listForSaleItems(bearerToken: string,
         page?:number,
         options: any = {}): Promise<ApiForSaleItemList> {
       
-      const urlPath = "/v2/forsale";
+      const urlPath = "/mezon.api.Mezon/ListForSaleItems";
       const queryParams = new Map<string, any>();
       queryParams.set("page", page);
   
@@ -11564,7 +11079,7 @@ export class MezonApi {
       if (body === null || body === undefined) {
         throw new Error("'body' is a required parameter but is null or undefined.");
       }
-      const urlPath = "/v2/follower";
+      const urlPath = "/mezon.api.Mezon/IsFollower";
       const queryParams = new Map<string, any>();
   
       let bodyJson : string = "";
@@ -11600,7 +11115,7 @@ export class MezonApi {
       if (body === null || body === undefined) {
         throw new Error("'body' is a required parameter but is null or undefined.");
       }
-      const urlPath = "/v2/transfer/ownership";
+      const urlPath = "/mezon.api.Mezon/TransferOwnership";
       const queryParams = new Map<string, any>();
   
       let bodyJson : string = "";
@@ -11636,7 +11151,7 @@ export class MezonApi {
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/username";
+    const urlPath = "/mezon.api.Mezon/UpdateUsername";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -11674,7 +11189,7 @@ export class MezonApi {
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channel/{channelId}/isban"
+    const urlPath = "/mezon.api.Mezon/IsBanned"
         .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
 
@@ -11710,7 +11225,7 @@ export class MezonApi {
       abuseType?:string,
       options: any = {}): Promise<any> {
     
-    const urlPath = "/v2/message/report";
+    const urlPath = "/mezon.api.Mezon/ReportMessageAbuse";
     const queryParams = new Map<string, any>();
     queryParams.set("message_id", messageId);
     queryParams.set("abuse_type", abuseType);
@@ -11743,7 +11258,7 @@ export class MezonApi {
   listLogedDevice(bearerToken: string,
       options: any = {}): Promise<ApiLogedDeviceList> {
     
-    const urlPath = "/v2/loged/device";
+    const urlPath = "/v2/ListLogedDevice";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
