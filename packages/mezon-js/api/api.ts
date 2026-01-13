@@ -3614,10 +3614,10 @@ export interface Message2InboxRequest {
   clan_id: string;
   avatar: string;
   content: string;
-  mentions: Uint8Array;
-  attachments: Uint8Array;
-  reactions: Uint8Array;
-  references: Uint8Array;
+  mentions: MessageMention[];
+  attachments: MessageAttachment[];
+  reactions: MessageReaction[];
+  references: MessageRef[];
 }
 
 /** Send an email with password to the server. Used with authenticate/link/unlink. */
@@ -37306,10 +37306,10 @@ function createBaseMessage2InboxRequest(): Message2InboxRequest {
     clan_id: "",
     avatar: "",
     content: "",
-    mentions: new Uint8Array(0),
-    attachments: new Uint8Array(0),
-    reactions: new Uint8Array(0),
-    references: new Uint8Array(0),
+    mentions: [],
+    attachments: [],
+    reactions: [],
+    references: [],
   };
 }
 
@@ -37330,17 +37330,17 @@ export const Message2InboxRequest = {
     if (message.content !== "") {
       writer.uint32(42).string(message.content);
     }
-    if (message.mentions.length !== 0) {
-      writer.uint32(50).bytes(message.mentions);
+    for (const v of message.mentions) {
+      MessageMention.encode(v!, writer.uint32(50).fork()).ldelim();
     }
-    if (message.attachments.length !== 0) {
-      writer.uint32(58).bytes(message.attachments);
+    for (const v of message.attachments) {
+      MessageAttachment.encode(v!, writer.uint32(58).fork()).ldelim();
     }
-    if (message.reactions.length !== 0) {
-      writer.uint32(66).bytes(message.reactions);
+    for (const v of message.reactions) {
+      MessageReaction.encode(v!, writer.uint32(66).fork()).ldelim();
     }
-    if (message.references.length !== 0) {
-      writer.uint32(74).bytes(message.references);
+    for (const v of message.references) {
+      MessageRef.encode(v!, writer.uint32(74).fork()).ldelim();
     }
     return writer;
   },
@@ -37392,28 +37392,28 @@ export const Message2InboxRequest = {
             break;
           }
 
-          message.mentions = reader.bytes();
+          message.mentions.push(MessageMention.decode(reader, reader.uint32()));
           continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          message.attachments = reader.bytes();
+          message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
           continue;
         case 8:
           if (tag !== 66) {
             break;
           }
 
-          message.reactions = reader.bytes();
+          message.reactions.push(MessageReaction.decode(reader, reader.uint32()));
           continue;
         case 9:
           if (tag !== 74) {
             break;
           }
 
-          message.references = reader.bytes();
+          message.references.push(MessageRef.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -37431,10 +37431,18 @@ export const Message2InboxRequest = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
-      mentions: isSet(object.mentions) ? bytesFromBase64(object.mentions) : new Uint8Array(0),
-      attachments: isSet(object.attachments) ? bytesFromBase64(object.attachments) : new Uint8Array(0),
-      reactions: isSet(object.reactions) ? bytesFromBase64(object.reactions) : new Uint8Array(0),
-      references: isSet(object.references) ? bytesFromBase64(object.references) : new Uint8Array(0),
+      mentions: globalThis.Array.isArray(object?.mentions)
+        ? object.mentions.map((e: any) => MessageMention.fromJSON(e))
+        : [],
+      attachments: globalThis.Array.isArray(object?.attachments)
+        ? object.attachments.map((e: any) => MessageAttachment.fromJSON(e))
+        : [],
+      reactions: globalThis.Array.isArray(object?.reactions)
+        ? object.reactions.map((e: any) => MessageReaction.fromJSON(e))
+        : [],
+      references: globalThis.Array.isArray(object?.references)
+        ? object.references.map((e: any) => MessageRef.fromJSON(e))
+        : [],
     };
   },
 
@@ -37455,17 +37463,17 @@ export const Message2InboxRequest = {
     if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.mentions.length !== 0) {
-      obj.mentions = base64FromBytes(message.mentions);
+    if (message.mentions?.length) {
+      obj.mentions = message.mentions.map((e) => MessageMention.toJSON(e));
     }
-    if (message.attachments.length !== 0) {
-      obj.attachments = base64FromBytes(message.attachments);
+    if (message.attachments?.length) {
+      obj.attachments = message.attachments.map((e) => MessageAttachment.toJSON(e));
     }
-    if (message.reactions.length !== 0) {
-      obj.reactions = base64FromBytes(message.reactions);
+    if (message.reactions?.length) {
+      obj.reactions = message.reactions.map((e) => MessageReaction.toJSON(e));
     }
-    if (message.references.length !== 0) {
-      obj.references = base64FromBytes(message.references);
+    if (message.references?.length) {
+      obj.references = message.references.map((e) => MessageRef.toJSON(e));
     }
     return obj;
   },
@@ -37480,10 +37488,10 @@ export const Message2InboxRequest = {
     message.clan_id = object.clan_id ?? "";
     message.avatar = object.avatar ?? "";
     message.content = object.content ?? "";
-    message.mentions = object.mentions ?? new Uint8Array(0);
-    message.attachments = object.attachments ?? new Uint8Array(0);
-    message.reactions = object.reactions ?? new Uint8Array(0);
-    message.references = object.references ?? new Uint8Array(0);
+    message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
+    message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
+    message.reactions = object.reactions?.map((e) => MessageReaction.fromPartial(e)) || [];
+    message.references = object.references?.map((e) => MessageRef.fromPartial(e)) || [];
     return message;
   },
 };

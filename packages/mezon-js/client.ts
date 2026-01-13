@@ -1848,7 +1848,7 @@ export class Client {
   }
 
   /** Add a custom ID to the social profiles on the current user's account. */
-  async linkMezon(
+  async linkSMS(
     session: Session,
     request: ApiLinkAccountMezon
   ): Promise<ApiLinkAccountConfirmRequest> {
@@ -1861,7 +1861,7 @@ export class Client {
     }
 
     return this.apiClient
-      .linkMezon(session.token, request)
+      .linkSMS(session.token, request)
       .then((response: ApiLinkAccountConfirmRequest) => {
         return Promise.resolve(response);
       });
@@ -1993,40 +1993,6 @@ export class Client {
           });
         });
         return Promise.resolve(result);
-      });
-  }
-
-  /** Execute an RPC function on the server. */
-  async rpc(
-    session: Session,
-    basicAuthUsername: string,
-    basicAuthPassword: string,
-    id: string,
-    input: object
-  ): Promise<RpcResponse> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .rpcFunc(
-        session.token,
-        basicAuthUsername,
-        basicAuthPassword,
-        id,
-        JSON.stringify(input)
-      )
-      .then((response: ApiRpc) => {
-        return Promise.resolve({
-          id: response.id,
-          payload: !response.payload
-            ? undefined
-            : safeJSONParse(response.payload),
-        });
       });
   }
 
