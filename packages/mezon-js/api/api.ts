@@ -2889,7 +2889,9 @@ export interface ChannelSettingListRequest {
   /** category id */
   category_id: string;
   /** is private channel */
-  private_channel: number;
+  private_channel:
+    | number
+    | undefined;
   /** is active */
   active:
     | number
@@ -29083,7 +29085,7 @@ function createBaseChannelSettingListRequest(): ChannelSettingListRequest {
     clan_id: "",
     parent_id: "",
     category_id: "",
-    private_channel: 0,
+    private_channel: undefined,
     active: undefined,
     status: undefined,
     type: undefined,
@@ -29104,8 +29106,8 @@ export const ChannelSettingListRequest = {
     if (message.category_id !== "") {
       writer.uint32(26).string(message.category_id);
     }
-    if (message.private_channel !== 0) {
-      writer.uint32(32).int32(message.private_channel);
+    if (message.private_channel !== undefined) {
+      Int32Value.encode({ value: message.private_channel! }, writer.uint32(34).fork()).ldelim();
     }
     if (message.active !== undefined) {
       Int32Value.encode({ value: message.active! }, writer.uint32(42).fork()).ldelim();
@@ -29157,11 +29159,11 @@ export const ChannelSettingListRequest = {
           message.category_id = reader.string();
           continue;
         case 4:
-          if (tag !== 32) {
+          if (tag !== 34) {
             break;
           }
 
-          message.private_channel = reader.int32();
+          message.private_channel = Int32Value.decode(reader, reader.uint32()).value;
           continue;
         case 5:
           if (tag !== 42) {
@@ -29219,7 +29221,7 @@ export const ChannelSettingListRequest = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
       category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
-      private_channel: isSet(object.private_channel) ? globalThis.Number(object.private_channel) : 0,
+      private_channel: isSet(object.private_channel) ? Number(object.private_channel) : undefined,
       active: isSet(object.active) ? Number(object.active) : undefined,
       status: isSet(object.status) ? Number(object.status) : undefined,
       type: isSet(object.type) ? Number(object.type) : undefined,
@@ -29240,8 +29242,8 @@ export const ChannelSettingListRequest = {
     if (message.category_id !== "") {
       obj.category_id = message.category_id;
     }
-    if (message.private_channel !== 0) {
-      obj.private_channel = Math.round(message.private_channel);
+    if (message.private_channel !== undefined) {
+      obj.private_channel = message.private_channel;
     }
     if (message.active !== undefined) {
       obj.active = message.active;
@@ -29272,7 +29274,7 @@ export const ChannelSettingListRequest = {
     message.clan_id = object.clan_id ?? "";
     message.parent_id = object.parent_id ?? "";
     message.category_id = object.category_id ?? "";
-    message.private_channel = object.private_channel ?? 0;
+    message.private_channel = object.private_channel ?? undefined;
     message.active = object.active ?? undefined;
     message.status = object.status ?? undefined;
     message.type = object.type ?? undefined;
