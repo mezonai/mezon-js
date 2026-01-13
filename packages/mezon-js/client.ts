@@ -16,7 +16,6 @@
 
 import {
   ApiAccount,
-  ApiAccountMezon,
   ApiAccountEmail,
   ApiChannelMessageList,
   ApiChannelDescList,
@@ -160,9 +159,7 @@ import {
   ApiClanDiscoverRequest,
   ApiQuickMenuAccessList,
   ApiQuickMenuAccessRequest,
-  ApiUnlockedItemRequest,
   ApiForSaleItemList,
-  ApiUnlockedItemResponse,
   ApiIsFollowerResponse,
   ApiIsFollowerRequest,
   ApiTransferOwnershipRequest,
@@ -181,7 +178,7 @@ import {
 
 import { Session } from "./session";
 import { DefaultSocket, Socket } from "./socket";
-import { safeJSONParse } from "./utils";
+import { decodeAttachments, decodeMentions, decodeReactions, decodeRefs, safeJSONParse } from "./utils";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
 
 const DEFAULT_HOST = "127.0.0.1";
@@ -250,8 +247,6 @@ export interface ChannelMessage {
   code: number;
   //The content payload.
   content: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time: string;
   //
   reactions?: Array<ApiMessageReaction>;
   //
@@ -1265,32 +1260,30 @@ export class Client {
             console.log("error parse content", e);
           }
           try {
-            reactions = safeJSONParse(m.reactions || "[]");
+            reactions = decodeReactions(m.reactions || '');
           } catch (e) {
             console.log("error parse reactions", e);
           }
           try {
-            mentions = safeJSONParse(m.mentions || "[]");
+            mentions = decodeMentions(m.mentions || '');
           } catch (e) {
             console.log("error parse mentions", e);
           }
           try {
-            attachments = safeJSONParse(m.attachments || "[]");
+            attachments = decodeAttachments(m.attachments || '');
           } catch (e) {
             console.log("error parse attachments", e);
           }
           try {
-            references = safeJSONParse(m.references || "[]");
+            references = decodeRefs(m.references || '');
           } catch (e) {
             console.log("error parse references", e);
           }
           result.messages!.push({
             channel_id: m.channel_id,
             code: m.code ? Number(m.code) : 0,
-            create_time: m.create_time || "",
             id: m.message_id,
             sender_id: m.sender_id,
-            update_time: m.update_time,
             username: m.username,
             display_name: m.display_name,
             avatar: m.avatar,
@@ -1300,10 +1293,10 @@ export class Client {
             category_name: m.category_name,
             clan_nick: m.clan_nick,
             clan_avatar: m.clan_avatar,
-            attachments: attachments,
-            mentions: mentions,
-            reactions: reactions,
-            references: references,
+            attachments: attachments?.attachments,
+            mentions: mentions?.mentions,
+            reactions: reactions?.reactions,
+            references: references?.refs,
             clan_id: m.clan_id,
             create_time_seconds: m.create_time_seconds,
             update_time_seconds: m.update_time_seconds,
@@ -2138,26 +2131,6 @@ export class Client {
     });
 
     return this.refreshTokenPromise;
-  }
-
-  /** Remove custom ID from the social profiles on the current user's account. */
-  async unlinkCustom(
-    session: Session,
-    request: ApiAccountMezon
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .unlinkMezon(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
   }
 
   /** Remove an email+password from the social profiles on the current user's account. */
@@ -4827,22 +4800,6 @@ export class Client {
       });
   }
 
-  async unlockItem(session: Session, request: ApiUnlockedItemRequest): Promise<ApiUnlockedItemResponse> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .unlockItem(session.token, request)
-      .then((response: ApiUnlockedItemResponse) => {
-         return Promise.resolve(response);
-      });
-  }
-
   async listForSaleItems(session: Session, 
     page?: number): Promise<ApiForSaleItemList> {
     if (
@@ -4946,3 +4903,5 @@ export class Client {
       });
   }
 }
+
+
