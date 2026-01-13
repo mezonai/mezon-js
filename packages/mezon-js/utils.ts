@@ -14,8 +14,6 @@ export function buildFetchOptions(method: string, options: any, bodyJson: string
         }
     }
 
-    //fetchOptions.headers["connect-protocol-version"] = "1";
-
     if(!Object.keys(fetchOptions.headers).includes("Accept")) {
       fetchOptions.headers["Accept"] = "application/proto";
     }
