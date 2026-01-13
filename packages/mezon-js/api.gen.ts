@@ -295,11 +295,11 @@ export interface MezonUpdateEventBody {
   //
   description?: string;
   //
-  end_time?: Date;
+  //end_time?: Date;
   //
   logo?: string;
   //
-  start_time?: Date;
+  //start_time?: Date;
   //
   title?: string;
   //
@@ -1197,7 +1197,7 @@ export interface ApiCreateActivityRequest {
   //
   application_id?: string;
   //
-  start_time?: string;
+  //start_time?: string;
   //
   status?: number;
 }
@@ -1255,11 +1255,11 @@ export interface ApiCreateEventRequest {
   //
   description?: string;
   //
-  end_time?: string;
+  //end_time?: string;
   //
   logo?: string;
   //
-  start_time?: string;
+  //start_time?: string;
   //
   title?: string;
   //
@@ -1271,7 +1271,7 @@ export interface ApiCreateEventRequest {
   //
   repeat_type?: number;
   //
-  creator_id?: number;
+  creator_id?: string;
   //
   user_id?: string;
   //
@@ -1455,7 +1455,7 @@ export interface ApiEventManagement {
   //
   description?: string;
   //
-  end_time?: Date;
+  //end_time?: Date;
   //
   id?: string;
   //
@@ -1670,8 +1670,6 @@ export interface ApiNotifiReactMessage {
 /**  */
 export interface ApiMessage2InboxRequest {
   //
-  attachments?: string;
-  //
   avatar?: string;
   //
   channel_id?: string;
@@ -1680,13 +1678,11 @@ export interface ApiMessage2InboxRequest {
   //
   content?: string;
   //
-  mentions?: string;
-  //
   message_id?: string;
-  //
-  reactions?: string;
-  //
-  references?: string;
+  mentions: Uint8Array;
+  attachments: Uint8Array;
+  reactions: Uint8Array;
+  references: Uint8Array;
 }
 
 /**  */
@@ -1876,7 +1872,7 @@ export interface ApiMezonOauthClient {
   //
   contacts?: Array<string>;
   //
-  created_at?: Date;
+  //created_at?: Date;
   //
   frontchannel_logout_session_required?: boolean;
   //
@@ -1936,7 +1932,7 @@ export interface ApiMezonOauthClient {
   //
   tos_uri?: string;
   //
-  updated_at?: string;
+  //updated_at?: string;
   //
   userinfo_signed_response_alg?: string;
 }
@@ -2201,10 +2197,8 @@ export interface ApiPinMessagesList {
 
 /**  */
 export interface ApiPubKey {
-  //
-  encr?: string;
-  //
-  sign?: string;
+  encr: Uint8Array;
+  sign: Uint8Array;
 }
 
 /**  */
@@ -2684,7 +2678,7 @@ export interface ApiUpdateAccountRequest {
   //The display name of the user.
   display_name?: string;
   //
-  dob?: string;
+  //dob?: string;
   //The email of the user's account.
   email?: string;
   //
@@ -3272,7 +3266,7 @@ export interface ApiMezonOauthClient {
   //
   contacts?: Array<string>;
   //
-  created_at?: Date;
+  //created_at?: Date;
   //
   frontchannel_logout_session_required?: boolean;
   //
@@ -3332,7 +3326,7 @@ export interface ApiMezonOauthClient {
   //
   tos_uri?: string;
   //
-  updated_at?: string;
+  //updated_at?: string;
   //
   userinfo_signed_response_alg?: string;
 }
@@ -3575,10 +3569,7 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.UpdateAccountRequest.encode(
-      tsproto.UpdateAccountRequest.fromPartial({
-        ...body,
-        dob: body.dob ? new Date(body.dob) : undefined
-      })
+      tsproto.UpdateAccountRequest.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 
