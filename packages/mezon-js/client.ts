@@ -37,7 +37,6 @@ import {
   ApiEvent,
   ApiFriendList,
   ApiNotificationList,
-  ApiRpc,
   ApiUpdateAccountRequest,
   MezonApi,
   ApiSession,
@@ -71,7 +70,6 @@ import {
   ApiWebhookListResponse,
   MezonUpdateWebhookByIdBody,
   ApiWebhookGenerateResponse,
-  ApiCheckDuplicateClanNameResponse,
   ApiClanStickerAddRequest,
   MezonUpdateClanStickerByIdBody,
   MezonChangeChannelCategoryBody,
@@ -1933,27 +1931,6 @@ export class Client {
       });
   }
 
-  /** Execute an RPC function on the server. */
-  async rpcHttpKey(
-    httpKey: string,
-    id: string,
-    input?: object
-  ): Promise<RpcResponse> {
-    return this.apiClient
-      .rpcFunc2("", id, (input && JSON.stringify(input)) || "", httpKey)
-      .then((response: ApiRpc) => {
-        return Promise.resolve({
-          id: response.id,
-          payload: !response.payload
-            ? undefined
-            : safeJSONParse(response.payload),
-        });
-      })
-      .catch((err: any) => {
-        throw err;
-      });
-  }
-
   /** Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user. */
   async sessionLogout(
     session: Session,
@@ -2758,26 +2735,6 @@ export class Client {
       });
   }
 
-  //**check duplicate clan name */
-  async checkDuplicateClanName(
-    session: Session,
-    clan_name: string
-  ): Promise<ApiCheckDuplicateClanNameResponse> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .checkDuplicateClanName(session.token, clan_name)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
-  }
-
   //**Add a new sticker */
   async addClanSticker(session: Session, request: ApiClanStickerAddRequest) {
     if (
@@ -3047,22 +3004,6 @@ export class Client {
 
     return this.apiClient
       .updateCategoryOrder(session.token, request)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
-  }
-
-  async deleteCategoryOrder(session: Session, clanId: string): Promise<any> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .deleteCategoryOrder(session.token, clanId)
       .then((response: any) => {
         return Promise.resolve(response);
       });
