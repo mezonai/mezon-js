@@ -5,7 +5,6 @@ import { buildFetchOptions } from "./utils";
 import { encode } from "js-base64";
 import * as tsproto from "./api/api";
 import { ApiUpdateChannelDescRequest } from "./client";
-import { ChannelMessage } from "./api/api";
 
 /** A single user-role pair. */
 export interface ChannelUserListChannelUser {
@@ -29,6 +28,67 @@ export interface ChannelUserListChannelUser {
   is_banned?: boolean;
   // expired time
   expired_ban_time?: number;
+}
+
+
+/** A message sent on a channel. */
+export interface ChannelMessage {
+  //The unique ID of this message.
+  id: string;
+  //
+  avatar?: string;
+  //The channel this message belongs to.
+  channel_id: string;
+  //The name of the chat room, or an empty string if this message was not sent through a chat room.
+  channel_label: string;
+  //The clan this message belong to.
+  clan_id?: string;
+  //The code representing a message type or category.
+  code: number;
+  //The content payload.
+  content: string;
+  //
+  reactions?: Array<ApiMessageReaction>;
+  //
+  mentions?: Array<ApiMessageMention>;
+  //
+  attachments?: Array<ApiMessageAttachment>;
+  //
+  references?: Array<ApiMessageRef>;
+  //
+  referenced_message?: string[];
+  //True if the message was persisted to the channel's history, false otherwise.
+  persistent?: boolean;
+  //Message sender, usually a user ID.
+  sender_id: string;
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
+  update_time?: string;
+  //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
+  clan_logo?: string;
+  //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
+  category_name?: string;
+  //The username of the message sender, if any.
+  username?: string;
+  // The clan nick name
+  clan_nick?: string;
+  // The clan avatar
+  clan_avatar?: string;
+  //
+  display_name?: string;
+  //
+  create_time_seconds?: number;
+  //
+  update_time_seconds?: number;
+  //
+  mode?: number;
+  //
+  message_id?: string;
+  //
+  hide_editted?: boolean;
+  //
+  is_public?: boolean;
+  //
+  topic_id?: string;
 }
 
 /**  */
@@ -3744,7 +3804,7 @@ export class MezonApi {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Session.decode(new Uint8Array(buffer)) as unknown as ApiLinkAccountConfirmRequest;
+          return tsproto.LinkAccountConfirmRequest.decode(new Uint8Array(buffer)) as unknown as ApiLinkAccountConfirmRequest;
         } else {
           throw response;
         }

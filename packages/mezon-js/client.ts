@@ -49,10 +49,6 @@ import {
   ApiInviteUserRes,
   ApiUploadAttachmentRequest,
   ApiUploadAttachment,
-  ApiMessageReaction,
-  ApiMessageMention,
-  ApiMessageAttachment,
-  ApiMessageRef,
   ApiChannelMessageHeader,
   ApiVoiceChannelUserList,
   ApiChannelAttachmentList,
@@ -174,6 +170,7 @@ import {
   ApiBannedUserList,
   ApiIsBannedResponse,
   ApiLogedDeviceList,
+  ChannelMessage,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -229,66 +226,6 @@ export interface RpcResponse {
   id?: string;
   /** The payload of the function which must be a JSON object. */
   payload?: object;
-}
-
-/** A message sent on a channel. */
-export interface ChannelMessage {
-  //The unique ID of this message.
-  id: string;
-  //
-  avatar?: string;
-  //The channel this message belongs to.
-  channel_id: string;
-  //The name of the chat room, or an empty string if this message was not sent through a chat room.
-  channel_label: string;
-  //The clan this message belong to.
-  clan_id?: string;
-  //The code representing a message type or category.
-  code: number;
-  //The content payload.
-  content: string;
-  //
-  reactions?: Array<ApiMessageReaction>;
-  //
-  mentions?: Array<ApiMessageMention>;
-  //
-  attachments?: Array<ApiMessageAttachment>;
-  //
-  references?: Array<ApiMessageRef>;
-  //
-  referenced_message?: string[];
-  //True if the message was persisted to the channel's history, false otherwise.
-  persistent?: boolean;
-  //Message sender, usually a user ID.
-  sender_id: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
-  update_time?: string;
-  //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
-  clan_logo?: string;
-  //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
-  category_name?: string;
-  //The username of the message sender, if any.
-  username?: string;
-  // The clan nick name
-  clan_nick?: string;
-  // The clan avatar
-  clan_avatar?: string;
-  //
-  display_name?: string;
-  //
-  create_time_seconds?: number;
-  //
-  update_time_seconds?: number;
-  //
-  mode?: number;
-  //
-  message_id?: string;
-  //
-  hide_editted?: boolean;
-  //
-  is_public?: boolean;
-  //
-  topic_id?: string;
 }
 
 /** A list of channel messages, usually a result of a list operation. */
@@ -1282,7 +1219,7 @@ export class Client {
           result.messages!.push({
             channel_id: m.channel_id,
             code: m.code ? Number(m.code) : 0,
-            id: m.message_id,
+            id: m.message_id || '',
             sender_id: m.sender_id,
             username: m.username,
             display_name: m.display_name,

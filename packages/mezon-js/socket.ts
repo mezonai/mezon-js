@@ -61,9 +61,9 @@ import {
   ApiListChannelAppsResponse,
   ApiListUserActivity,
   ApiListClanUnreadMsgIndicatorResponse,
+  ChannelMessage,
 } from "./api.gen";
 import { Session } from "./session";
-import { ChannelMessage } from "./client";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
 import { safeJSONParse } from "./utils";
 
