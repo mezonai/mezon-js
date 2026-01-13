@@ -1455,7 +1455,7 @@ export interface ApiEventManagement {
   //
   description?: string;
   //
-  end_time?: string;
+  end_time?: Date;
   //
   id?: string;
   //
@@ -1465,7 +1465,7 @@ export interface ApiEventManagement {
   //
   start_event?: number;
   //
-  start_time?: string;
+  start_time?: Date;
   //
   title?: string;
   //
@@ -5495,6 +5495,7 @@ export class MezonApi {
         parent_id: parentId,
         category_id: categoryId,
         active: active,
+        private_channel: privateChannel,
         status: status,
         type: type,
         limit: limit,

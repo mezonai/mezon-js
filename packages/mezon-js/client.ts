@@ -16,7 +16,6 @@
 
 import {
   ApiAccount,
-  ApiAccountMezon,
   ApiAccountEmail,
   ApiChannelMessageList,
   ApiChannelDescList,
@@ -160,9 +159,7 @@ import {
   ApiClanDiscoverRequest,
   ApiQuickMenuAccessList,
   ApiQuickMenuAccessRequest,
-  ApiUnlockedItemRequest,
   ApiForSaleItemList,
-  ApiUnlockedItemResponse,
   ApiIsFollowerResponse,
   ApiIsFollowerRequest,
   ApiTransferOwnershipRequest,
