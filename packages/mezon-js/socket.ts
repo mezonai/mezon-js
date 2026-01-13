@@ -65,7 +65,7 @@ import {
 } from "./api.gen";
 import { Session } from "./session";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
-import { safeJSONParse } from "./utils";
+import { decodeNotificationFcm, safeJSONParse } from "./utils";
 
 /** Stores function references for resolve/reject with a DOM Promise. */
 interface PromiseExecutor {
@@ -1952,7 +1952,7 @@ export class DefaultSocket implements Socket {
       if (!message.cid) {
         if (message.notifications) {
           message.notifications.notifications.forEach((n: ApiNotification) => {
-            n.content = n.content ? safeJSONParse(n.content) : undefined;
+            n.content = n.content ? decodeNotificationFcm(n.content) : undefined;
             this.onnotification(n);
           });
         } else if (message.voice_started_event) {

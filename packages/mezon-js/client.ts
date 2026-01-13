@@ -170,10 +170,11 @@ import {
   ApiLogedDeviceList,
   ChannelMessage,
 } from "./api.gen";
+import { PinMessagesList } from "./api/api";
 
 import { Session } from "./session";
 import { DefaultSocket, Socket } from "./socket";
-import { decodeAttachments, decodeMentions, decodeReactions, decodeRefs, safeJSONParse } from "./utils";
+import { decodeAttachments, decodeMentions, decodeNotificationFcm, decodeReactions, decodeRefs, safeJSONParse } from "./utils";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
 
 const DEFAULT_HOST = "127.0.0.1";
@@ -1919,7 +1920,7 @@ export class Client {
           result.notifications!.push({
             id: n.id,
             subject: n.subject,
-            content: n.content ? safeJSONParse(n.content) : undefined,
+            content: n.content ? decodeNotificationFcm(n.content) : undefined,
             code: n.code ? Number(n.code) : 0,
             sender_id: n.sender_id,
             create_time: n.create_time,
@@ -2564,8 +2565,29 @@ export class Client {
 
     return this.apiClient
       .getPinMessagesList(session.token, messageId, channelId, clanId)
-      .then((response: ApiPinMessagesList) => {
-        return Promise.resolve(response);
+      .then((response: PinMessagesList) => {
+        var result: ApiPinMessagesList = {
+          pin_messages_list: [],
+        };
+
+        if (response.pin_messages_list == null) {
+          return Promise.resolve(result);
+        }
+
+        response.pin_messages_list!.forEach((p) => {
+          result.pin_messages_list!.push({
+            id: p.id,
+            avatar: p.avatar,
+            channel_id: p.channel_id,
+            content: p.content,
+            create_time_seconds: p.create_time_seconds,
+            message_id: p.message_id,
+            sender_id: p.sender_id,
+            username: p.username,
+            attachment: p.attachment,
+          });
+        });
+        return Promise.resolve(result);
       });
   }
 

@@ -5,6 +5,7 @@ import { buildFetchOptions } from "./utils";
 import { encode } from "js-base64";
 import * as tsproto from "./api/api";
 import { ApiUpdateChannelDescRequest } from "./client";
+import { PinMessagesList } from "./api/api";
 
 /** A single user-role pair. */
 export interface ChannelUserListChannelUser {
@@ -1994,7 +1995,7 @@ export interface ApiNotification {
   //Category code for this notification.
   code?: number;
   //Content of the notification in JSON.
-  content?: string;
+  content?: tsproto.DirectFcmProto;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the notification was created.
   create_time?: string;
   //ID of the Notification.
@@ -2184,7 +2185,7 @@ export interface ApiPinMessage {
   //
   username?: string;
   //
-  attachment?: string;
+  attachment?: Uint8Array;
 }
 
 /**  */
@@ -8148,7 +8149,7 @@ export class MezonApi {
     channelId?: string,
     clanId?: string,
     options: any = {}
-  ): Promise<ApiPinMessagesList> {
+  ): Promise<PinMessagesList> {
     const urlPath = "/mezon.api.Mezon/GetPinMessagesList";
     const queryParams = new Map<string, any>();
 
@@ -8171,10 +8172,10 @@ export class MezonApi {
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return {} as ApiPinMessagesList;
+          return {} as PinMessagesList;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.PinMessagesList.decode(new Uint8Array(buffer)) as unknown as ApiPinMessagesList;
+          return tsproto.PinMessagesList.decode(new Uint8Array(buffer)) as unknown as PinMessagesList;
         } else {
           throw response;
         }

@@ -103,3 +103,12 @@ export function decodeNotificationFcm(data: any) {
 
   return noti;
 }
+
+export function encodeAttachments(data: tsproto.MessageAttachmentList) {
+  const attachmentWriter = tsproto.MessageAttachmentList.encode(
+    tsproto.MessageAttachmentList.fromPartial(data)
+  );
+  const encodedMsg = attachmentWriter.finish();
+
+  return encodedMsg;
+}
