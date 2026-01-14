@@ -65,7 +65,7 @@ import {
 } from "./api.gen";
 import { Session } from "./session";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
-import { decodeNotificationFcm, safeJSONParse } from "./utils";
+import { decodeAttachments, decodeMentions, decodeNotificationFcm, decodeReactions, decodeRefs, safeJSONParse } from "./utils";
 
 /** Stores function references for resolve/reject with a DOM Promise. */
 interface PromiseExecutor {
@@ -1336,27 +1336,27 @@ function CreateChannelMessageFromEvent(message: any) {
     console.log("content is invalid", e);
   }
   try {
-    reactions = safeJSONParse(message.channel_message.reactions);
+    reactions = decodeReactions(message.channel_message.reactions);
   } catch (e) {
     console.log("reactions is invalid", e);
   }
   try {
-    mentions = safeJSONParse(message.channel_message.mentions);
+    mentions = decodeMentions(message.channel_message.mentions);
   } catch (e) {
     console.log("mentions is invalid", e);
   }
   try {
-    attachments = safeJSONParse(message.channel_message.attachments);
+    attachments = decodeAttachments(message.channel_message.attachments);
   } catch (e) {
     console.log("attachments is invalid", e);
   }
   try {
-    references = safeJSONParse(message.channel_message.references);
+    references = decodeRefs(message.channel_message.references);
   } catch (e) {
     console.log("references is invalid", e);
   }
   try {
-    referencedMessags = safeJSONParse(message.channel_message.referenced_message);
+    referencedMessags = message.channel_message.referenced_message;
   } catch (e) {
     console.log("referenced messages is invalid", e);
   }
@@ -1378,11 +1378,11 @@ function CreateChannelMessageFromEvent(message: any) {
     clan_avatar: message.channel_message.clan_avatar,
     display_name: message.channel_message.display_name,
     content: content,
-    reactions: reactions,
-    mentions: mentions,
-    attachments: attachments,
+    reactions: reactions?.reactions,
+    mentions: mentions?.mentions,
+    attachments: attachments?.attachments,
     referenced_message: referencedMessags,
-    references: references,
+    references: references?.refs,
     hide_editted: message.channel_message.hide_editted,
     is_public: message.channel_message.is_public,
     create_time_seconds: message.channel_message.create_time_seconds,

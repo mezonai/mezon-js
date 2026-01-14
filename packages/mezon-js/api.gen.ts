@@ -3492,7 +3492,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -3565,7 +3565,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -3904,17 +3904,18 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.LinkAccountConfirmRequest.decode(new Uint8Array(buffer)) as unknown as ApiLinkAccountConfirmRequest;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -3943,17 +3944,18 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.LinkAccountConfirmRequest.decode(new Uint8Array(buffer)) as unknown as ApiLinkAccountConfirmRequest;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -4157,7 +4159,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -4723,7 +4725,6 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
    
-
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
@@ -5437,7 +5438,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -5464,7 +5465,7 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.UpdateChannelDescRequest.encode(
-      tsproto.UpdateChannelDescRequest.fromPartial(body)
+      tsproto.UpdateChannelDescRequest.fromPartial({...body, channel_id: channelId})
     );
     const encodedBody = bodyWriter.finish();
 
@@ -5480,7 +5481,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -5763,7 +5764,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -5811,7 +5812,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -6817,7 +6818,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -6935,7 +6936,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -6972,7 +6973,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -7406,19 +7407,22 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] =
         "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
+    fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return response;
+          return {} as ApiInviteUserRes;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.Session.decode(new Uint8Array(buffer)) as unknown as ApiInviteUserRes;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -7642,7 +7646,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -7732,7 +7736,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -7774,7 +7778,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -7816,7 +7820,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -8210,17 +8214,18 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return response;
+          return {} as ApiChannelMessageHeader;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.ChannelMessageHeader.decode(new Uint8Array(buffer)) as unknown as ApiChannelMessageHeader;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -8252,17 +8257,18 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return response;
+          return {} as ApiChannelMessageHeader;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.ChannelMessageHeader.decode(new Uint8Array(buffer)) as unknown as ApiChannelMessageHeader;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -8289,17 +8295,18 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return response;
+          return {} as ApiGetPubKeysResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.GetPubKeysResponse.decode(new Uint8Array(buffer)) as unknown as ApiGetPubKeysResponse;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
@@ -8335,7 +8342,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -8377,7 +8384,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -8428,7 +8435,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -8470,7 +8477,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -8607,7 +8614,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -8652,7 +8659,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -8700,7 +8707,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -8966,7 +8973,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -9832,7 +9839,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -9887,8 +9894,8 @@ export class MezonApi {
 
     const bodyWriter = tsproto.UserPermissionInChannelListRequest.encode(
       tsproto.UserPermissionInChannelListRequest.fromPartial({
-        clan_id: clanId || '',
-        channel_id: channelId || ''
+        clan_id: clanId,
+        channel_id: channelId
       })
     );
     const encodedBody = bodyWriter.finish();
@@ -9900,7 +9907,6 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
    
-
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
@@ -9980,7 +9986,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -10072,7 +10078,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -10169,7 +10175,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -10331,7 +10337,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -10356,7 +10362,7 @@ export class MezonApi {
 
     const bodyWriter = tsproto.ListOnboardingRequest.encode(
       tsproto.ListOnboardingRequest.fromPartial({
-        clan_id: clanId || '',
+        clan_id: clanId,
         guide_type: guideType,
         limit: limit,
         page: page
@@ -10448,7 +10454,7 @@ export class MezonApi {
     const bodyWriter = tsproto.OnboardingRequest.encode(
       tsproto.OnboardingRequest.fromPartial({
         id: id,
-        clan_id: clanId || ''
+        clan_id: clanId
       })
     );
     const encodedBody = bodyWriter.finish();
@@ -10465,7 +10471,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -10559,7 +10565,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response;
         } else {
           throw response;
         }
@@ -10827,7 +10833,6 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
    
-
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
@@ -11268,38 +11273,41 @@ export class MezonApi {
     isGuest?:boolean,
     options: any = {}): Promise<ApiGenerateMeetTokenExternalResponse> {
   
-  if (token === null || token === undefined) {
-    throw new Error("'token' is a required parameter but is null or undefined.");
+    if (token === null || token === undefined) {
+      throw new Error("'token' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/meet/external/{token}"
+        .replace("{token}", encodeURIComponent(String(token)));
+    const queryParams = new Map<string, any>();
+    queryParams.set("display_name", displayName);
+    queryParams.set("is_guest", isGuest);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
+    fetchOptions.headers["Content-Type"] = "application/json";
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as ApiGenerateMeetTokenExternalResponse;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();      
+            return tsproto.Session.decode(new Uint8Array(buffer)) as unknown as ApiGenerateMeetTokenExternalResponse;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
   }
-  const urlPath = "/v2/meet/external/{token}"
-      .replace("{token}", encodeURIComponent(String(token)));
-  const queryParams = new Map<string, any>();
-  queryParams.set("display_name", displayName);
-  queryParams.set("is_guest", isGuest);
-
-  let bodyJson : string = "";
-
-  const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
-  const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-  if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-  }
-
-  return Promise.race([
-    fetch(fullUrl, fetchOptions).then((response) => {
-      if (response.status == 204) {
-        return response;
-      } else if (response.status >= 200 && response.status < 300) {
-        return response.json();
-      } else {
-        throw response;
-      }
-    }),
-    new Promise((_, reject) =>
-      setTimeout(reject, this.timeoutMs, "Request timed out.")
-    ),
-  ]);
-}
   /** mute participant in the room */
   muteParticipantMezonMeet(bearerToken: string,
       body:ApiMeetParticipantRequest,
@@ -11483,19 +11491,22 @@ export class MezonApi {
     if (basicAuthUsername) {
       fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
+    fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return response;
+          return {} as ApiListClanDiscover;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          const buffer = await response.arrayBuffer();      
+          return tsproto.Session.decode(new Uint8Array(buffer)) as unknown as ApiListClanDiscover;
         } else {
           throw response;
         }
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }

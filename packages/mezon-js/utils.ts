@@ -5,16 +5,6 @@ export function buildFetchOptions(method: string, options: any, bodyJson: string
     const fetchOptions = {...{ method: method }, ...options};
     fetchOptions.headers = {...options.headers};
 
-    if (typeof XMLHttpRequest !== "undefined") {
-        const descriptor = Object.getOwnPropertyDescriptor(XMLHttpRequest.prototype, "withCredentials");
-
-        // in Cocos Creator, XMLHttpRequest.withCredentials is not writable, so make the fetch
-        // polyfill avoid writing to it.
-        if (!descriptor?.set) {
-            fetchOptions.credentials = 'cocos-ignore'; // string value is arbitrary, cannot be 'omit' or 'include
-        }
-    }
-
     if(!Object.keys(fetchOptions.headers).includes("Accept")) {
       fetchOptions.headers["Accept"] = "application/proto";
     }
@@ -23,7 +13,7 @@ export function buildFetchOptions(method: string, options: any, bodyJson: string
       fetchOptions.headers["Content-Type"] = "application/proto";
     }
 
-	Object.keys(fetchOptions.headers).forEach((key: string) => {
+	  Object.keys(fetchOptions.headers).forEach((key: string) => {
       if (!fetchOptions.headers[key]) {
         delete fetchOptions.headers[key];
       }
