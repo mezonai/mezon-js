@@ -11500,7 +11500,7 @@ export class MezonApi {
           return {} as ApiListClanDiscover;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Session.decode(new Uint8Array(buffer)) as unknown as ApiListClanDiscover;
+          return tsproto.ListClanDiscover.decode(new Uint8Array(buffer)) as unknown as ApiListClanDiscover;
         } else {
           throw response;
         }

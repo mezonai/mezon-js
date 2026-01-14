@@ -3778,6 +3778,27 @@ export interface ListClanBadgeCountResponse {
   badge_count: number;
 }
 
+export interface ClanDiscover {
+  clan_id: string;
+  clan_name: string;
+  invite_id: string;
+  clan_logo: string;
+  online_members: number;
+  total_members: number;
+  verified: boolean;
+  description: string;
+  banner: string;
+  about: string;
+  short_url: string;
+  create_time_seconds: number;
+}
+
+export interface ListClanDiscover {
+  clan_discover: ClanDiscover[];
+  page_number: number;
+  page_count: number;
+}
+
 function createBaseAccount(): Account {
   return {
     user: undefined,
@@ -39793,6 +39814,334 @@ export const ListClanBadgeCountResponse = {
   fromPartial<I extends Exact<DeepPartial<ListClanBadgeCountResponse>, I>>(object: I): ListClanBadgeCountResponse {
     const message = createBaseListClanBadgeCountResponse();
     message.badge_count = object.badge_count ?? 0;
+    return message;
+  },
+};
+
+function createBaseClanDiscover(): ClanDiscover {
+  return {
+    clan_id: "",
+    clan_name: "",
+    invite_id: "",
+    clan_logo: "",
+    online_members: 0,
+    total_members: 0,
+    verified: false,
+    description: "",
+    banner: "",
+    about: "",
+    short_url: "",
+    create_time_seconds: 0,
+  };
+}
+
+export const ClanDiscover = {
+  encode(message: ClanDiscover, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.clan_name !== "") {
+      writer.uint32(18).string(message.clan_name);
+    }
+    if (message.invite_id !== "") {
+      writer.uint32(26).string(message.invite_id);
+    }
+    if (message.clan_logo !== "") {
+      writer.uint32(34).string(message.clan_logo);
+    }
+    if (message.online_members !== 0) {
+      writer.uint32(40).int32(message.online_members);
+    }
+    if (message.total_members !== 0) {
+      writer.uint32(48).int32(message.total_members);
+    }
+    if (message.verified !== false) {
+      writer.uint32(56).bool(message.verified);
+    }
+    if (message.description !== "") {
+      writer.uint32(66).string(message.description);
+    }
+    if (message.banner !== "") {
+      writer.uint32(74).string(message.banner);
+    }
+    if (message.about !== "") {
+      writer.uint32(82).string(message.about);
+    }
+    if (message.short_url !== "") {
+      writer.uint32(90).string(message.short_url);
+    }
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(96).uint32(message.create_time_seconds);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanDiscover {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanDiscover();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.clan_name = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.invite_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.clan_logo = reader.string();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.online_members = reader.int32();
+          continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.total_members = reader.int32();
+          continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.verified = reader.bool();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.description = reader.string();
+          continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.banner = reader.string();
+          continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.about = reader.string();
+          continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.short_url = reader.string();
+          continue;
+        case 12:
+          if (tag !== 96) {
+            break;
+          }
+
+          message.create_time_seconds = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanDiscover {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
+      invite_id: isSet(object.invite_id) ? globalThis.String(object.invite_id) : "",
+      clan_logo: isSet(object.clan_logo) ? globalThis.String(object.clan_logo) : "",
+      online_members: isSet(object.online_members) ? globalThis.Number(object.online_members) : 0,
+      total_members: isSet(object.total_members) ? globalThis.Number(object.total_members) : 0,
+      verified: isSet(object.verified) ? globalThis.Boolean(object.verified) : false,
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      banner: isSet(object.banner) ? globalThis.String(object.banner) : "",
+      about: isSet(object.about) ? globalThis.String(object.about) : "",
+      short_url: isSet(object.short_url) ? globalThis.String(object.short_url) : "",
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
+    };
+  },
+
+  toJSON(message: ClanDiscover): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.clan_name !== "") {
+      obj.clan_name = message.clan_name;
+    }
+    if (message.invite_id !== "") {
+      obj.invite_id = message.invite_id;
+    }
+    if (message.clan_logo !== "") {
+      obj.clan_logo = message.clan_logo;
+    }
+    if (message.online_members !== 0) {
+      obj.online_members = Math.round(message.online_members);
+    }
+    if (message.total_members !== 0) {
+      obj.total_members = Math.round(message.total_members);
+    }
+    if (message.verified !== false) {
+      obj.verified = message.verified;
+    }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.banner !== "") {
+      obj.banner = message.banner;
+    }
+    if (message.about !== "") {
+      obj.about = message.about;
+    }
+    if (message.short_url !== "") {
+      obj.short_url = message.short_url;
+    }
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanDiscover>, I>>(base?: I): ClanDiscover {
+    return ClanDiscover.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ClanDiscover>, I>>(object: I): ClanDiscover {
+    const message = createBaseClanDiscover();
+    message.clan_id = object.clan_id ?? "";
+    message.clan_name = object.clan_name ?? "";
+    message.invite_id = object.invite_id ?? "";
+    message.clan_logo = object.clan_logo ?? "";
+    message.online_members = object.online_members ?? 0;
+    message.total_members = object.total_members ?? 0;
+    message.verified = object.verified ?? false;
+    message.description = object.description ?? "";
+    message.banner = object.banner ?? "";
+    message.about = object.about ?? "";
+    message.short_url = object.short_url ?? "";
+    message.create_time_seconds = object.create_time_seconds ?? 0;
+    return message;
+  },
+};
+
+function createBaseListClanDiscover(): ListClanDiscover {
+  return { clan_discover: [], page_number: 0, page_count: 0 };
+}
+
+export const ListClanDiscover = {
+  encode(message: ListClanDiscover, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.clan_discover) {
+      ClanDiscover.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.page_number !== 0) {
+      writer.uint32(16).int32(message.page_number);
+    }
+    if (message.page_count !== 0) {
+      writer.uint32(24).int32(message.page_count);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListClanDiscover {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListClanDiscover();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_discover.push(ClanDiscover.decode(reader, reader.uint32()));
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.page_number = reader.int32();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.page_count = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListClanDiscover {
+    return {
+      clan_discover: globalThis.Array.isArray(object?.clan_discover)
+        ? object.clan_discover.map((e: any) => ClanDiscover.fromJSON(e))
+        : [],
+      page_number: isSet(object.page_number) ? globalThis.Number(object.page_number) : 0,
+      page_count: isSet(object.page_count) ? globalThis.Number(object.page_count) : 0,
+    };
+  },
+
+  toJSON(message: ListClanDiscover): unknown {
+    const obj: any = {};
+    if (message.clan_discover?.length) {
+      obj.clan_discover = message.clan_discover.map((e) => ClanDiscover.toJSON(e));
+    }
+    if (message.page_number !== 0) {
+      obj.page_number = Math.round(message.page_number);
+    }
+    if (message.page_count !== 0) {
+      obj.page_count = Math.round(message.page_count);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListClanDiscover>, I>>(base?: I): ListClanDiscover {
+    return ListClanDiscover.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListClanDiscover>, I>>(object: I): ListClanDiscover {
+    const message = createBaseListClanDiscover();
+    message.clan_discover = object.clan_discover?.map((e) => ClanDiscover.fromPartial(e)) || [];
+    message.page_number = object.page_number ?? 0;
+    message.page_count = object.page_count ?? 0;
     return message;
   },
 };
