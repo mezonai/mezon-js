@@ -1,28 +1,19 @@
 import {encode, decode} from "js-base64"
+import * as tsproto from "./api/api";
 
 export function buildFetchOptions(method: string, options: any, bodyJson: string) {
     const fetchOptions = {...{ method: method }, ...options};
     fetchOptions.headers = {...options.headers};
 
-    if (typeof XMLHttpRequest !== "undefined") {
-        const descriptor = Object.getOwnPropertyDescriptor(XMLHttpRequest.prototype, "withCredentials");
-
-        // in Cocos Creator, XMLHttpRequest.withCredentials is not writable, so make the fetch
-        // polyfill avoid writing to it.
-        if (!descriptor?.set) {
-            fetchOptions.credentials = 'cocos-ignore'; // string value is arbitrary, cannot be 'omit' or 'include
-        }
-    }
-
     if(!Object.keys(fetchOptions.headers).includes("Accept")) {
-      fetchOptions.headers["Accept"] = "application/json";
+      fetchOptions.headers["Accept"] = "application/proto";
     }
 
     if(!Object.keys(fetchOptions.headers).includes("Content-Type")) {
-      fetchOptions.headers["Content-Type"] = "application/json";
+      fetchOptions.headers["Content-Type"] = "application/proto";
     }
 
-	Object.keys(fetchOptions.headers).forEach((key: string) => {
+	  Object.keys(fetchOptions.headers).forEach((key: string) => {
       if (!fetchOptions.headers[key]) {
         delete fetchOptions.headers[key];
       }
@@ -62,4 +53,78 @@ export function safeJSONParse(jsonStr: string) {
         }
         return {t: jsonStr}; // Handle the error gracefully or throw an exception if necessary
     }
+}
+
+export function decodeMentions(data: any) {
+  try {
+    const buffer: ArrayBuffer = data;
+    const uintBuffer: Uint8Array = new Uint8Array(buffer);
+    const mentions = tsproto.MessageMentionList.decode(uintBuffer);
+    return mentions;
+  } catch (error) {
+    console.error('Failed to decode mentions:', error);
+    console.error(data, 'data');
+    return undefined;
+  }
+}
+
+export function decodeAttachments(data: any) {
+  try {
+    const buffer: ArrayBuffer = data;
+    const uintBuffer: Uint8Array = new Uint8Array(buffer);
+    const attachments = tsproto.MessageAttachmentList.decode(uintBuffer);
+    return attachments;
+  } catch (error) {
+    console.error('Failed to decode attachments:', error);
+    console.error(data, 'data');
+    
+    return undefined;
+  }
+}
+
+export function decodeRefs(data: any) {
+  try {
+    const buffer: ArrayBuffer = data;
+    const uintBuffer: Uint8Array = new Uint8Array(buffer);
+    const refs = tsproto.MessageRefList.decode(uintBuffer);
+    return refs;
+  } catch (error) {
+    console.error('Failed to decode refs:', error);
+    console.error(data, 'data');
+    return undefined;
+  }
+}
+
+export function decodeReactions(data: any) {
+  try {
+    const buffer: ArrayBuffer = data;
+    const uintBuffer: Uint8Array = new Uint8Array(buffer);
+    const reactions = tsproto.MessageReactionList.decode(uintBuffer);
+    return reactions;
+  } catch (error) {
+    console.error('Failed to decode reactions:', error);
+    console.error(data, 'data');
+    return undefined;
+  }
+}
+
+export function decodeNotificationFcm(data: any) {
+  try {
+    const buffer: ArrayBuffer = data;
+    const uintBuffer: Uint8Array = new Uint8Array(buffer);
+    const noti = tsproto.DirectFcmProto.decode(uintBuffer);
+    return noti;
+  } catch (error) {
+    console.error('Failed to decode notification FCM:', error);
+    return undefined;
+  }
+}
+
+export function encodeAttachments(data: tsproto.MessageAttachmentList) {
+  const attachmentWriter = tsproto.MessageAttachmentList.encode(
+    tsproto.MessageAttachmentList.fromPartial(data)
+  );
+  const encodedMsg = attachmentWriter.finish();
+
+  return encodedMsg;
 }

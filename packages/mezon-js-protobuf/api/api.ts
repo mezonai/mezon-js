@@ -8,7 +8,6 @@
 import Long from "long";
 import _m0 from "protobufjs/minimal";
 import { Struct } from "../google/protobuf/struct";
-import { Timestamp } from "../google/protobuf/timestamp";
 import { BoolValue, Int32Value, StringValue } from "../google/protobuf/wrappers";
 
 export const protobufPackage = "mezon.api";
@@ -176,13 +175,9 @@ export interface Account {
   /** The qr code in the user's account. */
   qr_code: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user's email was verified. */
-  verify_time:
-    | Date
-    | undefined;
+  verify_time_seconds: number;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user's account was disabled/banned. */
-  disable_time:
-    | Date
-    | undefined;
+  disable_time_seconds: number;
   /** Logo url */
   logo: string;
   /** Splash screen url */
@@ -302,14 +297,6 @@ export interface ChannelMessage {
   avatar: string;
   /** The content payload. */
   content: string;
-  /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
-  create_time:
-    | Date
-    | undefined;
-  /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated. */
-  update_time:
-    | Date
-    | undefined;
   /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
   channel_label: string;
   /** The clan logo */
@@ -323,15 +310,15 @@ export interface ChannelMessage {
   /** The clan avatar */
   clan_avatar: string;
   /** Emoji reaction */
-  reactions: string;
+  reactions: Uint8Array;
   /** Message mention */
-  mentions: string;
+  mentions: Uint8Array;
   /** Message attachment */
-  attachments: string;
+  attachments: Uint8Array;
   /** Message reference */
-  references: string;
+  references: Uint8Array;
   /** referenced message */
-  referenced_message: string;
+  referenced_message: Uint8Array;
   /** create time in ms */
   create_time_seconds: number;
   /** update time in ms */
@@ -359,9 +346,7 @@ export interface MessageMention {
   /** role name */
   rolename: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
-  create_time:
-    | Date
-    | undefined;
+  create_time_seconds: number;
   /** start position from text */
   s: number;
   /** end position from text */
@@ -539,9 +524,7 @@ export interface Event {
   /** Arbitrary event property values. */
   properties: { [key: string]: string };
   /** The time when the event was triggered. */
-  timestamp:
-    | Date
-    | undefined;
+  timestamp_seconds: number;
   /** True if the event came directly from a client call, false otherwise. */
   external: boolean;
 }
@@ -560,9 +543,7 @@ export interface Friend {
   /** The friend status. */
   state: number;
   /** Time of the latest relationship update. */
-  update_time:
-    | Date
-    | undefined;
+  update_time_seconds: number;
   /** source id */
   source_id: string;
 }
@@ -699,10 +680,8 @@ export interface ChannelAttachment {
   url: string;
   /** uploader */
   uploader: string;
-  /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the group was created. */
-  create_time:
-    | Date
-    | undefined;
+  /** timestamp */
+  create_time_seconds: number;
   /** message id. */
   message_id: string;
   /** width */
@@ -862,13 +841,9 @@ export interface ListChannelAttachmentRequest {
   /** The channel type */
   file_type: string;
   /** Max number of records to return. Between 1 and 100. */
-  limit:
-    | number
-    | undefined;
+  limit: number;
   /** The group user state to list. */
-  state:
-    | number
-    | undefined;
+  state: number;
   /** An optional previous id for page. */
   before: number;
   /** An optional next id for page. */
@@ -922,15 +897,13 @@ export interface Notification {
   /** Subject of the notification. */
   subject: string;
   /** Content of the notification in JSON. */
-  content: string;
+  content: Uint8Array;
   /** Category code for this notification. */
   code: number;
   /** ID of the sender, if a user. Otherwise 'null'. */
   sender_id: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the notification was created. */
-  create_time:
-    | Date
-    | undefined;
+  create_time_seconds: number;
   /** True if this notification was persisted to the database. */
   persistent: boolean;
   /** ID of clan */
@@ -958,7 +931,7 @@ export interface EmojiRecent {
   /**  */
   emoji_id: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the emoji was created. */
-  update_time: Date | undefined;
+  update_time_seconds: number;
 }
 
 /** A collection of zero or more notifications. */
@@ -1022,6 +995,7 @@ export interface Session {
 /** Update username */
 export interface UpdateUsernameRequest {
   username: string;
+  display_name: string;
 }
 
 /** Update a user's account details. */
@@ -1051,9 +1025,7 @@ export interface UpdateAccountRequest {
     | string
     | undefined;
   /** date of birth */
-  dob:
-    | Date
-    | undefined;
+  dob_seconds: number;
   /** logo url */
   logo:
     | string
@@ -1124,25 +1096,17 @@ export interface User {
   /** Number of related edges to this user. */
   edge_count: number;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was created. */
-  create_time:
-    | Date
-    | undefined;
+  create_time_seconds: number;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was last updated. */
-  update_time:
-    | Date
-    | undefined;
+  update_time_seconds: number;
   /** About me */
   about_me: string;
   /** Join time */
-  join_time:
-    | Date
-    | undefined;
+  join_time_seconds: number;
   /** Platform */
   is_mobile: boolean;
   /** dob */
-  dob:
-    | Date
-    | undefined;
+  dob_seconds: number;
   /** Mezone id */
   mezon_id: string;
   /** list clan nick name */
@@ -1355,9 +1319,7 @@ export interface InviteUserRes {
   /** check user exist */
   user_joined: boolean;
   /** expiry_time */
-  expiry_time:
-    | Date
-    | undefined;
+  expiry_time_seconds: number;
   /**  */
   channel_desc: ChannelDescription | undefined;
   clan_logo: string;
@@ -1383,11 +1345,9 @@ export interface LinkInviteUser {
   /** link invite */
   invite_link: string;
   /** create time */
-  create_time:
-    | Date
-    | undefined;
+  create_time_seconds: number;
   /** expiry time */
-  expiry_time: Date | undefined;
+  expiry_time_seconds: number;
   id: string;
 }
 
@@ -1505,14 +1465,6 @@ export interface ChannelMessageHeader {
   sender_id: string;
   /** the content */
   content: string;
-  /** the attachment */
-  attachment: string;
-  /** the reference */
-  reference: string;
-  /** the mention */
-  mention: string;
-  /** the reactions */
-  reaction: string;
 }
 
 /** Channel description record */
@@ -1589,6 +1541,12 @@ export interface ChannelDescription {
 export interface ChannelDescList {
   /** A list of channel. */
   channeldesc: ChannelDescription[];
+}
+
+/** A list of channel description, usually a result of a list operation. */
+export interface ChannelDescListNoPool {
+  /** A list of channel. */
+  channeldesc: ChannelDescription[];
   /** Page thread */
   page: number;
 }
@@ -1657,9 +1615,7 @@ export interface CreateChannelDescRequest {
   /** The category of channel */
   category_id: string;
   /** The channel type. */
-  type:
-    | number
-    | undefined;
+  type: number;
   /** The channel lable */
   channel_label: string;
   /** The channel private */
@@ -1820,10 +1776,10 @@ export interface EventManagement {
   clan_id: string;
   channel_voice_id: string;
   address: string;
-  start_time: Date | undefined;
-  end_time: Date | undefined;
+  start_time_seconds: number;
+  end_time_seconds: number;
   user_ids: string[];
-  create_time: Date | undefined;
+  create_time_seconds: number;
   max_permission: number;
   channel_id: string;
   event_status: number;
@@ -1881,13 +1837,9 @@ export interface PinMessage {
   /**  */
   avatar: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
-  create_time:
-    | Date
-    | undefined;
-  /** create time in ms */
   create_time_seconds: number;
   /** attachment */
-  attachment: string;
+  attachment: Uint8Array;
 }
 
 export interface PinMessagesList {
@@ -1901,9 +1853,7 @@ export interface NotificationUserChannel {
   /**  */
   notification_setting_type: number;
   /**  */
-  time_mute:
-    | Date
-    | undefined;
+  time_mute_seconds: number;
   /**  */
   active: number;
   /**  */
@@ -2140,8 +2090,8 @@ export interface CreateEventRequest {
   clan_id: string;
   channel_voice_id: string;
   address: string;
-  start_time: Date | undefined;
-  end_time: Date | undefined;
+  start_time_seconds: number;
+  end_time_seconds: number;
   event_id: string;
   event_status: number;
   channel_id: string;
@@ -2161,8 +2111,8 @@ export interface UpdateEventRequest {
   event_id: string;
   channel_id: string;
   address: string;
-  start_time: Date | undefined;
-  end_time: Date | undefined;
+  start_time_seconds: number;
+  end_time_seconds: number;
   clan_id: string;
   creator_id: string;
   channel_voice_id: string;
@@ -2408,7 +2358,7 @@ export interface ClanSticker {
   shortname: string;
   category: string;
   creator_id: string;
-  create_time: Date | undefined;
+  create_time_seconds: number;
   clan_id: string;
   logo: string;
   clan_name: string;
@@ -2584,13 +2534,9 @@ export interface App {
   /** status online */
   is_shadow: boolean;
   /** The UNIX time when the app was disabled. */
-  disable_time:
-    | Date
-    | undefined;
+  disable_time_seconds: number;
   /** The UNIX time when the app was created */
-  create_time:
-    | Date
-    | undefined;
+  create_time_seconds: number;
   /** string token */
   token: string;
   /** role */
@@ -2693,9 +2639,7 @@ export interface AppClan {
 /** Delete channel messages by timestamp or/and ids. */
 export interface DeleteChannelMessagesRequest {
   /** Timestamp before which messages will be deleted. */
-  before:
-    | Date
-    | undefined;
+  before_seconds: number;
   /** IDs of the messages to delete. */
   ids: string[];
 }
@@ -2945,7 +2889,7 @@ export interface ChannelSettingListRequest {
   /** category id */
   category_id: string;
   /** is private channel */
-  privateChannel:
+  private_channel:
     | number
     | undefined;
   /** is active */
@@ -3081,8 +3025,8 @@ export interface ChannelCanvasItem {
   /** creator */
   creator_id: string;
   /**  */
-  update_time: Date | undefined;
-  create_time: Date | undefined;
+  update_time_seconds: number;
+  create_time_seconds: number;
 }
 
 export interface ChannelCanvasListResponse {
@@ -3147,8 +3091,8 @@ export interface UserActivity {
   activity_name: string;
   activity_type: number;
   activity_description: string;
-  start_time: Date | undefined;
-  end_time: Date | undefined;
+  start_time_seconds: number;
+  end_time_seconds: number;
   application_id: string;
   status: number;
 }
@@ -3161,7 +3105,7 @@ export interface CreateActivityRequest {
   activity_name: string;
   activity_type: number;
   activity_description: string;
-  start_time: Date | undefined;
+  start_time_seconds: number;
   application_id: string;
   status: number;
 }
@@ -3172,7 +3116,7 @@ export interface LoginIDResponse {
   /** status login */
   status: number;
   /** create time */
-  create_time_second: number;
+  create_time_seconds: number;
   /** platform */
   platform: string;
   /** user_id */
@@ -3236,7 +3180,7 @@ export interface AuditLog {
   entity_name: string;
   entity_id: string;
   details: string;
-  time_log: Date | undefined;
+  time_log_seconds: number;
   channel_id: string;
   channel_label: string;
 }
@@ -3321,11 +3265,9 @@ export interface OnboardingItem {
   /** answers */
   answers: OnboardingAnswer[];
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
-  create_time:
-    | Date
-    | undefined;
+  create_time_seconds: number;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated. */
-  update_time: Date | undefined;
+  update_time_seconds: number;
 }
 
 export interface OnboardingAnswer {
@@ -3532,9 +3474,9 @@ export interface SdTopic {
   clan_id: string;
   channel_id: string;
   status: number;
-  create_time: Date | undefined;
-  update_time: Date | undefined;
-  message: ChannelMessage | undefined;
+  create_time_seconds: number;
+  update_time_seconds: number;
+  content: string;
   last_sent_message: ChannelMessageHeader | undefined;
 }
 
@@ -3609,7 +3551,7 @@ export interface MezonOauthClient {
   client_secret_expires_at: number;
   client_uri: string;
   contacts: string[];
-  created_at: Date | undefined;
+  created_at_seconds: number;
   frontchannel_logout_session_required: boolean;
   frontchannel_logout_uri: string;
   grant_types: string[];
@@ -3639,7 +3581,7 @@ export interface MezonOauthClient {
   token_endpoint_auth_method: string;
   token_endpoint_auth_signing_alg: string;
   tos_uri: string;
-  updated_at: Date | undefined;
+  updated_at_seconds: number;
   userinfo_signed_response_alg: string;
 }
 
@@ -3672,10 +3614,10 @@ export interface Message2InboxRequest {
   clan_id: string;
   avatar: string;
   content: string;
-  mentions: string;
-  attachments: string;
-  reactions: string;
-  references: string;
+  mentions: MessageMention[];
+  attachments: MessageAttachment[];
+  reactions: MessageReaction[];
+  references: MessageRef[];
 }
 
 /** Send an email with password to the server. Used with authenticate/link/unlink. */
@@ -3781,13 +3723,80 @@ export interface LogedDeviceList {
 export interface LogedDevice {
   device_id: string;
   device_name: string;
-  login_at: Date | undefined;
+  login_at_seconds: number;
   status: number;
   platform: string;
   ip: string;
-  last_active: Date | undefined;
+  last_active_seconds: number;
   location: string;
   is_current: boolean;
+}
+
+export interface DirectFcmProto {
+  title: string;
+  link: string;
+  content: string;
+  channel_id: string;
+  sender_id: string;
+  avatar: string;
+  clan_id: string;
+  attachment_link: string;
+  display_name: string;
+  create_time_seconds: number;
+  update_time_seconds: number;
+  username: string;
+  mention_ids: string[];
+  position_s: number[];
+  position_e: number[];
+  attachment_type: string;
+  has_more_attachment: boolean;
+  is_mention_role: boolean[];
+  message_id: string;
+}
+
+export interface MessageMentionList {
+  mentions: MessageMention[];
+}
+
+export interface MessageAttachmentList {
+  attachments: MessageAttachment[];
+}
+
+export interface MessageRefList {
+  refs: MessageRef[];
+}
+
+export interface MessageReactionList {
+  reactions: MessageReaction[];
+}
+
+export interface ListClanBadgeCountRequest {
+  clan_id: string;
+}
+
+export interface ListClanBadgeCountResponse {
+  badge_count: number;
+}
+
+export interface ClanDiscover {
+  clan_id: string;
+  clan_name: string;
+  invite_id: string;
+  clan_logo: string;
+  online_members: number;
+  total_members: number;
+  verified: boolean;
+  description: string;
+  banner: string;
+  about: string;
+  short_url: string;
+  create_time_seconds: number;
+}
+
+export interface ListClanDiscover {
+  clan_discover: ClanDiscover[];
+  page_number: number;
+  page_count: number;
 }
 
 function createBaseAccount(): Account {
@@ -3795,8 +3804,8 @@ function createBaseAccount(): Account {
     user: undefined,
     email: "",
     qr_code: "",
-    verify_time: undefined,
-    disable_time: undefined,
+    verify_time_seconds: 0,
+    disable_time_seconds: 0,
     logo: "",
     splash_screen: "",
     encrypt_private_key: "",
@@ -3815,11 +3824,11 @@ export const Account = {
     if (message.qr_code !== "") {
       writer.uint32(26).string(message.qr_code);
     }
-    if (message.verify_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.verify_time), writer.uint32(34).fork()).ldelim();
+    if (message.verify_time_seconds !== 0) {
+      writer.uint32(32).uint32(message.verify_time_seconds);
     }
-    if (message.disable_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.disable_time), writer.uint32(42).fork()).ldelim();
+    if (message.disable_time_seconds !== 0) {
+      writer.uint32(40).uint32(message.disable_time_seconds);
     }
     if (message.logo !== "") {
       writer.uint32(50).string(message.logo);
@@ -3865,18 +3874,18 @@ export const Account = {
           message.qr_code = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.verify_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.verify_time_seconds = reader.uint32();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.disable_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.disable_time_seconds = reader.uint32();
           continue;
         case 6:
           if (tag !== 50) {
@@ -3920,8 +3929,8 @@ export const Account = {
       user: isSet(object.user) ? User.fromJSON(object.user) : undefined,
       email: isSet(object.email) ? globalThis.String(object.email) : "",
       qr_code: isSet(object.qr_code) ? globalThis.String(object.qr_code) : "",
-      verify_time: isSet(object.verify_time) ? fromJsonTimestamp(object.verify_time) : undefined,
-      disable_time: isSet(object.disable_time) ? fromJsonTimestamp(object.disable_time) : undefined,
+      verify_time_seconds: isSet(object.verify_time_seconds) ? globalThis.Number(object.verify_time_seconds) : 0,
+      disable_time_seconds: isSet(object.disable_time_seconds) ? globalThis.Number(object.disable_time_seconds) : 0,
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       splash_screen: isSet(object.splash_screen) ? globalThis.String(object.splash_screen) : "",
       encrypt_private_key: isSet(object.encrypt_private_key) ? globalThis.String(object.encrypt_private_key) : "",
@@ -3940,11 +3949,11 @@ export const Account = {
     if (message.qr_code !== "") {
       obj.qr_code = message.qr_code;
     }
-    if (message.verify_time !== undefined) {
-      obj.verify_time = message.verify_time.toISOString();
+    if (message.verify_time_seconds !== 0) {
+      obj.verify_time_seconds = Math.round(message.verify_time_seconds);
     }
-    if (message.disable_time !== undefined) {
-      obj.disable_time = message.disable_time.toISOString();
+    if (message.disable_time_seconds !== 0) {
+      obj.disable_time_seconds = Math.round(message.disable_time_seconds);
     }
     if (message.logo !== "") {
       obj.logo = message.logo;
@@ -3969,8 +3978,8 @@ export const Account = {
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
     message.email = object.email ?? "";
     message.qr_code = object.qr_code ?? "";
-    message.verify_time = object.verify_time ?? undefined;
-    message.disable_time = object.disable_time ?? undefined;
+    message.verify_time_seconds = object.verify_time_seconds ?? 0;
+    message.disable_time_seconds = object.disable_time_seconds ?? 0;
     message.logo = object.logo ?? "";
     message.splash_screen = object.splash_screen ?? "";
     message.encrypt_private_key = object.encrypt_private_key ?? "";
@@ -4966,19 +4975,17 @@ function createBaseChannelMessage(): ChannelMessage {
     username: "",
     avatar: "",
     content: "",
-    create_time: undefined,
-    update_time: undefined,
     channel_label: "",
     clan_logo: "",
     category_name: "",
     display_name: "",
     clan_nick: "",
     clan_avatar: "",
-    reactions: "",
-    mentions: "",
-    attachments: "",
-    references: "",
-    referenced_message: "",
+    reactions: new Uint8Array(0),
+    mentions: new Uint8Array(0),
+    attachments: new Uint8Array(0),
+    references: new Uint8Array(0),
+    referenced_message: new Uint8Array(0),
     create_time_seconds: 0,
     update_time_seconds: 0,
     mode: 0,
@@ -5014,62 +5021,56 @@ export const ChannelMessage = {
     if (message.content !== "") {
       writer.uint32(66).string(message.content);
     }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(74).fork()).ldelim();
-    }
-    if (message.update_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(82).fork()).ldelim();
-    }
     if (message.channel_label !== "") {
-      writer.uint32(90).string(message.channel_label);
+      writer.uint32(74).string(message.channel_label);
     }
     if (message.clan_logo !== "") {
-      writer.uint32(98).string(message.clan_logo);
+      writer.uint32(82).string(message.clan_logo);
     }
     if (message.category_name !== "") {
-      writer.uint32(106).string(message.category_name);
+      writer.uint32(90).string(message.category_name);
     }
     if (message.display_name !== "") {
-      writer.uint32(114).string(message.display_name);
+      writer.uint32(98).string(message.display_name);
     }
     if (message.clan_nick !== "") {
-      writer.uint32(122).string(message.clan_nick);
+      writer.uint32(106).string(message.clan_nick);
     }
     if (message.clan_avatar !== "") {
-      writer.uint32(130).string(message.clan_avatar);
+      writer.uint32(114).string(message.clan_avatar);
     }
-    if (message.reactions !== "") {
-      writer.uint32(138).string(message.reactions);
+    if (message.reactions.length !== 0) {
+      writer.uint32(122).bytes(message.reactions);
     }
-    if (message.mentions !== "") {
-      writer.uint32(146).string(message.mentions);
+    if (message.mentions.length !== 0) {
+      writer.uint32(130).bytes(message.mentions);
     }
-    if (message.attachments !== "") {
-      writer.uint32(154).string(message.attachments);
+    if (message.attachments.length !== 0) {
+      writer.uint32(138).bytes(message.attachments);
     }
-    if (message.references !== "") {
-      writer.uint32(162).string(message.references);
+    if (message.references.length !== 0) {
+      writer.uint32(146).bytes(message.references);
     }
-    if (message.referenced_message !== "") {
-      writer.uint32(170).string(message.referenced_message);
+    if (message.referenced_message.length !== 0) {
+      writer.uint32(154).bytes(message.referenced_message);
     }
     if (message.create_time_seconds !== 0) {
-      writer.uint32(176).uint32(message.create_time_seconds);
+      writer.uint32(160).uint32(message.create_time_seconds);
     }
     if (message.update_time_seconds !== 0) {
-      writer.uint32(184).uint32(message.update_time_seconds);
+      writer.uint32(168).uint32(message.update_time_seconds);
     }
     if (message.mode !== 0) {
-      writer.uint32(192).int32(message.mode);
+      writer.uint32(176).int32(message.mode);
     }
     if (message.hide_editted !== false) {
-      writer.uint32(200).bool(message.hide_editted);
+      writer.uint32(184).bool(message.hide_editted);
     }
     if (message.is_public !== false) {
-      writer.uint32(208).bool(message.is_public);
+      writer.uint32(192).bool(message.is_public);
     }
     if (message.topic_id !== "") {
-      writer.uint32(218).string(message.topic_id);
+      writer.uint32(202).string(message.topic_id);
     }
     return writer;
   },
@@ -5142,129 +5143,115 @@ export const ChannelMessage = {
             break;
           }
 
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.channel_label = reader.string();
           continue;
         case 10:
           if (tag !== 82) {
             break;
           }
 
-          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.clan_logo = reader.string();
           continue;
         case 11:
           if (tag !== 90) {
             break;
           }
 
-          message.channel_label = reader.string();
+          message.category_name = reader.string();
           continue;
         case 12:
           if (tag !== 98) {
             break;
           }
 
-          message.clan_logo = reader.string();
+          message.display_name = reader.string();
           continue;
         case 13:
           if (tag !== 106) {
             break;
           }
 
-          message.category_name = reader.string();
+          message.clan_nick = reader.string();
           continue;
         case 14:
           if (tag !== 114) {
             break;
           }
 
-          message.display_name = reader.string();
+          message.clan_avatar = reader.string();
           continue;
         case 15:
           if (tag !== 122) {
             break;
           }
 
-          message.clan_nick = reader.string();
+          message.reactions = reader.bytes();
           continue;
         case 16:
           if (tag !== 130) {
             break;
           }
 
-          message.clan_avatar = reader.string();
+          message.mentions = reader.bytes();
           continue;
         case 17:
           if (tag !== 138) {
             break;
           }
 
-          message.reactions = reader.string();
+          message.attachments = reader.bytes();
           continue;
         case 18:
           if (tag !== 146) {
             break;
           }
 
-          message.mentions = reader.string();
+          message.references = reader.bytes();
           continue;
         case 19:
           if (tag !== 154) {
             break;
           }
 
-          message.attachments = reader.string();
+          message.referenced_message = reader.bytes();
           continue;
         case 20:
-          if (tag !== 162) {
+          if (tag !== 160) {
             break;
           }
 
-          message.references = reader.string();
+          message.create_time_seconds = reader.uint32();
           continue;
         case 21:
-          if (tag !== 170) {
+          if (tag !== 168) {
             break;
           }
 
-          message.referenced_message = reader.string();
+          message.update_time_seconds = reader.uint32();
           continue;
         case 22:
           if (tag !== 176) {
             break;
           }
 
-          message.create_time_seconds = reader.uint32();
+          message.mode = reader.int32();
           continue;
         case 23:
           if (tag !== 184) {
             break;
           }
 
-          message.update_time_seconds = reader.uint32();
+          message.hide_editted = reader.bool();
           continue;
         case 24:
           if (tag !== 192) {
             break;
           }
 
-          message.mode = reader.int32();
-          continue;
-        case 25:
-          if (tag !== 200) {
-            break;
-          }
-
-          message.hide_editted = reader.bool();
-          continue;
-        case 26:
-          if (tag !== 208) {
-            break;
-          }
-
           message.is_public = reader.bool();
           continue;
-        case 27:
-          if (tag !== 218) {
+        case 25:
+          if (tag !== 202) {
             break;
           }
 
@@ -5289,19 +5276,19 @@ export const ChannelMessage = {
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
-      update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
       clan_logo: isSet(object.clan_logo) ? globalThis.String(object.clan_logo) : "",
       category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
       display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
       clan_nick: isSet(object.clan_nick) ? globalThis.String(object.clan_nick) : "",
       clan_avatar: isSet(object.clan_avatar) ? globalThis.String(object.clan_avatar) : "",
-      reactions: isSet(object.reactions) ? globalThis.String(object.reactions) : "",
-      mentions: isSet(object.mentions) ? globalThis.String(object.mentions) : "",
-      attachments: isSet(object.attachments) ? globalThis.String(object.attachments) : "",
-      references: isSet(object.references) ? globalThis.String(object.references) : "",
-      referenced_message: isSet(object.referenced_message) ? globalThis.String(object.referenced_message) : "",
+      reactions: isSet(object.reactions) ? bytesFromBase64(object.reactions) : new Uint8Array(0),
+      mentions: isSet(object.mentions) ? bytesFromBase64(object.mentions) : new Uint8Array(0),
+      attachments: isSet(object.attachments) ? bytesFromBase64(object.attachments) : new Uint8Array(0),
+      references: isSet(object.references) ? bytesFromBase64(object.references) : new Uint8Array(0),
+      referenced_message: isSet(object.referenced_message)
+        ? bytesFromBase64(object.referenced_message)
+        : new Uint8Array(0),
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
@@ -5337,12 +5324,6 @@ export const ChannelMessage = {
     if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
-    }
-    if (message.update_time !== undefined) {
-      obj.update_time = message.update_time.toISOString();
-    }
     if (message.channel_label !== "") {
       obj.channel_label = message.channel_label;
     }
@@ -5361,20 +5342,20 @@ export const ChannelMessage = {
     if (message.clan_avatar !== "") {
       obj.clan_avatar = message.clan_avatar;
     }
-    if (message.reactions !== "") {
-      obj.reactions = message.reactions;
+    if (message.reactions.length !== 0) {
+      obj.reactions = base64FromBytes(message.reactions);
     }
-    if (message.mentions !== "") {
-      obj.mentions = message.mentions;
+    if (message.mentions.length !== 0) {
+      obj.mentions = base64FromBytes(message.mentions);
     }
-    if (message.attachments !== "") {
-      obj.attachments = message.attachments;
+    if (message.attachments.length !== 0) {
+      obj.attachments = base64FromBytes(message.attachments);
     }
-    if (message.references !== "") {
-      obj.references = message.references;
+    if (message.references.length !== 0) {
+      obj.references = base64FromBytes(message.references);
     }
-    if (message.referenced_message !== "") {
-      obj.referenced_message = message.referenced_message;
+    if (message.referenced_message.length !== 0) {
+      obj.referenced_message = base64FromBytes(message.referenced_message);
     }
     if (message.create_time_seconds !== 0) {
       obj.create_time_seconds = Math.round(message.create_time_seconds);
@@ -5410,19 +5391,17 @@ export const ChannelMessage = {
     message.username = object.username ?? "";
     message.avatar = object.avatar ?? "";
     message.content = object.content ?? "";
-    message.create_time = object.create_time ?? undefined;
-    message.update_time = object.update_time ?? undefined;
     message.channel_label = object.channel_label ?? "";
     message.clan_logo = object.clan_logo ?? "";
     message.category_name = object.category_name ?? "";
     message.display_name = object.display_name ?? "";
     message.clan_nick = object.clan_nick ?? "";
     message.clan_avatar = object.clan_avatar ?? "";
-    message.reactions = object.reactions ?? "";
-    message.mentions = object.mentions ?? "";
-    message.attachments = object.attachments ?? "";
-    message.references = object.references ?? "";
-    message.referenced_message = object.referenced_message ?? "";
+    message.reactions = object.reactions ?? new Uint8Array(0);
+    message.mentions = object.mentions ?? new Uint8Array(0);
+    message.attachments = object.attachments ?? new Uint8Array(0);
+    message.references = object.references ?? new Uint8Array(0);
+    message.referenced_message = object.referenced_message ?? new Uint8Array(0);
     message.create_time_seconds = object.create_time_seconds ?? 0;
     message.update_time_seconds = object.update_time_seconds ?? 0;
     message.mode = object.mode ?? 0;
@@ -5434,7 +5413,7 @@ export const ChannelMessage = {
 };
 
 function createBaseMessageMention(): MessageMention {
-  return { id: "", user_id: "", username: "", role_id: "", rolename: "", create_time: undefined, s: 0, e: 0 };
+  return { id: "", user_id: "", username: "", role_id: "", rolename: "", create_time_seconds: 0, s: 0, e: 0 };
 }
 
 export const MessageMention = {
@@ -5454,8 +5433,8 @@ export const MessageMention = {
     if (message.rolename !== "") {
       writer.uint32(42).string(message.rolename);
     }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(50).fork()).ldelim();
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(48).uint32(message.create_time_seconds);
     }
     if (message.s !== 0) {
       writer.uint32(56).int32(message.s);
@@ -5509,11 +5488,11 @@ export const MessageMention = {
           message.rolename = reader.string();
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.create_time_seconds = reader.uint32();
           continue;
         case 7:
           if (tag !== 56) {
@@ -5545,7 +5524,7 @@ export const MessageMention = {
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "",
       rolename: isSet(object.rolename) ? globalThis.String(object.rolename) : "",
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       s: isSet(object.s) ? globalThis.Number(object.s) : 0,
       e: isSet(object.e) ? globalThis.Number(object.e) : 0,
     };
@@ -5568,8 +5547,8 @@ export const MessageMention = {
     if (message.rolename !== "") {
       obj.rolename = message.rolename;
     }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
     if (message.s !== 0) {
       obj.s = Math.round(message.s);
@@ -5590,7 +5569,7 @@ export const MessageMention = {
     message.username = object.username ?? "";
     message.role_id = object.role_id ?? "";
     message.rolename = object.rolename ?? "";
-    message.create_time = object.create_time ?? undefined;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
     message.s = object.s ?? 0;
     message.e = object.e ?? 0;
     return message;
@@ -7011,7 +6990,7 @@ export const DeleteNotificationsRequest = {
 };
 
 function createBaseEvent(): Event {
-  return { name: "", properties: {}, timestamp: undefined, external: false };
+  return { name: "", properties: {}, timestamp_seconds: 0, external: false };
 }
 
 export const Event = {
@@ -7022,8 +7001,8 @@ export const Event = {
     Object.entries(message.properties).forEach(([key, value]) => {
       Event_PropertiesEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).ldelim();
     });
-    if (message.timestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(26).fork()).ldelim();
+    if (message.timestamp_seconds !== 0) {
+      writer.uint32(24).uint32(message.timestamp_seconds);
     }
     if (message.external !== false) {
       writer.uint32(32).bool(message.external);
@@ -7056,11 +7035,11 @@ export const Event = {
           }
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.timestamp_seconds = reader.uint32();
           continue;
         case 4:
           if (tag !== 32) {
@@ -7087,7 +7066,7 @@ export const Event = {
           return acc;
         }, {})
         : {},
-      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
+      timestamp_seconds: isSet(object.timestamp_seconds) ? globalThis.Number(object.timestamp_seconds) : 0,
       external: isSet(object.external) ? globalThis.Boolean(object.external) : false,
     };
   },
@@ -7106,8 +7085,8 @@ export const Event = {
         });
       }
     }
-    if (message.timestamp !== undefined) {
-      obj.timestamp = message.timestamp.toISOString();
+    if (message.timestamp_seconds !== 0) {
+      obj.timestamp_seconds = Math.round(message.timestamp_seconds);
     }
     if (message.external !== false) {
       obj.external = message.external;
@@ -7130,7 +7109,7 @@ export const Event = {
       },
       {},
     );
-    message.timestamp = object.timestamp ?? undefined;
+    message.timestamp_seconds = object.timestamp_seconds ?? 0;
     message.external = object.external ?? false;
     return message;
   },
@@ -7211,7 +7190,7 @@ export const Event_PropertiesEntry = {
 };
 
 function createBaseFriend(): Friend {
-  return { user: undefined, state: 0, update_time: undefined, source_id: "" };
+  return { user: undefined, state: 0, update_time_seconds: 0, source_id: "" };
 }
 
 export const Friend = {
@@ -7222,8 +7201,8 @@ export const Friend = {
     if (message.state !== 0) {
       writer.uint32(16).int32(message.state);
     }
-    if (message.update_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(26).fork()).ldelim();
+    if (message.update_time_seconds !== 0) {
+      writer.uint32(24).uint32(message.update_time_seconds);
     }
     if (message.source_id !== "") {
       writer.uint32(34).string(message.source_id);
@@ -7253,11 +7232,11 @@ export const Friend = {
           message.state = reader.int32();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.update_time_seconds = reader.uint32();
           continue;
         case 4:
           if (tag !== 34) {
@@ -7279,7 +7258,7 @@ export const Friend = {
     return {
       user: isSet(object.user) ? User.fromJSON(object.user) : undefined,
       state: isSet(object.state) ? globalThis.Number(object.state) : 0,
-      update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
+      update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
       source_id: isSet(object.source_id) ? globalThis.String(object.source_id) : "",
     };
   },
@@ -7292,8 +7271,8 @@ export const Friend = {
     if (message.state !== 0) {
       obj.state = Math.round(message.state);
     }
-    if (message.update_time !== undefined) {
-      obj.update_time = message.update_time.toISOString();
+    if (message.update_time_seconds !== 0) {
+      obj.update_time_seconds = Math.round(message.update_time_seconds);
     }
     if (message.source_id !== "") {
       obj.source_id = message.source_id;
@@ -7308,7 +7287,7 @@ export const Friend = {
     const message = createBaseFriend();
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
     message.state = object.state ?? 0;
-    message.update_time = object.update_time ?? undefined;
+    message.update_time_seconds = object.update_time_seconds ?? 0;
     message.source_id = object.source_id ?? "";
     return message;
   },
@@ -7931,7 +7910,7 @@ function createBaseChannelAttachment(): ChannelAttachment {
     filesize: "",
     url: "",
     uploader: "",
-    create_time: undefined,
+    create_time_seconds: 0,
     message_id: "",
     width: 0,
     height: 0,
@@ -7958,8 +7937,8 @@ export const ChannelAttachment = {
     if (message.uploader !== "") {
       writer.uint32(50).string(message.uploader);
     }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(58).fork()).ldelim();
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(56).uint32(message.create_time_seconds);
     }
     if (message.message_id !== "") {
       writer.uint32(66).string(message.message_id);
@@ -8023,11 +8002,11 @@ export const ChannelAttachment = {
           message.uploader = reader.string();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.create_time_seconds = reader.uint32();
           continue;
         case 8:
           if (tag !== 66) {
@@ -8067,7 +8046,7 @@ export const ChannelAttachment = {
       filesize: isSet(object.filesize) ? globalThis.String(object.filesize) : "",
       url: isSet(object.url) ? globalThis.String(object.url) : "",
       uploader: isSet(object.uploader) ? globalThis.String(object.uploader) : "",
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
       width: isSet(object.width) ? globalThis.Number(object.width) : 0,
       height: isSet(object.height) ? globalThis.Number(object.height) : 0,
@@ -8094,8 +8073,8 @@ export const ChannelAttachment = {
     if (message.uploader !== "") {
       obj.uploader = message.uploader;
     }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
     if (message.message_id !== "") {
       obj.message_id = message.message_id;
@@ -8120,7 +8099,7 @@ export const ChannelAttachment = {
     message.filesize = object.filesize ?? "";
     message.url = object.url ?? "";
     message.uploader = object.uploader ?? "";
-    message.create_time = object.create_time ?? undefined;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
     message.message_id = object.message_id ?? "";
     message.width = object.width ?? 0;
     message.height = object.height ?? 0;
@@ -9188,16 +9167,7 @@ export const ListChannelUsersRequest = {
 };
 
 function createBaseListChannelAttachmentRequest(): ListChannelAttachmentRequest {
-  return {
-    clan_id: "",
-    channel_id: "",
-    file_type: "",
-    limit: undefined,
-    state: undefined,
-    before: 0,
-    after: 0,
-    around: 0,
-  };
+  return { clan_id: "", channel_id: "", file_type: "", limit: 0, state: 0, before: 0, after: 0, around: 0 };
 }
 
 export const ListChannelAttachmentRequest = {
@@ -9211,11 +9181,11 @@ export const ListChannelAttachmentRequest = {
     if (message.file_type !== "") {
       writer.uint32(26).string(message.file_type);
     }
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(34).fork()).ldelim();
+    if (message.limit !== 0) {
+      writer.uint32(32).int32(message.limit);
     }
-    if (message.state !== undefined) {
-      Int32Value.encode({ value: message.state! }, writer.uint32(42).fork()).ldelim();
+    if (message.state !== 0) {
+      writer.uint32(40).int32(message.state);
     }
     if (message.before !== 0) {
       writer.uint32(48).uint32(message.before);
@@ -9258,18 +9228,18 @@ export const ListChannelAttachmentRequest = {
           message.file_type = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          message.limit = reader.int32();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.state = Int32Value.decode(reader, reader.uint32()).value;
+          message.state = reader.int32();
           continue;
         case 6:
           if (tag !== 48) {
@@ -9306,8 +9276,8 @@ export const ListChannelAttachmentRequest = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       file_type: isSet(object.file_type) ? globalThis.String(object.file_type) : "",
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      state: isSet(object.state) ? Number(object.state) : undefined,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      state: isSet(object.state) ? globalThis.Number(object.state) : 0,
       before: isSet(object.before) ? globalThis.Number(object.before) : 0,
       after: isSet(object.after) ? globalThis.Number(object.after) : 0,
       around: isSet(object.around) ? globalThis.Number(object.around) : 0,
@@ -9325,11 +9295,11 @@ export const ListChannelAttachmentRequest = {
     if (message.file_type !== "") {
       obj.file_type = message.file_type;
     }
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
-    if (message.state !== undefined) {
-      obj.state = message.state;
+    if (message.state !== 0) {
+      obj.state = Math.round(message.state);
     }
     if (message.before !== 0) {
       obj.before = Math.round(message.before);
@@ -9351,8 +9321,8 @@ export const ListChannelAttachmentRequest = {
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.file_type = object.file_type ?? "";
-    message.limit = object.limit ?? undefined;
-    message.state = object.state ?? undefined;
+    message.limit = object.limit ?? 0;
+    message.state = object.state ?? 0;
     message.before = object.before ?? 0;
     message.after = object.after ?? 0;
     message.around = object.around ?? 0;
@@ -9644,10 +9614,10 @@ function createBaseNotification(): Notification {
   return {
     id: "",
     subject: "",
-    content: "",
+    content: new Uint8Array(0),
     code: 0,
     sender_id: "",
-    create_time: undefined,
+    create_time_seconds: 0,
     persistent: false,
     clan_id: "",
     channel_id: "",
@@ -9667,8 +9637,8 @@ export const Notification = {
     if (message.subject !== "") {
       writer.uint32(18).string(message.subject);
     }
-    if (message.content !== "") {
-      writer.uint32(26).string(message.content);
+    if (message.content.length !== 0) {
+      writer.uint32(26).bytes(message.content);
     }
     if (message.code !== 0) {
       writer.uint32(32).int32(message.code);
@@ -9676,8 +9646,8 @@ export const Notification = {
     if (message.sender_id !== "") {
       writer.uint32(42).string(message.sender_id);
     }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(50).fork()).ldelim();
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(48).uint32(message.create_time_seconds);
     }
     if (message.persistent !== false) {
       writer.uint32(56).bool(message.persistent);
@@ -9732,7 +9702,7 @@ export const Notification = {
             break;
           }
 
-          message.content = reader.string();
+          message.content = reader.bytes();
           continue;
         case 4:
           if (tag !== 32) {
@@ -9749,11 +9719,11 @@ export const Notification = {
           message.sender_id = reader.string();
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.create_time_seconds = reader.uint32();
           continue;
         case 7:
           if (tag !== 56) {
@@ -9824,10 +9794,10 @@ export const Notification = {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       subject: isSet(object.subject) ? globalThis.String(object.subject) : "",
-      content: isSet(object.content) ? globalThis.String(object.content) : "",
+      content: isSet(object.content) ? bytesFromBase64(object.content) : new Uint8Array(0),
       code: isSet(object.code) ? globalThis.Number(object.code) : 0,
       sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       persistent: isSet(object.persistent) ? globalThis.Boolean(object.persistent) : false,
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
@@ -9847,8 +9817,8 @@ export const Notification = {
     if (message.subject !== "") {
       obj.subject = message.subject;
     }
-    if (message.content !== "") {
-      obj.content = message.content;
+    if (message.content.length !== 0) {
+      obj.content = base64FromBytes(message.content);
     }
     if (message.code !== 0) {
       obj.code = Math.round(message.code);
@@ -9856,8 +9826,8 @@ export const Notification = {
     if (message.sender_id !== "") {
       obj.sender_id = message.sender_id;
     }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
     if (message.persistent !== false) {
       obj.persistent = message.persistent;
@@ -9893,10 +9863,10 @@ export const Notification = {
     const message = createBaseNotification();
     message.id = object.id ?? "";
     message.subject = object.subject ?? "";
-    message.content = object.content ?? "";
+    message.content = object.content ?? new Uint8Array(0);
     message.code = object.code ?? 0;
     message.sender_id = object.sender_id ?? "";
-    message.create_time = object.create_time ?? undefined;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
     message.persistent = object.persistent ?? false;
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
@@ -9912,7 +9882,7 @@ export const Notification = {
 };
 
 function createBaseEmojiRecent(): EmojiRecent {
-  return { emoji_recents_id: "", emoji_id: "", update_time: undefined };
+  return { emoji_recents_id: "", emoji_id: "", update_time_seconds: 0 };
 }
 
 export const EmojiRecent = {
@@ -9923,8 +9893,8 @@ export const EmojiRecent = {
     if (message.emoji_id !== "") {
       writer.uint32(18).string(message.emoji_id);
     }
-    if (message.update_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(26).fork()).ldelim();
+    if (message.update_time_seconds !== 0) {
+      writer.uint32(24).uint32(message.update_time_seconds);
     }
     return writer;
   },
@@ -9951,11 +9921,11 @@ export const EmojiRecent = {
           message.emoji_id = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.update_time_seconds = reader.uint32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -9970,7 +9940,7 @@ export const EmojiRecent = {
     return {
       emoji_recents_id: isSet(object.emoji_recents_id) ? globalThis.String(object.emoji_recents_id) : "",
       emoji_id: isSet(object.emoji_id) ? globalThis.String(object.emoji_id) : "",
-      update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
+      update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
     };
   },
 
@@ -9982,8 +9952,8 @@ export const EmojiRecent = {
     if (message.emoji_id !== "") {
       obj.emoji_id = message.emoji_id;
     }
-    if (message.update_time !== undefined) {
-      obj.update_time = message.update_time.toISOString();
+    if (message.update_time_seconds !== 0) {
+      obj.update_time_seconds = Math.round(message.update_time_seconds);
     }
     return obj;
   },
@@ -9995,7 +9965,7 @@ export const EmojiRecent = {
     const message = createBaseEmojiRecent();
     message.emoji_recents_id = object.emoji_recents_id ?? "";
     message.emoji_id = object.emoji_id ?? "";
-    message.update_time = object.update_time ?? undefined;
+    message.update_time_seconds = object.update_time_seconds ?? 0;
     return message;
   },
 };
@@ -10524,13 +10494,16 @@ export const Session = {
 };
 
 function createBaseUpdateUsernameRequest(): UpdateUsernameRequest {
-  return { username: "" };
+  return { username: "", display_name: "" };
 }
 
 export const UpdateUsernameRequest = {
   encode(message: UpdateUsernameRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.username !== "") {
       writer.uint32(10).string(message.username);
+    }
+    if (message.display_name !== "") {
+      writer.uint32(18).string(message.display_name);
     }
     return writer;
   },
@@ -10549,6 +10522,13 @@ export const UpdateUsernameRequest = {
 
           message.username = reader.string();
           continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.display_name = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10559,13 +10539,19 @@ export const UpdateUsernameRequest = {
   },
 
   fromJSON(object: any): UpdateUsernameRequest {
-    return { username: isSet(object.username) ? globalThis.String(object.username) : "" };
+    return {
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
+    };
   },
 
   toJSON(message: UpdateUsernameRequest): unknown {
     const obj: any = {};
     if (message.username !== "") {
       obj.username = message.username;
+    }
+    if (message.display_name !== "") {
+      obj.display_name = message.display_name;
     }
     return obj;
   },
@@ -10576,6 +10562,7 @@ export const UpdateUsernameRequest = {
   fromPartial<I extends Exact<DeepPartial<UpdateUsernameRequest>, I>>(object: I): UpdateUsernameRequest {
     const message = createBaseUpdateUsernameRequest();
     message.username = object.username ?? "";
+    message.display_name = object.display_name ?? "";
     return message;
   },
 };
@@ -10588,7 +10575,7 @@ function createBaseUpdateAccountRequest(): UpdateAccountRequest {
     location: undefined,
     timezone: undefined,
     about_me: undefined,
-    dob: undefined,
+    dob_seconds: 0,
     logo: undefined,
     splash_screen: undefined,
     encrypt_private_key: "",
@@ -10616,8 +10603,8 @@ export const UpdateAccountRequest = {
     if (message.about_me !== undefined) {
       StringValue.encode({ value: message.about_me! }, writer.uint32(50).fork()).ldelim();
     }
-    if (message.dob !== undefined) {
-      Timestamp.encode(toTimestamp(message.dob), writer.uint32(58).fork()).ldelim();
+    if (message.dob_seconds !== 0) {
+      writer.uint32(56).uint32(message.dob_seconds);
     }
     if (message.logo !== undefined) {
       StringValue.encode({ value: message.logo! }, writer.uint32(66).fork()).ldelim();
@@ -10684,11 +10671,11 @@ export const UpdateAccountRequest = {
           message.about_me = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.dob = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.dob_seconds = reader.uint32();
           continue;
         case 8:
           if (tag !== 66) {
@@ -10735,7 +10722,7 @@ export const UpdateAccountRequest = {
       location: isSet(object.location) ? String(object.location) : undefined,
       timezone: isSet(object.timezone) ? String(object.timezone) : undefined,
       about_me: isSet(object.about_me) ? String(object.about_me) : undefined,
-      dob: isSet(object.dob) ? fromJsonTimestamp(object.dob) : undefined,
+      dob_seconds: isSet(object.dob_seconds) ? globalThis.Number(object.dob_seconds) : 0,
       logo: isSet(object.logo) ? String(object.logo) : undefined,
       splash_screen: isSet(object.splash_screen) ? String(object.splash_screen) : undefined,
       encrypt_private_key: isSet(object.encrypt_private_key) ? globalThis.String(object.encrypt_private_key) : "",
@@ -10763,8 +10750,8 @@ export const UpdateAccountRequest = {
     if (message.about_me !== undefined) {
       obj.about_me = message.about_me;
     }
-    if (message.dob !== undefined) {
-      obj.dob = message.dob.toISOString();
+    if (message.dob_seconds !== 0) {
+      obj.dob_seconds = Math.round(message.dob_seconds);
     }
     if (message.logo !== undefined) {
       obj.logo = message.logo;
@@ -10792,7 +10779,7 @@ export const UpdateAccountRequest = {
     message.location = object.location ?? undefined;
     message.timezone = object.timezone ?? undefined;
     message.about_me = object.about_me ?? undefined;
-    message.dob = object.dob ?? undefined;
+    message.dob_seconds = object.dob_seconds ?? 0;
     message.logo = object.logo ?? undefined;
     message.splash_screen = object.splash_screen ?? undefined;
     message.encrypt_private_key = object.encrypt_private_key ?? "";
@@ -11044,12 +11031,12 @@ function createBaseUser(): User {
     online: false,
     phone_number: "",
     edge_count: 0,
-    create_time: undefined,
-    update_time: undefined,
+    create_time_seconds: 0,
+    update_time_seconds: 0,
     about_me: "",
-    join_time: undefined,
+    join_time_seconds: 0,
     is_mobile: false,
-    dob: undefined,
+    dob_seconds: 0,
     mezon_id: "",
     list_nick_names: [],
     status: "",
@@ -11091,23 +11078,23 @@ export const User = {
     if (message.edge_count !== 0) {
       writer.uint32(88).int32(message.edge_count);
     }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(98).fork()).ldelim();
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(96).uint32(message.create_time_seconds);
     }
-    if (message.update_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(106).fork()).ldelim();
+    if (message.update_time_seconds !== 0) {
+      writer.uint32(104).uint32(message.update_time_seconds);
     }
     if (message.about_me !== "") {
       writer.uint32(114).string(message.about_me);
     }
-    if (message.join_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.join_time), writer.uint32(122).fork()).ldelim();
+    if (message.join_time_seconds !== 0) {
+      writer.uint32(120).uint32(message.join_time_seconds);
     }
     if (message.is_mobile !== false) {
       writer.uint32(128).bool(message.is_mobile);
     }
-    if (message.dob !== undefined) {
-      Timestamp.encode(toTimestamp(message.dob), writer.uint32(138).fork()).ldelim();
+    if (message.dob_seconds !== 0) {
+      writer.uint32(136).uint32(message.dob_seconds);
     }
     if (message.mezon_id !== "") {
       writer.uint32(146).string(message.mezon_id);
@@ -11206,18 +11193,18 @@ export const User = {
           message.edge_count = reader.int32();
           continue;
         case 12:
-          if (tag !== 98) {
+          if (tag !== 96) {
             break;
           }
 
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.create_time_seconds = reader.uint32();
           continue;
         case 13:
-          if (tag !== 106) {
+          if (tag !== 104) {
             break;
           }
 
-          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.update_time_seconds = reader.uint32();
           continue;
         case 14:
           if (tag !== 114) {
@@ -11227,11 +11214,11 @@ export const User = {
           message.about_me = reader.string();
           continue;
         case 15:
-          if (tag !== 122) {
+          if (tag !== 120) {
             break;
           }
 
-          message.join_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.join_time_seconds = reader.uint32();
           continue;
         case 16:
           if (tag !== 128) {
@@ -11241,11 +11228,11 @@ export const User = {
           message.is_mobile = reader.bool();
           continue;
         case 17:
-          if (tag !== 138) {
+          if (tag !== 136) {
             break;
           }
 
-          message.dob = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.dob_seconds = reader.uint32();
           continue;
         case 18:
           if (tag !== 146) {
@@ -11290,12 +11277,12 @@ export const User = {
       online: isSet(object.online) ? globalThis.Boolean(object.online) : false,
       phone_number: isSet(object.phone_number) ? globalThis.String(object.phone_number) : "",
       edge_count: isSet(object.edge_count) ? globalThis.Number(object.edge_count) : 0,
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
-      update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
+      update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
       about_me: isSet(object.about_me) ? globalThis.String(object.about_me) : "",
-      join_time: isSet(object.join_time) ? fromJsonTimestamp(object.join_time) : undefined,
+      join_time_seconds: isSet(object.join_time_seconds) ? globalThis.Number(object.join_time_seconds) : 0,
       is_mobile: isSet(object.is_mobile) ? globalThis.Boolean(object.is_mobile) : false,
-      dob: isSet(object.dob) ? fromJsonTimestamp(object.dob) : undefined,
+      dob_seconds: isSet(object.dob_seconds) ? globalThis.Number(object.dob_seconds) : 0,
       mezon_id: isSet(object.mezon_id) ? globalThis.String(object.mezon_id) : "",
       list_nick_names: globalThis.Array.isArray(object?.list_nick_names)
         ? object.list_nick_names.map((e: any) => globalThis.String(e))
@@ -11339,23 +11326,23 @@ export const User = {
     if (message.edge_count !== 0) {
       obj.edge_count = Math.round(message.edge_count);
     }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
-    if (message.update_time !== undefined) {
-      obj.update_time = message.update_time.toISOString();
+    if (message.update_time_seconds !== 0) {
+      obj.update_time_seconds = Math.round(message.update_time_seconds);
     }
     if (message.about_me !== "") {
       obj.about_me = message.about_me;
     }
-    if (message.join_time !== undefined) {
-      obj.join_time = message.join_time.toISOString();
+    if (message.join_time_seconds !== 0) {
+      obj.join_time_seconds = Math.round(message.join_time_seconds);
     }
     if (message.is_mobile !== false) {
       obj.is_mobile = message.is_mobile;
     }
-    if (message.dob !== undefined) {
-      obj.dob = message.dob.toISOString();
+    if (message.dob_seconds !== 0) {
+      obj.dob_seconds = Math.round(message.dob_seconds);
     }
     if (message.mezon_id !== "") {
       obj.mezon_id = message.mezon_id;
@@ -11385,12 +11372,12 @@ export const User = {
     message.online = object.online ?? false;
     message.phone_number = object.phone_number ?? "";
     message.edge_count = object.edge_count ?? 0;
-    message.create_time = object.create_time ?? undefined;
-    message.update_time = object.update_time ?? undefined;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
+    message.update_time_seconds = object.update_time_seconds ?? 0;
     message.about_me = object.about_me ?? "";
-    message.join_time = object.join_time ?? undefined;
+    message.join_time_seconds = object.join_time_seconds ?? 0;
     message.is_mobile = object.is_mobile ?? false;
-    message.dob = object.dob ?? undefined;
+    message.dob_seconds = object.dob_seconds ?? 0;
     message.mezon_id = object.mezon_id ?? "";
     message.list_nick_names = object.list_nick_names?.map((e) => e) || [];
     message.status = object.status ?? "";
@@ -12938,7 +12925,7 @@ function createBaseInviteUserRes(): InviteUserRes {
     clan_name: "",
     channel_label: "",
     user_joined: false,
-    expiry_time: undefined,
+    expiry_time_seconds: 0,
     channel_desc: undefined,
     clan_logo: "",
     member_count: 0,
@@ -12962,8 +12949,8 @@ export const InviteUserRes = {
     if (message.user_joined !== false) {
       writer.uint32(40).bool(message.user_joined);
     }
-    if (message.expiry_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.expiry_time), writer.uint32(50).fork()).ldelim();
+    if (message.expiry_time_seconds !== 0) {
+      writer.uint32(48).uint32(message.expiry_time_seconds);
     }
     if (message.channel_desc !== undefined) {
       ChannelDescription.encode(message.channel_desc, writer.uint32(58).fork()).ldelim();
@@ -13020,11 +13007,11 @@ export const InviteUserRes = {
           message.user_joined = reader.bool();
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.expiry_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.expiry_time_seconds = reader.uint32();
           continue;
         case 7:
           if (tag !== 58) {
@@ -13063,7 +13050,7 @@ export const InviteUserRes = {
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
       user_joined: isSet(object.user_joined) ? globalThis.Boolean(object.user_joined) : false,
-      expiry_time: isSet(object.expiry_time) ? fromJsonTimestamp(object.expiry_time) : undefined,
+      expiry_time_seconds: isSet(object.expiry_time_seconds) ? globalThis.Number(object.expiry_time_seconds) : 0,
       channel_desc: isSet(object.channel_desc) ? ChannelDescription.fromJSON(object.channel_desc) : undefined,
       clan_logo: isSet(object.clan_logo) ? globalThis.String(object.clan_logo) : "",
       member_count: isSet(object.member_count) ? globalThis.Number(object.member_count) : 0,
@@ -13087,8 +13074,8 @@ export const InviteUserRes = {
     if (message.user_joined !== false) {
       obj.user_joined = message.user_joined;
     }
-    if (message.expiry_time !== undefined) {
-      obj.expiry_time = message.expiry_time.toISOString();
+    if (message.expiry_time_seconds !== 0) {
+      obj.expiry_time_seconds = Math.round(message.expiry_time_seconds);
     }
     if (message.channel_desc !== undefined) {
       obj.channel_desc = ChannelDescription.toJSON(message.channel_desc);
@@ -13112,7 +13099,7 @@ export const InviteUserRes = {
     message.clan_name = object.clan_name ?? "";
     message.channel_label = object.channel_label ?? "";
     message.user_joined = object.user_joined ?? false;
-    message.expiry_time = object.expiry_time ?? undefined;
+    message.expiry_time_seconds = object.expiry_time_seconds ?? 0;
     message.channel_desc = (object.channel_desc !== undefined && object.channel_desc !== null)
       ? ChannelDescription.fromPartial(object.channel_desc)
       : undefined;
@@ -13202,8 +13189,8 @@ function createBaseLinkInviteUser(): LinkInviteUser {
     creator_id: "",
     channel_id: "",
     invite_link: "",
-    create_time: undefined,
-    expiry_time: undefined,
+    create_time_seconds: 0,
+    expiry_time_seconds: 0,
     id: "",
   };
 }
@@ -13222,11 +13209,11 @@ export const LinkInviteUser = {
     if (message.invite_link !== "") {
       writer.uint32(34).string(message.invite_link);
     }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(42).fork()).ldelim();
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(40).uint32(message.create_time_seconds);
     }
-    if (message.expiry_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.expiry_time), writer.uint32(50).fork()).ldelim();
+    if (message.expiry_time_seconds !== 0) {
+      writer.uint32(48).uint32(message.expiry_time_seconds);
     }
     if (message.id !== "") {
       writer.uint32(58).string(message.id);
@@ -13270,18 +13257,18 @@ export const LinkInviteUser = {
           message.invite_link = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.create_time_seconds = reader.uint32();
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.expiry_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.expiry_time_seconds = reader.uint32();
           continue;
         case 7:
           if (tag !== 58) {
@@ -13305,8 +13292,8 @@ export const LinkInviteUser = {
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       invite_link: isSet(object.invite_link) ? globalThis.String(object.invite_link) : "",
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
-      expiry_time: isSet(object.expiry_time) ? fromJsonTimestamp(object.expiry_time) : undefined,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
+      expiry_time_seconds: isSet(object.expiry_time_seconds) ? globalThis.Number(object.expiry_time_seconds) : 0,
       id: isSet(object.id) ? globalThis.String(object.id) : "",
     };
   },
@@ -13325,11 +13312,11 @@ export const LinkInviteUser = {
     if (message.invite_link !== "") {
       obj.invite_link = message.invite_link;
     }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
-    if (message.expiry_time !== undefined) {
-      obj.expiry_time = message.expiry_time.toISOString();
+    if (message.expiry_time_seconds !== 0) {
+      obj.expiry_time_seconds = Math.round(message.expiry_time_seconds);
     }
     if (message.id !== "") {
       obj.id = message.id;
@@ -13346,8 +13333,8 @@ export const LinkInviteUser = {
     message.creator_id = object.creator_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.invite_link = object.invite_link ?? "";
-    message.create_time = object.create_time ?? undefined;
-    message.expiry_time = object.expiry_time ?? undefined;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
+    message.expiry_time_seconds = object.expiry_time_seconds ?? 0;
     message.id = object.id ?? "";
     return message;
   },
@@ -14488,16 +14475,7 @@ export const ListCategoryDescsRequest = {
 };
 
 function createBaseChannelMessageHeader(): ChannelMessageHeader {
-  return {
-    id: "",
-    timestamp_seconds: 0,
-    sender_id: "",
-    content: "",
-    attachment: "",
-    reference: "",
-    mention: "",
-    reaction: "",
-  };
+  return { id: "", timestamp_seconds: 0, sender_id: "", content: "" };
 }
 
 export const ChannelMessageHeader = {
@@ -14513,18 +14491,6 @@ export const ChannelMessageHeader = {
     }
     if (message.content !== "") {
       writer.uint32(34).string(message.content);
-    }
-    if (message.attachment !== "") {
-      writer.uint32(42).string(message.attachment);
-    }
-    if (message.reference !== "") {
-      writer.uint32(50).string(message.reference);
-    }
-    if (message.mention !== "") {
-      writer.uint32(58).string(message.mention);
-    }
-    if (message.reaction !== "") {
-      writer.uint32(66).string(message.reaction);
     }
     return writer;
   },
@@ -14564,34 +14530,6 @@ export const ChannelMessageHeader = {
 
           message.content = reader.string();
           continue;
-        case 5:
-          if (tag !== 42) {
-            break;
-          }
-
-          message.attachment = reader.string();
-          continue;
-        case 6:
-          if (tag !== 50) {
-            break;
-          }
-
-          message.reference = reader.string();
-          continue;
-        case 7:
-          if (tag !== 58) {
-            break;
-          }
-
-          message.mention = reader.string();
-          continue;
-        case 8:
-          if (tag !== 66) {
-            break;
-          }
-
-          message.reaction = reader.string();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -14607,10 +14545,6 @@ export const ChannelMessageHeader = {
       timestamp_seconds: isSet(object.timestamp_seconds) ? globalThis.Number(object.timestamp_seconds) : 0,
       sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
-      attachment: isSet(object.attachment) ? globalThis.String(object.attachment) : "",
-      reference: isSet(object.reference) ? globalThis.String(object.reference) : "",
-      mention: isSet(object.mention) ? globalThis.String(object.mention) : "",
-      reaction: isSet(object.reaction) ? globalThis.String(object.reaction) : "",
     };
   },
 
@@ -14628,18 +14562,6 @@ export const ChannelMessageHeader = {
     if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.attachment !== "") {
-      obj.attachment = message.attachment;
-    }
-    if (message.reference !== "") {
-      obj.reference = message.reference;
-    }
-    if (message.mention !== "") {
-      obj.mention = message.mention;
-    }
-    if (message.reaction !== "") {
-      obj.reaction = message.reaction;
-    }
     return obj;
   },
 
@@ -14652,10 +14574,6 @@ export const ChannelMessageHeader = {
     message.timestamp_seconds = object.timestamp_seconds ?? 0;
     message.sender_id = object.sender_id ?? "";
     message.content = object.content ?? "";
-    message.attachment = object.attachment ?? "";
-    message.reference = object.reference ?? "";
-    message.mention = object.mention ?? "";
-    message.reaction = object.reaction ?? "";
     return message;
   },
 };
@@ -15226,11 +15144,72 @@ export const ChannelDescription = {
 };
 
 function createBaseChannelDescList(): ChannelDescList {
-  return { channeldesc: [], page: 0 };
+  return { channeldesc: [] };
 }
 
 export const ChannelDescList = {
   encode(message: ChannelDescList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.channeldesc) {
+      ChannelDescription.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelDescList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelDescList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channeldesc.push(ChannelDescription.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelDescList {
+    return {
+      channeldesc: globalThis.Array.isArray(object?.channeldesc)
+        ? object.channeldesc.map((e: any) => ChannelDescription.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ChannelDescList): unknown {
+    const obj: any = {};
+    if (message.channeldesc?.length) {
+      obj.channeldesc = message.channeldesc.map((e) => ChannelDescription.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelDescList>, I>>(base?: I): ChannelDescList {
+    return ChannelDescList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ChannelDescList>, I>>(object: I): ChannelDescList {
+    const message = createBaseChannelDescList();
+    message.channeldesc = object.channeldesc?.map((e) => ChannelDescription.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseChannelDescListNoPool(): ChannelDescListNoPool {
+  return { channeldesc: [], page: 0 };
+}
+
+export const ChannelDescListNoPool = {
+  encode(message: ChannelDescListNoPool, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.channeldesc) {
       ChannelDescription.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -15240,10 +15219,10 @@ export const ChannelDescList = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelDescList {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelDescListNoPool {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseChannelDescList();
+    const message = createBaseChannelDescListNoPool();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -15270,7 +15249,7 @@ export const ChannelDescList = {
     return message;
   },
 
-  fromJSON(object: any): ChannelDescList {
+  fromJSON(object: any): ChannelDescListNoPool {
     return {
       channeldesc: globalThis.Array.isArray(object?.channeldesc)
         ? object.channeldesc.map((e: any) => ChannelDescription.fromJSON(e))
@@ -15279,7 +15258,7 @@ export const ChannelDescList = {
     };
   },
 
-  toJSON(message: ChannelDescList): unknown {
+  toJSON(message: ChannelDescListNoPool): unknown {
     const obj: any = {};
     if (message.channeldesc?.length) {
       obj.channeldesc = message.channeldesc.map((e) => ChannelDescription.toJSON(e));
@@ -15290,11 +15269,11 @@ export const ChannelDescList = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ChannelDescList>, I>>(base?: I): ChannelDescList {
-    return ChannelDescList.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<ChannelDescListNoPool>, I>>(base?: I): ChannelDescListNoPool {
+    return ChannelDescListNoPool.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ChannelDescList>, I>>(object: I): ChannelDescList {
-    const message = createBaseChannelDescList();
+  fromPartial<I extends Exact<DeepPartial<ChannelDescListNoPool>, I>>(object: I): ChannelDescListNoPool {
+    const message = createBaseChannelDescListNoPool();
     message.channeldesc = object.channeldesc?.map((e) => ChannelDescription.fromPartial(e)) || [];
     message.page = object.page ?? 0;
     return message;
@@ -15706,7 +15685,7 @@ function createBaseCreateChannelDescRequest(): CreateChannelDescRequest {
     parent_id: "",
     channel_id: "",
     category_id: "",
-    type: undefined,
+    type: 0,
     channel_label: "",
     channel_private: 0,
     user_ids: [],
@@ -15728,8 +15707,8 @@ export const CreateChannelDescRequest = {
     if (message.category_id !== "") {
       writer.uint32(34).string(message.category_id);
     }
-    if (message.type !== undefined) {
-      Int32Value.encode({ value: message.type! }, writer.uint32(42).fork()).ldelim();
+    if (message.type !== 0) {
+      writer.uint32(40).int32(message.type);
     }
     if (message.channel_label !== "") {
       writer.uint32(50).string(message.channel_label);
@@ -15782,11 +15761,11 @@ export const CreateChannelDescRequest = {
           message.category_id = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.type = Int32Value.decode(reader, reader.uint32()).value;
+          message.type = reader.int32();
           continue;
         case 6:
           if (tag !== 50) {
@@ -15831,7 +15810,7 @@ export const CreateChannelDescRequest = {
       parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
-      type: isSet(object.type) ? Number(object.type) : undefined,
+      type: isSet(object.type) ? globalThis.Number(object.type) : 0,
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
@@ -15853,8 +15832,8 @@ export const CreateChannelDescRequest = {
     if (message.category_id !== "") {
       obj.category_id = message.category_id;
     }
-    if (message.type !== undefined) {
-      obj.type = message.type;
+    if (message.type !== 0) {
+      obj.type = Math.round(message.type);
     }
     if (message.channel_label !== "") {
       obj.channel_label = message.channel_label;
@@ -15880,7 +15859,7 @@ export const CreateChannelDescRequest = {
     message.parent_id = object.parent_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.category_id = object.category_id ?? "";
-    message.type = object.type ?? undefined;
+    message.type = object.type ?? 0;
     message.channel_label = object.channel_label ?? "";
     message.channel_private = object.channel_private ?? 0;
     message.user_ids = object.user_ids?.map((e) => e) || [];
@@ -17275,10 +17254,10 @@ function createBaseEventManagement(): EventManagement {
     clan_id: "",
     channel_voice_id: "",
     address: "",
-    start_time: undefined,
-    end_time: undefined,
+    start_time_seconds: 0,
+    end_time_seconds: 0,
     user_ids: [],
-    create_time: undefined,
+    create_time_seconds: 0,
     max_permission: 0,
     channel_id: "",
     event_status: 0,
@@ -17320,17 +17299,17 @@ export const EventManagement = {
     if (message.address !== "") {
       writer.uint32(82).string(message.address);
     }
-    if (message.start_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.start_time), writer.uint32(90).fork()).ldelim();
+    if (message.start_time_seconds !== 0) {
+      writer.uint32(88).uint32(message.start_time_seconds);
     }
-    if (message.end_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.end_time), writer.uint32(98).fork()).ldelim();
+    if (message.end_time_seconds !== 0) {
+      writer.uint32(96).uint32(message.end_time_seconds);
     }
     for (const v of message.user_ids) {
       writer.uint32(106).string(v!);
     }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(114).fork()).ldelim();
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(112).uint32(message.create_time_seconds);
     }
     if (message.max_permission !== 0) {
       writer.uint32(120).int32(message.max_permission);
@@ -17431,18 +17410,18 @@ export const EventManagement = {
           message.address = reader.string();
           continue;
         case 11:
-          if (tag !== 90) {
+          if (tag !== 88) {
             break;
           }
 
-          message.start_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.start_time_seconds = reader.uint32();
           continue;
         case 12:
-          if (tag !== 98) {
+          if (tag !== 96) {
             break;
           }
 
-          message.end_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.end_time_seconds = reader.uint32();
           continue;
         case 13:
           if (tag !== 106) {
@@ -17452,11 +17431,11 @@ export const EventManagement = {
           message.user_ids.push(reader.string());
           continue;
         case 14:
-          if (tag !== 114) {
+          if (tag !== 112) {
             break;
           }
 
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.create_time_seconds = reader.uint32();
           continue;
         case 15:
           if (tag !== 120) {
@@ -17521,10 +17500,10 @@ export const EventManagement = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_voice_id: isSet(object.channel_voice_id) ? globalThis.String(object.channel_voice_id) : "",
       address: isSet(object.address) ? globalThis.String(object.address) : "",
-      start_time: isSet(object.start_time) ? fromJsonTimestamp(object.start_time) : undefined,
-      end_time: isSet(object.end_time) ? fromJsonTimestamp(object.end_time) : undefined,
+      start_time_seconds: isSet(object.start_time_seconds) ? globalThis.Number(object.start_time_seconds) : 0,
+      end_time_seconds: isSet(object.end_time_seconds) ? globalThis.Number(object.end_time_seconds) : 0,
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       max_permission: isSet(object.max_permission) ? globalThis.Number(object.max_permission) : 0,
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       event_status: isSet(object.event_status) ? globalThis.Number(object.event_status) : 0,
@@ -17566,17 +17545,17 @@ export const EventManagement = {
     if (message.address !== "") {
       obj.address = message.address;
     }
-    if (message.start_time !== undefined) {
-      obj.start_time = message.start_time.toISOString();
+    if (message.start_time_seconds !== 0) {
+      obj.start_time_seconds = Math.round(message.start_time_seconds);
     }
-    if (message.end_time !== undefined) {
-      obj.end_time = message.end_time.toISOString();
+    if (message.end_time_seconds !== 0) {
+      obj.end_time_seconds = Math.round(message.end_time_seconds);
     }
     if (message.user_ids?.length) {
       obj.user_ids = message.user_ids;
     }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
     if (message.max_permission !== 0) {
       obj.max_permission = Math.round(message.max_permission);
@@ -17614,10 +17593,10 @@ export const EventManagement = {
     message.clan_id = object.clan_id ?? "";
     message.channel_voice_id = object.channel_voice_id ?? "";
     message.address = object.address ?? "";
-    message.start_time = object.start_time ?? undefined;
-    message.end_time = object.end_time ?? undefined;
+    message.start_time_seconds = object.start_time_seconds ?? 0;
+    message.end_time_seconds = object.end_time_seconds ?? 0;
     message.user_ids = object.user_ids?.map((e) => e) || [];
-    message.create_time = object.create_time ?? undefined;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
     message.max_permission = object.max_permission ?? 0;
     message.channel_id = object.channel_id ?? "";
     message.event_status = object.event_status ?? 0;
@@ -17968,9 +17947,8 @@ function createBasePinMessage(): PinMessage {
     content: "",
     username: "",
     avatar: "",
-    create_time: undefined,
     create_time_seconds: 0,
-    attachment: "",
+    attachment: new Uint8Array(0),
   };
 }
 
@@ -17997,14 +17975,11 @@ export const PinMessage = {
     if (message.avatar !== "") {
       writer.uint32(58).string(message.avatar);
     }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(66).fork()).ldelim();
-    }
     if (message.create_time_seconds !== 0) {
-      writer.uint32(72).uint32(message.create_time_seconds);
+      writer.uint32(64).uint32(message.create_time_seconds);
     }
-    if (message.attachment !== "") {
-      writer.uint32(82).string(message.attachment);
+    if (message.attachment.length !== 0) {
+      writer.uint32(74).bytes(message.attachment);
     }
     return writer;
   },
@@ -18066,25 +18041,18 @@ export const PinMessage = {
           message.avatar = reader.string();
           continue;
         case 8:
-          if (tag !== 66) {
-            break;
-          }
-
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-        case 9:
-          if (tag !== 72) {
+          if (tag !== 64) {
             break;
           }
 
           message.create_time_seconds = reader.uint32();
           continue;
-        case 10:
-          if (tag !== 82) {
+        case 9:
+          if (tag !== 74) {
             break;
           }
 
-          message.attachment = reader.string();
+          message.attachment = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -18104,9 +18072,8 @@ export const PinMessage = {
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
-      attachment: isSet(object.attachment) ? globalThis.String(object.attachment) : "",
+      attachment: isSet(object.attachment) ? bytesFromBase64(object.attachment) : new Uint8Array(0),
     };
   },
 
@@ -18133,14 +18100,11 @@ export const PinMessage = {
     if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
-    }
     if (message.create_time_seconds !== 0) {
       obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
-    if (message.attachment !== "") {
-      obj.attachment = message.attachment;
+    if (message.attachment.length !== 0) {
+      obj.attachment = base64FromBytes(message.attachment);
     }
     return obj;
   },
@@ -18157,9 +18121,8 @@ export const PinMessage = {
     message.content = object.content ?? "";
     message.username = object.username ?? "";
     message.avatar = object.avatar ?? "";
-    message.create_time = object.create_time ?? undefined;
     message.create_time_seconds = object.create_time_seconds ?? 0;
-    message.attachment = object.attachment ?? "";
+    message.attachment = object.attachment ?? new Uint8Array(0);
     return message;
   },
 };
@@ -18226,7 +18189,7 @@ export const PinMessagesList = {
 };
 
 function createBaseNotificationUserChannel(): NotificationUserChannel {
-  return { id: "", notification_setting_type: 0, time_mute: undefined, active: 0, channel_id: "" };
+  return { id: "", notification_setting_type: 0, time_mute_seconds: 0, active: 0, channel_id: "" };
 }
 
 export const NotificationUserChannel = {
@@ -18237,8 +18200,8 @@ export const NotificationUserChannel = {
     if (message.notification_setting_type !== 0) {
       writer.uint32(16).int32(message.notification_setting_type);
     }
-    if (message.time_mute !== undefined) {
-      Timestamp.encode(toTimestamp(message.time_mute), writer.uint32(26).fork()).ldelim();
+    if (message.time_mute_seconds !== 0) {
+      writer.uint32(24).uint32(message.time_mute_seconds);
     }
     if (message.active !== 0) {
       writer.uint32(32).int32(message.active);
@@ -18271,11 +18234,11 @@ export const NotificationUserChannel = {
           message.notification_setting_type = reader.int32();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.time_mute = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.time_mute_seconds = reader.uint32();
           continue;
         case 4:
           if (tag !== 32) {
@@ -18306,7 +18269,7 @@ export const NotificationUserChannel = {
       notification_setting_type: isSet(object.notification_setting_type)
         ? globalThis.Number(object.notification_setting_type)
         : 0,
-      time_mute: isSet(object.time_mute) ? fromJsonTimestamp(object.time_mute) : undefined,
+      time_mute_seconds: isSet(object.time_mute_seconds) ? globalThis.Number(object.time_mute_seconds) : 0,
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
     };
@@ -18320,8 +18283,8 @@ export const NotificationUserChannel = {
     if (message.notification_setting_type !== 0) {
       obj.notification_setting_type = Math.round(message.notification_setting_type);
     }
-    if (message.time_mute !== undefined) {
-      obj.time_mute = message.time_mute.toISOString();
+    if (message.time_mute_seconds !== 0) {
+      obj.time_mute_seconds = Math.round(message.time_mute_seconds);
     }
     if (message.active !== 0) {
       obj.active = Math.round(message.active);
@@ -18339,7 +18302,7 @@ export const NotificationUserChannel = {
     const message = createBaseNotificationUserChannel();
     message.id = object.id ?? "";
     message.notification_setting_type = object.notification_setting_type ?? 0;
-    message.time_mute = object.time_mute ?? undefined;
+    message.time_mute_seconds = object.time_mute_seconds ?? 0;
     message.active = object.active ?? 0;
     message.channel_id = object.channel_id ?? "";
     return message;
@@ -20629,8 +20592,8 @@ function createBaseCreateEventRequest(): CreateEventRequest {
     clan_id: "",
     channel_voice_id: "",
     address: "",
-    start_time: undefined,
-    end_time: undefined,
+    start_time_seconds: 0,
+    end_time_seconds: 0,
     event_id: "",
     event_status: 0,
     channel_id: "",
@@ -20663,11 +20626,11 @@ export const CreateEventRequest = {
     if (message.address !== "") {
       writer.uint32(50).string(message.address);
     }
-    if (message.start_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.start_time), writer.uint32(58).fork()).ldelim();
+    if (message.start_time_seconds !== 0) {
+      writer.uint32(56).uint32(message.start_time_seconds);
     }
-    if (message.end_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.end_time), writer.uint32(66).fork()).ldelim();
+    if (message.end_time_seconds !== 0) {
+      writer.uint32(64).uint32(message.end_time_seconds);
     }
     if (message.event_id !== "") {
       writer.uint32(74).string(message.event_id);
@@ -20749,18 +20712,18 @@ export const CreateEventRequest = {
           message.address = reader.string();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.start_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.start_time_seconds = reader.uint32();
           continue;
         case 8:
-          if (tag !== 66) {
+          if (tag !== 64) {
             break;
           }
 
-          message.end_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.end_time_seconds = reader.uint32();
           continue;
         case 9:
           if (tag !== 74) {
@@ -20842,8 +20805,8 @@ export const CreateEventRequest = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_voice_id: isSet(object.channel_voice_id) ? globalThis.String(object.channel_voice_id) : "",
       address: isSet(object.address) ? globalThis.String(object.address) : "",
-      start_time: isSet(object.start_time) ? fromJsonTimestamp(object.start_time) : undefined,
-      end_time: isSet(object.end_time) ? fromJsonTimestamp(object.end_time) : undefined,
+      start_time_seconds: isSet(object.start_time_seconds) ? globalThis.Number(object.start_time_seconds) : 0,
+      end_time_seconds: isSet(object.end_time_seconds) ? globalThis.Number(object.end_time_seconds) : 0,
       event_id: isSet(object.event_id) ? globalThis.String(object.event_id) : "",
       event_status: isSet(object.event_status) ? globalThis.Number(object.event_status) : 0,
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
@@ -20876,11 +20839,11 @@ export const CreateEventRequest = {
     if (message.address !== "") {
       obj.address = message.address;
     }
-    if (message.start_time !== undefined) {
-      obj.start_time = message.start_time.toISOString();
+    if (message.start_time_seconds !== 0) {
+      obj.start_time_seconds = Math.round(message.start_time_seconds);
     }
-    if (message.end_time !== undefined) {
-      obj.end_time = message.end_time.toISOString();
+    if (message.end_time_seconds !== 0) {
+      obj.end_time_seconds = Math.round(message.end_time_seconds);
     }
     if (message.event_id !== "") {
       obj.event_id = message.event_id;
@@ -20923,8 +20886,8 @@ export const CreateEventRequest = {
     message.clan_id = object.clan_id ?? "";
     message.channel_voice_id = object.channel_voice_id ?? "";
     message.address = object.address ?? "";
-    message.start_time = object.start_time ?? undefined;
-    message.end_time = object.end_time ?? undefined;
+    message.start_time_seconds = object.start_time_seconds ?? 0;
+    message.end_time_seconds = object.end_time_seconds ?? 0;
     message.event_id = object.event_id ?? "";
     message.event_status = object.event_status ?? 0;
     message.channel_id = object.channel_id ?? "";
@@ -20948,8 +20911,8 @@ function createBaseUpdateEventRequest(): UpdateEventRequest {
     event_id: "",
     channel_id: "",
     address: "",
-    start_time: undefined,
-    end_time: undefined,
+    start_time_seconds: 0,
+    end_time_seconds: 0,
     clan_id: "",
     creator_id: "",
     channel_voice_id: "",
@@ -20978,11 +20941,11 @@ export const UpdateEventRequest = {
     if (message.address !== "") {
       writer.uint32(50).string(message.address);
     }
-    if (message.start_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.start_time), writer.uint32(58).fork()).ldelim();
+    if (message.start_time_seconds !== 0) {
+      writer.uint32(56).uint32(message.start_time_seconds);
     }
-    if (message.end_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.end_time), writer.uint32(66).fork()).ldelim();
+    if (message.end_time_seconds !== 0) {
+      writer.uint32(64).uint32(message.end_time_seconds);
     }
     if (message.clan_id !== "") {
       writer.uint32(74).string(message.clan_id);
@@ -21052,18 +21015,18 @@ export const UpdateEventRequest = {
           message.address = reader.string();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.start_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.start_time_seconds = reader.uint32();
           continue;
         case 8:
-          if (tag !== 66) {
+          if (tag !== 64) {
             break;
           }
 
-          message.end_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.end_time_seconds = reader.uint32();
           continue;
         case 9:
           if (tag !== 74) {
@@ -21117,8 +21080,8 @@ export const UpdateEventRequest = {
       event_id: isSet(object.event_id) ? globalThis.String(object.event_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       address: isSet(object.address) ? globalThis.String(object.address) : "",
-      start_time: isSet(object.start_time) ? fromJsonTimestamp(object.start_time) : undefined,
-      end_time: isSet(object.end_time) ? fromJsonTimestamp(object.end_time) : undefined,
+      start_time_seconds: isSet(object.start_time_seconds) ? globalThis.Number(object.start_time_seconds) : 0,
+      end_time_seconds: isSet(object.end_time_seconds) ? globalThis.Number(object.end_time_seconds) : 0,
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
       channel_voice_id: isSet(object.channel_voice_id) ? globalThis.String(object.channel_voice_id) : "",
@@ -21147,11 +21110,11 @@ export const UpdateEventRequest = {
     if (message.address !== "") {
       obj.address = message.address;
     }
-    if (message.start_time !== undefined) {
-      obj.start_time = message.start_time.toISOString();
+    if (message.start_time_seconds !== 0) {
+      obj.start_time_seconds = Math.round(message.start_time_seconds);
     }
-    if (message.end_time !== undefined) {
-      obj.end_time = message.end_time.toISOString();
+    if (message.end_time_seconds !== 0) {
+      obj.end_time_seconds = Math.round(message.end_time_seconds);
     }
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
@@ -21182,8 +21145,8 @@ export const UpdateEventRequest = {
     message.event_id = object.event_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.address = object.address ?? "";
-    message.start_time = object.start_time ?? undefined;
-    message.end_time = object.end_time ?? undefined;
+    message.start_time_seconds = object.start_time_seconds ?? 0;
+    message.end_time_seconds = object.end_time_seconds ?? 0;
     message.clan_id = object.clan_id ?? "";
     message.creator_id = object.creator_id ?? "";
     message.channel_voice_id = object.channel_voice_id ?? "";
@@ -23419,7 +23382,7 @@ function createBaseClanSticker(): ClanSticker {
     shortname: "",
     category: "",
     creator_id: "",
-    create_time: undefined,
+    create_time_seconds: 0,
     clan_id: "",
     logo: "",
     clan_name: "",
@@ -23445,8 +23408,8 @@ export const ClanSticker = {
     if (message.creator_id !== "") {
       writer.uint32(42).string(message.creator_id);
     }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(50).fork()).ldelim();
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(48).uint32(message.create_time_seconds);
     }
     if (message.clan_id !== "") {
       writer.uint32(58).string(message.clan_id);
@@ -23509,11 +23472,11 @@ export const ClanSticker = {
           message.creator_id = reader.string();
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.create_time_seconds = reader.uint32();
           continue;
         case 7:
           if (tag !== 58) {
@@ -23566,7 +23529,7 @@ export const ClanSticker = {
       shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
       category: isSet(object.category) ? globalThis.String(object.category) : "",
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
@@ -23592,8 +23555,8 @@ export const ClanSticker = {
     if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
@@ -23623,7 +23586,7 @@ export const ClanSticker = {
     message.shortname = object.shortname ?? "";
     message.category = object.category ?? "";
     message.creator_id = object.creator_id ?? "";
-    message.create_time = object.create_time ?? undefined;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
     message.clan_id = object.clan_id ?? "";
     message.logo = object.logo ?? "";
     message.clan_name = object.clan_name ?? "";
@@ -25802,8 +25765,8 @@ function createBaseApp(): App {
     creator_id: "",
     applogo: "",
     is_shadow: false,
-    disable_time: undefined,
-    create_time: undefined,
+    disable_time_seconds: 0,
+    create_time_seconds: 0,
     token: "",
     role: 0,
     about: "",
@@ -25828,11 +25791,11 @@ export const App = {
     if (message.is_shadow !== false) {
       writer.uint32(40).bool(message.is_shadow);
     }
-    if (message.disable_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.disable_time), writer.uint32(50).fork()).ldelim();
+    if (message.disable_time_seconds !== 0) {
+      writer.uint32(48).uint32(message.disable_time_seconds);
     }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(58).fork()).ldelim();
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(56).uint32(message.create_time_seconds);
     }
     if (message.token !== "") {
       writer.uint32(66).string(message.token);
@@ -25892,18 +25855,18 @@ export const App = {
           message.is_shadow = reader.bool();
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.disable_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.disable_time_seconds = reader.uint32();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.create_time_seconds = reader.uint32();
           continue;
         case 8:
           if (tag !== 66) {
@@ -25949,8 +25912,8 @@ export const App = {
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
       applogo: isSet(object.applogo) ? globalThis.String(object.applogo) : "",
       is_shadow: isSet(object.is_shadow) ? globalThis.Boolean(object.is_shadow) : false,
-      disable_time: isSet(object.disable_time) ? fromJsonTimestamp(object.disable_time) : undefined,
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
+      disable_time_seconds: isSet(object.disable_time_seconds) ? globalThis.Number(object.disable_time_seconds) : 0,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       token: isSet(object.token) ? globalThis.String(object.token) : "",
       role: isSet(object.role) ? globalThis.Number(object.role) : 0,
       about: isSet(object.about) ? globalThis.String(object.about) : "",
@@ -25975,11 +25938,11 @@ export const App = {
     if (message.is_shadow !== false) {
       obj.is_shadow = message.is_shadow;
     }
-    if (message.disable_time !== undefined) {
-      obj.disable_time = message.disable_time.toISOString();
+    if (message.disable_time_seconds !== 0) {
+      obj.disable_time_seconds = Math.round(message.disable_time_seconds);
     }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
     if (message.token !== "") {
       obj.token = message.token;
@@ -26006,8 +25969,8 @@ export const App = {
     message.creator_id = object.creator_id ?? "";
     message.applogo = object.applogo ?? "";
     message.is_shadow = object.is_shadow ?? false;
-    message.disable_time = object.disable_time ?? undefined;
-    message.create_time = object.create_time ?? undefined;
+    message.disable_time_seconds = object.disable_time_seconds ?? 0;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
     message.token = object.token ?? "";
     message.role = object.role ?? 0;
     message.about = object.about ?? "";
@@ -26737,13 +26700,13 @@ export const AppClan = {
 };
 
 function createBaseDeleteChannelMessagesRequest(): DeleteChannelMessagesRequest {
-  return { before: undefined, ids: [] };
+  return { before_seconds: 0, ids: [] };
 }
 
 export const DeleteChannelMessagesRequest = {
   encode(message: DeleteChannelMessagesRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.before !== undefined) {
-      Timestamp.encode(toTimestamp(message.before), writer.uint32(10).fork()).ldelim();
+    if (message.before_seconds !== 0) {
+      writer.uint32(8).uint32(message.before_seconds);
     }
     for (const v of message.ids) {
       writer.uint32(18).string(v!);
@@ -26759,11 +26722,11 @@ export const DeleteChannelMessagesRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.before = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.before_seconds = reader.uint32();
           continue;
         case 2:
           if (tag !== 18) {
@@ -26783,15 +26746,15 @@ export const DeleteChannelMessagesRequest = {
 
   fromJSON(object: any): DeleteChannelMessagesRequest {
     return {
-      before: isSet(object.before) ? fromJsonTimestamp(object.before) : undefined,
+      before_seconds: isSet(object.before_seconds) ? globalThis.Number(object.before_seconds) : 0,
       ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => globalThis.String(e)) : [],
     };
   },
 
   toJSON(message: DeleteChannelMessagesRequest): unknown {
     const obj: any = {};
-    if (message.before !== undefined) {
-      obj.before = message.before.toISOString();
+    if (message.before_seconds !== 0) {
+      obj.before_seconds = Math.round(message.before_seconds);
     }
     if (message.ids?.length) {
       obj.ids = message.ids;
@@ -26804,7 +26767,7 @@ export const DeleteChannelMessagesRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<DeleteChannelMessagesRequest>, I>>(object: I): DeleteChannelMessagesRequest {
     const message = createBaseDeleteChannelMessagesRequest();
-    message.before = object.before ?? undefined;
+    message.before_seconds = object.before_seconds ?? 0;
     message.ids = object.ids?.map((e) => e) || [];
     return message;
   },
@@ -29143,7 +29106,7 @@ function createBaseChannelSettingListRequest(): ChannelSettingListRequest {
     clan_id: "",
     parent_id: "",
     category_id: "",
-    privateChannel: undefined,
+    private_channel: undefined,
     active: undefined,
     status: undefined,
     type: undefined,
@@ -29164,8 +29127,8 @@ export const ChannelSettingListRequest = {
     if (message.category_id !== "") {
       writer.uint32(26).string(message.category_id);
     }
-    if (message.privateChannel !== undefined) {
-      Int32Value.encode({ value: message.privateChannel! }, writer.uint32(34).fork()).ldelim();
+    if (message.private_channel !== undefined) {
+      Int32Value.encode({ value: message.private_channel! }, writer.uint32(34).fork()).ldelim();
     }
     if (message.active !== undefined) {
       Int32Value.encode({ value: message.active! }, writer.uint32(42).fork()).ldelim();
@@ -29221,7 +29184,7 @@ export const ChannelSettingListRequest = {
             break;
           }
 
-          message.privateChannel = Int32Value.decode(reader, reader.uint32()).value;
+          message.private_channel = Int32Value.decode(reader, reader.uint32()).value;
           continue;
         case 5:
           if (tag !== 42) {
@@ -29279,7 +29242,7 @@ export const ChannelSettingListRequest = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
       category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
-      privateChannel: isSet(object.privateChannel) ? Number(object.privateChannel) : undefined,
+      private_channel: isSet(object.private_channel) ? Number(object.private_channel) : undefined,
       active: isSet(object.active) ? Number(object.active) : undefined,
       status: isSet(object.status) ? Number(object.status) : undefined,
       type: isSet(object.type) ? Number(object.type) : undefined,
@@ -29300,8 +29263,8 @@ export const ChannelSettingListRequest = {
     if (message.category_id !== "") {
       obj.category_id = message.category_id;
     }
-    if (message.privateChannel !== undefined) {
-      obj.privateChannel = message.privateChannel;
+    if (message.private_channel !== undefined) {
+      obj.private_channel = message.private_channel;
     }
     if (message.active !== undefined) {
       obj.active = message.active;
@@ -29332,7 +29295,7 @@ export const ChannelSettingListRequest = {
     message.clan_id = object.clan_id ?? "";
     message.parent_id = object.parent_id ?? "";
     message.category_id = object.category_id ?? "";
-    message.privateChannel = object.privateChannel ?? undefined;
+    message.private_channel = object.private_channel ?? undefined;
     message.active = object.active ?? undefined;
     message.status = object.status ?? undefined;
     message.type = object.type ?? undefined;
@@ -30200,8 +30163,8 @@ function createBaseChannelCanvasItem(): ChannelCanvasItem {
     is_default: false,
     content: "",
     creator_id: "",
-    update_time: undefined,
-    create_time: undefined,
+    update_time_seconds: 0,
+    create_time_seconds: 0,
   };
 }
 
@@ -30222,11 +30185,11 @@ export const ChannelCanvasItem = {
     if (message.creator_id !== "") {
       writer.uint32(42).string(message.creator_id);
     }
-    if (message.update_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(50).fork()).ldelim();
+    if (message.update_time_seconds !== 0) {
+      writer.uint32(48).uint32(message.update_time_seconds);
     }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(58).fork()).ldelim();
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(56).uint32(message.create_time_seconds);
     }
     return writer;
   },
@@ -30274,18 +30237,18 @@ export const ChannelCanvasItem = {
           message.creator_id = reader.string();
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.update_time_seconds = reader.uint32();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.create_time_seconds = reader.uint32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -30303,8 +30266,8 @@ export const ChannelCanvasItem = {
       is_default: isSet(object.is_default) ? globalThis.Boolean(object.is_default) : false,
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
+      update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
     };
   },
 
@@ -30325,11 +30288,11 @@ export const ChannelCanvasItem = {
     if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
-    if (message.update_time !== undefined) {
-      obj.update_time = message.update_time.toISOString();
+    if (message.update_time_seconds !== 0) {
+      obj.update_time_seconds = Math.round(message.update_time_seconds);
     }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
     return obj;
   },
@@ -30344,8 +30307,8 @@ export const ChannelCanvasItem = {
     message.is_default = object.is_default ?? false;
     message.content = object.content ?? "";
     message.creator_id = object.creator_id ?? "";
-    message.update_time = object.update_time ?? undefined;
-    message.create_time = object.create_time ?? undefined;
+    message.update_time_seconds = object.update_time_seconds ?? 0;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
     return message;
   },
 };
@@ -31008,8 +30971,8 @@ function createBaseUserActivity(): UserActivity {
     activity_name: "",
     activity_type: 0,
     activity_description: "",
-    start_time: undefined,
-    end_time: undefined,
+    start_time_seconds: 0,
+    end_time_seconds: 0,
     application_id: "",
     status: 0,
   };
@@ -31029,11 +30992,11 @@ export const UserActivity = {
     if (message.activity_description !== "") {
       writer.uint32(34).string(message.activity_description);
     }
-    if (message.start_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.start_time), writer.uint32(42).fork()).ldelim();
+    if (message.start_time_seconds !== 0) {
+      writer.uint32(40).uint32(message.start_time_seconds);
     }
-    if (message.end_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.end_time), writer.uint32(50).fork()).ldelim();
+    if (message.end_time_seconds !== 0) {
+      writer.uint32(48).uint32(message.end_time_seconds);
     }
     if (message.application_id !== "") {
       writer.uint32(58).string(message.application_id);
@@ -31080,18 +31043,18 @@ export const UserActivity = {
           message.activity_description = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.start_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.start_time_seconds = reader.uint32();
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.end_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.end_time_seconds = reader.uint32();
           continue;
         case 7:
           if (tag !== 58) {
@@ -31122,8 +31085,8 @@ export const UserActivity = {
       activity_name: isSet(object.activity_name) ? globalThis.String(object.activity_name) : "",
       activity_type: isSet(object.activity_type) ? globalThis.Number(object.activity_type) : 0,
       activity_description: isSet(object.activity_description) ? globalThis.String(object.activity_description) : "",
-      start_time: isSet(object.start_time) ? fromJsonTimestamp(object.start_time) : undefined,
-      end_time: isSet(object.end_time) ? fromJsonTimestamp(object.end_time) : undefined,
+      start_time_seconds: isSet(object.start_time_seconds) ? globalThis.Number(object.start_time_seconds) : 0,
+      end_time_seconds: isSet(object.end_time_seconds) ? globalThis.Number(object.end_time_seconds) : 0,
       application_id: isSet(object.application_id) ? globalThis.String(object.application_id) : "",
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
     };
@@ -31143,11 +31106,11 @@ export const UserActivity = {
     if (message.activity_description !== "") {
       obj.activity_description = message.activity_description;
     }
-    if (message.start_time !== undefined) {
-      obj.start_time = message.start_time.toISOString();
+    if (message.start_time_seconds !== 0) {
+      obj.start_time_seconds = Math.round(message.start_time_seconds);
     }
-    if (message.end_time !== undefined) {
-      obj.end_time = message.end_time.toISOString();
+    if (message.end_time_seconds !== 0) {
+      obj.end_time_seconds = Math.round(message.end_time_seconds);
     }
     if (message.application_id !== "") {
       obj.application_id = message.application_id;
@@ -31167,8 +31130,8 @@ export const UserActivity = {
     message.activity_name = object.activity_name ?? "";
     message.activity_type = object.activity_type ?? 0;
     message.activity_description = object.activity_description ?? "";
-    message.start_time = object.start_time ?? undefined;
-    message.end_time = object.end_time ?? undefined;
+    message.start_time_seconds = object.start_time_seconds ?? 0;
+    message.end_time_seconds = object.end_time_seconds ?? 0;
     message.application_id = object.application_id ?? "";
     message.status = object.status ?? 0;
     return message;
@@ -31241,7 +31204,7 @@ function createBaseCreateActivityRequest(): CreateActivityRequest {
     activity_name: "",
     activity_type: 0,
     activity_description: "",
-    start_time: undefined,
+    start_time_seconds: 0,
     application_id: "",
     status: 0,
   };
@@ -31258,8 +31221,8 @@ export const CreateActivityRequest = {
     if (message.activity_description !== "") {
       writer.uint32(26).string(message.activity_description);
     }
-    if (message.start_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.start_time), writer.uint32(34).fork()).ldelim();
+    if (message.start_time_seconds !== 0) {
+      writer.uint32(32).uint32(message.start_time_seconds);
     }
     if (message.application_id !== "") {
       writer.uint32(42).string(message.application_id);
@@ -31299,11 +31262,11 @@ export const CreateActivityRequest = {
           message.activity_description = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.start_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.start_time_seconds = reader.uint32();
           continue;
         case 5:
           if (tag !== 42) {
@@ -31333,7 +31296,7 @@ export const CreateActivityRequest = {
       activity_name: isSet(object.activity_name) ? globalThis.String(object.activity_name) : "",
       activity_type: isSet(object.activity_type) ? globalThis.Number(object.activity_type) : 0,
       activity_description: isSet(object.activity_description) ? globalThis.String(object.activity_description) : "",
-      start_time: isSet(object.start_time) ? fromJsonTimestamp(object.start_time) : undefined,
+      start_time_seconds: isSet(object.start_time_seconds) ? globalThis.Number(object.start_time_seconds) : 0,
       application_id: isSet(object.application_id) ? globalThis.String(object.application_id) : "",
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
     };
@@ -31350,8 +31313,8 @@ export const CreateActivityRequest = {
     if (message.activity_description !== "") {
       obj.activity_description = message.activity_description;
     }
-    if (message.start_time !== undefined) {
-      obj.start_time = message.start_time.toISOString();
+    if (message.start_time_seconds !== 0) {
+      obj.start_time_seconds = Math.round(message.start_time_seconds);
     }
     if (message.application_id !== "") {
       obj.application_id = message.application_id;
@@ -31370,7 +31333,7 @@ export const CreateActivityRequest = {
     message.activity_name = object.activity_name ?? "";
     message.activity_type = object.activity_type ?? 0;
     message.activity_description = object.activity_description ?? "";
-    message.start_time = object.start_time ?? undefined;
+    message.start_time_seconds = object.start_time_seconds ?? 0;
     message.application_id = object.application_id ?? "";
     message.status = object.status ?? 0;
     return message;
@@ -31378,7 +31341,7 @@ export const CreateActivityRequest = {
 };
 
 function createBaseLoginIDResponse(): LoginIDResponse {
-  return { login_id: "", status: 0, create_time_second: 0, platform: "", user_id: 0, username: "", address: "" };
+  return { login_id: "", status: 0, create_time_seconds: 0, platform: "", user_id: 0, username: "", address: "" };
 }
 
 export const LoginIDResponse = {
@@ -31389,8 +31352,8 @@ export const LoginIDResponse = {
     if (message.status !== 0) {
       writer.uint32(16).int32(message.status);
     }
-    if (message.create_time_second !== 0) {
-      writer.uint32(24).int64(message.create_time_second);
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(24).int64(message.create_time_seconds);
     }
     if (message.platform !== "") {
       writer.uint32(34).string(message.platform);
@@ -31433,7 +31396,7 @@ export const LoginIDResponse = {
             break;
           }
 
-          message.create_time_second = longToNumber(reader.int64() as Long);
+          message.create_time_seconds = longToNumber(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -31476,7 +31439,7 @@ export const LoginIDResponse = {
     return {
       login_id: isSet(object.login_id) ? globalThis.String(object.login_id) : "",
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
-      create_time_second: isSet(object.create_time_second) ? globalThis.Number(object.create_time_second) : 0,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       platform: isSet(object.platform) ? globalThis.String(object.platform) : "",
       user_id: isSet(object.user_id) ? globalThis.Number(object.user_id) : 0,
       username: isSet(object.username) ? globalThis.String(object.username) : "",
@@ -31492,8 +31455,8 @@ export const LoginIDResponse = {
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
-    if (message.create_time_second !== 0) {
-      obj.create_time_second = Math.round(message.create_time_second);
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
     if (message.platform !== "") {
       obj.platform = message.platform;
@@ -31517,7 +31480,7 @@ export const LoginIDResponse = {
     const message = createBaseLoginIDResponse();
     message.login_id = object.login_id ?? "";
     message.status = object.status ?? 0;
-    message.create_time_second = object.create_time_second ?? 0;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
     message.platform = object.platform ?? "";
     message.user_id = object.user_id ?? 0;
     message.username = object.username ?? "";
@@ -32141,7 +32104,7 @@ function createBaseAuditLog(): AuditLog {
     entity_name: "",
     entity_id: "",
     details: "",
-    time_log: undefined,
+    time_log_seconds: 0,
     channel_id: "",
     channel_label: "",
   };
@@ -32170,8 +32133,8 @@ export const AuditLog = {
     if (message.details !== "") {
       writer.uint32(58).string(message.details);
     }
-    if (message.time_log !== undefined) {
-      Timestamp.encode(toTimestamp(message.time_log), writer.uint32(66).fork()).ldelim();
+    if (message.time_log_seconds !== 0) {
+      writer.uint32(64).uint32(message.time_log_seconds);
     }
     if (message.channel_id !== "") {
       writer.uint32(74).string(message.channel_id);
@@ -32239,11 +32202,11 @@ export const AuditLog = {
           message.details = reader.string();
           continue;
         case 8:
-          if (tag !== 66) {
+          if (tag !== 64) {
             break;
           }
 
-          message.time_log = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.time_log_seconds = reader.uint32();
           continue;
         case 9:
           if (tag !== 74) {
@@ -32277,7 +32240,7 @@ export const AuditLog = {
       entity_name: isSet(object.entity_name) ? globalThis.String(object.entity_name) : "",
       entity_id: isSet(object.entity_id) ? globalThis.String(object.entity_id) : "",
       details: isSet(object.details) ? globalThis.String(object.details) : "",
-      time_log: isSet(object.time_log) ? fromJsonTimestamp(object.time_log) : undefined,
+      time_log_seconds: isSet(object.time_log_seconds) ? globalThis.Number(object.time_log_seconds) : 0,
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
     };
@@ -32306,8 +32269,8 @@ export const AuditLog = {
     if (message.details !== "") {
       obj.details = message.details;
     }
-    if (message.time_log !== undefined) {
-      obj.time_log = message.time_log.toISOString();
+    if (message.time_log_seconds !== 0) {
+      obj.time_log_seconds = Math.round(message.time_log_seconds);
     }
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
@@ -32330,7 +32293,7 @@ export const AuditLog = {
     message.entity_name = object.entity_name ?? "";
     message.entity_id = object.entity_id ?? "";
     message.details = object.details ?? "";
-    message.time_log = object.time_log ?? undefined;
+    message.time_log_seconds = object.time_log_seconds ?? 0;
     message.channel_id = object.channel_id ?? "";
     message.channel_label = object.channel_label ?? "";
     return message;
@@ -32994,8 +32957,8 @@ function createBaseOnboardingItem(): OnboardingItem {
     content: "",
     image_url: "",
     answers: [],
-    create_time: undefined,
-    update_time: undefined,
+    create_time_seconds: 0,
+    update_time_seconds: 0,
   };
 }
 
@@ -33028,11 +32991,11 @@ export const OnboardingItem = {
     for (const v of message.answers) {
       OnboardingAnswer.encode(v!, writer.uint32(74).fork()).ldelim();
     }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(82).fork()).ldelim();
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(80).uint32(message.create_time_seconds);
     }
-    if (message.update_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(90).fork()).ldelim();
+    if (message.update_time_seconds !== 0) {
+      writer.uint32(88).uint32(message.update_time_seconds);
     }
     return writer;
   },
@@ -33108,18 +33071,18 @@ export const OnboardingItem = {
           message.answers.push(OnboardingAnswer.decode(reader, reader.uint32()));
           continue;
         case 10:
-          if (tag !== 82) {
+          if (tag !== 80) {
             break;
           }
 
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.create_time_seconds = reader.uint32();
           continue;
         case 11:
-          if (tag !== 90) {
+          if (tag !== 88) {
             break;
           }
 
-          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.update_time_seconds = reader.uint32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -33143,8 +33106,8 @@ export const OnboardingItem = {
       answers: globalThis.Array.isArray(object?.answers)
         ? object.answers.map((e: any) => OnboardingAnswer.fromJSON(e))
         : [],
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
-      update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
+      update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
     };
   },
 
@@ -33177,11 +33140,11 @@ export const OnboardingItem = {
     if (message.answers?.length) {
       obj.answers = message.answers.map((e) => OnboardingAnswer.toJSON(e));
     }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
-    if (message.update_time !== undefined) {
-      obj.update_time = message.update_time.toISOString();
+    if (message.update_time_seconds !== 0) {
+      obj.update_time_seconds = Math.round(message.update_time_seconds);
     }
     return obj;
   },
@@ -33200,8 +33163,8 @@ export const OnboardingItem = {
     message.content = object.content ?? "";
     message.image_url = object.image_url ?? "";
     message.answers = object.answers?.map((e) => OnboardingAnswer.fromPartial(e)) || [];
-    message.create_time = object.create_time ?? undefined;
-    message.update_time = object.update_time ?? undefined;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
+    message.update_time_seconds = object.update_time_seconds ?? 0;
     return message;
   },
 };
@@ -35145,9 +35108,9 @@ function createBaseSdTopic(): SdTopic {
     clan_id: "",
     channel_id: "",
     status: 0,
-    create_time: undefined,
-    update_time: undefined,
-    message: undefined,
+    create_time_seconds: 0,
+    update_time_seconds: 0,
+    content: "",
     last_sent_message: undefined,
   };
 }
@@ -35172,14 +35135,14 @@ export const SdTopic = {
     if (message.status !== 0) {
       writer.uint32(48).int32(message.status);
     }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(58).fork()).ldelim();
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(56).uint32(message.create_time_seconds);
     }
-    if (message.update_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(66).fork()).ldelim();
+    if (message.update_time_seconds !== 0) {
+      writer.uint32(64).uint32(message.update_time_seconds);
     }
-    if (message.message !== undefined) {
-      ChannelMessage.encode(message.message, writer.uint32(74).fork()).ldelim();
+    if (message.content !== "") {
+      writer.uint32(74).string(message.content);
     }
     if (message.last_sent_message !== undefined) {
       ChannelMessageHeader.encode(message.last_sent_message, writer.uint32(82).fork()).ldelim();
@@ -35237,25 +35200,25 @@ export const SdTopic = {
           message.status = reader.int32();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.create_time_seconds = reader.uint32();
           continue;
         case 8:
-          if (tag !== 66) {
+          if (tag !== 64) {
             break;
           }
 
-          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.update_time_seconds = reader.uint32();
           continue;
         case 9:
           if (tag !== 74) {
             break;
           }
 
-          message.message = ChannelMessage.decode(reader, reader.uint32());
+          message.content = reader.string();
           continue;
         case 10:
           if (tag !== 82) {
@@ -35281,9 +35244,9 @@ export const SdTopic = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
-      update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
-      message: isSet(object.message) ? ChannelMessage.fromJSON(object.message) : undefined,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
+      update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
+      content: isSet(object.content) ? globalThis.String(object.content) : "",
       last_sent_message: isSet(object.last_sent_message)
         ? ChannelMessageHeader.fromJSON(object.last_sent_message)
         : undefined,
@@ -35310,14 +35273,14 @@ export const SdTopic = {
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
-    if (message.update_time !== undefined) {
-      obj.update_time = message.update_time.toISOString();
+    if (message.update_time_seconds !== 0) {
+      obj.update_time_seconds = Math.round(message.update_time_seconds);
     }
-    if (message.message !== undefined) {
-      obj.message = ChannelMessage.toJSON(message.message);
+    if (message.content !== "") {
+      obj.content = message.content;
     }
     if (message.last_sent_message !== undefined) {
       obj.last_sent_message = ChannelMessageHeader.toJSON(message.last_sent_message);
@@ -35336,11 +35299,9 @@ export const SdTopic = {
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.status = object.status ?? 0;
-    message.create_time = object.create_time ?? undefined;
-    message.update_time = object.update_time ?? undefined;
-    message.message = (object.message !== undefined && object.message !== null)
-      ? ChannelMessage.fromPartial(object.message)
-      : undefined;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
+    message.update_time_seconds = object.update_time_seconds ?? 0;
+    message.content = object.content ?? "";
     message.last_sent_message = (object.last_sent_message !== undefined && object.last_sent_message !== null)
       ? ChannelMessageHeader.fromPartial(object.last_sent_message)
       : undefined;
@@ -36176,7 +36137,7 @@ function createBaseMezonOauthClient(): MezonOauthClient {
     client_secret_expires_at: 0,
     client_uri: "",
     contacts: [],
-    created_at: undefined,
+    created_at_seconds: 0,
     frontchannel_logout_session_required: false,
     frontchannel_logout_uri: "",
     grant_types: [],
@@ -36206,7 +36167,7 @@ function createBaseMezonOauthClient(): MezonOauthClient {
     token_endpoint_auth_method: "",
     token_endpoint_auth_signing_alg: "",
     tos_uri: "",
-    updated_at: undefined,
+    updated_at_seconds: 0,
     userinfo_signed_response_alg: "",
   };
 }
@@ -36258,8 +36219,8 @@ export const MezonOauthClient = {
     for (const v of message.contacts) {
       writer.uint32(122).string(v!);
     }
-    if (message.created_at !== undefined) {
-      Timestamp.encode(toTimestamp(message.created_at), writer.uint32(130).fork()).ldelim();
+    if (message.created_at_seconds !== 0) {
+      writer.uint32(128).uint32(message.created_at_seconds);
     }
     if (message.frontchannel_logout_session_required !== false) {
       writer.uint32(136).bool(message.frontchannel_logout_session_required);
@@ -36348,8 +36309,8 @@ export const MezonOauthClient = {
     if (message.tos_uri !== "") {
       writer.uint32(362).string(message.tos_uri);
     }
-    if (message.updated_at !== undefined) {
-      Timestamp.encode(toTimestamp(message.updated_at), writer.uint32(370).fork()).ldelim();
+    if (message.updated_at_seconds !== 0) {
+      writer.uint32(368).uint32(message.updated_at_seconds);
     }
     if (message.userinfo_signed_response_alg !== "") {
       writer.uint32(378).string(message.userinfo_signed_response_alg);
@@ -36470,11 +36431,11 @@ export const MezonOauthClient = {
           message.contacts.push(reader.string());
           continue;
         case 16:
-          if (tag !== 130) {
+          if (tag !== 128) {
             break;
           }
 
-          message.created_at = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.created_at_seconds = reader.uint32();
           continue;
         case 17:
           if (tag !== 136) {
@@ -36680,11 +36641,11 @@ export const MezonOauthClient = {
           message.tos_uri = reader.string();
           continue;
         case 46:
-          if (tag !== 370) {
+          if (tag !== 368) {
             break;
           }
 
-          message.updated_at = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.updated_at_seconds = reader.uint32();
           continue;
         case 47:
           if (tag !== 378) {
@@ -36737,7 +36698,7 @@ export const MezonOauthClient = {
       contacts: globalThis.Array.isArray(object?.contacts)
         ? object.contacts.map((e: any) => globalThis.String(e))
         : [],
-      created_at: isSet(object.created_at) ? fromJsonTimestamp(object.created_at) : undefined,
+      created_at_seconds: isSet(object.created_at_seconds) ? globalThis.Number(object.created_at_seconds) : 0,
       frontchannel_logout_session_required: isSet(object.frontchannel_logout_session_required)
         ? globalThis.Boolean(object.frontchannel_logout_session_required)
         : false,
@@ -36805,7 +36766,7 @@ export const MezonOauthClient = {
         ? globalThis.String(object.token_endpoint_auth_signing_alg)
         : "",
       tos_uri: isSet(object.tos_uri) ? globalThis.String(object.tos_uri) : "",
-      updated_at: isSet(object.updated_at) ? fromJsonTimestamp(object.updated_at) : undefined,
+      updated_at_seconds: isSet(object.updated_at_seconds) ? globalThis.Number(object.updated_at_seconds) : 0,
       userinfo_signed_response_alg: isSet(object.userinfo_signed_response_alg)
         ? globalThis.String(object.userinfo_signed_response_alg)
         : "",
@@ -36859,8 +36820,8 @@ export const MezonOauthClient = {
     if (message.contacts?.length) {
       obj.contacts = message.contacts;
     }
-    if (message.created_at !== undefined) {
-      obj.created_at = message.created_at.toISOString();
+    if (message.created_at_seconds !== 0) {
+      obj.created_at_seconds = Math.round(message.created_at_seconds);
     }
     if (message.frontchannel_logout_session_required !== false) {
       obj.frontchannel_logout_session_required = message.frontchannel_logout_session_required;
@@ -36949,8 +36910,8 @@ export const MezonOauthClient = {
     if (message.tos_uri !== "") {
       obj.tos_uri = message.tos_uri;
     }
-    if (message.updated_at !== undefined) {
-      obj.updated_at = message.updated_at.toISOString();
+    if (message.updated_at_seconds !== 0) {
+      obj.updated_at_seconds = Math.round(message.updated_at_seconds);
     }
     if (message.userinfo_signed_response_alg !== "") {
       obj.userinfo_signed_response_alg = message.userinfo_signed_response_alg;
@@ -36981,7 +36942,7 @@ export const MezonOauthClient = {
     message.client_secret_expires_at = object.client_secret_expires_at ?? 0;
     message.client_uri = object.client_uri ?? "";
     message.contacts = object.contacts?.map((e) => e) || [];
-    message.created_at = object.created_at ?? undefined;
+    message.created_at_seconds = object.created_at_seconds ?? 0;
     message.frontchannel_logout_session_required = object.frontchannel_logout_session_required ?? false;
     message.frontchannel_logout_uri = object.frontchannel_logout_uri ?? "";
     message.grant_types = object.grant_types?.map((e) => e) || [];
@@ -37011,7 +36972,7 @@ export const MezonOauthClient = {
     message.token_endpoint_auth_method = object.token_endpoint_auth_method ?? "";
     message.token_endpoint_auth_signing_alg = object.token_endpoint_auth_signing_alg ?? "";
     message.tos_uri = object.tos_uri ?? "";
-    message.updated_at = object.updated_at ?? undefined;
+    message.updated_at_seconds = object.updated_at_seconds ?? 0;
     message.userinfo_signed_response_alg = object.userinfo_signed_response_alg ?? "";
     return message;
   },
@@ -37366,10 +37327,10 @@ function createBaseMessage2InboxRequest(): Message2InboxRequest {
     clan_id: "",
     avatar: "",
     content: "",
-    mentions: "",
-    attachments: "",
-    reactions: "",
-    references: "",
+    mentions: [],
+    attachments: [],
+    reactions: [],
+    references: [],
   };
 }
 
@@ -37390,17 +37351,17 @@ export const Message2InboxRequest = {
     if (message.content !== "") {
       writer.uint32(42).string(message.content);
     }
-    if (message.mentions !== "") {
-      writer.uint32(50).string(message.mentions);
+    for (const v of message.mentions) {
+      MessageMention.encode(v!, writer.uint32(50).fork()).ldelim();
     }
-    if (message.attachments !== "") {
-      writer.uint32(58).string(message.attachments);
+    for (const v of message.attachments) {
+      MessageAttachment.encode(v!, writer.uint32(58).fork()).ldelim();
     }
-    if (message.reactions !== "") {
-      writer.uint32(66).string(message.reactions);
+    for (const v of message.reactions) {
+      MessageReaction.encode(v!, writer.uint32(66).fork()).ldelim();
     }
-    if (message.references !== "") {
-      writer.uint32(74).string(message.references);
+    for (const v of message.references) {
+      MessageRef.encode(v!, writer.uint32(74).fork()).ldelim();
     }
     return writer;
   },
@@ -37452,28 +37413,28 @@ export const Message2InboxRequest = {
             break;
           }
 
-          message.mentions = reader.string();
+          message.mentions.push(MessageMention.decode(reader, reader.uint32()));
           continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          message.attachments = reader.string();
+          message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
           continue;
         case 8:
           if (tag !== 66) {
             break;
           }
 
-          message.reactions = reader.string();
+          message.reactions.push(MessageReaction.decode(reader, reader.uint32()));
           continue;
         case 9:
           if (tag !== 74) {
             break;
           }
 
-          message.references = reader.string();
+          message.references.push(MessageRef.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -37491,10 +37452,18 @@ export const Message2InboxRequest = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
-      mentions: isSet(object.mentions) ? globalThis.String(object.mentions) : "",
-      attachments: isSet(object.attachments) ? globalThis.String(object.attachments) : "",
-      reactions: isSet(object.reactions) ? globalThis.String(object.reactions) : "",
-      references: isSet(object.references) ? globalThis.String(object.references) : "",
+      mentions: globalThis.Array.isArray(object?.mentions)
+        ? object.mentions.map((e: any) => MessageMention.fromJSON(e))
+        : [],
+      attachments: globalThis.Array.isArray(object?.attachments)
+        ? object.attachments.map((e: any) => MessageAttachment.fromJSON(e))
+        : [],
+      reactions: globalThis.Array.isArray(object?.reactions)
+        ? object.reactions.map((e: any) => MessageReaction.fromJSON(e))
+        : [],
+      references: globalThis.Array.isArray(object?.references)
+        ? object.references.map((e: any) => MessageRef.fromJSON(e))
+        : [],
     };
   },
 
@@ -37515,17 +37484,17 @@ export const Message2InboxRequest = {
     if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.mentions !== "") {
-      obj.mentions = message.mentions;
+    if (message.mentions?.length) {
+      obj.mentions = message.mentions.map((e) => MessageMention.toJSON(e));
     }
-    if (message.attachments !== "") {
-      obj.attachments = message.attachments;
+    if (message.attachments?.length) {
+      obj.attachments = message.attachments.map((e) => MessageAttachment.toJSON(e));
     }
-    if (message.reactions !== "") {
-      obj.reactions = message.reactions;
+    if (message.reactions?.length) {
+      obj.reactions = message.reactions.map((e) => MessageReaction.toJSON(e));
     }
-    if (message.references !== "") {
-      obj.references = message.references;
+    if (message.references?.length) {
+      obj.references = message.references.map((e) => MessageRef.toJSON(e));
     }
     return obj;
   },
@@ -37540,10 +37509,10 @@ export const Message2InboxRequest = {
     message.clan_id = object.clan_id ?? "";
     message.avatar = object.avatar ?? "";
     message.content = object.content ?? "";
-    message.mentions = object.mentions ?? "";
-    message.attachments = object.attachments ?? "";
-    message.reactions = object.reactions ?? "";
-    message.references = object.references ?? "";
+    message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
+    message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
+    message.reactions = object.reactions?.map((e) => MessageReaction.fromPartial(e)) || [];
+    message.references = object.references?.map((e) => MessageRef.fromPartial(e)) || [];
     return message;
   },
 };
@@ -38917,11 +38886,11 @@ function createBaseLogedDevice(): LogedDevice {
   return {
     device_id: "",
     device_name: "",
-    login_at: undefined,
+    login_at_seconds: 0,
     status: 0,
     platform: "",
     ip: "",
-    last_active: undefined,
+    last_active_seconds: 0,
     location: "",
     is_current: false,
   };
@@ -38935,8 +38904,8 @@ export const LogedDevice = {
     if (message.device_name !== "") {
       writer.uint32(18).string(message.device_name);
     }
-    if (message.login_at !== undefined) {
-      Timestamp.encode(toTimestamp(message.login_at), writer.uint32(26).fork()).ldelim();
+    if (message.login_at_seconds !== 0) {
+      writer.uint32(24).uint32(message.login_at_seconds);
     }
     if (message.status !== 0) {
       writer.uint32(32).int32(message.status);
@@ -38947,8 +38916,8 @@ export const LogedDevice = {
     if (message.ip !== "") {
       writer.uint32(50).string(message.ip);
     }
-    if (message.last_active !== undefined) {
-      Timestamp.encode(toTimestamp(message.last_active), writer.uint32(58).fork()).ldelim();
+    if (message.last_active_seconds !== 0) {
+      writer.uint32(56).uint32(message.last_active_seconds);
     }
     if (message.location !== "") {
       writer.uint32(66).string(message.location);
@@ -38981,11 +38950,11 @@ export const LogedDevice = {
           message.device_name = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.login_at = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.login_at_seconds = reader.uint32();
           continue;
         case 4:
           if (tag !== 32) {
@@ -39009,11 +38978,11 @@ export const LogedDevice = {
           message.ip = reader.string();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.last_active = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.last_active_seconds = reader.uint32();
           continue;
         case 8:
           if (tag !== 66) {
@@ -39042,11 +39011,11 @@ export const LogedDevice = {
     return {
       device_id: isSet(object.device_id) ? globalThis.String(object.device_id) : "",
       device_name: isSet(object.device_name) ? globalThis.String(object.device_name) : "",
-      login_at: isSet(object.login_at) ? fromJsonTimestamp(object.login_at) : undefined,
+      login_at_seconds: isSet(object.login_at_seconds) ? globalThis.Number(object.login_at_seconds) : 0,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       platform: isSet(object.platform) ? globalThis.String(object.platform) : "",
       ip: isSet(object.ip) ? globalThis.String(object.ip) : "",
-      last_active: isSet(object.last_active) ? fromJsonTimestamp(object.last_active) : undefined,
+      last_active_seconds: isSet(object.last_active_seconds) ? globalThis.Number(object.last_active_seconds) : 0,
       location: isSet(object.location) ? globalThis.String(object.location) : "",
       is_current: isSet(object.is_current) ? globalThis.Boolean(object.is_current) : false,
     };
@@ -39060,8 +39029,8 @@ export const LogedDevice = {
     if (message.device_name !== "") {
       obj.device_name = message.device_name;
     }
-    if (message.login_at !== undefined) {
-      obj.login_at = message.login_at.toISOString();
+    if (message.login_at_seconds !== 0) {
+      obj.login_at_seconds = Math.round(message.login_at_seconds);
     }
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
@@ -39072,8 +39041,8 @@ export const LogedDevice = {
     if (message.ip !== "") {
       obj.ip = message.ip;
     }
-    if (message.last_active !== undefined) {
-      obj.last_active = message.last_active.toISOString();
+    if (message.last_active_seconds !== 0) {
+      obj.last_active_seconds = Math.round(message.last_active_seconds);
     }
     if (message.location !== "") {
       obj.location = message.location;
@@ -39091,13 +39060,1088 @@ export const LogedDevice = {
     const message = createBaseLogedDevice();
     message.device_id = object.device_id ?? "";
     message.device_name = object.device_name ?? "";
-    message.login_at = object.login_at ?? undefined;
+    message.login_at_seconds = object.login_at_seconds ?? 0;
     message.status = object.status ?? 0;
     message.platform = object.platform ?? "";
     message.ip = object.ip ?? "";
-    message.last_active = object.last_active ?? undefined;
+    message.last_active_seconds = object.last_active_seconds ?? 0;
     message.location = object.location ?? "";
     message.is_current = object.is_current ?? false;
+    return message;
+  },
+};
+
+function createBaseDirectFcmProto(): DirectFcmProto {
+  return {
+    title: "",
+    link: "",
+    content: "",
+    channel_id: "",
+    sender_id: "",
+    avatar: "",
+    clan_id: "",
+    attachment_link: "",
+    display_name: "",
+    create_time_seconds: 0,
+    update_time_seconds: 0,
+    username: "",
+    mention_ids: [],
+    position_s: [],
+    position_e: [],
+    attachment_type: "",
+    has_more_attachment: false,
+    is_mention_role: [],
+    message_id: "",
+  };
+}
+
+export const DirectFcmProto = {
+  encode(message: DirectFcmProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.title !== "") {
+      writer.uint32(10).string(message.title);
+    }
+    if (message.link !== "") {
+      writer.uint32(18).string(message.link);
+    }
+    if (message.content !== "") {
+      writer.uint32(26).string(message.content);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(34).string(message.channel_id);
+    }
+    if (message.sender_id !== "") {
+      writer.uint32(42).string(message.sender_id);
+    }
+    if (message.avatar !== "") {
+      writer.uint32(50).string(message.avatar);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(58).string(message.clan_id);
+    }
+    if (message.attachment_link !== "") {
+      writer.uint32(66).string(message.attachment_link);
+    }
+    if (message.display_name !== "") {
+      writer.uint32(74).string(message.display_name);
+    }
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(80).int32(message.create_time_seconds);
+    }
+    if (message.update_time_seconds !== 0) {
+      writer.uint32(88).int32(message.update_time_seconds);
+    }
+    if (message.username !== "") {
+      writer.uint32(98).string(message.username);
+    }
+    for (const v of message.mention_ids) {
+      writer.uint32(106).string(v!);
+    }
+    writer.uint32(114).fork();
+    for (const v of message.position_s) {
+      writer.int32(v);
+    }
+    writer.ldelim();
+    writer.uint32(122).fork();
+    for (const v of message.position_e) {
+      writer.int32(v);
+    }
+    writer.ldelim();
+    if (message.attachment_type !== "") {
+      writer.uint32(130).string(message.attachment_type);
+    }
+    if (message.has_more_attachment !== false) {
+      writer.uint32(136).bool(message.has_more_attachment);
+    }
+    writer.uint32(146).fork();
+    for (const v of message.is_mention_role) {
+      writer.bool(v);
+    }
+    writer.ldelim();
+    if (message.message_id !== "") {
+      writer.uint32(154).string(message.message_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DirectFcmProto {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDirectFcmProto();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.title = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.link = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.content = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.sender_id = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.avatar = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.attachment_link = reader.string();
+          continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.display_name = reader.string();
+          continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.create_time_seconds = reader.int32();
+          continue;
+        case 11:
+          if (tag !== 88) {
+            break;
+          }
+
+          message.update_time_seconds = reader.int32();
+          continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.username = reader.string();
+          continue;
+        case 13:
+          if (tag !== 106) {
+            break;
+          }
+
+          message.mention_ids.push(reader.string());
+          continue;
+        case 14:
+          if (tag === 112) {
+            message.position_s.push(reader.int32());
+
+            continue;
+          }
+
+          if (tag === 114) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.position_s.push(reader.int32());
+            }
+
+            continue;
+          }
+
+          break;
+        case 15:
+          if (tag === 120) {
+            message.position_e.push(reader.int32());
+
+            continue;
+          }
+
+          if (tag === 122) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.position_e.push(reader.int32());
+            }
+
+            continue;
+          }
+
+          break;
+        case 16:
+          if (tag !== 130) {
+            break;
+          }
+
+          message.attachment_type = reader.string();
+          continue;
+        case 17:
+          if (tag !== 136) {
+            break;
+          }
+
+          message.has_more_attachment = reader.bool();
+          continue;
+        case 18:
+          if (tag === 144) {
+            message.is_mention_role.push(reader.bool());
+
+            continue;
+          }
+
+          if (tag === 146) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.is_mention_role.push(reader.bool());
+            }
+
+            continue;
+          }
+
+          break;
+        case 19:
+          if (tag !== 154) {
+            break;
+          }
+
+          message.message_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DirectFcmProto {
+    return {
+      title: isSet(object.title) ? globalThis.String(object.title) : "",
+      link: isSet(object.link) ? globalThis.String(object.link) : "",
+      content: isSet(object.content) ? globalThis.String(object.content) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
+      avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      attachment_link: isSet(object.attachment_link) ? globalThis.String(object.attachment_link) : "",
+      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
+      update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      mention_ids: globalThis.Array.isArray(object?.mention_ids)
+        ? object.mention_ids.map((e: any) => globalThis.String(e))
+        : [],
+      position_s: globalThis.Array.isArray(object?.position_s)
+        ? object.position_s.map((e: any) => globalThis.Number(e))
+        : [],
+      position_e: globalThis.Array.isArray(object?.position_e)
+        ? object.position_e.map((e: any) => globalThis.Number(e))
+        : [],
+      attachment_type: isSet(object.attachment_type) ? globalThis.String(object.attachment_type) : "",
+      has_more_attachment: isSet(object.has_more_attachment) ? globalThis.Boolean(object.has_more_attachment) : false,
+      is_mention_role: globalThis.Array.isArray(object?.is_mention_role)
+        ? object.is_mention_role.map((e: any) => globalThis.Boolean(e))
+        : [],
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+    };
+  },
+
+  toJSON(message: DirectFcmProto): unknown {
+    const obj: any = {};
+    if (message.title !== "") {
+      obj.title = message.title;
+    }
+    if (message.link !== "") {
+      obj.link = message.link;
+    }
+    if (message.content !== "") {
+      obj.content = message.content;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.sender_id !== "") {
+      obj.sender_id = message.sender_id;
+    }
+    if (message.avatar !== "") {
+      obj.avatar = message.avatar;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.attachment_link !== "") {
+      obj.attachment_link = message.attachment_link;
+    }
+    if (message.display_name !== "") {
+      obj.display_name = message.display_name;
+    }
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
+    }
+    if (message.update_time_seconds !== 0) {
+      obj.update_time_seconds = Math.round(message.update_time_seconds);
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.mention_ids?.length) {
+      obj.mention_ids = message.mention_ids;
+    }
+    if (message.position_s?.length) {
+      obj.position_s = message.position_s.map((e) => Math.round(e));
+    }
+    if (message.position_e?.length) {
+      obj.position_e = message.position_e.map((e) => Math.round(e));
+    }
+    if (message.attachment_type !== "") {
+      obj.attachment_type = message.attachment_type;
+    }
+    if (message.has_more_attachment !== false) {
+      obj.has_more_attachment = message.has_more_attachment;
+    }
+    if (message.is_mention_role?.length) {
+      obj.is_mention_role = message.is_mention_role;
+    }
+    if (message.message_id !== "") {
+      obj.message_id = message.message_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DirectFcmProto>, I>>(base?: I): DirectFcmProto {
+    return DirectFcmProto.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<DirectFcmProto>, I>>(object: I): DirectFcmProto {
+    const message = createBaseDirectFcmProto();
+    message.title = object.title ?? "";
+    message.link = object.link ?? "";
+    message.content = object.content ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.sender_id = object.sender_id ?? "";
+    message.avatar = object.avatar ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.attachment_link = object.attachment_link ?? "";
+    message.display_name = object.display_name ?? "";
+    message.create_time_seconds = object.create_time_seconds ?? 0;
+    message.update_time_seconds = object.update_time_seconds ?? 0;
+    message.username = object.username ?? "";
+    message.mention_ids = object.mention_ids?.map((e) => e) || [];
+    message.position_s = object.position_s?.map((e) => e) || [];
+    message.position_e = object.position_e?.map((e) => e) || [];
+    message.attachment_type = object.attachment_type ?? "";
+    message.has_more_attachment = object.has_more_attachment ?? false;
+    message.is_mention_role = object.is_mention_role?.map((e) => e) || [];
+    message.message_id = object.message_id ?? "";
+    return message;
+  },
+};
+
+function createBaseMessageMentionList(): MessageMentionList {
+  return { mentions: [] };
+}
+
+export const MessageMentionList = {
+  encode(message: MessageMentionList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.mentions) {
+      MessageMention.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MessageMentionList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMessageMentionList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.mentions.push(MessageMention.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MessageMentionList {
+    return {
+      mentions: globalThis.Array.isArray(object?.mentions)
+        ? object.mentions.map((e: any) => MessageMention.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: MessageMentionList): unknown {
+    const obj: any = {};
+    if (message.mentions?.length) {
+      obj.mentions = message.mentions.map((e) => MessageMention.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MessageMentionList>, I>>(base?: I): MessageMentionList {
+    return MessageMentionList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MessageMentionList>, I>>(object: I): MessageMentionList {
+    const message = createBaseMessageMentionList();
+    message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseMessageAttachmentList(): MessageAttachmentList {
+  return { attachments: [] };
+}
+
+export const MessageAttachmentList = {
+  encode(message: MessageAttachmentList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.attachments) {
+      MessageAttachment.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MessageAttachmentList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMessageAttachmentList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MessageAttachmentList {
+    return {
+      attachments: globalThis.Array.isArray(object?.attachments)
+        ? object.attachments.map((e: any) => MessageAttachment.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: MessageAttachmentList): unknown {
+    const obj: any = {};
+    if (message.attachments?.length) {
+      obj.attachments = message.attachments.map((e) => MessageAttachment.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MessageAttachmentList>, I>>(base?: I): MessageAttachmentList {
+    return MessageAttachmentList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MessageAttachmentList>, I>>(object: I): MessageAttachmentList {
+    const message = createBaseMessageAttachmentList();
+    message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseMessageRefList(): MessageRefList {
+  return { refs: [] };
+}
+
+export const MessageRefList = {
+  encode(message: MessageRefList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.refs) {
+      MessageRef.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MessageRefList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMessageRefList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.refs.push(MessageRef.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MessageRefList {
+    return { refs: globalThis.Array.isArray(object?.refs) ? object.refs.map((e: any) => MessageRef.fromJSON(e)) : [] };
+  },
+
+  toJSON(message: MessageRefList): unknown {
+    const obj: any = {};
+    if (message.refs?.length) {
+      obj.refs = message.refs.map((e) => MessageRef.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MessageRefList>, I>>(base?: I): MessageRefList {
+    return MessageRefList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MessageRefList>, I>>(object: I): MessageRefList {
+    const message = createBaseMessageRefList();
+    message.refs = object.refs?.map((e) => MessageRef.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseMessageReactionList(): MessageReactionList {
+  return { reactions: [] };
+}
+
+export const MessageReactionList = {
+  encode(message: MessageReactionList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.reactions) {
+      MessageReaction.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MessageReactionList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMessageReactionList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.reactions.push(MessageReaction.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MessageReactionList {
+    return {
+      reactions: globalThis.Array.isArray(object?.reactions)
+        ? object.reactions.map((e: any) => MessageReaction.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: MessageReactionList): unknown {
+    const obj: any = {};
+    if (message.reactions?.length) {
+      obj.reactions = message.reactions.map((e) => MessageReaction.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MessageReactionList>, I>>(base?: I): MessageReactionList {
+    return MessageReactionList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MessageReactionList>, I>>(object: I): MessageReactionList {
+    const message = createBaseMessageReactionList();
+    message.reactions = object.reactions?.map((e) => MessageReaction.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseListClanBadgeCountRequest(): ListClanBadgeCountRequest {
+  return { clan_id: "" };
+}
+
+export const ListClanBadgeCountRequest = {
+  encode(message: ListClanBadgeCountRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListClanBadgeCountRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListClanBadgeCountRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListClanBadgeCountRequest {
+    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+  },
+
+  toJSON(message: ListClanBadgeCountRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListClanBadgeCountRequest>, I>>(base?: I): ListClanBadgeCountRequest {
+    return ListClanBadgeCountRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListClanBadgeCountRequest>, I>>(object: I): ListClanBadgeCountRequest {
+    const message = createBaseListClanBadgeCountRequest();
+    message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
+function createBaseListClanBadgeCountResponse(): ListClanBadgeCountResponse {
+  return { badge_count: 0 };
+}
+
+export const ListClanBadgeCountResponse = {
+  encode(message: ListClanBadgeCountResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.badge_count !== 0) {
+      writer.uint32(8).int32(message.badge_count);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListClanBadgeCountResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListClanBadgeCountResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.badge_count = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListClanBadgeCountResponse {
+    return { badge_count: isSet(object.badge_count) ? globalThis.Number(object.badge_count) : 0 };
+  },
+
+  toJSON(message: ListClanBadgeCountResponse): unknown {
+    const obj: any = {};
+    if (message.badge_count !== 0) {
+      obj.badge_count = Math.round(message.badge_count);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListClanBadgeCountResponse>, I>>(base?: I): ListClanBadgeCountResponse {
+    return ListClanBadgeCountResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListClanBadgeCountResponse>, I>>(object: I): ListClanBadgeCountResponse {
+    const message = createBaseListClanBadgeCountResponse();
+    message.badge_count = object.badge_count ?? 0;
+    return message;
+  },
+};
+
+function createBaseClanDiscover(): ClanDiscover {
+  return {
+    clan_id: "",
+    clan_name: "",
+    invite_id: "",
+    clan_logo: "",
+    online_members: 0,
+    total_members: 0,
+    verified: false,
+    description: "",
+    banner: "",
+    about: "",
+    short_url: "",
+    create_time_seconds: 0,
+  };
+}
+
+export const ClanDiscover = {
+  encode(message: ClanDiscover, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.clan_name !== "") {
+      writer.uint32(18).string(message.clan_name);
+    }
+    if (message.invite_id !== "") {
+      writer.uint32(26).string(message.invite_id);
+    }
+    if (message.clan_logo !== "") {
+      writer.uint32(34).string(message.clan_logo);
+    }
+    if (message.online_members !== 0) {
+      writer.uint32(40).int32(message.online_members);
+    }
+    if (message.total_members !== 0) {
+      writer.uint32(48).int32(message.total_members);
+    }
+    if (message.verified !== false) {
+      writer.uint32(56).bool(message.verified);
+    }
+    if (message.description !== "") {
+      writer.uint32(66).string(message.description);
+    }
+    if (message.banner !== "") {
+      writer.uint32(74).string(message.banner);
+    }
+    if (message.about !== "") {
+      writer.uint32(82).string(message.about);
+    }
+    if (message.short_url !== "") {
+      writer.uint32(90).string(message.short_url);
+    }
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(96).uint32(message.create_time_seconds);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanDiscover {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanDiscover();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.clan_name = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.invite_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.clan_logo = reader.string();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.online_members = reader.int32();
+          continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.total_members = reader.int32();
+          continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.verified = reader.bool();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.description = reader.string();
+          continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.banner = reader.string();
+          continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.about = reader.string();
+          continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.short_url = reader.string();
+          continue;
+        case 12:
+          if (tag !== 96) {
+            break;
+          }
+
+          message.create_time_seconds = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanDiscover {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
+      invite_id: isSet(object.invite_id) ? globalThis.String(object.invite_id) : "",
+      clan_logo: isSet(object.clan_logo) ? globalThis.String(object.clan_logo) : "",
+      online_members: isSet(object.online_members) ? globalThis.Number(object.online_members) : 0,
+      total_members: isSet(object.total_members) ? globalThis.Number(object.total_members) : 0,
+      verified: isSet(object.verified) ? globalThis.Boolean(object.verified) : false,
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      banner: isSet(object.banner) ? globalThis.String(object.banner) : "",
+      about: isSet(object.about) ? globalThis.String(object.about) : "",
+      short_url: isSet(object.short_url) ? globalThis.String(object.short_url) : "",
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
+    };
+  },
+
+  toJSON(message: ClanDiscover): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.clan_name !== "") {
+      obj.clan_name = message.clan_name;
+    }
+    if (message.invite_id !== "") {
+      obj.invite_id = message.invite_id;
+    }
+    if (message.clan_logo !== "") {
+      obj.clan_logo = message.clan_logo;
+    }
+    if (message.online_members !== 0) {
+      obj.online_members = Math.round(message.online_members);
+    }
+    if (message.total_members !== 0) {
+      obj.total_members = Math.round(message.total_members);
+    }
+    if (message.verified !== false) {
+      obj.verified = message.verified;
+    }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.banner !== "") {
+      obj.banner = message.banner;
+    }
+    if (message.about !== "") {
+      obj.about = message.about;
+    }
+    if (message.short_url !== "") {
+      obj.short_url = message.short_url;
+    }
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanDiscover>, I>>(base?: I): ClanDiscover {
+    return ClanDiscover.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ClanDiscover>, I>>(object: I): ClanDiscover {
+    const message = createBaseClanDiscover();
+    message.clan_id = object.clan_id ?? "";
+    message.clan_name = object.clan_name ?? "";
+    message.invite_id = object.invite_id ?? "";
+    message.clan_logo = object.clan_logo ?? "";
+    message.online_members = object.online_members ?? 0;
+    message.total_members = object.total_members ?? 0;
+    message.verified = object.verified ?? false;
+    message.description = object.description ?? "";
+    message.banner = object.banner ?? "";
+    message.about = object.about ?? "";
+    message.short_url = object.short_url ?? "";
+    message.create_time_seconds = object.create_time_seconds ?? 0;
+    return message;
+  },
+};
+
+function createBaseListClanDiscover(): ListClanDiscover {
+  return { clan_discover: [], page_number: 0, page_count: 0 };
+}
+
+export const ListClanDiscover = {
+  encode(message: ListClanDiscover, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.clan_discover) {
+      ClanDiscover.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.page_number !== 0) {
+      writer.uint32(16).int32(message.page_number);
+    }
+    if (message.page_count !== 0) {
+      writer.uint32(24).int32(message.page_count);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListClanDiscover {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListClanDiscover();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_discover.push(ClanDiscover.decode(reader, reader.uint32()));
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.page_number = reader.int32();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.page_count = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListClanDiscover {
+    return {
+      clan_discover: globalThis.Array.isArray(object?.clan_discover)
+        ? object.clan_discover.map((e: any) => ClanDiscover.fromJSON(e))
+        : [],
+      page_number: isSet(object.page_number) ? globalThis.Number(object.page_number) : 0,
+      page_count: isSet(object.page_count) ? globalThis.Number(object.page_count) : 0,
+    };
+  },
+
+  toJSON(message: ListClanDiscover): unknown {
+    const obj: any = {};
+    if (message.clan_discover?.length) {
+      obj.clan_discover = message.clan_discover.map((e) => ClanDiscover.toJSON(e));
+    }
+    if (message.page_number !== 0) {
+      obj.page_number = Math.round(message.page_number);
+    }
+    if (message.page_count !== 0) {
+      obj.page_count = Math.round(message.page_count);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListClanDiscover>, I>>(base?: I): ListClanDiscover {
+    return ListClanDiscover.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListClanDiscover>, I>>(object: I): ListClanDiscover {
+    const message = createBaseListClanDiscover();
+    message.clan_discover = object.clan_discover?.map((e) => ClanDiscover.fromPartial(e)) || [];
+    message.page_number = object.page_number ?? 0;
+    message.page_count = object.page_count ?? 0;
     return message;
   },
 };
@@ -39138,28 +40182,6 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
-
-function toTimestamp(date: Date): Timestamp {
-  const seconds = Math.trunc(date.getTime() / 1_000);
-  const nanos = (date.getTime() % 1_000) * 1_000_000;
-  return { seconds, nanos };
-}
-
-function fromTimestamp(t: Timestamp): Date {
-  let millis = (t.seconds || 0) * 1_000;
-  millis += (t.nanos || 0) / 1_000_000;
-  return new globalThis.Date(millis);
-}
-
-function fromJsonTimestamp(o: any): Date {
-  if (o instanceof globalThis.Date) {
-    return o;
-  } else if (typeof o === "string") {
-    return new globalThis.Date(o);
-  } else {
-    return fromTimestamp(Timestamp.fromJSON(o));
-  }
-}
 
 function longToNumber(long: Long): number {
   if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
