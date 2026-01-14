@@ -56,42 +56,68 @@ export function safeJSONParse(jsonStr: string) {
 }
 
 export function decodeMentions(data: any) {
-  const buffer: ArrayBuffer = data;
-  const uintBuffer: Uint8Array = new Uint8Array(buffer);
-  const mentions = tsproto.MessageMentionList.decode(uintBuffer);
-
-  return mentions;
+  try {
+    const buffer: ArrayBuffer = data;
+    const uintBuffer: Uint8Array = new Uint8Array(buffer);
+    const mentions = tsproto.MessageMentionList.decode(uintBuffer);
+    return mentions;
+  } catch (error) {
+    console.error('Failed to decode mentions:', error);
+    console.error(data, 'data');
+    return undefined;
+  }
 }
 
 export function decodeAttachments(data: any) {
-  const buffer: ArrayBuffer = data;
-  const uintBuffer: Uint8Array = new Uint8Array(buffer);
-  const attachments = tsproto.MessageAttachmentList.decode(uintBuffer);
-
-  return attachments;
+  try {
+    const buffer: ArrayBuffer = data;
+    const uintBuffer: Uint8Array = new Uint8Array(buffer);
+    const attachments = tsproto.MessageAttachmentList.decode(uintBuffer);
+    return attachments;
+  } catch (error) {
+    console.error('Failed to decode attachments:', error);
+    console.error(data, 'data');
+    
+    return undefined;
+  }
 }
 
 export function decodeRefs(data: any) {
-  const buffer: ArrayBuffer = data;
-  const uintBuffer: Uint8Array = new Uint8Array(buffer);
-  const refs = tsproto.MessageRefList.decode(uintBuffer);
-
-  return refs;
+  try {
+    const buffer: ArrayBuffer = data;
+    const uintBuffer: Uint8Array = new Uint8Array(buffer);
+    const refs = tsproto.MessageRefList.decode(uintBuffer);
+    return refs;
+  } catch (error) {
+    console.error('Failed to decode refs:', error);
+    console.error(data, 'data');
+    return undefined;
+  }
 }
 
 export function decodeReactions(data: any) {
-  const buffer: ArrayBuffer = data;
-  const uintBuffer: Uint8Array = new Uint8Array(buffer);
-  const reactions = tsproto.MessageReactionList.decode(uintBuffer);
-  return reactions;
+  try {
+    const buffer: ArrayBuffer = data;
+    const uintBuffer: Uint8Array = new Uint8Array(buffer);
+    const reactions = tsproto.MessageReactionList.decode(uintBuffer);
+    return reactions;
+  } catch (error) {
+    console.error('Failed to decode reactions:', error);
+    console.error(data, 'data');
+    return undefined;
+  }
 }
 
 export function decodeNotificationFcm(data: any) {
-  const buffer: ArrayBuffer = data;
-  const uintBuffer: Uint8Array = new Uint8Array(buffer);
-  const noti = tsproto.DirectFcmProto.decode(uintBuffer);
-
-  return noti;
+  try {
+    const buffer: ArrayBuffer = data;
+    const uintBuffer: Uint8Array = new Uint8Array(buffer);
+    const noti = tsproto.DirectFcmProto.decode(uintBuffer);
+    return noti;
+  } catch (error) {
+    console.error('Failed to decode notification FCM:', error);
+    return undefined;
+  }
 }
 
 export function encodeAttachments(data: tsproto.MessageAttachmentList) {

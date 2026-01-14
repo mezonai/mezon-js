@@ -7416,7 +7416,7 @@ export class MezonApi {
           return {} as ApiInviteUserRes;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.Session.decode(new Uint8Array(buffer)) as unknown as ApiInviteUserRes;
+          return tsproto.InviteUserRes.decode(new Uint8Array(buffer)) as unknown as ApiInviteUserRes;
         } else {
           throw response;
         }
