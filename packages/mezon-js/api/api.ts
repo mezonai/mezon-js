@@ -3799,6 +3799,12 @@ export interface ListClanDiscover {
   page_count: number;
 }
 
+export interface GenerateMeetTokenExternalResponse {
+  token: string;
+  guest_user_id: string;
+  guest_access_token: string;
+}
+
 function createBaseAccount(): Account {
   return {
     user: undefined,
@@ -40142,6 +40148,99 @@ export const ListClanDiscover = {
     message.clan_discover = object.clan_discover?.map((e) => ClanDiscover.fromPartial(e)) || [];
     message.page_number = object.page_number ?? 0;
     message.page_count = object.page_count ?? 0;
+    return message;
+  },
+};
+
+function createBaseGenerateMeetTokenExternalResponse(): GenerateMeetTokenExternalResponse {
+  return { token: "", guest_user_id: "", guest_access_token: "" };
+}
+
+export const GenerateMeetTokenExternalResponse = {
+  encode(message: GenerateMeetTokenExternalResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.token !== "") {
+      writer.uint32(10).string(message.token);
+    }
+    if (message.guest_user_id !== "") {
+      writer.uint32(18).string(message.guest_user_id);
+    }
+    if (message.guest_access_token !== "") {
+      writer.uint32(26).string(message.guest_access_token);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): GenerateMeetTokenExternalResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGenerateMeetTokenExternalResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.token = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.guest_user_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.guest_access_token = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GenerateMeetTokenExternalResponse {
+    return {
+      token: isSet(object.token) ? globalThis.String(object.token) : "",
+      guest_user_id: isSet(object.guest_user_id) ? globalThis.String(object.guest_user_id) : "",
+      guest_access_token: isSet(object.guest_access_token) ? globalThis.String(object.guest_access_token) : "",
+    };
+  },
+
+  toJSON(message: GenerateMeetTokenExternalResponse): unknown {
+    const obj: any = {};
+    if (message.token !== "") {
+      obj.token = message.token;
+    }
+    if (message.guest_user_id !== "") {
+      obj.guest_user_id = message.guest_user_id;
+    }
+    if (message.guest_access_token !== "") {
+      obj.guest_access_token = message.guest_access_token;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GenerateMeetTokenExternalResponse>, I>>(
+    base?: I,
+  ): GenerateMeetTokenExternalResponse {
+    return GenerateMeetTokenExternalResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<GenerateMeetTokenExternalResponse>, I>>(
+    object: I,
+  ): GenerateMeetTokenExternalResponse {
+    const message = createBaseGenerateMeetTokenExternalResponse();
+    message.token = object.token ?? "";
+    message.guest_user_id = object.guest_user_id ?? "";
+    message.guest_access_token = object.guest_access_token ?? "";
     return message;
   },
 };
