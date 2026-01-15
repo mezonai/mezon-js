@@ -62,9 +62,7 @@ export function decodeMentions(data: any) {
     const mentions = tsproto.MessageMentionList.decode(uintBuffer);
     return mentions;
   } catch (error) {
-    console.error('Failed to decode mentions:', error);
-    console.error(data, 'data');
-    return undefined;
+    return safeJSONParse(data)
   }
 }
 
@@ -75,10 +73,7 @@ export function decodeAttachments(data: any) {
     const attachments = tsproto.MessageAttachmentList.decode(uintBuffer);
     return attachments;
   } catch (error) {
-    console.error('Failed to decode attachments:', error);
-    console.error(data, 'data');
-    
-    return undefined;
+    return safeJSONParse(data)
   }
 }
 
@@ -89,9 +84,7 @@ export function decodeRefs(data: any) {
     const refs = tsproto.MessageRefList.decode(uintBuffer);
     return refs;
   } catch (error) {
-    console.error('Failed to decode refs:', error);
-    console.error(data, 'data');
-    return undefined;
+    return safeJSONParse(data)
   }
 }
 
@@ -102,9 +95,7 @@ export function decodeReactions(data: any) {
     const reactions = tsproto.MessageReactionList.decode(uintBuffer);
     return reactions;
   } catch (error) {
-    console.error('Failed to decode reactions:', error);
-    console.error(data, 'data');
-    return undefined;
+    return safeJSONParse(data)
   }
 }
 
@@ -115,9 +106,17 @@ export function decodeNotificationFcm(data: any) {
     const noti = tsproto.DirectFcmProto.decode(uintBuffer);
     return noti;
   } catch (error) {
-    console.error('Failed to decode notification FCM:', error);
-    return undefined;
+    return safeJSONParse(data)
   }
+}
+
+export function encodeMentions(data: tsproto.MessageMentionList) {
+  const mentionWriter = tsproto.MessageMentionList.encode(
+    tsproto.MessageMentionList.fromPartial(data)
+  );
+  const encodedMsg = mentionWriter.finish();
+
+  return encodedMsg;
 }
 
 export function encodeAttachments(data: tsproto.MessageAttachmentList) {
@@ -125,6 +124,33 @@ export function encodeAttachments(data: tsproto.MessageAttachmentList) {
     tsproto.MessageAttachmentList.fromPartial(data)
   );
   const encodedMsg = attachmentWriter.finish();
+
+  return encodedMsg;
+}
+
+export function encodeRefs(data: tsproto.MessageRefList) {
+  const refsWriter = tsproto.MessageRefList.encode(
+    tsproto.MessageRefList.fromPartial(data)
+  );
+  const encodedMsg = refsWriter.finish();
+
+  return encodedMsg;
+}
+
+export function encodeReactions(data: tsproto.MessageReactionList) {
+  const reactionWriter = tsproto.MessageReactionList.encode(
+    tsproto.MessageReactionList.fromPartial(data)
+  );
+  const encodedMsg = reactionWriter.finish();
+
+  return encodedMsg;
+}
+
+export function encodeNotificationFcm(data: tsproto.DirectFcmProto) {
+ const fcmWriter = tsproto.DirectFcmProto.encode(
+    tsproto.DirectFcmProto.fromPartial(data)
+  );
+  const encodedMsg = fcmWriter.finish();
 
   return encodedMsg;
 }
