@@ -641,7 +641,7 @@ export interface ChannelUserList_ChannelUser {
   /** clan Id */
   clan_id: bigint;
   /** added by */
-  added_by: string;
+  added_by: bigint;
   /** is banned */
   is_banned: boolean;
   /** expired time */
@@ -679,7 +679,7 @@ export interface ChannelAttachment {
   /** url */
   url: string;
   /** uploader */
-  uploader: string;
+  uploader: bigint;
   /** timestamp */
   create_time_seconds: number;
   /** message id. */
@@ -2664,7 +2664,7 @@ export interface SystemMessage {
   /** Setup tips */
   setup_tips: string;
   /** Hide audit log */
-  hide_audit_log: string;
+  hide_audit_log: boolean;
 }
 
 /** List of system message. */
@@ -3208,7 +3208,7 @@ export interface TokenSentEvent {
   /** extra attribute */
   extra_attribute: string;
   /** transaction id */
-  transaction_id: bigint;
+  transaction_id: string;
 }
 
 export interface UnlockItemRequest {
@@ -7732,7 +7732,7 @@ function createBaseChannelUserList_ChannelUser(): ChannelUserList_ChannelUser {
     clan_nick: "",
     clan_avatar: "",
     clan_id: 0n,
-    added_by: "",
+    added_by: 0n,
     is_banned: false,
     expired_ban_time: 0,
   };
@@ -7778,8 +7778,11 @@ export const ChannelUserList_ChannelUser = {
       }
       writer.uint32(56).int64(message.clan_id.toString());
     }
-    if (message.added_by !== "") {
-      writer.uint32(66).string(message.added_by);
+    if (message.added_by !== 0n) {
+      if (BigInt.asIntN(64, message.added_by) !== message.added_by) {
+        throw new globalThis.Error("value provided for field message.added_by of type int64 too large");
+      }
+      writer.uint32(64).int64(message.added_by.toString());
     }
     if (message.is_banned !== false) {
       writer.uint32(72).bool(message.is_banned);
@@ -7857,11 +7860,11 @@ export const ChannelUserList_ChannelUser = {
           message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 8:
-          if (tag !== 66) {
+          if (tag !== 64) {
             break;
           }
 
-          message.added_by = reader.string();
+          message.added_by = longToBigint(reader.int64() as Long);
           continue;
         case 9:
           if (tag !== 72) {
@@ -7895,7 +7898,7 @@ export const ChannelUserList_ChannelUser = {
       clan_nick: isSet(object.clan_nick) ? globalThis.String(object.clan_nick) : "",
       clan_avatar: isSet(object.clan_avatar) ? globalThis.String(object.clan_avatar) : "",
       clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
-      added_by: isSet(object.added_by) ? globalThis.String(object.added_by) : "",
+      added_by: isSet(object.added_by) ? BigInt(object.added_by) : 0n,
       is_banned: isSet(object.is_banned) ? globalThis.Boolean(object.is_banned) : false,
       expired_ban_time: isSet(object.expired_ban_time) ? globalThis.Number(object.expired_ban_time) : 0,
     };
@@ -7924,8 +7927,8 @@ export const ChannelUserList_ChannelUser = {
     if (message.clan_id !== 0n) {
       obj.clan_id = message.clan_id.toString();
     }
-    if (message.added_by !== "") {
-      obj.added_by = message.added_by;
+    if (message.added_by !== 0n) {
+      obj.added_by = message.added_by.toString();
     }
     if (message.is_banned !== false) {
       obj.is_banned = message.is_banned;
@@ -7948,7 +7951,7 @@ export const ChannelUserList_ChannelUser = {
     message.clan_nick = object.clan_nick ?? "";
     message.clan_avatar = object.clan_avatar ?? "";
     message.clan_id = object.clan_id ?? 0n;
-    message.added_by = object.added_by ?? "";
+    message.added_by = object.added_by ?? 0n;
     message.is_banned = object.is_banned ?? false;
     message.expired_ban_time = object.expired_ban_time ?? 0;
     return message;
@@ -8136,7 +8139,7 @@ function createBaseChannelAttachment(): ChannelAttachment {
     filetype: "",
     filesize: "",
     url: "",
-    uploader: "",
+    uploader: 0n,
     create_time_seconds: 0,
     message_id: 0n,
     width: 0,
@@ -8164,8 +8167,11 @@ export const ChannelAttachment = {
     if (message.url !== "") {
       writer.uint32(42).string(message.url);
     }
-    if (message.uploader !== "") {
-      writer.uint32(50).string(message.uploader);
+    if (message.uploader !== 0n) {
+      if (BigInt.asIntN(64, message.uploader) !== message.uploader) {
+        throw new globalThis.Error("value provided for field message.uploader of type int64 too large");
+      }
+      writer.uint32(48).int64(message.uploader.toString());
     }
     if (message.create_time_seconds !== 0) {
       writer.uint32(56).uint32(message.create_time_seconds);
@@ -8228,11 +8234,11 @@ export const ChannelAttachment = {
           message.url = reader.string();
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.uploader = reader.string();
+          message.uploader = longToBigint(reader.int64() as Long);
           continue;
         case 7:
           if (tag !== 56) {
@@ -8278,7 +8284,7 @@ export const ChannelAttachment = {
       filetype: isSet(object.filetype) ? globalThis.String(object.filetype) : "",
       filesize: isSet(object.filesize) ? globalThis.String(object.filesize) : "",
       url: isSet(object.url) ? globalThis.String(object.url) : "",
-      uploader: isSet(object.uploader) ? globalThis.String(object.uploader) : "",
+      uploader: isSet(object.uploader) ? BigInt(object.uploader) : 0n,
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       message_id: isSet(object.message_id) ? BigInt(object.message_id) : 0n,
       width: isSet(object.width) ? globalThis.Number(object.width) : 0,
@@ -8303,8 +8309,8 @@ export const ChannelAttachment = {
     if (message.url !== "") {
       obj.url = message.url;
     }
-    if (message.uploader !== "") {
-      obj.uploader = message.uploader;
+    if (message.uploader !== 0n) {
+      obj.uploader = message.uploader.toString();
     }
     if (message.create_time_seconds !== 0) {
       obj.create_time_seconds = Math.round(message.create_time_seconds);
@@ -8331,7 +8337,7 @@ export const ChannelAttachment = {
     message.filetype = object.filetype ?? "";
     message.filesize = object.filesize ?? "";
     message.url = object.url ?? "";
-    message.uploader = object.uploader ?? "";
+    message.uploader = object.uploader ?? 0n;
     message.create_time_seconds = object.create_time_seconds ?? 0;
     message.message_id = object.message_id ?? 0n;
     message.width = object.width ?? 0;
@@ -28134,7 +28140,7 @@ function createBaseSystemMessage(): SystemMessage {
     welcome_sticker: "",
     boost_message: "",
     setup_tips: "",
-    hide_audit_log: "",
+    hide_audit_log: false,
   };
 }
 
@@ -28170,8 +28176,8 @@ export const SystemMessage = {
     if (message.setup_tips !== "") {
       writer.uint32(58).string(message.setup_tips);
     }
-    if (message.hide_audit_log !== "") {
-      writer.uint32(66).string(message.hide_audit_log);
+    if (message.hide_audit_log !== false) {
+      writer.uint32(64).bool(message.hide_audit_log);
     }
     return writer;
   },
@@ -28233,11 +28239,11 @@ export const SystemMessage = {
           message.setup_tips = reader.string();
           continue;
         case 8:
-          if (tag !== 66) {
+          if (tag !== 64) {
             break;
           }
 
-          message.hide_audit_log = reader.string();
+          message.hide_audit_log = reader.bool();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -28257,7 +28263,7 @@ export const SystemMessage = {
       welcome_sticker: isSet(object.welcome_sticker) ? globalThis.String(object.welcome_sticker) : "",
       boost_message: isSet(object.boost_message) ? globalThis.String(object.boost_message) : "",
       setup_tips: isSet(object.setup_tips) ? globalThis.String(object.setup_tips) : "",
-      hide_audit_log: isSet(object.hide_audit_log) ? globalThis.String(object.hide_audit_log) : "",
+      hide_audit_log: isSet(object.hide_audit_log) ? globalThis.Boolean(object.hide_audit_log) : false,
     };
   },
 
@@ -28284,7 +28290,7 @@ export const SystemMessage = {
     if (message.setup_tips !== "") {
       obj.setup_tips = message.setup_tips;
     }
-    if (message.hide_audit_log !== "") {
+    if (message.hide_audit_log !== false) {
       obj.hide_audit_log = message.hide_audit_log;
     }
     return obj;
@@ -28302,7 +28308,7 @@ export const SystemMessage = {
     message.welcome_sticker = object.welcome_sticker ?? "";
     message.boost_message = object.boost_message ?? "";
     message.setup_tips = object.setup_tips ?? "";
-    message.hide_audit_log = object.hide_audit_log ?? "";
+    message.hide_audit_log = object.hide_audit_log ?? false;
     return message;
   },
 };
@@ -34126,7 +34132,7 @@ function createBaseTokenSentEvent(): TokenSentEvent {
     amount: 0,
     note: "",
     extra_attribute: "",
-    transaction_id: 0n,
+    transaction_id: "",
   };
 }
 
@@ -34156,11 +34162,8 @@ export const TokenSentEvent = {
     if (message.extra_attribute !== "") {
       writer.uint32(50).string(message.extra_attribute);
     }
-    if (message.transaction_id !== 0n) {
-      if (BigInt.asIntN(64, message.transaction_id) !== message.transaction_id) {
-        throw new globalThis.Error("value provided for field message.transaction_id of type int64 too large");
-      }
-      writer.uint32(56).int64(message.transaction_id.toString());
+    if (message.transaction_id !== "") {
+      writer.uint32(58).string(message.transaction_id);
     }
     return writer;
   },
@@ -34215,11 +34218,11 @@ export const TokenSentEvent = {
           message.extra_attribute = reader.string();
           continue;
         case 7:
-          if (tag !== 56) {
+          if (tag !== 58) {
             break;
           }
 
-          message.transaction_id = longToBigint(reader.int64() as Long);
+          message.transaction_id = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -34238,7 +34241,7 @@ export const TokenSentEvent = {
       amount: isSet(object.amount) ? globalThis.Number(object.amount) : 0,
       note: isSet(object.note) ? globalThis.String(object.note) : "",
       extra_attribute: isSet(object.extra_attribute) ? globalThis.String(object.extra_attribute) : "",
-      transaction_id: isSet(object.transaction_id) ? BigInt(object.transaction_id) : 0n,
+      transaction_id: isSet(object.transaction_id) ? globalThis.String(object.transaction_id) : "",
     };
   },
 
@@ -34262,8 +34265,8 @@ export const TokenSentEvent = {
     if (message.extra_attribute !== "") {
       obj.extra_attribute = message.extra_attribute;
     }
-    if (message.transaction_id !== 0n) {
-      obj.transaction_id = message.transaction_id.toString();
+    if (message.transaction_id !== "") {
+      obj.transaction_id = message.transaction_id;
     }
     return obj;
   },
@@ -34279,7 +34282,7 @@ export const TokenSentEvent = {
     message.amount = object.amount ?? 0;
     message.note = object.note ?? "";
     message.extra_attribute = object.extra_attribute ?? "";
-    message.transaction_id = object.transaction_id ?? 0n;
+    message.transaction_id = object.transaction_id ?? "";
     return message;
   },
 };

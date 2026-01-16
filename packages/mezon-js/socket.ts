@@ -536,7 +536,7 @@ export interface ChannelPresenceEvent {
 
 export interface VoiceEndedEvent {
   // id voice
-  id: bigint;
+  id: string;
   // The unique identifier of the chat clan.
   clan_id: bigint;
   // voice channel name
@@ -545,7 +545,7 @@ export interface VoiceEndedEvent {
 
 export interface VoiceStartedEvent {
   // id voice
-  id: bigint;
+  id: string;
   // The unique identifier of the chat clan.
   clan_id: bigint;
   // voice channel name
@@ -554,7 +554,7 @@ export interface VoiceStartedEvent {
 
 export interface VoiceLeavedEvent {
   // event id
-  id: bigint;
+  id: string;
   // clan id
   clan_id: bigint;
   // voice channel name

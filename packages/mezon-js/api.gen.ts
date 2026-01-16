@@ -2650,7 +2650,7 @@ export interface ApiTokenSentEvent {
   //
   extra_attribute?: string;
   //
-  transaction_id?: bigint;
+  transaction_id?: string;
 }
 
 /**  */

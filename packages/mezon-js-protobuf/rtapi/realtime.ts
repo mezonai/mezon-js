@@ -1049,13 +1049,13 @@ export interface MessageTypingEvent {
 /** Voice Joined event */
 export interface VoiceLeavedEvent {
   /** id voice */
-  id: bigint;
+  id: string;
   /** The unique identifier of the chat clan. */
   clan_id: bigint;
   /** voice channel name */
-  voice_channel_id: string;
+  voice_channel_id: bigint;
   /** voice user_id */
-  voice_user_id: string;
+  voice_user_id: bigint;
 }
 
 /** Voice Joined event */
@@ -1065,7 +1065,7 @@ export interface VoiceJoinedEvent {
   /** The channel name */
   clan_name: string;
   /** id voice */
-  id: bigint;
+  id: string;
   /** voice participant */
   participant: string;
   /** user id */
@@ -1073,7 +1073,7 @@ export interface VoiceJoinedEvent {
   /** voice channel label */
   voice_channel_label: string;
   /** voice channel id */
-  voice_channel_id: string;
+  voice_channel_id: bigint;
   /** last screenshot */
   last_screenshot: string;
 }
@@ -1215,7 +1215,7 @@ export interface ClanDeletedEvent {
   /** clan id */
   clan_id: bigint;
   /** deletor */
-  deletor: string;
+  deletor: bigint;
 }
 
 export interface StickerCreateEvent {
@@ -1440,7 +1440,7 @@ export interface ClanUpdatedEvent {
   /** is onboarding */
   is_onboarding: boolean;
   /** welcome channel id */
-  welcome_channel_id: string;
+  welcome_channel_id: bigint;
   /** onboarding_banner. */
   onboarding_banner: string;
   /** community banner */
@@ -1772,8 +1772,8 @@ export interface FcmDataPayload {
   receiver_id: bigint;
   title: string;
   body: Uint8Array;
-  user_role_ids: string[];
-  user_sent_ids: string[];
+  user_role_ids: bigint[];
+  user_sent_ids: bigint[];
   priority: number;
   message: ChannelMessage | undefined;
   is_e2ee: boolean;
@@ -8744,16 +8744,13 @@ export const MessageTypingEvent = {
 };
 
 function createBaseVoiceLeavedEvent(): VoiceLeavedEvent {
-  return { id: 0n, clan_id: 0n, voice_channel_id: "", voice_user_id: "" };
+  return { id: "", clan_id: 0n, voice_channel_id: 0n, voice_user_id: 0n };
 }
 
 export const VoiceLeavedEvent = {
   encode(message: VoiceLeavedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== 0n) {
-      if (BigInt.asIntN(64, message.id) !== message.id) {
-        throw new globalThis.Error("value provided for field message.id of type int64 too large");
-      }
-      writer.uint32(8).int64(message.id.toString());
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
     }
     if (message.clan_id !== 0n) {
       if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
@@ -8761,11 +8758,17 @@ export const VoiceLeavedEvent = {
       }
       writer.uint32(16).int64(message.clan_id.toString());
     }
-    if (message.voice_channel_id !== "") {
-      writer.uint32(26).string(message.voice_channel_id);
+    if (message.voice_channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.voice_channel_id) !== message.voice_channel_id) {
+        throw new globalThis.Error("value provided for field message.voice_channel_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.voice_channel_id.toString());
     }
-    if (message.voice_user_id !== "") {
-      writer.uint32(34).string(message.voice_user_id);
+    if (message.voice_user_id !== 0n) {
+      if (BigInt.asIntN(64, message.voice_user_id) !== message.voice_user_id) {
+        throw new globalThis.Error("value provided for field message.voice_user_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.voice_user_id.toString());
     }
     return writer;
   },
@@ -8778,11 +8781,11 @@ export const VoiceLeavedEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.id = longToBigint(reader.int64() as Long);
+          message.id = reader.string();
           continue;
         case 2:
           if (tag !== 16) {
@@ -8792,18 +8795,18 @@ export const VoiceLeavedEvent = {
           message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.voice_channel_id = reader.string();
+          message.voice_channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.voice_user_id = reader.string();
+          message.voice_user_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -8816,26 +8819,26 @@ export const VoiceLeavedEvent = {
 
   fromJSON(object: any): VoiceLeavedEvent {
     return {
-      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
       clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
-      voice_channel_id: isSet(object.voice_channel_id) ? globalThis.String(object.voice_channel_id) : "",
-      voice_user_id: isSet(object.voice_user_id) ? globalThis.String(object.voice_user_id) : "",
+      voice_channel_id: isSet(object.voice_channel_id) ? BigInt(object.voice_channel_id) : 0n,
+      voice_user_id: isSet(object.voice_user_id) ? BigInt(object.voice_user_id) : 0n,
     };
   },
 
   toJSON(message: VoiceLeavedEvent): unknown {
     const obj: any = {};
-    if (message.id !== 0n) {
-      obj.id = message.id.toString();
+    if (message.id !== "") {
+      obj.id = message.id;
     }
     if (message.clan_id !== 0n) {
       obj.clan_id = message.clan_id.toString();
     }
-    if (message.voice_channel_id !== "") {
-      obj.voice_channel_id = message.voice_channel_id;
+    if (message.voice_channel_id !== 0n) {
+      obj.voice_channel_id = message.voice_channel_id.toString();
     }
-    if (message.voice_user_id !== "") {
-      obj.voice_user_id = message.voice_user_id;
+    if (message.voice_user_id !== 0n) {
+      obj.voice_user_id = message.voice_user_id.toString();
     }
     return obj;
   },
@@ -8845,10 +8848,10 @@ export const VoiceLeavedEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<VoiceLeavedEvent>, I>>(object: I): VoiceLeavedEvent {
     const message = createBaseVoiceLeavedEvent();
-    message.id = object.id ?? 0n;
+    message.id = object.id ?? "";
     message.clan_id = object.clan_id ?? 0n;
-    message.voice_channel_id = object.voice_channel_id ?? "";
-    message.voice_user_id = object.voice_user_id ?? "";
+    message.voice_channel_id = object.voice_channel_id ?? 0n;
+    message.voice_user_id = object.voice_user_id ?? 0n;
     return message;
   },
 };
@@ -8857,11 +8860,11 @@ function createBaseVoiceJoinedEvent(): VoiceJoinedEvent {
   return {
     clan_id: 0n,
     clan_name: "",
-    id: 0n,
+    id: "",
     participant: "",
     user_id: 0n,
     voice_channel_label: "",
-    voice_channel_id: "",
+    voice_channel_id: 0n,
     last_screenshot: "",
   };
 }
@@ -8877,11 +8880,8 @@ export const VoiceJoinedEvent = {
     if (message.clan_name !== "") {
       writer.uint32(18).string(message.clan_name);
     }
-    if (message.id !== 0n) {
-      if (BigInt.asIntN(64, message.id) !== message.id) {
-        throw new globalThis.Error("value provided for field message.id of type int64 too large");
-      }
-      writer.uint32(24).int64(message.id.toString());
+    if (message.id !== "") {
+      writer.uint32(26).string(message.id);
     }
     if (message.participant !== "") {
       writer.uint32(34).string(message.participant);
@@ -8895,8 +8895,11 @@ export const VoiceJoinedEvent = {
     if (message.voice_channel_label !== "") {
       writer.uint32(50).string(message.voice_channel_label);
     }
-    if (message.voice_channel_id !== "") {
-      writer.uint32(58).string(message.voice_channel_id);
+    if (message.voice_channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.voice_channel_id) !== message.voice_channel_id) {
+        throw new globalThis.Error("value provided for field message.voice_channel_id of type int64 too large");
+      }
+      writer.uint32(56).int64(message.voice_channel_id.toString());
     }
     if (message.last_screenshot !== "") {
       writer.uint32(66).string(message.last_screenshot);
@@ -8926,11 +8929,11 @@ export const VoiceJoinedEvent = {
           message.clan_name = reader.string();
           continue;
         case 3:
-          if (tag !== 24) {
+          if (tag !== 26) {
             break;
           }
 
-          message.id = longToBigint(reader.int64() as Long);
+          message.id = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
@@ -8954,11 +8957,11 @@ export const VoiceJoinedEvent = {
           message.voice_channel_label = reader.string();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.voice_channel_id = reader.string();
+          message.voice_channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 8:
           if (tag !== 66) {
@@ -8980,11 +8983,11 @@ export const VoiceJoinedEvent = {
     return {
       clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
-      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
       participant: isSet(object.participant) ? globalThis.String(object.participant) : "",
       user_id: isSet(object.user_id) ? BigInt(object.user_id) : 0n,
       voice_channel_label: isSet(object.voice_channel_label) ? globalThis.String(object.voice_channel_label) : "",
-      voice_channel_id: isSet(object.voice_channel_id) ? globalThis.String(object.voice_channel_id) : "",
+      voice_channel_id: isSet(object.voice_channel_id) ? BigInt(object.voice_channel_id) : 0n,
       last_screenshot: isSet(object.last_screenshot) ? globalThis.String(object.last_screenshot) : "",
     };
   },
@@ -8997,8 +9000,8 @@ export const VoiceJoinedEvent = {
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.id !== 0n) {
-      obj.id = message.id.toString();
+    if (message.id !== "") {
+      obj.id = message.id;
     }
     if (message.participant !== "") {
       obj.participant = message.participant;
@@ -9009,8 +9012,8 @@ export const VoiceJoinedEvent = {
     if (message.voice_channel_label !== "") {
       obj.voice_channel_label = message.voice_channel_label;
     }
-    if (message.voice_channel_id !== "") {
-      obj.voice_channel_id = message.voice_channel_id;
+    if (message.voice_channel_id !== 0n) {
+      obj.voice_channel_id = message.voice_channel_id.toString();
     }
     if (message.last_screenshot !== "") {
       obj.last_screenshot = message.last_screenshot;
@@ -9025,11 +9028,11 @@ export const VoiceJoinedEvent = {
     const message = createBaseVoiceJoinedEvent();
     message.clan_id = object.clan_id ?? 0n;
     message.clan_name = object.clan_name ?? "";
-    message.id = object.id ?? 0n;
+    message.id = object.id ?? "";
     message.participant = object.participant ?? "";
     message.user_id = object.user_id ?? 0n;
     message.voice_channel_label = object.voice_channel_label ?? "";
-    message.voice_channel_id = object.voice_channel_id ?? "";
+    message.voice_channel_id = object.voice_channel_id ?? 0n;
     message.last_screenshot = object.last_screenshot ?? "";
     return message;
   },
@@ -10439,7 +10442,7 @@ export const ChannelDeletedEvent = {
 };
 
 function createBaseClanDeletedEvent(): ClanDeletedEvent {
-  return { clan_id: 0n, deletor: "" };
+  return { clan_id: 0n, deletor: 0n };
 }
 
 export const ClanDeletedEvent = {
@@ -10450,8 +10453,11 @@ export const ClanDeletedEvent = {
       }
       writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.deletor !== "") {
-      writer.uint32(18).string(message.deletor);
+    if (message.deletor !== 0n) {
+      if (BigInt.asIntN(64, message.deletor) !== message.deletor) {
+        throw new globalThis.Error("value provided for field message.deletor of type int64 too large");
+      }
+      writer.uint32(16).int64(message.deletor.toString());
     }
     return writer;
   },
@@ -10471,11 +10477,11 @@ export const ClanDeletedEvent = {
           message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.deletor = reader.string();
+          message.deletor = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -10489,7 +10495,7 @@ export const ClanDeletedEvent = {
   fromJSON(object: any): ClanDeletedEvent {
     return {
       clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
-      deletor: isSet(object.deletor) ? globalThis.String(object.deletor) : "",
+      deletor: isSet(object.deletor) ? BigInt(object.deletor) : 0n,
     };
   },
 
@@ -10498,8 +10504,8 @@ export const ClanDeletedEvent = {
     if (message.clan_id !== 0n) {
       obj.clan_id = message.clan_id.toString();
     }
-    if (message.deletor !== "") {
-      obj.deletor = message.deletor;
+    if (message.deletor !== 0n) {
+      obj.deletor = message.deletor.toString();
     }
     return obj;
   },
@@ -10510,7 +10516,7 @@ export const ClanDeletedEvent = {
   fromPartial<I extends Exact<DeepPartial<ClanDeletedEvent>, I>>(object: I): ClanDeletedEvent {
     const message = createBaseClanDeletedEvent();
     message.clan_id = object.clan_id ?? 0n;
-    message.deletor = object.deletor ?? "";
+    message.deletor = object.deletor ?? 0n;
     return message;
   },
 };
@@ -12418,7 +12424,7 @@ function createBaseClanUpdatedEvent(): ClanUpdatedEvent {
     banner: "",
     status: 0,
     is_onboarding: false,
-    welcome_channel_id: "",
+    welcome_channel_id: 0n,
     onboarding_banner: "",
     community_banner: "",
     is_community: false,
@@ -12451,8 +12457,11 @@ export const ClanUpdatedEvent = {
     if (message.is_onboarding !== false) {
       writer.uint32(48).bool(message.is_onboarding);
     }
-    if (message.welcome_channel_id !== "") {
-      writer.uint32(58).string(message.welcome_channel_id);
+    if (message.welcome_channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.welcome_channel_id) !== message.welcome_channel_id) {
+        throw new globalThis.Error("value provided for field message.welcome_channel_id of type int64 too large");
+      }
+      writer.uint32(56).int64(message.welcome_channel_id.toString());
     }
     if (message.onboarding_banner !== "") {
       writer.uint32(66).string(message.onboarding_banner);
@@ -12525,11 +12534,11 @@ export const ClanUpdatedEvent = {
           message.is_onboarding = reader.bool();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.welcome_channel_id = reader.string();
+          message.welcome_channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 8:
           if (tag !== 66) {
@@ -12590,7 +12599,7 @@ export const ClanUpdatedEvent = {
       banner: isSet(object.banner) ? globalThis.String(object.banner) : "",
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       is_onboarding: isSet(object.is_onboarding) ? globalThis.Boolean(object.is_onboarding) : false,
-      welcome_channel_id: isSet(object.welcome_channel_id) ? globalThis.String(object.welcome_channel_id) : "",
+      welcome_channel_id: isSet(object.welcome_channel_id) ? BigInt(object.welcome_channel_id) : 0n,
       onboarding_banner: isSet(object.onboarding_banner) ? globalThis.String(object.onboarding_banner) : "",
       community_banner: isSet(object.community_banner) ? globalThis.String(object.community_banner) : "",
       is_community: isSet(object.is_community) ? globalThis.Boolean(object.is_community) : false,
@@ -12620,8 +12629,8 @@ export const ClanUpdatedEvent = {
     if (message.is_onboarding !== false) {
       obj.is_onboarding = message.is_onboarding;
     }
-    if (message.welcome_channel_id !== "") {
-      obj.welcome_channel_id = message.welcome_channel_id;
+    if (message.welcome_channel_id !== 0n) {
+      obj.welcome_channel_id = message.welcome_channel_id.toString();
     }
     if (message.onboarding_banner !== "") {
       obj.onboarding_banner = message.onboarding_banner;
@@ -12655,7 +12664,7 @@ export const ClanUpdatedEvent = {
     message.banner = object.banner ?? "";
     message.status = object.status ?? 0;
     message.is_onboarding = object.is_onboarding ?? false;
-    message.welcome_channel_id = object.welcome_channel_id ?? "";
+    message.welcome_channel_id = object.welcome_channel_id ?? 0n;
     message.onboarding_banner = object.onboarding_banner ?? "";
     message.community_banner = object.community_banner ?? "";
     message.is_community = object.is_community ?? false;
@@ -17159,12 +17168,22 @@ export const FcmDataPayload = {
     if (message.body.length !== 0) {
       writer.uint32(34).bytes(message.body);
     }
+    writer.uint32(42).fork();
     for (const v of message.user_role_ids) {
-      writer.uint32(42).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field user_role_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
+    writer.uint32(50).fork();
     for (const v of message.user_sent_ids) {
-      writer.uint32(50).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field user_sent_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     if (message.priority !== 0) {
       writer.uint32(56).int32(message.priority);
     }
@@ -17228,19 +17247,39 @@ export const FcmDataPayload = {
           message.body = reader.bytes();
           continue;
         case 5:
-          if (tag !== 42) {
-            break;
+          if (tag === 40) {
+            message.user_role_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_role_ids.push(reader.string());
-          continue;
+          if (tag === 42) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_role_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 6:
-          if (tag !== 50) {
-            break;
+          if (tag === 48) {
+            message.user_sent_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_sent_ids.push(reader.string());
-          continue;
+          if (tag === 50) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_sent_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 7:
           if (tag !== 56) {
             break;
@@ -17313,10 +17352,10 @@ export const FcmDataPayload = {
       title: isSet(object.title) ? globalThis.String(object.title) : "",
       body: isSet(object.body) ? bytesFromBase64(object.body) : new Uint8Array(0),
       user_role_ids: globalThis.Array.isArray(object?.user_role_ids)
-        ? object.user_role_ids.map((e: any) => globalThis.String(e))
+        ? object.user_role_ids.map((e: any) => BigInt(e))
         : [],
       user_sent_ids: globalThis.Array.isArray(object?.user_sent_ids)
-        ? object.user_sent_ids.map((e: any) => globalThis.String(e))
+        ? object.user_sent_ids.map((e: any) => BigInt(e))
         : [],
       priority: isSet(object.priority) ? globalThis.Number(object.priority) : 0,
       message: isSet(object.message) ? ChannelMessage.fromJSON(object.message) : undefined,
@@ -17350,10 +17389,10 @@ export const FcmDataPayload = {
       obj.body = base64FromBytes(message.body);
     }
     if (message.user_role_ids?.length) {
-      obj.user_role_ids = message.user_role_ids;
+      obj.user_role_ids = message.user_role_ids.map((e) => e.toString());
     }
     if (message.user_sent_ids?.length) {
-      obj.user_sent_ids = message.user_sent_ids;
+      obj.user_sent_ids = message.user_sent_ids.map((e) => e.toString());
     }
     if (message.priority !== 0) {
       obj.priority = Math.round(message.priority);
