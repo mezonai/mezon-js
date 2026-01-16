@@ -4315,7 +4315,7 @@ export class Client {
 
   async getMezonOauthClient(
     session: Session,
-    clientId?: bigint,
+    clientId?: string,
     clientName?: string
   ): Promise<ApiMezonOauthClient> {
     if (
