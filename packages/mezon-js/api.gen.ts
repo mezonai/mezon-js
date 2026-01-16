@@ -11612,7 +11612,7 @@ export class MezonApi {
   /** Create mezon OAuth client */
   getMezonOauthClient(
     bearerToken: string,
-    clientId?: bigint,
+    clientId?: string,
     clientName?: string,
     options: any = {}
   ): Promise<ApiMezonOauthClient> {
