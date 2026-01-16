@@ -77,7 +77,7 @@ export interface Presence {
   /** The id of the user. */
   user_id: bigint;
   /** The session id of the user. */
-  session_id: bigint;
+  session_id: string;
   /** The username of the user. */
   username: string;
   /** The node the user is connected to. */
