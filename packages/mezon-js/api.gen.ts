@@ -18,7 +18,7 @@ export interface ChannelUserListChannelUser {
   //
   id?: bigint;
   //Their relationship to the role.
-  role_id?: Array<string>;
+  role_id?: Array<bigint>;
   //
   thread_id?: bigint;
   //User.
