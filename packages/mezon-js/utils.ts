@@ -44,9 +44,9 @@ export function safeJSONParse(jsonStr: string) {
       return JSON.parse(jsonStr);
     } catch (error) {
         if (jsonStr !== "") {
+          try {
             const fixedJsonStr = jsonStr.replace(/\n/g, "\\n");
-            try {
-                return JSON.parse(fixedJsonStr);
+            return JSON.parse(fixedJsonStr);
             } catch (e) {
                 console.error('Error parsing JSON:', jsonStr, error);
             }
