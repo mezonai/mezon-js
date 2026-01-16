@@ -204,7 +204,7 @@ export interface AccountRefresh_VarsEntry {
 /** Add one or more friends to the current user. */
 export interface AddFriendsRequest {
   /** The account id of a user. */
-  ids: string[];
+  ids: bigint[];
   /** The account username of a user. */
   usernames: string[];
 }
@@ -212,7 +212,7 @@ export interface AddFriendsRequest {
 /** Add one or more friends to the current user. */
 export interface AddFriendsResponse {
   /** The account id of a user. */
-  ids: string[];
+  ids: bigint[];
   /** The account username of a user. */
   usernames: string[];
 }
@@ -220,9 +220,9 @@ export interface AddFriendsResponse {
 /** Add users to a group. */
 export interface AddGroupUsersRequest {
   /** The group to add users to. */
-  group_id: string;
+  group_id: bigint;
   /** The users to add. */
-  user_ids: string[];
+  user_ids: bigint[];
 }
 
 /** Authenticate against the server with a refresh token. */
@@ -247,7 +247,7 @@ export interface SessionLogoutRequest {
   /** Refresh token to invalidate. */
   refresh_token: string;
   /** Device Id */
-  device_id: string;
+  device_id: bigint;
   /** FCM token from firebase */
   fcm_token: string;
   /** platform */
@@ -260,21 +260,21 @@ export interface IsBannedResponse {
 }
 
 export interface IsBannedRequest {
-  channel_id: string;
+  channel_id: bigint;
 }
 
 /** Ban users from a group. */
 export interface BanGroupUsersRequest {
   /** The group to ban users from. */
-  group_id: string;
+  group_id: bigint;
   /** The users to ban. */
-  user_ids: string[];
+  user_ids: bigint[];
 }
 
 /** Block one or more friends for the current user. */
 export interface BlockFriendsRequest {
   /** The account id of a user. */
-  ids: string[];
+  ids: bigint[];
   /** The account username of a user. */
   usernames: string[];
 }
@@ -282,15 +282,15 @@ export interface BlockFriendsRequest {
 /** A message sent on a channel. */
 export interface ChannelMessage {
   /** The clan this message belong to. */
-  clan_id: string;
+  clan_id: bigint;
   /** The channel this message belongs to. */
-  channel_id: string;
+  channel_id: bigint;
   /** The unique ID of this message. */
-  message_id: string;
+  message_id: bigint;
   /** The code representing a message type or category. */
   code: number;
   /** Message sender, usually a user ID. */
-  sender_id: string;
+  sender_id: bigint;
   /** The username of the message sender, if any. */
   username: string;
   /** The avatar of user who send message */
@@ -330,19 +330,19 @@ export interface ChannelMessage {
   /** is public */
   is_public: boolean;
   /** topic */
-  topic_id: string;
+  topic_id: bigint;
 }
 
 /** Mention to message */
 export interface MessageMention {
   /** Mention id */
-  id: string;
+  id: bigint;
   /** mention user id */
-  user_id: string;
+  user_id: bigint;
   /** mention username */
   username: string;
   /** role id */
-  role_id: string;
+  role_id: bigint;
   /** role name */
   rolename: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
@@ -382,13 +382,13 @@ export interface NotificationInfo {
 /** Emoji reaction by user */
 export interface MessageReaction {
   /** Reaction id */
-  id: string;
+  id: bigint;
   /** An emoji id */
-  emoji_id: string;
+  emoji_id: bigint;
   /** An emoji shortname */
   emoji: string;
   /** User react to message */
-  sender_id: string;
+  sender_id: bigint;
   /** Sender name */
   sender_name: string;
   /** avatar */
@@ -398,21 +398,21 @@ export interface MessageReaction {
   /** count of emoji */
   count: number;
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
   /** message id */
-  message_id: string;
+  message_id: bigint;
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** mode */
   mode: number;
   /** message sender id */
-  message_sender_id: string;
+  message_sender_id: bigint;
   /** is public */
   is_public: boolean;
   /** topic id */
-  topic_id: string;
+  topic_id: bigint;
   /** emoji_recent_id */
-  emoji_recent_id: string;
+  emoji_recent_id: bigint;
 }
 
 /** Message attachment */
@@ -420,7 +420,7 @@ export interface MessageAttachment {
   /** Attachment file name */
   filename: string;
   /** Attachment file size */
-  size: number;
+  size: bigint;
   /** Attachment url */
   url: string;
   /** Attachment file type */
@@ -438,9 +438,9 @@ export interface MessageAttachment {
 /** Message reference */
 export interface MessageRef {
   /** A message source */
-  message_id: string;
+  message_id: bigint;
   /** A message reference to */
-  message_ref_id: string;
+  message_ref_id: bigint;
   /** content reference */
   content: string;
   /** has attachment */
@@ -448,7 +448,7 @@ export interface MessageRef {
   /** Reference type. 0: reply */
   ref_type: number;
   /** original message sender */
-  message_sender_id: string;
+  message_sender_id: bigint;
   /** original message sendre username */
   message_sender_username: string;
   /** original message sender avatar */
@@ -462,7 +462,7 @@ export interface MessageRef {
 /** Message reference */
 export interface MessageDeleted {
   /** A deleted message source */
-  message_id: string;
+  message_id: bigint;
   /** Who delete it */
   deletor: string;
 }
@@ -498,7 +498,7 @@ export interface CreateGroupRequest {
 /** Delete one or more friends for the current user. */
 export interface DeleteFriendsRequest {
   /** The account id of a user. */
-  ids: string[];
+  ids: bigint[];
   /** The account username of a user. */
   usernames: string[];
 }
@@ -506,13 +506,13 @@ export interface DeleteFriendsRequest {
 /** Delete a group the user has access to. */
 export interface DeleteGroupRequest {
   /** The id of a group. */
-  group_id: string;
+  group_id: bigint;
 }
 
 /** Delete one or more notifications for the current user. */
 export interface DeleteNotificationsRequest {
   /** The id of notifications. */
-  ids: string[];
+  ids: bigint[];
   /** The category of notifications. */
   category: number;
 }
@@ -545,7 +545,7 @@ export interface Friend {
   /** Time of the latest relationship update. */
   update_time_seconds: number;
   /** source id */
-  source_id: string;
+  source_id: bigint;
 }
 
 /** The friendship status. */
@@ -621,25 +621,25 @@ export interface ChannelUserList {
   /** Cursor for the next page of results, if any. */
   cursor: string;
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
 }
 
 /** A single user-role pair. */
 export interface ChannelUserList_ChannelUser {
   /** User. */
-  user_id: string;
+  user_id: bigint;
   /** Their relationship to the role. */
-  role_id: string[];
+  role_id: bigint[];
   /** Id */
-  id: string;
+  id: bigint;
   /** thread id */
-  thread_id: string;
+  thread_id: bigint;
   /** clan nick name */
   clan_nick: string;
   /** clan avatar */
   clan_avatar: string;
   /** clan Id */
-  clan_id: string;
+  clan_id: bigint;
   /** added by */
   added_by: string;
   /** is banned */
@@ -651,11 +651,11 @@ export interface ChannelUserList_ChannelUser {
 /** A list of users belonging to a channel, along with their role. */
 export interface VoiceChannelUser {
   /** voice user join id */
-  id: string;
+  id: bigint;
   /** User for a channel. */
-  user_id: string;
+  user_id: bigint;
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
   /** participant */
   participant: string;
 }
@@ -669,7 +669,7 @@ export interface VoiceChannelUserList {
 /** channel attachment */
 export interface ChannelAttachment {
   /** url attachment */
-  id: string;
+  id: bigint;
   /** file name */
   filename: string;
   /** filetype */
@@ -683,7 +683,7 @@ export interface ChannelAttachment {
   /** timestamp */
   create_time_seconds: number;
   /** message id. */
-  message_id: string;
+  message_id: bigint;
   /** width */
   width: number;
   /** height */
@@ -703,7 +703,7 @@ export interface ClanUserList {
   /** Cursor for the next page of results, if any. */
   cursor: string;
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
 }
 
 /** A single user-role pair. */
@@ -713,13 +713,13 @@ export interface ClanUserList_ClanUser {
     | User
     | undefined;
   /** Their relationship to the role. */
-  role_id: string[];
+  role_id: bigint[];
   /** from the `nick_name` field in the `clan_desc_profile` table. */
   clan_nick: string;
   /** from the `avatar_url` field in the `clan_desc_profile` table. */
   clan_avatar: string;
   /**  */
-  clan_id: string;
+  clan_id: bigint;
 }
 
 export interface RegistFcmDeviceTokenRequest {
@@ -737,7 +737,7 @@ export interface RegistFcmDeviceTokenResponse {
   /** The token */
   token: string;
   /**  */
-  device_id: string;
+  device_id: bigint;
   /**  */
   platform: string;
 }
@@ -745,11 +745,11 @@ export interface RegistFcmDeviceTokenResponse {
 /** List a channel's message history. */
 export interface ListChannelMessagesRequest {
   /** the clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** The channel ID to list from. */
-  channel_id: string;
+  channel_id: bigint;
   /** The current message ID. */
-  message_id: string;
+  message_id: bigint;
   /** Max number of records to return. Between 1 and 100. */
   limit:
     | number
@@ -759,7 +759,7 @@ export interface ListChannelMessagesRequest {
     | number
     | undefined;
   /**  */
-  topic_id: string;
+  topic_id: bigint;
 }
 
 /** List friends for a user. */
@@ -799,7 +799,7 @@ export interface ListGroupsRequest {
 /** List all users that are part of a group. */
 export interface ListGroupUsersRequest {
   /** The group ID to list from. */
-  group_id: string;
+  group_id: bigint;
   /** Max number of records to return. Between 1 and 100. */
   limit:
     | number
@@ -815,9 +815,9 @@ export interface ListGroupUsersRequest {
 /** List all users that are part of a channel. */
 export interface ListChannelUsersRequest {
   /** The clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** The channel ID to list from. */
-  channel_id: string;
+  channel_id: bigint;
   /** The channel type */
   channel_type: number;
   /** Max number of records to return. Between 1 and 100. */
@@ -835,9 +835,9 @@ export interface ListChannelUsersRequest {
 /** List all attachments that are part of a channel. */
 export interface ListChannelAttachmentRequest {
   /** The clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** The channel ID to list from. */
-  channel_id: string;
+  channel_id: bigint;
   /** The channel type */
   file_type: string;
   /** Max number of records to return. Between 1 and 100. */
@@ -855,7 +855,7 @@ export interface ListChannelAttachmentRequest {
 /** List all users that are part of a clan. */
 export interface ListClanUsersRequest {
   /** The clan ID to list from. */
-  clan_id: string;
+  clan_id: bigint;
 }
 
 /** Get a list of unexpired notifications. */
@@ -865,9 +865,9 @@ export interface ListNotificationsRequest {
     | number
     | undefined;
   /** The clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** The current notification Id. */
-  notification_id: string;
+  notification_id: bigint;
   /** The category (1: mentions, 2: mesages, 3: for you). */
   category: number;
   /** True if listing should be older notifications to newer, false if reverse. */
@@ -877,7 +877,7 @@ export interface ListNotificationsRequest {
 /** List the groups a user is part of, and their relationship to each. */
 export interface ListUserGroupsRequest {
   /** ID of the user. */
-  user_id: string;
+  user_id: bigint;
   /** Max number of records to return. Between 1 and 100. */
   limit:
     | number
@@ -893,7 +893,7 @@ export interface ListUserGroupsRequest {
 /** A notification in the server. */
 export interface Notification {
   /** ID of the Notification. */
-  id: string;
+  id: bigint;
   /** Subject of the notification. */
   subject: string;
   /** Content of the notification in JSON. */
@@ -901,15 +901,15 @@ export interface Notification {
   /** Category code for this notification. */
   code: number;
   /** ID of the sender, if a user. Otherwise 'null'. */
-  sender_id: string;
+  sender_id: bigint;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the notification was created. */
   create_time_seconds: number;
   /** True if this notification was persisted to the database. */
   persistent: boolean;
   /** ID of clan */
-  clan_id: string;
+  clan_id: bigint;
   /** ID of channel */
-  channel_id: string;
+  channel_id: bigint;
   /** mode of */
   channel_type: number;
   /**  */
@@ -919,7 +919,7 @@ export interface Notification {
     | ChannelDescription
     | undefined;
   /**  */
-  topic_id: string;
+  topic_id: bigint;
   /** category. */
   category: number;
 }
@@ -927,9 +927,9 @@ export interface Notification {
 /**  */
 export interface EmojiRecent {
   /** ID of the emoji. */
-  emoji_recents_id: string;
+  emoji_recents_id: bigint;
   /**  */
-  emoji_id: string;
+  emoji_id: bigint;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the emoji was created. */
   update_time_seconds: number;
 }
@@ -951,17 +951,17 @@ export interface NotificationList {
 /** Promote a set of users in a group to the next role up. */
 export interface PromoteGroupUsersRequest {
   /** The group ID to promote in. */
-  group_id: string;
+  group_id: bigint;
   /** The users to promote. */
-  user_ids: string[];
+  user_ids: bigint[];
 }
 
 /** Demote a set of users in a group to the next role down. */
 export interface DemoteGroupUsersRequest {
   /** The group ID to demote in. */
-  group_id: string;
+  group_id: bigint;
   /** The users to demote. */
-  user_ids: string[];
+  user_ids: bigint[];
 }
 
 /** Execute an Lua function on the server. */
@@ -983,7 +983,7 @@ export interface Session {
   /** Refresh token that can be used for session token renewal. */
   refresh_token: string;
   /** User id */
-  user_id: string;
+  user_id: bigint;
   /** Whether to enable "Remember Me" for extended session duration. */
   is_remember: boolean;
   /** api url */
@@ -1043,7 +1043,7 @@ export interface UpdateAccountRequest {
 /** Update fields in a given group. */
 export interface UpdateGroupRequest {
   /** The ID of the group to update. */
-  group_id: string;
+  group_id: bigint;
   /** Name. */
   name:
     | string
@@ -1066,15 +1066,15 @@ export interface UpdateGroupRequest {
 
 export interface UpdateCategoryDescRequest {
   /** The ID of the group to update. */
-  category_id: string;
+  category_id: bigint;
   category_name: string;
-  clan_id: string;
+  clan_id: bigint;
 }
 
 /** A user in the server. */
 export interface User {
   /** The id of the user's account. */
-  id: string;
+  id: bigint;
   /** The username of the user's account. */
   username: string;
   /** The display name of the user. */
@@ -1108,7 +1108,7 @@ export interface User {
   /** dob */
   dob_seconds: number;
   /** Mezone id */
-  mezon_id: string;
+  mezon_id: bigint;
   /** list clan nick name */
   list_nick_names: string[];
   /** online, offline, invisible, idle, do not disturb */
@@ -1124,9 +1124,9 @@ export interface Users {
 /** Clan profile information */
 export interface ClanDescProfile {
   /** Clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** Clan creator */
-  creator_id: string;
+  creator_id: bigint;
   /** Clan nick name */
   nick_name: string;
   /** Clan profile banner */
@@ -1140,7 +1140,7 @@ export interface ClanDescProfile {
 /** Update Clan profile information */
 export interface UpdateClanDescProfileRequest {
   /** Clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** Clan nick name */
   nick_name: string;
   /** Clan profile banner */
@@ -1154,13 +1154,13 @@ export interface UpdateClanDescProfileRequest {
 /** Clan profile information */
 export interface ClanDescProfileRequest {
   /** Clan id */
-  clan_id: string;
+  clan_id: bigint;
 }
 
 /** Clan information */
 export interface ClanDesc {
   /** Clan creator */
-  creator_id: string;
+  creator_id: bigint;
   /** Clan name */
   clan_name: string;
   /** Clan logo */
@@ -1168,7 +1168,7 @@ export interface ClanDesc {
   /** Clan banner */
   banner: string;
   /** Clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** Clan status */
   status: number;
   /** Badge count */
@@ -1176,7 +1176,7 @@ export interface ClanDesc {
   /** Is onboarding. */
   is_onboarding: boolean;
   /** Welcome channel id. */
-  welcome_channel_id: string;
+  welcome_channel_id: bigint;
   /** Onboarding_banner. */
   onboarding_banner: string;
   /** clan order */
@@ -1209,7 +1209,7 @@ export interface CreateClanDescRequest {
 
 /** Update Clan information */
 export interface UpdateClanDescRequest {
-  clan_id: string;
+  clan_id: bigint;
   /** Clan name */
   clan_name: string;
   /** Clan logo */
@@ -1227,7 +1227,7 @@ export interface UpdateClanDescRequest {
     | boolean
     | undefined;
   /** Welcome channel id. */
-  welcome_channel_id: string;
+  welcome_channel_id: bigint;
   /** Onboarding_banner. */
   onboarding_banner:
     | string
@@ -1259,7 +1259,7 @@ export interface UpdateClanDescRequest {
 /** Delete a clan the user has access to. */
 export interface DeleteClanDescRequest {
   /** The id of a group. */
-  clan_desc_id: string;
+  clan_desc_id: bigint;
 }
 
 /** List (and optionally filter) channels. */
@@ -1277,7 +1277,7 @@ export interface ListClanDescRequest {
 }
 
 export interface ListClanUnreadMsgIndicatorRequest {
-  clan_id: string;
+  clan_id: bigint;
 }
 
 export interface ListClanUnreadMsgIndicatorResponse {
@@ -1293,9 +1293,9 @@ export interface ClanDescList {
 /** Add link invite users to. */
 export interface LinkInviteUserRequest {
   /** id clan to add link to . */
-  clan_id: string;
+  clan_id: bigint;
   /** id channel to add link to. */
-  channel_id: string;
+  channel_id: bigint;
   /** expiry time */
   expiry_time: number;
 }
@@ -1303,15 +1303,15 @@ export interface LinkInviteUserRequest {
 /** Add link invite users to. */
 export interface InviteUserRequest {
   /** id clan to add link to . */
-  invite_id: string;
+  invite_id: bigint;
 }
 
 /** Add link invite users to. */
 export interface InviteUserRes {
   /** id clan to add link to . */
-  clan_id: string;
+  clan_id: bigint;
   /** id channel to add link to. */
-  channel_id: string;
+  channel_id: bigint;
   /** clan name */
   clan_name: string;
   /** channel name */
@@ -1329,38 +1329,38 @@ export interface InviteUserRes {
 /** Add link invite users to. */
 export interface JoinClanChannelRequest {
   /** id clan to add link to . */
-  clan_id: string;
+  clan_id: bigint;
   /** id channel to add link to. */
-  channel_id: string;
+  channel_id: bigint;
 }
 
 /** Add link invite users to. */
 export interface LinkInviteUser {
   /** id clan */
-  clan_id: string;
+  clan_id: bigint;
   /** The user to add. */
-  creator_id: string;
+  creator_id: bigint;
   /** is clan invite */
-  channel_id: string;
+  channel_id: bigint;
   /** link invite */
   invite_link: string;
   /** create time */
   create_time_seconds: number;
   /** expiry time */
   expiry_time_seconds: number;
-  id: string;
+  id: bigint;
 }
 
 /** Get clan profile. */
 export interface ClanProfile {
   /** id user to find user */
-  user_id: string;
+  user_id: bigint;
   /** name user */
   nick_name: string;
   /** id avatar */
   avatar: string;
   /** id clan */
-  clan_id: string;
+  clan_id: bigint;
   /** about clan */
   about: string;
 }
@@ -1368,13 +1368,13 @@ export interface ClanProfile {
 /** information user by clan requset */
 export interface ClanProfileRequest {
   /** id clanc */
-  clan_id: string;
+  clan_id: bigint;
 }
 
 /** update nickname user by clan requset */
 export interface UpdateClanProfileRequest {
   /** id clanc */
-  clan_id: string;
+  clan_id: bigint;
   /** nick_name new */
   nick_name:
     | string
@@ -1390,49 +1390,49 @@ export interface UpdateClanOrderRequest {
 
 export interface UpdateClanOrderRequest_ClanOrder {
   order: number;
-  clan_id: string;
+  clan_id: bigint;
 }
 
 /** Category to group the channel */
 export interface CategoryDesc {
   /** Category creator */
-  creator_id: string;
+  creator_id: bigint;
   /** the Clan that category belong to */
-  clan_id: string;
+  clan_id: bigint;
   /** Category name */
   category_name: string;
-  category_id: string;
+  category_id: bigint;
   category_order: number;
 }
 
 export interface UpdateCategoryOrderRequest {
-  clan_id: string;
+  clan_id: bigint;
   categories: CategoryOrderUpdate[];
 }
 
 export interface UpdateRoleOrderRequest {
-  clan_id: string;
+  clan_id: bigint;
   roles: RoleOrderUpdate[];
 }
 
 export interface RoleOrderUpdate {
-  role_id: string;
+  role_id: bigint;
   order: number;
 }
 
 export interface CategoryOrderUpdate {
-  category_id: string;
+  category_id: bigint;
   order: number;
 }
 
 export interface CreateCategoryDescRequest {
   category_name: string;
-  clan_id: string;
+  clan_id: bigint;
 }
 
 export interface DeleteCategoryDescRequest {
-  category_id: string;
-  clan_id: string;
+  category_id: bigint;
+  clan_id: bigint;
   category_label: string;
 }
 
@@ -1458,11 +1458,11 @@ export interface ListCategoryDescsRequest {
 
 export interface ChannelMessageHeader {
   /** the message id */
-  id: string;
+  id: bigint;
   /** the time stamp */
   timestamp_seconds: number;
   /** the sender id */
-  sender_id: string;
+  sender_id: bigint;
   /** the content */
   content: string;
 }
@@ -1470,19 +1470,19 @@ export interface ChannelMessageHeader {
 /** Channel description record */
 export interface ChannelDescription {
   /** The clan of this channel */
-  clan_id: string;
+  clan_id: bigint;
   /** The parent channel this message belongs to. */
-  parent_id: string;
+  parent_id: bigint;
   /** The channel this message belongs to. */
-  channel_id: string;
+  channel_id: bigint;
   /** The category of channel */
-  category_id: string;
+  category_id: bigint;
   /** The category name */
   category_name: string;
   /** The channel type. */
   type: number;
   /** creator ID. */
-  creator_id: string;
+  creator_id: bigint;
   /** The channel lable */
   channel_label: string;
   /** The channel private */
@@ -1490,7 +1490,7 @@ export interface ChannelDescription {
   /** DM avatars */
   avatars: string[];
   /** List DM user ids */
-  user_ids: string[];
+  user_ids: bigint[];
   /** last message id */
   last_sent_message:
     | ChannelMessageHeader
@@ -1524,7 +1524,7 @@ export interface ChannelDescription {
   /** clan_name */
   clan_name: string;
   /** app id */
-  app_id: string;
+  app_id: bigint;
   /** channel all message */
   is_mute: boolean;
   /** age restricted */
@@ -1561,11 +1561,11 @@ export interface ListThreadRequest {
     | number
     | undefined;
   /** The clan of this channel */
-  clan_id: string;
+  clan_id: bigint;
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
   /** thread id */
-  thread_id: string;
+  thread_id: bigint;
   /** Number of page */
   page: number | undefined;
 }
@@ -1583,7 +1583,7 @@ export interface ListChannelDescsRequest {
   /** Cursor to start from */
   cursor: string;
   /** The clan of this channel */
-  clan_id: string;
+  clan_id: bigint;
   /** channel type */
   channel_type: number;
   /** is mobile */
@@ -1593,27 +1593,27 @@ export interface ListChannelDescsRequest {
 /** List channel description detail */
 export interface ListChannelDetailRequest {
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
 }
 
 /** Add a role for channel. */
 export interface AddRoleChannelDescRequest {
   /** This is the role that needs to be added to the channel */
-  role_ids: string[];
+  role_ids: bigint[];
   /** This is a channel that needs more roles */
-  channel_id: string;
+  channel_id: bigint;
 }
 
 /** Create a channel within clan. */
 export interface CreateChannelDescRequest {
   /** The clan of this channel */
-  clan_id: string;
+  clan_id: bigint;
   /** The parent channel this message belongs to. */
-  parent_id: string;
+  parent_id: bigint;
   /** The channel this message belongs to. */
-  channel_id: string;
+  channel_id: bigint;
   /** The category of channel */
-  category_id: string;
+  category_id: bigint;
   /** The channel type. */
   type: number;
   /** The channel lable */
@@ -1621,35 +1621,33 @@ export interface CreateChannelDescRequest {
   /** The channel private */
   channel_private: number;
   /** The users to add. */
-  user_ids: string[];
+  user_ids: bigint[];
   /** app url for channel type app */
-  app_id: string;
+  app_id: bigint;
 }
 
 /** Delete a channel the user has access to. */
 export interface DeleteChannelDescRequest {
   /** The clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** The id of a channel. */
-  channel_id: string;
+  channel_id: bigint;
 }
 
 /** Update fields in a given channel. */
 export interface UpdateChannelDescRequest {
   /** The clan ID */
-  clan_id: string;
+  clan_id: bigint;
   /** The ID of the channel to update. */
-  channel_id: string;
+  channel_id: bigint;
   /** The channel lable */
   channel_label:
     | string
     | undefined;
   /** The category of channel */
-  category_id:
-    | string
-    | undefined;
+  category_id: bigint;
   /** app url for channel type app */
-  app_id: string;
+  app_id: bigint;
   /** topic */
   topic: string;
   /**  */
@@ -1663,49 +1661,49 @@ export interface UpdateChannelDescRequest {
 /** Update fields in a given channel. */
 export interface ChangeChannelPrivateRequest {
   /** The clan ID */
-  clan_id: string;
+  clan_id: bigint;
   /** The ID of the channel to update. */
-  channel_id: string;
+  channel_id: bigint;
   /** The channel private */
   channel_private: number;
   /** The users to add. */
-  user_ids: string[];
+  user_ids: bigint[];
   /** This is the role that needs to be added to the channel */
-  role_ids: string[];
+  role_ids: bigint[];
 }
 
 /** Add users to a channel. */
 export interface AddChannelUsersRequest {
   /** The channel to add users to. */
-  channel_id: string;
+  channel_id: bigint;
   /** The users to add. */
-  user_ids: string[];
+  user_ids: bigint[];
 }
 
 /** Kick a set of users from a channel. */
 export interface RemoveChannelUsersRequest {
   /** The channel ID to kick from. */
-  channel_id: string;
+  channel_id: bigint;
   /** The users to kick. */
-  user_ids: string[];
+  user_ids: bigint[];
 }
 
 /** Kick a set of users from a clan. */
 export interface RemoveClanUsersRequest {
   /** The clan ID to kick from. */
-  clan_id: string;
+  clan_id: bigint;
   /** The users to kick. */
-  user_ids: string[];
+  user_ids: bigint[];
 }
 
 /** Ban a set of users from a channel. */
 export interface BanClanUsersRequest {
   /** The clan ID to kick from. */
-  clan_id: string;
+  clan_id: bigint;
   /** The channel ID to ban */
-  channel_id: string;
+  channel_id: bigint;
   /** The users to kick. */
-  user_ids: string[];
+  user_ids: bigint[];
   /** ban time */
   ban_time: number;
   /** The reason */
@@ -1715,11 +1713,11 @@ export interface BanClanUsersRequest {
 /** list banned user */
 export interface BannedUser {
   /** The channel ID to ban */
-  channel_id: string;
+  channel_id: bigint;
   /** The banned user. */
-  banned_id: string;
+  banned_id: bigint;
   /** The avatar */
-  banner_id: string;
+  banner_id: bigint;
   /** ban time */
   ban_time: number;
   /** The reason */
@@ -1727,8 +1725,8 @@ export interface BannedUser {
 }
 
 export interface BannedUserListRequest {
-  clan_id: string;
-  channel_id: string;
+  clan_id: bigint;
+  channel_id: bigint;
 }
 
 export interface BannedUserList {
@@ -1737,51 +1735,51 @@ export interface BannedUserList {
 
 /** Leave a channel. */
 export interface LeaveThreadRequest {
-  clan_id: string;
+  clan_id: bigint;
   /** The channel ID to leave. */
-  channel_id: string;
+  channel_id: bigint;
 }
 
 /** Role record */
 export interface Role {
   /** Role id */
-  id: string;
+  id: bigint;
   title: string;
   color: string;
   role_icon: string;
   slug: string;
   description: string;
-  creator_id: string;
-  clan_id: string;
+  creator_id: bigint;
+  clan_id: bigint;
   active: number;
   display_online: number;
   allow_mention: number;
   role_user_list: RoleUserList | undefined;
   permission_list: PermissionList | undefined;
   role_channel_active: number;
-  channel_ids: string[];
+  channel_ids: bigint[];
   max_level_permission: number;
   order_role: number;
 }
 
 /** Event clan */
 export interface EventManagement {
-  id: string;
+  id: bigint;
   title: string;
   logo: string;
   description: string;
   active: number;
   start_event: number;
-  creator_id: string;
-  clan_id: string;
-  channel_voice_id: string;
+  creator_id: bigint;
+  clan_id: bigint;
+  channel_voice_id: bigint;
   address: string;
   start_time_seconds: number;
   end_time_seconds: number;
-  user_ids: string[];
+  user_ids: bigint[];
   create_time_seconds: number;
   max_permission: number;
-  channel_id: string;
+  channel_id: bigint;
   event_status: number;
   repeat_type: number;
   is_private: boolean;
@@ -1791,7 +1789,7 @@ export interface EventManagement {
 /** Permission record */
 export interface Permission {
   /** Permission id */
-  id: string;
+  id: bigint;
   title: string;
   slug: string;
   description: string;
@@ -1803,7 +1801,7 @@ export interface Permission {
 /** Notification setting record */
 export interface NotificationSetting {
   /** Notification id */
-  id: string;
+  id: bigint;
   /** Notification title */
   notification_setting_type: number;
 }
@@ -1811,25 +1809,25 @@ export interface NotificationSetting {
 /**  */
 export interface DeletePinMessage {
   /**  */
-  id: string;
+  id: bigint;
   /**  */
-  message_id: string;
+  message_id: bigint;
   /**  */
-  channel_id: string;
+  channel_id: bigint;
   /**  */
-  clan_id: string;
+  clan_id: bigint;
 }
 
 /**  */
 export interface PinMessage {
   /**  */
-  id: string;
+  id: bigint;
   /**  */
-  message_id: string;
+  message_id: bigint;
   /**  */
-  channel_id: string;
+  channel_id: bigint;
   /**  */
-  sender_id: string;
+  sender_id: bigint;
   /**  */
   content: string;
   /**  */
@@ -1849,7 +1847,7 @@ export interface PinMessagesList {
 /** Notification channel */
 export interface NotificationUserChannel {
   /** Notification id */
-  id: string;
+  id: bigint;
   /**  */
   notification_setting_type: number;
   /**  */
@@ -1857,41 +1855,41 @@ export interface NotificationUserChannel {
   /**  */
   active: number;
   /**  */
-  channel_id: string;
+  channel_id: bigint;
 }
 
 /** Notification channel */
 export interface NotifiReactMessage {
   /** Notification id */
-  id: string;
+  id: bigint;
   /**  */
-  user_id: string;
+  user_id: bigint;
   /**  */
-  channel_id: string;
+  channel_id: bigint;
 }
 
 /**  */
 export interface DefaultNotificationClan {
   /**  */
-  clan_id: string;
+  clan_id: bigint;
 }
 
 /**  */
 export interface DefaultNotificationCategory {
   /**  */
-  category_id: string;
+  category_id: bigint;
 }
 
 /**  */
 export interface NotificationChannel {
   /**  */
-  channel_id: string;
+  channel_id: bigint;
 }
 
 /**  */
 export interface NotificationClan {
   /**  */
-  clan_id: string;
+  clan_id: bigint;
 }
 
 /**  */
@@ -1903,32 +1901,32 @@ export interface NotificationSettingList {
 /** set notification */
 export interface SetNotificationRequest {
   /** channelId or categoryId */
-  channel_category_id: string;
+  channel_category_id: bigint;
   /** notification_type */
   notification_type: number;
   /**  */
-  clan_id: string;
+  clan_id: bigint;
 }
 
 /**  */
 export interface PinMessageRequest {
-  message_id: string;
-  channel_id: string;
-  clan_id: string;
+  message_id: bigint;
+  channel_id: bigint;
+  clan_id: bigint;
 }
 
 /** set notification */
 export interface SetMuteRequest {
   /** channel_id and category_id */
-  id: string;
+  id: bigint;
   mute_time: number;
   active: number;
-  clan_id: string;
+  clan_id: bigint;
 }
 
 export interface HashtagDmListRequest {
   /** user Id */
-  user_id: string[];
+  user_id: bigint[];
   /** Max number of records to return. Between 1 and 100. */
   limit: number | undefined;
 }
@@ -1940,11 +1938,11 @@ export interface HashtagDmList {
 /** hashtagDM */
 export interface HashtagDm {
   /** The channel id. */
-  channel_id: string;
+  channel_id: bigint;
   /** The channel lable */
   channel_label: string;
   /** The clan of this channel */
-  clan_id: string;
+  clan_id: bigint;
   /** The clan name */
   clan_name: string;
   /**  */
@@ -1954,7 +1952,7 @@ export interface HashtagDm {
   /**  */
   channel_private: number;
   /**  */
-  parent_id: string;
+  parent_id: bigint;
 }
 
 export interface NotificationChannelCategorySettingList {
@@ -1963,7 +1961,7 @@ export interface NotificationChannelCategorySettingList {
 
 export interface NotificationChannelCategorySetting {
   /** Notification id */
-  id: string;
+  id: bigint;
   /**  */
   channel_category_label: string;
   /** Notification title */
@@ -1976,9 +1974,9 @@ export interface NotificationChannelCategorySetting {
 
 /** set default notification */
 export interface SetDefaultNotificationRequest {
-  clan_id: string;
+  clan_id: bigint;
   notification_type: number;
-  category_id: string;
+  category_id: bigint;
 }
 
 /** A list of role description, usually a result of a list operation. */
@@ -2004,12 +2002,12 @@ export interface PermissionList {
 
 /** List (and optionally filter) permissions. */
 export interface ListPermissionsRequest {
-  role_id: string;
+  role_id: bigint;
 }
 
 /** List (and optionally filter) role-users. */
 export interface ListRoleUsersRequest {
-  role_id: string;
+  role_id: bigint;
   /** Max number of records to return. Between 1 and 100. */
   limit:
     | number
@@ -2021,9 +2019,9 @@ export interface ListRoleUsersRequest {
 /** List Permission Of User In The Clan. */
 export interface ListPermissionOfUsersRequest {
   /** clan_id. */
-  clan_id: string;
+  clan_id: bigint;
   /** channel_id */
-  channel_id: string;
+  channel_id: bigint;
 }
 
 export interface RoleUserList {
@@ -2036,7 +2034,7 @@ export interface RoleUserList {
 /** A single user-role pair. */
 export interface RoleUserList_RoleUser {
   /** The id of the user's account. */
-  id: string;
+  id: bigint;
   /** The username of the user's account. */
   username: string;
   /** The display name of the user. */
@@ -2053,14 +2051,14 @@ export interface RoleUserList_RoleUser {
 
 export interface UserEventRequest {
   /** The ID of the clan to be updated. */
-  clan_id: string;
+  clan_id: bigint;
   /** The ID of the event to be updated. */
-  event_id: string;
+  event_id: bigint;
 }
 
 export interface ListEventsRequest {
   /** The clan of this event */
-  clan_id: string;
+  clan_id: bigint;
 }
 
 /** Create a role within clan. */
@@ -2069,15 +2067,15 @@ export interface CreateRoleRequest {
   color: string;
   role_icon: string;
   description: string;
-  clan_id: string;
+  clan_id: bigint;
   display_online: number;
   allow_mention: number;
   /** id of permission which has max level permission */
-  max_permission_id: string;
+  max_permission_id: bigint;
   /** The users to add. */
-  add_user_ids: string[];
+  add_user_ids: bigint[];
   /** The permissions to add. */
-  active_permission_ids: string[];
+  active_permission_ids: bigint[];
   /** order role */
   order_role: number;
 }
@@ -2087,18 +2085,18 @@ export interface CreateEventRequest {
   title: string;
   logo: string;
   description: string;
-  clan_id: string;
-  channel_voice_id: string;
+  clan_id: bigint;
+  channel_voice_id: bigint;
   address: string;
   start_time_seconds: number;
   end_time_seconds: number;
-  event_id: string;
+  event_id: bigint;
   event_status: number;
-  channel_id: string;
+  channel_id: bigint;
   action: number;
   repeat_type: number;
-  creator_id: string;
-  user_id: string;
+  creator_id: bigint;
+  user_id: bigint;
   is_private: boolean | undefined;
   meet_room: GenerateMezonMeetResponse | undefined;
 }
@@ -2108,47 +2106,47 @@ export interface UpdateEventRequest {
   title: string;
   logo: string;
   description: string;
-  event_id: string;
-  channel_id: string;
+  event_id: bigint;
+  channel_id: bigint;
   address: string;
   start_time_seconds: number;
   end_time_seconds: number;
-  clan_id: string;
-  creator_id: string;
-  channel_voice_id: string;
-  channel_id_old: string;
+  clan_id: bigint;
+  creator_id: bigint;
+  channel_voice_id: bigint;
+  channel_id_old: bigint;
   repeat_type: number;
 }
 
 /** Delete a role the user has access to. */
 export interface DeleteRoleRequest {
   /** The id of a role. */
-  role_id: string;
+  role_id: bigint;
   /** The id of a channel */
-  channel_id: string;
+  channel_id: bigint;
   /** clan_id */
-  clan_id: string;
+  clan_id: bigint;
   /** role label */
   role_label: string;
 }
 
 export interface DeleteEventRequest {
   /** The id of a event. */
-  event_id: string;
+  event_id: bigint;
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** creator id */
-  creator_id: string;
+  creator_id: bigint;
   /** event label */
   event_label: string;
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
 }
 
 /** Update fields in a given role. */
 export interface UpdateRoleRequest {
   /** The ID of the role to update. */
-  role_id: string;
+  role_id: bigint;
   title: string | undefined;
   color: string | undefined;
   role_icon: string | undefined;
@@ -2158,37 +2156,37 @@ export interface UpdateRoleRequest {
     | number
     | undefined;
   /** The users to add. */
-  add_user_ids: string[];
+  add_user_ids: bigint[];
   /** The permissions to add. */
-  active_permission_ids: string[];
+  active_permission_ids: bigint[];
   /** The users to remove. */
-  remove_user_ids: string[];
+  remove_user_ids: bigint[];
   /** The permissions to remove. */
-  remove_permission_ids: string[];
+  remove_permission_ids: bigint[];
   /** the clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** id of permission which has max level permission */
-  max_permission_id: string;
+  max_permission_id: bigint;
 }
 
 export interface UpdateRoleChannelRequest {
   /** The ID of the role to update. */
-  role_id: string;
+  role_id: bigint;
   /** The permissions to add. */
   permission_update: PermissionUpdate[];
   /** id of permission which has max level permission */
-  max_permission_id: string;
+  max_permission_id: bigint;
   /** The channel_id */
-  channel_id: string;
+  channel_id: bigint;
   /** The ID of the role to update. */
-  user_id: string;
+  user_id: bigint;
   /** Role label */
   role_label: string;
 }
 
 export interface PermissionUpdate {
   /** permission_id */
-  permission_id: string;
+  permission_id: bigint;
   /** permission slug */
   slug: string;
   /** type set permission */
@@ -2258,13 +2256,13 @@ export interface FilterParam {
 
 export interface SearchMessageDocument {
   /** The message ID. */
-  message_id: string;
+  message_id: bigint;
   /** The channel ID. */
-  channel_id: string;
+  channel_id: bigint;
   /** The clan ID. */
-  clan_id: string;
+  clan_id: bigint;
   /** The user ID of sender. */
-  sender_id: string;
+  sender_id: bigint;
   /** Message content */
   content: string;
   /** Mention users */
@@ -2325,7 +2323,7 @@ export interface RegistrationEmailRequest_VarsEntry {
 }
 
 export interface ClanEmoji {
-  id: string;
+  id: bigint;
   /** src url */
   src: string;
   /** shortname */
@@ -2333,9 +2331,9 @@ export interface ClanEmoji {
   /** category */
   category: string;
   /** creator id */
-  creator_id: string;
+  creator_id: bigint;
   /** clan_id */
-  clan_id: string;
+  clan_id: bigint;
   /** clan logo */
   logo: string;
   /** clan name */
@@ -2353,13 +2351,13 @@ export interface StickerListedResponse {
 }
 
 export interface ClanSticker {
-  id: string;
+  id: bigint;
   source: string;
   shortname: string;
   category: string;
-  creator_id: string;
+  creator_id: bigint;
   create_time_seconds: number;
-  clan_id: string;
+  clan_id: bigint;
   logo: string;
   clan_name: string;
   media_type: number;
@@ -2368,13 +2366,13 @@ export interface ClanSticker {
 }
 
 export interface AllUsersAddChannelRequest {
-  channel_id: string;
+  channel_id: bigint;
   limit: number | undefined;
 }
 
 export interface AllUsersAddChannelResponse {
-  channel_id: string;
-  user_ids: string[];
+  channel_id: bigint;
+  user_ids: bigint[];
   limit: number | undefined;
   usernames: string[];
   display_names: string[];
@@ -2383,80 +2381,80 @@ export interface AllUsersAddChannelResponse {
 }
 
 export interface ClanEmojiCreateRequest {
-  clan_id: string;
+  clan_id: bigint;
   source: string;
   shortname: string;
   category: string;
-  id: string;
+  id: bigint;
   is_for_sale: boolean;
 }
 
 export interface ClanEmojiGetByClanIdRequest {
-  clan_id: string;
+  clan_id: bigint;
 }
 
 export interface ClanEmojiDeleteRequest {
-  id: string;
-  clan_id: string;
+  id: bigint;
+  clan_id: bigint;
   emoji_label: string;
 }
 
 export interface ClanEmojiUpdateRequest {
-  id: string;
+  id: bigint;
   shortname: string;
-  clan_id: string;
+  clan_id: bigint;
 }
 
 export interface Webhook {
-  id: string;
+  id: bigint;
   webhook_name: string;
-  channel_id: string;
+  channel_id: bigint;
   active: number;
   /** URL of the webhook, which is automatically generated and different from the avatar */
   url: string;
-  creator_id: string;
+  creator_id: bigint;
   create_time: string;
   update_time: string;
   avatar: string;
   status: number;
-  clan_id: string;
+  clan_id: bigint;
 }
 
 export interface WebhookCreateRequest {
   webhook_name: string;
-  channel_id: string;
+  channel_id: bigint;
   avatar: string;
-  clan_id: string;
+  clan_id: bigint;
 }
 
 export interface WebhookListRequestById {
-  id: string;
+  id: bigint;
 }
 
 export interface WebhookUpdateRequestById {
   /** webhook Id */
-  id: string;
+  id: bigint;
   /** webhook name */
   webhook_name: string;
   /** change channel_id of webhook */
-  channel_id_update: string;
+  channel_id_update: bigint;
   /** webhook avatar */
   avatar: string;
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
 }
 
 export interface WebhookDeleteRequestById {
-  id: string;
-  clan_id: string;
-  channel_id: string;
+  id: bigint;
+  clan_id: bigint;
+  channel_id: bigint;
 }
 
 export interface WebhookListRequest {
-  channel_id: string;
-  clan_id: string;
+  channel_id: bigint;
+  clan_id: bigint;
 }
 
 export interface WebhookListResponse {
@@ -2466,13 +2464,13 @@ export interface WebhookListResponse {
 export interface WebhookGenerateResponse {
   url: string;
   hook_name: string;
-  channel_id: string;
+  channel_id: bigint;
   avatar: string;
 }
 
 export interface WebhookHandlerRequest {
   body: { [key: string]: any } | undefined;
-  channel_id: string;
+  channel_id: bigint;
   token: string;
 }
 
@@ -2488,9 +2486,9 @@ export interface ClanStickerAddRequest {
   source: string;
   shortname: string;
   category: string;
-  clan_id: string;
+  clan_id: bigint;
   /** UNIQUE include type number */
-  id: string;
+  id: bigint;
   /** media type for image or audio */
   media_type: number;
   /** is for sale */
@@ -2498,37 +2496,37 @@ export interface ClanStickerAddRequest {
 }
 
 export interface ClanStickerListByClanIdRequest {
-  clan_id: string;
+  clan_id: bigint;
 }
 
 export interface ClanStickerUpdateByIdRequest {
-  id: string;
+  id: bigint;
   source: string;
   shortname: string;
   category: string;
-  clan_id: string;
+  clan_id: bigint;
 }
 
 export interface ClanStickerDeleteRequest {
-  id: string;
-  clan_id: string;
+  id: bigint;
+  clan_id: bigint;
   sticker_label: string;
 }
 
 export interface ChangeChannelCategoryRequest {
-  clan_id: string;
-  channel_id: string;
-  new_category_id: string;
+  clan_id: bigint;
+  channel_id: bigint;
+  new_category_id: bigint;
 }
 
 /** App information. */
 export interface App {
   /** app id */
-  id: string;
+  id: bigint;
   /** appname */
   appname: string;
   /** creator_id */
-  creator_id: string;
+  creator_id: bigint;
   /** logo */
   applogo: string;
   /** status online */
@@ -2550,7 +2548,7 @@ export interface App {
 /** Delete a app. */
 export interface AppDeleteRequest {
   /** The unique identifier of the app. */
-  id: string;
+  id: bigint;
   /** Record the app deletion - used for GDPR compliance. */
   record_deletion: boolean | undefined;
 }
@@ -2572,7 +2570,7 @@ export interface AddAppRequest {
   /** The password. */
   token: string;
   /** Creator of the app. */
-  creator_id: string;
+  creator_id: bigint;
   /** Role of this app. */
   role: number;
   /** Is shadow. */
@@ -2598,7 +2596,7 @@ export interface ListAppsRequest {
 /** Update app information. */
 export interface UpdateAppRequest {
   /** User ID to update. */
-  id: string;
+  id: bigint;
   /** Username. */
   appname:
     | string
@@ -2626,14 +2624,14 @@ export interface UpdateAppRequest {
 /** The identifier for an app. */
 export interface AppId {
   /** The unique identifier of the app. */
-  id: string;
+  id: bigint;
 }
 
 /** The identifier for an app. */
 export interface AppClan {
   /** The unique identifier of the app. */
-  app_id: string;
-  clan_id: string;
+  app_id: bigint;
+  clan_id: bigint;
 }
 
 /** Delete channel messages by timestamp or/and ids. */
@@ -2641,22 +2639,22 @@ export interface DeleteChannelMessagesRequest {
   /** Timestamp before which messages will be deleted. */
   before_seconds: number;
   /** IDs of the messages to delete. */
-  ids: string[];
+  ids: bigint[];
 }
 
 export interface DeleteChannelMessagesResponse {
   /** Total number of messages deleted. */
-  total: number;
+  total: bigint;
 }
 
 /** System message details. */
 export interface SystemMessage {
   /** ID */
-  id: string;
+  id: bigint;
   /** Clan ID */
-  clan_id: string;
+  clan_id: bigint;
   /** Channel ID */
-  channel_id: string;
+  channel_id: bigint;
   /** Welcome random */
   welcome_random: string;
   /** Welcome sticker */
@@ -2677,9 +2675,9 @@ export interface SystemMessagesList {
 /** Request to get system message by clan and channel IDs. */
 export interface SystemMessageRequest {
   /** Clan ID */
-  clan_id: string;
+  clan_id: bigint;
   /** Channel ID */
-  channel_id: string;
+  channel_id: bigint;
   /** Welcome random */
   welcome_random: string;
   /** Welcome sticker */
@@ -2695,30 +2693,30 @@ export interface SystemMessageRequest {
 /** Request to delete a system message by clan ID. */
 export interface DeleteSystemMessage {
   /** Clan ID */
-  clan_id: string;
+  clan_id: bigint;
 }
 
 /** Request to get system message by clan ID. */
 export interface GetSystemMessage {
   /** Clan ID */
-  clan_id: string;
+  clan_id: bigint;
 }
 
 export interface DeleteCategoryOrderRequest {
-  clan_id: string;
+  clan_id: bigint;
 }
 
 export interface StreamHttpCallbackRequest {
   /** id */
-  id: string;
+  id: bigint;
   /** client_id */
-  client_id: string;
+  client_id: bigint;
   /** clan_id */
-  clan_id: string;
+  clan_id: bigint;
   /** channel_id */
-  channel_id: string;
+  channel_id: bigint;
   /** user_id */
-  user_id: string;
+  user_id: bigint;
   /** action */
   action: number;
   /** is_publisher */
@@ -2735,11 +2733,11 @@ export interface StreamHttpCallbackResponse {
 /** A list of users belonging to a channel, along with their role. */
 export interface StreamingChannelUser {
   /** user join id */
-  id: string;
+  id: bigint;
   /** user for a channel. */
-  user_id: string;
+  user_id: bigint;
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
   /** participant */
   participant: string;
 }
@@ -2752,38 +2750,38 @@ export interface StreamingChannelUserList {
 
 export interface RegisterStreamingChannelRequest {
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
 }
 
 export interface RegisterStreamingChannelResponse {
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
   /** streaming url */
   streaming_url: string;
 }
 
 export interface GiveCoffeeEvent {
   /** sender id */
-  sender_id: string;
+  sender_id: bigint;
   /** receiver id */
-  receiver_id: string;
+  receiver_id: bigint;
   /** token count */
   token_count: number;
   /** message_ref */
-  message_ref_id: string;
+  message_ref_id: bigint;
   /** chanel id */
-  channel_id: string;
+  channel_id: bigint;
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
 }
 
 export interface ListChannelAppsRequest {
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
 }
 
 export interface ListChannelAppsResponse {
@@ -2793,13 +2791,13 @@ export interface ListChannelAppsResponse {
 
 export interface ChannelAppResponse {
   /** id */
-  id: string;
+  id: bigint;
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
   /** app id */
-  app_id: string;
+  app_id: bigint;
   /** app url */
   app_url: string;
   /** app name */
@@ -2814,7 +2812,7 @@ export interface AllUserClans {
 
 export interface RoleListEventRequest {
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** limit */
   limit: number;
   /** state */
@@ -2838,16 +2836,16 @@ export interface RoleListEventResponse {
 
 export interface UserPermissionInChannelListRequest {
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
 }
 
 export interface UserPermissionInChannelListResponse {
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
   /** A list of permission. */
   permissions: PermissionList | undefined;
 }
@@ -2855,39 +2853,39 @@ export interface UserPermissionInChannelListResponse {
 /** Permission role channel */
 export interface PermissionRoleChannel {
   /** permission id */
-  permission_id: string;
+  permission_id: bigint;
   /** active */
   active: boolean;
 }
 
 export interface PermissionRoleChannelListEventRequest {
   /** role id */
-  role_id: string;
+  role_id: bigint;
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
   /** user id */
-  user_id: string;
+  user_id: bigint;
 }
 
 /** List of permission role channel */
 export interface PermissionRoleChannelListEventResponse {
   /** role id */
-  role_id: string;
+  role_id: bigint;
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
   /** user id */
-  user_id: string;
+  user_id: bigint;
   /** list of permission role channel */
   permission_role_channel: PermissionRoleChannel[];
 }
 
 export interface ChannelSettingListRequest {
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** parent id of thread */
-  parent_id: string;
+  parent_id: bigint;
   /** category id */
-  category_id: string;
+  category_id: bigint;
   /** is private channel */
   private_channel:
     | number
@@ -2918,15 +2916,15 @@ export interface ChannelSettingListRequest {
 
 export interface ChannelSettingItem {
   /** channel id */
-  id: string;
+  id: bigint;
   /** creator id */
-  creator_id: string;
+  creator_id: bigint;
   /** parentId */
-  parent_id: string;
+  parent_id: bigint;
   /** label of channel */
   channel_label: string;
   /** category id */
-  category_id: string;
+  category_id: bigint;
   /** meeting code */
   meeting_code: string;
   /** channel private */
@@ -2936,16 +2934,16 @@ export interface ChannelSettingItem {
   /** is active */
   active: number;
   /** list user in channel */
-  user_ids: string[];
+  user_ids: bigint[];
   /** message count */
-  message_count: number;
+  message_count: bigint;
   /** last sent message */
   last_sent_message: ChannelMessageHeader | undefined;
 }
 
 export interface ChannelSettingListResponse {
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** channel count */
   channel_count: number;
   /** thread count */
@@ -2956,22 +2954,20 @@ export interface ChannelSettingListResponse {
 
 export interface MarkAsReadRequest {
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
   /** category_id */
-  category_id: string;
+  category_id: bigint;
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
 }
 
 export interface EditChannelCanvasRequest {
   /** id */
-  id:
-    | string
-    | undefined;
+  id: bigint;
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** title */
   title: string;
   /** content */
@@ -2984,23 +2980,23 @@ export interface EditChannelCanvasRequest {
 
 export interface EditChannelCanvasResponse {
   /** id */
-  id: string;
+  id: bigint;
 }
 
 export interface DeleteChannelCanvasRequest {
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
   /** canvas id */
-  canvas_id: string;
+  canvas_id: bigint;
 }
 
 export interface ChannelCanvasListRequest {
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
   /** limit */
   limit:
     | number
@@ -3015,7 +3011,7 @@ export interface ChannelCanvasListRequest {
 
 export interface ChannelCanvasItem {
   /** id */
-  id: string;
+  id: bigint;
   /** title */
   title: string;
   /** is default */
@@ -3023,7 +3019,7 @@ export interface ChannelCanvasItem {
   /** content */
   content: string;
   /** creator */
-  creator_id: string;
+  creator_id: bigint;
   /**  */
   update_time_seconds: number;
   create_time_seconds: number;
@@ -3031,69 +3027,69 @@ export interface ChannelCanvasItem {
 
 export interface ChannelCanvasListResponse {
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
   /** channel doc item */
   channel_canvases: ChannelCanvasItem[];
   /**  */
-  count: number;
+  count: bigint;
 }
 
 export interface ChannelCanvasDetailRequest {
   /** id */
-  id: string;
+  id: bigint;
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
 }
 
 export interface ChannelCanvasDetailResponse {
   /** id */
-  id: string;
+  id: bigint;
   /** title */
   title: string;
   /** content */
   content: string;
   /** creator */
-  creator_id: string;
+  creator_id: bigint;
   /** editor */
-  editor_id: string;
+  editor_id: bigint;
   /** is default */
   is_default: boolean;
 }
 
 export interface AddFavoriteChannelRequest {
-  channel_id: string;
-  clan_id: string;
+  channel_id: bigint;
+  clan_id: bigint;
 }
 
 export interface RemoveFavoriteChannelRequest {
-  clan_id: string;
-  channel_id: string;
+  clan_id: bigint;
+  channel_id: bigint;
 }
 
 export interface AddFavoriteChannelResponse {
-  channel_id: string;
+  channel_id: bigint;
 }
 
 export interface ListFavoriteChannelRequest {
-  clan_id: string;
+  clan_id: bigint;
 }
 
 export interface ListFavoriteChannelResponse {
-  channel_ids: string[];
+  channel_ids: bigint[];
 }
 
 export interface UserActivity {
-  user_id: string;
+  user_id: bigint;
   activity_name: string;
   activity_type: number;
   activity_description: string;
   start_time_seconds: number;
   end_time_seconds: number;
-  application_id: string;
+  application_id: bigint;
   status: number;
 }
 
@@ -3106,21 +3102,21 @@ export interface CreateActivityRequest {
   activity_type: number;
   activity_description: string;
   start_time_seconds: number;
-  application_id: string;
+  application_id: bigint;
   status: number;
 }
 
 export interface LoginIDResponse {
   /** loginId */
-  login_id: string;
+  login_id: bigint;
   /** status login */
   status: number;
   /** create time */
-  create_time_seconds: number;
+  create_time_seconds: bigint;
   /** platform */
   platform: string;
   /** user_id */
-  user_id: number;
+  user_id: bigint;
   /** username */
   username: string;
   /** address */
@@ -3136,7 +3132,7 @@ export interface LoginRequest {
 
 export interface ConfirmLoginRequest {
   /** loginId */
-  login_id: string;
+  login_id: bigint;
   /** Whether to enable "Remember Me" for extended session duration. */
   is_remember: boolean | undefined;
 }
@@ -3151,7 +3147,7 @@ export interface PushPubKeyRequest {
 }
 
 export interface GetPubKeysRequest {
-  user_ids: string[];
+  user_ids: bigint[];
 }
 
 export interface GetPubKeysResponse {
@@ -3159,13 +3155,13 @@ export interface GetPubKeysResponse {
 }
 
 export interface GetPubKeysResponse_UserPubKey {
-  user_id: string;
+  user_id: bigint;
   PK: PubKey | undefined;
 }
 
 export interface ChanEncryptionMethod {
   method: string;
-  channel_id: string;
+  channel_id: bigint;
 }
 
 export interface GetKeyServerResp {
@@ -3173,15 +3169,15 @@ export interface GetKeyServerResp {
 }
 
 export interface AuditLog {
-  id: string;
-  user_id: string;
-  clan_id: string;
+  id: bigint;
+  user_id: bigint;
+  clan_id: bigint;
   action_log: string;
   entity_name: string;
-  entity_id: string;
+  entity_id: bigint;
   details: string;
   time_log_seconds: number;
-  channel_id: string;
+  channel_id: bigint;
   channel_label: string;
 }
 
@@ -3193,18 +3189,18 @@ export interface ListAuditLog {
 
 export interface ListAuditLogRequest {
   action_log: string;
-  user_id: string;
-  clan_id: string;
+  user_id: bigint;
+  clan_id: bigint;
   date_log: string;
 }
 
 export interface TokenSentEvent {
   /** sender id */
-  sender_id: string;
+  sender_id: bigint;
   /** sender name */
   sender_name: string;
   /** receiver */
-  receiver_id: string;
+  receiver_id: bigint;
   /** amount of token */
   amount: number;
   /** note */
@@ -3212,12 +3208,12 @@ export interface TokenSentEvent {
   /** extra attribute */
   extra_attribute: string;
   /** transaction id */
-  transaction_id: string;
+  transaction_id: bigint;
 }
 
 export interface UnlockItemRequest {
   /** item id */
-  item_id: string;
+  item_id: bigint;
   /** item type */
   item_type: number;
 }
@@ -3228,7 +3224,7 @@ export interface UnlockedItemResponse {
 
 export interface ListOnboardingRequest {
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** guide_type: 0 = greeting, 1 = rule, 2 = task, 3 = question */
   guide_type:
     | number
@@ -3247,15 +3243,15 @@ export interface ListOnboardingResponse {
 
 export interface OnboardingItem {
   /** id */
-  id: string;
+  id: bigint;
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** guide_type: 0 = greeting, 1 = rule, 2 = task, 3 = question */
   guide_type: number;
   /** task type */
   task_type: number;
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
   /** title */
   title: string;
   /** content */
@@ -3287,7 +3283,7 @@ export interface OnboardingContent {
   /** task type */
   task_type: number;
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
   /** title */
   title: string;
   /** content */
@@ -3300,22 +3296,22 @@ export interface OnboardingContent {
 
 export interface CreateOnboardingRequest {
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** contents */
   contents: OnboardingContent[];
 }
 
 export interface UpdateOnboardingRequest {
   /** id */
-  id: string;
+  id: bigint;
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
   /** task type */
   task_type:
     | number
     | undefined;
   /** channel id */
-  channel_id: string;
+  channel_id: bigint;
   /** title */
   title: string;
   /** content */
@@ -3328,24 +3324,24 @@ export interface UpdateOnboardingRequest {
 
 export interface OnboardingRequest {
   /** id */
-  id: string;
+  id: bigint;
   /** clan id */
-  clan_id: string;
+  clan_id: bigint;
 }
 
 export interface ClanWebhook {
   /** id. */
-  id: string;
+  id: bigint;
   /** webhook name. */
   webhook_name: string;
   /** clan id. */
-  clan_id: string;
+  clan_id: bigint;
   /** active. */
   active: number;
   /** URL of the webhook, which is automatically generated and different from the avatar. */
   url: string;
   /** creator id. */
-  creator_id: string;
+  creator_id: bigint;
   /** avatar */
   avatar: string;
   /** create time. */
@@ -3356,7 +3352,7 @@ export interface ClanWebhook {
 
 export interface GenerateClanWebhookRequest {
   /** clan id. */
-  clan_id: string;
+  clan_id: bigint;
   /** webhook name. */
   webhook_name: string;
   /** avatar. */
@@ -3365,7 +3361,7 @@ export interface GenerateClanWebhookRequest {
 
 export interface GenerateClanWebhookResponse {
   /** clan id. */
-  clan_id: string;
+  clan_id: bigint;
   /** url. */
   url: string;
   /** webhook name. */
@@ -3376,16 +3372,16 @@ export interface GenerateClanWebhookResponse {
 
 export interface ClanWebhookRequest {
   /** id. */
-  id: string;
+  id: bigint;
   /** clan id. */
-  clan_id: string;
+  clan_id: bigint;
 }
 
 export interface UpdateClanWebhookRequest {
   /** webhook id. */
-  id: string;
+  id: bigint;
   /** clan id. */
-  clan_id: string;
+  clan_id: bigint;
   /** webhook name. */
   webhook_name: string;
   /** avatar. */
@@ -3396,7 +3392,7 @@ export interface UpdateClanWebhookRequest {
 
 export interface ListClanWebhookRequest {
   /** clan_id. */
-  clan_id: string;
+  clan_id: bigint;
 }
 
 export interface ListClanWebhookResponse {
@@ -3423,7 +3419,7 @@ export interface ClanWebhookHandlerRequest {
 }
 
 export interface UserStatus {
-  user_id: string;
+  user_id: bigint;
   status: string;
 }
 
@@ -3435,11 +3431,11 @@ export interface UserStatusUpdate {
 
 export interface OnboardingSteps {
   /** id. */
-  id: string;
+  id: bigint;
   /** user id. */
-  user_id: string;
+  user_id: bigint;
   /** clan id. */
-  clan_id: string;
+  clan_id: bigint;
   /** onboarding step. */
   onboarding_step: number;
 }
@@ -3451,7 +3447,7 @@ export interface ListOnboardingStepResponse {
 
 export interface ListOnboardingStepRequest {
   /** clan id. */
-  clan_id: string;
+  clan_id: bigint;
   /** limit */
   limit:
     | number
@@ -3462,17 +3458,17 @@ export interface ListOnboardingStepRequest {
 
 export interface UpdateOnboardingStepRequest {
   /** clan id. */
-  clan_id: string;
+  clan_id: bigint;
   /** onboarding step. */
   onboarding_step: number | undefined;
 }
 
 export interface SdTopic {
-  id: string;
-  creator_id: string;
-  message_id: string;
-  clan_id: string;
-  channel_id: string;
+  id: bigint;
+  creator_id: bigint;
+  message_id: bigint;
+  clan_id: bigint;
+  channel_id: bigint;
   status: number;
   create_time_seconds: number;
   update_time_seconds: number;
@@ -3481,9 +3477,9 @@ export interface SdTopic {
 }
 
 export interface SdTopicRequest {
-  message_id: string;
-  clan_id: string;
-  channel_id: string;
+  message_id: bigint;
+  clan_id: bigint;
+  channel_id: bigint;
 }
 
 export interface SdTopicList {
@@ -3492,30 +3488,30 @@ export interface SdTopicList {
 }
 
 export interface ListSdTopicRequest {
-  clan_id: string;
+  clan_id: bigint;
   limit: number;
 }
 
 export interface SdTopicDetailRequest {
-  topic_id: string;
+  topic_id: bigint;
 }
 
 export interface DeleteSdTopicRequest {
-  channel_id: string;
-  id: string;
-  clan_id: string;
+  channel_id: bigint;
+  id: bigint;
+  clan_id: bigint;
 }
 
 export interface GenerateMeetTokenRequest {
-  channel_id: string;
+  channel_id: bigint;
   room_name: string;
 }
 
 export interface MeetParticipantRequest {
   username: string;
   room_name: string;
-  channel_id: string;
-  clan_id: string;
+  channel_id: bigint;
+  clan_id: bigint;
 }
 
 export interface GenerateMeetTokenResponse {
@@ -3523,15 +3519,15 @@ export interface GenerateMeetTokenResponse {
 }
 
 export interface GenerateMezonMeetResponse {
-  meet_id: string;
+  meet_id: bigint;
   room_name: string;
   external_link: string;
-  creator_id: string;
-  event_id: string;
+  creator_id: bigint;
+  event_id: bigint;
 }
 
 export interface CreateRoomChannelApps {
-  channel_id: string;
+  channel_id: bigint;
   room_name: string;
 }
 
@@ -3545,7 +3541,7 @@ export interface MezonOauthClient {
   backchannel_logout_session_required: boolean;
   backchannel_logout_uri: string;
   client_credentials_grant_access_token_lifespan: string;
-  client_id: string;
+  client_id: bigint;
   client_name: string;
   client_secret: string;
   client_secret_expires_at: number;
@@ -3590,18 +3586,18 @@ export interface MezonOauthClientList {
 }
 
 export interface GetMezonOauthClientRequest {
-  client_id: string;
+  client_id: bigint;
   client_name: string;
 }
 
 export interface SearchThreadRequest {
-  clan_id: string;
-  channel_id: string;
+  clan_id: bigint;
+  channel_id: bigint;
   label: string;
 }
 
 export interface GenerateHashChannelAppsRequest {
-  app_id: string;
+  app_id: bigint;
 }
 
 export interface GenerateHashChannelAppsResponse {
@@ -3609,9 +3605,9 @@ export interface GenerateHashChannelAppsResponse {
 }
 
 export interface Message2InboxRequest {
-  message_id: string;
-  channel_id: string;
-  clan_id: string;
+  message_id: bigint;
+  channel_id: bigint;
+  clan_id: bigint;
   avatar: string;
   content: string;
   mentions: MessageMention[];
@@ -3652,7 +3648,7 @@ export interface AccountMezon_VarsEntry {
 
 export interface LinkAccountConfirmRequest {
   /** The request id */
-  req_id: string;
+  req_id: bigint;
   /** Status */
   status: number;
   /** The confirm code */
@@ -3660,10 +3656,10 @@ export interface LinkAccountConfirmRequest {
 }
 
 export interface QuickMenuAccess {
-  id: string;
-  bot_id: string;
-  clan_id: string;
-  channel_id: string;
+  id: bigint;
+  bot_id: bigint;
+  clan_id: bigint;
+  channel_id: bigint;
   menu_name: string;
   background: string;
   action_msg: string;
@@ -3671,8 +3667,8 @@ export interface QuickMenuAccess {
 }
 
 export interface ListQuickMenuAccessRequest {
-  bot_id: string;
-  channel_id: string;
+  bot_id: bigint;
+  channel_id: bigint;
   menu_type: number;
 }
 
@@ -3694,25 +3690,25 @@ export interface ForSaleItemList {
 }
 
 export interface IsFollowerRequest {
-  follow_id: string;
+  follow_id: bigint;
 }
 
 export interface IsFollowerResponse {
-  follow_id: string;
+  follow_id: bigint;
   is_follower: boolean;
 }
 
 export interface TransferOwnershipRequest {
-  clan_id: string;
-  new_owner_id: string;
+  clan_id: bigint;
+  new_owner_id: bigint;
 }
 
 export interface UserIds {
-  user_ids: string[];
+  user_ids: bigint[];
 }
 
 export interface ReportMessageAbuseReqest {
-  message_id: string;
+  message_id: bigint;
   abuse_type: string;
 }
 
@@ -3721,7 +3717,7 @@ export interface LogedDeviceList {
 }
 
 export interface LogedDevice {
-  device_id: string;
+  device_id: bigint;
   device_name: string;
   login_at_seconds: number;
   status: number;
@@ -3736,22 +3732,22 @@ export interface DirectFcmProto {
   title: string;
   link: string;
   content: string;
-  channel_id: string;
-  sender_id: string;
+  channel_id: bigint;
+  sender_id: bigint;
   avatar: string;
-  clan_id: string;
+  clan_id: bigint;
   attachment_link: string;
   display_name: string;
   create_time_seconds: number;
   update_time_seconds: number;
   username: string;
-  mention_ids: string[];
+  mention_ids: bigint[];
   position_s: number[];
   position_e: number[];
   attachment_type: string;
   has_more_attachment: boolean;
   is_mention_role: boolean[];
-  message_id: string;
+  message_id: bigint;
 }
 
 export interface MessageMentionList {
@@ -3771,7 +3767,7 @@ export interface MessageReactionList {
 }
 
 export interface ListClanBadgeCountRequest {
-  clan_id: string;
+  clan_id: bigint;
 }
 
 export interface ListClanBadgeCountResponse {
@@ -3779,9 +3775,9 @@ export interface ListClanBadgeCountResponse {
 }
 
 export interface ClanDiscover {
-  clan_id: string;
+  clan_id: bigint;
   clan_name: string;
-  invite_id: string;
+  invite_id: bigint;
   clan_logo: string;
   online_members: number;
   total_members: number;
@@ -3801,7 +3797,7 @@ export interface ListClanDiscover {
 
 export interface GenerateMeetTokenExternalResponse {
   token: string;
-  guest_user_id: string;
+  guest_user_id: bigint;
   guest_access_token: string;
 }
 
@@ -4167,9 +4163,14 @@ function createBaseAddFriendsRequest(): AddFriendsRequest {
 
 export const AddFriendsRequest = {
   encode(message: AddFriendsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    writer.uint32(10).fork();
     for (const v of message.ids) {
-      writer.uint32(10).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     for (const v of message.usernames) {
       writer.uint32(18).string(v!);
     }
@@ -4184,12 +4185,22 @@ export const AddFriendsRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
+          if (tag === 8) {
+            message.ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.ids.push(reader.string());
-          continue;
+          if (tag === 10) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 2:
           if (tag !== 18) {
             break;
@@ -4208,7 +4219,7 @@ export const AddFriendsRequest = {
 
   fromJSON(object: any): AddFriendsRequest {
     return {
-      ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => globalThis.String(e)) : [],
+      ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => BigInt(e)) : [],
       usernames: globalThis.Array.isArray(object?.usernames)
         ? object.usernames.map((e: any) => globalThis.String(e))
         : [],
@@ -4218,7 +4229,7 @@ export const AddFriendsRequest = {
   toJSON(message: AddFriendsRequest): unknown {
     const obj: any = {};
     if (message.ids?.length) {
-      obj.ids = message.ids;
+      obj.ids = message.ids.map((e) => e.toString());
     }
     if (message.usernames?.length) {
       obj.usernames = message.usernames;
@@ -4243,9 +4254,14 @@ function createBaseAddFriendsResponse(): AddFriendsResponse {
 
 export const AddFriendsResponse = {
   encode(message: AddFriendsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    writer.uint32(10).fork();
     for (const v of message.ids) {
-      writer.uint32(10).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     for (const v of message.usernames) {
       writer.uint32(18).string(v!);
     }
@@ -4260,12 +4276,22 @@ export const AddFriendsResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
+          if (tag === 8) {
+            message.ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.ids.push(reader.string());
-          continue;
+          if (tag === 10) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 2:
           if (tag !== 18) {
             break;
@@ -4284,7 +4310,7 @@ export const AddFriendsResponse = {
 
   fromJSON(object: any): AddFriendsResponse {
     return {
-      ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => globalThis.String(e)) : [],
+      ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => BigInt(e)) : [],
       usernames: globalThis.Array.isArray(object?.usernames)
         ? object.usernames.map((e: any) => globalThis.String(e))
         : [],
@@ -4294,7 +4320,7 @@ export const AddFriendsResponse = {
   toJSON(message: AddFriendsResponse): unknown {
     const obj: any = {};
     if (message.ids?.length) {
-      obj.ids = message.ids;
+      obj.ids = message.ids.map((e) => e.toString());
     }
     if (message.usernames?.length) {
       obj.usernames = message.usernames;
@@ -4314,17 +4340,25 @@ export const AddFriendsResponse = {
 };
 
 function createBaseAddGroupUsersRequest(): AddGroupUsersRequest {
-  return { group_id: "", user_ids: [] };
+  return { group_id: 0n, user_ids: [] };
 }
 
 export const AddGroupUsersRequest = {
   encode(message: AddGroupUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.group_id !== "") {
-      writer.uint32(10).string(message.group_id);
+    if (message.group_id !== 0n) {
+      if (BigInt.asIntN(64, message.group_id) !== message.group_id) {
+        throw new globalThis.Error("value provided for field message.group_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.group_id.toString());
     }
+    writer.uint32(18).fork();
     for (const v of message.user_ids) {
-      writer.uint32(18).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field user_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -4336,19 +4370,29 @@ export const AddGroupUsersRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.group_id = reader.string();
+          message.group_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
-            break;
+          if (tag === 16) {
+            message.user_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 18) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -4360,18 +4404,18 @@ export const AddGroupUsersRequest = {
 
   fromJSON(object: any): AddGroupUsersRequest {
     return {
-      group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "",
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      group_id: isSet(object.group_id) ? BigInt(object.group_id) : 0n,
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => BigInt(e)) : [],
     };
   },
 
   toJSON(message: AddGroupUsersRequest): unknown {
     const obj: any = {};
-    if (message.group_id !== "") {
-      obj.group_id = message.group_id;
+    if (message.group_id !== 0n) {
+      obj.group_id = message.group_id.toString();
     }
     if (message.user_ids?.length) {
-      obj.user_ids = message.user_ids;
+      obj.user_ids = message.user_ids.map((e) => e.toString());
     }
     return obj;
   },
@@ -4381,7 +4425,7 @@ export const AddGroupUsersRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<AddGroupUsersRequest>, I>>(object: I): AddGroupUsersRequest {
     const message = createBaseAddGroupUsersRequest();
-    message.group_id = object.group_id ?? "";
+    message.group_id = object.group_id ?? 0n;
     message.user_ids = object.user_ids?.map((e) => e) || [];
     return message;
   },
@@ -4572,7 +4616,7 @@ export const SessionRefreshRequest_VarsEntry = {
 };
 
 function createBaseSessionLogoutRequest(): SessionLogoutRequest {
-  return { token: "", refresh_token: "", device_id: "", fcm_token: "", platform: "" };
+  return { token: "", refresh_token: "", device_id: 0n, fcm_token: "", platform: "" };
 }
 
 export const SessionLogoutRequest = {
@@ -4583,8 +4627,11 @@ export const SessionLogoutRequest = {
     if (message.refresh_token !== "") {
       writer.uint32(18).string(message.refresh_token);
     }
-    if (message.device_id !== "") {
-      writer.uint32(26).string(message.device_id);
+    if (message.device_id !== 0n) {
+      if (BigInt.asIntN(64, message.device_id) !== message.device_id) {
+        throw new globalThis.Error("value provided for field message.device_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.device_id.toString());
     }
     if (message.fcm_token !== "") {
       writer.uint32(34).string(message.fcm_token);
@@ -4617,11 +4664,11 @@ export const SessionLogoutRequest = {
           message.refresh_token = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.device_id = reader.string();
+          message.device_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -4650,7 +4697,7 @@ export const SessionLogoutRequest = {
     return {
       token: isSet(object.token) ? globalThis.String(object.token) : "",
       refresh_token: isSet(object.refresh_token) ? globalThis.String(object.refresh_token) : "",
-      device_id: isSet(object.device_id) ? globalThis.String(object.device_id) : "",
+      device_id: isSet(object.device_id) ? BigInt(object.device_id) : 0n,
       fcm_token: isSet(object.fcm_token) ? globalThis.String(object.fcm_token) : "",
       platform: isSet(object.platform) ? globalThis.String(object.platform) : "",
     };
@@ -4664,8 +4711,8 @@ export const SessionLogoutRequest = {
     if (message.refresh_token !== "") {
       obj.refresh_token = message.refresh_token;
     }
-    if (message.device_id !== "") {
-      obj.device_id = message.device_id;
+    if (message.device_id !== 0n) {
+      obj.device_id = message.device_id.toString();
     }
     if (message.fcm_token !== "") {
       obj.fcm_token = message.fcm_token;
@@ -4683,7 +4730,7 @@ export const SessionLogoutRequest = {
     const message = createBaseSessionLogoutRequest();
     message.token = object.token ?? "";
     message.refresh_token = object.refresh_token ?? "";
-    message.device_id = object.device_id ?? "";
+    message.device_id = object.device_id ?? 0n;
     message.fcm_token = object.fcm_token ?? "";
     message.platform = object.platform ?? "";
     return message;
@@ -4765,13 +4812,16 @@ export const IsBannedResponse = {
 };
 
 function createBaseIsBannedRequest(): IsBannedRequest {
-  return { channel_id: "" };
+  return { channel_id: 0n };
 }
 
 export const IsBannedRequest = {
   encode(message: IsBannedRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.channel_id.toString());
     }
     return writer;
   },
@@ -4784,11 +4834,11 @@ export const IsBannedRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -4800,13 +4850,13 @@ export const IsBannedRequest = {
   },
 
   fromJSON(object: any): IsBannedRequest {
-    return { channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "" };
+    return { channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n };
   },
 
   toJSON(message: IsBannedRequest): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     return obj;
   },
@@ -4816,23 +4866,31 @@ export const IsBannedRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<IsBannedRequest>, I>>(object: I): IsBannedRequest {
     const message = createBaseIsBannedRequest();
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     return message;
   },
 };
 
 function createBaseBanGroupUsersRequest(): BanGroupUsersRequest {
-  return { group_id: "", user_ids: [] };
+  return { group_id: 0n, user_ids: [] };
 }
 
 export const BanGroupUsersRequest = {
   encode(message: BanGroupUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.group_id !== "") {
-      writer.uint32(10).string(message.group_id);
+    if (message.group_id !== 0n) {
+      if (BigInt.asIntN(64, message.group_id) !== message.group_id) {
+        throw new globalThis.Error("value provided for field message.group_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.group_id.toString());
     }
+    writer.uint32(18).fork();
     for (const v of message.user_ids) {
-      writer.uint32(18).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field user_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -4844,19 +4902,29 @@ export const BanGroupUsersRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.group_id = reader.string();
+          message.group_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
-            break;
+          if (tag === 16) {
+            message.user_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 18) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -4868,18 +4936,18 @@ export const BanGroupUsersRequest = {
 
   fromJSON(object: any): BanGroupUsersRequest {
     return {
-      group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "",
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      group_id: isSet(object.group_id) ? BigInt(object.group_id) : 0n,
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => BigInt(e)) : [],
     };
   },
 
   toJSON(message: BanGroupUsersRequest): unknown {
     const obj: any = {};
-    if (message.group_id !== "") {
-      obj.group_id = message.group_id;
+    if (message.group_id !== 0n) {
+      obj.group_id = message.group_id.toString();
     }
     if (message.user_ids?.length) {
-      obj.user_ids = message.user_ids;
+      obj.user_ids = message.user_ids.map((e) => e.toString());
     }
     return obj;
   },
@@ -4889,7 +4957,7 @@ export const BanGroupUsersRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<BanGroupUsersRequest>, I>>(object: I): BanGroupUsersRequest {
     const message = createBaseBanGroupUsersRequest();
-    message.group_id = object.group_id ?? "";
+    message.group_id = object.group_id ?? 0n;
     message.user_ids = object.user_ids?.map((e) => e) || [];
     return message;
   },
@@ -4901,9 +4969,14 @@ function createBaseBlockFriendsRequest(): BlockFriendsRequest {
 
 export const BlockFriendsRequest = {
   encode(message: BlockFriendsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    writer.uint32(10).fork();
     for (const v of message.ids) {
-      writer.uint32(10).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     for (const v of message.usernames) {
       writer.uint32(18).string(v!);
     }
@@ -4918,12 +4991,22 @@ export const BlockFriendsRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
+          if (tag === 8) {
+            message.ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.ids.push(reader.string());
-          continue;
+          if (tag === 10) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 2:
           if (tag !== 18) {
             break;
@@ -4942,7 +5025,7 @@ export const BlockFriendsRequest = {
 
   fromJSON(object: any): BlockFriendsRequest {
     return {
-      ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => globalThis.String(e)) : [],
+      ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => BigInt(e)) : [],
       usernames: globalThis.Array.isArray(object?.usernames)
         ? object.usernames.map((e: any) => globalThis.String(e))
         : [],
@@ -4952,7 +5035,7 @@ export const BlockFriendsRequest = {
   toJSON(message: BlockFriendsRequest): unknown {
     const obj: any = {};
     if (message.ids?.length) {
-      obj.ids = message.ids;
+      obj.ids = message.ids.map((e) => e.toString());
     }
     if (message.usernames?.length) {
       obj.usernames = message.usernames;
@@ -4973,11 +5056,11 @@ export const BlockFriendsRequest = {
 
 function createBaseChannelMessage(): ChannelMessage {
   return {
-    clan_id: "",
-    channel_id: "",
-    message_id: "",
+    clan_id: 0n,
+    channel_id: 0n,
+    message_id: 0n,
     code: 0,
-    sender_id: "",
+    sender_id: 0n,
     username: "",
     avatar: "",
     content: "",
@@ -4997,26 +5080,38 @@ function createBaseChannelMessage(): ChannelMessage {
     mode: 0,
     hide_editted: false,
     is_public: false,
-    topic_id: "",
+    topic_id: 0n,
   };
 }
 
 export const ChannelMessage = {
   encode(message: ChannelMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
-    if (message.message_id !== "") {
-      writer.uint32(26).string(message.message_id);
+    if (message.message_id !== 0n) {
+      if (BigInt.asIntN(64, message.message_id) !== message.message_id) {
+        throw new globalThis.Error("value provided for field message.message_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.message_id.toString());
     }
     if (message.code !== 0) {
       writer.uint32(32).int32(message.code);
     }
-    if (message.sender_id !== "") {
-      writer.uint32(42).string(message.sender_id);
+    if (message.sender_id !== 0n) {
+      if (BigInt.asIntN(64, message.sender_id) !== message.sender_id) {
+        throw new globalThis.Error("value provided for field message.sender_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.sender_id.toString());
     }
     if (message.username !== "") {
       writer.uint32(50).string(message.username);
@@ -5075,8 +5170,11 @@ export const ChannelMessage = {
     if (message.is_public !== false) {
       writer.uint32(192).bool(message.is_public);
     }
-    if (message.topic_id !== "") {
-      writer.uint32(202).string(message.topic_id);
+    if (message.topic_id !== 0n) {
+      if (BigInt.asIntN(64, message.topic_id) !== message.topic_id) {
+        throw new globalThis.Error("value provided for field message.topic_id of type int64 too large");
+      }
+      writer.uint32(200).int64(message.topic_id.toString());
     }
     return writer;
   },
@@ -5089,25 +5187,25 @@ export const ChannelMessage = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 32) {
@@ -5117,11 +5215,11 @@ export const ChannelMessage = {
           message.code = reader.int32();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.sender_id = reader.string();
+          message.sender_id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 50) {
@@ -5257,11 +5355,11 @@ export const ChannelMessage = {
           message.is_public = reader.bool();
           continue;
         case 25:
-          if (tag !== 202) {
+          if (tag !== 200) {
             break;
           }
 
-          message.topic_id = reader.string();
+          message.topic_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -5274,11 +5372,11 @@ export const ChannelMessage = {
 
   fromJSON(object: any): ChannelMessage {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      message_id: isSet(object.message_id) ? BigInt(object.message_id) : 0n,
       code: isSet(object.code) ? globalThis.Number(object.code) : 0,
-      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
+      sender_id: isSet(object.sender_id) ? BigInt(object.sender_id) : 0n,
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
@@ -5300,26 +5398,26 @@ export const ChannelMessage = {
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
       hide_editted: isSet(object.hide_editted) ? globalThis.Boolean(object.hide_editted) : false,
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
-      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
+      topic_id: isSet(object.topic_id) ? BigInt(object.topic_id) : 0n,
     };
   },
 
   toJSON(message: ChannelMessage): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.message_id !== "") {
-      obj.message_id = message.message_id;
+    if (message.message_id !== 0n) {
+      obj.message_id = message.message_id.toString();
     }
     if (message.code !== 0) {
       obj.code = Math.round(message.code);
     }
-    if (message.sender_id !== "") {
-      obj.sender_id = message.sender_id;
+    if (message.sender_id !== 0n) {
+      obj.sender_id = message.sender_id.toString();
     }
     if (message.username !== "") {
       obj.username = message.username;
@@ -5378,8 +5476,8 @@ export const ChannelMessage = {
     if (message.is_public !== false) {
       obj.is_public = message.is_public;
     }
-    if (message.topic_id !== "") {
-      obj.topic_id = message.topic_id;
+    if (message.topic_id !== 0n) {
+      obj.topic_id = message.topic_id.toString();
     }
     return obj;
   },
@@ -5389,11 +5487,11 @@ export const ChannelMessage = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelMessage>, I>>(object: I): ChannelMessage {
     const message = createBaseChannelMessage();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.message_id = object.message_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
+    message.message_id = object.message_id ?? 0n;
     message.code = object.code ?? 0;
-    message.sender_id = object.sender_id ?? "";
+    message.sender_id = object.sender_id ?? 0n;
     message.username = object.username ?? "";
     message.avatar = object.avatar ?? "";
     message.content = object.content ?? "";
@@ -5413,28 +5511,37 @@ export const ChannelMessage = {
     message.mode = object.mode ?? 0;
     message.hide_editted = object.hide_editted ?? false;
     message.is_public = object.is_public ?? false;
-    message.topic_id = object.topic_id ?? "";
+    message.topic_id = object.topic_id ?? 0n;
     return message;
   },
 };
 
 function createBaseMessageMention(): MessageMention {
-  return { id: "", user_id: "", username: "", role_id: "", rolename: "", create_time_seconds: 0, s: 0, e: 0 };
+  return { id: 0n, user_id: 0n, username: "", role_id: 0n, rolename: "", create_time_seconds: 0, s: 0, e: 0 };
 }
 
 export const MessageMention = {
   encode(message: MessageMention, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.user_id !== "") {
-      writer.uint32(18).string(message.user_id);
+    if (message.user_id !== 0n) {
+      if (BigInt.asIntN(64, message.user_id) !== message.user_id) {
+        throw new globalThis.Error("value provided for field message.user_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.user_id.toString());
     }
     if (message.username !== "") {
       writer.uint32(26).string(message.username);
     }
-    if (message.role_id !== "") {
-      writer.uint32(34).string(message.role_id);
+    if (message.role_id !== 0n) {
+      if (BigInt.asIntN(64, message.role_id) !== message.role_id) {
+        throw new globalThis.Error("value provided for field message.role_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.role_id.toString());
     }
     if (message.rolename !== "") {
       writer.uint32(42).string(message.rolename);
@@ -5459,18 +5566,18 @@ export const MessageMention = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -5480,11 +5587,11 @@ export const MessageMention = {
           message.username = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.role_id = reader.string();
+          message.role_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
           if (tag !== 42) {
@@ -5525,10 +5632,10 @@ export const MessageMention = {
 
   fromJSON(object: any): MessageMention {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      user_id: isSet(object.user_id) ? BigInt(object.user_id) : 0n,
       username: isSet(object.username) ? globalThis.String(object.username) : "",
-      role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "",
+      role_id: isSet(object.role_id) ? BigInt(object.role_id) : 0n,
       rolename: isSet(object.rolename) ? globalThis.String(object.rolename) : "",
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       s: isSet(object.s) ? globalThis.Number(object.s) : 0,
@@ -5538,17 +5645,17 @@ export const MessageMention = {
 
   toJSON(message: MessageMention): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
+    if (message.user_id !== 0n) {
+      obj.user_id = message.user_id.toString();
     }
     if (message.username !== "") {
       obj.username = message.username;
     }
-    if (message.role_id !== "") {
-      obj.role_id = message.role_id;
+    if (message.role_id !== 0n) {
+      obj.role_id = message.role_id.toString();
     }
     if (message.rolename !== "") {
       obj.rolename = message.rolename;
@@ -5570,10 +5677,10 @@ export const MessageMention = {
   },
   fromPartial<I extends Exact<DeepPartial<MessageMention>, I>>(object: I): MessageMention {
     const message = createBaseMessageMention();
-    message.id = object.id ?? "";
-    message.user_id = object.user_id ?? "";
+    message.id = object.id ?? 0n;
+    message.user_id = object.user_id ?? 0n;
     message.username = object.username ?? "";
-    message.role_id = object.role_id ?? "";
+    message.role_id = object.role_id ?? 0n;
     message.rolename = object.rolename ?? "";
     message.create_time_seconds = object.create_time_seconds ?? 0;
     message.s = object.s ?? 0;
@@ -5807,38 +5914,47 @@ export const NotificationInfo = {
 
 function createBaseMessageReaction(): MessageReaction {
   return {
-    id: "",
-    emoji_id: "",
+    id: 0n,
+    emoji_id: 0n,
     emoji: "",
-    sender_id: "",
+    sender_id: 0n,
     sender_name: "",
     sender_avatar: "",
     action: false,
     count: 0,
-    channel_id: "",
-    message_id: "",
-    clan_id: "",
+    channel_id: 0n,
+    message_id: 0n,
+    clan_id: 0n,
     mode: 0,
-    message_sender_id: "",
+    message_sender_id: 0n,
     is_public: false,
-    topic_id: "",
-    emoji_recent_id: "",
+    topic_id: 0n,
+    emoji_recent_id: 0n,
   };
 }
 
 export const MessageReaction = {
   encode(message: MessageReaction, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.emoji_id !== "") {
-      writer.uint32(18).string(message.emoji_id);
+    if (message.emoji_id !== 0n) {
+      if (BigInt.asIntN(64, message.emoji_id) !== message.emoji_id) {
+        throw new globalThis.Error("value provided for field message.emoji_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.emoji_id.toString());
     }
     if (message.emoji !== "") {
       writer.uint32(26).string(message.emoji);
     }
-    if (message.sender_id !== "") {
-      writer.uint32(34).string(message.sender_id);
+    if (message.sender_id !== 0n) {
+      if (BigInt.asIntN(64, message.sender_id) !== message.sender_id) {
+        throw new globalThis.Error("value provided for field message.sender_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.sender_id.toString());
     }
     if (message.sender_name !== "") {
       writer.uint32(42).string(message.sender_name);
@@ -5852,29 +5968,47 @@ export const MessageReaction = {
     if (message.count !== 0) {
       writer.uint32(64).int32(message.count);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(74).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(72).int64(message.channel_id.toString());
     }
-    if (message.message_id !== "") {
-      writer.uint32(82).string(message.message_id);
+    if (message.message_id !== 0n) {
+      if (BigInt.asIntN(64, message.message_id) !== message.message_id) {
+        throw new globalThis.Error("value provided for field message.message_id of type int64 too large");
+      }
+      writer.uint32(80).int64(message.message_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(90).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(88).int64(message.clan_id.toString());
     }
     if (message.mode !== 0) {
       writer.uint32(96).int32(message.mode);
     }
-    if (message.message_sender_id !== "") {
-      writer.uint32(106).string(message.message_sender_id);
+    if (message.message_sender_id !== 0n) {
+      if (BigInt.asIntN(64, message.message_sender_id) !== message.message_sender_id) {
+        throw new globalThis.Error("value provided for field message.message_sender_id of type int64 too large");
+      }
+      writer.uint32(104).int64(message.message_sender_id.toString());
     }
     if (message.is_public !== false) {
       writer.uint32(112).bool(message.is_public);
     }
-    if (message.topic_id !== "") {
-      writer.uint32(122).string(message.topic_id);
+    if (message.topic_id !== 0n) {
+      if (BigInt.asIntN(64, message.topic_id) !== message.topic_id) {
+        throw new globalThis.Error("value provided for field message.topic_id of type int64 too large");
+      }
+      writer.uint32(120).int64(message.topic_id.toString());
     }
-    if (message.emoji_recent_id !== "") {
-      writer.uint32(130).string(message.emoji_recent_id);
+    if (message.emoji_recent_id !== 0n) {
+      if (BigInt.asIntN(64, message.emoji_recent_id) !== message.emoji_recent_id) {
+        throw new globalThis.Error("value provided for field message.emoji_recent_id of type int64 too large");
+      }
+      writer.uint32(128).int64(message.emoji_recent_id.toString());
     }
     return writer;
   },
@@ -5887,18 +6021,18 @@ export const MessageReaction = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.emoji_id = reader.string();
+          message.emoji_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -5908,11 +6042,11 @@ export const MessageReaction = {
           message.emoji = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.sender_id = reader.string();
+          message.sender_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
           if (tag !== 42) {
@@ -5943,25 +6077,25 @@ export const MessageReaction = {
           message.count = reader.int32();
           continue;
         case 9:
-          if (tag !== 74) {
+          if (tag !== 72) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 10:
-          if (tag !== 82) {
+          if (tag !== 80) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToBigint(reader.int64() as Long);
           continue;
         case 11:
-          if (tag !== 90) {
+          if (tag !== 88) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 12:
           if (tag !== 96) {
@@ -5971,11 +6105,11 @@ export const MessageReaction = {
           message.mode = reader.int32();
           continue;
         case 13:
-          if (tag !== 106) {
+          if (tag !== 104) {
             break;
           }
 
-          message.message_sender_id = reader.string();
+          message.message_sender_id = longToBigint(reader.int64() as Long);
           continue;
         case 14:
           if (tag !== 112) {
@@ -5985,18 +6119,18 @@ export const MessageReaction = {
           message.is_public = reader.bool();
           continue;
         case 15:
-          if (tag !== 122) {
+          if (tag !== 120) {
             break;
           }
 
-          message.topic_id = reader.string();
+          message.topic_id = longToBigint(reader.int64() as Long);
           continue;
         case 16:
-          if (tag !== 130) {
+          if (tag !== 128) {
             break;
           }
 
-          message.emoji_recent_id = reader.string();
+          message.emoji_recent_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -6009,38 +6143,38 @@ export const MessageReaction = {
 
   fromJSON(object: any): MessageReaction {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      emoji_id: isSet(object.emoji_id) ? globalThis.String(object.emoji_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      emoji_id: isSet(object.emoji_id) ? BigInt(object.emoji_id) : 0n,
       emoji: isSet(object.emoji) ? globalThis.String(object.emoji) : "",
-      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
+      sender_id: isSet(object.sender_id) ? BigInt(object.sender_id) : 0n,
       sender_name: isSet(object.sender_name) ? globalThis.String(object.sender_name) : "",
       sender_avatar: isSet(object.sender_avatar) ? globalThis.String(object.sender_avatar) : "",
       action: isSet(object.action) ? globalThis.Boolean(object.action) : false,
       count: isSet(object.count) ? globalThis.Number(object.count) : 0,
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      message_id: isSet(object.message_id) ? BigInt(object.message_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
-      message_sender_id: isSet(object.message_sender_id) ? globalThis.String(object.message_sender_id) : "",
+      message_sender_id: isSet(object.message_sender_id) ? BigInt(object.message_sender_id) : 0n,
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
-      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
-      emoji_recent_id: isSet(object.emoji_recent_id) ? globalThis.String(object.emoji_recent_id) : "",
+      topic_id: isSet(object.topic_id) ? BigInt(object.topic_id) : 0n,
+      emoji_recent_id: isSet(object.emoji_recent_id) ? BigInt(object.emoji_recent_id) : 0n,
     };
   },
 
   toJSON(message: MessageReaction): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.emoji_id !== "") {
-      obj.emoji_id = message.emoji_id;
+    if (message.emoji_id !== 0n) {
+      obj.emoji_id = message.emoji_id.toString();
     }
     if (message.emoji !== "") {
       obj.emoji = message.emoji;
     }
-    if (message.sender_id !== "") {
-      obj.sender_id = message.sender_id;
+    if (message.sender_id !== 0n) {
+      obj.sender_id = message.sender_id.toString();
     }
     if (message.sender_name !== "") {
       obj.sender_name = message.sender_name;
@@ -6054,29 +6188,29 @@ export const MessageReaction = {
     if (message.count !== 0) {
       obj.count = Math.round(message.count);
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.message_id !== "") {
-      obj.message_id = message.message_id;
+    if (message.message_id !== 0n) {
+      obj.message_id = message.message_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.mode !== 0) {
       obj.mode = Math.round(message.mode);
     }
-    if (message.message_sender_id !== "") {
-      obj.message_sender_id = message.message_sender_id;
+    if (message.message_sender_id !== 0n) {
+      obj.message_sender_id = message.message_sender_id.toString();
     }
     if (message.is_public !== false) {
       obj.is_public = message.is_public;
     }
-    if (message.topic_id !== "") {
-      obj.topic_id = message.topic_id;
+    if (message.topic_id !== 0n) {
+      obj.topic_id = message.topic_id.toString();
     }
-    if (message.emoji_recent_id !== "") {
-      obj.emoji_recent_id = message.emoji_recent_id;
+    if (message.emoji_recent_id !== 0n) {
+      obj.emoji_recent_id = message.emoji_recent_id.toString();
     }
     return obj;
   },
@@ -6086,28 +6220,28 @@ export const MessageReaction = {
   },
   fromPartial<I extends Exact<DeepPartial<MessageReaction>, I>>(object: I): MessageReaction {
     const message = createBaseMessageReaction();
-    message.id = object.id ?? "";
-    message.emoji_id = object.emoji_id ?? "";
+    message.id = object.id ?? 0n;
+    message.emoji_id = object.emoji_id ?? 0n;
     message.emoji = object.emoji ?? "";
-    message.sender_id = object.sender_id ?? "";
+    message.sender_id = object.sender_id ?? 0n;
     message.sender_name = object.sender_name ?? "";
     message.sender_avatar = object.sender_avatar ?? "";
     message.action = object.action ?? false;
     message.count = object.count ?? 0;
-    message.channel_id = object.channel_id ?? "";
-    message.message_id = object.message_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
+    message.message_id = object.message_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     message.mode = object.mode ?? 0;
-    message.message_sender_id = object.message_sender_id ?? "";
+    message.message_sender_id = object.message_sender_id ?? 0n;
     message.is_public = object.is_public ?? false;
-    message.topic_id = object.topic_id ?? "";
-    message.emoji_recent_id = object.emoji_recent_id ?? "";
+    message.topic_id = object.topic_id ?? 0n;
+    message.emoji_recent_id = object.emoji_recent_id ?? 0n;
     return message;
   },
 };
 
 function createBaseMessageAttachment(): MessageAttachment {
-  return { filename: "", size: 0, url: "", filetype: "", width: 0, height: 0, thumbnail: "", duration: 0 };
+  return { filename: "", size: 0n, url: "", filetype: "", width: 0, height: 0, thumbnail: "", duration: 0 };
 }
 
 export const MessageAttachment = {
@@ -6115,8 +6249,11 @@ export const MessageAttachment = {
     if (message.filename !== "") {
       writer.uint32(10).string(message.filename);
     }
-    if (message.size !== 0) {
-      writer.uint32(16).int64(message.size);
+    if (message.size !== 0n) {
+      if (BigInt.asIntN(64, message.size) !== message.size) {
+        throw new globalThis.Error("value provided for field message.size of type int64 too large");
+      }
+      writer.uint32(16).int64(message.size.toString());
     }
     if (message.url !== "") {
       writer.uint32(26).string(message.url);
@@ -6158,7 +6295,7 @@ export const MessageAttachment = {
             break;
           }
 
-          message.size = longToNumber(reader.int64() as Long);
+          message.size = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -6214,7 +6351,7 @@ export const MessageAttachment = {
   fromJSON(object: any): MessageAttachment {
     return {
       filename: isSet(object.filename) ? globalThis.String(object.filename) : "",
-      size: isSet(object.size) ? globalThis.Number(object.size) : 0,
+      size: isSet(object.size) ? BigInt(object.size) : 0n,
       url: isSet(object.url) ? globalThis.String(object.url) : "",
       filetype: isSet(object.filetype) ? globalThis.String(object.filetype) : "",
       width: isSet(object.width) ? globalThis.Number(object.width) : 0,
@@ -6229,8 +6366,8 @@ export const MessageAttachment = {
     if (message.filename !== "") {
       obj.filename = message.filename;
     }
-    if (message.size !== 0) {
-      obj.size = Math.round(message.size);
+    if (message.size !== 0n) {
+      obj.size = message.size.toString();
     }
     if (message.url !== "") {
       obj.url = message.url;
@@ -6259,7 +6396,7 @@ export const MessageAttachment = {
   fromPartial<I extends Exact<DeepPartial<MessageAttachment>, I>>(object: I): MessageAttachment {
     const message = createBaseMessageAttachment();
     message.filename = object.filename ?? "";
-    message.size = object.size ?? 0;
+    message.size = object.size ?? 0n;
     message.url = object.url ?? "";
     message.filetype = object.filetype ?? "";
     message.width = object.width ?? 0;
@@ -6272,12 +6409,12 @@ export const MessageAttachment = {
 
 function createBaseMessageRef(): MessageRef {
   return {
-    message_id: "",
-    message_ref_id: "",
+    message_id: 0n,
+    message_ref_id: 0n,
     content: "",
     has_attachment: false,
     ref_type: 0,
-    message_sender_id: "",
+    message_sender_id: 0n,
     message_sender_username: "",
     mesages_sender_avatar: "",
     message_sender_clan_nick: "",
@@ -6287,11 +6424,17 @@ function createBaseMessageRef(): MessageRef {
 
 export const MessageRef = {
   encode(message: MessageRef, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.message_id !== "") {
-      writer.uint32(10).string(message.message_id);
+    if (message.message_id !== 0n) {
+      if (BigInt.asIntN(64, message.message_id) !== message.message_id) {
+        throw new globalThis.Error("value provided for field message.message_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.message_id.toString());
     }
-    if (message.message_ref_id !== "") {
-      writer.uint32(18).string(message.message_ref_id);
+    if (message.message_ref_id !== 0n) {
+      if (BigInt.asIntN(64, message.message_ref_id) !== message.message_ref_id) {
+        throw new globalThis.Error("value provided for field message.message_ref_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.message_ref_id.toString());
     }
     if (message.content !== "") {
       writer.uint32(26).string(message.content);
@@ -6302,8 +6445,11 @@ export const MessageRef = {
     if (message.ref_type !== 0) {
       writer.uint32(40).int32(message.ref_type);
     }
-    if (message.message_sender_id !== "") {
-      writer.uint32(50).string(message.message_sender_id);
+    if (message.message_sender_id !== 0n) {
+      if (BigInt.asIntN(64, message.message_sender_id) !== message.message_sender_id) {
+        throw new globalThis.Error("value provided for field message.message_sender_id of type int64 too large");
+      }
+      writer.uint32(48).int64(message.message_sender_id.toString());
     }
     if (message.message_sender_username !== "") {
       writer.uint32(58).string(message.message_sender_username);
@@ -6328,18 +6474,18 @@ export const MessageRef = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.message_ref_id = reader.string();
+          message.message_ref_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -6363,11 +6509,11 @@ export const MessageRef = {
           message.ref_type = reader.int32();
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.message_sender_id = reader.string();
+          message.message_sender_id = longToBigint(reader.int64() as Long);
           continue;
         case 7:
           if (tag !== 58) {
@@ -6408,12 +6554,12 @@ export const MessageRef = {
 
   fromJSON(object: any): MessageRef {
     return {
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
-      message_ref_id: isSet(object.message_ref_id) ? globalThis.String(object.message_ref_id) : "",
+      message_id: isSet(object.message_id) ? BigInt(object.message_id) : 0n,
+      message_ref_id: isSet(object.message_ref_id) ? BigInt(object.message_ref_id) : 0n,
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       has_attachment: isSet(object.has_attachment) ? globalThis.Boolean(object.has_attachment) : false,
       ref_type: isSet(object.ref_type) ? globalThis.Number(object.ref_type) : 0,
-      message_sender_id: isSet(object.message_sender_id) ? globalThis.String(object.message_sender_id) : "",
+      message_sender_id: isSet(object.message_sender_id) ? BigInt(object.message_sender_id) : 0n,
       message_sender_username: isSet(object.message_sender_username)
         ? globalThis.String(object.message_sender_username)
         : "",
@@ -6429,11 +6575,11 @@ export const MessageRef = {
 
   toJSON(message: MessageRef): unknown {
     const obj: any = {};
-    if (message.message_id !== "") {
-      obj.message_id = message.message_id;
+    if (message.message_id !== 0n) {
+      obj.message_id = message.message_id.toString();
     }
-    if (message.message_ref_id !== "") {
-      obj.message_ref_id = message.message_ref_id;
+    if (message.message_ref_id !== 0n) {
+      obj.message_ref_id = message.message_ref_id.toString();
     }
     if (message.content !== "") {
       obj.content = message.content;
@@ -6444,8 +6590,8 @@ export const MessageRef = {
     if (message.ref_type !== 0) {
       obj.ref_type = Math.round(message.ref_type);
     }
-    if (message.message_sender_id !== "") {
-      obj.message_sender_id = message.message_sender_id;
+    if (message.message_sender_id !== 0n) {
+      obj.message_sender_id = message.message_sender_id.toString();
     }
     if (message.message_sender_username !== "") {
       obj.message_sender_username = message.message_sender_username;
@@ -6467,12 +6613,12 @@ export const MessageRef = {
   },
   fromPartial<I extends Exact<DeepPartial<MessageRef>, I>>(object: I): MessageRef {
     const message = createBaseMessageRef();
-    message.message_id = object.message_id ?? "";
-    message.message_ref_id = object.message_ref_id ?? "";
+    message.message_id = object.message_id ?? 0n;
+    message.message_ref_id = object.message_ref_id ?? 0n;
     message.content = object.content ?? "";
     message.has_attachment = object.has_attachment ?? false;
     message.ref_type = object.ref_type ?? 0;
-    message.message_sender_id = object.message_sender_id ?? "";
+    message.message_sender_id = object.message_sender_id ?? 0n;
     message.message_sender_username = object.message_sender_username ?? "";
     message.mesages_sender_avatar = object.mesages_sender_avatar ?? "";
     message.message_sender_clan_nick = object.message_sender_clan_nick ?? "";
@@ -6482,13 +6628,16 @@ export const MessageRef = {
 };
 
 function createBaseMessageDeleted(): MessageDeleted {
-  return { message_id: "", deletor: "" };
+  return { message_id: 0n, deletor: "" };
 }
 
 export const MessageDeleted = {
   encode(message: MessageDeleted, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.message_id !== "") {
-      writer.uint32(10).string(message.message_id);
+    if (message.message_id !== 0n) {
+      if (BigInt.asIntN(64, message.message_id) !== message.message_id) {
+        throw new globalThis.Error("value provided for field message.message_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.message_id.toString());
     }
     if (message.deletor !== "") {
       writer.uint32(18).string(message.deletor);
@@ -6504,11 +6653,11 @@ export const MessageDeleted = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -6528,15 +6677,15 @@ export const MessageDeleted = {
 
   fromJSON(object: any): MessageDeleted {
     return {
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      message_id: isSet(object.message_id) ? BigInt(object.message_id) : 0n,
       deletor: isSet(object.deletor) ? globalThis.String(object.deletor) : "",
     };
   },
 
   toJSON(message: MessageDeleted): unknown {
     const obj: any = {};
-    if (message.message_id !== "") {
-      obj.message_id = message.message_id;
+    if (message.message_id !== 0n) {
+      obj.message_id = message.message_id.toString();
     }
     if (message.deletor !== "") {
       obj.deletor = message.deletor;
@@ -6549,7 +6698,7 @@ export const MessageDeleted = {
   },
   fromPartial<I extends Exact<DeepPartial<MessageDeleted>, I>>(object: I): MessageDeleted {
     const message = createBaseMessageDeleted();
-    message.message_id = object.message_id ?? "";
+    message.message_id = object.message_id ?? 0n;
     message.deletor = object.deletor ?? "";
     return message;
   },
@@ -6794,9 +6943,14 @@ function createBaseDeleteFriendsRequest(): DeleteFriendsRequest {
 
 export const DeleteFriendsRequest = {
   encode(message: DeleteFriendsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    writer.uint32(10).fork();
     for (const v of message.ids) {
-      writer.uint32(10).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     for (const v of message.usernames) {
       writer.uint32(18).string(v!);
     }
@@ -6811,12 +6965,22 @@ export const DeleteFriendsRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
+          if (tag === 8) {
+            message.ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.ids.push(reader.string());
-          continue;
+          if (tag === 10) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 2:
           if (tag !== 18) {
             break;
@@ -6835,7 +6999,7 @@ export const DeleteFriendsRequest = {
 
   fromJSON(object: any): DeleteFriendsRequest {
     return {
-      ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => globalThis.String(e)) : [],
+      ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => BigInt(e)) : [],
       usernames: globalThis.Array.isArray(object?.usernames)
         ? object.usernames.map((e: any) => globalThis.String(e))
         : [],
@@ -6845,7 +7009,7 @@ export const DeleteFriendsRequest = {
   toJSON(message: DeleteFriendsRequest): unknown {
     const obj: any = {};
     if (message.ids?.length) {
-      obj.ids = message.ids;
+      obj.ids = message.ids.map((e) => e.toString());
     }
     if (message.usernames?.length) {
       obj.usernames = message.usernames;
@@ -6865,13 +7029,16 @@ export const DeleteFriendsRequest = {
 };
 
 function createBaseDeleteGroupRequest(): DeleteGroupRequest {
-  return { group_id: "" };
+  return { group_id: 0n };
 }
 
 export const DeleteGroupRequest = {
   encode(message: DeleteGroupRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.group_id !== "") {
-      writer.uint32(10).string(message.group_id);
+    if (message.group_id !== 0n) {
+      if (BigInt.asIntN(64, message.group_id) !== message.group_id) {
+        throw new globalThis.Error("value provided for field message.group_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.group_id.toString());
     }
     return writer;
   },
@@ -6884,11 +7051,11 @@ export const DeleteGroupRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.group_id = reader.string();
+          message.group_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -6900,13 +7067,13 @@ export const DeleteGroupRequest = {
   },
 
   fromJSON(object: any): DeleteGroupRequest {
-    return { group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "" };
+    return { group_id: isSet(object.group_id) ? BigInt(object.group_id) : 0n };
   },
 
   toJSON(message: DeleteGroupRequest): unknown {
     const obj: any = {};
-    if (message.group_id !== "") {
-      obj.group_id = message.group_id;
+    if (message.group_id !== 0n) {
+      obj.group_id = message.group_id.toString();
     }
     return obj;
   },
@@ -6916,7 +7083,7 @@ export const DeleteGroupRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<DeleteGroupRequest>, I>>(object: I): DeleteGroupRequest {
     const message = createBaseDeleteGroupRequest();
-    message.group_id = object.group_id ?? "";
+    message.group_id = object.group_id ?? 0n;
     return message;
   },
 };
@@ -6927,9 +7094,14 @@ function createBaseDeleteNotificationsRequest(): DeleteNotificationsRequest {
 
 export const DeleteNotificationsRequest = {
   encode(message: DeleteNotificationsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    writer.uint32(10).fork();
     for (const v of message.ids) {
-      writer.uint32(10).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     if (message.category !== 0) {
       writer.uint32(16).int32(message.category);
     }
@@ -6944,12 +7116,22 @@ export const DeleteNotificationsRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
+          if (tag === 8) {
+            message.ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.ids.push(reader.string());
-          continue;
+          if (tag === 10) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 2:
           if (tag !== 16) {
             break;
@@ -6968,7 +7150,7 @@ export const DeleteNotificationsRequest = {
 
   fromJSON(object: any): DeleteNotificationsRequest {
     return {
-      ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => globalThis.String(e)) : [],
+      ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => BigInt(e)) : [],
       category: isSet(object.category) ? globalThis.Number(object.category) : 0,
     };
   },
@@ -6976,7 +7158,7 @@ export const DeleteNotificationsRequest = {
   toJSON(message: DeleteNotificationsRequest): unknown {
     const obj: any = {};
     if (message.ids?.length) {
-      obj.ids = message.ids;
+      obj.ids = message.ids.map((e) => e.toString());
     }
     if (message.category !== 0) {
       obj.category = Math.round(message.category);
@@ -7196,7 +7378,7 @@ export const Event_PropertiesEntry = {
 };
 
 function createBaseFriend(): Friend {
-  return { user: undefined, state: 0, update_time_seconds: 0, source_id: "" };
+  return { user: undefined, state: 0, update_time_seconds: 0, source_id: 0n };
 }
 
 export const Friend = {
@@ -7210,8 +7392,11 @@ export const Friend = {
     if (message.update_time_seconds !== 0) {
       writer.uint32(24).uint32(message.update_time_seconds);
     }
-    if (message.source_id !== "") {
-      writer.uint32(34).string(message.source_id);
+    if (message.source_id !== 0n) {
+      if (BigInt.asIntN(64, message.source_id) !== message.source_id) {
+        throw new globalThis.Error("value provided for field message.source_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.source_id.toString());
     }
     return writer;
   },
@@ -7245,11 +7430,11 @@ export const Friend = {
           message.update_time_seconds = reader.uint32();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.source_id = reader.string();
+          message.source_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -7265,7 +7450,7 @@ export const Friend = {
       user: isSet(object.user) ? User.fromJSON(object.user) : undefined,
       state: isSet(object.state) ? globalThis.Number(object.state) : 0,
       update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
-      source_id: isSet(object.source_id) ? globalThis.String(object.source_id) : "",
+      source_id: isSet(object.source_id) ? BigInt(object.source_id) : 0n,
     };
   },
 
@@ -7280,8 +7465,8 @@ export const Friend = {
     if (message.update_time_seconds !== 0) {
       obj.update_time_seconds = Math.round(message.update_time_seconds);
     }
-    if (message.source_id !== "") {
-      obj.source_id = message.source_id;
+    if (message.source_id !== 0n) {
+      obj.source_id = message.source_id.toString();
     }
     return obj;
   },
@@ -7294,7 +7479,7 @@ export const Friend = {
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
     message.state = object.state ?? 0;
     message.update_time_seconds = object.update_time_seconds ?? 0;
-    message.source_id = object.source_id ?? "";
+    message.source_id = object.source_id ?? 0n;
     return message;
   },
 };
@@ -7448,7 +7633,7 @@ export const UpdateUsersRequest = {
 };
 
 function createBaseChannelUserList(): ChannelUserList {
-  return { channel_users: [], cursor: "", channel_id: "" };
+  return { channel_users: [], cursor: "", channel_id: 0n };
 }
 
 export const ChannelUserList = {
@@ -7459,8 +7644,11 @@ export const ChannelUserList = {
     if (message.cursor !== "") {
       writer.uint32(18).string(message.cursor);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.channel_id.toString());
     }
     return writer;
   },
@@ -7487,11 +7675,11 @@ export const ChannelUserList = {
           message.cursor = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -7508,7 +7696,7 @@ export const ChannelUserList = {
         ? object.channel_users.map((e: any) => ChannelUserList_ChannelUser.fromJSON(e))
         : [],
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
     };
   },
 
@@ -7520,8 +7708,8 @@ export const ChannelUserList = {
     if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     return obj;
   },
@@ -7533,20 +7721,20 @@ export const ChannelUserList = {
     const message = createBaseChannelUserList();
     message.channel_users = object.channel_users?.map((e) => ChannelUserList_ChannelUser.fromPartial(e)) || [];
     message.cursor = object.cursor ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     return message;
   },
 };
 
 function createBaseChannelUserList_ChannelUser(): ChannelUserList_ChannelUser {
   return {
-    user_id: "",
+    user_id: 0n,
     role_id: [],
-    id: "",
-    thread_id: "",
+    id: 0n,
+    thread_id: 0n,
     clan_nick: "",
     clan_avatar: "",
-    clan_id: "",
+    clan_id: 0n,
     added_by: "",
     is_banned: false,
     expired_ban_time: 0,
@@ -7555,17 +7743,31 @@ function createBaseChannelUserList_ChannelUser(): ChannelUserList_ChannelUser {
 
 export const ChannelUserList_ChannelUser = {
   encode(message: ChannelUserList_ChannelUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
+    if (message.user_id !== 0n) {
+      if (BigInt.asIntN(64, message.user_id) !== message.user_id) {
+        throw new globalThis.Error("value provided for field message.user_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.user_id.toString());
     }
+    writer.uint32(18).fork();
     for (const v of message.role_id) {
-      writer.uint32(18).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field role_id of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
-    if (message.id !== "") {
-      writer.uint32(26).string(message.id);
+    writer.ldelim();
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.id.toString());
     }
-    if (message.thread_id !== "") {
-      writer.uint32(34).string(message.thread_id);
+    if (message.thread_id !== 0n) {
+      if (BigInt.asIntN(64, message.thread_id) !== message.thread_id) {
+        throw new globalThis.Error("value provided for field message.thread_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.thread_id.toString());
     }
     if (message.clan_nick !== "") {
       writer.uint32(42).string(message.clan_nick);
@@ -7573,8 +7775,11 @@ export const ChannelUserList_ChannelUser = {
     if (message.clan_avatar !== "") {
       writer.uint32(50).string(message.clan_avatar);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(58).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(56).int64(message.clan_id.toString());
     }
     if (message.added_by !== "") {
       writer.uint32(66).string(message.added_by);
@@ -7596,32 +7801,42 @@ export const ChannelUserList_ChannelUser = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
-            break;
+          if (tag === 16) {
+            message.role_id.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.role_id.push(reader.string());
-          continue;
+          if (tag === 18) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.role_id.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.thread_id = reader.string();
+          message.thread_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
           if (tag !== 42) {
@@ -7638,11 +7853,11 @@ export const ChannelUserList_ChannelUser = {
           message.clan_avatar = reader.string();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 8:
           if (tag !== 66) {
@@ -7676,13 +7891,13 @@ export const ChannelUserList_ChannelUser = {
 
   fromJSON(object: any): ChannelUserList_ChannelUser {
     return {
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      role_id: globalThis.Array.isArray(object?.role_id) ? object.role_id.map((e: any) => globalThis.String(e)) : [],
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      thread_id: isSet(object.thread_id) ? globalThis.String(object.thread_id) : "",
+      user_id: isSet(object.user_id) ? BigInt(object.user_id) : 0n,
+      role_id: globalThis.Array.isArray(object?.role_id) ? object.role_id.map((e: any) => BigInt(e)) : [],
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      thread_id: isSet(object.thread_id) ? BigInt(object.thread_id) : 0n,
       clan_nick: isSet(object.clan_nick) ? globalThis.String(object.clan_nick) : "",
       clan_avatar: isSet(object.clan_avatar) ? globalThis.String(object.clan_avatar) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       added_by: isSet(object.added_by) ? globalThis.String(object.added_by) : "",
       is_banned: isSet(object.is_banned) ? globalThis.Boolean(object.is_banned) : false,
       expired_ban_time: isSet(object.expired_ban_time) ? globalThis.Number(object.expired_ban_time) : 0,
@@ -7691,17 +7906,17 @@ export const ChannelUserList_ChannelUser = {
 
   toJSON(message: ChannelUserList_ChannelUser): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
+    if (message.user_id !== 0n) {
+      obj.user_id = message.user_id.toString();
     }
     if (message.role_id?.length) {
-      obj.role_id = message.role_id;
+      obj.role_id = message.role_id.map((e) => e.toString());
     }
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.thread_id !== "") {
-      obj.thread_id = message.thread_id;
+    if (message.thread_id !== 0n) {
+      obj.thread_id = message.thread_id.toString();
     }
     if (message.clan_nick !== "") {
       obj.clan_nick = message.clan_nick;
@@ -7709,8 +7924,8 @@ export const ChannelUserList_ChannelUser = {
     if (message.clan_avatar !== "") {
       obj.clan_avatar = message.clan_avatar;
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.added_by !== "") {
       obj.added_by = message.added_by;
@@ -7729,13 +7944,13 @@ export const ChannelUserList_ChannelUser = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelUserList_ChannelUser>, I>>(object: I): ChannelUserList_ChannelUser {
     const message = createBaseChannelUserList_ChannelUser();
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? 0n;
     message.role_id = object.role_id?.map((e) => e) || [];
-    message.id = object.id ?? "";
-    message.thread_id = object.thread_id ?? "";
+    message.id = object.id ?? 0n;
+    message.thread_id = object.thread_id ?? 0n;
     message.clan_nick = object.clan_nick ?? "";
     message.clan_avatar = object.clan_avatar ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.added_by = object.added_by ?? "";
     message.is_banned = object.is_banned ?? false;
     message.expired_ban_time = object.expired_ban_time ?? 0;
@@ -7744,19 +7959,28 @@ export const ChannelUserList_ChannelUser = {
 };
 
 function createBaseVoiceChannelUser(): VoiceChannelUser {
-  return { id: "", user_id: "", channel_id: "", participant: "" };
+  return { id: 0n, user_id: 0n, channel_id: 0n, participant: "" };
 }
 
 export const VoiceChannelUser = {
   encode(message: VoiceChannelUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.user_id !== "") {
-      writer.uint32(18).string(message.user_id);
+    if (message.user_id !== 0n) {
+      if (BigInt.asIntN(64, message.user_id) !== message.user_id) {
+        throw new globalThis.Error("value provided for field message.user_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.user_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.channel_id.toString());
     }
     if (message.participant !== "") {
       writer.uint32(34).string(message.participant);
@@ -7772,25 +7996,25 @@ export const VoiceChannelUser = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -7810,23 +8034,23 @@ export const VoiceChannelUser = {
 
   fromJSON(object: any): VoiceChannelUser {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      user_id: isSet(object.user_id) ? BigInt(object.user_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       participant: isSet(object.participant) ? globalThis.String(object.participant) : "",
     };
   },
 
   toJSON(message: VoiceChannelUser): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
+    if (message.user_id !== 0n) {
+      obj.user_id = message.user_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.participant !== "") {
       obj.participant = message.participant;
@@ -7839,9 +8063,9 @@ export const VoiceChannelUser = {
   },
   fromPartial<I extends Exact<DeepPartial<VoiceChannelUser>, I>>(object: I): VoiceChannelUser {
     const message = createBaseVoiceChannelUser();
-    message.id = object.id ?? "";
-    message.user_id = object.user_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.id = object.id ?? 0n;
+    message.user_id = object.user_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     message.participant = object.participant ?? "";
     return message;
   },
@@ -7910,14 +8134,14 @@ export const VoiceChannelUserList = {
 
 function createBaseChannelAttachment(): ChannelAttachment {
   return {
-    id: "",
+    id: 0n,
     filename: "",
     filetype: "",
     filesize: "",
     url: "",
     uploader: "",
     create_time_seconds: 0,
-    message_id: "",
+    message_id: 0n,
     width: 0,
     height: 0,
   };
@@ -7925,8 +8149,11 @@ function createBaseChannelAttachment(): ChannelAttachment {
 
 export const ChannelAttachment = {
   encode(message: ChannelAttachment, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.filename !== "") {
       writer.uint32(18).string(message.filename);
@@ -7946,8 +8173,11 @@ export const ChannelAttachment = {
     if (message.create_time_seconds !== 0) {
       writer.uint32(56).uint32(message.create_time_seconds);
     }
-    if (message.message_id !== "") {
-      writer.uint32(66).string(message.message_id);
+    if (message.message_id !== 0n) {
+      if (BigInt.asIntN(64, message.message_id) !== message.message_id) {
+        throw new globalThis.Error("value provided for field message.message_id of type int64 too large");
+      }
+      writer.uint32(64).int64(message.message_id.toString());
     }
     if (message.width !== 0) {
       writer.uint32(72).int32(message.width);
@@ -7966,11 +8196,11 @@ export const ChannelAttachment = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -8015,11 +8245,11 @@ export const ChannelAttachment = {
           message.create_time_seconds = reader.uint32();
           continue;
         case 8:
-          if (tag !== 66) {
+          if (tag !== 64) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToBigint(reader.int64() as Long);
           continue;
         case 9:
           if (tag !== 72) {
@@ -8046,14 +8276,14 @@ export const ChannelAttachment = {
 
   fromJSON(object: any): ChannelAttachment {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       filename: isSet(object.filename) ? globalThis.String(object.filename) : "",
       filetype: isSet(object.filetype) ? globalThis.String(object.filetype) : "",
       filesize: isSet(object.filesize) ? globalThis.String(object.filesize) : "",
       url: isSet(object.url) ? globalThis.String(object.url) : "",
       uploader: isSet(object.uploader) ? globalThis.String(object.uploader) : "",
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      message_id: isSet(object.message_id) ? BigInt(object.message_id) : 0n,
       width: isSet(object.width) ? globalThis.Number(object.width) : 0,
       height: isSet(object.height) ? globalThis.Number(object.height) : 0,
     };
@@ -8061,8 +8291,8 @@ export const ChannelAttachment = {
 
   toJSON(message: ChannelAttachment): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.filename !== "") {
       obj.filename = message.filename;
@@ -8082,8 +8312,8 @@ export const ChannelAttachment = {
     if (message.create_time_seconds !== 0) {
       obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
-    if (message.message_id !== "") {
-      obj.message_id = message.message_id;
+    if (message.message_id !== 0n) {
+      obj.message_id = message.message_id.toString();
     }
     if (message.width !== 0) {
       obj.width = Math.round(message.width);
@@ -8099,14 +8329,14 @@ export const ChannelAttachment = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelAttachment>, I>>(object: I): ChannelAttachment {
     const message = createBaseChannelAttachment();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.filename = object.filename ?? "";
     message.filetype = object.filetype ?? "";
     message.filesize = object.filesize ?? "";
     message.url = object.url ?? "";
     message.uploader = object.uploader ?? "";
     message.create_time_seconds = object.create_time_seconds ?? 0;
-    message.message_id = object.message_id ?? "";
+    message.message_id = object.message_id ?? 0n;
     message.width = object.width ?? 0;
     message.height = object.height ?? 0;
     return message;
@@ -8175,7 +8405,7 @@ export const ChannelAttachmentList = {
 };
 
 function createBaseClanUserList(): ClanUserList {
-  return { clan_users: [], cursor: "", clan_id: "" };
+  return { clan_users: [], cursor: "", clan_id: 0n };
 }
 
 export const ClanUserList = {
@@ -8186,8 +8416,11 @@ export const ClanUserList = {
     if (message.cursor !== "") {
       writer.uint32(18).string(message.cursor);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -8214,11 +8447,11 @@ export const ClanUserList = {
           message.cursor = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -8235,7 +8468,7 @@ export const ClanUserList = {
         ? object.clan_users.map((e: any) => ClanUserList_ClanUser.fromJSON(e))
         : [],
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
@@ -8247,8 +8480,8 @@ export const ClanUserList = {
     if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -8260,13 +8493,13 @@ export const ClanUserList = {
     const message = createBaseClanUserList();
     message.clan_users = object.clan_users?.map((e) => ClanUserList_ClanUser.fromPartial(e)) || [];
     message.cursor = object.cursor ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseClanUserList_ClanUser(): ClanUserList_ClanUser {
-  return { user: undefined, role_id: [], clan_nick: "", clan_avatar: "", clan_id: "" };
+  return { user: undefined, role_id: [], clan_nick: "", clan_avatar: "", clan_id: 0n };
 }
 
 export const ClanUserList_ClanUser = {
@@ -8274,17 +8507,25 @@ export const ClanUserList_ClanUser = {
     if (message.user !== undefined) {
       User.encode(message.user, writer.uint32(10).fork()).ldelim();
     }
+    writer.uint32(18).fork();
     for (const v of message.role_id) {
-      writer.uint32(18).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field role_id of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     if (message.clan_nick !== "") {
       writer.uint32(26).string(message.clan_nick);
     }
     if (message.clan_avatar !== "") {
       writer.uint32(34).string(message.clan_avatar);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(42).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -8304,12 +8545,22 @@ export const ClanUserList_ClanUser = {
           message.user = User.decode(reader, reader.uint32());
           continue;
         case 2:
-          if (tag !== 18) {
-            break;
+          if (tag === 16) {
+            message.role_id.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.role_id.push(reader.string());
-          continue;
+          if (tag === 18) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.role_id.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 3:
           if (tag !== 26) {
             break;
@@ -8325,11 +8576,11 @@ export const ClanUserList_ClanUser = {
           message.clan_avatar = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -8343,10 +8594,10 @@ export const ClanUserList_ClanUser = {
   fromJSON(object: any): ClanUserList_ClanUser {
     return {
       user: isSet(object.user) ? User.fromJSON(object.user) : undefined,
-      role_id: globalThis.Array.isArray(object?.role_id) ? object.role_id.map((e: any) => globalThis.String(e)) : [],
+      role_id: globalThis.Array.isArray(object?.role_id) ? object.role_id.map((e: any) => BigInt(e)) : [],
       clan_nick: isSet(object.clan_nick) ? globalThis.String(object.clan_nick) : "",
       clan_avatar: isSet(object.clan_avatar) ? globalThis.String(object.clan_avatar) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
@@ -8356,7 +8607,7 @@ export const ClanUserList_ClanUser = {
       obj.user = User.toJSON(message.user);
     }
     if (message.role_id?.length) {
-      obj.role_id = message.role_id;
+      obj.role_id = message.role_id.map((e) => e.toString());
     }
     if (message.clan_nick !== "") {
       obj.clan_nick = message.clan_nick;
@@ -8364,8 +8615,8 @@ export const ClanUserList_ClanUser = {
     if (message.clan_avatar !== "") {
       obj.clan_avatar = message.clan_avatar;
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -8379,7 +8630,7 @@ export const ClanUserList_ClanUser = {
     message.role_id = object.role_id?.map((e) => e) || [];
     message.clan_nick = object.clan_nick ?? "";
     message.clan_avatar = object.clan_avatar ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
@@ -8489,7 +8740,7 @@ export const RegistFcmDeviceTokenRequest = {
 };
 
 function createBaseRegistFcmDeviceTokenResponse(): RegistFcmDeviceTokenResponse {
-  return { token: "", device_id: "", platform: "" };
+  return { token: "", device_id: 0n, platform: "" };
 }
 
 export const RegistFcmDeviceTokenResponse = {
@@ -8497,8 +8748,11 @@ export const RegistFcmDeviceTokenResponse = {
     if (message.token !== "") {
       writer.uint32(10).string(message.token);
     }
-    if (message.device_id !== "") {
-      writer.uint32(18).string(message.device_id);
+    if (message.device_id !== 0n) {
+      if (BigInt.asIntN(64, message.device_id) !== message.device_id) {
+        throw new globalThis.Error("value provided for field message.device_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.device_id.toString());
     }
     if (message.platform !== "") {
       writer.uint32(26).string(message.platform);
@@ -8521,11 +8775,11 @@ export const RegistFcmDeviceTokenResponse = {
           message.token = reader.string();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.device_id = reader.string();
+          message.device_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -8546,7 +8800,7 @@ export const RegistFcmDeviceTokenResponse = {
   fromJSON(object: any): RegistFcmDeviceTokenResponse {
     return {
       token: isSet(object.token) ? globalThis.String(object.token) : "",
-      device_id: isSet(object.device_id) ? globalThis.String(object.device_id) : "",
+      device_id: isSet(object.device_id) ? BigInt(object.device_id) : 0n,
       platform: isSet(object.platform) ? globalThis.String(object.platform) : "",
     };
   },
@@ -8556,8 +8810,8 @@ export const RegistFcmDeviceTokenResponse = {
     if (message.token !== "") {
       obj.token = message.token;
     }
-    if (message.device_id !== "") {
-      obj.device_id = message.device_id;
+    if (message.device_id !== 0n) {
+      obj.device_id = message.device_id.toString();
     }
     if (message.platform !== "") {
       obj.platform = message.platform;
@@ -8571,26 +8825,35 @@ export const RegistFcmDeviceTokenResponse = {
   fromPartial<I extends Exact<DeepPartial<RegistFcmDeviceTokenResponse>, I>>(object: I): RegistFcmDeviceTokenResponse {
     const message = createBaseRegistFcmDeviceTokenResponse();
     message.token = object.token ?? "";
-    message.device_id = object.device_id ?? "";
+    message.device_id = object.device_id ?? 0n;
     message.platform = object.platform ?? "";
     return message;
   },
 };
 
 function createBaseListChannelMessagesRequest(): ListChannelMessagesRequest {
-  return { clan_id: "", channel_id: "", message_id: "", limit: undefined, direction: undefined, topic_id: "" };
+  return { clan_id: 0n, channel_id: 0n, message_id: 0n, limit: undefined, direction: undefined, topic_id: 0n };
 }
 
 export const ListChannelMessagesRequest = {
   encode(message: ListChannelMessagesRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
-    if (message.message_id !== "") {
-      writer.uint32(26).string(message.message_id);
+    if (message.message_id !== 0n) {
+      if (BigInt.asIntN(64, message.message_id) !== message.message_id) {
+        throw new globalThis.Error("value provided for field message.message_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.message_id.toString());
     }
     if (message.limit !== undefined) {
       Int32Value.encode({ value: message.limit! }, writer.uint32(34).fork()).ldelim();
@@ -8598,8 +8861,11 @@ export const ListChannelMessagesRequest = {
     if (message.direction !== undefined) {
       Int32Value.encode({ value: message.direction! }, writer.uint32(42).fork()).ldelim();
     }
-    if (message.topic_id !== "") {
-      writer.uint32(50).string(message.topic_id);
+    if (message.topic_id !== 0n) {
+      if (BigInt.asIntN(64, message.topic_id) !== message.topic_id) {
+        throw new globalThis.Error("value provided for field message.topic_id of type int64 too large");
+      }
+      writer.uint32(48).int64(message.topic_id.toString());
     }
     return writer;
   },
@@ -8612,25 +8878,25 @@ export const ListChannelMessagesRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -8647,11 +8913,11 @@ export const ListChannelMessagesRequest = {
           message.direction = Int32Value.decode(reader, reader.uint32()).value;
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.topic_id = reader.string();
+          message.topic_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -8664,25 +8930,25 @@ export const ListChannelMessagesRequest = {
 
   fromJSON(object: any): ListChannelMessagesRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      message_id: isSet(object.message_id) ? BigInt(object.message_id) : 0n,
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       direction: isSet(object.direction) ? Number(object.direction) : undefined,
-      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
+      topic_id: isSet(object.topic_id) ? BigInt(object.topic_id) : 0n,
     };
   },
 
   toJSON(message: ListChannelMessagesRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.message_id !== "") {
-      obj.message_id = message.message_id;
+    if (message.message_id !== 0n) {
+      obj.message_id = message.message_id.toString();
     }
     if (message.limit !== undefined) {
       obj.limit = message.limit;
@@ -8690,8 +8956,8 @@ export const ListChannelMessagesRequest = {
     if (message.direction !== undefined) {
       obj.direction = message.direction;
     }
-    if (message.topic_id !== "") {
-      obj.topic_id = message.topic_id;
+    if (message.topic_id !== 0n) {
+      obj.topic_id = message.topic_id.toString();
     }
     return obj;
   },
@@ -8701,12 +8967,12 @@ export const ListChannelMessagesRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListChannelMessagesRequest>, I>>(object: I): ListChannelMessagesRequest {
     const message = createBaseListChannelMessagesRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.message_id = object.message_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
+    message.message_id = object.message_id ?? 0n;
     message.limit = object.limit ?? undefined;
     message.direction = object.direction ?? undefined;
-    message.topic_id = object.topic_id ?? "";
+    message.topic_id = object.topic_id ?? 0n;
     return message;
   },
 };
@@ -8935,13 +9201,16 @@ export const ListGroupsRequest = {
 };
 
 function createBaseListGroupUsersRequest(): ListGroupUsersRequest {
-  return { group_id: "", limit: undefined, state: undefined, cursor: "" };
+  return { group_id: 0n, limit: undefined, state: undefined, cursor: "" };
 }
 
 export const ListGroupUsersRequest = {
   encode(message: ListGroupUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.group_id !== "") {
-      writer.uint32(10).string(message.group_id);
+    if (message.group_id !== 0n) {
+      if (BigInt.asIntN(64, message.group_id) !== message.group_id) {
+        throw new globalThis.Error("value provided for field message.group_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.group_id.toString());
     }
     if (message.limit !== undefined) {
       Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
@@ -8963,11 +9232,11 @@ export const ListGroupUsersRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.group_id = reader.string();
+          message.group_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -9001,7 +9270,7 @@ export const ListGroupUsersRequest = {
 
   fromJSON(object: any): ListGroupUsersRequest {
     return {
-      group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "",
+      group_id: isSet(object.group_id) ? BigInt(object.group_id) : 0n,
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       state: isSet(object.state) ? Number(object.state) : undefined,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
@@ -9010,8 +9279,8 @@ export const ListGroupUsersRequest = {
 
   toJSON(message: ListGroupUsersRequest): unknown {
     const obj: any = {};
-    if (message.group_id !== "") {
-      obj.group_id = message.group_id;
+    if (message.group_id !== 0n) {
+      obj.group_id = message.group_id.toString();
     }
     if (message.limit !== undefined) {
       obj.limit = message.limit;
@@ -9030,7 +9299,7 @@ export const ListGroupUsersRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListGroupUsersRequest>, I>>(object: I): ListGroupUsersRequest {
     const message = createBaseListGroupUsersRequest();
-    message.group_id = object.group_id ?? "";
+    message.group_id = object.group_id ?? 0n;
     message.limit = object.limit ?? undefined;
     message.state = object.state ?? undefined;
     message.cursor = object.cursor ?? "";
@@ -9039,16 +9308,22 @@ export const ListGroupUsersRequest = {
 };
 
 function createBaseListChannelUsersRequest(): ListChannelUsersRequest {
-  return { clan_id: "", channel_id: "", channel_type: 0, limit: undefined, state: undefined, cursor: "" };
+  return { clan_id: 0n, channel_id: 0n, channel_type: 0, limit: undefined, state: undefined, cursor: "" };
 }
 
 export const ListChannelUsersRequest = {
   encode(message: ListChannelUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     if (message.channel_type !== 0) {
       writer.uint32(24).int32(message.channel_type);
@@ -9073,18 +9348,18 @@ export const ListChannelUsersRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 24) {
@@ -9125,8 +9400,8 @@ export const ListChannelUsersRequest = {
 
   fromJSON(object: any): ListChannelUsersRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       state: isSet(object.state) ? Number(object.state) : undefined,
@@ -9136,11 +9411,11 @@ export const ListChannelUsersRequest = {
 
   toJSON(message: ListChannelUsersRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.channel_type !== 0) {
       obj.channel_type = Math.round(message.channel_type);
@@ -9162,8 +9437,8 @@ export const ListChannelUsersRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListChannelUsersRequest>, I>>(object: I): ListChannelUsersRequest {
     const message = createBaseListChannelUsersRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     message.channel_type = object.channel_type ?? 0;
     message.limit = object.limit ?? undefined;
     message.state = object.state ?? undefined;
@@ -9173,16 +9448,22 @@ export const ListChannelUsersRequest = {
 };
 
 function createBaseListChannelAttachmentRequest(): ListChannelAttachmentRequest {
-  return { clan_id: "", channel_id: "", file_type: "", limit: 0, state: 0, before: 0, after: 0, around: 0 };
+  return { clan_id: 0n, channel_id: 0n, file_type: "", limit: 0, state: 0, before: 0, after: 0, around: 0 };
 }
 
 export const ListChannelAttachmentRequest = {
   encode(message: ListChannelAttachmentRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     if (message.file_type !== "") {
       writer.uint32(26).string(message.file_type);
@@ -9213,18 +9494,18 @@ export const ListChannelAttachmentRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -9279,8 +9560,8 @@ export const ListChannelAttachmentRequest = {
 
   fromJSON(object: any): ListChannelAttachmentRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       file_type: isSet(object.file_type) ? globalThis.String(object.file_type) : "",
       limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
       state: isSet(object.state) ? globalThis.Number(object.state) : 0,
@@ -9292,11 +9573,11 @@ export const ListChannelAttachmentRequest = {
 
   toJSON(message: ListChannelAttachmentRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.file_type !== "") {
       obj.file_type = message.file_type;
@@ -9324,8 +9605,8 @@ export const ListChannelAttachmentRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListChannelAttachmentRequest>, I>>(object: I): ListChannelAttachmentRequest {
     const message = createBaseListChannelAttachmentRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     message.file_type = object.file_type ?? "";
     message.limit = object.limit ?? 0;
     message.state = object.state ?? 0;
@@ -9337,13 +9618,16 @@ export const ListChannelAttachmentRequest = {
 };
 
 function createBaseListClanUsersRequest(): ListClanUsersRequest {
-  return { clan_id: "" };
+  return { clan_id: 0n };
 }
 
 export const ListClanUsersRequest = {
   encode(message: ListClanUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -9356,11 +9640,11 @@ export const ListClanUsersRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -9372,13 +9656,13 @@ export const ListClanUsersRequest = {
   },
 
   fromJSON(object: any): ListClanUsersRequest {
-    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+    return { clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n };
   },
 
   toJSON(message: ListClanUsersRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -9388,13 +9672,13 @@ export const ListClanUsersRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListClanUsersRequest>, I>>(object: I): ListClanUsersRequest {
     const message = createBaseListClanUsersRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseListNotificationsRequest(): ListNotificationsRequest {
-  return { limit: undefined, clan_id: "", notification_id: "", category: 0, direction: undefined };
+  return { limit: undefined, clan_id: 0n, notification_id: 0n, category: 0, direction: undefined };
 }
 
 export const ListNotificationsRequest = {
@@ -9402,11 +9686,17 @@ export const ListNotificationsRequest = {
     if (message.limit !== undefined) {
       Int32Value.encode({ value: message.limit! }, writer.uint32(10).fork()).ldelim();
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.clan_id.toString());
     }
-    if (message.notification_id !== "") {
-      writer.uint32(26).string(message.notification_id);
+    if (message.notification_id !== 0n) {
+      if (BigInt.asIntN(64, message.notification_id) !== message.notification_id) {
+        throw new globalThis.Error("value provided for field message.notification_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.notification_id.toString());
     }
     if (message.category !== 0) {
       writer.uint32(32).int32(message.category);
@@ -9432,18 +9722,18 @@ export const ListNotificationsRequest = {
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.notification_id = reader.string();
+          message.notification_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 32) {
@@ -9471,8 +9761,8 @@ export const ListNotificationsRequest = {
   fromJSON(object: any): ListNotificationsRequest {
     return {
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      notification_id: isSet(object.notification_id) ? globalThis.String(object.notification_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      notification_id: isSet(object.notification_id) ? BigInt(object.notification_id) : 0n,
       category: isSet(object.category) ? globalThis.Number(object.category) : 0,
       direction: isSet(object.direction) ? Number(object.direction) : undefined,
     };
@@ -9483,11 +9773,11 @@ export const ListNotificationsRequest = {
     if (message.limit !== undefined) {
       obj.limit = message.limit;
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.notification_id !== "") {
-      obj.notification_id = message.notification_id;
+    if (message.notification_id !== 0n) {
+      obj.notification_id = message.notification_id.toString();
     }
     if (message.category !== 0) {
       obj.category = Math.round(message.category);
@@ -9504,8 +9794,8 @@ export const ListNotificationsRequest = {
   fromPartial<I extends Exact<DeepPartial<ListNotificationsRequest>, I>>(object: I): ListNotificationsRequest {
     const message = createBaseListNotificationsRequest();
     message.limit = object.limit ?? undefined;
-    message.clan_id = object.clan_id ?? "";
-    message.notification_id = object.notification_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.notification_id = object.notification_id ?? 0n;
     message.category = object.category ?? 0;
     message.direction = object.direction ?? undefined;
     return message;
@@ -9513,13 +9803,16 @@ export const ListNotificationsRequest = {
 };
 
 function createBaseListUserGroupsRequest(): ListUserGroupsRequest {
-  return { user_id: "", limit: undefined, state: undefined, cursor: "" };
+  return { user_id: 0n, limit: undefined, state: undefined, cursor: "" };
 }
 
 export const ListUserGroupsRequest = {
   encode(message: ListUserGroupsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
+    if (message.user_id !== 0n) {
+      if (BigInt.asIntN(64, message.user_id) !== message.user_id) {
+        throw new globalThis.Error("value provided for field message.user_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.user_id.toString());
     }
     if (message.limit !== undefined) {
       Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
@@ -9541,11 +9834,11 @@ export const ListUserGroupsRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -9579,7 +9872,7 @@ export const ListUserGroupsRequest = {
 
   fromJSON(object: any): ListUserGroupsRequest {
     return {
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_id: isSet(object.user_id) ? BigInt(object.user_id) : 0n,
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       state: isSet(object.state) ? Number(object.state) : undefined,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
@@ -9588,8 +9881,8 @@ export const ListUserGroupsRequest = {
 
   toJSON(message: ListUserGroupsRequest): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
+    if (message.user_id !== 0n) {
+      obj.user_id = message.user_id.toString();
     }
     if (message.limit !== undefined) {
       obj.limit = message.limit;
@@ -9608,7 +9901,7 @@ export const ListUserGroupsRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListUserGroupsRequest>, I>>(object: I): ListUserGroupsRequest {
     const message = createBaseListUserGroupsRequest();
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? 0n;
     message.limit = object.limit ?? undefined;
     message.state = object.state ?? undefined;
     message.cursor = object.cursor ?? "";
@@ -9618,27 +9911,30 @@ export const ListUserGroupsRequest = {
 
 function createBaseNotification(): Notification {
   return {
-    id: "",
+    id: 0n,
     subject: "",
     content: new Uint8Array(0),
     code: 0,
-    sender_id: "",
+    sender_id: 0n,
     create_time_seconds: 0,
     persistent: false,
-    clan_id: "",
-    channel_id: "",
+    clan_id: 0n,
+    channel_id: 0n,
     channel_type: 0,
     avatar_url: "",
     channel: undefined,
-    topic_id: "",
+    topic_id: 0n,
     category: 0,
   };
 }
 
 export const Notification = {
   encode(message: Notification, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.subject !== "") {
       writer.uint32(18).string(message.subject);
@@ -9649,8 +9945,11 @@ export const Notification = {
     if (message.code !== 0) {
       writer.uint32(32).int32(message.code);
     }
-    if (message.sender_id !== "") {
-      writer.uint32(42).string(message.sender_id);
+    if (message.sender_id !== 0n) {
+      if (BigInt.asIntN(64, message.sender_id) !== message.sender_id) {
+        throw new globalThis.Error("value provided for field message.sender_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.sender_id.toString());
     }
     if (message.create_time_seconds !== 0) {
       writer.uint32(48).uint32(message.create_time_seconds);
@@ -9658,11 +9957,17 @@ export const Notification = {
     if (message.persistent !== false) {
       writer.uint32(56).bool(message.persistent);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(66).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(64).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(74).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(72).int64(message.channel_id.toString());
     }
     if (message.channel_type !== 0) {
       writer.uint32(80).int32(message.channel_type);
@@ -9673,8 +9978,11 @@ export const Notification = {
     if (message.channel !== undefined) {
       ChannelDescription.encode(message.channel, writer.uint32(98).fork()).ldelim();
     }
-    if (message.topic_id !== "") {
-      writer.uint32(106).string(message.topic_id);
+    if (message.topic_id !== 0n) {
+      if (BigInt.asIntN(64, message.topic_id) !== message.topic_id) {
+        throw new globalThis.Error("value provided for field message.topic_id of type int64 too large");
+      }
+      writer.uint32(104).int64(message.topic_id.toString());
     }
     if (message.category !== 0) {
       writer.uint32(112).int32(message.category);
@@ -9690,11 +9998,11 @@ export const Notification = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -9718,11 +10026,11 @@ export const Notification = {
           message.code = reader.int32();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.sender_id = reader.string();
+          message.sender_id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 48) {
@@ -9739,18 +10047,18 @@ export const Notification = {
           message.persistent = reader.bool();
           continue;
         case 8:
-          if (tag !== 66) {
+          if (tag !== 64) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 9:
-          if (tag !== 74) {
+          if (tag !== 72) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 10:
           if (tag !== 80) {
@@ -9774,11 +10082,11 @@ export const Notification = {
           message.channel = ChannelDescription.decode(reader, reader.uint32());
           continue;
         case 13:
-          if (tag !== 106) {
+          if (tag !== 104) {
             break;
           }
 
-          message.topic_id = reader.string();
+          message.topic_id = longToBigint(reader.int64() as Long);
           continue;
         case 14:
           if (tag !== 112) {
@@ -9798,27 +10106,27 @@ export const Notification = {
 
   fromJSON(object: any): Notification {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       subject: isSet(object.subject) ? globalThis.String(object.subject) : "",
       content: isSet(object.content) ? bytesFromBase64(object.content) : new Uint8Array(0),
       code: isSet(object.code) ? globalThis.Number(object.code) : 0,
-      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
+      sender_id: isSet(object.sender_id) ? BigInt(object.sender_id) : 0n,
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       persistent: isSet(object.persistent) ? globalThis.Boolean(object.persistent) : false,
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
       avatar_url: isSet(object.avatar_url) ? globalThis.String(object.avatar_url) : "",
       channel: isSet(object.channel) ? ChannelDescription.fromJSON(object.channel) : undefined,
-      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
+      topic_id: isSet(object.topic_id) ? BigInt(object.topic_id) : 0n,
       category: isSet(object.category) ? globalThis.Number(object.category) : 0,
     };
   },
 
   toJSON(message: Notification): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.subject !== "") {
       obj.subject = message.subject;
@@ -9829,8 +10137,8 @@ export const Notification = {
     if (message.code !== 0) {
       obj.code = Math.round(message.code);
     }
-    if (message.sender_id !== "") {
-      obj.sender_id = message.sender_id;
+    if (message.sender_id !== 0n) {
+      obj.sender_id = message.sender_id.toString();
     }
     if (message.create_time_seconds !== 0) {
       obj.create_time_seconds = Math.round(message.create_time_seconds);
@@ -9838,11 +10146,11 @@ export const Notification = {
     if (message.persistent !== false) {
       obj.persistent = message.persistent;
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.channel_type !== 0) {
       obj.channel_type = Math.round(message.channel_type);
@@ -9853,8 +10161,8 @@ export const Notification = {
     if (message.channel !== undefined) {
       obj.channel = ChannelDescription.toJSON(message.channel);
     }
-    if (message.topic_id !== "") {
-      obj.topic_id = message.topic_id;
+    if (message.topic_id !== 0n) {
+      obj.topic_id = message.topic_id.toString();
     }
     if (message.category !== 0) {
       obj.category = Math.round(message.category);
@@ -9867,37 +10175,43 @@ export const Notification = {
   },
   fromPartial<I extends Exact<DeepPartial<Notification>, I>>(object: I): Notification {
     const message = createBaseNotification();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.subject = object.subject ?? "";
     message.content = object.content ?? new Uint8Array(0);
     message.code = object.code ?? 0;
-    message.sender_id = object.sender_id ?? "";
+    message.sender_id = object.sender_id ?? 0n;
     message.create_time_seconds = object.create_time_seconds ?? 0;
     message.persistent = object.persistent ?? false;
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     message.channel_type = object.channel_type ?? 0;
     message.avatar_url = object.avatar_url ?? "";
     message.channel = (object.channel !== undefined && object.channel !== null)
       ? ChannelDescription.fromPartial(object.channel)
       : undefined;
-    message.topic_id = object.topic_id ?? "";
+    message.topic_id = object.topic_id ?? 0n;
     message.category = object.category ?? 0;
     return message;
   },
 };
 
 function createBaseEmojiRecent(): EmojiRecent {
-  return { emoji_recents_id: "", emoji_id: "", update_time_seconds: 0 };
+  return { emoji_recents_id: 0n, emoji_id: 0n, update_time_seconds: 0 };
 }
 
 export const EmojiRecent = {
   encode(message: EmojiRecent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.emoji_recents_id !== "") {
-      writer.uint32(10).string(message.emoji_recents_id);
+    if (message.emoji_recents_id !== 0n) {
+      if (BigInt.asIntN(64, message.emoji_recents_id) !== message.emoji_recents_id) {
+        throw new globalThis.Error("value provided for field message.emoji_recents_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.emoji_recents_id.toString());
     }
-    if (message.emoji_id !== "") {
-      writer.uint32(18).string(message.emoji_id);
+    if (message.emoji_id !== 0n) {
+      if (BigInt.asIntN(64, message.emoji_id) !== message.emoji_id) {
+        throw new globalThis.Error("value provided for field message.emoji_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.emoji_id.toString());
     }
     if (message.update_time_seconds !== 0) {
       writer.uint32(24).uint32(message.update_time_seconds);
@@ -9913,18 +10227,18 @@ export const EmojiRecent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.emoji_recents_id = reader.string();
+          message.emoji_recents_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.emoji_id = reader.string();
+          message.emoji_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 24) {
@@ -9944,19 +10258,19 @@ export const EmojiRecent = {
 
   fromJSON(object: any): EmojiRecent {
     return {
-      emoji_recents_id: isSet(object.emoji_recents_id) ? globalThis.String(object.emoji_recents_id) : "",
-      emoji_id: isSet(object.emoji_id) ? globalThis.String(object.emoji_id) : "",
+      emoji_recents_id: isSet(object.emoji_recents_id) ? BigInt(object.emoji_recents_id) : 0n,
+      emoji_id: isSet(object.emoji_id) ? BigInt(object.emoji_id) : 0n,
       update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
     };
   },
 
   toJSON(message: EmojiRecent): unknown {
     const obj: any = {};
-    if (message.emoji_recents_id !== "") {
-      obj.emoji_recents_id = message.emoji_recents_id;
+    if (message.emoji_recents_id !== 0n) {
+      obj.emoji_recents_id = message.emoji_recents_id.toString();
     }
-    if (message.emoji_id !== "") {
-      obj.emoji_id = message.emoji_id;
+    if (message.emoji_id !== 0n) {
+      obj.emoji_id = message.emoji_id.toString();
     }
     if (message.update_time_seconds !== 0) {
       obj.update_time_seconds = Math.round(message.update_time_seconds);
@@ -9969,8 +10283,8 @@ export const EmojiRecent = {
   },
   fromPartial<I extends Exact<DeepPartial<EmojiRecent>, I>>(object: I): EmojiRecent {
     const message = createBaseEmojiRecent();
-    message.emoji_recents_id = object.emoji_recents_id ?? "";
-    message.emoji_id = object.emoji_id ?? "";
+    message.emoji_recents_id = object.emoji_recents_id ?? 0n;
+    message.emoji_id = object.emoji_id ?? 0n;
     message.update_time_seconds = object.update_time_seconds ?? 0;
     return message;
   },
@@ -10114,17 +10428,25 @@ export const NotificationList = {
 };
 
 function createBasePromoteGroupUsersRequest(): PromoteGroupUsersRequest {
-  return { group_id: "", user_ids: [] };
+  return { group_id: 0n, user_ids: [] };
 }
 
 export const PromoteGroupUsersRequest = {
   encode(message: PromoteGroupUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.group_id !== "") {
-      writer.uint32(10).string(message.group_id);
+    if (message.group_id !== 0n) {
+      if (BigInt.asIntN(64, message.group_id) !== message.group_id) {
+        throw new globalThis.Error("value provided for field message.group_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.group_id.toString());
     }
+    writer.uint32(18).fork();
     for (const v of message.user_ids) {
-      writer.uint32(18).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field user_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -10136,19 +10458,29 @@ export const PromoteGroupUsersRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.group_id = reader.string();
+          message.group_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
-            break;
+          if (tag === 16) {
+            message.user_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 18) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10160,18 +10492,18 @@ export const PromoteGroupUsersRequest = {
 
   fromJSON(object: any): PromoteGroupUsersRequest {
     return {
-      group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "",
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      group_id: isSet(object.group_id) ? BigInt(object.group_id) : 0n,
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => BigInt(e)) : [],
     };
   },
 
   toJSON(message: PromoteGroupUsersRequest): unknown {
     const obj: any = {};
-    if (message.group_id !== "") {
-      obj.group_id = message.group_id;
+    if (message.group_id !== 0n) {
+      obj.group_id = message.group_id.toString();
     }
     if (message.user_ids?.length) {
-      obj.user_ids = message.user_ids;
+      obj.user_ids = message.user_ids.map((e) => e.toString());
     }
     return obj;
   },
@@ -10181,24 +10513,32 @@ export const PromoteGroupUsersRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<PromoteGroupUsersRequest>, I>>(object: I): PromoteGroupUsersRequest {
     const message = createBasePromoteGroupUsersRequest();
-    message.group_id = object.group_id ?? "";
+    message.group_id = object.group_id ?? 0n;
     message.user_ids = object.user_ids?.map((e) => e) || [];
     return message;
   },
 };
 
 function createBaseDemoteGroupUsersRequest(): DemoteGroupUsersRequest {
-  return { group_id: "", user_ids: [] };
+  return { group_id: 0n, user_ids: [] };
 }
 
 export const DemoteGroupUsersRequest = {
   encode(message: DemoteGroupUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.group_id !== "") {
-      writer.uint32(10).string(message.group_id);
+    if (message.group_id !== 0n) {
+      if (BigInt.asIntN(64, message.group_id) !== message.group_id) {
+        throw new globalThis.Error("value provided for field message.group_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.group_id.toString());
     }
+    writer.uint32(18).fork();
     for (const v of message.user_ids) {
-      writer.uint32(18).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field user_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -10210,19 +10550,29 @@ export const DemoteGroupUsersRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.group_id = reader.string();
+          message.group_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
-            break;
+          if (tag === 16) {
+            message.user_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 18) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10234,18 +10584,18 @@ export const DemoteGroupUsersRequest = {
 
   fromJSON(object: any): DemoteGroupUsersRequest {
     return {
-      group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "",
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      group_id: isSet(object.group_id) ? BigInt(object.group_id) : 0n,
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => BigInt(e)) : [],
     };
   },
 
   toJSON(message: DemoteGroupUsersRequest): unknown {
     const obj: any = {};
-    if (message.group_id !== "") {
-      obj.group_id = message.group_id;
+    if (message.group_id !== 0n) {
+      obj.group_id = message.group_id.toString();
     }
     if (message.user_ids?.length) {
-      obj.user_ids = message.user_ids;
+      obj.user_ids = message.user_ids.map((e) => e.toString());
     }
     return obj;
   },
@@ -10255,7 +10605,7 @@ export const DemoteGroupUsersRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<DemoteGroupUsersRequest>, I>>(object: I): DemoteGroupUsersRequest {
     const message = createBaseDemoteGroupUsersRequest();
-    message.group_id = object.group_id ?? "";
+    message.group_id = object.group_id ?? 0n;
     message.user_ids = object.user_ids?.map((e) => e) || [];
     return message;
   },
@@ -10351,7 +10701,7 @@ export const Rpc = {
 };
 
 function createBaseSession(): Session {
-  return { created: false, token: "", refresh_token: "", user_id: "", is_remember: false, api_url: "", id_token: "" };
+  return { created: false, token: "", refresh_token: "", user_id: 0n, is_remember: false, api_url: "", id_token: "" };
 }
 
 export const Session = {
@@ -10365,8 +10715,11 @@ export const Session = {
     if (message.refresh_token !== "") {
       writer.uint32(26).string(message.refresh_token);
     }
-    if (message.user_id !== "") {
-      writer.uint32(34).string(message.user_id);
+    if (message.user_id !== 0n) {
+      if (BigInt.asIntN(64, message.user_id) !== message.user_id) {
+        throw new globalThis.Error("value provided for field message.user_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.user_id.toString());
     }
     if (message.is_remember !== false) {
       writer.uint32(40).bool(message.is_remember);
@@ -10409,11 +10762,11 @@ export const Session = {
           message.refresh_token = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
           if (tag !== 40) {
@@ -10450,7 +10803,7 @@ export const Session = {
       created: isSet(object.created) ? globalThis.Boolean(object.created) : false,
       token: isSet(object.token) ? globalThis.String(object.token) : "",
       refresh_token: isSet(object.refresh_token) ? globalThis.String(object.refresh_token) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_id: isSet(object.user_id) ? BigInt(object.user_id) : 0n,
       is_remember: isSet(object.is_remember) ? globalThis.Boolean(object.is_remember) : false,
       api_url: isSet(object.api_url) ? globalThis.String(object.api_url) : "",
       id_token: isSet(object.id_token) ? globalThis.String(object.id_token) : "",
@@ -10468,8 +10821,8 @@ export const Session = {
     if (message.refresh_token !== "") {
       obj.refresh_token = message.refresh_token;
     }
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
+    if (message.user_id !== 0n) {
+      obj.user_id = message.user_id.toString();
     }
     if (message.is_remember !== false) {
       obj.is_remember = message.is_remember;
@@ -10491,7 +10844,7 @@ export const Session = {
     message.created = object.created ?? false;
     message.token = object.token ?? "";
     message.refresh_token = object.refresh_token ?? "";
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? 0n;
     message.is_remember = object.is_remember ?? false;
     message.api_url = object.api_url ?? "";
     message.id_token = object.id_token ?? "";
@@ -10796,7 +11149,7 @@ export const UpdateAccountRequest = {
 
 function createBaseUpdateGroupRequest(): UpdateGroupRequest {
   return {
-    group_id: "",
+    group_id: 0n,
     name: undefined,
     description: undefined,
     lang_tag: undefined,
@@ -10807,8 +11160,11 @@ function createBaseUpdateGroupRequest(): UpdateGroupRequest {
 
 export const UpdateGroupRequest = {
   encode(message: UpdateGroupRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.group_id !== "") {
-      writer.uint32(10).string(message.group_id);
+    if (message.group_id !== 0n) {
+      if (BigInt.asIntN(64, message.group_id) !== message.group_id) {
+        throw new globalThis.Error("value provided for field message.group_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.group_id.toString());
     }
     if (message.name !== undefined) {
       StringValue.encode({ value: message.name! }, writer.uint32(18).fork()).ldelim();
@@ -10836,11 +11192,11 @@ export const UpdateGroupRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.group_id = reader.string();
+          message.group_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -10888,7 +11244,7 @@ export const UpdateGroupRequest = {
 
   fromJSON(object: any): UpdateGroupRequest {
     return {
-      group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "",
+      group_id: isSet(object.group_id) ? BigInt(object.group_id) : 0n,
       name: isSet(object.name) ? String(object.name) : undefined,
       description: isSet(object.description) ? String(object.description) : undefined,
       lang_tag: isSet(object.lang_tag) ? String(object.lang_tag) : undefined,
@@ -10899,8 +11255,8 @@ export const UpdateGroupRequest = {
 
   toJSON(message: UpdateGroupRequest): unknown {
     const obj: any = {};
-    if (message.group_id !== "") {
-      obj.group_id = message.group_id;
+    if (message.group_id !== 0n) {
+      obj.group_id = message.group_id.toString();
     }
     if (message.name !== undefined) {
       obj.name = message.name;
@@ -10925,7 +11281,7 @@ export const UpdateGroupRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<UpdateGroupRequest>, I>>(object: I): UpdateGroupRequest {
     const message = createBaseUpdateGroupRequest();
-    message.group_id = object.group_id ?? "";
+    message.group_id = object.group_id ?? 0n;
     message.name = object.name ?? undefined;
     message.description = object.description ?? undefined;
     message.lang_tag = object.lang_tag ?? undefined;
@@ -10936,19 +11292,25 @@ export const UpdateGroupRequest = {
 };
 
 function createBaseUpdateCategoryDescRequest(): UpdateCategoryDescRequest {
-  return { category_id: "", category_name: "", clan_id: "" };
+  return { category_id: 0n, category_name: "", clan_id: 0n };
 }
 
 export const UpdateCategoryDescRequest = {
   encode(message: UpdateCategoryDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.category_id !== "") {
-      writer.uint32(10).string(message.category_id);
+    if (message.category_id !== 0n) {
+      if (BigInt.asIntN(64, message.category_id) !== message.category_id) {
+        throw new globalThis.Error("value provided for field message.category_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.category_id.toString());
     }
     if (message.category_name !== "") {
       writer.uint32(18).string(message.category_name);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -10961,11 +11323,11 @@ export const UpdateCategoryDescRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.category_id = reader.string();
+          message.category_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -10975,11 +11337,11 @@ export const UpdateCategoryDescRequest = {
           message.category_name = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -10992,22 +11354,22 @@ export const UpdateCategoryDescRequest = {
 
   fromJSON(object: any): UpdateCategoryDescRequest {
     return {
-      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
+      category_id: isSet(object.category_id) ? BigInt(object.category_id) : 0n,
       category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
   toJSON(message: UpdateCategoryDescRequest): unknown {
     const obj: any = {};
-    if (message.category_id !== "") {
-      obj.category_id = message.category_id;
+    if (message.category_id !== 0n) {
+      obj.category_id = message.category_id.toString();
     }
     if (message.category_name !== "") {
       obj.category_name = message.category_name;
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -11017,16 +11379,16 @@ export const UpdateCategoryDescRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<UpdateCategoryDescRequest>, I>>(object: I): UpdateCategoryDescRequest {
     const message = createBaseUpdateCategoryDescRequest();
-    message.category_id = object.category_id ?? "";
+    message.category_id = object.category_id ?? 0n;
     message.category_name = object.category_name ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseUser(): User {
   return {
-    id: "",
+    id: 0n,
     username: "",
     display_name: "",
     avatar_url: "",
@@ -11043,7 +11405,7 @@ function createBaseUser(): User {
     join_time_seconds: 0,
     is_mobile: false,
     dob_seconds: 0,
-    mezon_id: "",
+    mezon_id: 0n,
     list_nick_names: [],
     status: "",
   };
@@ -11051,8 +11413,11 @@ function createBaseUser(): User {
 
 export const User = {
   encode(message: User, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.username !== "") {
       writer.uint32(18).string(message.username);
@@ -11102,8 +11467,11 @@ export const User = {
     if (message.dob_seconds !== 0) {
       writer.uint32(136).uint32(message.dob_seconds);
     }
-    if (message.mezon_id !== "") {
-      writer.uint32(146).string(message.mezon_id);
+    if (message.mezon_id !== 0n) {
+      if (BigInt.asIntN(64, message.mezon_id) !== message.mezon_id) {
+        throw new globalThis.Error("value provided for field message.mezon_id of type int64 too large");
+      }
+      writer.uint32(144).int64(message.mezon_id.toString());
     }
     for (const v of message.list_nick_names) {
       writer.uint32(154).string(v!);
@@ -11122,11 +11490,11 @@ export const User = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -11241,11 +11609,11 @@ export const User = {
           message.dob_seconds = reader.uint32();
           continue;
         case 18:
-          if (tag !== 146) {
+          if (tag !== 144) {
             break;
           }
 
-          message.mezon_id = reader.string();
+          message.mezon_id = longToBigint(reader.int64() as Long);
           continue;
         case 19:
           if (tag !== 154) {
@@ -11272,7 +11640,7 @@ export const User = {
 
   fromJSON(object: any): User {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
       avatar_url: isSet(object.avatar_url) ? globalThis.String(object.avatar_url) : "",
@@ -11289,7 +11657,7 @@ export const User = {
       join_time_seconds: isSet(object.join_time_seconds) ? globalThis.Number(object.join_time_seconds) : 0,
       is_mobile: isSet(object.is_mobile) ? globalThis.Boolean(object.is_mobile) : false,
       dob_seconds: isSet(object.dob_seconds) ? globalThis.Number(object.dob_seconds) : 0,
-      mezon_id: isSet(object.mezon_id) ? globalThis.String(object.mezon_id) : "",
+      mezon_id: isSet(object.mezon_id) ? BigInt(object.mezon_id) : 0n,
       list_nick_names: globalThis.Array.isArray(object?.list_nick_names)
         ? object.list_nick_names.map((e: any) => globalThis.String(e))
         : [],
@@ -11299,8 +11667,8 @@ export const User = {
 
   toJSON(message: User): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.username !== "") {
       obj.username = message.username;
@@ -11350,8 +11718,8 @@ export const User = {
     if (message.dob_seconds !== 0) {
       obj.dob_seconds = Math.round(message.dob_seconds);
     }
-    if (message.mezon_id !== "") {
-      obj.mezon_id = message.mezon_id;
+    if (message.mezon_id !== 0n) {
+      obj.mezon_id = message.mezon_id.toString();
     }
     if (message.list_nick_names?.length) {
       obj.list_nick_names = message.list_nick_names;
@@ -11367,7 +11735,7 @@ export const User = {
   },
   fromPartial<I extends Exact<DeepPartial<User>, I>>(object: I): User {
     const message = createBaseUser();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.username = object.username ?? "";
     message.display_name = object.display_name ?? "";
     message.avatar_url = object.avatar_url ?? "";
@@ -11384,7 +11752,7 @@ export const User = {
     message.join_time_seconds = object.join_time_seconds ?? 0;
     message.is_mobile = object.is_mobile ?? false;
     message.dob_seconds = object.dob_seconds ?? 0;
-    message.mezon_id = object.mezon_id ?? "";
+    message.mezon_id = object.mezon_id ?? 0n;
     message.list_nick_names = object.list_nick_names?.map((e) => e) || [];
     message.status = object.status ?? "";
     return message;
@@ -11449,16 +11817,22 @@ export const Users = {
 };
 
 function createBaseClanDescProfile(): ClanDescProfile {
-  return { clan_id: "", creator_id: "", nick_name: "", profile_banner: "", profile_theme: "", avatar_url: "" };
+  return { clan_id: 0n, creator_id: 0n, nick_name: "", profile_banner: "", profile_theme: "", avatar_url: "" };
 }
 
 export const ClanDescProfile = {
   encode(message: ClanDescProfile, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.creator_id !== "") {
-      writer.uint32(18).string(message.creator_id);
+    if (message.creator_id !== 0n) {
+      if (BigInt.asIntN(64, message.creator_id) !== message.creator_id) {
+        throw new globalThis.Error("value provided for field message.creator_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.creator_id.toString());
     }
     if (message.nick_name !== "") {
       writer.uint32(26).string(message.nick_name);
@@ -11483,18 +11857,18 @@ export const ClanDescProfile = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -11535,8 +11909,8 @@ export const ClanDescProfile = {
 
   fromJSON(object: any): ClanDescProfile {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      creator_id: isSet(object.creator_id) ? BigInt(object.creator_id) : 0n,
       nick_name: isSet(object.nick_name) ? globalThis.String(object.nick_name) : "",
       profile_banner: isSet(object.profile_banner) ? globalThis.String(object.profile_banner) : "",
       profile_theme: isSet(object.profile_theme) ? globalThis.String(object.profile_theme) : "",
@@ -11546,11 +11920,11 @@ export const ClanDescProfile = {
 
   toJSON(message: ClanDescProfile): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
+    if (message.creator_id !== 0n) {
+      obj.creator_id = message.creator_id.toString();
     }
     if (message.nick_name !== "") {
       obj.nick_name = message.nick_name;
@@ -11572,8 +11946,8 @@ export const ClanDescProfile = {
   },
   fromPartial<I extends Exact<DeepPartial<ClanDescProfile>, I>>(object: I): ClanDescProfile {
     const message = createBaseClanDescProfile();
-    message.clan_id = object.clan_id ?? "";
-    message.creator_id = object.creator_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.creator_id = object.creator_id ?? 0n;
     message.nick_name = object.nick_name ?? "";
     message.profile_banner = object.profile_banner ?? "";
     message.profile_theme = object.profile_theme ?? "";
@@ -11583,13 +11957,16 @@ export const ClanDescProfile = {
 };
 
 function createBaseUpdateClanDescProfileRequest(): UpdateClanDescProfileRequest {
-  return { clan_id: "", nick_name: "", profile_banner: "", profile_theme: "", avatar_url: "" };
+  return { clan_id: 0n, nick_name: "", profile_banner: "", profile_theme: "", avatar_url: "" };
 }
 
 export const UpdateClanDescProfileRequest = {
   encode(message: UpdateClanDescProfileRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     if (message.nick_name !== "") {
       writer.uint32(18).string(message.nick_name);
@@ -11614,11 +11991,11 @@ export const UpdateClanDescProfileRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -11659,7 +12036,7 @@ export const UpdateClanDescProfileRequest = {
 
   fromJSON(object: any): UpdateClanDescProfileRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       nick_name: isSet(object.nick_name) ? globalThis.String(object.nick_name) : "",
       profile_banner: isSet(object.profile_banner) ? globalThis.String(object.profile_banner) : "",
       profile_theme: isSet(object.profile_theme) ? globalThis.String(object.profile_theme) : "",
@@ -11669,8 +12046,8 @@ export const UpdateClanDescProfileRequest = {
 
   toJSON(message: UpdateClanDescProfileRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.nick_name !== "") {
       obj.nick_name = message.nick_name;
@@ -11692,7 +12069,7 @@ export const UpdateClanDescProfileRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<UpdateClanDescProfileRequest>, I>>(object: I): UpdateClanDescProfileRequest {
     const message = createBaseUpdateClanDescProfileRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.nick_name = object.nick_name ?? "";
     message.profile_banner = object.profile_banner ?? "";
     message.profile_theme = object.profile_theme ?? "";
@@ -11702,13 +12079,16 @@ export const UpdateClanDescProfileRequest = {
 };
 
 function createBaseClanDescProfileRequest(): ClanDescProfileRequest {
-  return { clan_id: "" };
+  return { clan_id: 0n };
 }
 
 export const ClanDescProfileRequest = {
   encode(message: ClanDescProfileRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -11721,11 +12101,11 @@ export const ClanDescProfileRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -11737,13 +12117,13 @@ export const ClanDescProfileRequest = {
   },
 
   fromJSON(object: any): ClanDescProfileRequest {
-    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+    return { clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n };
   },
 
   toJSON(message: ClanDescProfileRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -11753,22 +12133,22 @@ export const ClanDescProfileRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ClanDescProfileRequest>, I>>(object: I): ClanDescProfileRequest {
     const message = createBaseClanDescProfileRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseClanDesc(): ClanDesc {
   return {
-    creator_id: "",
+    creator_id: 0n,
     clan_name: "",
     logo: "",
     banner: "",
-    clan_id: "",
+    clan_id: 0n,
     status: 0,
     badge_count: 0,
     is_onboarding: false,
-    welcome_channel_id: "",
+    welcome_channel_id: 0n,
     onboarding_banner: "",
     clan_order: 0,
     is_community: false,
@@ -11783,8 +12163,11 @@ function createBaseClanDesc(): ClanDesc {
 
 export const ClanDesc = {
   encode(message: ClanDesc, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.creator_id !== "") {
-      writer.uint32(10).string(message.creator_id);
+    if (message.creator_id !== 0n) {
+      if (BigInt.asIntN(64, message.creator_id) !== message.creator_id) {
+        throw new globalThis.Error("value provided for field message.creator_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.creator_id.toString());
     }
     if (message.clan_name !== "") {
       writer.uint32(18).string(message.clan_name);
@@ -11795,8 +12178,11 @@ export const ClanDesc = {
     if (message.banner !== "") {
       writer.uint32(34).string(message.banner);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(42).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.clan_id.toString());
     }
     if (message.status !== 0) {
       writer.uint32(48).int32(message.status);
@@ -11807,8 +12193,11 @@ export const ClanDesc = {
     if (message.is_onboarding !== false) {
       writer.uint32(64).bool(message.is_onboarding);
     }
-    if (message.welcome_channel_id !== "") {
-      writer.uint32(74).string(message.welcome_channel_id);
+    if (message.welcome_channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.welcome_channel_id) !== message.welcome_channel_id) {
+        throw new globalThis.Error("value provided for field message.welcome_channel_id of type int64 too large");
+      }
+      writer.uint32(72).int64(message.welcome_channel_id.toString());
     }
     if (message.onboarding_banner !== "") {
       writer.uint32(82).string(message.onboarding_banner);
@@ -11848,11 +12237,11 @@ export const ClanDesc = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -11876,11 +12265,11 @@ export const ClanDesc = {
           message.banner = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 48) {
@@ -11904,11 +12293,11 @@ export const ClanDesc = {
           message.is_onboarding = reader.bool();
           continue;
         case 9:
-          if (tag !== 74) {
+          if (tag !== 72) {
             break;
           }
 
-          message.welcome_channel_id = reader.string();
+          message.welcome_channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 10:
           if (tag !== 82) {
@@ -11984,15 +12373,15 @@ export const ClanDesc = {
 
   fromJSON(object: any): ClanDesc {
     return {
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      creator_id: isSet(object.creator_id) ? BigInt(object.creator_id) : 0n,
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       banner: isSet(object.banner) ? globalThis.String(object.banner) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       badge_count: isSet(object.badge_count) ? globalThis.Number(object.badge_count) : 0,
       is_onboarding: isSet(object.is_onboarding) ? globalThis.Boolean(object.is_onboarding) : false,
-      welcome_channel_id: isSet(object.welcome_channel_id) ? globalThis.String(object.welcome_channel_id) : "",
+      welcome_channel_id: isSet(object.welcome_channel_id) ? BigInt(object.welcome_channel_id) : 0n,
       onboarding_banner: isSet(object.onboarding_banner) ? globalThis.String(object.onboarding_banner) : "",
       clan_order: isSet(object.clan_order) ? globalThis.Number(object.clan_order) : 0,
       is_community: isSet(object.is_community) ? globalThis.Boolean(object.is_community) : false,
@@ -12007,8 +12396,8 @@ export const ClanDesc = {
 
   toJSON(message: ClanDesc): unknown {
     const obj: any = {};
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
+    if (message.creator_id !== 0n) {
+      obj.creator_id = message.creator_id.toString();
     }
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
@@ -12019,8 +12408,8 @@ export const ClanDesc = {
     if (message.banner !== "") {
       obj.banner = message.banner;
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
@@ -12031,8 +12420,8 @@ export const ClanDesc = {
     if (message.is_onboarding !== false) {
       obj.is_onboarding = message.is_onboarding;
     }
-    if (message.welcome_channel_id !== "") {
-      obj.welcome_channel_id = message.welcome_channel_id;
+    if (message.welcome_channel_id !== 0n) {
+      obj.welcome_channel_id = message.welcome_channel_id.toString();
     }
     if (message.onboarding_banner !== "") {
       obj.onboarding_banner = message.onboarding_banner;
@@ -12069,15 +12458,15 @@ export const ClanDesc = {
   },
   fromPartial<I extends Exact<DeepPartial<ClanDesc>, I>>(object: I): ClanDesc {
     const message = createBaseClanDesc();
-    message.creator_id = object.creator_id ?? "";
+    message.creator_id = object.creator_id ?? 0n;
     message.clan_name = object.clan_name ?? "";
     message.logo = object.logo ?? "";
     message.banner = object.banner ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.status = object.status ?? 0;
     message.badge_count = object.badge_count ?? 0;
     message.is_onboarding = object.is_onboarding ?? false;
-    message.welcome_channel_id = object.welcome_channel_id ?? "";
+    message.welcome_channel_id = object.welcome_channel_id ?? 0n;
     message.onboarding_banner = object.onboarding_banner ?? "";
     message.clan_order = object.clan_order ?? 0;
     message.is_community = object.is_community ?? false;
@@ -12182,13 +12571,13 @@ export const CreateClanDescRequest = {
 
 function createBaseUpdateClanDescRequest(): UpdateClanDescRequest {
   return {
-    clan_id: "",
+    clan_id: 0n,
     clan_name: "",
     logo: undefined,
     banner: undefined,
     status: 0,
     is_onboarding: undefined,
-    welcome_channel_id: "",
+    welcome_channel_id: 0n,
     onboarding_banner: undefined,
     is_community: undefined,
     community_banner: undefined,
@@ -12201,8 +12590,11 @@ function createBaseUpdateClanDescRequest(): UpdateClanDescRequest {
 
 export const UpdateClanDescRequest = {
   encode(message: UpdateClanDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     if (message.clan_name !== "") {
       writer.uint32(18).string(message.clan_name);
@@ -12219,8 +12611,11 @@ export const UpdateClanDescRequest = {
     if (message.is_onboarding !== undefined) {
       BoolValue.encode({ value: message.is_onboarding! }, writer.uint32(50).fork()).ldelim();
     }
-    if (message.welcome_channel_id !== "") {
-      writer.uint32(58).string(message.welcome_channel_id);
+    if (message.welcome_channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.welcome_channel_id) !== message.welcome_channel_id) {
+        throw new globalThis.Error("value provided for field message.welcome_channel_id of type int64 too large");
+      }
+      writer.uint32(56).int64(message.welcome_channel_id.toString());
     }
     if (message.onboarding_banner !== undefined) {
       StringValue.encode({ value: message.onboarding_banner! }, writer.uint32(66).fork()).ldelim();
@@ -12254,11 +12649,11 @@ export const UpdateClanDescRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -12296,11 +12691,11 @@ export const UpdateClanDescRequest = {
           message.is_onboarding = BoolValue.decode(reader, reader.uint32()).value;
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.welcome_channel_id = reader.string();
+          message.welcome_channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 8:
           if (tag !== 66) {
@@ -12362,13 +12757,13 @@ export const UpdateClanDescRequest = {
 
   fromJSON(object: any): UpdateClanDescRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       logo: isSet(object.logo) ? String(object.logo) : undefined,
       banner: isSet(object.banner) ? String(object.banner) : undefined,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       is_onboarding: isSet(object.is_onboarding) ? Boolean(object.is_onboarding) : undefined,
-      welcome_channel_id: isSet(object.welcome_channel_id) ? globalThis.String(object.welcome_channel_id) : "",
+      welcome_channel_id: isSet(object.welcome_channel_id) ? BigInt(object.welcome_channel_id) : 0n,
       onboarding_banner: isSet(object.onboarding_banner) ? String(object.onboarding_banner) : undefined,
       is_community: isSet(object.is_community) ? Boolean(object.is_community) : undefined,
       community_banner: isSet(object.community_banner) ? String(object.community_banner) : undefined,
@@ -12381,8 +12776,8 @@ export const UpdateClanDescRequest = {
 
   toJSON(message: UpdateClanDescRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
@@ -12399,8 +12794,8 @@ export const UpdateClanDescRequest = {
     if (message.is_onboarding !== undefined) {
       obj.is_onboarding = message.is_onboarding;
     }
-    if (message.welcome_channel_id !== "") {
-      obj.welcome_channel_id = message.welcome_channel_id;
+    if (message.welcome_channel_id !== 0n) {
+      obj.welcome_channel_id = message.welcome_channel_id.toString();
     }
     if (message.onboarding_banner !== undefined) {
       obj.onboarding_banner = message.onboarding_banner;
@@ -12431,13 +12826,13 @@ export const UpdateClanDescRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<UpdateClanDescRequest>, I>>(object: I): UpdateClanDescRequest {
     const message = createBaseUpdateClanDescRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.clan_name = object.clan_name ?? "";
     message.logo = object.logo ?? undefined;
     message.banner = object.banner ?? undefined;
     message.status = object.status ?? 0;
     message.is_onboarding = object.is_onboarding ?? undefined;
-    message.welcome_channel_id = object.welcome_channel_id ?? "";
+    message.welcome_channel_id = object.welcome_channel_id ?? 0n;
     message.onboarding_banner = object.onboarding_banner ?? undefined;
     message.is_community = object.is_community ?? undefined;
     message.community_banner = object.community_banner ?? undefined;
@@ -12450,13 +12845,16 @@ export const UpdateClanDescRequest = {
 };
 
 function createBaseDeleteClanDescRequest(): DeleteClanDescRequest {
-  return { clan_desc_id: "" };
+  return { clan_desc_id: 0n };
 }
 
 export const DeleteClanDescRequest = {
   encode(message: DeleteClanDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_desc_id !== "") {
-      writer.uint32(10).string(message.clan_desc_id);
+    if (message.clan_desc_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_desc_id) !== message.clan_desc_id) {
+        throw new globalThis.Error("value provided for field message.clan_desc_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_desc_id.toString());
     }
     return writer;
   },
@@ -12469,11 +12867,11 @@ export const DeleteClanDescRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_desc_id = reader.string();
+          message.clan_desc_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -12485,13 +12883,13 @@ export const DeleteClanDescRequest = {
   },
 
   fromJSON(object: any): DeleteClanDescRequest {
-    return { clan_desc_id: isSet(object.clan_desc_id) ? globalThis.String(object.clan_desc_id) : "" };
+    return { clan_desc_id: isSet(object.clan_desc_id) ? BigInt(object.clan_desc_id) : 0n };
   },
 
   toJSON(message: DeleteClanDescRequest): unknown {
     const obj: any = {};
-    if (message.clan_desc_id !== "") {
-      obj.clan_desc_id = message.clan_desc_id;
+    if (message.clan_desc_id !== 0n) {
+      obj.clan_desc_id = message.clan_desc_id.toString();
     }
     return obj;
   },
@@ -12501,7 +12899,7 @@ export const DeleteClanDescRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<DeleteClanDescRequest>, I>>(object: I): DeleteClanDescRequest {
     const message = createBaseDeleteClanDescRequest();
-    message.clan_desc_id = object.clan_desc_id ?? "";
+    message.clan_desc_id = object.clan_desc_id ?? 0n;
     return message;
   },
 };
@@ -12596,13 +12994,16 @@ export const ListClanDescRequest = {
 };
 
 function createBaseListClanUnreadMsgIndicatorRequest(): ListClanUnreadMsgIndicatorRequest {
-  return { clan_id: "" };
+  return { clan_id: 0n };
 }
 
 export const ListClanUnreadMsgIndicatorRequest = {
   encode(message: ListClanUnreadMsgIndicatorRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -12615,11 +13016,11 @@ export const ListClanUnreadMsgIndicatorRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -12631,13 +13032,13 @@ export const ListClanUnreadMsgIndicatorRequest = {
   },
 
   fromJSON(object: any): ListClanUnreadMsgIndicatorRequest {
-    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+    return { clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n };
   },
 
   toJSON(message: ListClanUnreadMsgIndicatorRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -12651,7 +13052,7 @@ export const ListClanUnreadMsgIndicatorRequest = {
     object: I,
   ): ListClanUnreadMsgIndicatorRequest {
     const message = createBaseListClanUnreadMsgIndicatorRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
@@ -12779,16 +13180,22 @@ export const ClanDescList = {
 };
 
 function createBaseLinkInviteUserRequest(): LinkInviteUserRequest {
-  return { clan_id: "", channel_id: "", expiry_time: 0 };
+  return { clan_id: 0n, channel_id: 0n, expiry_time: 0 };
 }
 
 export const LinkInviteUserRequest = {
   encode(message: LinkInviteUserRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     if (message.expiry_time !== 0) {
       writer.uint32(24).int32(message.expiry_time);
@@ -12804,18 +13211,18 @@ export const LinkInviteUserRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 24) {
@@ -12835,19 +13242,19 @@ export const LinkInviteUserRequest = {
 
   fromJSON(object: any): LinkInviteUserRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       expiry_time: isSet(object.expiry_time) ? globalThis.Number(object.expiry_time) : 0,
     };
   },
 
   toJSON(message: LinkInviteUserRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.expiry_time !== 0) {
       obj.expiry_time = Math.round(message.expiry_time);
@@ -12860,21 +13267,24 @@ export const LinkInviteUserRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<LinkInviteUserRequest>, I>>(object: I): LinkInviteUserRequest {
     const message = createBaseLinkInviteUserRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     message.expiry_time = object.expiry_time ?? 0;
     return message;
   },
 };
 
 function createBaseInviteUserRequest(): InviteUserRequest {
-  return { invite_id: "" };
+  return { invite_id: 0n };
 }
 
 export const InviteUserRequest = {
   encode(message: InviteUserRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.invite_id !== "") {
-      writer.uint32(10).string(message.invite_id);
+    if (message.invite_id !== 0n) {
+      if (BigInt.asIntN(64, message.invite_id) !== message.invite_id) {
+        throw new globalThis.Error("value provided for field message.invite_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.invite_id.toString());
     }
     return writer;
   },
@@ -12887,11 +13297,11 @@ export const InviteUserRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.invite_id = reader.string();
+          message.invite_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -12903,13 +13313,13 @@ export const InviteUserRequest = {
   },
 
   fromJSON(object: any): InviteUserRequest {
-    return { invite_id: isSet(object.invite_id) ? globalThis.String(object.invite_id) : "" };
+    return { invite_id: isSet(object.invite_id) ? BigInt(object.invite_id) : 0n };
   },
 
   toJSON(message: InviteUserRequest): unknown {
     const obj: any = {};
-    if (message.invite_id !== "") {
-      obj.invite_id = message.invite_id;
+    if (message.invite_id !== 0n) {
+      obj.invite_id = message.invite_id.toString();
     }
     return obj;
   },
@@ -12919,15 +13329,15 @@ export const InviteUserRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<InviteUserRequest>, I>>(object: I): InviteUserRequest {
     const message = createBaseInviteUserRequest();
-    message.invite_id = object.invite_id ?? "";
+    message.invite_id = object.invite_id ?? 0n;
     return message;
   },
 };
 
 function createBaseInviteUserRes(): InviteUserRes {
   return {
-    clan_id: "",
-    channel_id: "",
+    clan_id: 0n,
+    channel_id: 0n,
     clan_name: "",
     channel_label: "",
     user_joined: false,
@@ -12940,11 +13350,17 @@ function createBaseInviteUserRes(): InviteUserRes {
 
 export const InviteUserRes = {
   encode(message: InviteUserRes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     if (message.clan_name !== "") {
       writer.uint32(26).string(message.clan_name);
@@ -12978,18 +13394,18 @@ export const InviteUserRes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -13051,8 +13467,8 @@ export const InviteUserRes = {
 
   fromJSON(object: any): InviteUserRes {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
       user_joined: isSet(object.user_joined) ? globalThis.Boolean(object.user_joined) : false,
@@ -13065,11 +13481,11 @@ export const InviteUserRes = {
 
   toJSON(message: InviteUserRes): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
@@ -13100,8 +13516,8 @@ export const InviteUserRes = {
   },
   fromPartial<I extends Exact<DeepPartial<InviteUserRes>, I>>(object: I): InviteUserRes {
     const message = createBaseInviteUserRes();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     message.clan_name = object.clan_name ?? "";
     message.channel_label = object.channel_label ?? "";
     message.user_joined = object.user_joined ?? false;
@@ -13116,16 +13532,22 @@ export const InviteUserRes = {
 };
 
 function createBaseJoinClanChannelRequest(): JoinClanChannelRequest {
-  return { clan_id: "", channel_id: "" };
+  return { clan_id: 0n, channel_id: 0n };
 }
 
 export const JoinClanChannelRequest = {
   encode(message: JoinClanChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     return writer;
   },
@@ -13138,18 +13560,18 @@ export const JoinClanChannelRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -13162,18 +13584,18 @@ export const JoinClanChannelRequest = {
 
   fromJSON(object: any): JoinClanChannelRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
     };
   },
 
   toJSON(message: JoinClanChannelRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     return obj;
   },
@@ -13183,34 +13605,43 @@ export const JoinClanChannelRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<JoinClanChannelRequest>, I>>(object: I): JoinClanChannelRequest {
     const message = createBaseJoinClanChannelRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     return message;
   },
 };
 
 function createBaseLinkInviteUser(): LinkInviteUser {
   return {
-    clan_id: "",
-    creator_id: "",
-    channel_id: "",
+    clan_id: 0n,
+    creator_id: 0n,
+    channel_id: 0n,
     invite_link: "",
     create_time_seconds: 0,
     expiry_time_seconds: 0,
-    id: "",
+    id: 0n,
   };
 }
 
 export const LinkInviteUser = {
   encode(message: LinkInviteUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.creator_id !== "") {
-      writer.uint32(18).string(message.creator_id);
+    if (message.creator_id !== 0n) {
+      if (BigInt.asIntN(64, message.creator_id) !== message.creator_id) {
+        throw new globalThis.Error("value provided for field message.creator_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.creator_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.channel_id.toString());
     }
     if (message.invite_link !== "") {
       writer.uint32(34).string(message.invite_link);
@@ -13221,8 +13652,11 @@ export const LinkInviteUser = {
     if (message.expiry_time_seconds !== 0) {
       writer.uint32(48).uint32(message.expiry_time_seconds);
     }
-    if (message.id !== "") {
-      writer.uint32(58).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(56).int64(message.id.toString());
     }
     return writer;
   },
@@ -13235,25 +13669,25 @@ export const LinkInviteUser = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -13277,11 +13711,11 @@ export const LinkInviteUser = {
           message.expiry_time_seconds = reader.uint32();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -13294,26 +13728,26 @@ export const LinkInviteUser = {
 
   fromJSON(object: any): LinkInviteUser {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      creator_id: isSet(object.creator_id) ? BigInt(object.creator_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       invite_link: isSet(object.invite_link) ? globalThis.String(object.invite_link) : "",
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       expiry_time_seconds: isSet(object.expiry_time_seconds) ? globalThis.Number(object.expiry_time_seconds) : 0,
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
     };
   },
 
   toJSON(message: LinkInviteUser): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
+    if (message.creator_id !== 0n) {
+      obj.creator_id = message.creator_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.invite_link !== "") {
       obj.invite_link = message.invite_link;
@@ -13324,8 +13758,8 @@ export const LinkInviteUser = {
     if (message.expiry_time_seconds !== 0) {
       obj.expiry_time_seconds = Math.round(message.expiry_time_seconds);
     }
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     return obj;
   },
@@ -13335,25 +13769,28 @@ export const LinkInviteUser = {
   },
   fromPartial<I extends Exact<DeepPartial<LinkInviteUser>, I>>(object: I): LinkInviteUser {
     const message = createBaseLinkInviteUser();
-    message.clan_id = object.clan_id ?? "";
-    message.creator_id = object.creator_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.creator_id = object.creator_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     message.invite_link = object.invite_link ?? "";
     message.create_time_seconds = object.create_time_seconds ?? 0;
     message.expiry_time_seconds = object.expiry_time_seconds ?? 0;
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     return message;
   },
 };
 
 function createBaseClanProfile(): ClanProfile {
-  return { user_id: "", nick_name: "", avatar: "", clan_id: "", about: "" };
+  return { user_id: 0n, nick_name: "", avatar: "", clan_id: 0n, about: "" };
 }
 
 export const ClanProfile = {
   encode(message: ClanProfile, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
+    if (message.user_id !== 0n) {
+      if (BigInt.asIntN(64, message.user_id) !== message.user_id) {
+        throw new globalThis.Error("value provided for field message.user_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.user_id.toString());
     }
     if (message.nick_name !== "") {
       writer.uint32(18).string(message.nick_name);
@@ -13361,8 +13798,11 @@ export const ClanProfile = {
     if (message.avatar !== "") {
       writer.uint32(26).string(message.avatar);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(34).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.clan_id.toString());
     }
     if (message.about !== "") {
       writer.uint32(42).string(message.about);
@@ -13378,11 +13818,11 @@ export const ClanProfile = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -13399,11 +13839,11 @@ export const ClanProfile = {
           message.avatar = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
           if (tag !== 42) {
@@ -13423,18 +13863,18 @@ export const ClanProfile = {
 
   fromJSON(object: any): ClanProfile {
     return {
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_id: isSet(object.user_id) ? BigInt(object.user_id) : 0n,
       nick_name: isSet(object.nick_name) ? globalThis.String(object.nick_name) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       about: isSet(object.about) ? globalThis.String(object.about) : "",
     };
   },
 
   toJSON(message: ClanProfile): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
+    if (message.user_id !== 0n) {
+      obj.user_id = message.user_id.toString();
     }
     if (message.nick_name !== "") {
       obj.nick_name = message.nick_name;
@@ -13442,8 +13882,8 @@ export const ClanProfile = {
     if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.about !== "") {
       obj.about = message.about;
@@ -13456,23 +13896,26 @@ export const ClanProfile = {
   },
   fromPartial<I extends Exact<DeepPartial<ClanProfile>, I>>(object: I): ClanProfile {
     const message = createBaseClanProfile();
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? 0n;
     message.nick_name = object.nick_name ?? "";
     message.avatar = object.avatar ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.about = object.about ?? "";
     return message;
   },
 };
 
 function createBaseClanProfileRequest(): ClanProfileRequest {
-  return { clan_id: "" };
+  return { clan_id: 0n };
 }
 
 export const ClanProfileRequest = {
   encode(message: ClanProfileRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -13485,11 +13928,11 @@ export const ClanProfileRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -13501,13 +13944,13 @@ export const ClanProfileRequest = {
   },
 
   fromJSON(object: any): ClanProfileRequest {
-    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+    return { clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n };
   },
 
   toJSON(message: ClanProfileRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -13517,19 +13960,22 @@ export const ClanProfileRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ClanProfileRequest>, I>>(object: I): ClanProfileRequest {
     const message = createBaseClanProfileRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseUpdateClanProfileRequest(): UpdateClanProfileRequest {
-  return { clan_id: "", nick_name: undefined, avatar: undefined };
+  return { clan_id: 0n, nick_name: undefined, avatar: undefined };
 }
 
 export const UpdateClanProfileRequest = {
   encode(message: UpdateClanProfileRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     if (message.nick_name !== undefined) {
       StringValue.encode({ value: message.nick_name! }, writer.uint32(18).fork()).ldelim();
@@ -13548,11 +13994,11 @@ export const UpdateClanProfileRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -13579,7 +14025,7 @@ export const UpdateClanProfileRequest = {
 
   fromJSON(object: any): UpdateClanProfileRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       nick_name: isSet(object.nick_name) ? String(object.nick_name) : undefined,
       avatar: isSet(object.avatar) ? String(object.avatar) : undefined,
     };
@@ -13587,8 +14033,8 @@ export const UpdateClanProfileRequest = {
 
   toJSON(message: UpdateClanProfileRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.nick_name !== undefined) {
       obj.nick_name = message.nick_name;
@@ -13604,7 +14050,7 @@ export const UpdateClanProfileRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<UpdateClanProfileRequest>, I>>(object: I): UpdateClanProfileRequest {
     const message = createBaseUpdateClanProfileRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.nick_name = object.nick_name ?? undefined;
     message.avatar = object.avatar ?? undefined;
     return message;
@@ -13673,7 +14119,7 @@ export const UpdateClanOrderRequest = {
 };
 
 function createBaseUpdateClanOrderRequest_ClanOrder(): UpdateClanOrderRequest_ClanOrder {
-  return { order: 0, clan_id: "" };
+  return { order: 0, clan_id: 0n };
 }
 
 export const UpdateClanOrderRequest_ClanOrder = {
@@ -13681,8 +14127,11 @@ export const UpdateClanOrderRequest_ClanOrder = {
     if (message.order !== 0) {
       writer.uint32(8).int32(message.order);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -13702,11 +14151,11 @@ export const UpdateClanOrderRequest_ClanOrder = {
           message.order = reader.int32();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -13720,7 +14169,7 @@ export const UpdateClanOrderRequest_ClanOrder = {
   fromJSON(object: any): UpdateClanOrderRequest_ClanOrder {
     return {
       order: isSet(object.order) ? globalThis.Number(object.order) : 0,
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
@@ -13729,8 +14178,8 @@ export const UpdateClanOrderRequest_ClanOrder = {
     if (message.order !== 0) {
       obj.order = Math.round(message.order);
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -13745,28 +14194,37 @@ export const UpdateClanOrderRequest_ClanOrder = {
   ): UpdateClanOrderRequest_ClanOrder {
     const message = createBaseUpdateClanOrderRequest_ClanOrder();
     message.order = object.order ?? 0;
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseCategoryDesc(): CategoryDesc {
-  return { creator_id: "", clan_id: "", category_name: "", category_id: "", category_order: 0 };
+  return { creator_id: 0n, clan_id: 0n, category_name: "", category_id: 0n, category_order: 0 };
 }
 
 export const CategoryDesc = {
   encode(message: CategoryDesc, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.creator_id !== "") {
-      writer.uint32(10).string(message.creator_id);
+    if (message.creator_id !== 0n) {
+      if (BigInt.asIntN(64, message.creator_id) !== message.creator_id) {
+        throw new globalThis.Error("value provided for field message.creator_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.creator_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.clan_id.toString());
     }
     if (message.category_name !== "") {
       writer.uint32(26).string(message.category_name);
     }
-    if (message.category_id !== "") {
-      writer.uint32(34).string(message.category_id);
+    if (message.category_id !== 0n) {
+      if (BigInt.asIntN(64, message.category_id) !== message.category_id) {
+        throw new globalThis.Error("value provided for field message.category_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.category_id.toString());
     }
     if (message.category_order !== 0) {
       writer.uint32(40).int32(message.category_order);
@@ -13782,18 +14240,18 @@ export const CategoryDesc = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -13803,11 +14261,11 @@ export const CategoryDesc = {
           message.category_name = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.category_id = reader.string();
+          message.category_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
           if (tag !== 40) {
@@ -13827,27 +14285,27 @@ export const CategoryDesc = {
 
   fromJSON(object: any): CategoryDesc {
     return {
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      creator_id: isSet(object.creator_id) ? BigInt(object.creator_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
-      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
+      category_id: isSet(object.category_id) ? BigInt(object.category_id) : 0n,
       category_order: isSet(object.category_order) ? globalThis.Number(object.category_order) : 0,
     };
   },
 
   toJSON(message: CategoryDesc): unknown {
     const obj: any = {};
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
+    if (message.creator_id !== 0n) {
+      obj.creator_id = message.creator_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.category_name !== "") {
       obj.category_name = message.category_name;
     }
-    if (message.category_id !== "") {
-      obj.category_id = message.category_id;
+    if (message.category_id !== 0n) {
+      obj.category_id = message.category_id.toString();
     }
     if (message.category_order !== 0) {
       obj.category_order = Math.round(message.category_order);
@@ -13860,23 +14318,26 @@ export const CategoryDesc = {
   },
   fromPartial<I extends Exact<DeepPartial<CategoryDesc>, I>>(object: I): CategoryDesc {
     const message = createBaseCategoryDesc();
-    message.creator_id = object.creator_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.creator_id = object.creator_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     message.category_name = object.category_name ?? "";
-    message.category_id = object.category_id ?? "";
+    message.category_id = object.category_id ?? 0n;
     message.category_order = object.category_order ?? 0;
     return message;
   },
 };
 
 function createBaseUpdateCategoryOrderRequest(): UpdateCategoryOrderRequest {
-  return { clan_id: "", categories: [] };
+  return { clan_id: 0n, categories: [] };
 }
 
 export const UpdateCategoryOrderRequest = {
   encode(message: UpdateCategoryOrderRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     for (const v of message.categories) {
       CategoryOrderUpdate.encode(v!, writer.uint32(18).fork()).ldelim();
@@ -13892,11 +14353,11 @@ export const UpdateCategoryOrderRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -13916,7 +14377,7 @@ export const UpdateCategoryOrderRequest = {
 
   fromJSON(object: any): UpdateCategoryOrderRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       categories: globalThis.Array.isArray(object?.categories)
         ? object.categories.map((e: any) => CategoryOrderUpdate.fromJSON(e))
         : [],
@@ -13925,8 +14386,8 @@ export const UpdateCategoryOrderRequest = {
 
   toJSON(message: UpdateCategoryOrderRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.categories?.length) {
       obj.categories = message.categories.map((e) => CategoryOrderUpdate.toJSON(e));
@@ -13939,20 +14400,23 @@ export const UpdateCategoryOrderRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<UpdateCategoryOrderRequest>, I>>(object: I): UpdateCategoryOrderRequest {
     const message = createBaseUpdateCategoryOrderRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.categories = object.categories?.map((e) => CategoryOrderUpdate.fromPartial(e)) || [];
     return message;
   },
 };
 
 function createBaseUpdateRoleOrderRequest(): UpdateRoleOrderRequest {
-  return { clan_id: "", roles: [] };
+  return { clan_id: 0n, roles: [] };
 }
 
 export const UpdateRoleOrderRequest = {
   encode(message: UpdateRoleOrderRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     for (const v of message.roles) {
       RoleOrderUpdate.encode(v!, writer.uint32(18).fork()).ldelim();
@@ -13968,11 +14432,11 @@ export const UpdateRoleOrderRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -13992,15 +14456,15 @@ export const UpdateRoleOrderRequest = {
 
   fromJSON(object: any): UpdateRoleOrderRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       roles: globalThis.Array.isArray(object?.roles) ? object.roles.map((e: any) => RoleOrderUpdate.fromJSON(e)) : [],
     };
   },
 
   toJSON(message: UpdateRoleOrderRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.roles?.length) {
       obj.roles = message.roles.map((e) => RoleOrderUpdate.toJSON(e));
@@ -14013,20 +14477,23 @@ export const UpdateRoleOrderRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<UpdateRoleOrderRequest>, I>>(object: I): UpdateRoleOrderRequest {
     const message = createBaseUpdateRoleOrderRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.roles = object.roles?.map((e) => RoleOrderUpdate.fromPartial(e)) || [];
     return message;
   },
 };
 
 function createBaseRoleOrderUpdate(): RoleOrderUpdate {
-  return { role_id: "", order: 0 };
+  return { role_id: 0n, order: 0 };
 }
 
 export const RoleOrderUpdate = {
   encode(message: RoleOrderUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.role_id !== "") {
-      writer.uint32(10).string(message.role_id);
+    if (message.role_id !== 0n) {
+      if (BigInt.asIntN(64, message.role_id) !== message.role_id) {
+        throw new globalThis.Error("value provided for field message.role_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.role_id.toString());
     }
     if (message.order !== 0) {
       writer.uint32(16).int32(message.order);
@@ -14042,11 +14509,11 @@ export const RoleOrderUpdate = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.role_id = reader.string();
+          message.role_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
@@ -14066,15 +14533,15 @@ export const RoleOrderUpdate = {
 
   fromJSON(object: any): RoleOrderUpdate {
     return {
-      role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "",
+      role_id: isSet(object.role_id) ? BigInt(object.role_id) : 0n,
       order: isSet(object.order) ? globalThis.Number(object.order) : 0,
     };
   },
 
   toJSON(message: RoleOrderUpdate): unknown {
     const obj: any = {};
-    if (message.role_id !== "") {
-      obj.role_id = message.role_id;
+    if (message.role_id !== 0n) {
+      obj.role_id = message.role_id.toString();
     }
     if (message.order !== 0) {
       obj.order = Math.round(message.order);
@@ -14087,20 +14554,23 @@ export const RoleOrderUpdate = {
   },
   fromPartial<I extends Exact<DeepPartial<RoleOrderUpdate>, I>>(object: I): RoleOrderUpdate {
     const message = createBaseRoleOrderUpdate();
-    message.role_id = object.role_id ?? "";
+    message.role_id = object.role_id ?? 0n;
     message.order = object.order ?? 0;
     return message;
   },
 };
 
 function createBaseCategoryOrderUpdate(): CategoryOrderUpdate {
-  return { category_id: "", order: 0 };
+  return { category_id: 0n, order: 0 };
 }
 
 export const CategoryOrderUpdate = {
   encode(message: CategoryOrderUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.category_id !== "") {
-      writer.uint32(10).string(message.category_id);
+    if (message.category_id !== 0n) {
+      if (BigInt.asIntN(64, message.category_id) !== message.category_id) {
+        throw new globalThis.Error("value provided for field message.category_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.category_id.toString());
     }
     if (message.order !== 0) {
       writer.uint32(16).int32(message.order);
@@ -14116,11 +14586,11 @@ export const CategoryOrderUpdate = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.category_id = reader.string();
+          message.category_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
@@ -14140,15 +14610,15 @@ export const CategoryOrderUpdate = {
 
   fromJSON(object: any): CategoryOrderUpdate {
     return {
-      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
+      category_id: isSet(object.category_id) ? BigInt(object.category_id) : 0n,
       order: isSet(object.order) ? globalThis.Number(object.order) : 0,
     };
   },
 
   toJSON(message: CategoryOrderUpdate): unknown {
     const obj: any = {};
-    if (message.category_id !== "") {
-      obj.category_id = message.category_id;
+    if (message.category_id !== 0n) {
+      obj.category_id = message.category_id.toString();
     }
     if (message.order !== 0) {
       obj.order = Math.round(message.order);
@@ -14161,14 +14631,14 @@ export const CategoryOrderUpdate = {
   },
   fromPartial<I extends Exact<DeepPartial<CategoryOrderUpdate>, I>>(object: I): CategoryOrderUpdate {
     const message = createBaseCategoryOrderUpdate();
-    message.category_id = object.category_id ?? "";
+    message.category_id = object.category_id ?? 0n;
     message.order = object.order ?? 0;
     return message;
   },
 };
 
 function createBaseCreateCategoryDescRequest(): CreateCategoryDescRequest {
-  return { category_name: "", clan_id: "" };
+  return { category_name: "", clan_id: 0n };
 }
 
 export const CreateCategoryDescRequest = {
@@ -14176,8 +14646,11 @@ export const CreateCategoryDescRequest = {
     if (message.category_name !== "") {
       writer.uint32(10).string(message.category_name);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -14197,11 +14670,11 @@ export const CreateCategoryDescRequest = {
           message.category_name = reader.string();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -14215,7 +14688,7 @@ export const CreateCategoryDescRequest = {
   fromJSON(object: any): CreateCategoryDescRequest {
     return {
       category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
@@ -14224,8 +14697,8 @@ export const CreateCategoryDescRequest = {
     if (message.category_name !== "") {
       obj.category_name = message.category_name;
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -14236,22 +14709,28 @@ export const CreateCategoryDescRequest = {
   fromPartial<I extends Exact<DeepPartial<CreateCategoryDescRequest>, I>>(object: I): CreateCategoryDescRequest {
     const message = createBaseCreateCategoryDescRequest();
     message.category_name = object.category_name ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseDeleteCategoryDescRequest(): DeleteCategoryDescRequest {
-  return { category_id: "", clan_id: "", category_label: "" };
+  return { category_id: 0n, clan_id: 0n, category_label: "" };
 }
 
 export const DeleteCategoryDescRequest = {
   encode(message: DeleteCategoryDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.category_id !== "") {
-      writer.uint32(10).string(message.category_id);
+    if (message.category_id !== 0n) {
+      if (BigInt.asIntN(64, message.category_id) !== message.category_id) {
+        throw new globalThis.Error("value provided for field message.category_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.category_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.clan_id.toString());
     }
     if (message.category_label !== "") {
       writer.uint32(26).string(message.category_label);
@@ -14267,18 +14746,18 @@ export const DeleteCategoryDescRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.category_id = reader.string();
+          message.category_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -14298,19 +14777,19 @@ export const DeleteCategoryDescRequest = {
 
   fromJSON(object: any): DeleteCategoryDescRequest {
     return {
-      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      category_id: isSet(object.category_id) ? BigInt(object.category_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       category_label: isSet(object.category_label) ? globalThis.String(object.category_label) : "",
     };
   },
 
   toJSON(message: DeleteCategoryDescRequest): unknown {
     const obj: any = {};
-    if (message.category_id !== "") {
-      obj.category_id = message.category_id;
+    if (message.category_id !== 0n) {
+      obj.category_id = message.category_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.category_label !== "") {
       obj.category_label = message.category_label;
@@ -14323,8 +14802,8 @@ export const DeleteCategoryDescRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<DeleteCategoryDescRequest>, I>>(object: I): DeleteCategoryDescRequest {
     const message = createBaseDeleteCategoryDescRequest();
-    message.category_id = object.category_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.category_id = object.category_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     message.category_label = object.category_label ?? "";
     return message;
   },
@@ -14481,19 +14960,25 @@ export const ListCategoryDescsRequest = {
 };
 
 function createBaseChannelMessageHeader(): ChannelMessageHeader {
-  return { id: "", timestamp_seconds: 0, sender_id: "", content: "" };
+  return { id: 0n, timestamp_seconds: 0, sender_id: 0n, content: "" };
 }
 
 export const ChannelMessageHeader = {
   encode(message: ChannelMessageHeader, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.timestamp_seconds !== 0) {
       writer.uint32(16).uint32(message.timestamp_seconds);
     }
-    if (message.sender_id !== "") {
-      writer.uint32(26).string(message.sender_id);
+    if (message.sender_id !== 0n) {
+      if (BigInt.asIntN(64, message.sender_id) !== message.sender_id) {
+        throw new globalThis.Error("value provided for field message.sender_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.sender_id.toString());
     }
     if (message.content !== "") {
       writer.uint32(34).string(message.content);
@@ -14509,11 +14994,11 @@ export const ChannelMessageHeader = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
@@ -14523,11 +15008,11 @@ export const ChannelMessageHeader = {
           message.timestamp_seconds = reader.uint32();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.sender_id = reader.string();
+          message.sender_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -14547,23 +15032,23 @@ export const ChannelMessageHeader = {
 
   fromJSON(object: any): ChannelMessageHeader {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       timestamp_seconds: isSet(object.timestamp_seconds) ? globalThis.Number(object.timestamp_seconds) : 0,
-      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
+      sender_id: isSet(object.sender_id) ? BigInt(object.sender_id) : 0n,
       content: isSet(object.content) ? globalThis.String(object.content) : "",
     };
   },
 
   toJSON(message: ChannelMessageHeader): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.timestamp_seconds !== 0) {
       obj.timestamp_seconds = Math.round(message.timestamp_seconds);
     }
-    if (message.sender_id !== "") {
-      obj.sender_id = message.sender_id;
+    if (message.sender_id !== 0n) {
+      obj.sender_id = message.sender_id.toString();
     }
     if (message.content !== "") {
       obj.content = message.content;
@@ -14576,9 +15061,9 @@ export const ChannelMessageHeader = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelMessageHeader>, I>>(object: I): ChannelMessageHeader {
     const message = createBaseChannelMessageHeader();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.timestamp_seconds = object.timestamp_seconds ?? 0;
-    message.sender_id = object.sender_id ?? "";
+    message.sender_id = object.sender_id ?? 0n;
     message.content = object.content ?? "";
     return message;
   },
@@ -14586,13 +15071,13 @@ export const ChannelMessageHeader = {
 
 function createBaseChannelDescription(): ChannelDescription {
   return {
-    clan_id: "",
-    parent_id: "",
-    channel_id: "",
-    category_id: "",
+    clan_id: 0n,
+    parent_id: 0n,
+    channel_id: 0n,
+    category_id: 0n,
     category_name: "",
     type: 0,
-    creator_id: "",
+    creator_id: 0n,
     channel_label: "",
     channel_private: 0,
     avatars: [],
@@ -14611,7 +15096,7 @@ function createBaseChannelDescription(): ChannelDescription {
     display_names: [],
     channel_avatar: "",
     clan_name: "",
-    app_id: "",
+    app_id: 0n,
     is_mute: false,
     age_restricted: 0,
     topic: "",
@@ -14622,17 +15107,29 @@ function createBaseChannelDescription(): ChannelDescription {
 
 export const ChannelDescription = {
   encode(message: ChannelDescription, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.parent_id !== "") {
-      writer.uint32(18).string(message.parent_id);
+    if (message.parent_id !== 0n) {
+      if (BigInt.asIntN(64, message.parent_id) !== message.parent_id) {
+        throw new globalThis.Error("value provided for field message.parent_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.parent_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.channel_id.toString());
     }
-    if (message.category_id !== "") {
-      writer.uint32(34).string(message.category_id);
+    if (message.category_id !== 0n) {
+      if (BigInt.asIntN(64, message.category_id) !== message.category_id) {
+        throw new globalThis.Error("value provided for field message.category_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.category_id.toString());
     }
     if (message.category_name !== "") {
       writer.uint32(42).string(message.category_name);
@@ -14640,8 +15137,11 @@ export const ChannelDescription = {
     if (message.type !== 0) {
       writer.uint32(48).int32(message.type);
     }
-    if (message.creator_id !== "") {
-      writer.uint32(58).string(message.creator_id);
+    if (message.creator_id !== 0n) {
+      if (BigInt.asIntN(64, message.creator_id) !== message.creator_id) {
+        throw new globalThis.Error("value provided for field message.creator_id of type int64 too large");
+      }
+      writer.uint32(56).int64(message.creator_id.toString());
     }
     if (message.channel_label !== "") {
       writer.uint32(66).string(message.channel_label);
@@ -14652,9 +15152,14 @@ export const ChannelDescription = {
     for (const v of message.avatars) {
       writer.uint32(82).string(v!);
     }
+    writer.uint32(90).fork();
     for (const v of message.user_ids) {
-      writer.uint32(90).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field user_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     if (message.last_sent_message !== undefined) {
       ChannelMessageHeader.encode(message.last_sent_message, writer.uint32(98).fork()).ldelim();
     }
@@ -14699,8 +15204,11 @@ export const ChannelDescription = {
     if (message.clan_name !== "") {
       writer.uint32(202).string(message.clan_name);
     }
-    if (message.app_id !== "") {
-      writer.uint32(210).string(message.app_id);
+    if (message.app_id !== 0n) {
+      if (BigInt.asIntN(64, message.app_id) !== message.app_id) {
+        throw new globalThis.Error("value provided for field message.app_id of type int64 too large");
+      }
+      writer.uint32(208).int64(message.app_id.toString());
     }
     if (message.is_mute !== false) {
       writer.uint32(216).bool(message.is_mute);
@@ -14728,32 +15236,32 @@ export const ChannelDescription = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.parent_id = reader.string();
+          message.parent_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.category_id = reader.string();
+          message.category_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
           if (tag !== 42) {
@@ -14770,11 +15278,11 @@ export const ChannelDescription = {
           message.type = reader.int32();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToBigint(reader.int64() as Long);
           continue;
         case 8:
           if (tag !== 66) {
@@ -14798,12 +15306,22 @@ export const ChannelDescription = {
           message.avatars.push(reader.string());
           continue;
         case 11:
-          if (tag !== 90) {
-            break;
+          if (tag === 88) {
+            message.user_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 90) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 12:
           if (tag !== 98) {
             break;
@@ -14913,11 +15431,11 @@ export const ChannelDescription = {
           message.clan_name = reader.string();
           continue;
         case 26:
-          if (tag !== 210) {
+          if (tag !== 208) {
             break;
           }
 
-          message.app_id = reader.string();
+          message.app_id = longToBigint(reader.int64() as Long);
           continue;
         case 27:
           if (tag !== 216) {
@@ -14965,17 +15483,17 @@ export const ChannelDescription = {
 
   fromJSON(object: any): ChannelDescription {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      parent_id: isSet(object.parent_id) ? BigInt(object.parent_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      category_id: isSet(object.category_id) ? BigInt(object.category_id) : 0n,
       category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
       type: isSet(object.type) ? globalThis.Number(object.type) : 0,
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      creator_id: isSet(object.creator_id) ? BigInt(object.creator_id) : 0n,
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
       avatars: globalThis.Array.isArray(object?.avatars) ? object.avatars.map((e: any) => globalThis.String(e)) : [],
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => BigInt(e)) : [],
       last_sent_message: isSet(object.last_sent_message)
         ? ChannelMessageHeader.fromJSON(object.last_sent_message)
         : undefined,
@@ -14998,7 +15516,7 @@ export const ChannelDescription = {
         : [],
       channel_avatar: isSet(object.channel_avatar) ? globalThis.String(object.channel_avatar) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
-      app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
+      app_id: isSet(object.app_id) ? BigInt(object.app_id) : 0n,
       is_mute: isSet(object.is_mute) ? globalThis.Boolean(object.is_mute) : false,
       age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
       topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
@@ -15009,17 +15527,17 @@ export const ChannelDescription = {
 
   toJSON(message: ChannelDescription): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.parent_id !== "") {
-      obj.parent_id = message.parent_id;
+    if (message.parent_id !== 0n) {
+      obj.parent_id = message.parent_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.category_id !== "") {
-      obj.category_id = message.category_id;
+    if (message.category_id !== 0n) {
+      obj.category_id = message.category_id.toString();
     }
     if (message.category_name !== "") {
       obj.category_name = message.category_name;
@@ -15027,8 +15545,8 @@ export const ChannelDescription = {
     if (message.type !== 0) {
       obj.type = Math.round(message.type);
     }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
+    if (message.creator_id !== 0n) {
+      obj.creator_id = message.creator_id.toString();
     }
     if (message.channel_label !== "") {
       obj.channel_label = message.channel_label;
@@ -15040,7 +15558,7 @@ export const ChannelDescription = {
       obj.avatars = message.avatars;
     }
     if (message.user_ids?.length) {
-      obj.user_ids = message.user_ids;
+      obj.user_ids = message.user_ids.map((e) => e.toString());
     }
     if (message.last_sent_message !== undefined) {
       obj.last_sent_message = ChannelMessageHeader.toJSON(message.last_sent_message);
@@ -15084,8 +15602,8 @@ export const ChannelDescription = {
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.app_id !== "") {
-      obj.app_id = message.app_id;
+    if (message.app_id !== 0n) {
+      obj.app_id = message.app_id.toString();
     }
     if (message.is_mute !== false) {
       obj.is_mute = message.is_mute;
@@ -15110,13 +15628,13 @@ export const ChannelDescription = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelDescription>, I>>(object: I): ChannelDescription {
     const message = createBaseChannelDescription();
-    message.clan_id = object.clan_id ?? "";
-    message.parent_id = object.parent_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.category_id = object.category_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.parent_id = object.parent_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
+    message.category_id = object.category_id ?? 0n;
     message.category_name = object.category_name ?? "";
     message.type = object.type ?? 0;
-    message.creator_id = object.creator_id ?? "";
+    message.creator_id = object.creator_id ?? 0n;
     message.channel_label = object.channel_label ?? "";
     message.channel_private = object.channel_private ?? 0;
     message.avatars = object.avatars?.map((e) => e) || [];
@@ -15139,7 +15657,7 @@ export const ChannelDescription = {
     message.display_names = object.display_names?.map((e) => e) || [];
     message.channel_avatar = object.channel_avatar ?? "";
     message.clan_name = object.clan_name ?? "";
-    message.app_id = object.app_id ?? "";
+    message.app_id = object.app_id ?? 0n;
     message.is_mute = object.is_mute ?? false;
     message.age_restricted = object.age_restricted ?? 0;
     message.topic = object.topic ?? "";
@@ -15287,7 +15805,7 @@ export const ChannelDescListNoPool = {
 };
 
 function createBaseListThreadRequest(): ListThreadRequest {
-  return { limit: undefined, state: undefined, clan_id: "", channel_id: "", thread_id: "", page: undefined };
+  return { limit: undefined, state: undefined, clan_id: 0n, channel_id: 0n, thread_id: 0n, page: undefined };
 }
 
 export const ListThreadRequest = {
@@ -15298,14 +15816,23 @@ export const ListThreadRequest = {
     if (message.state !== undefined) {
       Int32Value.encode({ value: message.state! }, writer.uint32(18).fork()).ldelim();
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(34).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.channel_id.toString());
     }
-    if (message.thread_id !== "") {
-      writer.uint32(42).string(message.thread_id);
+    if (message.thread_id !== 0n) {
+      if (BigInt.asIntN(64, message.thread_id) !== message.thread_id) {
+        throw new globalThis.Error("value provided for field message.thread_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.thread_id.toString());
     }
     if (message.page !== undefined) {
       Int32Value.encode({ value: message.page! }, writer.uint32(50).fork()).ldelim();
@@ -15335,25 +15862,25 @@ export const ListThreadRequest = {
           message.state = Int32Value.decode(reader, reader.uint32()).value;
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.thread_id = reader.string();
+          message.thread_id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 50) {
@@ -15375,9 +15902,9 @@ export const ListThreadRequest = {
     return {
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       state: isSet(object.state) ? Number(object.state) : undefined,
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      thread_id: isSet(object.thread_id) ? globalThis.String(object.thread_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      thread_id: isSet(object.thread_id) ? BigInt(object.thread_id) : 0n,
       page: isSet(object.page) ? Number(object.page) : undefined,
     };
   },
@@ -15390,14 +15917,14 @@ export const ListThreadRequest = {
     if (message.state !== undefined) {
       obj.state = message.state;
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.thread_id !== "") {
-      obj.thread_id = message.thread_id;
+    if (message.thread_id !== 0n) {
+      obj.thread_id = message.thread_id.toString();
     }
     if (message.page !== undefined) {
       obj.page = message.page;
@@ -15412,16 +15939,16 @@ export const ListThreadRequest = {
     const message = createBaseListThreadRequest();
     message.limit = object.limit ?? undefined;
     message.state = object.state ?? undefined;
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.thread_id = object.thread_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
+    message.thread_id = object.thread_id ?? 0n;
     message.page = object.page ?? undefined;
     return message;
   },
 };
 
 function createBaseListChannelDescsRequest(): ListChannelDescsRequest {
-  return { limit: undefined, state: undefined, cursor: "", clan_id: "", channel_type: 0, is_mobile: false };
+  return { limit: undefined, state: undefined, cursor: "", clan_id: 0n, channel_type: 0, is_mobile: false };
 }
 
 export const ListChannelDescsRequest = {
@@ -15435,8 +15962,11 @@ export const ListChannelDescsRequest = {
     if (message.cursor !== "") {
       writer.uint32(26).string(message.cursor);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(34).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.clan_id.toString());
     }
     if (message.channel_type !== 0) {
       writer.uint32(40).int32(message.channel_type);
@@ -15476,11 +16006,11 @@ export const ListChannelDescsRequest = {
           message.cursor = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
           if (tag !== 40) {
@@ -15510,7 +16040,7 @@ export const ListChannelDescsRequest = {
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       state: isSet(object.state) ? Number(object.state) : undefined,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
       is_mobile: isSet(object.is_mobile) ? globalThis.Boolean(object.is_mobile) : false,
     };
@@ -15527,8 +16057,8 @@ export const ListChannelDescsRequest = {
     if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.channel_type !== 0) {
       obj.channel_type = Math.round(message.channel_type);
@@ -15547,7 +16077,7 @@ export const ListChannelDescsRequest = {
     message.limit = object.limit ?? undefined;
     message.state = object.state ?? undefined;
     message.cursor = object.cursor ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.channel_type = object.channel_type ?? 0;
     message.is_mobile = object.is_mobile ?? false;
     return message;
@@ -15555,13 +16085,16 @@ export const ListChannelDescsRequest = {
 };
 
 function createBaseListChannelDetailRequest(): ListChannelDetailRequest {
-  return { channel_id: "" };
+  return { channel_id: 0n };
 }
 
 export const ListChannelDetailRequest = {
   encode(message: ListChannelDetailRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.channel_id.toString());
     }
     return writer;
   },
@@ -15574,11 +16107,11 @@ export const ListChannelDetailRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -15590,13 +16123,13 @@ export const ListChannelDetailRequest = {
   },
 
   fromJSON(object: any): ListChannelDetailRequest {
-    return { channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "" };
+    return { channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n };
   },
 
   toJSON(message: ListChannelDetailRequest): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     return obj;
   },
@@ -15606,22 +16139,30 @@ export const ListChannelDetailRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListChannelDetailRequest>, I>>(object: I): ListChannelDetailRequest {
     const message = createBaseListChannelDetailRequest();
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     return message;
   },
 };
 
 function createBaseAddRoleChannelDescRequest(): AddRoleChannelDescRequest {
-  return { role_ids: [], channel_id: "" };
+  return { role_ids: [], channel_id: 0n };
 }
 
 export const AddRoleChannelDescRequest = {
   encode(message: AddRoleChannelDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    writer.uint32(10).fork();
     for (const v of message.role_ids) {
-      writer.uint32(10).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field role_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    writer.ldelim();
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     return writer;
   },
@@ -15634,18 +16175,28 @@ export const AddRoleChannelDescRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
+          if (tag === 8) {
+            message.role_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.role_ids.push(reader.string());
-          continue;
+          if (tag === 10) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.role_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -15658,18 +16209,18 @@ export const AddRoleChannelDescRequest = {
 
   fromJSON(object: any): AddRoleChannelDescRequest {
     return {
-      role_ids: globalThis.Array.isArray(object?.role_ids) ? object.role_ids.map((e: any) => globalThis.String(e)) : [],
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      role_ids: globalThis.Array.isArray(object?.role_ids) ? object.role_ids.map((e: any) => BigInt(e)) : [],
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
     };
   },
 
   toJSON(message: AddRoleChannelDescRequest): unknown {
     const obj: any = {};
     if (message.role_ids?.length) {
-      obj.role_ids = message.role_ids;
+      obj.role_ids = message.role_ids.map((e) => e.toString());
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     return obj;
   },
@@ -15680,38 +16231,50 @@ export const AddRoleChannelDescRequest = {
   fromPartial<I extends Exact<DeepPartial<AddRoleChannelDescRequest>, I>>(object: I): AddRoleChannelDescRequest {
     const message = createBaseAddRoleChannelDescRequest();
     message.role_ids = object.role_ids?.map((e) => e) || [];
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     return message;
   },
 };
 
 function createBaseCreateChannelDescRequest(): CreateChannelDescRequest {
   return {
-    clan_id: "",
-    parent_id: "",
-    channel_id: "",
-    category_id: "",
+    clan_id: 0n,
+    parent_id: 0n,
+    channel_id: 0n,
+    category_id: 0n,
     type: 0,
     channel_label: "",
     channel_private: 0,
     user_ids: [],
-    app_id: "",
+    app_id: 0n,
   };
 }
 
 export const CreateChannelDescRequest = {
   encode(message: CreateChannelDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.parent_id !== "") {
-      writer.uint32(18).string(message.parent_id);
+    if (message.parent_id !== 0n) {
+      if (BigInt.asIntN(64, message.parent_id) !== message.parent_id) {
+        throw new globalThis.Error("value provided for field message.parent_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.parent_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.channel_id.toString());
     }
-    if (message.category_id !== "") {
-      writer.uint32(34).string(message.category_id);
+    if (message.category_id !== 0n) {
+      if (BigInt.asIntN(64, message.category_id) !== message.category_id) {
+        throw new globalThis.Error("value provided for field message.category_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.category_id.toString());
     }
     if (message.type !== 0) {
       writer.uint32(40).int32(message.type);
@@ -15722,11 +16285,19 @@ export const CreateChannelDescRequest = {
     if (message.channel_private !== 0) {
       writer.uint32(56).int32(message.channel_private);
     }
+    writer.uint32(66).fork();
     for (const v of message.user_ids) {
-      writer.uint32(66).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field user_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
-    if (message.app_id !== "") {
-      writer.uint32(74).string(message.app_id);
+    writer.ldelim();
+    if (message.app_id !== 0n) {
+      if (BigInt.asIntN(64, message.app_id) !== message.app_id) {
+        throw new globalThis.Error("value provided for field message.app_id of type int64 too large");
+      }
+      writer.uint32(72).int64(message.app_id.toString());
     }
     return writer;
   },
@@ -15739,32 +16310,32 @@ export const CreateChannelDescRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.parent_id = reader.string();
+          message.parent_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.category_id = reader.string();
+          message.category_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
           if (tag !== 40) {
@@ -15788,18 +16359,28 @@ export const CreateChannelDescRequest = {
           message.channel_private = reader.int32();
           continue;
         case 8:
-          if (tag !== 66) {
-            break;
+          if (tag === 64) {
+            message.user_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 66) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 9:
-          if (tag !== 74) {
+          if (tag !== 72) {
             break;
           }
 
-          message.app_id = reader.string();
+          message.app_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -15812,31 +16393,31 @@ export const CreateChannelDescRequest = {
 
   fromJSON(object: any): CreateChannelDescRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      parent_id: isSet(object.parent_id) ? BigInt(object.parent_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      category_id: isSet(object.category_id) ? BigInt(object.category_id) : 0n,
       type: isSet(object.type) ? globalThis.Number(object.type) : 0,
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
-      app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => BigInt(e)) : [],
+      app_id: isSet(object.app_id) ? BigInt(object.app_id) : 0n,
     };
   },
 
   toJSON(message: CreateChannelDescRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.parent_id !== "") {
-      obj.parent_id = message.parent_id;
+    if (message.parent_id !== 0n) {
+      obj.parent_id = message.parent_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.category_id !== "") {
-      obj.category_id = message.category_id;
+    if (message.category_id !== 0n) {
+      obj.category_id = message.category_id.toString();
     }
     if (message.type !== 0) {
       obj.type = Math.round(message.type);
@@ -15848,10 +16429,10 @@ export const CreateChannelDescRequest = {
       obj.channel_private = Math.round(message.channel_private);
     }
     if (message.user_ids?.length) {
-      obj.user_ids = message.user_ids;
+      obj.user_ids = message.user_ids.map((e) => e.toString());
     }
-    if (message.app_id !== "") {
-      obj.app_id = message.app_id;
+    if (message.app_id !== 0n) {
+      obj.app_id = message.app_id.toString();
     }
     return obj;
   },
@@ -15861,30 +16442,36 @@ export const CreateChannelDescRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<CreateChannelDescRequest>, I>>(object: I): CreateChannelDescRequest {
     const message = createBaseCreateChannelDescRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.parent_id = object.parent_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.category_id = object.category_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.parent_id = object.parent_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
+    message.category_id = object.category_id ?? 0n;
     message.type = object.type ?? 0;
     message.channel_label = object.channel_label ?? "";
     message.channel_private = object.channel_private ?? 0;
     message.user_ids = object.user_ids?.map((e) => e) || [];
-    message.app_id = object.app_id ?? "";
+    message.app_id = object.app_id ?? 0n;
     return message;
   },
 };
 
 function createBaseDeleteChannelDescRequest(): DeleteChannelDescRequest {
-  return { clan_id: "", channel_id: "" };
+  return { clan_id: 0n, channel_id: 0n };
 }
 
 export const DeleteChannelDescRequest = {
   encode(message: DeleteChannelDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     return writer;
   },
@@ -15897,18 +16484,18 @@ export const DeleteChannelDescRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -15921,18 +16508,18 @@ export const DeleteChannelDescRequest = {
 
   fromJSON(object: any): DeleteChannelDescRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
     };
   },
 
   toJSON(message: DeleteChannelDescRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     return obj;
   },
@@ -15942,19 +16529,19 @@ export const DeleteChannelDescRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<DeleteChannelDescRequest>, I>>(object: I): DeleteChannelDescRequest {
     const message = createBaseDeleteChannelDescRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     return message;
   },
 };
 
 function createBaseUpdateChannelDescRequest(): UpdateChannelDescRequest {
   return {
-    clan_id: "",
-    channel_id: "",
+    clan_id: 0n,
+    channel_id: 0n,
     channel_label: undefined,
-    category_id: undefined,
-    app_id: "",
+    category_id: 0n,
+    app_id: 0n,
     topic: "",
     age_restricted: 0,
     e2ee: 0,
@@ -15964,20 +16551,32 @@ function createBaseUpdateChannelDescRequest(): UpdateChannelDescRequest {
 
 export const UpdateChannelDescRequest = {
   encode(message: UpdateChannelDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     if (message.channel_label !== undefined) {
       StringValue.encode({ value: message.channel_label! }, writer.uint32(26).fork()).ldelim();
     }
-    if (message.category_id !== undefined) {
-      StringValue.encode({ value: message.category_id! }, writer.uint32(34).fork()).ldelim();
+    if (message.category_id !== 0n) {
+      if (BigInt.asIntN(64, message.category_id) !== message.category_id) {
+        throw new globalThis.Error("value provided for field message.category_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.category_id.toString());
     }
-    if (message.app_id !== "") {
-      writer.uint32(42).string(message.app_id);
+    if (message.app_id !== 0n) {
+      if (BigInt.asIntN(64, message.app_id) !== message.app_id) {
+        throw new globalThis.Error("value provided for field message.app_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.app_id.toString());
     }
     if (message.topic !== "") {
       writer.uint32(50).string(message.topic);
@@ -16002,18 +16601,18 @@ export const UpdateChannelDescRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -16023,18 +16622,18 @@ export const UpdateChannelDescRequest = {
           message.channel_label = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.category_id = StringValue.decode(reader, reader.uint32()).value;
+          message.category_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.app_id = reader.string();
+          message.app_id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 50) {
@@ -16075,11 +16674,11 @@ export const UpdateChannelDescRequest = {
 
   fromJSON(object: any): UpdateChannelDescRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       channel_label: isSet(object.channel_label) ? String(object.channel_label) : undefined,
-      category_id: isSet(object.category_id) ? String(object.category_id) : undefined,
-      app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
+      category_id: isSet(object.category_id) ? BigInt(object.category_id) : 0n,
+      app_id: isSet(object.app_id) ? BigInt(object.app_id) : 0n,
       topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
       age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
       e2ee: isSet(object.e2ee) ? globalThis.Number(object.e2ee) : 0,
@@ -16089,20 +16688,20 @@ export const UpdateChannelDescRequest = {
 
   toJSON(message: UpdateChannelDescRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.channel_label !== undefined) {
       obj.channel_label = message.channel_label;
     }
-    if (message.category_id !== undefined) {
-      obj.category_id = message.category_id;
+    if (message.category_id !== 0n) {
+      obj.category_id = message.category_id.toString();
     }
-    if (message.app_id !== "") {
-      obj.app_id = message.app_id;
+    if (message.app_id !== 0n) {
+      obj.app_id = message.app_id.toString();
     }
     if (message.topic !== "") {
       obj.topic = message.topic;
@@ -16124,11 +16723,11 @@ export const UpdateChannelDescRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<UpdateChannelDescRequest>, I>>(object: I): UpdateChannelDescRequest {
     const message = createBaseUpdateChannelDescRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     message.channel_label = object.channel_label ?? undefined;
-    message.category_id = object.category_id ?? undefined;
-    message.app_id = object.app_id ?? "";
+    message.category_id = object.category_id ?? 0n;
+    message.app_id = object.app_id ?? 0n;
     message.topic = object.topic ?? "";
     message.age_restricted = object.age_restricted ?? 0;
     message.e2ee = object.e2ee ?? 0;
@@ -16138,26 +16737,42 @@ export const UpdateChannelDescRequest = {
 };
 
 function createBaseChangeChannelPrivateRequest(): ChangeChannelPrivateRequest {
-  return { clan_id: "", channel_id: "", channel_private: 0, user_ids: [], role_ids: [] };
+  return { clan_id: 0n, channel_id: 0n, channel_private: 0, user_ids: [], role_ids: [] };
 }
 
 export const ChangeChannelPrivateRequest = {
   encode(message: ChangeChannelPrivateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     if (message.channel_private !== 0) {
       writer.uint32(24).int32(message.channel_private);
     }
+    writer.uint32(34).fork();
     for (const v of message.user_ids) {
-      writer.uint32(34).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field user_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
+    writer.uint32(42).fork();
     for (const v of message.role_ids) {
-      writer.uint32(42).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field role_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -16169,18 +16784,18 @@ export const ChangeChannelPrivateRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 24) {
@@ -16190,19 +16805,39 @@ export const ChangeChannelPrivateRequest = {
           message.channel_private = reader.int32();
           continue;
         case 4:
-          if (tag !== 34) {
-            break;
+          if (tag === 32) {
+            message.user_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 34) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 5:
-          if (tag !== 42) {
-            break;
+          if (tag === 40) {
+            message.role_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.role_ids.push(reader.string());
-          continue;
+          if (tag === 42) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.role_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -16214,30 +16849,30 @@ export const ChangeChannelPrivateRequest = {
 
   fromJSON(object: any): ChangeChannelPrivateRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
-      role_ids: globalThis.Array.isArray(object?.role_ids) ? object.role_ids.map((e: any) => globalThis.String(e)) : [],
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => BigInt(e)) : [],
+      role_ids: globalThis.Array.isArray(object?.role_ids) ? object.role_ids.map((e: any) => BigInt(e)) : [],
     };
   },
 
   toJSON(message: ChangeChannelPrivateRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.channel_private !== 0) {
       obj.channel_private = Math.round(message.channel_private);
     }
     if (message.user_ids?.length) {
-      obj.user_ids = message.user_ids;
+      obj.user_ids = message.user_ids.map((e) => e.toString());
     }
     if (message.role_ids?.length) {
-      obj.role_ids = message.role_ids;
+      obj.role_ids = message.role_ids.map((e) => e.toString());
     }
     return obj;
   },
@@ -16247,8 +16882,8 @@ export const ChangeChannelPrivateRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ChangeChannelPrivateRequest>, I>>(object: I): ChangeChannelPrivateRequest {
     const message = createBaseChangeChannelPrivateRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     message.channel_private = object.channel_private ?? 0;
     message.user_ids = object.user_ids?.map((e) => e) || [];
     message.role_ids = object.role_ids?.map((e) => e) || [];
@@ -16257,17 +16892,25 @@ export const ChangeChannelPrivateRequest = {
 };
 
 function createBaseAddChannelUsersRequest(): AddChannelUsersRequest {
-  return { channel_id: "", user_ids: [] };
+  return { channel_id: 0n, user_ids: [] };
 }
 
 export const AddChannelUsersRequest = {
   encode(message: AddChannelUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.channel_id.toString());
     }
+    writer.uint32(18).fork();
     for (const v of message.user_ids) {
-      writer.uint32(18).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field user_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -16279,19 +16922,29 @@ export const AddChannelUsersRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
-            break;
+          if (tag === 16) {
+            message.user_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 18) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -16303,18 +16956,18 @@ export const AddChannelUsersRequest = {
 
   fromJSON(object: any): AddChannelUsersRequest {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => BigInt(e)) : [],
     };
   },
 
   toJSON(message: AddChannelUsersRequest): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.user_ids?.length) {
-      obj.user_ids = message.user_ids;
+      obj.user_ids = message.user_ids.map((e) => e.toString());
     }
     return obj;
   },
@@ -16324,24 +16977,32 @@ export const AddChannelUsersRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<AddChannelUsersRequest>, I>>(object: I): AddChannelUsersRequest {
     const message = createBaseAddChannelUsersRequest();
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     message.user_ids = object.user_ids?.map((e) => e) || [];
     return message;
   },
 };
 
 function createBaseRemoveChannelUsersRequest(): RemoveChannelUsersRequest {
-  return { channel_id: "", user_ids: [] };
+  return { channel_id: 0n, user_ids: [] };
 }
 
 export const RemoveChannelUsersRequest = {
   encode(message: RemoveChannelUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.channel_id.toString());
     }
+    writer.uint32(18).fork();
     for (const v of message.user_ids) {
-      writer.uint32(18).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field user_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -16353,19 +17014,29 @@ export const RemoveChannelUsersRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
-            break;
+          if (tag === 16) {
+            message.user_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 18) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -16377,18 +17048,18 @@ export const RemoveChannelUsersRequest = {
 
   fromJSON(object: any): RemoveChannelUsersRequest {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => BigInt(e)) : [],
     };
   },
 
   toJSON(message: RemoveChannelUsersRequest): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.user_ids?.length) {
-      obj.user_ids = message.user_ids;
+      obj.user_ids = message.user_ids.map((e) => e.toString());
     }
     return obj;
   },
@@ -16398,24 +17069,32 @@ export const RemoveChannelUsersRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<RemoveChannelUsersRequest>, I>>(object: I): RemoveChannelUsersRequest {
     const message = createBaseRemoveChannelUsersRequest();
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     message.user_ids = object.user_ids?.map((e) => e) || [];
     return message;
   },
 };
 
 function createBaseRemoveClanUsersRequest(): RemoveClanUsersRequest {
-  return { clan_id: "", user_ids: [] };
+  return { clan_id: 0n, user_ids: [] };
 }
 
 export const RemoveClanUsersRequest = {
   encode(message: RemoveClanUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
+    writer.uint32(18).fork();
     for (const v of message.user_ids) {
-      writer.uint32(18).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field user_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -16427,19 +17106,29 @@ export const RemoveClanUsersRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
-            break;
+          if (tag === 16) {
+            message.user_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 18) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -16451,18 +17140,18 @@ export const RemoveClanUsersRequest = {
 
   fromJSON(object: any): RemoveClanUsersRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => BigInt(e)) : [],
     };
   },
 
   toJSON(message: RemoveClanUsersRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.user_ids?.length) {
-      obj.user_ids = message.user_ids;
+      obj.user_ids = message.user_ids.map((e) => e.toString());
     }
     return obj;
   },
@@ -16472,27 +17161,38 @@ export const RemoveClanUsersRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<RemoveClanUsersRequest>, I>>(object: I): RemoveClanUsersRequest {
     const message = createBaseRemoveClanUsersRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.user_ids = object.user_ids?.map((e) => e) || [];
     return message;
   },
 };
 
 function createBaseBanClanUsersRequest(): BanClanUsersRequest {
-  return { clan_id: "", channel_id: "", user_ids: [], ban_time: 0, reason: "" };
+  return { clan_id: 0n, channel_id: 0n, user_ids: [], ban_time: 0, reason: "" };
 }
 
 export const BanClanUsersRequest = {
   encode(message: BanClanUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
+    writer.uint32(26).fork();
     for (const v of message.user_ids) {
-      writer.uint32(26).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field user_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     if (message.ban_time !== 0) {
       writer.uint32(32).int32(message.ban_time);
     }
@@ -16510,26 +17210,36 @@ export const BanClanUsersRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
-            break;
+          if (tag === 24) {
+            message.user_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 26) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 4:
           if (tag !== 32) {
             break;
@@ -16555,9 +17265,9 @@ export const BanClanUsersRequest = {
 
   fromJSON(object: any): BanClanUsersRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => BigInt(e)) : [],
       ban_time: isSet(object.ban_time) ? globalThis.Number(object.ban_time) : 0,
       reason: isSet(object.reason) ? globalThis.String(object.reason) : "",
     };
@@ -16565,14 +17275,14 @@ export const BanClanUsersRequest = {
 
   toJSON(message: BanClanUsersRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.user_ids?.length) {
-      obj.user_ids = message.user_ids;
+      obj.user_ids = message.user_ids.map((e) => e.toString());
     }
     if (message.ban_time !== 0) {
       obj.ban_time = Math.round(message.ban_time);
@@ -16588,8 +17298,8 @@ export const BanClanUsersRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<BanClanUsersRequest>, I>>(object: I): BanClanUsersRequest {
     const message = createBaseBanClanUsersRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     message.user_ids = object.user_ids?.map((e) => e) || [];
     message.ban_time = object.ban_time ?? 0;
     message.reason = object.reason ?? "";
@@ -16598,19 +17308,28 @@ export const BanClanUsersRequest = {
 };
 
 function createBaseBannedUser(): BannedUser {
-  return { channel_id: "", banned_id: "", banner_id: "", ban_time: 0, reason: "" };
+  return { channel_id: 0n, banned_id: 0n, banner_id: 0n, ban_time: 0, reason: "" };
 }
 
 export const BannedUser = {
   encode(message: BannedUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.channel_id.toString());
     }
-    if (message.banned_id !== "") {
-      writer.uint32(18).string(message.banned_id);
+    if (message.banned_id !== 0n) {
+      if (BigInt.asIntN(64, message.banned_id) !== message.banned_id) {
+        throw new globalThis.Error("value provided for field message.banned_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.banned_id.toString());
     }
-    if (message.banner_id !== "") {
-      writer.uint32(26).string(message.banner_id);
+    if (message.banner_id !== 0n) {
+      if (BigInt.asIntN(64, message.banner_id) !== message.banner_id) {
+        throw new globalThis.Error("value provided for field message.banner_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.banner_id.toString());
     }
     if (message.ban_time !== 0) {
       writer.uint32(32).int32(message.ban_time);
@@ -16629,25 +17348,25 @@ export const BannedUser = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.banned_id = reader.string();
+          message.banned_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.banner_id = reader.string();
+          message.banner_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 32) {
@@ -16674,9 +17393,9 @@ export const BannedUser = {
 
   fromJSON(object: any): BannedUser {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      banned_id: isSet(object.banned_id) ? globalThis.String(object.banned_id) : "",
-      banner_id: isSet(object.banner_id) ? globalThis.String(object.banner_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      banned_id: isSet(object.banned_id) ? BigInt(object.banned_id) : 0n,
+      banner_id: isSet(object.banner_id) ? BigInt(object.banner_id) : 0n,
       ban_time: isSet(object.ban_time) ? globalThis.Number(object.ban_time) : 0,
       reason: isSet(object.reason) ? globalThis.String(object.reason) : "",
     };
@@ -16684,14 +17403,14 @@ export const BannedUser = {
 
   toJSON(message: BannedUser): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.banned_id !== "") {
-      obj.banned_id = message.banned_id;
+    if (message.banned_id !== 0n) {
+      obj.banned_id = message.banned_id.toString();
     }
-    if (message.banner_id !== "") {
-      obj.banner_id = message.banner_id;
+    if (message.banner_id !== 0n) {
+      obj.banner_id = message.banner_id.toString();
     }
     if (message.ban_time !== 0) {
       obj.ban_time = Math.round(message.ban_time);
@@ -16707,9 +17426,9 @@ export const BannedUser = {
   },
   fromPartial<I extends Exact<DeepPartial<BannedUser>, I>>(object: I): BannedUser {
     const message = createBaseBannedUser();
-    message.channel_id = object.channel_id ?? "";
-    message.banned_id = object.banned_id ?? "";
-    message.banner_id = object.banner_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
+    message.banned_id = object.banned_id ?? 0n;
+    message.banner_id = object.banner_id ?? 0n;
     message.ban_time = object.ban_time ?? 0;
     message.reason = object.reason ?? "";
     return message;
@@ -16717,16 +17436,22 @@ export const BannedUser = {
 };
 
 function createBaseBannedUserListRequest(): BannedUserListRequest {
-  return { clan_id: "", channel_id: "" };
+  return { clan_id: 0n, channel_id: 0n };
 }
 
 export const BannedUserListRequest = {
   encode(message: BannedUserListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     return writer;
   },
@@ -16739,18 +17464,18 @@ export const BannedUserListRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -16763,18 +17488,18 @@ export const BannedUserListRequest = {
 
   fromJSON(object: any): BannedUserListRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
     };
   },
 
   toJSON(message: BannedUserListRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     return obj;
   },
@@ -16784,8 +17509,8 @@ export const BannedUserListRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<BannedUserListRequest>, I>>(object: I): BannedUserListRequest {
     const message = createBaseBannedUserListRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     return message;
   },
 };
@@ -16852,16 +17577,22 @@ export const BannedUserList = {
 };
 
 function createBaseLeaveThreadRequest(): LeaveThreadRequest {
-  return { clan_id: "", channel_id: "" };
+  return { clan_id: 0n, channel_id: 0n };
 }
 
 export const LeaveThreadRequest = {
   encode(message: LeaveThreadRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     return writer;
   },
@@ -16874,18 +17605,18 @@ export const LeaveThreadRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -16898,18 +17629,18 @@ export const LeaveThreadRequest = {
 
   fromJSON(object: any): LeaveThreadRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
     };
   },
 
   toJSON(message: LeaveThreadRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     return obj;
   },
@@ -16919,22 +17650,22 @@ export const LeaveThreadRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<LeaveThreadRequest>, I>>(object: I): LeaveThreadRequest {
     const message = createBaseLeaveThreadRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     return message;
   },
 };
 
 function createBaseRole(): Role {
   return {
-    id: "",
+    id: 0n,
     title: "",
     color: "",
     role_icon: "",
     slug: "",
     description: "",
-    creator_id: "",
-    clan_id: "",
+    creator_id: 0n,
+    clan_id: 0n,
     active: 0,
     display_online: 0,
     allow_mention: 0,
@@ -16949,8 +17680,11 @@ function createBaseRole(): Role {
 
 export const Role = {
   encode(message: Role, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.title !== "") {
       writer.uint32(18).string(message.title);
@@ -16967,11 +17701,17 @@ export const Role = {
     if (message.description !== "") {
       writer.uint32(50).string(message.description);
     }
-    if (message.creator_id !== "") {
-      writer.uint32(58).string(message.creator_id);
+    if (message.creator_id !== 0n) {
+      if (BigInt.asIntN(64, message.creator_id) !== message.creator_id) {
+        throw new globalThis.Error("value provided for field message.creator_id of type int64 too large");
+      }
+      writer.uint32(56).int64(message.creator_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(66).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(64).int64(message.clan_id.toString());
     }
     if (message.active !== 0) {
       writer.uint32(72).int32(message.active);
@@ -16991,9 +17731,14 @@ export const Role = {
     if (message.role_channel_active !== 0) {
       writer.uint32(112).int32(message.role_channel_active);
     }
+    writer.uint32(122).fork();
     for (const v of message.channel_ids) {
-      writer.uint32(122).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field channel_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     if (message.max_level_permission !== 0) {
       writer.uint32(128).int32(message.max_level_permission);
     }
@@ -17011,11 +17756,11 @@ export const Role = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -17053,18 +17798,18 @@ export const Role = {
           message.description = reader.string();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToBigint(reader.int64() as Long);
           continue;
         case 8:
-          if (tag !== 66) {
+          if (tag !== 64) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 9:
           if (tag !== 72) {
@@ -17109,12 +17854,22 @@ export const Role = {
           message.role_channel_active = reader.int32();
           continue;
         case 15:
-          if (tag !== 122) {
-            break;
+          if (tag === 120) {
+            message.channel_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.channel_ids.push(reader.string());
-          continue;
+          if (tag === 122) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.channel_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 16:
           if (tag !== 128) {
             break;
@@ -17140,23 +17895,21 @@ export const Role = {
 
   fromJSON(object: any): Role {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       title: isSet(object.title) ? globalThis.String(object.title) : "",
       color: isSet(object.color) ? globalThis.String(object.color) : "",
       role_icon: isSet(object.role_icon) ? globalThis.String(object.role_icon) : "",
       slug: isSet(object.slug) ? globalThis.String(object.slug) : "",
       description: isSet(object.description) ? globalThis.String(object.description) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      creator_id: isSet(object.creator_id) ? BigInt(object.creator_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
       display_online: isSet(object.display_online) ? globalThis.Number(object.display_online) : 0,
       allow_mention: isSet(object.allow_mention) ? globalThis.Number(object.allow_mention) : 0,
       role_user_list: isSet(object.role_user_list) ? RoleUserList.fromJSON(object.role_user_list) : undefined,
       permission_list: isSet(object.permission_list) ? PermissionList.fromJSON(object.permission_list) : undefined,
       role_channel_active: isSet(object.role_channel_active) ? globalThis.Number(object.role_channel_active) : 0,
-      channel_ids: globalThis.Array.isArray(object?.channel_ids)
-        ? object.channel_ids.map((e: any) => globalThis.String(e))
-        : [],
+      channel_ids: globalThis.Array.isArray(object?.channel_ids) ? object.channel_ids.map((e: any) => BigInt(e)) : [],
       max_level_permission: isSet(object.max_level_permission) ? globalThis.Number(object.max_level_permission) : 0,
       order_role: isSet(object.order_role) ? globalThis.Number(object.order_role) : 0,
     };
@@ -17164,8 +17917,8 @@ export const Role = {
 
   toJSON(message: Role): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.title !== "") {
       obj.title = message.title;
@@ -17182,11 +17935,11 @@ export const Role = {
     if (message.description !== "") {
       obj.description = message.description;
     }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
+    if (message.creator_id !== 0n) {
+      obj.creator_id = message.creator_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.active !== 0) {
       obj.active = Math.round(message.active);
@@ -17207,7 +17960,7 @@ export const Role = {
       obj.role_channel_active = Math.round(message.role_channel_active);
     }
     if (message.channel_ids?.length) {
-      obj.channel_ids = message.channel_ids;
+      obj.channel_ids = message.channel_ids.map((e) => e.toString());
     }
     if (message.max_level_permission !== 0) {
       obj.max_level_permission = Math.round(message.max_level_permission);
@@ -17223,14 +17976,14 @@ export const Role = {
   },
   fromPartial<I extends Exact<DeepPartial<Role>, I>>(object: I): Role {
     const message = createBaseRole();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.title = object.title ?? "";
     message.color = object.color ?? "";
     message.role_icon = object.role_icon ?? "";
     message.slug = object.slug ?? "";
     message.description = object.description ?? "";
-    message.creator_id = object.creator_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.creator_id = object.creator_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     message.active = object.active ?? 0;
     message.display_online = object.display_online ?? 0;
     message.allow_mention = object.allow_mention ?? 0;
@@ -17250,22 +18003,22 @@ export const Role = {
 
 function createBaseEventManagement(): EventManagement {
   return {
-    id: "",
+    id: 0n,
     title: "",
     logo: "",
     description: "",
     active: 0,
     start_event: 0,
-    creator_id: "",
-    clan_id: "",
-    channel_voice_id: "",
+    creator_id: 0n,
+    clan_id: 0n,
+    channel_voice_id: 0n,
     address: "",
     start_time_seconds: 0,
     end_time_seconds: 0,
     user_ids: [],
     create_time_seconds: 0,
     max_permission: 0,
-    channel_id: "",
+    channel_id: 0n,
     event_status: 0,
     repeat_type: 0,
     is_private: false,
@@ -17275,8 +18028,11 @@ function createBaseEventManagement(): EventManagement {
 
 export const EventManagement = {
   encode(message: EventManagement, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.title !== "") {
       writer.uint32(18).string(message.title);
@@ -17293,14 +18049,23 @@ export const EventManagement = {
     if (message.start_event !== 0) {
       writer.uint32(48).int32(message.start_event);
     }
-    if (message.creator_id !== "") {
-      writer.uint32(58).string(message.creator_id);
+    if (message.creator_id !== 0n) {
+      if (BigInt.asIntN(64, message.creator_id) !== message.creator_id) {
+        throw new globalThis.Error("value provided for field message.creator_id of type int64 too large");
+      }
+      writer.uint32(56).int64(message.creator_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(66).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(64).int64(message.clan_id.toString());
     }
-    if (message.channel_voice_id !== "") {
-      writer.uint32(74).string(message.channel_voice_id);
+    if (message.channel_voice_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_voice_id) !== message.channel_voice_id) {
+        throw new globalThis.Error("value provided for field message.channel_voice_id of type int64 too large");
+      }
+      writer.uint32(72).int64(message.channel_voice_id.toString());
     }
     if (message.address !== "") {
       writer.uint32(82).string(message.address);
@@ -17311,17 +18076,25 @@ export const EventManagement = {
     if (message.end_time_seconds !== 0) {
       writer.uint32(96).uint32(message.end_time_seconds);
     }
+    writer.uint32(106).fork();
     for (const v of message.user_ids) {
-      writer.uint32(106).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field user_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     if (message.create_time_seconds !== 0) {
       writer.uint32(112).uint32(message.create_time_seconds);
     }
     if (message.max_permission !== 0) {
       writer.uint32(120).int32(message.max_permission);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(130).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(128).int64(message.channel_id.toString());
     }
     if (message.event_status !== 0) {
       writer.uint32(136).int32(message.event_status);
@@ -17346,11 +18119,11 @@ export const EventManagement = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -17388,25 +18161,25 @@ export const EventManagement = {
           message.start_event = reader.int32();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToBigint(reader.int64() as Long);
           continue;
         case 8:
-          if (tag !== 66) {
+          if (tag !== 64) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 9:
-          if (tag !== 74) {
+          if (tag !== 72) {
             break;
           }
 
-          message.channel_voice_id = reader.string();
+          message.channel_voice_id = longToBigint(reader.int64() as Long);
           continue;
         case 10:
           if (tag !== 82) {
@@ -17430,12 +18203,22 @@ export const EventManagement = {
           message.end_time_seconds = reader.uint32();
           continue;
         case 13:
-          if (tag !== 106) {
-            break;
+          if (tag === 104) {
+            message.user_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 106) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 14:
           if (tag !== 112) {
             break;
@@ -17451,11 +18234,11 @@ export const EventManagement = {
           message.max_permission = reader.int32();
           continue;
         case 16:
-          if (tag !== 130) {
+          if (tag !== 128) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 17:
           if (tag !== 136) {
@@ -17496,22 +18279,22 @@ export const EventManagement = {
 
   fromJSON(object: any): EventManagement {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       title: isSet(object.title) ? globalThis.String(object.title) : "",
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       description: isSet(object.description) ? globalThis.String(object.description) : "",
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
       start_event: isSet(object.start_event) ? globalThis.Number(object.start_event) : 0,
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_voice_id: isSet(object.channel_voice_id) ? globalThis.String(object.channel_voice_id) : "",
+      creator_id: isSet(object.creator_id) ? BigInt(object.creator_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_voice_id: isSet(object.channel_voice_id) ? BigInt(object.channel_voice_id) : 0n,
       address: isSet(object.address) ? globalThis.String(object.address) : "",
       start_time_seconds: isSet(object.start_time_seconds) ? globalThis.Number(object.start_time_seconds) : 0,
       end_time_seconds: isSet(object.end_time_seconds) ? globalThis.Number(object.end_time_seconds) : 0,
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => BigInt(e)) : [],
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       max_permission: isSet(object.max_permission) ? globalThis.Number(object.max_permission) : 0,
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       event_status: isSet(object.event_status) ? globalThis.Number(object.event_status) : 0,
       repeat_type: isSet(object.repeat_type) ? globalThis.Number(object.repeat_type) : 0,
       is_private: isSet(object.is_private) ? globalThis.Boolean(object.is_private) : false,
@@ -17521,8 +18304,8 @@ export const EventManagement = {
 
   toJSON(message: EventManagement): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.title !== "") {
       obj.title = message.title;
@@ -17539,14 +18322,14 @@ export const EventManagement = {
     if (message.start_event !== 0) {
       obj.start_event = Math.round(message.start_event);
     }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
+    if (message.creator_id !== 0n) {
+      obj.creator_id = message.creator_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_voice_id !== "") {
-      obj.channel_voice_id = message.channel_voice_id;
+    if (message.channel_voice_id !== 0n) {
+      obj.channel_voice_id = message.channel_voice_id.toString();
     }
     if (message.address !== "") {
       obj.address = message.address;
@@ -17558,7 +18341,7 @@ export const EventManagement = {
       obj.end_time_seconds = Math.round(message.end_time_seconds);
     }
     if (message.user_ids?.length) {
-      obj.user_ids = message.user_ids;
+      obj.user_ids = message.user_ids.map((e) => e.toString());
     }
     if (message.create_time_seconds !== 0) {
       obj.create_time_seconds = Math.round(message.create_time_seconds);
@@ -17566,8 +18349,8 @@ export const EventManagement = {
     if (message.max_permission !== 0) {
       obj.max_permission = Math.round(message.max_permission);
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.event_status !== 0) {
       obj.event_status = Math.round(message.event_status);
@@ -17589,22 +18372,22 @@ export const EventManagement = {
   },
   fromPartial<I extends Exact<DeepPartial<EventManagement>, I>>(object: I): EventManagement {
     const message = createBaseEventManagement();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.title = object.title ?? "";
     message.logo = object.logo ?? "";
     message.description = object.description ?? "";
     message.active = object.active ?? 0;
     message.start_event = object.start_event ?? 0;
-    message.creator_id = object.creator_id ?? "";
-    message.clan_id = object.clan_id ?? "";
-    message.channel_voice_id = object.channel_voice_id ?? "";
+    message.creator_id = object.creator_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_voice_id = object.channel_voice_id ?? 0n;
     message.address = object.address ?? "";
     message.start_time_seconds = object.start_time_seconds ?? 0;
     message.end_time_seconds = object.end_time_seconds ?? 0;
     message.user_ids = object.user_ids?.map((e) => e) || [];
     message.create_time_seconds = object.create_time_seconds ?? 0;
     message.max_permission = object.max_permission ?? 0;
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     message.event_status = object.event_status ?? 0;
     message.repeat_type = object.repeat_type ?? 0;
     message.is_private = object.is_private ?? false;
@@ -17616,13 +18399,16 @@ export const EventManagement = {
 };
 
 function createBasePermission(): Permission {
-  return { id: "", title: "", slug: "", description: "", active: 0, scope: 0, level: 0 };
+  return { id: 0n, title: "", slug: "", description: "", active: 0, scope: 0, level: 0 };
 }
 
 export const Permission = {
   encode(message: Permission, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.title !== "") {
       writer.uint32(18).string(message.title);
@@ -17653,11 +18439,11 @@ export const Permission = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -17712,7 +18498,7 @@ export const Permission = {
 
   fromJSON(object: any): Permission {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       title: isSet(object.title) ? globalThis.String(object.title) : "",
       slug: isSet(object.slug) ? globalThis.String(object.slug) : "",
       description: isSet(object.description) ? globalThis.String(object.description) : "",
@@ -17724,8 +18510,8 @@ export const Permission = {
 
   toJSON(message: Permission): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.title !== "") {
       obj.title = message.title;
@@ -17753,7 +18539,7 @@ export const Permission = {
   },
   fromPartial<I extends Exact<DeepPartial<Permission>, I>>(object: I): Permission {
     const message = createBasePermission();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.title = object.title ?? "";
     message.slug = object.slug ?? "";
     message.description = object.description ?? "";
@@ -17765,13 +18551,16 @@ export const Permission = {
 };
 
 function createBaseNotificationSetting(): NotificationSetting {
-  return { id: "", notification_setting_type: 0 };
+  return { id: 0n, notification_setting_type: 0 };
 }
 
 export const NotificationSetting = {
   encode(message: NotificationSetting, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.notification_setting_type !== 0) {
       writer.uint32(16).int32(message.notification_setting_type);
@@ -17787,11 +18576,11 @@ export const NotificationSetting = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
@@ -17811,7 +18600,7 @@ export const NotificationSetting = {
 
   fromJSON(object: any): NotificationSetting {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       notification_setting_type: isSet(object.notification_setting_type)
         ? globalThis.Number(object.notification_setting_type)
         : 0,
@@ -17820,8 +18609,8 @@ export const NotificationSetting = {
 
   toJSON(message: NotificationSetting): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.notification_setting_type !== 0) {
       obj.notification_setting_type = Math.round(message.notification_setting_type);
@@ -17834,29 +18623,41 @@ export const NotificationSetting = {
   },
   fromPartial<I extends Exact<DeepPartial<NotificationSetting>, I>>(object: I): NotificationSetting {
     const message = createBaseNotificationSetting();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.notification_setting_type = object.notification_setting_type ?? 0;
     return message;
   },
 };
 
 function createBaseDeletePinMessage(): DeletePinMessage {
-  return { id: "", message_id: "", channel_id: "", clan_id: "" };
+  return { id: 0n, message_id: 0n, channel_id: 0n, clan_id: 0n };
 }
 
 export const DeletePinMessage = {
   encode(message: DeletePinMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
+    if (message.message_id !== 0n) {
+      if (BigInt.asIntN(64, message.message_id) !== message.message_id) {
+        throw new globalThis.Error("value provided for field message.message_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.message_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.channel_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(34).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -17869,32 +18670,32 @@ export const DeletePinMessage = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -17907,26 +18708,26 @@ export const DeletePinMessage = {
 
   fromJSON(object: any): DeletePinMessage {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      message_id: isSet(object.message_id) ? BigInt(object.message_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
   toJSON(message: DeletePinMessage): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.message_id !== "") {
-      obj.message_id = message.message_id;
+    if (message.message_id !== 0n) {
+      obj.message_id = message.message_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -17936,20 +18737,20 @@ export const DeletePinMessage = {
   },
   fromPartial<I extends Exact<DeepPartial<DeletePinMessage>, I>>(object: I): DeletePinMessage {
     const message = createBaseDeletePinMessage();
-    message.id = object.id ?? "";
-    message.message_id = object.message_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.id = object.id ?? 0n;
+    message.message_id = object.message_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBasePinMessage(): PinMessage {
   return {
-    id: "",
-    message_id: "",
-    channel_id: "",
-    sender_id: "",
+    id: 0n,
+    message_id: 0n,
+    channel_id: 0n,
+    sender_id: 0n,
     content: "",
     username: "",
     avatar: "",
@@ -17960,17 +18761,29 @@ function createBasePinMessage(): PinMessage {
 
 export const PinMessage = {
   encode(message: PinMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
+    if (message.message_id !== 0n) {
+      if (BigInt.asIntN(64, message.message_id) !== message.message_id) {
+        throw new globalThis.Error("value provided for field message.message_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.message_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.channel_id.toString());
     }
-    if (message.sender_id !== "") {
-      writer.uint32(34).string(message.sender_id);
+    if (message.sender_id !== 0n) {
+      if (BigInt.asIntN(64, message.sender_id) !== message.sender_id) {
+        throw new globalThis.Error("value provided for field message.sender_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.sender_id.toString());
     }
     if (message.content !== "") {
       writer.uint32(42).string(message.content);
@@ -17998,32 +18811,32 @@ export const PinMessage = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.sender_id = reader.string();
+          message.sender_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
           if (tag !== 42) {
@@ -18071,10 +18884,10 @@ export const PinMessage = {
 
   fromJSON(object: any): PinMessage {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      message_id: isSet(object.message_id) ? BigInt(object.message_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      sender_id: isSet(object.sender_id) ? BigInt(object.sender_id) : 0n,
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
@@ -18085,17 +18898,17 @@ export const PinMessage = {
 
   toJSON(message: PinMessage): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.message_id !== "") {
-      obj.message_id = message.message_id;
+    if (message.message_id !== 0n) {
+      obj.message_id = message.message_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.sender_id !== "") {
-      obj.sender_id = message.sender_id;
+    if (message.sender_id !== 0n) {
+      obj.sender_id = message.sender_id.toString();
     }
     if (message.content !== "") {
       obj.content = message.content;
@@ -18120,10 +18933,10 @@ export const PinMessage = {
   },
   fromPartial<I extends Exact<DeepPartial<PinMessage>, I>>(object: I): PinMessage {
     const message = createBasePinMessage();
-    message.id = object.id ?? "";
-    message.message_id = object.message_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.sender_id = object.sender_id ?? "";
+    message.id = object.id ?? 0n;
+    message.message_id = object.message_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
+    message.sender_id = object.sender_id ?? 0n;
     message.content = object.content ?? "";
     message.username = object.username ?? "";
     message.avatar = object.avatar ?? "";
@@ -18195,13 +19008,16 @@ export const PinMessagesList = {
 };
 
 function createBaseNotificationUserChannel(): NotificationUserChannel {
-  return { id: "", notification_setting_type: 0, time_mute_seconds: 0, active: 0, channel_id: "" };
+  return { id: 0n, notification_setting_type: 0, time_mute_seconds: 0, active: 0, channel_id: 0n };
 }
 
 export const NotificationUserChannel = {
   encode(message: NotificationUserChannel, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.notification_setting_type !== 0) {
       writer.uint32(16).int32(message.notification_setting_type);
@@ -18212,8 +19028,11 @@ export const NotificationUserChannel = {
     if (message.active !== 0) {
       writer.uint32(32).int32(message.active);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(42).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.channel_id.toString());
     }
     return writer;
   },
@@ -18226,11 +19045,11 @@ export const NotificationUserChannel = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
@@ -18254,11 +19073,11 @@ export const NotificationUserChannel = {
           message.active = reader.int32();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -18271,20 +19090,20 @@ export const NotificationUserChannel = {
 
   fromJSON(object: any): NotificationUserChannel {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       notification_setting_type: isSet(object.notification_setting_type)
         ? globalThis.Number(object.notification_setting_type)
         : 0,
       time_mute_seconds: isSet(object.time_mute_seconds) ? globalThis.Number(object.time_mute_seconds) : 0,
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
     };
   },
 
   toJSON(message: NotificationUserChannel): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.notification_setting_type !== 0) {
       obj.notification_setting_type = Math.round(message.notification_setting_type);
@@ -18295,8 +19114,8 @@ export const NotificationUserChannel = {
     if (message.active !== 0) {
       obj.active = Math.round(message.active);
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     return obj;
   },
@@ -18306,29 +19125,38 @@ export const NotificationUserChannel = {
   },
   fromPartial<I extends Exact<DeepPartial<NotificationUserChannel>, I>>(object: I): NotificationUserChannel {
     const message = createBaseNotificationUserChannel();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.notification_setting_type = object.notification_setting_type ?? 0;
     message.time_mute_seconds = object.time_mute_seconds ?? 0;
     message.active = object.active ?? 0;
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     return message;
   },
 };
 
 function createBaseNotifiReactMessage(): NotifiReactMessage {
-  return { id: "", user_id: "", channel_id: "" };
+  return { id: 0n, user_id: 0n, channel_id: 0n };
 }
 
 export const NotifiReactMessage = {
   encode(message: NotifiReactMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.user_id !== "") {
-      writer.uint32(18).string(message.user_id);
+    if (message.user_id !== 0n) {
+      if (BigInt.asIntN(64, message.user_id) !== message.user_id) {
+        throw new globalThis.Error("value provided for field message.user_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.user_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.channel_id.toString());
     }
     return writer;
   },
@@ -18341,25 +19169,25 @@ export const NotifiReactMessage = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -18372,22 +19200,22 @@ export const NotifiReactMessage = {
 
   fromJSON(object: any): NotifiReactMessage {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      user_id: isSet(object.user_id) ? BigInt(object.user_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
     };
   },
 
   toJSON(message: NotifiReactMessage): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
+    if (message.user_id !== 0n) {
+      obj.user_id = message.user_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     return obj;
   },
@@ -18397,21 +19225,24 @@ export const NotifiReactMessage = {
   },
   fromPartial<I extends Exact<DeepPartial<NotifiReactMessage>, I>>(object: I): NotifiReactMessage {
     const message = createBaseNotifiReactMessage();
-    message.id = object.id ?? "";
-    message.user_id = object.user_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.id = object.id ?? 0n;
+    message.user_id = object.user_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     return message;
   },
 };
 
 function createBaseDefaultNotificationClan(): DefaultNotificationClan {
-  return { clan_id: "" };
+  return { clan_id: 0n };
 }
 
 export const DefaultNotificationClan = {
   encode(message: DefaultNotificationClan, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -18424,11 +19255,11 @@ export const DefaultNotificationClan = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -18440,13 +19271,13 @@ export const DefaultNotificationClan = {
   },
 
   fromJSON(object: any): DefaultNotificationClan {
-    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+    return { clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n };
   },
 
   toJSON(message: DefaultNotificationClan): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -18456,19 +19287,22 @@ export const DefaultNotificationClan = {
   },
   fromPartial<I extends Exact<DeepPartial<DefaultNotificationClan>, I>>(object: I): DefaultNotificationClan {
     const message = createBaseDefaultNotificationClan();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseDefaultNotificationCategory(): DefaultNotificationCategory {
-  return { category_id: "" };
+  return { category_id: 0n };
 }
 
 export const DefaultNotificationCategory = {
   encode(message: DefaultNotificationCategory, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.category_id !== "") {
-      writer.uint32(10).string(message.category_id);
+    if (message.category_id !== 0n) {
+      if (BigInt.asIntN(64, message.category_id) !== message.category_id) {
+        throw new globalThis.Error("value provided for field message.category_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.category_id.toString());
     }
     return writer;
   },
@@ -18481,11 +19315,11 @@ export const DefaultNotificationCategory = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.category_id = reader.string();
+          message.category_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -18497,13 +19331,13 @@ export const DefaultNotificationCategory = {
   },
 
   fromJSON(object: any): DefaultNotificationCategory {
-    return { category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "" };
+    return { category_id: isSet(object.category_id) ? BigInt(object.category_id) : 0n };
   },
 
   toJSON(message: DefaultNotificationCategory): unknown {
     const obj: any = {};
-    if (message.category_id !== "") {
-      obj.category_id = message.category_id;
+    if (message.category_id !== 0n) {
+      obj.category_id = message.category_id.toString();
     }
     return obj;
   },
@@ -18513,19 +19347,22 @@ export const DefaultNotificationCategory = {
   },
   fromPartial<I extends Exact<DeepPartial<DefaultNotificationCategory>, I>>(object: I): DefaultNotificationCategory {
     const message = createBaseDefaultNotificationCategory();
-    message.category_id = object.category_id ?? "";
+    message.category_id = object.category_id ?? 0n;
     return message;
   },
 };
 
 function createBaseNotificationChannel(): NotificationChannel {
-  return { channel_id: "" };
+  return { channel_id: 0n };
 }
 
 export const NotificationChannel = {
   encode(message: NotificationChannel, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.channel_id.toString());
     }
     return writer;
   },
@@ -18538,11 +19375,11 @@ export const NotificationChannel = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -18554,13 +19391,13 @@ export const NotificationChannel = {
   },
 
   fromJSON(object: any): NotificationChannel {
-    return { channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "" };
+    return { channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n };
   },
 
   toJSON(message: NotificationChannel): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     return obj;
   },
@@ -18570,19 +19407,22 @@ export const NotificationChannel = {
   },
   fromPartial<I extends Exact<DeepPartial<NotificationChannel>, I>>(object: I): NotificationChannel {
     const message = createBaseNotificationChannel();
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     return message;
   },
 };
 
 function createBaseNotificationClan(): NotificationClan {
-  return { clan_id: "" };
+  return { clan_id: 0n };
 }
 
 export const NotificationClan = {
   encode(message: NotificationClan, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -18595,11 +19435,11 @@ export const NotificationClan = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -18611,13 +19451,13 @@ export const NotificationClan = {
   },
 
   fromJSON(object: any): NotificationClan {
-    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+    return { clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n };
   },
 
   toJSON(message: NotificationClan): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -18627,7 +19467,7 @@ export const NotificationClan = {
   },
   fromPartial<I extends Exact<DeepPartial<NotificationClan>, I>>(object: I): NotificationClan {
     const message = createBaseNotificationClan();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
@@ -18694,19 +19534,25 @@ export const NotificationSettingList = {
 };
 
 function createBaseSetNotificationRequest(): SetNotificationRequest {
-  return { channel_category_id: "", notification_type: 0, clan_id: "" };
+  return { channel_category_id: 0n, notification_type: 0, clan_id: 0n };
 }
 
 export const SetNotificationRequest = {
   encode(message: SetNotificationRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_category_id !== "") {
-      writer.uint32(10).string(message.channel_category_id);
+    if (message.channel_category_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_category_id) !== message.channel_category_id) {
+        throw new globalThis.Error("value provided for field message.channel_category_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.channel_category_id.toString());
     }
     if (message.notification_type !== 0) {
       writer.uint32(16).int32(message.notification_type);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -18719,11 +19565,11 @@ export const SetNotificationRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_category_id = reader.string();
+          message.channel_category_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
@@ -18733,11 +19579,11 @@ export const SetNotificationRequest = {
           message.notification_type = reader.int32();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -18750,22 +19596,22 @@ export const SetNotificationRequest = {
 
   fromJSON(object: any): SetNotificationRequest {
     return {
-      channel_category_id: isSet(object.channel_category_id) ? globalThis.String(object.channel_category_id) : "",
+      channel_category_id: isSet(object.channel_category_id) ? BigInt(object.channel_category_id) : 0n,
       notification_type: isSet(object.notification_type) ? globalThis.Number(object.notification_type) : 0,
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
   toJSON(message: SetNotificationRequest): unknown {
     const obj: any = {};
-    if (message.channel_category_id !== "") {
-      obj.channel_category_id = message.channel_category_id;
+    if (message.channel_category_id !== 0n) {
+      obj.channel_category_id = message.channel_category_id.toString();
     }
     if (message.notification_type !== 0) {
       obj.notification_type = Math.round(message.notification_type);
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -18775,27 +19621,36 @@ export const SetNotificationRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<SetNotificationRequest>, I>>(object: I): SetNotificationRequest {
     const message = createBaseSetNotificationRequest();
-    message.channel_category_id = object.channel_category_id ?? "";
+    message.channel_category_id = object.channel_category_id ?? 0n;
     message.notification_type = object.notification_type ?? 0;
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBasePinMessageRequest(): PinMessageRequest {
-  return { message_id: "", channel_id: "", clan_id: "" };
+  return { message_id: 0n, channel_id: 0n, clan_id: 0n };
 }
 
 export const PinMessageRequest = {
   encode(message: PinMessageRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.message_id !== "") {
-      writer.uint32(10).string(message.message_id);
+    if (message.message_id !== 0n) {
+      if (BigInt.asIntN(64, message.message_id) !== message.message_id) {
+        throw new globalThis.Error("value provided for field message.message_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.message_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -18808,25 +19663,25 @@ export const PinMessageRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -18839,22 +19694,22 @@ export const PinMessageRequest = {
 
   fromJSON(object: any): PinMessageRequest {
     return {
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      message_id: isSet(object.message_id) ? BigInt(object.message_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
   toJSON(message: PinMessageRequest): unknown {
     const obj: any = {};
-    if (message.message_id !== "") {
-      obj.message_id = message.message_id;
+    if (message.message_id !== 0n) {
+      obj.message_id = message.message_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -18864,21 +19719,24 @@ export const PinMessageRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<PinMessageRequest>, I>>(object: I): PinMessageRequest {
     const message = createBasePinMessageRequest();
-    message.message_id = object.message_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.message_id = object.message_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseSetMuteRequest(): SetMuteRequest {
-  return { id: "", mute_time: 0, active: 0, clan_id: "" };
+  return { id: 0n, mute_time: 0, active: 0, clan_id: 0n };
 }
 
 export const SetMuteRequest = {
   encode(message: SetMuteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.mute_time !== 0) {
       writer.uint32(16).int32(message.mute_time);
@@ -18886,8 +19744,11 @@ export const SetMuteRequest = {
     if (message.active !== 0) {
       writer.uint32(24).int32(message.active);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(34).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -18900,11 +19761,11 @@ export const SetMuteRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
@@ -18921,11 +19782,11 @@ export const SetMuteRequest = {
           message.active = reader.int32();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -18938,17 +19799,17 @@ export const SetMuteRequest = {
 
   fromJSON(object: any): SetMuteRequest {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       mute_time: isSet(object.mute_time) ? globalThis.Number(object.mute_time) : 0,
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
   toJSON(message: SetMuteRequest): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.mute_time !== 0) {
       obj.mute_time = Math.round(message.mute_time);
@@ -18956,8 +19817,8 @@ export const SetMuteRequest = {
     if (message.active !== 0) {
       obj.active = Math.round(message.active);
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -18967,10 +19828,10 @@ export const SetMuteRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<SetMuteRequest>, I>>(object: I): SetMuteRequest {
     const message = createBaseSetMuteRequest();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.mute_time = object.mute_time ?? 0;
     message.active = object.active ?? 0;
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
@@ -18981,9 +19842,14 @@ function createBaseHashtagDmListRequest(): HashtagDmListRequest {
 
 export const HashtagDmListRequest = {
   encode(message: HashtagDmListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    writer.uint32(10).fork();
     for (const v of message.user_id) {
-      writer.uint32(10).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field user_id of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     if (message.limit !== undefined) {
       Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
     }
@@ -18998,12 +19864,22 @@ export const HashtagDmListRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
+          if (tag === 8) {
+            message.user_id.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_id.push(reader.string());
-          continue;
+          if (tag === 10) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_id.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 2:
           if (tag !== 18) {
             break;
@@ -19022,7 +19898,7 @@ export const HashtagDmListRequest = {
 
   fromJSON(object: any): HashtagDmListRequest {
     return {
-      user_id: globalThis.Array.isArray(object?.user_id) ? object.user_id.map((e: any) => globalThis.String(e)) : [],
+      user_id: globalThis.Array.isArray(object?.user_id) ? object.user_id.map((e: any) => BigInt(e)) : [],
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
     };
   },
@@ -19030,7 +19906,7 @@ export const HashtagDmListRequest = {
   toJSON(message: HashtagDmListRequest): unknown {
     const obj: any = {};
     if (message.user_id?.length) {
-      obj.user_id = message.user_id;
+      obj.user_id = message.user_id.map((e) => e.toString());
     }
     if (message.limit !== undefined) {
       obj.limit = message.limit;
@@ -19112,27 +19988,33 @@ export const HashtagDmList = {
 
 function createBaseHashtagDm(): HashtagDm {
   return {
-    channel_id: "",
+    channel_id: 0n,
     channel_label: "",
-    clan_id: "",
+    clan_id: 0n,
     clan_name: "",
     meeting_code: "",
     type: 0,
     channel_private: 0,
-    parent_id: "",
+    parent_id: 0n,
   };
 }
 
 export const HashtagDm = {
   encode(message: HashtagDm, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.channel_id.toString());
     }
     if (message.channel_label !== "") {
       writer.uint32(18).string(message.channel_label);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.clan_id.toString());
     }
     if (message.clan_name !== "") {
       writer.uint32(34).string(message.clan_name);
@@ -19146,8 +20028,11 @@ export const HashtagDm = {
     if (message.channel_private !== 0) {
       writer.uint32(56).int32(message.channel_private);
     }
-    if (message.parent_id !== "") {
-      writer.uint32(66).string(message.parent_id);
+    if (message.parent_id !== 0n) {
+      if (BigInt.asIntN(64, message.parent_id) !== message.parent_id) {
+        throw new globalThis.Error("value provided for field message.parent_id of type int64 too large");
+      }
+      writer.uint32(64).int64(message.parent_id.toString());
     }
     return writer;
   },
@@ -19160,11 +20045,11 @@ export const HashtagDm = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -19174,11 +20059,11 @@ export const HashtagDm = {
           message.channel_label = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -19209,11 +20094,11 @@ export const HashtagDm = {
           message.channel_private = reader.int32();
           continue;
         case 8:
-          if (tag !== 66) {
+          if (tag !== 64) {
             break;
           }
 
-          message.parent_id = reader.string();
+          message.parent_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -19226,27 +20111,27 @@ export const HashtagDm = {
 
   fromJSON(object: any): HashtagDm {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
       type: isSet(object.type) ? globalThis.Number(object.type) : 0,
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
-      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
+      parent_id: isSet(object.parent_id) ? BigInt(object.parent_id) : 0n,
     };
   },
 
   toJSON(message: HashtagDm): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.channel_label !== "") {
       obj.channel_label = message.channel_label;
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
@@ -19260,8 +20145,8 @@ export const HashtagDm = {
     if (message.channel_private !== 0) {
       obj.channel_private = Math.round(message.channel_private);
     }
-    if (message.parent_id !== "") {
-      obj.parent_id = message.parent_id;
+    if (message.parent_id !== 0n) {
+      obj.parent_id = message.parent_id.toString();
     }
     return obj;
   },
@@ -19271,14 +20156,14 @@ export const HashtagDm = {
   },
   fromPartial<I extends Exact<DeepPartial<HashtagDm>, I>>(object: I): HashtagDm {
     const message = createBaseHashtagDm();
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     message.channel_label = object.channel_label ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.clan_name = object.clan_name ?? "";
     message.meeting_code = object.meeting_code ?? "";
     message.type = object.type ?? 0;
     message.channel_private = object.channel_private ?? 0;
-    message.parent_id = object.parent_id ?? "";
+    message.parent_id = object.parent_id ?? 0n;
     return message;
   },
 };
@@ -19359,13 +20244,16 @@ export const NotificationChannelCategorySettingList = {
 };
 
 function createBaseNotificationChannelCategorySetting(): NotificationChannelCategorySetting {
-  return { id: "", channel_category_label: "", notification_setting_type: 0, channel_category_title: "", action: 0 };
+  return { id: 0n, channel_category_label: "", notification_setting_type: 0, channel_category_title: "", action: 0 };
 }
 
 export const NotificationChannelCategorySetting = {
   encode(message: NotificationChannelCategorySetting, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.channel_category_label !== "") {
       writer.uint32(18).string(message.channel_category_label);
@@ -19390,11 +20278,11 @@ export const NotificationChannelCategorySetting = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -19435,7 +20323,7 @@ export const NotificationChannelCategorySetting = {
 
   fromJSON(object: any): NotificationChannelCategorySetting {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       channel_category_label: isSet(object.channel_category_label)
         ? globalThis.String(object.channel_category_label)
         : "",
@@ -19451,8 +20339,8 @@ export const NotificationChannelCategorySetting = {
 
   toJSON(message: NotificationChannelCategorySetting): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.channel_category_label !== "") {
       obj.channel_category_label = message.channel_category_label;
@@ -19478,7 +20366,7 @@ export const NotificationChannelCategorySetting = {
     object: I,
   ): NotificationChannelCategorySetting {
     const message = createBaseNotificationChannelCategorySetting();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.channel_category_label = object.channel_category_label ?? "";
     message.notification_setting_type = object.notification_setting_type ?? 0;
     message.channel_category_title = object.channel_category_title ?? "";
@@ -19488,19 +20376,25 @@ export const NotificationChannelCategorySetting = {
 };
 
 function createBaseSetDefaultNotificationRequest(): SetDefaultNotificationRequest {
-  return { clan_id: "", notification_type: 0, category_id: "" };
+  return { clan_id: 0n, notification_type: 0, category_id: 0n };
 }
 
 export const SetDefaultNotificationRequest = {
   encode(message: SetDefaultNotificationRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     if (message.notification_type !== 0) {
       writer.uint32(16).int32(message.notification_type);
     }
-    if (message.category_id !== "") {
-      writer.uint32(26).string(message.category_id);
+    if (message.category_id !== 0n) {
+      if (BigInt.asIntN(64, message.category_id) !== message.category_id) {
+        throw new globalThis.Error("value provided for field message.category_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.category_id.toString());
     }
     return writer;
   },
@@ -19513,11 +20407,11 @@ export const SetDefaultNotificationRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
@@ -19527,11 +20421,11 @@ export const SetDefaultNotificationRequest = {
           message.notification_type = reader.int32();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.category_id = reader.string();
+          message.category_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -19544,22 +20438,22 @@ export const SetDefaultNotificationRequest = {
 
   fromJSON(object: any): SetDefaultNotificationRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       notification_type: isSet(object.notification_type) ? globalThis.Number(object.notification_type) : 0,
-      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
+      category_id: isSet(object.category_id) ? BigInt(object.category_id) : 0n,
     };
   },
 
   toJSON(message: SetDefaultNotificationRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.notification_type !== 0) {
       obj.notification_type = Math.round(message.notification_type);
     }
-    if (message.category_id !== "") {
-      obj.category_id = message.category_id;
+    if (message.category_id !== 0n) {
+      obj.category_id = message.category_id.toString();
     }
     return obj;
   },
@@ -19571,9 +20465,9 @@ export const SetDefaultNotificationRequest = {
     object: I,
   ): SetDefaultNotificationRequest {
     const message = createBaseSetDefaultNotificationRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.notification_type = object.notification_type ?? 0;
-    message.category_id = object.category_id ?? "";
+    message.category_id = object.category_id ?? 0n;
     return message;
   },
 };
@@ -19790,13 +20684,16 @@ export const PermissionList = {
 };
 
 function createBaseListPermissionsRequest(): ListPermissionsRequest {
-  return { role_id: "" };
+  return { role_id: 0n };
 }
 
 export const ListPermissionsRequest = {
   encode(message: ListPermissionsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.role_id !== "") {
-      writer.uint32(10).string(message.role_id);
+    if (message.role_id !== 0n) {
+      if (BigInt.asIntN(64, message.role_id) !== message.role_id) {
+        throw new globalThis.Error("value provided for field message.role_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.role_id.toString());
     }
     return writer;
   },
@@ -19809,11 +20706,11 @@ export const ListPermissionsRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.role_id = reader.string();
+          message.role_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -19825,13 +20722,13 @@ export const ListPermissionsRequest = {
   },
 
   fromJSON(object: any): ListPermissionsRequest {
-    return { role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "" };
+    return { role_id: isSet(object.role_id) ? BigInt(object.role_id) : 0n };
   },
 
   toJSON(message: ListPermissionsRequest): unknown {
     const obj: any = {};
-    if (message.role_id !== "") {
-      obj.role_id = message.role_id;
+    if (message.role_id !== 0n) {
+      obj.role_id = message.role_id.toString();
     }
     return obj;
   },
@@ -19841,19 +20738,22 @@ export const ListPermissionsRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListPermissionsRequest>, I>>(object: I): ListPermissionsRequest {
     const message = createBaseListPermissionsRequest();
-    message.role_id = object.role_id ?? "";
+    message.role_id = object.role_id ?? 0n;
     return message;
   },
 };
 
 function createBaseListRoleUsersRequest(): ListRoleUsersRequest {
-  return { role_id: "", limit: undefined, cursor: "" };
+  return { role_id: 0n, limit: undefined, cursor: "" };
 }
 
 export const ListRoleUsersRequest = {
   encode(message: ListRoleUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.role_id !== "") {
-      writer.uint32(10).string(message.role_id);
+    if (message.role_id !== 0n) {
+      if (BigInt.asIntN(64, message.role_id) !== message.role_id) {
+        throw new globalThis.Error("value provided for field message.role_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.role_id.toString());
     }
     if (message.limit !== undefined) {
       Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
@@ -19872,11 +20772,11 @@ export const ListRoleUsersRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.role_id = reader.string();
+          message.role_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -19903,7 +20803,7 @@ export const ListRoleUsersRequest = {
 
   fromJSON(object: any): ListRoleUsersRequest {
     return {
-      role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "",
+      role_id: isSet(object.role_id) ? BigInt(object.role_id) : 0n,
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
@@ -19911,8 +20811,8 @@ export const ListRoleUsersRequest = {
 
   toJSON(message: ListRoleUsersRequest): unknown {
     const obj: any = {};
-    if (message.role_id !== "") {
-      obj.role_id = message.role_id;
+    if (message.role_id !== 0n) {
+      obj.role_id = message.role_id.toString();
     }
     if (message.limit !== undefined) {
       obj.limit = message.limit;
@@ -19928,7 +20828,7 @@ export const ListRoleUsersRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListRoleUsersRequest>, I>>(object: I): ListRoleUsersRequest {
     const message = createBaseListRoleUsersRequest();
-    message.role_id = object.role_id ?? "";
+    message.role_id = object.role_id ?? 0n;
     message.limit = object.limit ?? undefined;
     message.cursor = object.cursor ?? "";
     return message;
@@ -19936,16 +20836,22 @@ export const ListRoleUsersRequest = {
 };
 
 function createBaseListPermissionOfUsersRequest(): ListPermissionOfUsersRequest {
-  return { clan_id: "", channel_id: "" };
+  return { clan_id: 0n, channel_id: 0n };
 }
 
 export const ListPermissionOfUsersRequest = {
   encode(message: ListPermissionOfUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     return writer;
   },
@@ -19958,18 +20864,18 @@ export const ListPermissionOfUsersRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -19982,18 +20888,18 @@ export const ListPermissionOfUsersRequest = {
 
   fromJSON(object: any): ListPermissionOfUsersRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
     };
   },
 
   toJSON(message: ListPermissionOfUsersRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     return obj;
   },
@@ -20003,8 +20909,8 @@ export const ListPermissionOfUsersRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListPermissionOfUsersRequest>, I>>(object: I): ListPermissionOfUsersRequest {
     const message = createBaseListPermissionOfUsersRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     return message;
   },
 };
@@ -20086,13 +20992,16 @@ export const RoleUserList = {
 };
 
 function createBaseRoleUserList_RoleUser(): RoleUserList_RoleUser {
-  return { id: "", username: "", display_name: "", avatar_url: "", lang_tag: "", location: "", online: false };
+  return { id: 0n, username: "", display_name: "", avatar_url: "", lang_tag: "", location: "", online: false };
 }
 
 export const RoleUserList_RoleUser = {
   encode(message: RoleUserList_RoleUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.username !== "") {
       writer.uint32(18).string(message.username);
@@ -20123,11 +21032,11 @@ export const RoleUserList_RoleUser = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -20182,7 +21091,7 @@ export const RoleUserList_RoleUser = {
 
   fromJSON(object: any): RoleUserList_RoleUser {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
       avatar_url: isSet(object.avatar_url) ? globalThis.String(object.avatar_url) : "",
@@ -20194,8 +21103,8 @@ export const RoleUserList_RoleUser = {
 
   toJSON(message: RoleUserList_RoleUser): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.username !== "") {
       obj.username = message.username;
@@ -20223,7 +21132,7 @@ export const RoleUserList_RoleUser = {
   },
   fromPartial<I extends Exact<DeepPartial<RoleUserList_RoleUser>, I>>(object: I): RoleUserList_RoleUser {
     const message = createBaseRoleUserList_RoleUser();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.username = object.username ?? "";
     message.display_name = object.display_name ?? "";
     message.avatar_url = object.avatar_url ?? "";
@@ -20235,16 +21144,22 @@ export const RoleUserList_RoleUser = {
 };
 
 function createBaseUserEventRequest(): UserEventRequest {
-  return { clan_id: "", event_id: "" };
+  return { clan_id: 0n, event_id: 0n };
 }
 
 export const UserEventRequest = {
   encode(message: UserEventRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.event_id !== "") {
-      writer.uint32(18).string(message.event_id);
+    if (message.event_id !== 0n) {
+      if (BigInt.asIntN(64, message.event_id) !== message.event_id) {
+        throw new globalThis.Error("value provided for field message.event_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.event_id.toString());
     }
     return writer;
   },
@@ -20257,18 +21172,18 @@ export const UserEventRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.event_id = reader.string();
+          message.event_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -20281,18 +21196,18 @@ export const UserEventRequest = {
 
   fromJSON(object: any): UserEventRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      event_id: isSet(object.event_id) ? globalThis.String(object.event_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      event_id: isSet(object.event_id) ? BigInt(object.event_id) : 0n,
     };
   },
 
   toJSON(message: UserEventRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.event_id !== "") {
-      obj.event_id = message.event_id;
+    if (message.event_id !== 0n) {
+      obj.event_id = message.event_id.toString();
     }
     return obj;
   },
@@ -20302,20 +21217,23 @@ export const UserEventRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<UserEventRequest>, I>>(object: I): UserEventRequest {
     const message = createBaseUserEventRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.event_id = object.event_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.event_id = object.event_id ?? 0n;
     return message;
   },
 };
 
 function createBaseListEventsRequest(): ListEventsRequest {
-  return { clan_id: "" };
+  return { clan_id: 0n };
 }
 
 export const ListEventsRequest = {
   encode(message: ListEventsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -20328,11 +21246,11 @@ export const ListEventsRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -20344,13 +21262,13 @@ export const ListEventsRequest = {
   },
 
   fromJSON(object: any): ListEventsRequest {
-    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+    return { clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n };
   },
 
   toJSON(message: ListEventsRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -20360,7 +21278,7 @@ export const ListEventsRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListEventsRequest>, I>>(object: I): ListEventsRequest {
     const message = createBaseListEventsRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
@@ -20371,10 +21289,10 @@ function createBaseCreateRoleRequest(): CreateRoleRequest {
     color: "",
     role_icon: "",
     description: "",
-    clan_id: "",
+    clan_id: 0n,
     display_online: 0,
     allow_mention: 0,
-    max_permission_id: "",
+    max_permission_id: 0n,
     add_user_ids: [],
     active_permission_ids: [],
     order_role: 0,
@@ -20395,8 +21313,11 @@ export const CreateRoleRequest = {
     if (message.description !== "") {
       writer.uint32(34).string(message.description);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(42).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.clan_id.toString());
     }
     if (message.display_online !== 0) {
       writer.uint32(48).int32(message.display_online);
@@ -20404,15 +21325,28 @@ export const CreateRoleRequest = {
     if (message.allow_mention !== 0) {
       writer.uint32(56).int32(message.allow_mention);
     }
-    if (message.max_permission_id !== "") {
-      writer.uint32(66).string(message.max_permission_id);
+    if (message.max_permission_id !== 0n) {
+      if (BigInt.asIntN(64, message.max_permission_id) !== message.max_permission_id) {
+        throw new globalThis.Error("value provided for field message.max_permission_id of type int64 too large");
+      }
+      writer.uint32(64).int64(message.max_permission_id.toString());
     }
+    writer.uint32(74).fork();
     for (const v of message.add_user_ids) {
-      writer.uint32(74).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field add_user_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
+    writer.uint32(82).fork();
     for (const v of message.active_permission_ids) {
-      writer.uint32(82).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field active_permission_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     if (message.order_role !== 0) {
       writer.uint32(88).int32(message.order_role);
     }
@@ -20455,11 +21389,11 @@ export const CreateRoleRequest = {
           message.description = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 48) {
@@ -20476,26 +21410,46 @@ export const CreateRoleRequest = {
           message.allow_mention = reader.int32();
           continue;
         case 8:
-          if (tag !== 66) {
+          if (tag !== 64) {
             break;
           }
 
-          message.max_permission_id = reader.string();
+          message.max_permission_id = longToBigint(reader.int64() as Long);
           continue;
         case 9:
-          if (tag !== 74) {
-            break;
+          if (tag === 72) {
+            message.add_user_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.add_user_ids.push(reader.string());
-          continue;
+          if (tag === 74) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.add_user_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 10:
-          if (tag !== 82) {
-            break;
+          if (tag === 80) {
+            message.active_permission_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.active_permission_ids.push(reader.string());
-          continue;
+          if (tag === 82) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.active_permission_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 11:
           if (tag !== 88) {
             break;
@@ -20518,15 +21472,15 @@ export const CreateRoleRequest = {
       color: isSet(object.color) ? globalThis.String(object.color) : "",
       role_icon: isSet(object.role_icon) ? globalThis.String(object.role_icon) : "",
       description: isSet(object.description) ? globalThis.String(object.description) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       display_online: isSet(object.display_online) ? globalThis.Number(object.display_online) : 0,
       allow_mention: isSet(object.allow_mention) ? globalThis.Number(object.allow_mention) : 0,
-      max_permission_id: isSet(object.max_permission_id) ? globalThis.String(object.max_permission_id) : "",
+      max_permission_id: isSet(object.max_permission_id) ? BigInt(object.max_permission_id) : 0n,
       add_user_ids: globalThis.Array.isArray(object?.add_user_ids)
-        ? object.add_user_ids.map((e: any) => globalThis.String(e))
+        ? object.add_user_ids.map((e: any) => BigInt(e))
         : [],
       active_permission_ids: globalThis.Array.isArray(object?.active_permission_ids)
-        ? object.active_permission_ids.map((e: any) => globalThis.String(e))
+        ? object.active_permission_ids.map((e: any) => BigInt(e))
         : [],
       order_role: isSet(object.order_role) ? globalThis.Number(object.order_role) : 0,
     };
@@ -20546,8 +21500,8 @@ export const CreateRoleRequest = {
     if (message.description !== "") {
       obj.description = message.description;
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.display_online !== 0) {
       obj.display_online = Math.round(message.display_online);
@@ -20555,14 +21509,14 @@ export const CreateRoleRequest = {
     if (message.allow_mention !== 0) {
       obj.allow_mention = Math.round(message.allow_mention);
     }
-    if (message.max_permission_id !== "") {
-      obj.max_permission_id = message.max_permission_id;
+    if (message.max_permission_id !== 0n) {
+      obj.max_permission_id = message.max_permission_id.toString();
     }
     if (message.add_user_ids?.length) {
-      obj.add_user_ids = message.add_user_ids;
+      obj.add_user_ids = message.add_user_ids.map((e) => e.toString());
     }
     if (message.active_permission_ids?.length) {
-      obj.active_permission_ids = message.active_permission_ids;
+      obj.active_permission_ids = message.active_permission_ids.map((e) => e.toString());
     }
     if (message.order_role !== 0) {
       obj.order_role = Math.round(message.order_role);
@@ -20579,10 +21533,10 @@ export const CreateRoleRequest = {
     message.color = object.color ?? "";
     message.role_icon = object.role_icon ?? "";
     message.description = object.description ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.display_online = object.display_online ?? 0;
     message.allow_mention = object.allow_mention ?? 0;
-    message.max_permission_id = object.max_permission_id ?? "";
+    message.max_permission_id = object.max_permission_id ?? 0n;
     message.add_user_ids = object.add_user_ids?.map((e) => e) || [];
     message.active_permission_ids = object.active_permission_ids?.map((e) => e) || [];
     message.order_role = object.order_role ?? 0;
@@ -20595,18 +21549,18 @@ function createBaseCreateEventRequest(): CreateEventRequest {
     title: "",
     logo: "",
     description: "",
-    clan_id: "",
-    channel_voice_id: "",
+    clan_id: 0n,
+    channel_voice_id: 0n,
     address: "",
     start_time_seconds: 0,
     end_time_seconds: 0,
-    event_id: "",
+    event_id: 0n,
     event_status: 0,
-    channel_id: "",
+    channel_id: 0n,
     action: 0,
     repeat_type: 0,
-    creator_id: "",
-    user_id: "",
+    creator_id: 0n,
+    user_id: 0n,
     is_private: undefined,
     meet_room: undefined,
   };
@@ -20623,11 +21577,17 @@ export const CreateEventRequest = {
     if (message.description !== "") {
       writer.uint32(26).string(message.description);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(34).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.clan_id.toString());
     }
-    if (message.channel_voice_id !== "") {
-      writer.uint32(42).string(message.channel_voice_id);
+    if (message.channel_voice_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_voice_id) !== message.channel_voice_id) {
+        throw new globalThis.Error("value provided for field message.channel_voice_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.channel_voice_id.toString());
     }
     if (message.address !== "") {
       writer.uint32(50).string(message.address);
@@ -20638,14 +21598,20 @@ export const CreateEventRequest = {
     if (message.end_time_seconds !== 0) {
       writer.uint32(64).uint32(message.end_time_seconds);
     }
-    if (message.event_id !== "") {
-      writer.uint32(74).string(message.event_id);
+    if (message.event_id !== 0n) {
+      if (BigInt.asIntN(64, message.event_id) !== message.event_id) {
+        throw new globalThis.Error("value provided for field message.event_id of type int64 too large");
+      }
+      writer.uint32(72).int64(message.event_id.toString());
     }
     if (message.event_status !== 0) {
       writer.uint32(80).int32(message.event_status);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(90).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(88).int64(message.channel_id.toString());
     }
     if (message.action !== 0) {
       writer.uint32(96).int32(message.action);
@@ -20653,11 +21619,17 @@ export const CreateEventRequest = {
     if (message.repeat_type !== 0) {
       writer.uint32(104).int32(message.repeat_type);
     }
-    if (message.creator_id !== "") {
-      writer.uint32(114).string(message.creator_id);
+    if (message.creator_id !== 0n) {
+      if (BigInt.asIntN(64, message.creator_id) !== message.creator_id) {
+        throw new globalThis.Error("value provided for field message.creator_id of type int64 too large");
+      }
+      writer.uint32(112).int64(message.creator_id.toString());
     }
-    if (message.user_id !== "") {
-      writer.uint32(122).string(message.user_id);
+    if (message.user_id !== 0n) {
+      if (BigInt.asIntN(64, message.user_id) !== message.user_id) {
+        throw new globalThis.Error("value provided for field message.user_id of type int64 too large");
+      }
+      writer.uint32(120).int64(message.user_id.toString());
     }
     if (message.is_private !== undefined) {
       BoolValue.encode({ value: message.is_private! }, writer.uint32(130).fork()).ldelim();
@@ -20697,18 +21669,18 @@ export const CreateEventRequest = {
           message.description = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.channel_voice_id = reader.string();
+          message.channel_voice_id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 50) {
@@ -20732,11 +21704,11 @@ export const CreateEventRequest = {
           message.end_time_seconds = reader.uint32();
           continue;
         case 9:
-          if (tag !== 74) {
+          if (tag !== 72) {
             break;
           }
 
-          message.event_id = reader.string();
+          message.event_id = longToBigint(reader.int64() as Long);
           continue;
         case 10:
           if (tag !== 80) {
@@ -20746,11 +21718,11 @@ export const CreateEventRequest = {
           message.event_status = reader.int32();
           continue;
         case 11:
-          if (tag !== 90) {
+          if (tag !== 88) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 12:
           if (tag !== 96) {
@@ -20767,18 +21739,18 @@ export const CreateEventRequest = {
           message.repeat_type = reader.int32();
           continue;
         case 14:
-          if (tag !== 114) {
+          if (tag !== 112) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToBigint(reader.int64() as Long);
           continue;
         case 15:
-          if (tag !== 122) {
+          if (tag !== 120) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToBigint(reader.int64() as Long);
           continue;
         case 16:
           if (tag !== 130) {
@@ -20808,18 +21780,18 @@ export const CreateEventRequest = {
       title: isSet(object.title) ? globalThis.String(object.title) : "",
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       description: isSet(object.description) ? globalThis.String(object.description) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_voice_id: isSet(object.channel_voice_id) ? globalThis.String(object.channel_voice_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_voice_id: isSet(object.channel_voice_id) ? BigInt(object.channel_voice_id) : 0n,
       address: isSet(object.address) ? globalThis.String(object.address) : "",
       start_time_seconds: isSet(object.start_time_seconds) ? globalThis.Number(object.start_time_seconds) : 0,
       end_time_seconds: isSet(object.end_time_seconds) ? globalThis.Number(object.end_time_seconds) : 0,
-      event_id: isSet(object.event_id) ? globalThis.String(object.event_id) : "",
+      event_id: isSet(object.event_id) ? BigInt(object.event_id) : 0n,
       event_status: isSet(object.event_status) ? globalThis.Number(object.event_status) : 0,
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       action: isSet(object.action) ? globalThis.Number(object.action) : 0,
       repeat_type: isSet(object.repeat_type) ? globalThis.Number(object.repeat_type) : 0,
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      creator_id: isSet(object.creator_id) ? BigInt(object.creator_id) : 0n,
+      user_id: isSet(object.user_id) ? BigInt(object.user_id) : 0n,
       is_private: isSet(object.is_private) ? Boolean(object.is_private) : undefined,
       meet_room: isSet(object.meet_room) ? GenerateMezonMeetResponse.fromJSON(object.meet_room) : undefined,
     };
@@ -20836,11 +21808,11 @@ export const CreateEventRequest = {
     if (message.description !== "") {
       obj.description = message.description;
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_voice_id !== "") {
-      obj.channel_voice_id = message.channel_voice_id;
+    if (message.channel_voice_id !== 0n) {
+      obj.channel_voice_id = message.channel_voice_id.toString();
     }
     if (message.address !== "") {
       obj.address = message.address;
@@ -20851,14 +21823,14 @@ export const CreateEventRequest = {
     if (message.end_time_seconds !== 0) {
       obj.end_time_seconds = Math.round(message.end_time_seconds);
     }
-    if (message.event_id !== "") {
-      obj.event_id = message.event_id;
+    if (message.event_id !== 0n) {
+      obj.event_id = message.event_id.toString();
     }
     if (message.event_status !== 0) {
       obj.event_status = Math.round(message.event_status);
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.action !== 0) {
       obj.action = Math.round(message.action);
@@ -20866,11 +21838,11 @@ export const CreateEventRequest = {
     if (message.repeat_type !== 0) {
       obj.repeat_type = Math.round(message.repeat_type);
     }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
+    if (message.creator_id !== 0n) {
+      obj.creator_id = message.creator_id.toString();
     }
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
+    if (message.user_id !== 0n) {
+      obj.user_id = message.user_id.toString();
     }
     if (message.is_private !== undefined) {
       obj.is_private = message.is_private;
@@ -20889,18 +21861,18 @@ export const CreateEventRequest = {
     message.title = object.title ?? "";
     message.logo = object.logo ?? "";
     message.description = object.description ?? "";
-    message.clan_id = object.clan_id ?? "";
-    message.channel_voice_id = object.channel_voice_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_voice_id = object.channel_voice_id ?? 0n;
     message.address = object.address ?? "";
     message.start_time_seconds = object.start_time_seconds ?? 0;
     message.end_time_seconds = object.end_time_seconds ?? 0;
-    message.event_id = object.event_id ?? "";
+    message.event_id = object.event_id ?? 0n;
     message.event_status = object.event_status ?? 0;
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     message.action = object.action ?? 0;
     message.repeat_type = object.repeat_type ?? 0;
-    message.creator_id = object.creator_id ?? "";
-    message.user_id = object.user_id ?? "";
+    message.creator_id = object.creator_id ?? 0n;
+    message.user_id = object.user_id ?? 0n;
     message.is_private = object.is_private ?? undefined;
     message.meet_room = (object.meet_room !== undefined && object.meet_room !== null)
       ? GenerateMezonMeetResponse.fromPartial(object.meet_room)
@@ -20914,15 +21886,15 @@ function createBaseUpdateEventRequest(): UpdateEventRequest {
     title: "",
     logo: "",
     description: "",
-    event_id: "",
-    channel_id: "",
+    event_id: 0n,
+    channel_id: 0n,
     address: "",
     start_time_seconds: 0,
     end_time_seconds: 0,
-    clan_id: "",
-    creator_id: "",
-    channel_voice_id: "",
-    channel_id_old: "",
+    clan_id: 0n,
+    creator_id: 0n,
+    channel_voice_id: 0n,
+    channel_id_old: 0n,
     repeat_type: 0,
   };
 }
@@ -20938,11 +21910,17 @@ export const UpdateEventRequest = {
     if (message.description !== "") {
       writer.uint32(26).string(message.description);
     }
-    if (message.event_id !== "") {
-      writer.uint32(34).string(message.event_id);
+    if (message.event_id !== 0n) {
+      if (BigInt.asIntN(64, message.event_id) !== message.event_id) {
+        throw new globalThis.Error("value provided for field message.event_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.event_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(42).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.channel_id.toString());
     }
     if (message.address !== "") {
       writer.uint32(50).string(message.address);
@@ -20953,17 +21931,29 @@ export const UpdateEventRequest = {
     if (message.end_time_seconds !== 0) {
       writer.uint32(64).uint32(message.end_time_seconds);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(74).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(72).int64(message.clan_id.toString());
     }
-    if (message.creator_id !== "") {
-      writer.uint32(82).string(message.creator_id);
+    if (message.creator_id !== 0n) {
+      if (BigInt.asIntN(64, message.creator_id) !== message.creator_id) {
+        throw new globalThis.Error("value provided for field message.creator_id of type int64 too large");
+      }
+      writer.uint32(80).int64(message.creator_id.toString());
     }
-    if (message.channel_voice_id !== "") {
-      writer.uint32(90).string(message.channel_voice_id);
+    if (message.channel_voice_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_voice_id) !== message.channel_voice_id) {
+        throw new globalThis.Error("value provided for field message.channel_voice_id of type int64 too large");
+      }
+      writer.uint32(88).int64(message.channel_voice_id.toString());
     }
-    if (message.channel_id_old !== "") {
-      writer.uint32(98).string(message.channel_id_old);
+    if (message.channel_id_old !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id_old) !== message.channel_id_old) {
+        throw new globalThis.Error("value provided for field message.channel_id_old of type int64 too large");
+      }
+      writer.uint32(96).int64(message.channel_id_old.toString());
     }
     if (message.repeat_type !== 0) {
       writer.uint32(104).int32(message.repeat_type);
@@ -21000,18 +21990,18 @@ export const UpdateEventRequest = {
           message.description = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.event_id = reader.string();
+          message.event_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 50) {
@@ -21035,32 +22025,32 @@ export const UpdateEventRequest = {
           message.end_time_seconds = reader.uint32();
           continue;
         case 9:
-          if (tag !== 74) {
+          if (tag !== 72) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 10:
-          if (tag !== 82) {
+          if (tag !== 80) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToBigint(reader.int64() as Long);
           continue;
         case 11:
-          if (tag !== 90) {
+          if (tag !== 88) {
             break;
           }
 
-          message.channel_voice_id = reader.string();
+          message.channel_voice_id = longToBigint(reader.int64() as Long);
           continue;
         case 12:
-          if (tag !== 98) {
+          if (tag !== 96) {
             break;
           }
 
-          message.channel_id_old = reader.string();
+          message.channel_id_old = longToBigint(reader.int64() as Long);
           continue;
         case 13:
           if (tag !== 104) {
@@ -21083,15 +22073,15 @@ export const UpdateEventRequest = {
       title: isSet(object.title) ? globalThis.String(object.title) : "",
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       description: isSet(object.description) ? globalThis.String(object.description) : "",
-      event_id: isSet(object.event_id) ? globalThis.String(object.event_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      event_id: isSet(object.event_id) ? BigInt(object.event_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       address: isSet(object.address) ? globalThis.String(object.address) : "",
       start_time_seconds: isSet(object.start_time_seconds) ? globalThis.Number(object.start_time_seconds) : 0,
       end_time_seconds: isSet(object.end_time_seconds) ? globalThis.Number(object.end_time_seconds) : 0,
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      channel_voice_id: isSet(object.channel_voice_id) ? globalThis.String(object.channel_voice_id) : "",
-      channel_id_old: isSet(object.channel_id_old) ? globalThis.String(object.channel_id_old) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      creator_id: isSet(object.creator_id) ? BigInt(object.creator_id) : 0n,
+      channel_voice_id: isSet(object.channel_voice_id) ? BigInt(object.channel_voice_id) : 0n,
+      channel_id_old: isSet(object.channel_id_old) ? BigInt(object.channel_id_old) : 0n,
       repeat_type: isSet(object.repeat_type) ? globalThis.Number(object.repeat_type) : 0,
     };
   },
@@ -21107,11 +22097,11 @@ export const UpdateEventRequest = {
     if (message.description !== "") {
       obj.description = message.description;
     }
-    if (message.event_id !== "") {
-      obj.event_id = message.event_id;
+    if (message.event_id !== 0n) {
+      obj.event_id = message.event_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.address !== "") {
       obj.address = message.address;
@@ -21122,17 +22112,17 @@ export const UpdateEventRequest = {
     if (message.end_time_seconds !== 0) {
       obj.end_time_seconds = Math.round(message.end_time_seconds);
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
+    if (message.creator_id !== 0n) {
+      obj.creator_id = message.creator_id.toString();
     }
-    if (message.channel_voice_id !== "") {
-      obj.channel_voice_id = message.channel_voice_id;
+    if (message.channel_voice_id !== 0n) {
+      obj.channel_voice_id = message.channel_voice_id.toString();
     }
-    if (message.channel_id_old !== "") {
-      obj.channel_id_old = message.channel_id_old;
+    if (message.channel_id_old !== 0n) {
+      obj.channel_id_old = message.channel_id_old.toString();
     }
     if (message.repeat_type !== 0) {
       obj.repeat_type = Math.round(message.repeat_type);
@@ -21148,34 +22138,43 @@ export const UpdateEventRequest = {
     message.title = object.title ?? "";
     message.logo = object.logo ?? "";
     message.description = object.description ?? "";
-    message.event_id = object.event_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.event_id = object.event_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     message.address = object.address ?? "";
     message.start_time_seconds = object.start_time_seconds ?? 0;
     message.end_time_seconds = object.end_time_seconds ?? 0;
-    message.clan_id = object.clan_id ?? "";
-    message.creator_id = object.creator_id ?? "";
-    message.channel_voice_id = object.channel_voice_id ?? "";
-    message.channel_id_old = object.channel_id_old ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.creator_id = object.creator_id ?? 0n;
+    message.channel_voice_id = object.channel_voice_id ?? 0n;
+    message.channel_id_old = object.channel_id_old ?? 0n;
     message.repeat_type = object.repeat_type ?? 0;
     return message;
   },
 };
 
 function createBaseDeleteRoleRequest(): DeleteRoleRequest {
-  return { role_id: "", channel_id: "", clan_id: "", role_label: "" };
+  return { role_id: 0n, channel_id: 0n, clan_id: 0n, role_label: "" };
 }
 
 export const DeleteRoleRequest = {
   encode(message: DeleteRoleRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.role_id !== "") {
-      writer.uint32(10).string(message.role_id);
+    if (message.role_id !== 0n) {
+      if (BigInt.asIntN(64, message.role_id) !== message.role_id) {
+        throw new globalThis.Error("value provided for field message.role_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.role_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.clan_id.toString());
     }
     if (message.role_label !== "") {
       writer.uint32(34).string(message.role_label);
@@ -21191,25 +22190,25 @@ export const DeleteRoleRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.role_id = reader.string();
+          message.role_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -21229,23 +22228,23 @@ export const DeleteRoleRequest = {
 
   fromJSON(object: any): DeleteRoleRequest {
     return {
-      role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      role_id: isSet(object.role_id) ? BigInt(object.role_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       role_label: isSet(object.role_label) ? globalThis.String(object.role_label) : "",
     };
   },
 
   toJSON(message: DeleteRoleRequest): unknown {
     const obj: any = {};
-    if (message.role_id !== "") {
-      obj.role_id = message.role_id;
+    if (message.role_id !== 0n) {
+      obj.role_id = message.role_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.role_label !== "") {
       obj.role_label = message.role_label;
@@ -21258,34 +22257,46 @@ export const DeleteRoleRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<DeleteRoleRequest>, I>>(object: I): DeleteRoleRequest {
     const message = createBaseDeleteRoleRequest();
-    message.role_id = object.role_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.role_id = object.role_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     message.role_label = object.role_label ?? "";
     return message;
   },
 };
 
 function createBaseDeleteEventRequest(): DeleteEventRequest {
-  return { event_id: "", clan_id: "", creator_id: "", event_label: "", channel_id: "" };
+  return { event_id: 0n, clan_id: 0n, creator_id: 0n, event_label: "", channel_id: 0n };
 }
 
 export const DeleteEventRequest = {
   encode(message: DeleteEventRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.event_id !== "") {
-      writer.uint32(10).string(message.event_id);
+    if (message.event_id !== 0n) {
+      if (BigInt.asIntN(64, message.event_id) !== message.event_id) {
+        throw new globalThis.Error("value provided for field message.event_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.event_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.clan_id.toString());
     }
-    if (message.creator_id !== "") {
-      writer.uint32(26).string(message.creator_id);
+    if (message.creator_id !== 0n) {
+      if (BigInt.asIntN(64, message.creator_id) !== message.creator_id) {
+        throw new globalThis.Error("value provided for field message.creator_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.creator_id.toString());
     }
     if (message.event_label !== "") {
       writer.uint32(34).string(message.event_label);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(42).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.channel_id.toString());
     }
     return writer;
   },
@@ -21298,25 +22309,25 @@ export const DeleteEventRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.event_id = reader.string();
+          message.event_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -21326,11 +22337,11 @@ export const DeleteEventRequest = {
           message.event_label = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -21343,30 +22354,30 @@ export const DeleteEventRequest = {
 
   fromJSON(object: any): DeleteEventRequest {
     return {
-      event_id: isSet(object.event_id) ? globalThis.String(object.event_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      event_id: isSet(object.event_id) ? BigInt(object.event_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      creator_id: isSet(object.creator_id) ? BigInt(object.creator_id) : 0n,
       event_label: isSet(object.event_label) ? globalThis.String(object.event_label) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
     };
   },
 
   toJSON(message: DeleteEventRequest): unknown {
     const obj: any = {};
-    if (message.event_id !== "") {
-      obj.event_id = message.event_id;
+    if (message.event_id !== 0n) {
+      obj.event_id = message.event_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
+    if (message.creator_id !== 0n) {
+      obj.creator_id = message.creator_id.toString();
     }
     if (message.event_label !== "") {
       obj.event_label = message.event_label;
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     return obj;
   },
@@ -21376,18 +22387,18 @@ export const DeleteEventRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<DeleteEventRequest>, I>>(object: I): DeleteEventRequest {
     const message = createBaseDeleteEventRequest();
-    message.event_id = object.event_id ?? "";
-    message.clan_id = object.clan_id ?? "";
-    message.creator_id = object.creator_id ?? "";
+    message.event_id = object.event_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
+    message.creator_id = object.creator_id ?? 0n;
     message.event_label = object.event_label ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     return message;
   },
 };
 
 function createBaseUpdateRoleRequest(): UpdateRoleRequest {
   return {
-    role_id: "",
+    role_id: 0n,
     title: undefined,
     color: undefined,
     role_icon: undefined,
@@ -21398,15 +22409,18 @@ function createBaseUpdateRoleRequest(): UpdateRoleRequest {
     active_permission_ids: [],
     remove_user_ids: [],
     remove_permission_ids: [],
-    clan_id: "",
-    max_permission_id: "",
+    clan_id: 0n,
+    max_permission_id: 0n,
   };
 }
 
 export const UpdateRoleRequest = {
   encode(message: UpdateRoleRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.role_id !== "") {
-      writer.uint32(10).string(message.role_id);
+    if (message.role_id !== 0n) {
+      if (BigInt.asIntN(64, message.role_id) !== message.role_id) {
+        throw new globalThis.Error("value provided for field message.role_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.role_id.toString());
     }
     if (message.title !== undefined) {
       StringValue.encode({ value: message.title! }, writer.uint32(18).fork()).ldelim();
@@ -21426,23 +22440,49 @@ export const UpdateRoleRequest = {
     if (message.allow_mention !== undefined) {
       Int32Value.encode({ value: message.allow_mention! }, writer.uint32(58).fork()).ldelim();
     }
+    writer.uint32(66).fork();
     for (const v of message.add_user_ids) {
-      writer.uint32(66).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field add_user_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
+    writer.uint32(74).fork();
     for (const v of message.active_permission_ids) {
-      writer.uint32(74).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field active_permission_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
+    writer.uint32(82).fork();
     for (const v of message.remove_user_ids) {
-      writer.uint32(82).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field remove_user_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
+    writer.uint32(90).fork();
     for (const v of message.remove_permission_ids) {
-      writer.uint32(90).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field remove_permission_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(98).string(message.clan_id);
+    writer.ldelim();
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(96).int64(message.clan_id.toString());
     }
-    if (message.max_permission_id !== "") {
-      writer.uint32(106).string(message.max_permission_id);
+    if (message.max_permission_id !== 0n) {
+      if (BigInt.asIntN(64, message.max_permission_id) !== message.max_permission_id) {
+        throw new globalThis.Error("value provided for field message.max_permission_id of type int64 too large");
+      }
+      writer.uint32(104).int64(message.max_permission_id.toString());
     }
     return writer;
   },
@@ -21455,11 +22495,11 @@ export const UpdateRoleRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.role_id = reader.string();
+          message.role_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -21504,46 +22544,86 @@ export const UpdateRoleRequest = {
           message.allow_mention = Int32Value.decode(reader, reader.uint32()).value;
           continue;
         case 8:
-          if (tag !== 66) {
-            break;
+          if (tag === 64) {
+            message.add_user_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.add_user_ids.push(reader.string());
-          continue;
+          if (tag === 66) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.add_user_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 9:
-          if (tag !== 74) {
-            break;
+          if (tag === 72) {
+            message.active_permission_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.active_permission_ids.push(reader.string());
-          continue;
+          if (tag === 74) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.active_permission_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 10:
-          if (tag !== 82) {
-            break;
+          if (tag === 80) {
+            message.remove_user_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.remove_user_ids.push(reader.string());
-          continue;
+          if (tag === 82) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.remove_user_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 11:
-          if (tag !== 90) {
-            break;
+          if (tag === 88) {
+            message.remove_permission_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.remove_permission_ids.push(reader.string());
-          continue;
+          if (tag === 90) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.remove_permission_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 12:
-          if (tag !== 98) {
+          if (tag !== 96) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 13:
-          if (tag !== 106) {
+          if (tag !== 104) {
             break;
           }
 
-          message.max_permission_id = reader.string();
+          message.max_permission_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -21556,7 +22636,7 @@ export const UpdateRoleRequest = {
 
   fromJSON(object: any): UpdateRoleRequest {
     return {
-      role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "",
+      role_id: isSet(object.role_id) ? BigInt(object.role_id) : 0n,
       title: isSet(object.title) ? String(object.title) : undefined,
       color: isSet(object.color) ? String(object.color) : undefined,
       role_icon: isSet(object.role_icon) ? String(object.role_icon) : undefined,
@@ -21564,26 +22644,26 @@ export const UpdateRoleRequest = {
       display_online: isSet(object.display_online) ? Number(object.display_online) : undefined,
       allow_mention: isSet(object.allow_mention) ? Number(object.allow_mention) : undefined,
       add_user_ids: globalThis.Array.isArray(object?.add_user_ids)
-        ? object.add_user_ids.map((e: any) => globalThis.String(e))
+        ? object.add_user_ids.map((e: any) => BigInt(e))
         : [],
       active_permission_ids: globalThis.Array.isArray(object?.active_permission_ids)
-        ? object.active_permission_ids.map((e: any) => globalThis.String(e))
+        ? object.active_permission_ids.map((e: any) => BigInt(e))
         : [],
       remove_user_ids: globalThis.Array.isArray(object?.remove_user_ids)
-        ? object.remove_user_ids.map((e: any) => globalThis.String(e))
+        ? object.remove_user_ids.map((e: any) => BigInt(e))
         : [],
       remove_permission_ids: globalThis.Array.isArray(object?.remove_permission_ids)
-        ? object.remove_permission_ids.map((e: any) => globalThis.String(e))
+        ? object.remove_permission_ids.map((e: any) => BigInt(e))
         : [],
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      max_permission_id: isSet(object.max_permission_id) ? globalThis.String(object.max_permission_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      max_permission_id: isSet(object.max_permission_id) ? BigInt(object.max_permission_id) : 0n,
     };
   },
 
   toJSON(message: UpdateRoleRequest): unknown {
     const obj: any = {};
-    if (message.role_id !== "") {
-      obj.role_id = message.role_id;
+    if (message.role_id !== 0n) {
+      obj.role_id = message.role_id.toString();
     }
     if (message.title !== undefined) {
       obj.title = message.title;
@@ -21604,22 +22684,22 @@ export const UpdateRoleRequest = {
       obj.allow_mention = message.allow_mention;
     }
     if (message.add_user_ids?.length) {
-      obj.add_user_ids = message.add_user_ids;
+      obj.add_user_ids = message.add_user_ids.map((e) => e.toString());
     }
     if (message.active_permission_ids?.length) {
-      obj.active_permission_ids = message.active_permission_ids;
+      obj.active_permission_ids = message.active_permission_ids.map((e) => e.toString());
     }
     if (message.remove_user_ids?.length) {
-      obj.remove_user_ids = message.remove_user_ids;
+      obj.remove_user_ids = message.remove_user_ids.map((e) => e.toString());
     }
     if (message.remove_permission_ids?.length) {
-      obj.remove_permission_ids = message.remove_permission_ids;
+      obj.remove_permission_ids = message.remove_permission_ids.map((e) => e.toString());
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.max_permission_id !== "") {
-      obj.max_permission_id = message.max_permission_id;
+    if (message.max_permission_id !== 0n) {
+      obj.max_permission_id = message.max_permission_id.toString();
     }
     return obj;
   },
@@ -21629,7 +22709,7 @@ export const UpdateRoleRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<UpdateRoleRequest>, I>>(object: I): UpdateRoleRequest {
     const message = createBaseUpdateRoleRequest();
-    message.role_id = object.role_id ?? "";
+    message.role_id = object.role_id ?? 0n;
     message.title = object.title ?? undefined;
     message.color = object.color ?? undefined;
     message.role_icon = object.role_icon ?? undefined;
@@ -21640,32 +22720,44 @@ export const UpdateRoleRequest = {
     message.active_permission_ids = object.active_permission_ids?.map((e) => e) || [];
     message.remove_user_ids = object.remove_user_ids?.map((e) => e) || [];
     message.remove_permission_ids = object.remove_permission_ids?.map((e) => e) || [];
-    message.clan_id = object.clan_id ?? "";
-    message.max_permission_id = object.max_permission_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.max_permission_id = object.max_permission_id ?? 0n;
     return message;
   },
 };
 
 function createBaseUpdateRoleChannelRequest(): UpdateRoleChannelRequest {
-  return { role_id: "", permission_update: [], max_permission_id: "", channel_id: "", user_id: "", role_label: "" };
+  return { role_id: 0n, permission_update: [], max_permission_id: 0n, channel_id: 0n, user_id: 0n, role_label: "" };
 }
 
 export const UpdateRoleChannelRequest = {
   encode(message: UpdateRoleChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.role_id !== "") {
-      writer.uint32(10).string(message.role_id);
+    if (message.role_id !== 0n) {
+      if (BigInt.asIntN(64, message.role_id) !== message.role_id) {
+        throw new globalThis.Error("value provided for field message.role_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.role_id.toString());
     }
     for (const v of message.permission_update) {
       PermissionUpdate.encode(v!, writer.uint32(18).fork()).ldelim();
     }
-    if (message.max_permission_id !== "") {
-      writer.uint32(26).string(message.max_permission_id);
+    if (message.max_permission_id !== 0n) {
+      if (BigInt.asIntN(64, message.max_permission_id) !== message.max_permission_id) {
+        throw new globalThis.Error("value provided for field message.max_permission_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.max_permission_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(34).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.channel_id.toString());
     }
-    if (message.user_id !== "") {
-      writer.uint32(42).string(message.user_id);
+    if (message.user_id !== 0n) {
+      if (BigInt.asIntN(64, message.user_id) !== message.user_id) {
+        throw new globalThis.Error("value provided for field message.user_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.user_id.toString());
     }
     if (message.role_label !== "") {
       writer.uint32(50).string(message.role_label);
@@ -21681,11 +22773,11 @@ export const UpdateRoleChannelRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.role_id = reader.string();
+          message.role_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -21695,25 +22787,25 @@ export const UpdateRoleChannelRequest = {
           message.permission_update.push(PermissionUpdate.decode(reader, reader.uint32()));
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.max_permission_id = reader.string();
+          message.max_permission_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 50) {
@@ -21733,33 +22825,33 @@ export const UpdateRoleChannelRequest = {
 
   fromJSON(object: any): UpdateRoleChannelRequest {
     return {
-      role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "",
+      role_id: isSet(object.role_id) ? BigInt(object.role_id) : 0n,
       permission_update: globalThis.Array.isArray(object?.permission_update)
         ? object.permission_update.map((e: any) => PermissionUpdate.fromJSON(e))
         : [],
-      max_permission_id: isSet(object.max_permission_id) ? globalThis.String(object.max_permission_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      max_permission_id: isSet(object.max_permission_id) ? BigInt(object.max_permission_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      user_id: isSet(object.user_id) ? BigInt(object.user_id) : 0n,
       role_label: isSet(object.role_label) ? globalThis.String(object.role_label) : "",
     };
   },
 
   toJSON(message: UpdateRoleChannelRequest): unknown {
     const obj: any = {};
-    if (message.role_id !== "") {
-      obj.role_id = message.role_id;
+    if (message.role_id !== 0n) {
+      obj.role_id = message.role_id.toString();
     }
     if (message.permission_update?.length) {
       obj.permission_update = message.permission_update.map((e) => PermissionUpdate.toJSON(e));
     }
-    if (message.max_permission_id !== "") {
-      obj.max_permission_id = message.max_permission_id;
+    if (message.max_permission_id !== 0n) {
+      obj.max_permission_id = message.max_permission_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
+    if (message.user_id !== 0n) {
+      obj.user_id = message.user_id.toString();
     }
     if (message.role_label !== "") {
       obj.role_label = message.role_label;
@@ -21772,24 +22864,27 @@ export const UpdateRoleChannelRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<UpdateRoleChannelRequest>, I>>(object: I): UpdateRoleChannelRequest {
     const message = createBaseUpdateRoleChannelRequest();
-    message.role_id = object.role_id ?? "";
+    message.role_id = object.role_id ?? 0n;
     message.permission_update = object.permission_update?.map((e) => PermissionUpdate.fromPartial(e)) || [];
-    message.max_permission_id = object.max_permission_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.user_id = object.user_id ?? "";
+    message.max_permission_id = object.max_permission_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
+    message.user_id = object.user_id ?? 0n;
     message.role_label = object.role_label ?? "";
     return message;
   },
 };
 
 function createBasePermissionUpdate(): PermissionUpdate {
-  return { permission_id: "", slug: "", type: 0 };
+  return { permission_id: 0n, slug: "", type: 0 };
 }
 
 export const PermissionUpdate = {
   encode(message: PermissionUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.permission_id !== "") {
-      writer.uint32(10).string(message.permission_id);
+    if (message.permission_id !== 0n) {
+      if (BigInt.asIntN(64, message.permission_id) !== message.permission_id) {
+        throw new globalThis.Error("value provided for field message.permission_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.permission_id.toString());
     }
     if (message.slug !== "") {
       writer.uint32(18).string(message.slug);
@@ -21808,11 +22903,11 @@ export const PermissionUpdate = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.permission_id = reader.string();
+          message.permission_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -21839,7 +22934,7 @@ export const PermissionUpdate = {
 
   fromJSON(object: any): PermissionUpdate {
     return {
-      permission_id: isSet(object.permission_id) ? globalThis.String(object.permission_id) : "",
+      permission_id: isSet(object.permission_id) ? BigInt(object.permission_id) : 0n,
       slug: isSet(object.slug) ? globalThis.String(object.slug) : "",
       type: isSet(object.type) ? globalThis.Number(object.type) : 0,
     };
@@ -21847,8 +22942,8 @@ export const PermissionUpdate = {
 
   toJSON(message: PermissionUpdate): unknown {
     const obj: any = {};
-    if (message.permission_id !== "") {
-      obj.permission_id = message.permission_id;
+    if (message.permission_id !== 0n) {
+      obj.permission_id = message.permission_id.toString();
     }
     if (message.slug !== "") {
       obj.slug = message.slug;
@@ -21864,7 +22959,7 @@ export const PermissionUpdate = {
   },
   fromPartial<I extends Exact<DeepPartial<PermissionUpdate>, I>>(object: I): PermissionUpdate {
     const message = createBasePermissionUpdate();
-    message.permission_id = object.permission_id ?? "";
+    message.permission_id = object.permission_id ?? 0n;
     message.slug = object.slug ?? "";
     message.type = object.type ?? 0;
     return message;
@@ -22407,10 +23502,10 @@ export const FilterParam = {
 
 function createBaseSearchMessageDocument(): SearchMessageDocument {
   return {
-    message_id: "",
-    channel_id: "",
-    clan_id: "",
-    sender_id: "",
+    message_id: 0n,
+    channel_id: 0n,
+    clan_id: 0n,
+    sender_id: 0n,
     content: "",
     mentions: "",
     reactions: "",
@@ -22429,17 +23524,29 @@ function createBaseSearchMessageDocument(): SearchMessageDocument {
 
 export const SearchMessageDocument = {
   encode(message: SearchMessageDocument, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.message_id !== "") {
-      writer.uint32(10).string(message.message_id);
+    if (message.message_id !== 0n) {
+      if (BigInt.asIntN(64, message.message_id) !== message.message_id) {
+        throw new globalThis.Error("value provided for field message.message_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.message_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.clan_id.toString());
     }
-    if (message.sender_id !== "") {
-      writer.uint32(34).string(message.sender_id);
+    if (message.sender_id !== 0n) {
+      if (BigInt.asIntN(64, message.sender_id) !== message.sender_id) {
+        throw new globalThis.Error("value provided for field message.sender_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.sender_id.toString());
     }
     if (message.content !== "") {
       writer.uint32(42).string(message.content);
@@ -22491,32 +23598,32 @@ export const SearchMessageDocument = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.sender_id = reader.string();
+          message.sender_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
           if (tag !== 42) {
@@ -22620,10 +23727,10 @@ export const SearchMessageDocument = {
 
   fromJSON(object: any): SearchMessageDocument {
     return {
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
+      message_id: isSet(object.message_id) ? BigInt(object.message_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      sender_id: isSet(object.sender_id) ? BigInt(object.sender_id) : 0n,
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       mentions: isSet(object.mentions) ? globalThis.String(object.mentions) : "",
       reactions: isSet(object.reactions) ? globalThis.String(object.reactions) : "",
@@ -22644,17 +23751,17 @@ export const SearchMessageDocument = {
 
   toJSON(message: SearchMessageDocument): unknown {
     const obj: any = {};
-    if (message.message_id !== "") {
-      obj.message_id = message.message_id;
+    if (message.message_id !== 0n) {
+      obj.message_id = message.message_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.sender_id !== "") {
-      obj.sender_id = message.sender_id;
+    if (message.sender_id !== 0n) {
+      obj.sender_id = message.sender_id.toString();
     }
     if (message.content !== "") {
       obj.content = message.content;
@@ -22703,10 +23810,10 @@ export const SearchMessageDocument = {
   },
   fromPartial<I extends Exact<DeepPartial<SearchMessageDocument>, I>>(object: I): SearchMessageDocument {
     const message = createBaseSearchMessageDocument();
-    message.message_id = object.message_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.clan_id = object.clan_id ?? "";
-    message.sender_id = object.sender_id ?? "";
+    message.message_id = object.message_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
+    message.sender_id = object.sender_id ?? 0n;
     message.content = object.content ?? "";
     message.mentions = object.mentions ?? "";
     message.reactions = object.reactions ?? "";
@@ -23072,12 +24179,12 @@ export const RegistrationEmailRequest_VarsEntry = {
 
 function createBaseClanEmoji(): ClanEmoji {
   return {
-    id: "",
+    id: 0n,
     src: "",
     shortname: "",
     category: "",
-    creator_id: "",
-    clan_id: "",
+    creator_id: 0n,
+    clan_id: 0n,
     logo: "",
     clan_name: "",
     is_for_sale: false,
@@ -23086,8 +24193,11 @@ function createBaseClanEmoji(): ClanEmoji {
 
 export const ClanEmoji = {
   encode(message: ClanEmoji, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.src !== "") {
       writer.uint32(18).string(message.src);
@@ -23098,11 +24208,17 @@ export const ClanEmoji = {
     if (message.category !== "") {
       writer.uint32(34).string(message.category);
     }
-    if (message.creator_id !== "") {
-      writer.uint32(42).string(message.creator_id);
+    if (message.creator_id !== 0n) {
+      if (BigInt.asIntN(64, message.creator_id) !== message.creator_id) {
+        throw new globalThis.Error("value provided for field message.creator_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.creator_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(50).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(48).int64(message.clan_id.toString());
     }
     if (message.logo !== "") {
       writer.uint32(58).string(message.logo);
@@ -23124,11 +24240,11 @@ export const ClanEmoji = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -23152,18 +24268,18 @@ export const ClanEmoji = {
           message.category = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 7:
           if (tag !== 58) {
@@ -23197,12 +24313,12 @@ export const ClanEmoji = {
 
   fromJSON(object: any): ClanEmoji {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       src: isSet(object.src) ? globalThis.String(object.src) : "",
       shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
       category: isSet(object.category) ? globalThis.String(object.category) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      creator_id: isSet(object.creator_id) ? BigInt(object.creator_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       is_for_sale: isSet(object.is_for_sale) ? globalThis.Boolean(object.is_for_sale) : false,
@@ -23211,8 +24327,8 @@ export const ClanEmoji = {
 
   toJSON(message: ClanEmoji): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.src !== "") {
       obj.src = message.src;
@@ -23223,11 +24339,11 @@ export const ClanEmoji = {
     if (message.category !== "") {
       obj.category = message.category;
     }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
+    if (message.creator_id !== 0n) {
+      obj.creator_id = message.creator_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.logo !== "") {
       obj.logo = message.logo;
@@ -23246,12 +24362,12 @@ export const ClanEmoji = {
   },
   fromPartial<I extends Exact<DeepPartial<ClanEmoji>, I>>(object: I): ClanEmoji {
     const message = createBaseClanEmoji();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.src = object.src ?? "";
     message.shortname = object.shortname ?? "";
     message.category = object.category ?? "";
-    message.creator_id = object.creator_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.creator_id = object.creator_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     message.logo = object.logo ?? "";
     message.clan_name = object.clan_name ?? "";
     message.is_for_sale = object.is_for_sale ?? false;
@@ -23383,13 +24499,13 @@ export const StickerListedResponse = {
 
 function createBaseClanSticker(): ClanSticker {
   return {
-    id: "",
+    id: 0n,
     source: "",
     shortname: "",
     category: "",
-    creator_id: "",
+    creator_id: 0n,
     create_time_seconds: 0,
-    clan_id: "",
+    clan_id: 0n,
     logo: "",
     clan_name: "",
     media_type: 0,
@@ -23399,8 +24515,11 @@ function createBaseClanSticker(): ClanSticker {
 
 export const ClanSticker = {
   encode(message: ClanSticker, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.source !== "") {
       writer.uint32(18).string(message.source);
@@ -23411,14 +24530,20 @@ export const ClanSticker = {
     if (message.category !== "") {
       writer.uint32(34).string(message.category);
     }
-    if (message.creator_id !== "") {
-      writer.uint32(42).string(message.creator_id);
+    if (message.creator_id !== 0n) {
+      if (BigInt.asIntN(64, message.creator_id) !== message.creator_id) {
+        throw new globalThis.Error("value provided for field message.creator_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.creator_id.toString());
     }
     if (message.create_time_seconds !== 0) {
       writer.uint32(48).uint32(message.create_time_seconds);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(58).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(56).int64(message.clan_id.toString());
     }
     if (message.logo !== "") {
       writer.uint32(66).string(message.logo);
@@ -23443,11 +24568,11 @@ export const ClanSticker = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -23471,11 +24596,11 @@ export const ClanSticker = {
           message.category = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 48) {
@@ -23485,11 +24610,11 @@ export const ClanSticker = {
           message.create_time_seconds = reader.uint32();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 8:
           if (tag !== 66) {
@@ -23530,13 +24655,13 @@ export const ClanSticker = {
 
   fromJSON(object: any): ClanSticker {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       source: isSet(object.source) ? globalThis.String(object.source) : "",
       shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
       category: isSet(object.category) ? globalThis.String(object.category) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      creator_id: isSet(object.creator_id) ? BigInt(object.creator_id) : 0n,
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       media_type: isSet(object.media_type) ? globalThis.Number(object.media_type) : 0,
@@ -23546,8 +24671,8 @@ export const ClanSticker = {
 
   toJSON(message: ClanSticker): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.source !== "") {
       obj.source = message.source;
@@ -23558,14 +24683,14 @@ export const ClanSticker = {
     if (message.category !== "") {
       obj.category = message.category;
     }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
+    if (message.creator_id !== 0n) {
+      obj.creator_id = message.creator_id.toString();
     }
     if (message.create_time_seconds !== 0) {
       obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.logo !== "") {
       obj.logo = message.logo;
@@ -23587,13 +24712,13 @@ export const ClanSticker = {
   },
   fromPartial<I extends Exact<DeepPartial<ClanSticker>, I>>(object: I): ClanSticker {
     const message = createBaseClanSticker();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.source = object.source ?? "";
     message.shortname = object.shortname ?? "";
     message.category = object.category ?? "";
-    message.creator_id = object.creator_id ?? "";
+    message.creator_id = object.creator_id ?? 0n;
     message.create_time_seconds = object.create_time_seconds ?? 0;
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.logo = object.logo ?? "";
     message.clan_name = object.clan_name ?? "";
     message.media_type = object.media_type ?? 0;
@@ -23603,13 +24728,16 @@ export const ClanSticker = {
 };
 
 function createBaseAllUsersAddChannelRequest(): AllUsersAddChannelRequest {
-  return { channel_id: "", limit: undefined };
+  return { channel_id: 0n, limit: undefined };
 }
 
 export const AllUsersAddChannelRequest = {
   encode(message: AllUsersAddChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.channel_id.toString());
     }
     if (message.limit !== undefined) {
       Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
@@ -23625,11 +24753,11 @@ export const AllUsersAddChannelRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -23649,15 +24777,15 @@ export const AllUsersAddChannelRequest = {
 
   fromJSON(object: any): AllUsersAddChannelRequest {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
     };
   },
 
   toJSON(message: AllUsersAddChannelRequest): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.limit !== undefined) {
       obj.limit = message.limit;
@@ -23670,24 +24798,32 @@ export const AllUsersAddChannelRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<AllUsersAddChannelRequest>, I>>(object: I): AllUsersAddChannelRequest {
     const message = createBaseAllUsersAddChannelRequest();
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     message.limit = object.limit ?? undefined;
     return message;
   },
 };
 
 function createBaseAllUsersAddChannelResponse(): AllUsersAddChannelResponse {
-  return { channel_id: "", user_ids: [], limit: undefined, usernames: [], display_names: [], avatars: [], onlines: [] };
+  return { channel_id: 0n, user_ids: [], limit: undefined, usernames: [], display_names: [], avatars: [], onlines: [] };
 }
 
 export const AllUsersAddChannelResponse = {
   encode(message: AllUsersAddChannelResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.channel_id.toString());
     }
+    writer.uint32(18).fork();
     for (const v of message.user_ids) {
-      writer.uint32(18).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field user_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     if (message.limit !== undefined) {
       Int32Value.encode({ value: message.limit! }, writer.uint32(26).fork()).ldelim();
     }
@@ -23716,19 +24852,29 @@ export const AllUsersAddChannelResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
-            break;
+          if (tag === 16) {
+            message.user_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 18) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 3:
           if (tag !== 26) {
             break;
@@ -23785,8 +24931,8 @@ export const AllUsersAddChannelResponse = {
 
   fromJSON(object: any): AllUsersAddChannelResponse {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => BigInt(e)) : [],
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       usernames: globalThis.Array.isArray(object?.usernames)
         ? object.usernames.map((e: any) => globalThis.String(e))
@@ -23801,11 +24947,11 @@ export const AllUsersAddChannelResponse = {
 
   toJSON(message: AllUsersAddChannelResponse): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.user_ids?.length) {
-      obj.user_ids = message.user_ids;
+      obj.user_ids = message.user_ids.map((e) => e.toString());
     }
     if (message.limit !== undefined) {
       obj.limit = message.limit;
@@ -23830,7 +24976,7 @@ export const AllUsersAddChannelResponse = {
   },
   fromPartial<I extends Exact<DeepPartial<AllUsersAddChannelResponse>, I>>(object: I): AllUsersAddChannelResponse {
     const message = createBaseAllUsersAddChannelResponse();
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     message.user_ids = object.user_ids?.map((e) => e) || [];
     message.limit = object.limit ?? undefined;
     message.usernames = object.usernames?.map((e) => e) || [];
@@ -23842,13 +24988,16 @@ export const AllUsersAddChannelResponse = {
 };
 
 function createBaseClanEmojiCreateRequest(): ClanEmojiCreateRequest {
-  return { clan_id: "", source: "", shortname: "", category: "", id: "", is_for_sale: false };
+  return { clan_id: 0n, source: "", shortname: "", category: "", id: 0n, is_for_sale: false };
 }
 
 export const ClanEmojiCreateRequest = {
   encode(message: ClanEmojiCreateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     if (message.source !== "") {
       writer.uint32(18).string(message.source);
@@ -23859,8 +25008,11 @@ export const ClanEmojiCreateRequest = {
     if (message.category !== "") {
       writer.uint32(34).string(message.category);
     }
-    if (message.id !== "") {
-      writer.uint32(42).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.id.toString());
     }
     if (message.is_for_sale !== false) {
       writer.uint32(48).bool(message.is_for_sale);
@@ -23876,11 +25028,11 @@ export const ClanEmojiCreateRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -23904,11 +25056,11 @@ export const ClanEmojiCreateRequest = {
           message.category = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 48) {
@@ -23928,19 +25080,19 @@ export const ClanEmojiCreateRequest = {
 
   fromJSON(object: any): ClanEmojiCreateRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       source: isSet(object.source) ? globalThis.String(object.source) : "",
       shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
       category: isSet(object.category) ? globalThis.String(object.category) : "",
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       is_for_sale: isSet(object.is_for_sale) ? globalThis.Boolean(object.is_for_sale) : false,
     };
   },
 
   toJSON(message: ClanEmojiCreateRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.source !== "") {
       obj.source = message.source;
@@ -23951,8 +25103,8 @@ export const ClanEmojiCreateRequest = {
     if (message.category !== "") {
       obj.category = message.category;
     }
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.is_for_sale !== false) {
       obj.is_for_sale = message.is_for_sale;
@@ -23965,24 +25117,27 @@ export const ClanEmojiCreateRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ClanEmojiCreateRequest>, I>>(object: I): ClanEmojiCreateRequest {
     const message = createBaseClanEmojiCreateRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.source = object.source ?? "";
     message.shortname = object.shortname ?? "";
     message.category = object.category ?? "";
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.is_for_sale = object.is_for_sale ?? false;
     return message;
   },
 };
 
 function createBaseClanEmojiGetByClanIdRequest(): ClanEmojiGetByClanIdRequest {
-  return { clan_id: "" };
+  return { clan_id: 0n };
 }
 
 export const ClanEmojiGetByClanIdRequest = {
   encode(message: ClanEmojiGetByClanIdRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -23995,11 +25150,11 @@ export const ClanEmojiGetByClanIdRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -24011,13 +25166,13 @@ export const ClanEmojiGetByClanIdRequest = {
   },
 
   fromJSON(object: any): ClanEmojiGetByClanIdRequest {
-    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+    return { clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n };
   },
 
   toJSON(message: ClanEmojiGetByClanIdRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -24027,22 +25182,28 @@ export const ClanEmojiGetByClanIdRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ClanEmojiGetByClanIdRequest>, I>>(object: I): ClanEmojiGetByClanIdRequest {
     const message = createBaseClanEmojiGetByClanIdRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseClanEmojiDeleteRequest(): ClanEmojiDeleteRequest {
-  return { id: "", clan_id: "", emoji_label: "" };
+  return { id: 0n, clan_id: 0n, emoji_label: "" };
 }
 
 export const ClanEmojiDeleteRequest = {
   encode(message: ClanEmojiDeleteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.clan_id.toString());
     }
     if (message.emoji_label !== "") {
       writer.uint32(26).string(message.emoji_label);
@@ -24058,18 +25219,18 @@ export const ClanEmojiDeleteRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -24089,19 +25250,19 @@ export const ClanEmojiDeleteRequest = {
 
   fromJSON(object: any): ClanEmojiDeleteRequest {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       emoji_label: isSet(object.emoji_label) ? globalThis.String(object.emoji_label) : "",
     };
   },
 
   toJSON(message: ClanEmojiDeleteRequest): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.emoji_label !== "") {
       obj.emoji_label = message.emoji_label;
@@ -24114,27 +25275,33 @@ export const ClanEmojiDeleteRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ClanEmojiDeleteRequest>, I>>(object: I): ClanEmojiDeleteRequest {
     const message = createBaseClanEmojiDeleteRequest();
-    message.id = object.id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.id = object.id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     message.emoji_label = object.emoji_label ?? "";
     return message;
   },
 };
 
 function createBaseClanEmojiUpdateRequest(): ClanEmojiUpdateRequest {
-  return { id: "", shortname: "", clan_id: "" };
+  return { id: 0n, shortname: "", clan_id: 0n };
 }
 
 export const ClanEmojiUpdateRequest = {
   encode(message: ClanEmojiUpdateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.shortname !== "") {
       writer.uint32(18).string(message.shortname);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -24147,11 +25314,11 @@ export const ClanEmojiUpdateRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -24161,11 +25328,11 @@ export const ClanEmojiUpdateRequest = {
           message.shortname = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -24178,22 +25345,22 @@ export const ClanEmojiUpdateRequest = {
 
   fromJSON(object: any): ClanEmojiUpdateRequest {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
   toJSON(message: ClanEmojiUpdateRequest): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.shortname !== "") {
       obj.shortname = message.shortname;
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -24203,39 +25370,45 @@ export const ClanEmojiUpdateRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ClanEmojiUpdateRequest>, I>>(object: I): ClanEmojiUpdateRequest {
     const message = createBaseClanEmojiUpdateRequest();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.shortname = object.shortname ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseWebhook(): Webhook {
   return {
-    id: "",
+    id: 0n,
     webhook_name: "",
-    channel_id: "",
+    channel_id: 0n,
     active: 0,
     url: "",
-    creator_id: "",
+    creator_id: 0n,
     create_time: "",
     update_time: "",
     avatar: "",
     status: 0,
-    clan_id: "",
+    clan_id: 0n,
   };
 }
 
 export const Webhook = {
   encode(message: Webhook, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.webhook_name !== "") {
       writer.uint32(18).string(message.webhook_name);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.channel_id.toString());
     }
     if (message.active !== 0) {
       writer.uint32(32).int32(message.active);
@@ -24243,8 +25416,11 @@ export const Webhook = {
     if (message.url !== "") {
       writer.uint32(42).string(message.url);
     }
-    if (message.creator_id !== "") {
-      writer.uint32(50).string(message.creator_id);
+    if (message.creator_id !== 0n) {
+      if (BigInt.asIntN(64, message.creator_id) !== message.creator_id) {
+        throw new globalThis.Error("value provided for field message.creator_id of type int64 too large");
+      }
+      writer.uint32(48).int64(message.creator_id.toString());
     }
     if (message.create_time !== "") {
       writer.uint32(58).string(message.create_time);
@@ -24258,8 +25434,11 @@ export const Webhook = {
     if (message.status !== 0) {
       writer.uint32(80).int32(message.status);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(90).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(88).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -24272,11 +25451,11 @@ export const Webhook = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -24286,11 +25465,11 @@ export const Webhook = {
           message.webhook_name = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 32) {
@@ -24307,11 +25486,11 @@ export const Webhook = {
           message.url = reader.string();
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToBigint(reader.int64() as Long);
           continue;
         case 7:
           if (tag !== 58) {
@@ -24342,11 +25521,11 @@ export const Webhook = {
           message.status = reader.int32();
           continue;
         case 11:
-          if (tag !== 90) {
+          if (tag !== 88) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -24359,30 +25538,30 @@ export const Webhook = {
 
   fromJSON(object: any): Webhook {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       webhook_name: isSet(object.webhook_name) ? globalThis.String(object.webhook_name) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
       url: isSet(object.url) ? globalThis.String(object.url) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      creator_id: isSet(object.creator_id) ? BigInt(object.creator_id) : 0n,
       create_time: isSet(object.create_time) ? globalThis.String(object.create_time) : "",
       update_time: isSet(object.update_time) ? globalThis.String(object.update_time) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
   toJSON(message: Webhook): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.webhook_name !== "") {
       obj.webhook_name = message.webhook_name;
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.active !== 0) {
       obj.active = Math.round(message.active);
@@ -24390,8 +25569,8 @@ export const Webhook = {
     if (message.url !== "") {
       obj.url = message.url;
     }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
+    if (message.creator_id !== 0n) {
+      obj.creator_id = message.creator_id.toString();
     }
     if (message.create_time !== "") {
       obj.create_time = message.create_time;
@@ -24405,8 +25584,8 @@ export const Webhook = {
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -24416,23 +25595,23 @@ export const Webhook = {
   },
   fromPartial<I extends Exact<DeepPartial<Webhook>, I>>(object: I): Webhook {
     const message = createBaseWebhook();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.webhook_name = object.webhook_name ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     message.active = object.active ?? 0;
     message.url = object.url ?? "";
-    message.creator_id = object.creator_id ?? "";
+    message.creator_id = object.creator_id ?? 0n;
     message.create_time = object.create_time ?? "";
     message.update_time = object.update_time ?? "";
     message.avatar = object.avatar ?? "";
     message.status = object.status ?? 0;
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseWebhookCreateRequest(): WebhookCreateRequest {
-  return { webhook_name: "", channel_id: "", avatar: "", clan_id: "" };
+  return { webhook_name: "", channel_id: 0n, avatar: "", clan_id: 0n };
 }
 
 export const WebhookCreateRequest = {
@@ -24440,14 +25619,20 @@ export const WebhookCreateRequest = {
     if (message.webhook_name !== "") {
       writer.uint32(10).string(message.webhook_name);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     if (message.avatar !== "") {
       writer.uint32(26).string(message.avatar);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(34).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -24467,11 +25652,11 @@ export const WebhookCreateRequest = {
           message.webhook_name = reader.string();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -24481,11 +25666,11 @@ export const WebhookCreateRequest = {
           message.avatar = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -24499,9 +25684,9 @@ export const WebhookCreateRequest = {
   fromJSON(object: any): WebhookCreateRequest {
     return {
       webhook_name: isSet(object.webhook_name) ? globalThis.String(object.webhook_name) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
@@ -24510,14 +25695,14 @@ export const WebhookCreateRequest = {
     if (message.webhook_name !== "") {
       obj.webhook_name = message.webhook_name;
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -24528,21 +25713,24 @@ export const WebhookCreateRequest = {
   fromPartial<I extends Exact<DeepPartial<WebhookCreateRequest>, I>>(object: I): WebhookCreateRequest {
     const message = createBaseWebhookCreateRequest();
     message.webhook_name = object.webhook_name ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     message.avatar = object.avatar ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseWebhookListRequestById(): WebhookListRequestById {
-  return { id: "" };
+  return { id: 0n };
 }
 
 export const WebhookListRequestById = {
   encode(message: WebhookListRequestById, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     return writer;
   },
@@ -24555,11 +25743,11 @@ export const WebhookListRequestById = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -24571,13 +25759,13 @@ export const WebhookListRequestById = {
   },
 
   fromJSON(object: any): WebhookListRequestById {
-    return { id: isSet(object.id) ? globalThis.String(object.id) : "" };
+    return { id: isSet(object.id) ? BigInt(object.id) : 0n };
   },
 
   toJSON(message: WebhookListRequestById): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     return obj;
   },
@@ -24587,34 +25775,46 @@ export const WebhookListRequestById = {
   },
   fromPartial<I extends Exact<DeepPartial<WebhookListRequestById>, I>>(object: I): WebhookListRequestById {
     const message = createBaseWebhookListRequestById();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     return message;
   },
 };
 
 function createBaseWebhookUpdateRequestById(): WebhookUpdateRequestById {
-  return { id: "", webhook_name: "", channel_id_update: "", avatar: "", channel_id: "", clan_id: "" };
+  return { id: 0n, webhook_name: "", channel_id_update: 0n, avatar: "", channel_id: 0n, clan_id: 0n };
 }
 
 export const WebhookUpdateRequestById = {
   encode(message: WebhookUpdateRequestById, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.webhook_name !== "") {
       writer.uint32(18).string(message.webhook_name);
     }
-    if (message.channel_id_update !== "") {
-      writer.uint32(26).string(message.channel_id_update);
+    if (message.channel_id_update !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id_update) !== message.channel_id_update) {
+        throw new globalThis.Error("value provided for field message.channel_id_update of type int64 too large");
+      }
+      writer.uint32(24).int64(message.channel_id_update.toString());
     }
     if (message.avatar !== "") {
       writer.uint32(34).string(message.avatar);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(42).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.channel_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(50).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(48).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -24627,11 +25827,11 @@ export const WebhookUpdateRequestById = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -24641,11 +25841,11 @@ export const WebhookUpdateRequestById = {
           message.webhook_name = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.channel_id_update = reader.string();
+          message.channel_id_update = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -24655,18 +25855,18 @@ export const WebhookUpdateRequestById = {
           message.avatar = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -24679,34 +25879,34 @@ export const WebhookUpdateRequestById = {
 
   fromJSON(object: any): WebhookUpdateRequestById {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       webhook_name: isSet(object.webhook_name) ? globalThis.String(object.webhook_name) : "",
-      channel_id_update: isSet(object.channel_id_update) ? globalThis.String(object.channel_id_update) : "",
+      channel_id_update: isSet(object.channel_id_update) ? BigInt(object.channel_id_update) : 0n,
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
   toJSON(message: WebhookUpdateRequestById): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.webhook_name !== "") {
       obj.webhook_name = message.webhook_name;
     }
-    if (message.channel_id_update !== "") {
-      obj.channel_id_update = message.channel_id_update;
+    if (message.channel_id_update !== 0n) {
+      obj.channel_id_update = message.channel_id_update.toString();
     }
     if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -24716,30 +25916,39 @@ export const WebhookUpdateRequestById = {
   },
   fromPartial<I extends Exact<DeepPartial<WebhookUpdateRequestById>, I>>(object: I): WebhookUpdateRequestById {
     const message = createBaseWebhookUpdateRequestById();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.webhook_name = object.webhook_name ?? "";
-    message.channel_id_update = object.channel_id_update ?? "";
+    message.channel_id_update = object.channel_id_update ?? 0n;
     message.avatar = object.avatar ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseWebhookDeleteRequestById(): WebhookDeleteRequestById {
-  return { id: "", clan_id: "", channel_id: "" };
+  return { id: 0n, clan_id: 0n, channel_id: 0n };
 }
 
 export const WebhookDeleteRequestById = {
   encode(message: WebhookDeleteRequestById, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.channel_id.toString());
     }
     return writer;
   },
@@ -24752,25 +25961,25 @@ export const WebhookDeleteRequestById = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -24783,22 +25992,22 @@ export const WebhookDeleteRequestById = {
 
   fromJSON(object: any): WebhookDeleteRequestById {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
     };
   },
 
   toJSON(message: WebhookDeleteRequestById): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     return obj;
   },
@@ -24808,24 +26017,30 @@ export const WebhookDeleteRequestById = {
   },
   fromPartial<I extends Exact<DeepPartial<WebhookDeleteRequestById>, I>>(object: I): WebhookDeleteRequestById {
     const message = createBaseWebhookDeleteRequestById();
-    message.id = object.id ?? "";
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.id = object.id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     return message;
   },
 };
 
 function createBaseWebhookListRequest(): WebhookListRequest {
-  return { channel_id: "", clan_id: "" };
+  return { channel_id: 0n, clan_id: 0n };
 }
 
 export const WebhookListRequest = {
   encode(message: WebhookListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.channel_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -24838,18 +26053,18 @@ export const WebhookListRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -24862,18 +26077,18 @@ export const WebhookListRequest = {
 
   fromJSON(object: any): WebhookListRequest {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
   toJSON(message: WebhookListRequest): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -24883,8 +26098,8 @@ export const WebhookListRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<WebhookListRequest>, I>>(object: I): WebhookListRequest {
     const message = createBaseWebhookListRequest();
-    message.channel_id = object.channel_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
@@ -24949,7 +26164,7 @@ export const WebhookListResponse = {
 };
 
 function createBaseWebhookGenerateResponse(): WebhookGenerateResponse {
-  return { url: "", hook_name: "", channel_id: "", avatar: "" };
+  return { url: "", hook_name: "", channel_id: 0n, avatar: "" };
 }
 
 export const WebhookGenerateResponse = {
@@ -24960,8 +26175,11 @@ export const WebhookGenerateResponse = {
     if (message.hook_name !== "") {
       writer.uint32(18).string(message.hook_name);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.channel_id.toString());
     }
     if (message.avatar !== "") {
       writer.uint32(34).string(message.avatar);
@@ -24991,11 +26209,11 @@ export const WebhookGenerateResponse = {
           message.hook_name = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -25017,7 +26235,7 @@ export const WebhookGenerateResponse = {
     return {
       url: isSet(object.url) ? globalThis.String(object.url) : "",
       hook_name: isSet(object.hook_name) ? globalThis.String(object.hook_name) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
     };
   },
@@ -25030,8 +26248,8 @@ export const WebhookGenerateResponse = {
     if (message.hook_name !== "") {
       obj.hook_name = message.hook_name;
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.avatar !== "") {
       obj.avatar = message.avatar;
@@ -25046,14 +26264,14 @@ export const WebhookGenerateResponse = {
     const message = createBaseWebhookGenerateResponse();
     message.url = object.url ?? "";
     message.hook_name = object.hook_name ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     message.avatar = object.avatar ?? "";
     return message;
   },
 };
 
 function createBaseWebhookHandlerRequest(): WebhookHandlerRequest {
-  return { body: undefined, channel_id: "", token: "" };
+  return { body: undefined, channel_id: 0n, token: "" };
 }
 
 export const WebhookHandlerRequest = {
@@ -25061,8 +26279,11 @@ export const WebhookHandlerRequest = {
     if (message.body !== undefined) {
       Struct.encode(Struct.wrap(message.body), writer.uint32(10).fork()).ldelim();
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     if (message.token !== "") {
       writer.uint32(26).string(message.token);
@@ -25085,11 +26306,11 @@ export const WebhookHandlerRequest = {
           message.body = Struct.unwrap(Struct.decode(reader, reader.uint32()));
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -25110,7 +26331,7 @@ export const WebhookHandlerRequest = {
   fromJSON(object: any): WebhookHandlerRequest {
     return {
       body: isObject(object.body) ? object.body : undefined,
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       token: isSet(object.token) ? globalThis.String(object.token) : "",
     };
   },
@@ -25120,8 +26341,8 @@ export const WebhookHandlerRequest = {
     if (message.body !== undefined) {
       obj.body = message.body;
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.token !== "") {
       obj.token = message.token;
@@ -25135,7 +26356,7 @@ export const WebhookHandlerRequest = {
   fromPartial<I extends Exact<DeepPartial<WebhookHandlerRequest>, I>>(object: I): WebhookHandlerRequest {
     const message = createBaseWebhookHandlerRequest();
     message.body = object.body ?? undefined;
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     message.token = object.token ?? "";
     return message;
   },
@@ -25260,7 +26481,7 @@ export const CheckDuplicateClanNameResponse = {
 };
 
 function createBaseClanStickerAddRequest(): ClanStickerAddRequest {
-  return { source: "", shortname: "", category: "", clan_id: "", id: "", media_type: 0, is_for_sale: false };
+  return { source: "", shortname: "", category: "", clan_id: 0n, id: 0n, media_type: 0, is_for_sale: false };
 }
 
 export const ClanStickerAddRequest = {
@@ -25274,11 +26495,17 @@ export const ClanStickerAddRequest = {
     if (message.category !== "") {
       writer.uint32(26).string(message.category);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(34).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.clan_id.toString());
     }
-    if (message.id !== "") {
-      writer.uint32(42).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.id.toString());
     }
     if (message.media_type !== 0) {
       writer.uint32(48).int32(message.media_type);
@@ -25318,18 +26545,18 @@ export const ClanStickerAddRequest = {
           message.category = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 48) {
@@ -25359,8 +26586,8 @@ export const ClanStickerAddRequest = {
       source: isSet(object.source) ? globalThis.String(object.source) : "",
       shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
       category: isSet(object.category) ? globalThis.String(object.category) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       media_type: isSet(object.media_type) ? globalThis.Number(object.media_type) : 0,
       is_for_sale: isSet(object.is_for_sale) ? globalThis.Boolean(object.is_for_sale) : false,
     };
@@ -25377,11 +26604,11 @@ export const ClanStickerAddRequest = {
     if (message.category !== "") {
       obj.category = message.category;
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.media_type !== 0) {
       obj.media_type = Math.round(message.media_type);
@@ -25400,8 +26627,8 @@ export const ClanStickerAddRequest = {
     message.source = object.source ?? "";
     message.shortname = object.shortname ?? "";
     message.category = object.category ?? "";
-    message.clan_id = object.clan_id ?? "";
-    message.id = object.id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.id = object.id ?? 0n;
     message.media_type = object.media_type ?? 0;
     message.is_for_sale = object.is_for_sale ?? false;
     return message;
@@ -25409,13 +26636,16 @@ export const ClanStickerAddRequest = {
 };
 
 function createBaseClanStickerListByClanIdRequest(): ClanStickerListByClanIdRequest {
-  return { clan_id: "" };
+  return { clan_id: 0n };
 }
 
 export const ClanStickerListByClanIdRequest = {
   encode(message: ClanStickerListByClanIdRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -25428,11 +26658,11 @@ export const ClanStickerListByClanIdRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -25444,13 +26674,13 @@ export const ClanStickerListByClanIdRequest = {
   },
 
   fromJSON(object: any): ClanStickerListByClanIdRequest {
-    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+    return { clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n };
   },
 
   toJSON(message: ClanStickerListByClanIdRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -25462,19 +26692,22 @@ export const ClanStickerListByClanIdRequest = {
     object: I,
   ): ClanStickerListByClanIdRequest {
     const message = createBaseClanStickerListByClanIdRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseClanStickerUpdateByIdRequest(): ClanStickerUpdateByIdRequest {
-  return { id: "", source: "", shortname: "", category: "", clan_id: "" };
+  return { id: 0n, source: "", shortname: "", category: "", clan_id: 0n };
 }
 
 export const ClanStickerUpdateByIdRequest = {
   encode(message: ClanStickerUpdateByIdRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.source !== "") {
       writer.uint32(18).string(message.source);
@@ -25485,8 +26718,11 @@ export const ClanStickerUpdateByIdRequest = {
     if (message.category !== "") {
       writer.uint32(34).string(message.category);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(42).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -25499,11 +26735,11 @@ export const ClanStickerUpdateByIdRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -25527,11 +26763,11 @@ export const ClanStickerUpdateByIdRequest = {
           message.category = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -25544,18 +26780,18 @@ export const ClanStickerUpdateByIdRequest = {
 
   fromJSON(object: any): ClanStickerUpdateByIdRequest {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       source: isSet(object.source) ? globalThis.String(object.source) : "",
       shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
       category: isSet(object.category) ? globalThis.String(object.category) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
   toJSON(message: ClanStickerUpdateByIdRequest): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.source !== "") {
       obj.source = message.source;
@@ -25566,8 +26802,8 @@ export const ClanStickerUpdateByIdRequest = {
     if (message.category !== "") {
       obj.category = message.category;
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -25577,26 +26813,32 @@ export const ClanStickerUpdateByIdRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ClanStickerUpdateByIdRequest>, I>>(object: I): ClanStickerUpdateByIdRequest {
     const message = createBaseClanStickerUpdateByIdRequest();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.source = object.source ?? "";
     message.shortname = object.shortname ?? "";
     message.category = object.category ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseClanStickerDeleteRequest(): ClanStickerDeleteRequest {
-  return { id: "", clan_id: "", sticker_label: "" };
+  return { id: 0n, clan_id: 0n, sticker_label: "" };
 }
 
 export const ClanStickerDeleteRequest = {
   encode(message: ClanStickerDeleteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.clan_id.toString());
     }
     if (message.sticker_label !== "") {
       writer.uint32(26).string(message.sticker_label);
@@ -25612,18 +26854,18 @@ export const ClanStickerDeleteRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -25643,19 +26885,19 @@ export const ClanStickerDeleteRequest = {
 
   fromJSON(object: any): ClanStickerDeleteRequest {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       sticker_label: isSet(object.sticker_label) ? globalThis.String(object.sticker_label) : "",
     };
   },
 
   toJSON(message: ClanStickerDeleteRequest): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.sticker_label !== "") {
       obj.sticker_label = message.sticker_label;
@@ -25668,27 +26910,36 @@ export const ClanStickerDeleteRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ClanStickerDeleteRequest>, I>>(object: I): ClanStickerDeleteRequest {
     const message = createBaseClanStickerDeleteRequest();
-    message.id = object.id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.id = object.id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     message.sticker_label = object.sticker_label ?? "";
     return message;
   },
 };
 
 function createBaseChangeChannelCategoryRequest(): ChangeChannelCategoryRequest {
-  return { clan_id: "", channel_id: "", new_category_id: "" };
+  return { clan_id: 0n, channel_id: 0n, new_category_id: 0n };
 }
 
 export const ChangeChannelCategoryRequest = {
   encode(message: ChangeChannelCategoryRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
-    if (message.new_category_id !== "") {
-      writer.uint32(26).string(message.new_category_id);
+    if (message.new_category_id !== 0n) {
+      if (BigInt.asIntN(64, message.new_category_id) !== message.new_category_id) {
+        throw new globalThis.Error("value provided for field message.new_category_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.new_category_id.toString());
     }
     return writer;
   },
@@ -25701,25 +26952,25 @@ export const ChangeChannelCategoryRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.new_category_id = reader.string();
+          message.new_category_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -25732,22 +26983,22 @@ export const ChangeChannelCategoryRequest = {
 
   fromJSON(object: any): ChangeChannelCategoryRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      new_category_id: isSet(object.new_category_id) ? globalThis.String(object.new_category_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      new_category_id: isSet(object.new_category_id) ? BigInt(object.new_category_id) : 0n,
     };
   },
 
   toJSON(message: ChangeChannelCategoryRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.new_category_id !== "") {
-      obj.new_category_id = message.new_category_id;
+    if (message.new_category_id !== 0n) {
+      obj.new_category_id = message.new_category_id.toString();
     }
     return obj;
   },
@@ -25757,18 +27008,18 @@ export const ChangeChannelCategoryRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ChangeChannelCategoryRequest>, I>>(object: I): ChangeChannelCategoryRequest {
     const message = createBaseChangeChannelCategoryRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.new_category_id = object.new_category_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
+    message.new_category_id = object.new_category_id ?? 0n;
     return message;
   },
 };
 
 function createBaseApp(): App {
   return {
-    id: "",
+    id: 0n,
     appname: "",
-    creator_id: "",
+    creator_id: 0n,
     applogo: "",
     is_shadow: false,
     disable_time_seconds: 0,
@@ -25782,14 +27033,20 @@ function createBaseApp(): App {
 
 export const App = {
   encode(message: App, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.appname !== "") {
       writer.uint32(18).string(message.appname);
     }
-    if (message.creator_id !== "") {
-      writer.uint32(26).string(message.creator_id);
+    if (message.creator_id !== 0n) {
+      if (BigInt.asIntN(64, message.creator_id) !== message.creator_id) {
+        throw new globalThis.Error("value provided for field message.creator_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.creator_id.toString());
     }
     if (message.applogo !== "") {
       writer.uint32(34).string(message.applogo);
@@ -25826,11 +27083,11 @@ export const App = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -25840,11 +27097,11 @@ export const App = {
           message.appname = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -25913,9 +27170,9 @@ export const App = {
 
   fromJSON(object: any): App {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       appname: isSet(object.appname) ? globalThis.String(object.appname) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      creator_id: isSet(object.creator_id) ? BigInt(object.creator_id) : 0n,
       applogo: isSet(object.applogo) ? globalThis.String(object.applogo) : "",
       is_shadow: isSet(object.is_shadow) ? globalThis.Boolean(object.is_shadow) : false,
       disable_time_seconds: isSet(object.disable_time_seconds) ? globalThis.Number(object.disable_time_seconds) : 0,
@@ -25929,14 +27186,14 @@ export const App = {
 
   toJSON(message: App): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.appname !== "") {
       obj.appname = message.appname;
     }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
+    if (message.creator_id !== 0n) {
+      obj.creator_id = message.creator_id.toString();
     }
     if (message.applogo !== "") {
       obj.applogo = message.applogo;
@@ -25970,9 +27227,9 @@ export const App = {
   },
   fromPartial<I extends Exact<DeepPartial<App>, I>>(object: I): App {
     const message = createBaseApp();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.appname = object.appname ?? "";
-    message.creator_id = object.creator_id ?? "";
+    message.creator_id = object.creator_id ?? 0n;
     message.applogo = object.applogo ?? "";
     message.is_shadow = object.is_shadow ?? false;
     message.disable_time_seconds = object.disable_time_seconds ?? 0;
@@ -25986,13 +27243,16 @@ export const App = {
 };
 
 function createBaseAppDeleteRequest(): AppDeleteRequest {
-  return { id: "", record_deletion: undefined };
+  return { id: 0n, record_deletion: undefined };
 }
 
 export const AppDeleteRequest = {
   encode(message: AppDeleteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.record_deletion !== undefined) {
       BoolValue.encode({ value: message.record_deletion! }, writer.uint32(18).fork()).ldelim();
@@ -26008,11 +27268,11 @@ export const AppDeleteRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -26032,15 +27292,15 @@ export const AppDeleteRequest = {
 
   fromJSON(object: any): AppDeleteRequest {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       record_deletion: isSet(object.record_deletion) ? Boolean(object.record_deletion) : undefined,
     };
   },
 
   toJSON(message: AppDeleteRequest): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.record_deletion !== undefined) {
       obj.record_deletion = message.record_deletion;
@@ -26053,7 +27313,7 @@ export const AppDeleteRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<AppDeleteRequest>, I>>(object: I): AppDeleteRequest {
     const message = createBaseAppDeleteRequest();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.record_deletion = object.record_deletion ?? undefined;
     return message;
   },
@@ -26149,7 +27409,7 @@ export const AppList = {
 };
 
 function createBaseAddAppRequest(): AddAppRequest {
-  return { appname: "", token: "", creator_id: "", role: 0, is_shadow: false, app_url: "", app_logo: "", about_me: "" };
+  return { appname: "", token: "", creator_id: 0n, role: 0, is_shadow: false, app_url: "", app_logo: "", about_me: "" };
 }
 
 export const AddAppRequest = {
@@ -26160,8 +27420,11 @@ export const AddAppRequest = {
     if (message.token !== "") {
       writer.uint32(18).string(message.token);
     }
-    if (message.creator_id !== "") {
-      writer.uint32(26).string(message.creator_id);
+    if (message.creator_id !== 0n) {
+      if (BigInt.asIntN(64, message.creator_id) !== message.creator_id) {
+        throw new globalThis.Error("value provided for field message.creator_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.creator_id.toString());
     }
     if (message.role !== 0) {
       writer.uint32(32).int32(message.role);
@@ -26203,11 +27466,11 @@ export const AddAppRequest = {
           message.token = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 32) {
@@ -26257,7 +27520,7 @@ export const AddAppRequest = {
     return {
       appname: isSet(object.appname) ? globalThis.String(object.appname) : "",
       token: isSet(object.token) ? globalThis.String(object.token) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      creator_id: isSet(object.creator_id) ? BigInt(object.creator_id) : 0n,
       role: isSet(object.role) ? globalThis.Number(object.role) : 0,
       is_shadow: isSet(object.is_shadow) ? globalThis.Boolean(object.is_shadow) : false,
       app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
@@ -26274,8 +27537,8 @@ export const AddAppRequest = {
     if (message.token !== "") {
       obj.token = message.token;
     }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
+    if (message.creator_id !== 0n) {
+      obj.creator_id = message.creator_id.toString();
     }
     if (message.role !== 0) {
       obj.role = Math.round(message.role);
@@ -26302,7 +27565,7 @@ export const AddAppRequest = {
     const message = createBaseAddAppRequest();
     message.appname = object.appname ?? "";
     message.token = object.token ?? "";
-    message.creator_id = object.creator_id ?? "";
+    message.creator_id = object.creator_id ?? 0n;
     message.role = object.role ?? 0;
     message.is_shadow = object.is_shadow ?? false;
     message.app_url = object.app_url ?? "";
@@ -26403,7 +27666,7 @@ export const ListAppsRequest = {
 
 function createBaseUpdateAppRequest(): UpdateAppRequest {
   return {
-    id: "",
+    id: 0n,
     appname: undefined,
     metadata: undefined,
     applogo: undefined,
@@ -26416,8 +27679,11 @@ function createBaseUpdateAppRequest(): UpdateAppRequest {
 
 export const UpdateAppRequest = {
   encode(message: UpdateAppRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.appname !== undefined) {
       StringValue.encode({ value: message.appname! }, writer.uint32(18).fork()).ldelim();
@@ -26451,11 +27717,11 @@ export const UpdateAppRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -26517,7 +27783,7 @@ export const UpdateAppRequest = {
 
   fromJSON(object: any): UpdateAppRequest {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       appname: isSet(object.appname) ? String(object.appname) : undefined,
       metadata: isSet(object.metadata) ? String(object.metadata) : undefined,
       applogo: isSet(object.applogo) ? String(object.applogo) : undefined,
@@ -26530,8 +27796,8 @@ export const UpdateAppRequest = {
 
   toJSON(message: UpdateAppRequest): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.appname !== undefined) {
       obj.appname = message.appname;
@@ -26562,7 +27828,7 @@ export const UpdateAppRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<UpdateAppRequest>, I>>(object: I): UpdateAppRequest {
     const message = createBaseUpdateAppRequest();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.appname = object.appname ?? undefined;
     message.metadata = object.metadata ?? undefined;
     message.applogo = object.applogo ?? undefined;
@@ -26575,13 +27841,16 @@ export const UpdateAppRequest = {
 };
 
 function createBaseAppId(): AppId {
-  return { id: "" };
+  return { id: 0n };
 }
 
 export const AppId = {
   encode(message: AppId, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     return writer;
   },
@@ -26594,11 +27863,11 @@ export const AppId = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -26610,13 +27879,13 @@ export const AppId = {
   },
 
   fromJSON(object: any): AppId {
-    return { id: isSet(object.id) ? globalThis.String(object.id) : "" };
+    return { id: isSet(object.id) ? BigInt(object.id) : 0n };
   },
 
   toJSON(message: AppId): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     return obj;
   },
@@ -26626,22 +27895,28 @@ export const AppId = {
   },
   fromPartial<I extends Exact<DeepPartial<AppId>, I>>(object: I): AppId {
     const message = createBaseAppId();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     return message;
   },
 };
 
 function createBaseAppClan(): AppClan {
-  return { app_id: "", clan_id: "" };
+  return { app_id: 0n, clan_id: 0n };
 }
 
 export const AppClan = {
   encode(message: AppClan, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.app_id !== "") {
-      writer.uint32(10).string(message.app_id);
+    if (message.app_id !== 0n) {
+      if (BigInt.asIntN(64, message.app_id) !== message.app_id) {
+        throw new globalThis.Error("value provided for field message.app_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.app_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -26654,18 +27929,18 @@ export const AppClan = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.app_id = reader.string();
+          message.app_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -26678,18 +27953,18 @@ export const AppClan = {
 
   fromJSON(object: any): AppClan {
     return {
-      app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      app_id: isSet(object.app_id) ? BigInt(object.app_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
   toJSON(message: AppClan): unknown {
     const obj: any = {};
-    if (message.app_id !== "") {
-      obj.app_id = message.app_id;
+    if (message.app_id !== 0n) {
+      obj.app_id = message.app_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -26699,8 +27974,8 @@ export const AppClan = {
   },
   fromPartial<I extends Exact<DeepPartial<AppClan>, I>>(object: I): AppClan {
     const message = createBaseAppClan();
-    message.app_id = object.app_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.app_id = object.app_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
@@ -26714,9 +27989,14 @@ export const DeleteChannelMessagesRequest = {
     if (message.before_seconds !== 0) {
       writer.uint32(8).uint32(message.before_seconds);
     }
+    writer.uint32(18).fork();
     for (const v of message.ids) {
-      writer.uint32(18).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -26735,12 +28015,22 @@ export const DeleteChannelMessagesRequest = {
           message.before_seconds = reader.uint32();
           continue;
         case 2:
-          if (tag !== 18) {
-            break;
+          if (tag === 16) {
+            message.ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.ids.push(reader.string());
-          continue;
+          if (tag === 18) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -26753,7 +28043,7 @@ export const DeleteChannelMessagesRequest = {
   fromJSON(object: any): DeleteChannelMessagesRequest {
     return {
       before_seconds: isSet(object.before_seconds) ? globalThis.Number(object.before_seconds) : 0,
-      ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => globalThis.String(e)) : [],
+      ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => BigInt(e)) : [],
     };
   },
 
@@ -26763,7 +28053,7 @@ export const DeleteChannelMessagesRequest = {
       obj.before_seconds = Math.round(message.before_seconds);
     }
     if (message.ids?.length) {
-      obj.ids = message.ids;
+      obj.ids = message.ids.map((e) => e.toString());
     }
     return obj;
   },
@@ -26780,13 +28070,16 @@ export const DeleteChannelMessagesRequest = {
 };
 
 function createBaseDeleteChannelMessagesResponse(): DeleteChannelMessagesResponse {
-  return { total: 0 };
+  return { total: 0n };
 }
 
 export const DeleteChannelMessagesResponse = {
   encode(message: DeleteChannelMessagesResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.total !== 0) {
-      writer.uint32(8).int64(message.total);
+    if (message.total !== 0n) {
+      if (BigInt.asIntN(64, message.total) !== message.total) {
+        throw new globalThis.Error("value provided for field message.total of type int64 too large");
+      }
+      writer.uint32(8).int64(message.total.toString());
     }
     return writer;
   },
@@ -26803,7 +28096,7 @@ export const DeleteChannelMessagesResponse = {
             break;
           }
 
-          message.total = longToNumber(reader.int64() as Long);
+          message.total = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -26815,13 +28108,13 @@ export const DeleteChannelMessagesResponse = {
   },
 
   fromJSON(object: any): DeleteChannelMessagesResponse {
-    return { total: isSet(object.total) ? globalThis.Number(object.total) : 0 };
+    return { total: isSet(object.total) ? BigInt(object.total) : 0n };
   },
 
   toJSON(message: DeleteChannelMessagesResponse): unknown {
     const obj: any = {};
-    if (message.total !== 0) {
-      obj.total = Math.round(message.total);
+    if (message.total !== 0n) {
+      obj.total = message.total.toString();
     }
     return obj;
   },
@@ -26833,16 +28126,16 @@ export const DeleteChannelMessagesResponse = {
     object: I,
   ): DeleteChannelMessagesResponse {
     const message = createBaseDeleteChannelMessagesResponse();
-    message.total = object.total ?? 0;
+    message.total = object.total ?? 0n;
     return message;
   },
 };
 
 function createBaseSystemMessage(): SystemMessage {
   return {
-    id: "",
-    clan_id: "",
-    channel_id: "",
+    id: 0n,
+    clan_id: 0n,
+    channel_id: 0n,
     welcome_random: "",
     welcome_sticker: "",
     boost_message: "",
@@ -26853,14 +28146,23 @@ function createBaseSystemMessage(): SystemMessage {
 
 export const SystemMessage = {
   encode(message: SystemMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.channel_id.toString());
     }
     if (message.welcome_random !== "") {
       writer.uint32(34).string(message.welcome_random);
@@ -26888,25 +28190,25 @@ export const SystemMessage = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -26954,9 +28256,9 @@ export const SystemMessage = {
 
   fromJSON(object: any): SystemMessage {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       welcome_random: isSet(object.welcome_random) ? globalThis.String(object.welcome_random) : "",
       welcome_sticker: isSet(object.welcome_sticker) ? globalThis.String(object.welcome_sticker) : "",
       boost_message: isSet(object.boost_message) ? globalThis.String(object.boost_message) : "",
@@ -26967,14 +28269,14 @@ export const SystemMessage = {
 
   toJSON(message: SystemMessage): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.welcome_random !== "") {
       obj.welcome_random = message.welcome_random;
@@ -26999,9 +28301,9 @@ export const SystemMessage = {
   },
   fromPartial<I extends Exact<DeepPartial<SystemMessage>, I>>(object: I): SystemMessage {
     const message = createBaseSystemMessage();
-    message.id = object.id ?? "";
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.id = object.id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     message.welcome_random = object.welcome_random ?? "";
     message.welcome_sticker = object.welcome_sticker ?? "";
     message.boost_message = object.boost_message ?? "";
@@ -27074,8 +28376,8 @@ export const SystemMessagesList = {
 
 function createBaseSystemMessageRequest(): SystemMessageRequest {
   return {
-    clan_id: "",
-    channel_id: "",
+    clan_id: 0n,
+    channel_id: 0n,
     welcome_random: "",
     welcome_sticker: "",
     boost_message: "",
@@ -27086,11 +28388,17 @@ function createBaseSystemMessageRequest(): SystemMessageRequest {
 
 export const SystemMessageRequest = {
   encode(message: SystemMessageRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     if (message.welcome_random !== "") {
       writer.uint32(26).string(message.welcome_random);
@@ -27118,18 +28426,18 @@ export const SystemMessageRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -27177,8 +28485,8 @@ export const SystemMessageRequest = {
 
   fromJSON(object: any): SystemMessageRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       welcome_random: isSet(object.welcome_random) ? globalThis.String(object.welcome_random) : "",
       welcome_sticker: isSet(object.welcome_sticker) ? globalThis.String(object.welcome_sticker) : "",
       boost_message: isSet(object.boost_message) ? globalThis.String(object.boost_message) : "",
@@ -27189,11 +28497,11 @@ export const SystemMessageRequest = {
 
   toJSON(message: SystemMessageRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.welcome_random !== "") {
       obj.welcome_random = message.welcome_random;
@@ -27218,8 +28526,8 @@ export const SystemMessageRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<SystemMessageRequest>, I>>(object: I): SystemMessageRequest {
     const message = createBaseSystemMessageRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     message.welcome_random = object.welcome_random ?? "";
     message.welcome_sticker = object.welcome_sticker ?? "";
     message.boost_message = object.boost_message ?? "";
@@ -27230,13 +28538,16 @@ export const SystemMessageRequest = {
 };
 
 function createBaseDeleteSystemMessage(): DeleteSystemMessage {
-  return { clan_id: "" };
+  return { clan_id: 0n };
 }
 
 export const DeleteSystemMessage = {
   encode(message: DeleteSystemMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -27249,11 +28560,11 @@ export const DeleteSystemMessage = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -27265,13 +28576,13 @@ export const DeleteSystemMessage = {
   },
 
   fromJSON(object: any): DeleteSystemMessage {
-    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+    return { clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n };
   },
 
   toJSON(message: DeleteSystemMessage): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -27281,19 +28592,22 @@ export const DeleteSystemMessage = {
   },
   fromPartial<I extends Exact<DeepPartial<DeleteSystemMessage>, I>>(object: I): DeleteSystemMessage {
     const message = createBaseDeleteSystemMessage();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseGetSystemMessage(): GetSystemMessage {
-  return { clan_id: "" };
+  return { clan_id: 0n };
 }
 
 export const GetSystemMessage = {
   encode(message: GetSystemMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -27306,11 +28620,11 @@ export const GetSystemMessage = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -27322,13 +28636,13 @@ export const GetSystemMessage = {
   },
 
   fromJSON(object: any): GetSystemMessage {
-    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+    return { clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n };
   },
 
   toJSON(message: GetSystemMessage): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -27338,19 +28652,22 @@ export const GetSystemMessage = {
   },
   fromPartial<I extends Exact<DeepPartial<GetSystemMessage>, I>>(object: I): GetSystemMessage {
     const message = createBaseGetSystemMessage();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseDeleteCategoryOrderRequest(): DeleteCategoryOrderRequest {
-  return { clan_id: "" };
+  return { clan_id: 0n };
 }
 
 export const DeleteCategoryOrderRequest = {
   encode(message: DeleteCategoryOrderRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -27363,11 +28680,11 @@ export const DeleteCategoryOrderRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -27379,13 +28696,13 @@ export const DeleteCategoryOrderRequest = {
   },
 
   fromJSON(object: any): DeleteCategoryOrderRequest {
-    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+    return { clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n };
   },
 
   toJSON(message: DeleteCategoryOrderRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -27395,31 +28712,46 @@ export const DeleteCategoryOrderRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<DeleteCategoryOrderRequest>, I>>(object: I): DeleteCategoryOrderRequest {
     const message = createBaseDeleteCategoryOrderRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseStreamHttpCallbackRequest(): StreamHttpCallbackRequest {
-  return { id: "", client_id: "", clan_id: "", channel_id: "", user_id: "", action: 0, is_publisher: false, token: "" };
+  return { id: 0n, client_id: 0n, clan_id: 0n, channel_id: 0n, user_id: 0n, action: 0, is_publisher: false, token: "" };
 }
 
 export const StreamHttpCallbackRequest = {
   encode(message: StreamHttpCallbackRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.client_id !== "") {
-      writer.uint32(18).string(message.client_id);
+    if (message.client_id !== 0n) {
+      if (BigInt.asIntN(64, message.client_id) !== message.client_id) {
+        throw new globalThis.Error("value provided for field message.client_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.client_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(34).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.channel_id.toString());
     }
-    if (message.user_id !== "") {
-      writer.uint32(42).string(message.user_id);
+    if (message.user_id !== 0n) {
+      if (BigInt.asIntN(64, message.user_id) !== message.user_id) {
+        throw new globalThis.Error("value provided for field message.user_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.user_id.toString());
     }
     if (message.action !== 0) {
       writer.uint32(48).int32(message.action);
@@ -27441,39 +28773,39 @@ export const StreamHttpCallbackRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.client_id = reader.string();
+          message.client_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 48) {
@@ -27507,11 +28839,11 @@ export const StreamHttpCallbackRequest = {
 
   fromJSON(object: any): StreamHttpCallbackRequest {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      client_id: isSet(object.client_id) ? globalThis.String(object.client_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      client_id: isSet(object.client_id) ? BigInt(object.client_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      user_id: isSet(object.user_id) ? BigInt(object.user_id) : 0n,
       action: isSet(object.action) ? globalThis.Number(object.action) : 0,
       is_publisher: isSet(object.is_publisher) ? globalThis.Boolean(object.is_publisher) : false,
       token: isSet(object.token) ? globalThis.String(object.token) : "",
@@ -27520,20 +28852,20 @@ export const StreamHttpCallbackRequest = {
 
   toJSON(message: StreamHttpCallbackRequest): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.client_id !== "") {
-      obj.client_id = message.client_id;
+    if (message.client_id !== 0n) {
+      obj.client_id = message.client_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
+    if (message.user_id !== 0n) {
+      obj.user_id = message.user_id.toString();
     }
     if (message.action !== 0) {
       obj.action = Math.round(message.action);
@@ -27552,11 +28884,11 @@ export const StreamHttpCallbackRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<StreamHttpCallbackRequest>, I>>(object: I): StreamHttpCallbackRequest {
     const message = createBaseStreamHttpCallbackRequest();
-    message.id = object.id ?? "";
-    message.client_id = object.client_id ?? "";
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.user_id = object.user_id ?? "";
+    message.id = object.id ?? 0n;
+    message.client_id = object.client_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
+    message.user_id = object.user_id ?? 0n;
     message.action = object.action ?? 0;
     message.is_publisher = object.is_publisher ?? false;
     message.token = object.token ?? "";
@@ -27639,19 +28971,28 @@ export const StreamHttpCallbackResponse = {
 };
 
 function createBaseStreamingChannelUser(): StreamingChannelUser {
-  return { id: "", user_id: "", channel_id: "", participant: "" };
+  return { id: 0n, user_id: 0n, channel_id: 0n, participant: "" };
 }
 
 export const StreamingChannelUser = {
   encode(message: StreamingChannelUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.user_id !== "") {
-      writer.uint32(18).string(message.user_id);
+    if (message.user_id !== 0n) {
+      if (BigInt.asIntN(64, message.user_id) !== message.user_id) {
+        throw new globalThis.Error("value provided for field message.user_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.user_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.channel_id.toString());
     }
     if (message.participant !== "") {
       writer.uint32(34).string(message.participant);
@@ -27667,25 +29008,25 @@ export const StreamingChannelUser = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -27705,23 +29046,23 @@ export const StreamingChannelUser = {
 
   fromJSON(object: any): StreamingChannelUser {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      user_id: isSet(object.user_id) ? BigInt(object.user_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       participant: isSet(object.participant) ? globalThis.String(object.participant) : "",
     };
   },
 
   toJSON(message: StreamingChannelUser): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
+    if (message.user_id !== 0n) {
+      obj.user_id = message.user_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.participant !== "") {
       obj.participant = message.participant;
@@ -27734,9 +29075,9 @@ export const StreamingChannelUser = {
   },
   fromPartial<I extends Exact<DeepPartial<StreamingChannelUser>, I>>(object: I): StreamingChannelUser {
     const message = createBaseStreamingChannelUser();
-    message.id = object.id ?? "";
-    message.user_id = object.user_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.id = object.id ?? 0n;
+    message.user_id = object.user_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     message.participant = object.participant ?? "";
     return message;
   },
@@ -27805,16 +29146,22 @@ export const StreamingChannelUserList = {
 };
 
 function createBaseRegisterStreamingChannelRequest(): RegisterStreamingChannelRequest {
-  return { clan_id: "", channel_id: "" };
+  return { clan_id: 0n, channel_id: 0n };
 }
 
 export const RegisterStreamingChannelRequest = {
   encode(message: RegisterStreamingChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     return writer;
   },
@@ -27827,18 +29174,18 @@ export const RegisterStreamingChannelRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -27851,18 +29198,18 @@ export const RegisterStreamingChannelRequest = {
 
   fromJSON(object: any): RegisterStreamingChannelRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
     };
   },
 
   toJSON(message: RegisterStreamingChannelRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     return obj;
   },
@@ -27874,23 +29221,29 @@ export const RegisterStreamingChannelRequest = {
     object: I,
   ): RegisterStreamingChannelRequest {
     const message = createBaseRegisterStreamingChannelRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     return message;
   },
 };
 
 function createBaseRegisterStreamingChannelResponse(): RegisterStreamingChannelResponse {
-  return { clan_id: "", channel_id: "", streaming_url: "" };
+  return { clan_id: 0n, channel_id: 0n, streaming_url: "" };
 }
 
 export const RegisterStreamingChannelResponse = {
   encode(message: RegisterStreamingChannelResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     if (message.streaming_url !== "") {
       writer.uint32(26).string(message.streaming_url);
@@ -27906,18 +29259,18 @@ export const RegisterStreamingChannelResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -27937,19 +29290,19 @@ export const RegisterStreamingChannelResponse = {
 
   fromJSON(object: any): RegisterStreamingChannelResponse {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       streaming_url: isSet(object.streaming_url) ? globalThis.String(object.streaming_url) : "",
     };
   },
 
   toJSON(message: RegisterStreamingChannelResponse): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.streaming_url !== "") {
       obj.streaming_url = message.streaming_url;
@@ -27966,36 +29319,51 @@ export const RegisterStreamingChannelResponse = {
     object: I,
   ): RegisterStreamingChannelResponse {
     const message = createBaseRegisterStreamingChannelResponse();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     message.streaming_url = object.streaming_url ?? "";
     return message;
   },
 };
 
 function createBaseGiveCoffeeEvent(): GiveCoffeeEvent {
-  return { sender_id: "", receiver_id: "", token_count: 0, message_ref_id: "", channel_id: "", clan_id: "" };
+  return { sender_id: 0n, receiver_id: 0n, token_count: 0, message_ref_id: 0n, channel_id: 0n, clan_id: 0n };
 }
 
 export const GiveCoffeeEvent = {
   encode(message: GiveCoffeeEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.sender_id !== "") {
-      writer.uint32(10).string(message.sender_id);
+    if (message.sender_id !== 0n) {
+      if (BigInt.asIntN(64, message.sender_id) !== message.sender_id) {
+        throw new globalThis.Error("value provided for field message.sender_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.sender_id.toString());
     }
-    if (message.receiver_id !== "") {
-      writer.uint32(18).string(message.receiver_id);
+    if (message.receiver_id !== 0n) {
+      if (BigInt.asIntN(64, message.receiver_id) !== message.receiver_id) {
+        throw new globalThis.Error("value provided for field message.receiver_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.receiver_id.toString());
     }
     if (message.token_count !== 0) {
       writer.uint32(24).int32(message.token_count);
     }
-    if (message.message_ref_id !== "") {
-      writer.uint32(34).string(message.message_ref_id);
+    if (message.message_ref_id !== 0n) {
+      if (BigInt.asIntN(64, message.message_ref_id) !== message.message_ref_id) {
+        throw new globalThis.Error("value provided for field message.message_ref_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.message_ref_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(42).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.channel_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(50).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(48).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -28008,18 +29376,18 @@ export const GiveCoffeeEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.sender_id = reader.string();
+          message.sender_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.receiver_id = reader.string();
+          message.receiver_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 24) {
@@ -28029,25 +29397,25 @@ export const GiveCoffeeEvent = {
           message.token_count = reader.int32();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.message_ref_id = reader.string();
+          message.message_ref_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -28060,34 +29428,34 @@ export const GiveCoffeeEvent = {
 
   fromJSON(object: any): GiveCoffeeEvent {
     return {
-      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
-      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
+      sender_id: isSet(object.sender_id) ? BigInt(object.sender_id) : 0n,
+      receiver_id: isSet(object.receiver_id) ? BigInt(object.receiver_id) : 0n,
       token_count: isSet(object.token_count) ? globalThis.Number(object.token_count) : 0,
-      message_ref_id: isSet(object.message_ref_id) ? globalThis.String(object.message_ref_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      message_ref_id: isSet(object.message_ref_id) ? BigInt(object.message_ref_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
   toJSON(message: GiveCoffeeEvent): unknown {
     const obj: any = {};
-    if (message.sender_id !== "") {
-      obj.sender_id = message.sender_id;
+    if (message.sender_id !== 0n) {
+      obj.sender_id = message.sender_id.toString();
     }
-    if (message.receiver_id !== "") {
-      obj.receiver_id = message.receiver_id;
+    if (message.receiver_id !== 0n) {
+      obj.receiver_id = message.receiver_id.toString();
     }
     if (message.token_count !== 0) {
       obj.token_count = Math.round(message.token_count);
     }
-    if (message.message_ref_id !== "") {
-      obj.message_ref_id = message.message_ref_id;
+    if (message.message_ref_id !== 0n) {
+      obj.message_ref_id = message.message_ref_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -28097,24 +29465,27 @@ export const GiveCoffeeEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<GiveCoffeeEvent>, I>>(object: I): GiveCoffeeEvent {
     const message = createBaseGiveCoffeeEvent();
-    message.sender_id = object.sender_id ?? "";
-    message.receiver_id = object.receiver_id ?? "";
+    message.sender_id = object.sender_id ?? 0n;
+    message.receiver_id = object.receiver_id ?? 0n;
     message.token_count = object.token_count ?? 0;
-    message.message_ref_id = object.message_ref_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.message_ref_id = object.message_ref_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseListChannelAppsRequest(): ListChannelAppsRequest {
-  return { clan_id: "" };
+  return { clan_id: 0n };
 }
 
 export const ListChannelAppsRequest = {
   encode(message: ListChannelAppsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -28127,11 +29498,11 @@ export const ListChannelAppsRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -28143,13 +29514,13 @@ export const ListChannelAppsRequest = {
   },
 
   fromJSON(object: any): ListChannelAppsRequest {
-    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+    return { clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n };
   },
 
   toJSON(message: ListChannelAppsRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -28159,7 +29530,7 @@ export const ListChannelAppsRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListChannelAppsRequest>, I>>(object: I): ListChannelAppsRequest {
     const message = createBaseListChannelAppsRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
@@ -28226,22 +29597,34 @@ export const ListChannelAppsResponse = {
 };
 
 function createBaseChannelAppResponse(): ChannelAppResponse {
-  return { id: "", clan_id: "", channel_id: "", app_id: "", app_url: "", app_name: "", app_logo: "" };
+  return { id: 0n, clan_id: 0n, channel_id: 0n, app_id: 0n, app_url: "", app_name: "", app_logo: "" };
 }
 
 export const ChannelAppResponse = {
   encode(message: ChannelAppResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.channel_id.toString());
     }
-    if (message.app_id !== "") {
-      writer.uint32(34).string(message.app_id);
+    if (message.app_id !== 0n) {
+      if (BigInt.asIntN(64, message.app_id) !== message.app_id) {
+        throw new globalThis.Error("value provided for field message.app_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.app_id.toString());
     }
     if (message.app_url !== "") {
       writer.uint32(42).string(message.app_url);
@@ -28263,32 +29646,32 @@ export const ChannelAppResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.app_id = reader.string();
+          message.app_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
           if (tag !== 42) {
@@ -28322,10 +29705,10 @@ export const ChannelAppResponse = {
 
   fromJSON(object: any): ChannelAppResponse {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      app_id: isSet(object.app_id) ? BigInt(object.app_id) : 0n,
       app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
       app_name: isSet(object.app_name) ? globalThis.String(object.app_name) : "",
       app_logo: isSet(object.app_logo) ? globalThis.String(object.app_logo) : "",
@@ -28334,17 +29717,17 @@ export const ChannelAppResponse = {
 
   toJSON(message: ChannelAppResponse): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.app_id !== "") {
-      obj.app_id = message.app_id;
+    if (message.app_id !== 0n) {
+      obj.app_id = message.app_id.toString();
     }
     if (message.app_url !== "") {
       obj.app_url = message.app_url;
@@ -28363,10 +29746,10 @@ export const ChannelAppResponse = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelAppResponse>, I>>(object: I): ChannelAppResponse {
     const message = createBaseChannelAppResponse();
-    message.id = object.id ?? "";
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.app_id = object.app_id ?? "";
+    message.id = object.id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
+    message.app_id = object.app_id ?? 0n;
     message.app_url = object.app_url ?? "";
     message.app_name = object.app_name ?? "";
     message.app_logo = object.app_logo ?? "";
@@ -28432,13 +29815,16 @@ export const AllUserClans = {
 };
 
 function createBaseRoleListEventRequest(): RoleListEventRequest {
-  return { clan_id: "", limit: 0, state: 0, cursor: "" };
+  return { clan_id: 0n, limit: 0, state: 0, cursor: "" };
 }
 
 export const RoleListEventRequest = {
   encode(message: RoleListEventRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     if (message.limit !== 0) {
       writer.uint32(16).int32(message.limit);
@@ -28460,11 +29846,11 @@ export const RoleListEventRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
@@ -28498,7 +29884,7 @@ export const RoleListEventRequest = {
 
   fromJSON(object: any): RoleListEventRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
       state: isSet(object.state) ? globalThis.Number(object.state) : 0,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
@@ -28507,8 +29893,8 @@ export const RoleListEventRequest = {
 
   toJSON(message: RoleListEventRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.limit !== 0) {
       obj.limit = Math.round(message.limit);
@@ -28527,7 +29913,7 @@ export const RoleListEventRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<RoleListEventRequest>, I>>(object: I): RoleListEventRequest {
     const message = createBaseRoleListEventRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.limit = object.limit ?? 0;
     message.state = object.state ?? 0;
     message.cursor = object.cursor ?? "";
@@ -28657,16 +30043,22 @@ export const RoleListEventResponse = {
 };
 
 function createBaseUserPermissionInChannelListRequest(): UserPermissionInChannelListRequest {
-  return { clan_id: "", channel_id: "" };
+  return { clan_id: 0n, channel_id: 0n };
 }
 
 export const UserPermissionInChannelListRequest = {
   encode(message: UserPermissionInChannelListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     return writer;
   },
@@ -28679,18 +30071,18 @@ export const UserPermissionInChannelListRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -28703,18 +30095,18 @@ export const UserPermissionInChannelListRequest = {
 
   fromJSON(object: any): UserPermissionInChannelListRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
     };
   },
 
   toJSON(message: UserPermissionInChannelListRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     return obj;
   },
@@ -28728,23 +30120,29 @@ export const UserPermissionInChannelListRequest = {
     object: I,
   ): UserPermissionInChannelListRequest {
     const message = createBaseUserPermissionInChannelListRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     return message;
   },
 };
 
 function createBaseUserPermissionInChannelListResponse(): UserPermissionInChannelListResponse {
-  return { clan_id: "", channel_id: "", permissions: undefined };
+  return { clan_id: 0n, channel_id: 0n, permissions: undefined };
 }
 
 export const UserPermissionInChannelListResponse = {
   encode(message: UserPermissionInChannelListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     if (message.permissions !== undefined) {
       PermissionList.encode(message.permissions, writer.uint32(26).fork()).ldelim();
@@ -28760,18 +30158,18 @@ export const UserPermissionInChannelListResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -28791,19 +30189,19 @@ export const UserPermissionInChannelListResponse = {
 
   fromJSON(object: any): UserPermissionInChannelListResponse {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       permissions: isSet(object.permissions) ? PermissionList.fromJSON(object.permissions) : undefined,
     };
   },
 
   toJSON(message: UserPermissionInChannelListResponse): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.permissions !== undefined) {
       obj.permissions = PermissionList.toJSON(message.permissions);
@@ -28820,8 +30218,8 @@ export const UserPermissionInChannelListResponse = {
     object: I,
   ): UserPermissionInChannelListResponse {
     const message = createBaseUserPermissionInChannelListResponse();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     message.permissions = (object.permissions !== undefined && object.permissions !== null)
       ? PermissionList.fromPartial(object.permissions)
       : undefined;
@@ -28830,13 +30228,16 @@ export const UserPermissionInChannelListResponse = {
 };
 
 function createBasePermissionRoleChannel(): PermissionRoleChannel {
-  return { permission_id: "", active: false };
+  return { permission_id: 0n, active: false };
 }
 
 export const PermissionRoleChannel = {
   encode(message: PermissionRoleChannel, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.permission_id !== "") {
-      writer.uint32(10).string(message.permission_id);
+    if (message.permission_id !== 0n) {
+      if (BigInt.asIntN(64, message.permission_id) !== message.permission_id) {
+        throw new globalThis.Error("value provided for field message.permission_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.permission_id.toString());
     }
     if (message.active !== false) {
       writer.uint32(16).bool(message.active);
@@ -28852,11 +30253,11 @@ export const PermissionRoleChannel = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.permission_id = reader.string();
+          message.permission_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
@@ -28876,15 +30277,15 @@ export const PermissionRoleChannel = {
 
   fromJSON(object: any): PermissionRoleChannel {
     return {
-      permission_id: isSet(object.permission_id) ? globalThis.String(object.permission_id) : "",
+      permission_id: isSet(object.permission_id) ? BigInt(object.permission_id) : 0n,
       active: isSet(object.active) ? globalThis.Boolean(object.active) : false,
     };
   },
 
   toJSON(message: PermissionRoleChannel): unknown {
     const obj: any = {};
-    if (message.permission_id !== "") {
-      obj.permission_id = message.permission_id;
+    if (message.permission_id !== 0n) {
+      obj.permission_id = message.permission_id.toString();
     }
     if (message.active !== false) {
       obj.active = message.active;
@@ -28897,26 +30298,35 @@ export const PermissionRoleChannel = {
   },
   fromPartial<I extends Exact<DeepPartial<PermissionRoleChannel>, I>>(object: I): PermissionRoleChannel {
     const message = createBasePermissionRoleChannel();
-    message.permission_id = object.permission_id ?? "";
+    message.permission_id = object.permission_id ?? 0n;
     message.active = object.active ?? false;
     return message;
   },
 };
 
 function createBasePermissionRoleChannelListEventRequest(): PermissionRoleChannelListEventRequest {
-  return { role_id: "", channel_id: "", user_id: "" };
+  return { role_id: 0n, channel_id: 0n, user_id: 0n };
 }
 
 export const PermissionRoleChannelListEventRequest = {
   encode(message: PermissionRoleChannelListEventRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.role_id !== "") {
-      writer.uint32(10).string(message.role_id);
+    if (message.role_id !== 0n) {
+      if (BigInt.asIntN(64, message.role_id) !== message.role_id) {
+        throw new globalThis.Error("value provided for field message.role_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.role_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
-    if (message.user_id !== "") {
-      writer.uint32(34).string(message.user_id);
+    if (message.user_id !== 0n) {
+      if (BigInt.asIntN(64, message.user_id) !== message.user_id) {
+        throw new globalThis.Error("value provided for field message.user_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.user_id.toString());
     }
     return writer;
   },
@@ -28929,25 +30339,25 @@ export const PermissionRoleChannelListEventRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.role_id = reader.string();
+          message.role_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -28960,22 +30370,22 @@ export const PermissionRoleChannelListEventRequest = {
 
   fromJSON(object: any): PermissionRoleChannelListEventRequest {
     return {
-      role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      role_id: isSet(object.role_id) ? BigInt(object.role_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      user_id: isSet(object.user_id) ? BigInt(object.user_id) : 0n,
     };
   },
 
   toJSON(message: PermissionRoleChannelListEventRequest): unknown {
     const obj: any = {};
-    if (message.role_id !== "") {
-      obj.role_id = message.role_id;
+    if (message.role_id !== 0n) {
+      obj.role_id = message.role_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
+    if (message.user_id !== 0n) {
+      obj.user_id = message.user_id.toString();
     }
     return obj;
   },
@@ -28989,27 +30399,36 @@ export const PermissionRoleChannelListEventRequest = {
     object: I,
   ): PermissionRoleChannelListEventRequest {
     const message = createBasePermissionRoleChannelListEventRequest();
-    message.role_id = object.role_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.user_id = object.user_id ?? "";
+    message.role_id = object.role_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
+    message.user_id = object.user_id ?? 0n;
     return message;
   },
 };
 
 function createBasePermissionRoleChannelListEventResponse(): PermissionRoleChannelListEventResponse {
-  return { role_id: "", channel_id: "", user_id: "", permission_role_channel: [] };
+  return { role_id: 0n, channel_id: 0n, user_id: 0n, permission_role_channel: [] };
 }
 
 export const PermissionRoleChannelListEventResponse = {
   encode(message: PermissionRoleChannelListEventResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.role_id !== "") {
-      writer.uint32(10).string(message.role_id);
+    if (message.role_id !== 0n) {
+      if (BigInt.asIntN(64, message.role_id) !== message.role_id) {
+        throw new globalThis.Error("value provided for field message.role_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.role_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
-    if (message.user_id !== "") {
-      writer.uint32(26).string(message.user_id);
+    if (message.user_id !== 0n) {
+      if (BigInt.asIntN(64, message.user_id) !== message.user_id) {
+        throw new globalThis.Error("value provided for field message.user_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.user_id.toString());
     }
     for (const v of message.permission_role_channel) {
       PermissionRoleChannel.encode(v!, writer.uint32(34).fork()).ldelim();
@@ -29025,25 +30444,25 @@ export const PermissionRoleChannelListEventResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.role_id = reader.string();
+          message.role_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -29063,9 +30482,9 @@ export const PermissionRoleChannelListEventResponse = {
 
   fromJSON(object: any): PermissionRoleChannelListEventResponse {
     return {
-      role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      role_id: isSet(object.role_id) ? BigInt(object.role_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      user_id: isSet(object.user_id) ? BigInt(object.user_id) : 0n,
       permission_role_channel: globalThis.Array.isArray(object?.permission_role_channel)
         ? object.permission_role_channel.map((e: any) => PermissionRoleChannel.fromJSON(e))
         : [],
@@ -29074,14 +30493,14 @@ export const PermissionRoleChannelListEventResponse = {
 
   toJSON(message: PermissionRoleChannelListEventResponse): unknown {
     const obj: any = {};
-    if (message.role_id !== "") {
-      obj.role_id = message.role_id;
+    if (message.role_id !== 0n) {
+      obj.role_id = message.role_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
+    if (message.user_id !== 0n) {
+      obj.user_id = message.user_id.toString();
     }
     if (message.permission_role_channel?.length) {
       obj.permission_role_channel = message.permission_role_channel.map((e) => PermissionRoleChannel.toJSON(e));
@@ -29098,9 +30517,9 @@ export const PermissionRoleChannelListEventResponse = {
     object: I,
   ): PermissionRoleChannelListEventResponse {
     const message = createBasePermissionRoleChannelListEventResponse();
-    message.role_id = object.role_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.user_id = object.user_id ?? "";
+    message.role_id = object.role_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
+    message.user_id = object.user_id ?? 0n;
     message.permission_role_channel =
       object.permission_role_channel?.map((e) => PermissionRoleChannel.fromPartial(e)) || [];
     return message;
@@ -29109,9 +30528,9 @@ export const PermissionRoleChannelListEventResponse = {
 
 function createBaseChannelSettingListRequest(): ChannelSettingListRequest {
   return {
-    clan_id: "",
-    parent_id: "",
-    category_id: "",
+    clan_id: 0n,
+    parent_id: 0n,
+    category_id: 0n,
     private_channel: undefined,
     active: undefined,
     status: undefined,
@@ -29124,14 +30543,23 @@ function createBaseChannelSettingListRequest(): ChannelSettingListRequest {
 
 export const ChannelSettingListRequest = {
   encode(message: ChannelSettingListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.parent_id !== "") {
-      writer.uint32(18).string(message.parent_id);
+    if (message.parent_id !== 0n) {
+      if (BigInt.asIntN(64, message.parent_id) !== message.parent_id) {
+        throw new globalThis.Error("value provided for field message.parent_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.parent_id.toString());
     }
-    if (message.category_id !== "") {
-      writer.uint32(26).string(message.category_id);
+    if (message.category_id !== 0n) {
+      if (BigInt.asIntN(64, message.category_id) !== message.category_id) {
+        throw new globalThis.Error("value provided for field message.category_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.category_id.toString());
     }
     if (message.private_channel !== undefined) {
       Int32Value.encode({ value: message.private_channel! }, writer.uint32(34).fork()).ldelim();
@@ -29165,25 +30593,25 @@ export const ChannelSettingListRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.parent_id = reader.string();
+          message.parent_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.category_id = reader.string();
+          message.category_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -29245,9 +30673,9 @@ export const ChannelSettingListRequest = {
 
   fromJSON(object: any): ChannelSettingListRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
-      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      parent_id: isSet(object.parent_id) ? BigInt(object.parent_id) : 0n,
+      category_id: isSet(object.category_id) ? BigInt(object.category_id) : 0n,
       private_channel: isSet(object.private_channel) ? Number(object.private_channel) : undefined,
       active: isSet(object.active) ? Number(object.active) : undefined,
       status: isSet(object.status) ? Number(object.status) : undefined,
@@ -29260,14 +30688,14 @@ export const ChannelSettingListRequest = {
 
   toJSON(message: ChannelSettingListRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.parent_id !== "") {
-      obj.parent_id = message.parent_id;
+    if (message.parent_id !== 0n) {
+      obj.parent_id = message.parent_id.toString();
     }
-    if (message.category_id !== "") {
-      obj.category_id = message.category_id;
+    if (message.category_id !== 0n) {
+      obj.category_id = message.category_id.toString();
     }
     if (message.private_channel !== undefined) {
       obj.private_channel = message.private_channel;
@@ -29298,9 +30726,9 @@ export const ChannelSettingListRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelSettingListRequest>, I>>(object: I): ChannelSettingListRequest {
     const message = createBaseChannelSettingListRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.parent_id = object.parent_id ?? "";
-    message.category_id = object.category_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.parent_id = object.parent_id ?? 0n;
+    message.category_id = object.category_id ?? 0n;
     message.private_channel = object.private_channel ?? undefined;
     message.active = object.active ?? undefined;
     message.status = object.status ?? undefined;
@@ -29314,37 +30742,49 @@ export const ChannelSettingListRequest = {
 
 function createBaseChannelSettingItem(): ChannelSettingItem {
   return {
-    id: "",
-    creator_id: "",
-    parent_id: "",
+    id: 0n,
+    creator_id: 0n,
+    parent_id: 0n,
     channel_label: "",
-    category_id: "",
+    category_id: 0n,
     meeting_code: "",
     channel_private: 0,
     channel_type: 0,
     active: 0,
     user_ids: [],
-    message_count: 0,
+    message_count: 0n,
     last_sent_message: undefined,
   };
 }
 
 export const ChannelSettingItem = {
   encode(message: ChannelSettingItem, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.creator_id !== "") {
-      writer.uint32(18).string(message.creator_id);
+    if (message.creator_id !== 0n) {
+      if (BigInt.asIntN(64, message.creator_id) !== message.creator_id) {
+        throw new globalThis.Error("value provided for field message.creator_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.creator_id.toString());
     }
-    if (message.parent_id !== "") {
-      writer.uint32(26).string(message.parent_id);
+    if (message.parent_id !== 0n) {
+      if (BigInt.asIntN(64, message.parent_id) !== message.parent_id) {
+        throw new globalThis.Error("value provided for field message.parent_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.parent_id.toString());
     }
     if (message.channel_label !== "") {
       writer.uint32(34).string(message.channel_label);
     }
-    if (message.category_id !== "") {
-      writer.uint32(42).string(message.category_id);
+    if (message.category_id !== 0n) {
+      if (BigInt.asIntN(64, message.category_id) !== message.category_id) {
+        throw new globalThis.Error("value provided for field message.category_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.category_id.toString());
     }
     if (message.meeting_code !== "") {
       writer.uint32(50).string(message.meeting_code);
@@ -29358,11 +30798,19 @@ export const ChannelSettingItem = {
     if (message.active !== 0) {
       writer.uint32(72).int32(message.active);
     }
+    writer.uint32(82).fork();
     for (const v of message.user_ids) {
-      writer.uint32(82).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field user_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
-    if (message.message_count !== 0) {
-      writer.uint32(88).int64(message.message_count);
+    writer.ldelim();
+    if (message.message_count !== 0n) {
+      if (BigInt.asIntN(64, message.message_count) !== message.message_count) {
+        throw new globalThis.Error("value provided for field message.message_count of type int64 too large");
+      }
+      writer.uint32(88).int64(message.message_count.toString());
     }
     if (message.last_sent_message !== undefined) {
       ChannelMessageHeader.encode(message.last_sent_message, writer.uint32(98).fork()).ldelim();
@@ -29378,25 +30826,25 @@ export const ChannelSettingItem = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.parent_id = reader.string();
+          message.parent_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -29406,11 +30854,11 @@ export const ChannelSettingItem = {
           message.channel_label = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.category_id = reader.string();
+          message.category_id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 50) {
@@ -29441,18 +30889,28 @@ export const ChannelSettingItem = {
           message.active = reader.int32();
           continue;
         case 10:
-          if (tag !== 82) {
-            break;
+          if (tag === 80) {
+            message.user_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 82) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 11:
           if (tag !== 88) {
             break;
           }
 
-          message.message_count = longToNumber(reader.int64() as Long);
+          message.message_count = longToBigint(reader.int64() as Long);
           continue;
         case 12:
           if (tag !== 98) {
@@ -29472,17 +30930,17 @@ export const ChannelSettingItem = {
 
   fromJSON(object: any): ChannelSettingItem {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      creator_id: isSet(object.creator_id) ? BigInt(object.creator_id) : 0n,
+      parent_id: isSet(object.parent_id) ? BigInt(object.parent_id) : 0n,
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
-      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
+      category_id: isSet(object.category_id) ? BigInt(object.category_id) : 0n,
       meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
-      message_count: isSet(object.message_count) ? globalThis.Number(object.message_count) : 0,
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => BigInt(e)) : [],
+      message_count: isSet(object.message_count) ? BigInt(object.message_count) : 0n,
       last_sent_message: isSet(object.last_sent_message)
         ? ChannelMessageHeader.fromJSON(object.last_sent_message)
         : undefined,
@@ -29491,20 +30949,20 @@ export const ChannelSettingItem = {
 
   toJSON(message: ChannelSettingItem): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
+    if (message.creator_id !== 0n) {
+      obj.creator_id = message.creator_id.toString();
     }
-    if (message.parent_id !== "") {
-      obj.parent_id = message.parent_id;
+    if (message.parent_id !== 0n) {
+      obj.parent_id = message.parent_id.toString();
     }
     if (message.channel_label !== "") {
       obj.channel_label = message.channel_label;
     }
-    if (message.category_id !== "") {
-      obj.category_id = message.category_id;
+    if (message.category_id !== 0n) {
+      obj.category_id = message.category_id.toString();
     }
     if (message.meeting_code !== "") {
       obj.meeting_code = message.meeting_code;
@@ -29519,10 +30977,10 @@ export const ChannelSettingItem = {
       obj.active = Math.round(message.active);
     }
     if (message.user_ids?.length) {
-      obj.user_ids = message.user_ids;
+      obj.user_ids = message.user_ids.map((e) => e.toString());
     }
-    if (message.message_count !== 0) {
-      obj.message_count = Math.round(message.message_count);
+    if (message.message_count !== 0n) {
+      obj.message_count = message.message_count.toString();
     }
     if (message.last_sent_message !== undefined) {
       obj.last_sent_message = ChannelMessageHeader.toJSON(message.last_sent_message);
@@ -29535,17 +30993,17 @@ export const ChannelSettingItem = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelSettingItem>, I>>(object: I): ChannelSettingItem {
     const message = createBaseChannelSettingItem();
-    message.id = object.id ?? "";
-    message.creator_id = object.creator_id ?? "";
-    message.parent_id = object.parent_id ?? "";
+    message.id = object.id ?? 0n;
+    message.creator_id = object.creator_id ?? 0n;
+    message.parent_id = object.parent_id ?? 0n;
     message.channel_label = object.channel_label ?? "";
-    message.category_id = object.category_id ?? "";
+    message.category_id = object.category_id ?? 0n;
     message.meeting_code = object.meeting_code ?? "";
     message.channel_private = object.channel_private ?? 0;
     message.channel_type = object.channel_type ?? 0;
     message.active = object.active ?? 0;
     message.user_ids = object.user_ids?.map((e) => e) || [];
-    message.message_count = object.message_count ?? 0;
+    message.message_count = object.message_count ?? 0n;
     message.last_sent_message = (object.last_sent_message !== undefined && object.last_sent_message !== null)
       ? ChannelMessageHeader.fromPartial(object.last_sent_message)
       : undefined;
@@ -29554,13 +31012,16 @@ export const ChannelSettingItem = {
 };
 
 function createBaseChannelSettingListResponse(): ChannelSettingListResponse {
-  return { clan_id: "", channel_count: 0, thread_count: 0, channel_setting_list: [] };
+  return { clan_id: 0n, channel_count: 0, thread_count: 0, channel_setting_list: [] };
 }
 
 export const ChannelSettingListResponse = {
   encode(message: ChannelSettingListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     if (message.channel_count !== 0) {
       writer.uint32(16).int32(message.channel_count);
@@ -29582,11 +31043,11 @@ export const ChannelSettingListResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
@@ -29620,7 +31081,7 @@ export const ChannelSettingListResponse = {
 
   fromJSON(object: any): ChannelSettingListResponse {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       channel_count: isSet(object.channel_count) ? globalThis.Number(object.channel_count) : 0,
       thread_count: isSet(object.thread_count) ? globalThis.Number(object.thread_count) : 0,
       channel_setting_list: globalThis.Array.isArray(object?.channel_setting_list)
@@ -29631,8 +31092,8 @@ export const ChannelSettingListResponse = {
 
   toJSON(message: ChannelSettingListResponse): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.channel_count !== 0) {
       obj.channel_count = Math.round(message.channel_count);
@@ -29651,7 +31112,7 @@ export const ChannelSettingListResponse = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelSettingListResponse>, I>>(object: I): ChannelSettingListResponse {
     const message = createBaseChannelSettingListResponse();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.channel_count = object.channel_count ?? 0;
     message.thread_count = object.thread_count ?? 0;
     message.channel_setting_list = object.channel_setting_list?.map((e) => ChannelSettingItem.fromPartial(e)) || [];
@@ -29660,19 +31121,28 @@ export const ChannelSettingListResponse = {
 };
 
 function createBaseMarkAsReadRequest(): MarkAsReadRequest {
-  return { channel_id: "", category_id: "", clan_id: "" };
+  return { channel_id: 0n, category_id: 0n, clan_id: 0n };
 }
 
 export const MarkAsReadRequest = {
   encode(message: MarkAsReadRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.channel_id.toString());
     }
-    if (message.category_id !== "") {
-      writer.uint32(18).string(message.category_id);
+    if (message.category_id !== 0n) {
+      if (BigInt.asIntN(64, message.category_id) !== message.category_id) {
+        throw new globalThis.Error("value provided for field message.category_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.category_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -29685,25 +31155,25 @@ export const MarkAsReadRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.category_id = reader.string();
+          message.category_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -29716,22 +31186,22 @@ export const MarkAsReadRequest = {
 
   fromJSON(object: any): MarkAsReadRequest {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      category_id: isSet(object.category_id) ? BigInt(object.category_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
   toJSON(message: MarkAsReadRequest): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.category_id !== "") {
-      obj.category_id = message.category_id;
+    if (message.category_id !== 0n) {
+      obj.category_id = message.category_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -29741,27 +31211,36 @@ export const MarkAsReadRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<MarkAsReadRequest>, I>>(object: I): MarkAsReadRequest {
     const message = createBaseMarkAsReadRequest();
-    message.channel_id = object.channel_id ?? "";
-    message.category_id = object.category_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
+    message.category_id = object.category_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseEditChannelCanvasRequest(): EditChannelCanvasRequest {
-  return { id: undefined, channel_id: "", clan_id: "", title: "", content: "", is_default: false, status: 0 };
+  return { id: 0n, channel_id: 0n, clan_id: 0n, title: "", content: "", is_default: false, status: 0 };
 }
 
 export const EditChannelCanvasRequest = {
   encode(message: EditChannelCanvasRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined) {
-      StringValue.encode({ value: message.id! }, writer.uint32(10).fork()).ldelim();
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.clan_id.toString());
     }
     if (message.title !== "") {
       writer.uint32(34).string(message.title);
@@ -29786,25 +31265,25 @@ export const EditChannelCanvasRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = StringValue.decode(reader, reader.uint32()).value;
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -29845,9 +31324,9 @@ export const EditChannelCanvasRequest = {
 
   fromJSON(object: any): EditChannelCanvasRequest {
     return {
-      id: isSet(object.id) ? String(object.id) : undefined,
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       title: isSet(object.title) ? globalThis.String(object.title) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       is_default: isSet(object.is_default) ? globalThis.Boolean(object.is_default) : false,
@@ -29857,14 +31336,14 @@ export const EditChannelCanvasRequest = {
 
   toJSON(message: EditChannelCanvasRequest): unknown {
     const obj: any = {};
-    if (message.id !== undefined) {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.title !== "") {
       obj.title = message.title;
@@ -29886,9 +31365,9 @@ export const EditChannelCanvasRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<EditChannelCanvasRequest>, I>>(object: I): EditChannelCanvasRequest {
     const message = createBaseEditChannelCanvasRequest();
-    message.id = object.id ?? undefined;
-    message.channel_id = object.channel_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.id = object.id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     message.title = object.title ?? "";
     message.content = object.content ?? "";
     message.is_default = object.is_default ?? false;
@@ -29898,13 +31377,16 @@ export const EditChannelCanvasRequest = {
 };
 
 function createBaseEditChannelCanvasResponse(): EditChannelCanvasResponse {
-  return { id: "" };
+  return { id: 0n };
 }
 
 export const EditChannelCanvasResponse = {
   encode(message: EditChannelCanvasResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     return writer;
   },
@@ -29917,11 +31399,11 @@ export const EditChannelCanvasResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -29933,13 +31415,13 @@ export const EditChannelCanvasResponse = {
   },
 
   fromJSON(object: any): EditChannelCanvasResponse {
-    return { id: isSet(object.id) ? globalThis.String(object.id) : "" };
+    return { id: isSet(object.id) ? BigInt(object.id) : 0n };
   },
 
   toJSON(message: EditChannelCanvasResponse): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     return obj;
   },
@@ -29949,25 +31431,34 @@ export const EditChannelCanvasResponse = {
   },
   fromPartial<I extends Exact<DeepPartial<EditChannelCanvasResponse>, I>>(object: I): EditChannelCanvasResponse {
     const message = createBaseEditChannelCanvasResponse();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     return message;
   },
 };
 
 function createBaseDeleteChannelCanvasRequest(): DeleteChannelCanvasRequest {
-  return { clan_id: "", channel_id: "", canvas_id: "" };
+  return { clan_id: 0n, channel_id: 0n, canvas_id: 0n };
 }
 
 export const DeleteChannelCanvasRequest = {
   encode(message: DeleteChannelCanvasRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
-    if (message.canvas_id !== "") {
-      writer.uint32(26).string(message.canvas_id);
+    if (message.canvas_id !== 0n) {
+      if (BigInt.asIntN(64, message.canvas_id) !== message.canvas_id) {
+        throw new globalThis.Error("value provided for field message.canvas_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.canvas_id.toString());
     }
     return writer;
   },
@@ -29980,25 +31471,25 @@ export const DeleteChannelCanvasRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.canvas_id = reader.string();
+          message.canvas_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -30011,22 +31502,22 @@ export const DeleteChannelCanvasRequest = {
 
   fromJSON(object: any): DeleteChannelCanvasRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      canvas_id: isSet(object.canvas_id) ? globalThis.String(object.canvas_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      canvas_id: isSet(object.canvas_id) ? BigInt(object.canvas_id) : 0n,
     };
   },
 
   toJSON(message: DeleteChannelCanvasRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.canvas_id !== "") {
-      obj.canvas_id = message.canvas_id;
+    if (message.canvas_id !== 0n) {
+      obj.canvas_id = message.canvas_id.toString();
     }
     return obj;
   },
@@ -30036,24 +31527,30 @@ export const DeleteChannelCanvasRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<DeleteChannelCanvasRequest>, I>>(object: I): DeleteChannelCanvasRequest {
     const message = createBaseDeleteChannelCanvasRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.canvas_id = object.canvas_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
+    message.canvas_id = object.canvas_id ?? 0n;
     return message;
   },
 };
 
 function createBaseChannelCanvasListRequest(): ChannelCanvasListRequest {
-  return { clan_id: "", channel_id: "", limit: undefined, page: undefined, cursor: "" };
+  return { clan_id: 0n, channel_id: 0n, limit: undefined, page: undefined, cursor: "" };
 }
 
 export const ChannelCanvasListRequest = {
   encode(message: ChannelCanvasListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     if (message.limit !== undefined) {
       Int32Value.encode({ value: message.limit! }, writer.uint32(26).fork()).ldelim();
@@ -30075,18 +31572,18 @@ export const ChannelCanvasListRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -30120,8 +31617,8 @@ export const ChannelCanvasListRequest = {
 
   fromJSON(object: any): ChannelCanvasListRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       page: isSet(object.page) ? Number(object.page) : undefined,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
@@ -30130,11 +31627,11 @@ export const ChannelCanvasListRequest = {
 
   toJSON(message: ChannelCanvasListRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.limit !== undefined) {
       obj.limit = message.limit;
@@ -30153,8 +31650,8 @@ export const ChannelCanvasListRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelCanvasListRequest>, I>>(object: I): ChannelCanvasListRequest {
     const message = createBaseChannelCanvasListRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     message.limit = object.limit ?? undefined;
     message.page = object.page ?? undefined;
     message.cursor = object.cursor ?? "";
@@ -30164,11 +31661,11 @@ export const ChannelCanvasListRequest = {
 
 function createBaseChannelCanvasItem(): ChannelCanvasItem {
   return {
-    id: "",
+    id: 0n,
     title: "",
     is_default: false,
     content: "",
-    creator_id: "",
+    creator_id: 0n,
     update_time_seconds: 0,
     create_time_seconds: 0,
   };
@@ -30176,8 +31673,11 @@ function createBaseChannelCanvasItem(): ChannelCanvasItem {
 
 export const ChannelCanvasItem = {
   encode(message: ChannelCanvasItem, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.title !== "") {
       writer.uint32(18).string(message.title);
@@ -30188,8 +31688,11 @@ export const ChannelCanvasItem = {
     if (message.content !== "") {
       writer.uint32(34).string(message.content);
     }
-    if (message.creator_id !== "") {
-      writer.uint32(42).string(message.creator_id);
+    if (message.creator_id !== 0n) {
+      if (BigInt.asIntN(64, message.creator_id) !== message.creator_id) {
+        throw new globalThis.Error("value provided for field message.creator_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.creator_id.toString());
     }
     if (message.update_time_seconds !== 0) {
       writer.uint32(48).uint32(message.update_time_seconds);
@@ -30208,11 +31711,11 @@ export const ChannelCanvasItem = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -30236,11 +31739,11 @@ export const ChannelCanvasItem = {
           message.content = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 48) {
@@ -30267,11 +31770,11 @@ export const ChannelCanvasItem = {
 
   fromJSON(object: any): ChannelCanvasItem {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       title: isSet(object.title) ? globalThis.String(object.title) : "",
       is_default: isSet(object.is_default) ? globalThis.Boolean(object.is_default) : false,
       content: isSet(object.content) ? globalThis.String(object.content) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      creator_id: isSet(object.creator_id) ? BigInt(object.creator_id) : 0n,
       update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
     };
@@ -30279,8 +31782,8 @@ export const ChannelCanvasItem = {
 
   toJSON(message: ChannelCanvasItem): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.title !== "") {
       obj.title = message.title;
@@ -30291,8 +31794,8 @@ export const ChannelCanvasItem = {
     if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
+    if (message.creator_id !== 0n) {
+      obj.creator_id = message.creator_id.toString();
     }
     if (message.update_time_seconds !== 0) {
       obj.update_time_seconds = Math.round(message.update_time_seconds);
@@ -30308,11 +31811,11 @@ export const ChannelCanvasItem = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelCanvasItem>, I>>(object: I): ChannelCanvasItem {
     const message = createBaseChannelCanvasItem();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.title = object.title ?? "";
     message.is_default = object.is_default ?? false;
     message.content = object.content ?? "";
-    message.creator_id = object.creator_id ?? "";
+    message.creator_id = object.creator_id ?? 0n;
     message.update_time_seconds = object.update_time_seconds ?? 0;
     message.create_time_seconds = object.create_time_seconds ?? 0;
     return message;
@@ -30320,22 +31823,31 @@ export const ChannelCanvasItem = {
 };
 
 function createBaseChannelCanvasListResponse(): ChannelCanvasListResponse {
-  return { clan_id: "", channel_id: "", channel_canvases: [], count: 0 };
+  return { clan_id: 0n, channel_id: 0n, channel_canvases: [], count: 0n };
 }
 
 export const ChannelCanvasListResponse = {
   encode(message: ChannelCanvasListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     for (const v of message.channel_canvases) {
       ChannelCanvasItem.encode(v!, writer.uint32(26).fork()).ldelim();
     }
-    if (message.count !== 0) {
-      writer.uint32(32).int64(message.count);
+    if (message.count !== 0n) {
+      if (BigInt.asIntN(64, message.count) !== message.count) {
+        throw new globalThis.Error("value provided for field message.count of type int64 too large");
+      }
+      writer.uint32(32).int64(message.count.toString());
     }
     return writer;
   },
@@ -30348,18 +31860,18 @@ export const ChannelCanvasListResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -30373,7 +31885,7 @@ export const ChannelCanvasListResponse = {
             break;
           }
 
-          message.count = longToNumber(reader.int64() as Long);
+          message.count = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -30386,28 +31898,28 @@ export const ChannelCanvasListResponse = {
 
   fromJSON(object: any): ChannelCanvasListResponse {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       channel_canvases: globalThis.Array.isArray(object?.channel_canvases)
         ? object.channel_canvases.map((e: any) => ChannelCanvasItem.fromJSON(e))
         : [],
-      count: isSet(object.count) ? globalThis.Number(object.count) : 0,
+      count: isSet(object.count) ? BigInt(object.count) : 0n,
     };
   },
 
   toJSON(message: ChannelCanvasListResponse): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.channel_canvases?.length) {
       obj.channel_canvases = message.channel_canvases.map((e) => ChannelCanvasItem.toJSON(e));
     }
-    if (message.count !== 0) {
-      obj.count = Math.round(message.count);
+    if (message.count !== 0n) {
+      obj.count = message.count.toString();
     }
     return obj;
   },
@@ -30417,28 +31929,37 @@ export const ChannelCanvasListResponse = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelCanvasListResponse>, I>>(object: I): ChannelCanvasListResponse {
     const message = createBaseChannelCanvasListResponse();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     message.channel_canvases = object.channel_canvases?.map((e) => ChannelCanvasItem.fromPartial(e)) || [];
-    message.count = object.count ?? 0;
+    message.count = object.count ?? 0n;
     return message;
   },
 };
 
 function createBaseChannelCanvasDetailRequest(): ChannelCanvasDetailRequest {
-  return { id: "", clan_id: "", channel_id: "" };
+  return { id: 0n, clan_id: 0n, channel_id: 0n };
 }
 
 export const ChannelCanvasDetailRequest = {
   encode(message: ChannelCanvasDetailRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.channel_id.toString());
     }
     return writer;
   },
@@ -30451,25 +31972,25 @@ export const ChannelCanvasDetailRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -30482,22 +32003,22 @@ export const ChannelCanvasDetailRequest = {
 
   fromJSON(object: any): ChannelCanvasDetailRequest {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
     };
   },
 
   toJSON(message: ChannelCanvasDetailRequest): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     return obj;
   },
@@ -30507,21 +32028,24 @@ export const ChannelCanvasDetailRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelCanvasDetailRequest>, I>>(object: I): ChannelCanvasDetailRequest {
     const message = createBaseChannelCanvasDetailRequest();
-    message.id = object.id ?? "";
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.id = object.id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     return message;
   },
 };
 
 function createBaseChannelCanvasDetailResponse(): ChannelCanvasDetailResponse {
-  return { id: "", title: "", content: "", creator_id: "", editor_id: "", is_default: false };
+  return { id: 0n, title: "", content: "", creator_id: 0n, editor_id: 0n, is_default: false };
 }
 
 export const ChannelCanvasDetailResponse = {
   encode(message: ChannelCanvasDetailResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.title !== "") {
       writer.uint32(18).string(message.title);
@@ -30529,11 +32053,17 @@ export const ChannelCanvasDetailResponse = {
     if (message.content !== "") {
       writer.uint32(26).string(message.content);
     }
-    if (message.creator_id !== "") {
-      writer.uint32(34).string(message.creator_id);
+    if (message.creator_id !== 0n) {
+      if (BigInt.asIntN(64, message.creator_id) !== message.creator_id) {
+        throw new globalThis.Error("value provided for field message.creator_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.creator_id.toString());
     }
-    if (message.editor_id !== "") {
-      writer.uint32(42).string(message.editor_id);
+    if (message.editor_id !== 0n) {
+      if (BigInt.asIntN(64, message.editor_id) !== message.editor_id) {
+        throw new globalThis.Error("value provided for field message.editor_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.editor_id.toString());
     }
     if (message.is_default !== false) {
       writer.uint32(48).bool(message.is_default);
@@ -30549,11 +32079,11 @@ export const ChannelCanvasDetailResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -30570,18 +32100,18 @@ export const ChannelCanvasDetailResponse = {
           message.content = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.editor_id = reader.string();
+          message.editor_id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 48) {
@@ -30601,19 +32131,19 @@ export const ChannelCanvasDetailResponse = {
 
   fromJSON(object: any): ChannelCanvasDetailResponse {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       title: isSet(object.title) ? globalThis.String(object.title) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      editor_id: isSet(object.editor_id) ? globalThis.String(object.editor_id) : "",
+      creator_id: isSet(object.creator_id) ? BigInt(object.creator_id) : 0n,
+      editor_id: isSet(object.editor_id) ? BigInt(object.editor_id) : 0n,
       is_default: isSet(object.is_default) ? globalThis.Boolean(object.is_default) : false,
     };
   },
 
   toJSON(message: ChannelCanvasDetailResponse): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.title !== "") {
       obj.title = message.title;
@@ -30621,11 +32151,11 @@ export const ChannelCanvasDetailResponse = {
     if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
+    if (message.creator_id !== 0n) {
+      obj.creator_id = message.creator_id.toString();
     }
-    if (message.editor_id !== "") {
-      obj.editor_id = message.editor_id;
+    if (message.editor_id !== 0n) {
+      obj.editor_id = message.editor_id.toString();
     }
     if (message.is_default !== false) {
       obj.is_default = message.is_default;
@@ -30638,27 +32168,33 @@ export const ChannelCanvasDetailResponse = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelCanvasDetailResponse>, I>>(object: I): ChannelCanvasDetailResponse {
     const message = createBaseChannelCanvasDetailResponse();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.title = object.title ?? "";
     message.content = object.content ?? "";
-    message.creator_id = object.creator_id ?? "";
-    message.editor_id = object.editor_id ?? "";
+    message.creator_id = object.creator_id ?? 0n;
+    message.editor_id = object.editor_id ?? 0n;
     message.is_default = object.is_default ?? false;
     return message;
   },
 };
 
 function createBaseAddFavoriteChannelRequest(): AddFavoriteChannelRequest {
-  return { channel_id: "", clan_id: "" };
+  return { channel_id: 0n, clan_id: 0n };
 }
 
 export const AddFavoriteChannelRequest = {
   encode(message: AddFavoriteChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.channel_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -30671,18 +32207,18 @@ export const AddFavoriteChannelRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -30695,18 +32231,18 @@ export const AddFavoriteChannelRequest = {
 
   fromJSON(object: any): AddFavoriteChannelRequest {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
   toJSON(message: AddFavoriteChannelRequest): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -30716,23 +32252,29 @@ export const AddFavoriteChannelRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<AddFavoriteChannelRequest>, I>>(object: I): AddFavoriteChannelRequest {
     const message = createBaseAddFavoriteChannelRequest();
-    message.channel_id = object.channel_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseRemoveFavoriteChannelRequest(): RemoveFavoriteChannelRequest {
-  return { clan_id: "", channel_id: "" };
+  return { clan_id: 0n, channel_id: 0n };
 }
 
 export const RemoveFavoriteChannelRequest = {
   encode(message: RemoveFavoriteChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     return writer;
   },
@@ -30745,18 +32287,18 @@ export const RemoveFavoriteChannelRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -30769,18 +32311,18 @@ export const RemoveFavoriteChannelRequest = {
 
   fromJSON(object: any): RemoveFavoriteChannelRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
     };
   },
 
   toJSON(message: RemoveFavoriteChannelRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     return obj;
   },
@@ -30790,20 +32332,23 @@ export const RemoveFavoriteChannelRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<RemoveFavoriteChannelRequest>, I>>(object: I): RemoveFavoriteChannelRequest {
     const message = createBaseRemoveFavoriteChannelRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     return message;
   },
 };
 
 function createBaseAddFavoriteChannelResponse(): AddFavoriteChannelResponse {
-  return { channel_id: "" };
+  return { channel_id: 0n };
 }
 
 export const AddFavoriteChannelResponse = {
   encode(message: AddFavoriteChannelResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.channel_id.toString());
     }
     return writer;
   },
@@ -30816,11 +32361,11 @@ export const AddFavoriteChannelResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -30832,13 +32377,13 @@ export const AddFavoriteChannelResponse = {
   },
 
   fromJSON(object: any): AddFavoriteChannelResponse {
-    return { channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "" };
+    return { channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n };
   },
 
   toJSON(message: AddFavoriteChannelResponse): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     return obj;
   },
@@ -30848,19 +32393,22 @@ export const AddFavoriteChannelResponse = {
   },
   fromPartial<I extends Exact<DeepPartial<AddFavoriteChannelResponse>, I>>(object: I): AddFavoriteChannelResponse {
     const message = createBaseAddFavoriteChannelResponse();
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     return message;
   },
 };
 
 function createBaseListFavoriteChannelRequest(): ListFavoriteChannelRequest {
-  return { clan_id: "" };
+  return { clan_id: 0n };
 }
 
 export const ListFavoriteChannelRequest = {
   encode(message: ListFavoriteChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -30873,11 +32421,11 @@ export const ListFavoriteChannelRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -30889,13 +32437,13 @@ export const ListFavoriteChannelRequest = {
   },
 
   fromJSON(object: any): ListFavoriteChannelRequest {
-    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+    return { clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n };
   },
 
   toJSON(message: ListFavoriteChannelRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -30905,7 +32453,7 @@ export const ListFavoriteChannelRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListFavoriteChannelRequest>, I>>(object: I): ListFavoriteChannelRequest {
     const message = createBaseListFavoriteChannelRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
@@ -30916,9 +32464,14 @@ function createBaseListFavoriteChannelResponse(): ListFavoriteChannelResponse {
 
 export const ListFavoriteChannelResponse = {
   encode(message: ListFavoriteChannelResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    writer.uint32(10).fork();
     for (const v of message.channel_ids) {
-      writer.uint32(10).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field channel_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -30930,12 +32483,22 @@ export const ListFavoriteChannelResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
+          if (tag === 8) {
+            message.channel_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.channel_ids.push(reader.string());
-          continue;
+          if (tag === 10) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.channel_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -30947,16 +32510,14 @@ export const ListFavoriteChannelResponse = {
 
   fromJSON(object: any): ListFavoriteChannelResponse {
     return {
-      channel_ids: globalThis.Array.isArray(object?.channel_ids)
-        ? object.channel_ids.map((e: any) => globalThis.String(e))
-        : [],
+      channel_ids: globalThis.Array.isArray(object?.channel_ids) ? object.channel_ids.map((e: any) => BigInt(e)) : [],
     };
   },
 
   toJSON(message: ListFavoriteChannelResponse): unknown {
     const obj: any = {};
     if (message.channel_ids?.length) {
-      obj.channel_ids = message.channel_ids;
+      obj.channel_ids = message.channel_ids.map((e) => e.toString());
     }
     return obj;
   },
@@ -30973,21 +32534,24 @@ export const ListFavoriteChannelResponse = {
 
 function createBaseUserActivity(): UserActivity {
   return {
-    user_id: "",
+    user_id: 0n,
     activity_name: "",
     activity_type: 0,
     activity_description: "",
     start_time_seconds: 0,
     end_time_seconds: 0,
-    application_id: "",
+    application_id: 0n,
     status: 0,
   };
 }
 
 export const UserActivity = {
   encode(message: UserActivity, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
+    if (message.user_id !== 0n) {
+      if (BigInt.asIntN(64, message.user_id) !== message.user_id) {
+        throw new globalThis.Error("value provided for field message.user_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.user_id.toString());
     }
     if (message.activity_name !== "") {
       writer.uint32(18).string(message.activity_name);
@@ -31004,8 +32568,11 @@ export const UserActivity = {
     if (message.end_time_seconds !== 0) {
       writer.uint32(48).uint32(message.end_time_seconds);
     }
-    if (message.application_id !== "") {
-      writer.uint32(58).string(message.application_id);
+    if (message.application_id !== 0n) {
+      if (BigInt.asIntN(64, message.application_id) !== message.application_id) {
+        throw new globalThis.Error("value provided for field message.application_id of type int64 too large");
+      }
+      writer.uint32(56).int64(message.application_id.toString());
     }
     if (message.status !== 0) {
       writer.uint32(64).int32(message.status);
@@ -31021,11 +32588,11 @@ export const UserActivity = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -31063,11 +32630,11 @@ export const UserActivity = {
           message.end_time_seconds = reader.uint32();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.application_id = reader.string();
+          message.application_id = longToBigint(reader.int64() as Long);
           continue;
         case 8:
           if (tag !== 64) {
@@ -31087,21 +32654,21 @@ export const UserActivity = {
 
   fromJSON(object: any): UserActivity {
     return {
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_id: isSet(object.user_id) ? BigInt(object.user_id) : 0n,
       activity_name: isSet(object.activity_name) ? globalThis.String(object.activity_name) : "",
       activity_type: isSet(object.activity_type) ? globalThis.Number(object.activity_type) : 0,
       activity_description: isSet(object.activity_description) ? globalThis.String(object.activity_description) : "",
       start_time_seconds: isSet(object.start_time_seconds) ? globalThis.Number(object.start_time_seconds) : 0,
       end_time_seconds: isSet(object.end_time_seconds) ? globalThis.Number(object.end_time_seconds) : 0,
-      application_id: isSet(object.application_id) ? globalThis.String(object.application_id) : "",
+      application_id: isSet(object.application_id) ? BigInt(object.application_id) : 0n,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
     };
   },
 
   toJSON(message: UserActivity): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
+    if (message.user_id !== 0n) {
+      obj.user_id = message.user_id.toString();
     }
     if (message.activity_name !== "") {
       obj.activity_name = message.activity_name;
@@ -31118,8 +32685,8 @@ export const UserActivity = {
     if (message.end_time_seconds !== 0) {
       obj.end_time_seconds = Math.round(message.end_time_seconds);
     }
-    if (message.application_id !== "") {
-      obj.application_id = message.application_id;
+    if (message.application_id !== 0n) {
+      obj.application_id = message.application_id.toString();
     }
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
@@ -31132,13 +32699,13 @@ export const UserActivity = {
   },
   fromPartial<I extends Exact<DeepPartial<UserActivity>, I>>(object: I): UserActivity {
     const message = createBaseUserActivity();
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? 0n;
     message.activity_name = object.activity_name ?? "";
     message.activity_type = object.activity_type ?? 0;
     message.activity_description = object.activity_description ?? "";
     message.start_time_seconds = object.start_time_seconds ?? 0;
     message.end_time_seconds = object.end_time_seconds ?? 0;
-    message.application_id = object.application_id ?? "";
+    message.application_id = object.application_id ?? 0n;
     message.status = object.status ?? 0;
     return message;
   },
@@ -31211,7 +32778,7 @@ function createBaseCreateActivityRequest(): CreateActivityRequest {
     activity_type: 0,
     activity_description: "",
     start_time_seconds: 0,
-    application_id: "",
+    application_id: 0n,
     status: 0,
   };
 }
@@ -31230,8 +32797,11 @@ export const CreateActivityRequest = {
     if (message.start_time_seconds !== 0) {
       writer.uint32(32).uint32(message.start_time_seconds);
     }
-    if (message.application_id !== "") {
-      writer.uint32(42).string(message.application_id);
+    if (message.application_id !== 0n) {
+      if (BigInt.asIntN(64, message.application_id) !== message.application_id) {
+        throw new globalThis.Error("value provided for field message.application_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.application_id.toString());
     }
     if (message.status !== 0) {
       writer.uint32(48).int32(message.status);
@@ -31275,11 +32845,11 @@ export const CreateActivityRequest = {
           message.start_time_seconds = reader.uint32();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.application_id = reader.string();
+          message.application_id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 48) {
@@ -31303,7 +32873,7 @@ export const CreateActivityRequest = {
       activity_type: isSet(object.activity_type) ? globalThis.Number(object.activity_type) : 0,
       activity_description: isSet(object.activity_description) ? globalThis.String(object.activity_description) : "",
       start_time_seconds: isSet(object.start_time_seconds) ? globalThis.Number(object.start_time_seconds) : 0,
-      application_id: isSet(object.application_id) ? globalThis.String(object.application_id) : "",
+      application_id: isSet(object.application_id) ? BigInt(object.application_id) : 0n,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
     };
   },
@@ -31322,8 +32892,8 @@ export const CreateActivityRequest = {
     if (message.start_time_seconds !== 0) {
       obj.start_time_seconds = Math.round(message.start_time_seconds);
     }
-    if (message.application_id !== "") {
-      obj.application_id = message.application_id;
+    if (message.application_id !== 0n) {
+      obj.application_id = message.application_id.toString();
     }
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
@@ -31340,32 +32910,41 @@ export const CreateActivityRequest = {
     message.activity_type = object.activity_type ?? 0;
     message.activity_description = object.activity_description ?? "";
     message.start_time_seconds = object.start_time_seconds ?? 0;
-    message.application_id = object.application_id ?? "";
+    message.application_id = object.application_id ?? 0n;
     message.status = object.status ?? 0;
     return message;
   },
 };
 
 function createBaseLoginIDResponse(): LoginIDResponse {
-  return { login_id: "", status: 0, create_time_seconds: 0, platform: "", user_id: 0, username: "", address: "" };
+  return { login_id: 0n, status: 0, create_time_seconds: 0n, platform: "", user_id: 0n, username: "", address: "" };
 }
 
 export const LoginIDResponse = {
   encode(message: LoginIDResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.login_id !== "") {
-      writer.uint32(10).string(message.login_id);
+    if (message.login_id !== 0n) {
+      if (BigInt.asIntN(64, message.login_id) !== message.login_id) {
+        throw new globalThis.Error("value provided for field message.login_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.login_id.toString());
     }
     if (message.status !== 0) {
       writer.uint32(16).int32(message.status);
     }
-    if (message.create_time_seconds !== 0) {
-      writer.uint32(24).int64(message.create_time_seconds);
+    if (message.create_time_seconds !== 0n) {
+      if (BigInt.asIntN(64, message.create_time_seconds) !== message.create_time_seconds) {
+        throw new globalThis.Error("value provided for field message.create_time_seconds of type int64 too large");
+      }
+      writer.uint32(24).int64(message.create_time_seconds.toString());
     }
     if (message.platform !== "") {
       writer.uint32(34).string(message.platform);
     }
-    if (message.user_id !== 0) {
-      writer.uint32(40).int64(message.user_id);
+    if (message.user_id !== 0n) {
+      if (BigInt.asIntN(64, message.user_id) !== message.user_id) {
+        throw new globalThis.Error("value provided for field message.user_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.user_id.toString());
     }
     if (message.username !== "") {
       writer.uint32(50).string(message.username);
@@ -31384,11 +32963,11 @@ export const LoginIDResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.login_id = reader.string();
+          message.login_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
@@ -31402,7 +32981,7 @@ export const LoginIDResponse = {
             break;
           }
 
-          message.create_time_seconds = longToNumber(reader.int64() as Long);
+          message.create_time_seconds = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -31416,7 +32995,7 @@ export const LoginIDResponse = {
             break;
           }
 
-          message.user_id = longToNumber(reader.int64() as Long);
+          message.user_id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 50) {
@@ -31443,11 +33022,11 @@ export const LoginIDResponse = {
 
   fromJSON(object: any): LoginIDResponse {
     return {
-      login_id: isSet(object.login_id) ? globalThis.String(object.login_id) : "",
+      login_id: isSet(object.login_id) ? BigInt(object.login_id) : 0n,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
-      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
+      create_time_seconds: isSet(object.create_time_seconds) ? BigInt(object.create_time_seconds) : 0n,
       platform: isSet(object.platform) ? globalThis.String(object.platform) : "",
-      user_id: isSet(object.user_id) ? globalThis.Number(object.user_id) : 0,
+      user_id: isSet(object.user_id) ? BigInt(object.user_id) : 0n,
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       address: isSet(object.address) ? globalThis.String(object.address) : "",
     };
@@ -31455,20 +33034,20 @@ export const LoginIDResponse = {
 
   toJSON(message: LoginIDResponse): unknown {
     const obj: any = {};
-    if (message.login_id !== "") {
-      obj.login_id = message.login_id;
+    if (message.login_id !== 0n) {
+      obj.login_id = message.login_id.toString();
     }
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
-    if (message.create_time_seconds !== 0) {
-      obj.create_time_seconds = Math.round(message.create_time_seconds);
+    if (message.create_time_seconds !== 0n) {
+      obj.create_time_seconds = message.create_time_seconds.toString();
     }
     if (message.platform !== "") {
       obj.platform = message.platform;
     }
-    if (message.user_id !== 0) {
-      obj.user_id = Math.round(message.user_id);
+    if (message.user_id !== 0n) {
+      obj.user_id = message.user_id.toString();
     }
     if (message.username !== "") {
       obj.username = message.username;
@@ -31484,11 +33063,11 @@ export const LoginIDResponse = {
   },
   fromPartial<I extends Exact<DeepPartial<LoginIDResponse>, I>>(object: I): LoginIDResponse {
     const message = createBaseLoginIDResponse();
-    message.login_id = object.login_id ?? "";
+    message.login_id = object.login_id ?? 0n;
     message.status = object.status ?? 0;
-    message.create_time_seconds = object.create_time_seconds ?? 0;
+    message.create_time_seconds = object.create_time_seconds ?? 0n;
     message.platform = object.platform ?? "";
-    message.user_id = object.user_id ?? 0;
+    message.user_id = object.user_id ?? 0n;
     message.username = object.username ?? "";
     message.address = object.address ?? "";
     return message;
@@ -31570,13 +33149,16 @@ export const LoginRequest = {
 };
 
 function createBaseConfirmLoginRequest(): ConfirmLoginRequest {
-  return { login_id: "", is_remember: undefined };
+  return { login_id: 0n, is_remember: undefined };
 }
 
 export const ConfirmLoginRequest = {
   encode(message: ConfirmLoginRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.login_id !== "") {
-      writer.uint32(10).string(message.login_id);
+    if (message.login_id !== 0n) {
+      if (BigInt.asIntN(64, message.login_id) !== message.login_id) {
+        throw new globalThis.Error("value provided for field message.login_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.login_id.toString());
     }
     if (message.is_remember !== undefined) {
       BoolValue.encode({ value: message.is_remember! }, writer.uint32(18).fork()).ldelim();
@@ -31592,11 +33174,11 @@ export const ConfirmLoginRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.login_id = reader.string();
+          message.login_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -31616,15 +33198,15 @@ export const ConfirmLoginRequest = {
 
   fromJSON(object: any): ConfirmLoginRequest {
     return {
-      login_id: isSet(object.login_id) ? globalThis.String(object.login_id) : "",
+      login_id: isSet(object.login_id) ? BigInt(object.login_id) : 0n,
       is_remember: isSet(object.is_remember) ? Boolean(object.is_remember) : undefined,
     };
   },
 
   toJSON(message: ConfirmLoginRequest): unknown {
     const obj: any = {};
-    if (message.login_id !== "") {
-      obj.login_id = message.login_id;
+    if (message.login_id !== 0n) {
+      obj.login_id = message.login_id.toString();
     }
     if (message.is_remember !== undefined) {
       obj.is_remember = message.is_remember;
@@ -31637,7 +33219,7 @@ export const ConfirmLoginRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ConfirmLoginRequest>, I>>(object: I): ConfirmLoginRequest {
     const message = createBaseConfirmLoginRequest();
-    message.login_id = object.login_id ?? "";
+    message.login_id = object.login_id ?? 0n;
     message.is_remember = object.is_remember ?? undefined;
     return message;
   },
@@ -31780,9 +33362,14 @@ function createBaseGetPubKeysRequest(): GetPubKeysRequest {
 
 export const GetPubKeysRequest = {
   encode(message: GetPubKeysRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    writer.uint32(10).fork();
     for (const v of message.user_ids) {
-      writer.uint32(10).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field user_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -31794,12 +33381,22 @@ export const GetPubKeysRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
+          if (tag === 8) {
+            message.user_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 10) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -31810,15 +33407,13 @@ export const GetPubKeysRequest = {
   },
 
   fromJSON(object: any): GetPubKeysRequest {
-    return {
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
-    };
+    return { user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => BigInt(e)) : [] };
   },
 
   toJSON(message: GetPubKeysRequest): unknown {
     const obj: any = {};
     if (message.user_ids?.length) {
-      obj.user_ids = message.user_ids;
+      obj.user_ids = message.user_ids.map((e) => e.toString());
     }
     return obj;
   },
@@ -31895,13 +33490,16 @@ export const GetPubKeysResponse = {
 };
 
 function createBaseGetPubKeysResponse_UserPubKey(): GetPubKeysResponse_UserPubKey {
-  return { user_id: "", PK: undefined };
+  return { user_id: 0n, PK: undefined };
 }
 
 export const GetPubKeysResponse_UserPubKey = {
   encode(message: GetPubKeysResponse_UserPubKey, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
+    if (message.user_id !== 0n) {
+      if (BigInt.asIntN(64, message.user_id) !== message.user_id) {
+        throw new globalThis.Error("value provided for field message.user_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.user_id.toString());
     }
     if (message.PK !== undefined) {
       PubKey.encode(message.PK, writer.uint32(18).fork()).ldelim();
@@ -31917,11 +33515,11 @@ export const GetPubKeysResponse_UserPubKey = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -31941,15 +33539,15 @@ export const GetPubKeysResponse_UserPubKey = {
 
   fromJSON(object: any): GetPubKeysResponse_UserPubKey {
     return {
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_id: isSet(object.user_id) ? BigInt(object.user_id) : 0n,
       PK: isSet(object.PK) ? PubKey.fromJSON(object.PK) : undefined,
     };
   },
 
   toJSON(message: GetPubKeysResponse_UserPubKey): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
+    if (message.user_id !== 0n) {
+      obj.user_id = message.user_id.toString();
     }
     if (message.PK !== undefined) {
       obj.PK = PubKey.toJSON(message.PK);
@@ -31964,14 +33562,14 @@ export const GetPubKeysResponse_UserPubKey = {
     object: I,
   ): GetPubKeysResponse_UserPubKey {
     const message = createBaseGetPubKeysResponse_UserPubKey();
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? 0n;
     message.PK = (object.PK !== undefined && object.PK !== null) ? PubKey.fromPartial(object.PK) : undefined;
     return message;
   },
 };
 
 function createBaseChanEncryptionMethod(): ChanEncryptionMethod {
-  return { method: "", channel_id: "" };
+  return { method: "", channel_id: 0n };
 }
 
 export const ChanEncryptionMethod = {
@@ -31979,8 +33577,11 @@ export const ChanEncryptionMethod = {
     if (message.method !== "") {
       writer.uint32(10).string(message.method);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     return writer;
   },
@@ -32000,11 +33601,11 @@ export const ChanEncryptionMethod = {
           message.method = reader.string();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -32018,7 +33619,7 @@ export const ChanEncryptionMethod = {
   fromJSON(object: any): ChanEncryptionMethod {
     return {
       method: isSet(object.method) ? globalThis.String(object.method) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
     };
   },
 
@@ -32027,8 +33628,8 @@ export const ChanEncryptionMethod = {
     if (message.method !== "") {
       obj.method = message.method;
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     return obj;
   },
@@ -32039,7 +33640,7 @@ export const ChanEncryptionMethod = {
   fromPartial<I extends Exact<DeepPartial<ChanEncryptionMethod>, I>>(object: I): ChanEncryptionMethod {
     const message = createBaseChanEncryptionMethod();
     message.method = object.method ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     return message;
   },
 };
@@ -32103,29 +33704,38 @@ export const GetKeyServerResp = {
 
 function createBaseAuditLog(): AuditLog {
   return {
-    id: "",
-    user_id: "",
-    clan_id: "",
+    id: 0n,
+    user_id: 0n,
+    clan_id: 0n,
     action_log: "",
     entity_name: "",
-    entity_id: "",
+    entity_id: 0n,
     details: "",
     time_log_seconds: 0,
-    channel_id: "",
+    channel_id: 0n,
     channel_label: "",
   };
 }
 
 export const AuditLog = {
   encode(message: AuditLog, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.user_id !== "") {
-      writer.uint32(18).string(message.user_id);
+    if (message.user_id !== 0n) {
+      if (BigInt.asIntN(64, message.user_id) !== message.user_id) {
+        throw new globalThis.Error("value provided for field message.user_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.user_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.clan_id.toString());
     }
     if (message.action_log !== "") {
       writer.uint32(34).string(message.action_log);
@@ -32133,8 +33743,11 @@ export const AuditLog = {
     if (message.entity_name !== "") {
       writer.uint32(42).string(message.entity_name);
     }
-    if (message.entity_id !== "") {
-      writer.uint32(50).string(message.entity_id);
+    if (message.entity_id !== 0n) {
+      if (BigInt.asIntN(64, message.entity_id) !== message.entity_id) {
+        throw new globalThis.Error("value provided for field message.entity_id of type int64 too large");
+      }
+      writer.uint32(48).int64(message.entity_id.toString());
     }
     if (message.details !== "") {
       writer.uint32(58).string(message.details);
@@ -32142,8 +33755,11 @@ export const AuditLog = {
     if (message.time_log_seconds !== 0) {
       writer.uint32(64).uint32(message.time_log_seconds);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(74).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(72).int64(message.channel_id.toString());
     }
     if (message.channel_label !== "") {
       writer.uint32(82).string(message.channel_label);
@@ -32159,25 +33775,25 @@ export const AuditLog = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -32194,11 +33810,11 @@ export const AuditLog = {
           message.entity_name = reader.string();
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.entity_id = reader.string();
+          message.entity_id = longToBigint(reader.int64() as Long);
           continue;
         case 7:
           if (tag !== 58) {
@@ -32215,11 +33831,11 @@ export const AuditLog = {
           message.time_log_seconds = reader.uint32();
           continue;
         case 9:
-          if (tag !== 74) {
+          if (tag !== 72) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 10:
           if (tag !== 82) {
@@ -32239,29 +33855,29 @@ export const AuditLog = {
 
   fromJSON(object: any): AuditLog {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      user_id: isSet(object.user_id) ? BigInt(object.user_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       action_log: isSet(object.action_log) ? globalThis.String(object.action_log) : "",
       entity_name: isSet(object.entity_name) ? globalThis.String(object.entity_name) : "",
-      entity_id: isSet(object.entity_id) ? globalThis.String(object.entity_id) : "",
+      entity_id: isSet(object.entity_id) ? BigInt(object.entity_id) : 0n,
       details: isSet(object.details) ? globalThis.String(object.details) : "",
       time_log_seconds: isSet(object.time_log_seconds) ? globalThis.Number(object.time_log_seconds) : 0,
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
     };
   },
 
   toJSON(message: AuditLog): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
+    if (message.user_id !== 0n) {
+      obj.user_id = message.user_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.action_log !== "") {
       obj.action_log = message.action_log;
@@ -32269,8 +33885,8 @@ export const AuditLog = {
     if (message.entity_name !== "") {
       obj.entity_name = message.entity_name;
     }
-    if (message.entity_id !== "") {
-      obj.entity_id = message.entity_id;
+    if (message.entity_id !== 0n) {
+      obj.entity_id = message.entity_id.toString();
     }
     if (message.details !== "") {
       obj.details = message.details;
@@ -32278,8 +33894,8 @@ export const AuditLog = {
     if (message.time_log_seconds !== 0) {
       obj.time_log_seconds = Math.round(message.time_log_seconds);
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.channel_label !== "") {
       obj.channel_label = message.channel_label;
@@ -32292,15 +33908,15 @@ export const AuditLog = {
   },
   fromPartial<I extends Exact<DeepPartial<AuditLog>, I>>(object: I): AuditLog {
     const message = createBaseAuditLog();
-    message.id = object.id ?? "";
-    message.user_id = object.user_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.id = object.id ?? 0n;
+    message.user_id = object.user_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     message.action_log = object.action_log ?? "";
     message.entity_name = object.entity_name ?? "";
-    message.entity_id = object.entity_id ?? "";
+    message.entity_id = object.entity_id ?? 0n;
     message.details = object.details ?? "";
     message.time_log_seconds = object.time_log_seconds ?? 0;
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     message.channel_label = object.channel_label ?? "";
     return message;
   },
@@ -32396,7 +34012,7 @@ export const ListAuditLog = {
 };
 
 function createBaseListAuditLogRequest(): ListAuditLogRequest {
-  return { action_log: "", user_id: "", clan_id: "", date_log: "" };
+  return { action_log: "", user_id: 0n, clan_id: 0n, date_log: "" };
 }
 
 export const ListAuditLogRequest = {
@@ -32404,11 +34020,17 @@ export const ListAuditLogRequest = {
     if (message.action_log !== "") {
       writer.uint32(10).string(message.action_log);
     }
-    if (message.user_id !== "") {
-      writer.uint32(18).string(message.user_id);
+    if (message.user_id !== 0n) {
+      if (BigInt.asIntN(64, message.user_id) !== message.user_id) {
+        throw new globalThis.Error("value provided for field message.user_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.user_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.clan_id.toString());
     }
     if (message.date_log !== "") {
       writer.uint32(34).string(message.date_log);
@@ -32431,18 +34053,18 @@ export const ListAuditLogRequest = {
           message.action_log = reader.string();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -32463,8 +34085,8 @@ export const ListAuditLogRequest = {
   fromJSON(object: any): ListAuditLogRequest {
     return {
       action_log: isSet(object.action_log) ? globalThis.String(object.action_log) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      user_id: isSet(object.user_id) ? BigInt(object.user_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       date_log: isSet(object.date_log) ? globalThis.String(object.date_log) : "",
     };
   },
@@ -32474,11 +34096,11 @@ export const ListAuditLogRequest = {
     if (message.action_log !== "") {
       obj.action_log = message.action_log;
     }
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
+    if (message.user_id !== 0n) {
+      obj.user_id = message.user_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.date_log !== "") {
       obj.date_log = message.date_log;
@@ -32492,8 +34114,8 @@ export const ListAuditLogRequest = {
   fromPartial<I extends Exact<DeepPartial<ListAuditLogRequest>, I>>(object: I): ListAuditLogRequest {
     const message = createBaseListAuditLogRequest();
     message.action_log = object.action_log ?? "";
-    message.user_id = object.user_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.user_id = object.user_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     message.date_log = object.date_log ?? "";
     return message;
   },
@@ -32501,26 +34123,32 @@ export const ListAuditLogRequest = {
 
 function createBaseTokenSentEvent(): TokenSentEvent {
   return {
-    sender_id: "",
+    sender_id: 0n,
     sender_name: "",
-    receiver_id: "",
+    receiver_id: 0n,
     amount: 0,
     note: "",
     extra_attribute: "",
-    transaction_id: "",
+    transaction_id: 0n,
   };
 }
 
 export const TokenSentEvent = {
   encode(message: TokenSentEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.sender_id !== "") {
-      writer.uint32(10).string(message.sender_id);
+    if (message.sender_id !== 0n) {
+      if (BigInt.asIntN(64, message.sender_id) !== message.sender_id) {
+        throw new globalThis.Error("value provided for field message.sender_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.sender_id.toString());
     }
     if (message.sender_name !== "") {
       writer.uint32(18).string(message.sender_name);
     }
-    if (message.receiver_id !== "") {
-      writer.uint32(26).string(message.receiver_id);
+    if (message.receiver_id !== 0n) {
+      if (BigInt.asIntN(64, message.receiver_id) !== message.receiver_id) {
+        throw new globalThis.Error("value provided for field message.receiver_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.receiver_id.toString());
     }
     if (message.amount !== 0) {
       writer.uint32(32).int32(message.amount);
@@ -32531,8 +34159,11 @@ export const TokenSentEvent = {
     if (message.extra_attribute !== "") {
       writer.uint32(50).string(message.extra_attribute);
     }
-    if (message.transaction_id !== "") {
-      writer.uint32(58).string(message.transaction_id);
+    if (message.transaction_id !== 0n) {
+      if (BigInt.asIntN(64, message.transaction_id) !== message.transaction_id) {
+        throw new globalThis.Error("value provided for field message.transaction_id of type int64 too large");
+      }
+      writer.uint32(56).int64(message.transaction_id.toString());
     }
     return writer;
   },
@@ -32545,11 +34176,11 @@ export const TokenSentEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.sender_id = reader.string();
+          message.sender_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -32559,11 +34190,11 @@ export const TokenSentEvent = {
           message.sender_name = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.receiver_id = reader.string();
+          message.receiver_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 32) {
@@ -32587,11 +34218,11 @@ export const TokenSentEvent = {
           message.extra_attribute = reader.string();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.transaction_id = reader.string();
+          message.transaction_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -32604,26 +34235,26 @@ export const TokenSentEvent = {
 
   fromJSON(object: any): TokenSentEvent {
     return {
-      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
+      sender_id: isSet(object.sender_id) ? BigInt(object.sender_id) : 0n,
       sender_name: isSet(object.sender_name) ? globalThis.String(object.sender_name) : "",
-      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
+      receiver_id: isSet(object.receiver_id) ? BigInt(object.receiver_id) : 0n,
       amount: isSet(object.amount) ? globalThis.Number(object.amount) : 0,
       note: isSet(object.note) ? globalThis.String(object.note) : "",
       extra_attribute: isSet(object.extra_attribute) ? globalThis.String(object.extra_attribute) : "",
-      transaction_id: isSet(object.transaction_id) ? globalThis.String(object.transaction_id) : "",
+      transaction_id: isSet(object.transaction_id) ? BigInt(object.transaction_id) : 0n,
     };
   },
 
   toJSON(message: TokenSentEvent): unknown {
     const obj: any = {};
-    if (message.sender_id !== "") {
-      obj.sender_id = message.sender_id;
+    if (message.sender_id !== 0n) {
+      obj.sender_id = message.sender_id.toString();
     }
     if (message.sender_name !== "") {
       obj.sender_name = message.sender_name;
     }
-    if (message.receiver_id !== "") {
-      obj.receiver_id = message.receiver_id;
+    if (message.receiver_id !== 0n) {
+      obj.receiver_id = message.receiver_id.toString();
     }
     if (message.amount !== 0) {
       obj.amount = Math.round(message.amount);
@@ -32634,8 +34265,8 @@ export const TokenSentEvent = {
     if (message.extra_attribute !== "") {
       obj.extra_attribute = message.extra_attribute;
     }
-    if (message.transaction_id !== "") {
-      obj.transaction_id = message.transaction_id;
+    if (message.transaction_id !== 0n) {
+      obj.transaction_id = message.transaction_id.toString();
     }
     return obj;
   },
@@ -32645,25 +34276,28 @@ export const TokenSentEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<TokenSentEvent>, I>>(object: I): TokenSentEvent {
     const message = createBaseTokenSentEvent();
-    message.sender_id = object.sender_id ?? "";
+    message.sender_id = object.sender_id ?? 0n;
     message.sender_name = object.sender_name ?? "";
-    message.receiver_id = object.receiver_id ?? "";
+    message.receiver_id = object.receiver_id ?? 0n;
     message.amount = object.amount ?? 0;
     message.note = object.note ?? "";
     message.extra_attribute = object.extra_attribute ?? "";
-    message.transaction_id = object.transaction_id ?? "";
+    message.transaction_id = object.transaction_id ?? 0n;
     return message;
   },
 };
 
 function createBaseUnlockItemRequest(): UnlockItemRequest {
-  return { item_id: "", item_type: 0 };
+  return { item_id: 0n, item_type: 0 };
 }
 
 export const UnlockItemRequest = {
   encode(message: UnlockItemRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.item_id !== "") {
-      writer.uint32(10).string(message.item_id);
+    if (message.item_id !== 0n) {
+      if (BigInt.asIntN(64, message.item_id) !== message.item_id) {
+        throw new globalThis.Error("value provided for field message.item_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.item_id.toString());
     }
     if (message.item_type !== 0) {
       writer.uint32(16).int32(message.item_type);
@@ -32679,11 +34313,11 @@ export const UnlockItemRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.item_id = reader.string();
+          message.item_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
@@ -32703,15 +34337,15 @@ export const UnlockItemRequest = {
 
   fromJSON(object: any): UnlockItemRequest {
     return {
-      item_id: isSet(object.item_id) ? globalThis.String(object.item_id) : "",
+      item_id: isSet(object.item_id) ? BigInt(object.item_id) : 0n,
       item_type: isSet(object.item_type) ? globalThis.Number(object.item_type) : 0,
     };
   },
 
   toJSON(message: UnlockItemRequest): unknown {
     const obj: any = {};
-    if (message.item_id !== "") {
-      obj.item_id = message.item_id;
+    if (message.item_id !== 0n) {
+      obj.item_id = message.item_id.toString();
     }
     if (message.item_type !== 0) {
       obj.item_type = Math.round(message.item_type);
@@ -32724,7 +34358,7 @@ export const UnlockItemRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<UnlockItemRequest>, I>>(object: I): UnlockItemRequest {
     const message = createBaseUnlockItemRequest();
-    message.item_id = object.item_id ?? "";
+    message.item_id = object.item_id ?? 0n;
     message.item_type = object.item_type ?? 0;
     return message;
   },
@@ -32788,13 +34422,16 @@ export const UnlockedItemResponse = {
 };
 
 function createBaseListOnboardingRequest(): ListOnboardingRequest {
-  return { clan_id: "", guide_type: undefined, limit: undefined, page: undefined };
+  return { clan_id: 0n, guide_type: undefined, limit: undefined, page: undefined };
 }
 
 export const ListOnboardingRequest = {
   encode(message: ListOnboardingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     if (message.guide_type !== undefined) {
       Int32Value.encode({ value: message.guide_type! }, writer.uint32(18).fork()).ldelim();
@@ -32816,11 +34453,11 @@ export const ListOnboardingRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -32854,7 +34491,7 @@ export const ListOnboardingRequest = {
 
   fromJSON(object: any): ListOnboardingRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       guide_type: isSet(object.guide_type) ? Number(object.guide_type) : undefined,
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       page: isSet(object.page) ? Number(object.page) : undefined,
@@ -32863,8 +34500,8 @@ export const ListOnboardingRequest = {
 
   toJSON(message: ListOnboardingRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.guide_type !== undefined) {
       obj.guide_type = message.guide_type;
@@ -32883,7 +34520,7 @@ export const ListOnboardingRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListOnboardingRequest>, I>>(object: I): ListOnboardingRequest {
     const message = createBaseListOnboardingRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.guide_type = object.guide_type ?? undefined;
     message.limit = object.limit ?? undefined;
     message.page = object.page ?? undefined;
@@ -32954,11 +34591,11 @@ export const ListOnboardingResponse = {
 
 function createBaseOnboardingItem(): OnboardingItem {
   return {
-    id: "",
-    clan_id: "",
+    id: 0n,
+    clan_id: 0n,
     guide_type: 0,
     task_type: 0,
-    channel_id: "",
+    channel_id: 0n,
     title: "",
     content: "",
     image_url: "",
@@ -32970,11 +34607,17 @@ function createBaseOnboardingItem(): OnboardingItem {
 
 export const OnboardingItem = {
   encode(message: OnboardingItem, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.clan_id.toString());
     }
     if (message.guide_type !== 0) {
       writer.uint32(24).int32(message.guide_type);
@@ -32982,8 +34625,11 @@ export const OnboardingItem = {
     if (message.task_type !== 0) {
       writer.uint32(32).int32(message.task_type);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(42).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.channel_id.toString());
     }
     if (message.title !== "") {
       writer.uint32(50).string(message.title);
@@ -33014,18 +34660,18 @@ export const OnboardingItem = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 24) {
@@ -33042,11 +34688,11 @@ export const OnboardingItem = {
           message.task_type = reader.int32();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 50) {
@@ -33101,11 +34747,11 @@ export const OnboardingItem = {
 
   fromJSON(object: any): OnboardingItem {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       guide_type: isSet(object.guide_type) ? globalThis.Number(object.guide_type) : 0,
       task_type: isSet(object.task_type) ? globalThis.Number(object.task_type) : 0,
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       title: isSet(object.title) ? globalThis.String(object.title) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       image_url: isSet(object.image_url) ? globalThis.String(object.image_url) : "",
@@ -33119,11 +34765,11 @@ export const OnboardingItem = {
 
   toJSON(message: OnboardingItem): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.guide_type !== 0) {
       obj.guide_type = Math.round(message.guide_type);
@@ -33131,8 +34777,8 @@ export const OnboardingItem = {
     if (message.task_type !== 0) {
       obj.task_type = Math.round(message.task_type);
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.title !== "") {
       obj.title = message.title;
@@ -33160,11 +34806,11 @@ export const OnboardingItem = {
   },
   fromPartial<I extends Exact<DeepPartial<OnboardingItem>, I>>(object: I): OnboardingItem {
     const message = createBaseOnboardingItem();
-    message.id = object.id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.id = object.id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     message.guide_type = object.guide_type ?? 0;
     message.task_type = object.task_type ?? 0;
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     message.title = object.title ?? "";
     message.content = object.content ?? "";
     message.image_url = object.image_url ?? "";
@@ -33280,7 +34926,7 @@ export const OnboardingAnswer = {
 };
 
 function createBaseOnboardingContent(): OnboardingContent {
-  return { guide_type: 0, task_type: 0, channel_id: "", title: "", content: "", image_url: "", answers: [] };
+  return { guide_type: 0, task_type: 0, channel_id: 0n, title: "", content: "", image_url: "", answers: [] };
 }
 
 export const OnboardingContent = {
@@ -33291,8 +34937,11 @@ export const OnboardingContent = {
     if (message.task_type !== 0) {
       writer.uint32(16).int32(message.task_type);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.channel_id.toString());
     }
     if (message.title !== "") {
       writer.uint32(34).string(message.title);
@@ -33331,11 +34980,11 @@ export const OnboardingContent = {
           message.task_type = reader.int32();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -33378,7 +35027,7 @@ export const OnboardingContent = {
     return {
       guide_type: isSet(object.guide_type) ? globalThis.Number(object.guide_type) : 0,
       task_type: isSet(object.task_type) ? globalThis.Number(object.task_type) : 0,
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       title: isSet(object.title) ? globalThis.String(object.title) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       image_url: isSet(object.image_url) ? globalThis.String(object.image_url) : "",
@@ -33396,8 +35045,8 @@ export const OnboardingContent = {
     if (message.task_type !== 0) {
       obj.task_type = Math.round(message.task_type);
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.title !== "") {
       obj.title = message.title;
@@ -33421,7 +35070,7 @@ export const OnboardingContent = {
     const message = createBaseOnboardingContent();
     message.guide_type = object.guide_type ?? 0;
     message.task_type = object.task_type ?? 0;
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     message.title = object.title ?? "";
     message.content = object.content ?? "";
     message.image_url = object.image_url ?? "";
@@ -33431,13 +35080,16 @@ export const OnboardingContent = {
 };
 
 function createBaseCreateOnboardingRequest(): CreateOnboardingRequest {
-  return { clan_id: "", contents: [] };
+  return { clan_id: 0n, contents: [] };
 }
 
 export const CreateOnboardingRequest = {
   encode(message: CreateOnboardingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     for (const v of message.contents) {
       OnboardingContent.encode(v!, writer.uint32(18).fork()).ldelim();
@@ -33453,11 +35105,11 @@ export const CreateOnboardingRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -33477,7 +35129,7 @@ export const CreateOnboardingRequest = {
 
   fromJSON(object: any): CreateOnboardingRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       contents: globalThis.Array.isArray(object?.contents)
         ? object.contents.map((e: any) => OnboardingContent.fromJSON(e))
         : [],
@@ -33486,8 +35138,8 @@ export const CreateOnboardingRequest = {
 
   toJSON(message: CreateOnboardingRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.contents?.length) {
       obj.contents = message.contents.map((e) => OnboardingContent.toJSON(e));
@@ -33500,7 +35152,7 @@ export const CreateOnboardingRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<CreateOnboardingRequest>, I>>(object: I): CreateOnboardingRequest {
     const message = createBaseCreateOnboardingRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.contents = object.contents?.map((e) => OnboardingContent.fromPartial(e)) || [];
     return message;
   },
@@ -33508,10 +35160,10 @@ export const CreateOnboardingRequest = {
 
 function createBaseUpdateOnboardingRequest(): UpdateOnboardingRequest {
   return {
-    id: "",
-    clan_id: "",
+    id: 0n,
+    clan_id: 0n,
     task_type: undefined,
-    channel_id: "",
+    channel_id: 0n,
     title: "",
     content: "",
     image_url: "",
@@ -33521,17 +35173,26 @@ function createBaseUpdateOnboardingRequest(): UpdateOnboardingRequest {
 
 export const UpdateOnboardingRequest = {
   encode(message: UpdateOnboardingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.clan_id.toString());
     }
     if (message.task_type !== undefined) {
       Int32Value.encode({ value: message.task_type! }, writer.uint32(26).fork()).ldelim();
     }
-    if (message.channel_id !== "") {
-      writer.uint32(34).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.channel_id.toString());
     }
     if (message.title !== "") {
       writer.uint32(42).string(message.title);
@@ -33556,18 +35217,18 @@ export const UpdateOnboardingRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -33577,11 +35238,11 @@ export const UpdateOnboardingRequest = {
           message.task_type = Int32Value.decode(reader, reader.uint32()).value;
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
           if (tag !== 42) {
@@ -33622,10 +35283,10 @@ export const UpdateOnboardingRequest = {
 
   fromJSON(object: any): UpdateOnboardingRequest {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       task_type: isSet(object.task_type) ? Number(object.task_type) : undefined,
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       title: isSet(object.title) ? globalThis.String(object.title) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       image_url: isSet(object.image_url) ? globalThis.String(object.image_url) : "",
@@ -33637,17 +35298,17 @@ export const UpdateOnboardingRequest = {
 
   toJSON(message: UpdateOnboardingRequest): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.task_type !== undefined) {
       obj.task_type = message.task_type;
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.title !== "") {
       obj.title = message.title;
@@ -33669,10 +35330,10 @@ export const UpdateOnboardingRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<UpdateOnboardingRequest>, I>>(object: I): UpdateOnboardingRequest {
     const message = createBaseUpdateOnboardingRequest();
-    message.id = object.id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.id = object.id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     message.task_type = object.task_type ?? undefined;
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     message.title = object.title ?? "";
     message.content = object.content ?? "";
     message.image_url = object.image_url ?? "";
@@ -33682,16 +35343,22 @@ export const UpdateOnboardingRequest = {
 };
 
 function createBaseOnboardingRequest(): OnboardingRequest {
-  return { id: "", clan_id: "" };
+  return { id: 0n, clan_id: 0n };
 }
 
 export const OnboardingRequest = {
   encode(message: OnboardingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -33704,18 +35371,18 @@ export const OnboardingRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -33728,18 +35395,18 @@ export const OnboardingRequest = {
 
   fromJSON(object: any): OnboardingRequest {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
   toJSON(message: OnboardingRequest): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -33749,20 +35416,20 @@ export const OnboardingRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<OnboardingRequest>, I>>(object: I): OnboardingRequest {
     const message = createBaseOnboardingRequest();
-    message.id = object.id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.id = object.id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseClanWebhook(): ClanWebhook {
   return {
-    id: "",
+    id: 0n,
     webhook_name: "",
-    clan_id: "",
+    clan_id: 0n,
     active: 0,
     url: "",
-    creator_id: "",
+    creator_id: 0n,
     avatar: "",
     create_time: "",
     update_time: "",
@@ -33771,14 +35438,20 @@ function createBaseClanWebhook(): ClanWebhook {
 
 export const ClanWebhook = {
   encode(message: ClanWebhook, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
     if (message.webhook_name !== "") {
       writer.uint32(18).string(message.webhook_name);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.clan_id.toString());
     }
     if (message.active !== 0) {
       writer.uint32(32).int32(message.active);
@@ -33786,8 +35459,11 @@ export const ClanWebhook = {
     if (message.url !== "") {
       writer.uint32(42).string(message.url);
     }
-    if (message.creator_id !== "") {
-      writer.uint32(50).string(message.creator_id);
+    if (message.creator_id !== 0n) {
+      if (BigInt.asIntN(64, message.creator_id) !== message.creator_id) {
+        throw new globalThis.Error("value provided for field message.creator_id of type int64 too large");
+      }
+      writer.uint32(48).int64(message.creator_id.toString());
     }
     if (message.avatar !== "") {
       writer.uint32(58).string(message.avatar);
@@ -33809,11 +35485,11 @@ export const ClanWebhook = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -33823,11 +35499,11 @@ export const ClanWebhook = {
           message.webhook_name = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 32) {
@@ -33844,11 +35520,11 @@ export const ClanWebhook = {
           message.url = reader.string();
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToBigint(reader.int64() as Long);
           continue;
         case 7:
           if (tag !== 58) {
@@ -33882,12 +35558,12 @@ export const ClanWebhook = {
 
   fromJSON(object: any): ClanWebhook {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
       webhook_name: isSet(object.webhook_name) ? globalThis.String(object.webhook_name) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
       url: isSet(object.url) ? globalThis.String(object.url) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      creator_id: isSet(object.creator_id) ? BigInt(object.creator_id) : 0n,
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       create_time: isSet(object.create_time) ? globalThis.String(object.create_time) : "",
       update_time: isSet(object.update_time) ? globalThis.String(object.update_time) : "",
@@ -33896,14 +35572,14 @@ export const ClanWebhook = {
 
   toJSON(message: ClanWebhook): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
     if (message.webhook_name !== "") {
       obj.webhook_name = message.webhook_name;
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.active !== 0) {
       obj.active = Math.round(message.active);
@@ -33911,8 +35587,8 @@ export const ClanWebhook = {
     if (message.url !== "") {
       obj.url = message.url;
     }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
+    if (message.creator_id !== 0n) {
+      obj.creator_id = message.creator_id.toString();
     }
     if (message.avatar !== "") {
       obj.avatar = message.avatar;
@@ -33931,12 +35607,12 @@ export const ClanWebhook = {
   },
   fromPartial<I extends Exact<DeepPartial<ClanWebhook>, I>>(object: I): ClanWebhook {
     const message = createBaseClanWebhook();
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0n;
     message.webhook_name = object.webhook_name ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.active = object.active ?? 0;
     message.url = object.url ?? "";
-    message.creator_id = object.creator_id ?? "";
+    message.creator_id = object.creator_id ?? 0n;
     message.avatar = object.avatar ?? "";
     message.create_time = object.create_time ?? "";
     message.update_time = object.update_time ?? "";
@@ -33945,13 +35621,16 @@ export const ClanWebhook = {
 };
 
 function createBaseGenerateClanWebhookRequest(): GenerateClanWebhookRequest {
-  return { clan_id: "", webhook_name: "", avatar: "" };
+  return { clan_id: 0n, webhook_name: "", avatar: "" };
 }
 
 export const GenerateClanWebhookRequest = {
   encode(message: GenerateClanWebhookRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     if (message.webhook_name !== "") {
       writer.uint32(18).string(message.webhook_name);
@@ -33970,11 +35649,11 @@ export const GenerateClanWebhookRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -34001,7 +35680,7 @@ export const GenerateClanWebhookRequest = {
 
   fromJSON(object: any): GenerateClanWebhookRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       webhook_name: isSet(object.webhook_name) ? globalThis.String(object.webhook_name) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
     };
@@ -34009,8 +35688,8 @@ export const GenerateClanWebhookRequest = {
 
   toJSON(message: GenerateClanWebhookRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.webhook_name !== "") {
       obj.webhook_name = message.webhook_name;
@@ -34026,7 +35705,7 @@ export const GenerateClanWebhookRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<GenerateClanWebhookRequest>, I>>(object: I): GenerateClanWebhookRequest {
     const message = createBaseGenerateClanWebhookRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.webhook_name = object.webhook_name ?? "";
     message.avatar = object.avatar ?? "";
     return message;
@@ -34034,13 +35713,16 @@ export const GenerateClanWebhookRequest = {
 };
 
 function createBaseGenerateClanWebhookResponse(): GenerateClanWebhookResponse {
-  return { clan_id: "", url: "", webhook_name: "", avatar: "" };
+  return { clan_id: 0n, url: "", webhook_name: "", avatar: "" };
 }
 
 export const GenerateClanWebhookResponse = {
   encode(message: GenerateClanWebhookResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     if (message.url !== "") {
       writer.uint32(18).string(message.url);
@@ -34062,11 +35744,11 @@ export const GenerateClanWebhookResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -34100,7 +35782,7 @@ export const GenerateClanWebhookResponse = {
 
   fromJSON(object: any): GenerateClanWebhookResponse {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       url: isSet(object.url) ? globalThis.String(object.url) : "",
       webhook_name: isSet(object.webhook_name) ? globalThis.String(object.webhook_name) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
@@ -34109,8 +35791,8 @@ export const GenerateClanWebhookResponse = {
 
   toJSON(message: GenerateClanWebhookResponse): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.url !== "") {
       obj.url = message.url;
@@ -34129,7 +35811,7 @@ export const GenerateClanWebhookResponse = {
   },
   fromPartial<I extends Exact<DeepPartial<GenerateClanWebhookResponse>, I>>(object: I): GenerateClanWebhookResponse {
     const message = createBaseGenerateClanWebhookResponse();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.url = object.url ?? "";
     message.webhook_name = object.webhook_name ?? "";
     message.avatar = object.avatar ?? "";
@@ -34138,16 +35820,22 @@ export const GenerateClanWebhookResponse = {
 };
 
 function createBaseClanWebhookRequest(): ClanWebhookRequest {
-  return { id: "", clan_id: "" };
+  return { id: 0n, clan_id: 0n };
 }
 
 export const ClanWebhookRequest = {
   encode(message: ClanWebhookRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -34160,18 +35848,18 @@ export const ClanWebhookRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -34184,18 +35872,18 @@ export const ClanWebhookRequest = {
 
   fromJSON(object: any): ClanWebhookRequest {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
   toJSON(message: ClanWebhookRequest): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -34205,23 +35893,29 @@ export const ClanWebhookRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ClanWebhookRequest>, I>>(object: I): ClanWebhookRequest {
     const message = createBaseClanWebhookRequest();
-    message.id = object.id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.id = object.id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseUpdateClanWebhookRequest(): UpdateClanWebhookRequest {
-  return { id: "", clan_id: "", webhook_name: "", avatar: "", reset_token: false };
+  return { id: 0n, clan_id: 0n, webhook_name: "", avatar: "", reset_token: false };
 }
 
 export const UpdateClanWebhookRequest = {
   encode(message: UpdateClanWebhookRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.clan_id.toString());
     }
     if (message.webhook_name !== "") {
       writer.uint32(26).string(message.webhook_name);
@@ -34243,18 +35937,18 @@ export const UpdateClanWebhookRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -34288,8 +35982,8 @@ export const UpdateClanWebhookRequest = {
 
   fromJSON(object: any): UpdateClanWebhookRequest {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       webhook_name: isSet(object.webhook_name) ? globalThis.String(object.webhook_name) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       reset_token: isSet(object.reset_token) ? globalThis.Boolean(object.reset_token) : false,
@@ -34298,11 +35992,11 @@ export const UpdateClanWebhookRequest = {
 
   toJSON(message: UpdateClanWebhookRequest): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.webhook_name !== "") {
       obj.webhook_name = message.webhook_name;
@@ -34321,8 +36015,8 @@ export const UpdateClanWebhookRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<UpdateClanWebhookRequest>, I>>(object: I): UpdateClanWebhookRequest {
     const message = createBaseUpdateClanWebhookRequest();
-    message.id = object.id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.id = object.id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     message.webhook_name = object.webhook_name ?? "";
     message.avatar = object.avatar ?? "";
     message.reset_token = object.reset_token ?? false;
@@ -34331,13 +36025,16 @@ export const UpdateClanWebhookRequest = {
 };
 
 function createBaseListClanWebhookRequest(): ListClanWebhookRequest {
-  return { clan_id: "" };
+  return { clan_id: 0n };
 }
 
 export const ListClanWebhookRequest = {
   encode(message: ListClanWebhookRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -34350,11 +36047,11 @@ export const ListClanWebhookRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -34366,13 +36063,13 @@ export const ListClanWebhookRequest = {
   },
 
   fromJSON(object: any): ListClanWebhookRequest {
-    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+    return { clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n };
   },
 
   toJSON(message: ListClanWebhookRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -34382,7 +36079,7 @@ export const ListClanWebhookRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListClanWebhookRequest>, I>>(object: I): ListClanWebhookRequest {
     const message = createBaseListClanWebhookRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
@@ -34616,13 +36313,16 @@ export const ClanWebhookHandlerRequest = {
 };
 
 function createBaseUserStatus(): UserStatus {
-  return { user_id: "", status: "" };
+  return { user_id: 0n, status: "" };
 }
 
 export const UserStatus = {
   encode(message: UserStatus, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
+    if (message.user_id !== 0n) {
+      if (BigInt.asIntN(64, message.user_id) !== message.user_id) {
+        throw new globalThis.Error("value provided for field message.user_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.user_id.toString());
     }
     if (message.status !== "") {
       writer.uint32(18).string(message.status);
@@ -34638,11 +36338,11 @@ export const UserStatus = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -34662,15 +36362,15 @@ export const UserStatus = {
 
   fromJSON(object: any): UserStatus {
     return {
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_id: isSet(object.user_id) ? BigInt(object.user_id) : 0n,
       status: isSet(object.status) ? globalThis.String(object.status) : "",
     };
   },
 
   toJSON(message: UserStatus): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
+    if (message.user_id !== 0n) {
+      obj.user_id = message.user_id.toString();
     }
     if (message.status !== "") {
       obj.status = message.status;
@@ -34683,7 +36383,7 @@ export const UserStatus = {
   },
   fromPartial<I extends Exact<DeepPartial<UserStatus>, I>>(object: I): UserStatus {
     const message = createBaseUserStatus();
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? 0n;
     message.status = object.status ?? "";
     return message;
   },
@@ -34779,19 +36479,28 @@ export const UserStatusUpdate = {
 };
 
 function createBaseOnboardingSteps(): OnboardingSteps {
-  return { id: "", user_id: "", clan_id: "", onboarding_step: 0 };
+  return { id: 0n, user_id: 0n, clan_id: 0n, onboarding_step: 0 };
 }
 
 export const OnboardingSteps = {
   encode(message: OnboardingSteps, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.user_id !== "") {
-      writer.uint32(18).string(message.user_id);
+    if (message.user_id !== 0n) {
+      if (BigInt.asIntN(64, message.user_id) !== message.user_id) {
+        throw new globalThis.Error("value provided for field message.user_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.user_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.clan_id.toString());
     }
     if (message.onboarding_step !== 0) {
       writer.uint32(32).int32(message.onboarding_step);
@@ -34807,25 +36516,25 @@ export const OnboardingSteps = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 32) {
@@ -34845,23 +36554,23 @@ export const OnboardingSteps = {
 
   fromJSON(object: any): OnboardingSteps {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      user_id: isSet(object.user_id) ? BigInt(object.user_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       onboarding_step: isSet(object.onboarding_step) ? globalThis.Number(object.onboarding_step) : 0,
     };
   },
 
   toJSON(message: OnboardingSteps): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
+    if (message.user_id !== 0n) {
+      obj.user_id = message.user_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.onboarding_step !== 0) {
       obj.onboarding_step = Math.round(message.onboarding_step);
@@ -34874,9 +36583,9 @@ export const OnboardingSteps = {
   },
   fromPartial<I extends Exact<DeepPartial<OnboardingSteps>, I>>(object: I): OnboardingSteps {
     const message = createBaseOnboardingSteps();
-    message.id = object.id ?? "";
-    message.user_id = object.user_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.id = object.id ?? 0n;
+    message.user_id = object.user_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     message.onboarding_step = object.onboarding_step ?? 0;
     return message;
   },
@@ -34944,13 +36653,16 @@ export const ListOnboardingStepResponse = {
 };
 
 function createBaseListOnboardingStepRequest(): ListOnboardingStepRequest {
-  return { clan_id: "", limit: undefined, page: undefined };
+  return { clan_id: 0n, limit: undefined, page: undefined };
 }
 
 export const ListOnboardingStepRequest = {
   encode(message: ListOnboardingStepRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     if (message.limit !== undefined) {
       Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
@@ -34969,11 +36681,11 @@ export const ListOnboardingStepRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -35000,7 +36712,7 @@ export const ListOnboardingStepRequest = {
 
   fromJSON(object: any): ListOnboardingStepRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       page: isSet(object.page) ? Number(object.page) : undefined,
     };
@@ -35008,8 +36720,8 @@ export const ListOnboardingStepRequest = {
 
   toJSON(message: ListOnboardingStepRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.limit !== undefined) {
       obj.limit = message.limit;
@@ -35025,7 +36737,7 @@ export const ListOnboardingStepRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListOnboardingStepRequest>, I>>(object: I): ListOnboardingStepRequest {
     const message = createBaseListOnboardingStepRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.limit = object.limit ?? undefined;
     message.page = object.page ?? undefined;
     return message;
@@ -35033,13 +36745,16 @@ export const ListOnboardingStepRequest = {
 };
 
 function createBaseUpdateOnboardingStepRequest(): UpdateOnboardingStepRequest {
-  return { clan_id: "", onboarding_step: undefined };
+  return { clan_id: 0n, onboarding_step: undefined };
 }
 
 export const UpdateOnboardingStepRequest = {
   encode(message: UpdateOnboardingStepRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     if (message.onboarding_step !== undefined) {
       Int32Value.encode({ value: message.onboarding_step! }, writer.uint32(18).fork()).ldelim();
@@ -35055,11 +36770,11 @@ export const UpdateOnboardingStepRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -35079,15 +36794,15 @@ export const UpdateOnboardingStepRequest = {
 
   fromJSON(object: any): UpdateOnboardingStepRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       onboarding_step: isSet(object.onboarding_step) ? Number(object.onboarding_step) : undefined,
     };
   },
 
   toJSON(message: UpdateOnboardingStepRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.onboarding_step !== undefined) {
       obj.onboarding_step = message.onboarding_step;
@@ -35100,7 +36815,7 @@ export const UpdateOnboardingStepRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<UpdateOnboardingStepRequest>, I>>(object: I): UpdateOnboardingStepRequest {
     const message = createBaseUpdateOnboardingStepRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.onboarding_step = object.onboarding_step ?? undefined;
     return message;
   },
@@ -35108,11 +36823,11 @@ export const UpdateOnboardingStepRequest = {
 
 function createBaseSdTopic(): SdTopic {
   return {
-    id: "",
-    creator_id: "",
-    message_id: "",
-    clan_id: "",
-    channel_id: "",
+    id: 0n,
+    creator_id: 0n,
+    message_id: 0n,
+    clan_id: 0n,
+    channel_id: 0n,
     status: 0,
     create_time_seconds: 0,
     update_time_seconds: 0,
@@ -35123,20 +36838,35 @@ function createBaseSdTopic(): SdTopic {
 
 export const SdTopic = {
   encode(message: SdTopic, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.creator_id !== "") {
-      writer.uint32(18).string(message.creator_id);
+    if (message.creator_id !== 0n) {
+      if (BigInt.asIntN(64, message.creator_id) !== message.creator_id) {
+        throw new globalThis.Error("value provided for field message.creator_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.creator_id.toString());
     }
-    if (message.message_id !== "") {
-      writer.uint32(26).string(message.message_id);
+    if (message.message_id !== 0n) {
+      if (BigInt.asIntN(64, message.message_id) !== message.message_id) {
+        throw new globalThis.Error("value provided for field message.message_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.message_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(34).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(42).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.channel_id.toString());
     }
     if (message.status !== 0) {
       writer.uint32(48).int32(message.status);
@@ -35164,39 +36894,39 @@ export const SdTopic = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 48) {
@@ -35244,11 +36974,11 @@ export const SdTopic = {
 
   fromJSON(object: any): SdTopic {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      creator_id: isSet(object.creator_id) ? BigInt(object.creator_id) : 0n,
+      message_id: isSet(object.message_id) ? BigInt(object.message_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
@@ -35261,20 +36991,20 @@ export const SdTopic = {
 
   toJSON(message: SdTopic): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
+    if (message.creator_id !== 0n) {
+      obj.creator_id = message.creator_id.toString();
     }
-    if (message.message_id !== "") {
-      obj.message_id = message.message_id;
+    if (message.message_id !== 0n) {
+      obj.message_id = message.message_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
@@ -35299,11 +37029,11 @@ export const SdTopic = {
   },
   fromPartial<I extends Exact<DeepPartial<SdTopic>, I>>(object: I): SdTopic {
     const message = createBaseSdTopic();
-    message.id = object.id ?? "";
-    message.creator_id = object.creator_id ?? "";
-    message.message_id = object.message_id ?? "";
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.id = object.id ?? 0n;
+    message.creator_id = object.creator_id ?? 0n;
+    message.message_id = object.message_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     message.status = object.status ?? 0;
     message.create_time_seconds = object.create_time_seconds ?? 0;
     message.update_time_seconds = object.update_time_seconds ?? 0;
@@ -35316,19 +37046,28 @@ export const SdTopic = {
 };
 
 function createBaseSdTopicRequest(): SdTopicRequest {
-  return { message_id: "", clan_id: "", channel_id: "" };
+  return { message_id: 0n, clan_id: 0n, channel_id: 0n };
 }
 
 export const SdTopicRequest = {
   encode(message: SdTopicRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.message_id !== "") {
-      writer.uint32(10).string(message.message_id);
+    if (message.message_id !== 0n) {
+      if (BigInt.asIntN(64, message.message_id) !== message.message_id) {
+        throw new globalThis.Error("value provided for field message.message_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.message_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.channel_id.toString());
     }
     return writer;
   },
@@ -35341,25 +37080,25 @@ export const SdTopicRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -35372,22 +37111,22 @@ export const SdTopicRequest = {
 
   fromJSON(object: any): SdTopicRequest {
     return {
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      message_id: isSet(object.message_id) ? BigInt(object.message_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
     };
   },
 
   toJSON(message: SdTopicRequest): unknown {
     const obj: any = {};
-    if (message.message_id !== "") {
-      obj.message_id = message.message_id;
+    if (message.message_id !== 0n) {
+      obj.message_id = message.message_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     return obj;
   },
@@ -35397,9 +37136,9 @@ export const SdTopicRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<SdTopicRequest>, I>>(object: I): SdTopicRequest {
     const message = createBaseSdTopicRequest();
-    message.message_id = object.message_id ?? "";
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.message_id = object.message_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     return message;
   },
 };
@@ -35479,13 +37218,16 @@ export const SdTopicList = {
 };
 
 function createBaseListSdTopicRequest(): ListSdTopicRequest {
-  return { clan_id: "", limit: 0 };
+  return { clan_id: 0n, limit: 0 };
 }
 
 export const ListSdTopicRequest = {
   encode(message: ListSdTopicRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     if (message.limit !== 0) {
       writer.uint32(16).int32(message.limit);
@@ -35501,11 +37243,11 @@ export const ListSdTopicRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
@@ -35525,15 +37267,15 @@ export const ListSdTopicRequest = {
 
   fromJSON(object: any): ListSdTopicRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
     };
   },
 
   toJSON(message: ListSdTopicRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.limit !== 0) {
       obj.limit = Math.round(message.limit);
@@ -35546,20 +37288,23 @@ export const ListSdTopicRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListSdTopicRequest>, I>>(object: I): ListSdTopicRequest {
     const message = createBaseListSdTopicRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.limit = object.limit ?? 0;
     return message;
   },
 };
 
 function createBaseSdTopicDetailRequest(): SdTopicDetailRequest {
-  return { topic_id: "" };
+  return { topic_id: 0n };
 }
 
 export const SdTopicDetailRequest = {
   encode(message: SdTopicDetailRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.topic_id !== "") {
-      writer.uint32(10).string(message.topic_id);
+    if (message.topic_id !== 0n) {
+      if (BigInt.asIntN(64, message.topic_id) !== message.topic_id) {
+        throw new globalThis.Error("value provided for field message.topic_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.topic_id.toString());
     }
     return writer;
   },
@@ -35572,11 +37317,11 @@ export const SdTopicDetailRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.topic_id = reader.string();
+          message.topic_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -35588,13 +37333,13 @@ export const SdTopicDetailRequest = {
   },
 
   fromJSON(object: any): SdTopicDetailRequest {
-    return { topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "" };
+    return { topic_id: isSet(object.topic_id) ? BigInt(object.topic_id) : 0n };
   },
 
   toJSON(message: SdTopicDetailRequest): unknown {
     const obj: any = {};
-    if (message.topic_id !== "") {
-      obj.topic_id = message.topic_id;
+    if (message.topic_id !== 0n) {
+      obj.topic_id = message.topic_id.toString();
     }
     return obj;
   },
@@ -35604,25 +37349,34 @@ export const SdTopicDetailRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<SdTopicDetailRequest>, I>>(object: I): SdTopicDetailRequest {
     const message = createBaseSdTopicDetailRequest();
-    message.topic_id = object.topic_id ?? "";
+    message.topic_id = object.topic_id ?? 0n;
     return message;
   },
 };
 
 function createBaseDeleteSdTopicRequest(): DeleteSdTopicRequest {
-  return { channel_id: "", id: "", clan_id: "" };
+  return { channel_id: 0n, id: 0n, clan_id: 0n };
 }
 
 export const DeleteSdTopicRequest = {
   encode(message: DeleteSdTopicRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.channel_id.toString());
     }
-    if (message.id !== "") {
-      writer.uint32(18).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -35635,25 +37389,25 @@ export const DeleteSdTopicRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -35666,22 +37420,22 @@ export const DeleteSdTopicRequest = {
 
   fromJSON(object: any): DeleteSdTopicRequest {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
   toJSON(message: DeleteSdTopicRequest): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -35691,21 +37445,24 @@ export const DeleteSdTopicRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<DeleteSdTopicRequest>, I>>(object: I): DeleteSdTopicRequest {
     const message = createBaseDeleteSdTopicRequest();
-    message.channel_id = object.channel_id ?? "";
-    message.id = object.id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
+    message.id = object.id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
 
 function createBaseGenerateMeetTokenRequest(): GenerateMeetTokenRequest {
-  return { channel_id: "", room_name: "" };
+  return { channel_id: 0n, room_name: "" };
 }
 
 export const GenerateMeetTokenRequest = {
   encode(message: GenerateMeetTokenRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.channel_id.toString());
     }
     if (message.room_name !== "") {
       writer.uint32(18).string(message.room_name);
@@ -35721,11 +37478,11 @@ export const GenerateMeetTokenRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -35745,15 +37502,15 @@ export const GenerateMeetTokenRequest = {
 
   fromJSON(object: any): GenerateMeetTokenRequest {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
     };
   },
 
   toJSON(message: GenerateMeetTokenRequest): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.room_name !== "") {
       obj.room_name = message.room_name;
@@ -35766,14 +37523,14 @@ export const GenerateMeetTokenRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<GenerateMeetTokenRequest>, I>>(object: I): GenerateMeetTokenRequest {
     const message = createBaseGenerateMeetTokenRequest();
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     message.room_name = object.room_name ?? "";
     return message;
   },
 };
 
 function createBaseMeetParticipantRequest(): MeetParticipantRequest {
-  return { username: "", room_name: "", channel_id: "", clan_id: "" };
+  return { username: "", room_name: "", channel_id: 0n, clan_id: 0n };
 }
 
 export const MeetParticipantRequest = {
@@ -35784,11 +37541,17 @@ export const MeetParticipantRequest = {
     if (message.room_name !== "") {
       writer.uint32(18).string(message.room_name);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.channel_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(34).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -35815,18 +37578,18 @@ export const MeetParticipantRequest = {
           message.room_name = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -35841,8 +37604,8 @@ export const MeetParticipantRequest = {
     return {
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
     };
   },
 
@@ -35854,11 +37617,11 @@ export const MeetParticipantRequest = {
     if (message.room_name !== "") {
       obj.room_name = message.room_name;
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -35870,8 +37633,8 @@ export const MeetParticipantRequest = {
     const message = createBaseMeetParticipantRequest();
     message.username = object.username ?? "";
     message.room_name = object.room_name ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
@@ -35934,13 +37697,16 @@ export const GenerateMeetTokenResponse = {
 };
 
 function createBaseGenerateMezonMeetResponse(): GenerateMezonMeetResponse {
-  return { meet_id: "", room_name: "", external_link: "", creator_id: "", event_id: "" };
+  return { meet_id: 0n, room_name: "", external_link: "", creator_id: 0n, event_id: 0n };
 }
 
 export const GenerateMezonMeetResponse = {
   encode(message: GenerateMezonMeetResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.meet_id !== "") {
-      writer.uint32(10).string(message.meet_id);
+    if (message.meet_id !== 0n) {
+      if (BigInt.asIntN(64, message.meet_id) !== message.meet_id) {
+        throw new globalThis.Error("value provided for field message.meet_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.meet_id.toString());
     }
     if (message.room_name !== "") {
       writer.uint32(18).string(message.room_name);
@@ -35948,11 +37714,17 @@ export const GenerateMezonMeetResponse = {
     if (message.external_link !== "") {
       writer.uint32(26).string(message.external_link);
     }
-    if (message.creator_id !== "") {
-      writer.uint32(34).string(message.creator_id);
+    if (message.creator_id !== 0n) {
+      if (BigInt.asIntN(64, message.creator_id) !== message.creator_id) {
+        throw new globalThis.Error("value provided for field message.creator_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.creator_id.toString());
     }
-    if (message.event_id !== "") {
-      writer.uint32(42).string(message.event_id);
+    if (message.event_id !== 0n) {
+      if (BigInt.asIntN(64, message.event_id) !== message.event_id) {
+        throw new globalThis.Error("value provided for field message.event_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.event_id.toString());
     }
     return writer;
   },
@@ -35965,11 +37737,11 @@ export const GenerateMezonMeetResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.meet_id = reader.string();
+          message.meet_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -35986,18 +37758,18 @@ export const GenerateMezonMeetResponse = {
           message.external_link = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.event_id = reader.string();
+          message.event_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -36010,18 +37782,18 @@ export const GenerateMezonMeetResponse = {
 
   fromJSON(object: any): GenerateMezonMeetResponse {
     return {
-      meet_id: isSet(object.meet_id) ? globalThis.String(object.meet_id) : "",
+      meet_id: isSet(object.meet_id) ? BigInt(object.meet_id) : 0n,
       room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
       external_link: isSet(object.external_link) ? globalThis.String(object.external_link) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      event_id: isSet(object.event_id) ? globalThis.String(object.event_id) : "",
+      creator_id: isSet(object.creator_id) ? BigInt(object.creator_id) : 0n,
+      event_id: isSet(object.event_id) ? BigInt(object.event_id) : 0n,
     };
   },
 
   toJSON(message: GenerateMezonMeetResponse): unknown {
     const obj: any = {};
-    if (message.meet_id !== "") {
-      obj.meet_id = message.meet_id;
+    if (message.meet_id !== 0n) {
+      obj.meet_id = message.meet_id.toString();
     }
     if (message.room_name !== "") {
       obj.room_name = message.room_name;
@@ -36029,11 +37801,11 @@ export const GenerateMezonMeetResponse = {
     if (message.external_link !== "") {
       obj.external_link = message.external_link;
     }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
+    if (message.creator_id !== 0n) {
+      obj.creator_id = message.creator_id.toString();
     }
-    if (message.event_id !== "") {
-      obj.event_id = message.event_id;
+    if (message.event_id !== 0n) {
+      obj.event_id = message.event_id.toString();
     }
     return obj;
   },
@@ -36043,23 +37815,26 @@ export const GenerateMezonMeetResponse = {
   },
   fromPartial<I extends Exact<DeepPartial<GenerateMezonMeetResponse>, I>>(object: I): GenerateMezonMeetResponse {
     const message = createBaseGenerateMezonMeetResponse();
-    message.meet_id = object.meet_id ?? "";
+    message.meet_id = object.meet_id ?? 0n;
     message.room_name = object.room_name ?? "";
     message.external_link = object.external_link ?? "";
-    message.creator_id = object.creator_id ?? "";
-    message.event_id = object.event_id ?? "";
+    message.creator_id = object.creator_id ?? 0n;
+    message.event_id = object.event_id ?? 0n;
     return message;
   },
 };
 
 function createBaseCreateRoomChannelApps(): CreateRoomChannelApps {
-  return { channel_id: "", room_name: "" };
+  return { channel_id: 0n, room_name: "" };
 }
 
 export const CreateRoomChannelApps = {
   encode(message: CreateRoomChannelApps, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.channel_id.toString());
     }
     if (message.room_name !== "") {
       writer.uint32(18).string(message.room_name);
@@ -36075,11 +37850,11 @@ export const CreateRoomChannelApps = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -36099,15 +37874,15 @@ export const CreateRoomChannelApps = {
 
   fromJSON(object: any): CreateRoomChannelApps {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
     };
   },
 
   toJSON(message: CreateRoomChannelApps): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.room_name !== "") {
       obj.room_name = message.room_name;
@@ -36120,7 +37895,7 @@ export const CreateRoomChannelApps = {
   },
   fromPartial<I extends Exact<DeepPartial<CreateRoomChannelApps>, I>>(object: I): CreateRoomChannelApps {
     const message = createBaseCreateRoomChannelApps();
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
     message.room_name = object.room_name ?? "";
     return message;
   },
@@ -36137,7 +37912,7 @@ function createBaseMezonOauthClient(): MezonOauthClient {
     backchannel_logout_session_required: false,
     backchannel_logout_uri: "",
     client_credentials_grant_access_token_lifespan: "",
-    client_id: "",
+    client_id: 0n,
     client_name: "",
     client_secret: "",
     client_secret_expires_at: 0,
@@ -36207,8 +37982,11 @@ export const MezonOauthClient = {
     if (message.client_credentials_grant_access_token_lifespan !== "") {
       writer.uint32(74).string(message.client_credentials_grant_access_token_lifespan);
     }
-    if (message.client_id !== "") {
-      writer.uint32(82).string(message.client_id);
+    if (message.client_id !== 0n) {
+      if (BigInt.asIntN(64, message.client_id) !== message.client_id) {
+        throw new globalThis.Error("value provided for field message.client_id of type int64 too large");
+      }
+      writer.uint32(80).int64(message.client_id.toString());
     }
     if (message.client_name !== "") {
       writer.uint32(90).string(message.client_name);
@@ -36395,11 +38173,11 @@ export const MezonOauthClient = {
           message.client_credentials_grant_access_token_lifespan = reader.string();
           continue;
         case 10:
-          if (tag !== 82) {
+          if (tag !== 80) {
             break;
           }
 
-          message.client_id = reader.string();
+          message.client_id = longToBigint(reader.int64() as Long);
           continue;
         case 11:
           if (tag !== 90) {
@@ -36694,7 +38472,7 @@ export const MezonOauthClient = {
       client_credentials_grant_access_token_lifespan: isSet(object.client_credentials_grant_access_token_lifespan)
         ? globalThis.String(object.client_credentials_grant_access_token_lifespan)
         : "",
-      client_id: isSet(object.client_id) ? globalThis.String(object.client_id) : "",
+      client_id: isSet(object.client_id) ? BigInt(object.client_id) : 0n,
       client_name: isSet(object.client_name) ? globalThis.String(object.client_name) : "",
       client_secret: isSet(object.client_secret) ? globalThis.String(object.client_secret) : "",
       client_secret_expires_at: isSet(object.client_secret_expires_at)
@@ -36808,8 +38586,8 @@ export const MezonOauthClient = {
     if (message.client_credentials_grant_access_token_lifespan !== "") {
       obj.client_credentials_grant_access_token_lifespan = message.client_credentials_grant_access_token_lifespan;
     }
-    if (message.client_id !== "") {
-      obj.client_id = message.client_id;
+    if (message.client_id !== 0n) {
+      obj.client_id = message.client_id.toString();
     }
     if (message.client_name !== "") {
       obj.client_name = message.client_name;
@@ -36942,7 +38720,7 @@ export const MezonOauthClient = {
     message.backchannel_logout_uri = object.backchannel_logout_uri ?? "";
     message.client_credentials_grant_access_token_lifespan = object.client_credentials_grant_access_token_lifespan ??
       "";
-    message.client_id = object.client_id ?? "";
+    message.client_id = object.client_id ?? 0n;
     message.client_name = object.client_name ?? "";
     message.client_secret = object.client_secret ?? "";
     message.client_secret_expires_at = object.client_secret_expires_at ?? 0;
@@ -37046,13 +38824,16 @@ export const MezonOauthClientList = {
 };
 
 function createBaseGetMezonOauthClientRequest(): GetMezonOauthClientRequest {
-  return { client_id: "", client_name: "" };
+  return { client_id: 0n, client_name: "" };
 }
 
 export const GetMezonOauthClientRequest = {
   encode(message: GetMezonOauthClientRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.client_id !== "") {
-      writer.uint32(10).string(message.client_id);
+    if (message.client_id !== 0n) {
+      if (BigInt.asIntN(64, message.client_id) !== message.client_id) {
+        throw new globalThis.Error("value provided for field message.client_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.client_id.toString());
     }
     if (message.client_name !== "") {
       writer.uint32(18).string(message.client_name);
@@ -37068,11 +38849,11 @@ export const GetMezonOauthClientRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.client_id = reader.string();
+          message.client_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -37092,15 +38873,15 @@ export const GetMezonOauthClientRequest = {
 
   fromJSON(object: any): GetMezonOauthClientRequest {
     return {
-      client_id: isSet(object.client_id) ? globalThis.String(object.client_id) : "",
+      client_id: isSet(object.client_id) ? BigInt(object.client_id) : 0n,
       client_name: isSet(object.client_name) ? globalThis.String(object.client_name) : "",
     };
   },
 
   toJSON(message: GetMezonOauthClientRequest): unknown {
     const obj: any = {};
-    if (message.client_id !== "") {
-      obj.client_id = message.client_id;
+    if (message.client_id !== 0n) {
+      obj.client_id = message.client_id.toString();
     }
     if (message.client_name !== "") {
       obj.client_name = message.client_name;
@@ -37113,23 +38894,29 @@ export const GetMezonOauthClientRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<GetMezonOauthClientRequest>, I>>(object: I): GetMezonOauthClientRequest {
     const message = createBaseGetMezonOauthClientRequest();
-    message.client_id = object.client_id ?? "";
+    message.client_id = object.client_id ?? 0n;
     message.client_name = object.client_name ?? "";
     return message;
   },
 };
 
 function createBaseSearchThreadRequest(): SearchThreadRequest {
-  return { clan_id: "", channel_id: "", label: "" };
+  return { clan_id: 0n, channel_id: 0n, label: "" };
 }
 
 export const SearchThreadRequest = {
   encode(message: SearchThreadRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     if (message.label !== "") {
       writer.uint32(26).string(message.label);
@@ -37145,18 +38932,18 @@ export const SearchThreadRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -37176,19 +38963,19 @@ export const SearchThreadRequest = {
 
   fromJSON(object: any): SearchThreadRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       label: isSet(object.label) ? globalThis.String(object.label) : "",
     };
   },
 
   toJSON(message: SearchThreadRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.label !== "") {
       obj.label = message.label;
@@ -37201,21 +38988,24 @@ export const SearchThreadRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<SearchThreadRequest>, I>>(object: I): SearchThreadRequest {
     const message = createBaseSearchThreadRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     message.label = object.label ?? "";
     return message;
   },
 };
 
 function createBaseGenerateHashChannelAppsRequest(): GenerateHashChannelAppsRequest {
-  return { app_id: "" };
+  return { app_id: 0n };
 }
 
 export const GenerateHashChannelAppsRequest = {
   encode(message: GenerateHashChannelAppsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.app_id !== "") {
-      writer.uint32(10).string(message.app_id);
+    if (message.app_id !== 0n) {
+      if (BigInt.asIntN(64, message.app_id) !== message.app_id) {
+        throw new globalThis.Error("value provided for field message.app_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.app_id.toString());
     }
     return writer;
   },
@@ -37228,11 +39018,11 @@ export const GenerateHashChannelAppsRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.app_id = reader.string();
+          message.app_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -37244,13 +39034,13 @@ export const GenerateHashChannelAppsRequest = {
   },
 
   fromJSON(object: any): GenerateHashChannelAppsRequest {
-    return { app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "" };
+    return { app_id: isSet(object.app_id) ? BigInt(object.app_id) : 0n };
   },
 
   toJSON(message: GenerateHashChannelAppsRequest): unknown {
     const obj: any = {};
-    if (message.app_id !== "") {
-      obj.app_id = message.app_id;
+    if (message.app_id !== 0n) {
+      obj.app_id = message.app_id.toString();
     }
     return obj;
   },
@@ -37262,7 +39052,7 @@ export const GenerateHashChannelAppsRequest = {
     object: I,
   ): GenerateHashChannelAppsRequest {
     const message = createBaseGenerateHashChannelAppsRequest();
-    message.app_id = object.app_id ?? "";
+    message.app_id = object.app_id ?? 0n;
     return message;
   },
 };
@@ -37328,9 +39118,9 @@ export const GenerateHashChannelAppsResponse = {
 
 function createBaseMessage2InboxRequest(): Message2InboxRequest {
   return {
-    message_id: "",
-    channel_id: "",
-    clan_id: "",
+    message_id: 0n,
+    channel_id: 0n,
+    clan_id: 0n,
     avatar: "",
     content: "",
     mentions: [],
@@ -37342,14 +39132,23 @@ function createBaseMessage2InboxRequest(): Message2InboxRequest {
 
 export const Message2InboxRequest = {
   encode(message: Message2InboxRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.message_id !== "") {
-      writer.uint32(10).string(message.message_id);
+    if (message.message_id !== 0n) {
+      if (BigInt.asIntN(64, message.message_id) !== message.message_id) {
+        throw new globalThis.Error("value provided for field message.message_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.message_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.clan_id.toString());
     }
     if (message.avatar !== "") {
       writer.uint32(34).string(message.avatar);
@@ -37380,25 +39179,25 @@ export const Message2InboxRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -37453,9 +39252,9 @@ export const Message2InboxRequest = {
 
   fromJSON(object: any): Message2InboxRequest {
     return {
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      message_id: isSet(object.message_id) ? BigInt(object.message_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       mentions: globalThis.Array.isArray(object?.mentions)
@@ -37475,14 +39274,14 @@ export const Message2InboxRequest = {
 
   toJSON(message: Message2InboxRequest): unknown {
     const obj: any = {};
-    if (message.message_id !== "") {
-      obj.message_id = message.message_id;
+    if (message.message_id !== 0n) {
+      obj.message_id = message.message_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.avatar !== "") {
       obj.avatar = message.avatar;
@@ -37510,9 +39309,9 @@ export const Message2InboxRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<Message2InboxRequest>, I>>(object: I): Message2InboxRequest {
     const message = createBaseMessage2InboxRequest();
-    message.message_id = object.message_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.message_id = object.message_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
     message.avatar = object.avatar ?? "";
     message.content = object.content ?? "";
     message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
@@ -37888,13 +39687,16 @@ export const AccountMezon_VarsEntry = {
 };
 
 function createBaseLinkAccountConfirmRequest(): LinkAccountConfirmRequest {
-  return { req_id: "", status: 0, otp_code: "" };
+  return { req_id: 0n, status: 0, otp_code: "" };
 }
 
 export const LinkAccountConfirmRequest = {
   encode(message: LinkAccountConfirmRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.req_id !== "") {
-      writer.uint32(10).string(message.req_id);
+    if (message.req_id !== 0n) {
+      if (BigInt.asIntN(64, message.req_id) !== message.req_id) {
+        throw new globalThis.Error("value provided for field message.req_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.req_id.toString());
     }
     if (message.status !== 0) {
       writer.uint32(16).int32(message.status);
@@ -37913,11 +39715,11 @@ export const LinkAccountConfirmRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.req_id = reader.string();
+          message.req_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
@@ -37944,7 +39746,7 @@ export const LinkAccountConfirmRequest = {
 
   fromJSON(object: any): LinkAccountConfirmRequest {
     return {
-      req_id: isSet(object.req_id) ? globalThis.String(object.req_id) : "",
+      req_id: isSet(object.req_id) ? BigInt(object.req_id) : 0n,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       otp_code: isSet(object.otp_code) ? globalThis.String(object.otp_code) : "",
     };
@@ -37952,8 +39754,8 @@ export const LinkAccountConfirmRequest = {
 
   toJSON(message: LinkAccountConfirmRequest): unknown {
     const obj: any = {};
-    if (message.req_id !== "") {
-      obj.req_id = message.req_id;
+    if (message.req_id !== 0n) {
+      obj.req_id = message.req_id.toString();
     }
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
@@ -37969,7 +39771,7 @@ export const LinkAccountConfirmRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<LinkAccountConfirmRequest>, I>>(object: I): LinkAccountConfirmRequest {
     const message = createBaseLinkAccountConfirmRequest();
-    message.req_id = object.req_id ?? "";
+    message.req_id = object.req_id ?? 0n;
     message.status = object.status ?? 0;
     message.otp_code = object.otp_code ?? "";
     return message;
@@ -37978,10 +39780,10 @@ export const LinkAccountConfirmRequest = {
 
 function createBaseQuickMenuAccess(): QuickMenuAccess {
   return {
-    id: "",
-    bot_id: "",
-    clan_id: "",
-    channel_id: "",
+    id: 0n,
+    bot_id: 0n,
+    clan_id: 0n,
+    channel_id: 0n,
     menu_name: "",
     background: "",
     action_msg: "",
@@ -37991,17 +39793,29 @@ function createBaseQuickMenuAccess(): QuickMenuAccess {
 
 export const QuickMenuAccess = {
   encode(message: QuickMenuAccess, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== 0n) {
+      if (BigInt.asIntN(64, message.id) !== message.id) {
+        throw new globalThis.Error("value provided for field message.id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.id.toString());
     }
-    if (message.bot_id !== "") {
-      writer.uint32(18).string(message.bot_id);
+    if (message.bot_id !== 0n) {
+      if (BigInt.asIntN(64, message.bot_id) !== message.bot_id) {
+        throw new globalThis.Error("value provided for field message.bot_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.bot_id.toString());
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.clan_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(34).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.channel_id.toString());
     }
     if (message.menu_name !== "") {
       writer.uint32(42).string(message.menu_name);
@@ -38026,32 +39840,32 @@ export const QuickMenuAccess = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.bot_id = reader.string();
+          message.bot_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
           if (tag !== 42) {
@@ -38092,10 +39906,10 @@ export const QuickMenuAccess = {
 
   fromJSON(object: any): QuickMenuAccess {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      bot_id: isSet(object.bot_id) ? globalThis.String(object.bot_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      bot_id: isSet(object.bot_id) ? BigInt(object.bot_id) : 0n,
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       menu_name: isSet(object.menu_name) ? globalThis.String(object.menu_name) : "",
       background: isSet(object.background) ? globalThis.String(object.background) : "",
       action_msg: isSet(object.action_msg) ? globalThis.String(object.action_msg) : "",
@@ -38105,17 +39919,17 @@ export const QuickMenuAccess = {
 
   toJSON(message: QuickMenuAccess): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0n) {
+      obj.id = message.id.toString();
     }
-    if (message.bot_id !== "") {
-      obj.bot_id = message.bot_id;
+    if (message.bot_id !== 0n) {
+      obj.bot_id = message.bot_id.toString();
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.menu_name !== "") {
       obj.menu_name = message.menu_name;
@@ -38137,10 +39951,10 @@ export const QuickMenuAccess = {
   },
   fromPartial<I extends Exact<DeepPartial<QuickMenuAccess>, I>>(object: I): QuickMenuAccess {
     const message = createBaseQuickMenuAccess();
-    message.id = object.id ?? "";
-    message.bot_id = object.bot_id ?? "";
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.id = object.id ?? 0n;
+    message.bot_id = object.bot_id ?? 0n;
+    message.clan_id = object.clan_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     message.menu_name = object.menu_name ?? "";
     message.background = object.background ?? "";
     message.action_msg = object.action_msg ?? "";
@@ -38150,16 +39964,22 @@ export const QuickMenuAccess = {
 };
 
 function createBaseListQuickMenuAccessRequest(): ListQuickMenuAccessRequest {
-  return { bot_id: "", channel_id: "", menu_type: 0 };
+  return { bot_id: 0n, channel_id: 0n, menu_type: 0 };
 }
 
 export const ListQuickMenuAccessRequest = {
   encode(message: ListQuickMenuAccessRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.bot_id !== "") {
-      writer.uint32(10).string(message.bot_id);
+    if (message.bot_id !== 0n) {
+      if (BigInt.asIntN(64, message.bot_id) !== message.bot_id) {
+        throw new globalThis.Error("value provided for field message.bot_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.bot_id.toString());
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.channel_id.toString());
     }
     if (message.menu_type !== 0) {
       writer.uint32(24).int32(message.menu_type);
@@ -38175,18 +39995,18 @@ export const ListQuickMenuAccessRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.bot_id = reader.string();
+          message.bot_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 24) {
@@ -38206,19 +40026,19 @@ export const ListQuickMenuAccessRequest = {
 
   fromJSON(object: any): ListQuickMenuAccessRequest {
     return {
-      bot_id: isSet(object.bot_id) ? globalThis.String(object.bot_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      bot_id: isSet(object.bot_id) ? BigInt(object.bot_id) : 0n,
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
       menu_type: isSet(object.menu_type) ? globalThis.Number(object.menu_type) : 0,
     };
   },
 
   toJSON(message: ListQuickMenuAccessRequest): unknown {
     const obj: any = {};
-    if (message.bot_id !== "") {
-      obj.bot_id = message.bot_id;
+    if (message.bot_id !== 0n) {
+      obj.bot_id = message.bot_id.toString();
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
     if (message.menu_type !== 0) {
       obj.menu_type = Math.round(message.menu_type);
@@ -38231,8 +40051,8 @@ export const ListQuickMenuAccessRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListQuickMenuAccessRequest>, I>>(object: I): ListQuickMenuAccessRequest {
     const message = createBaseListQuickMenuAccessRequest();
-    message.bot_id = object.bot_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.bot_id = object.bot_id ?? 0n;
+    message.channel_id = object.channel_id ?? 0n;
     message.menu_type = object.menu_type ?? 0;
     return message;
   },
@@ -38492,13 +40312,16 @@ export const ForSaleItemList = {
 };
 
 function createBaseIsFollowerRequest(): IsFollowerRequest {
-  return { follow_id: "" };
+  return { follow_id: 0n };
 }
 
 export const IsFollowerRequest = {
   encode(message: IsFollowerRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.follow_id !== "") {
-      writer.uint32(10).string(message.follow_id);
+    if (message.follow_id !== 0n) {
+      if (BigInt.asIntN(64, message.follow_id) !== message.follow_id) {
+        throw new globalThis.Error("value provided for field message.follow_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.follow_id.toString());
     }
     return writer;
   },
@@ -38511,11 +40334,11 @@ export const IsFollowerRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.follow_id = reader.string();
+          message.follow_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -38527,13 +40350,13 @@ export const IsFollowerRequest = {
   },
 
   fromJSON(object: any): IsFollowerRequest {
-    return { follow_id: isSet(object.follow_id) ? globalThis.String(object.follow_id) : "" };
+    return { follow_id: isSet(object.follow_id) ? BigInt(object.follow_id) : 0n };
   },
 
   toJSON(message: IsFollowerRequest): unknown {
     const obj: any = {};
-    if (message.follow_id !== "") {
-      obj.follow_id = message.follow_id;
+    if (message.follow_id !== 0n) {
+      obj.follow_id = message.follow_id.toString();
     }
     return obj;
   },
@@ -38543,19 +40366,22 @@ export const IsFollowerRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<IsFollowerRequest>, I>>(object: I): IsFollowerRequest {
     const message = createBaseIsFollowerRequest();
-    message.follow_id = object.follow_id ?? "";
+    message.follow_id = object.follow_id ?? 0n;
     return message;
   },
 };
 
 function createBaseIsFollowerResponse(): IsFollowerResponse {
-  return { follow_id: "", is_follower: false };
+  return { follow_id: 0n, is_follower: false };
 }
 
 export const IsFollowerResponse = {
   encode(message: IsFollowerResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.follow_id !== "") {
-      writer.uint32(10).string(message.follow_id);
+    if (message.follow_id !== 0n) {
+      if (BigInt.asIntN(64, message.follow_id) !== message.follow_id) {
+        throw new globalThis.Error("value provided for field message.follow_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.follow_id.toString());
     }
     if (message.is_follower !== false) {
       writer.uint32(16).bool(message.is_follower);
@@ -38571,11 +40397,11 @@ export const IsFollowerResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.follow_id = reader.string();
+          message.follow_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
@@ -38595,15 +40421,15 @@ export const IsFollowerResponse = {
 
   fromJSON(object: any): IsFollowerResponse {
     return {
-      follow_id: isSet(object.follow_id) ? globalThis.String(object.follow_id) : "",
+      follow_id: isSet(object.follow_id) ? BigInt(object.follow_id) : 0n,
       is_follower: isSet(object.is_follower) ? globalThis.Boolean(object.is_follower) : false,
     };
   },
 
   toJSON(message: IsFollowerResponse): unknown {
     const obj: any = {};
-    if (message.follow_id !== "") {
-      obj.follow_id = message.follow_id;
+    if (message.follow_id !== 0n) {
+      obj.follow_id = message.follow_id.toString();
     }
     if (message.is_follower !== false) {
       obj.is_follower = message.is_follower;
@@ -38616,23 +40442,29 @@ export const IsFollowerResponse = {
   },
   fromPartial<I extends Exact<DeepPartial<IsFollowerResponse>, I>>(object: I): IsFollowerResponse {
     const message = createBaseIsFollowerResponse();
-    message.follow_id = object.follow_id ?? "";
+    message.follow_id = object.follow_id ?? 0n;
     message.is_follower = object.is_follower ?? false;
     return message;
   },
 };
 
 function createBaseTransferOwnershipRequest(): TransferOwnershipRequest {
-  return { clan_id: "", new_owner_id: "" };
+  return { clan_id: 0n, new_owner_id: 0n };
 }
 
 export const TransferOwnershipRequest = {
   encode(message: TransferOwnershipRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.new_owner_id !== "") {
-      writer.uint32(18).string(message.new_owner_id);
+    if (message.new_owner_id !== 0n) {
+      if (BigInt.asIntN(64, message.new_owner_id) !== message.new_owner_id) {
+        throw new globalThis.Error("value provided for field message.new_owner_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.new_owner_id.toString());
     }
     return writer;
   },
@@ -38645,18 +40477,18 @@ export const TransferOwnershipRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.new_owner_id = reader.string();
+          message.new_owner_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -38669,18 +40501,18 @@ export const TransferOwnershipRequest = {
 
   fromJSON(object: any): TransferOwnershipRequest {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      new_owner_id: isSet(object.new_owner_id) ? globalThis.String(object.new_owner_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
+      new_owner_id: isSet(object.new_owner_id) ? BigInt(object.new_owner_id) : 0n,
     };
   },
 
   toJSON(message: TransferOwnershipRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
-    if (message.new_owner_id !== "") {
-      obj.new_owner_id = message.new_owner_id;
+    if (message.new_owner_id !== 0n) {
+      obj.new_owner_id = message.new_owner_id.toString();
     }
     return obj;
   },
@@ -38690,8 +40522,8 @@ export const TransferOwnershipRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<TransferOwnershipRequest>, I>>(object: I): TransferOwnershipRequest {
     const message = createBaseTransferOwnershipRequest();
-    message.clan_id = object.clan_id ?? "";
-    message.new_owner_id = object.new_owner_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
+    message.new_owner_id = object.new_owner_id ?? 0n;
     return message;
   },
 };
@@ -38702,9 +40534,14 @@ function createBaseUserIds(): UserIds {
 
 export const UserIds = {
   encode(message: UserIds, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    writer.uint32(10).fork();
     for (const v of message.user_ids) {
-      writer.uint32(10).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field user_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -38716,12 +40553,22 @@ export const UserIds = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
+          if (tag === 8) {
+            message.user_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 10) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -38732,15 +40579,13 @@ export const UserIds = {
   },
 
   fromJSON(object: any): UserIds {
-    return {
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
-    };
+    return { user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => BigInt(e)) : [] };
   },
 
   toJSON(message: UserIds): unknown {
     const obj: any = {};
     if (message.user_ids?.length) {
-      obj.user_ids = message.user_ids;
+      obj.user_ids = message.user_ids.map((e) => e.toString());
     }
     return obj;
   },
@@ -38756,13 +40601,16 @@ export const UserIds = {
 };
 
 function createBaseReportMessageAbuseReqest(): ReportMessageAbuseReqest {
-  return { message_id: "", abuse_type: "" };
+  return { message_id: 0n, abuse_type: "" };
 }
 
 export const ReportMessageAbuseReqest = {
   encode(message: ReportMessageAbuseReqest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.message_id !== "") {
-      writer.uint32(10).string(message.message_id);
+    if (message.message_id !== 0n) {
+      if (BigInt.asIntN(64, message.message_id) !== message.message_id) {
+        throw new globalThis.Error("value provided for field message.message_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.message_id.toString());
     }
     if (message.abuse_type !== "") {
       writer.uint32(18).string(message.abuse_type);
@@ -38778,11 +40626,11 @@ export const ReportMessageAbuseReqest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -38802,15 +40650,15 @@ export const ReportMessageAbuseReqest = {
 
   fromJSON(object: any): ReportMessageAbuseReqest {
     return {
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      message_id: isSet(object.message_id) ? BigInt(object.message_id) : 0n,
       abuse_type: isSet(object.abuse_type) ? globalThis.String(object.abuse_type) : "",
     };
   },
 
   toJSON(message: ReportMessageAbuseReqest): unknown {
     const obj: any = {};
-    if (message.message_id !== "") {
-      obj.message_id = message.message_id;
+    if (message.message_id !== 0n) {
+      obj.message_id = message.message_id.toString();
     }
     if (message.abuse_type !== "") {
       obj.abuse_type = message.abuse_type;
@@ -38823,7 +40671,7 @@ export const ReportMessageAbuseReqest = {
   },
   fromPartial<I extends Exact<DeepPartial<ReportMessageAbuseReqest>, I>>(object: I): ReportMessageAbuseReqest {
     const message = createBaseReportMessageAbuseReqest();
-    message.message_id = object.message_id ?? "";
+    message.message_id = object.message_id ?? 0n;
     message.abuse_type = object.abuse_type ?? "";
     return message;
   },
@@ -38890,7 +40738,7 @@ export const LogedDeviceList = {
 
 function createBaseLogedDevice(): LogedDevice {
   return {
-    device_id: "",
+    device_id: 0n,
     device_name: "",
     login_at_seconds: 0,
     status: 0,
@@ -38904,8 +40752,11 @@ function createBaseLogedDevice(): LogedDevice {
 
 export const LogedDevice = {
   encode(message: LogedDevice, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.device_id !== "") {
-      writer.uint32(10).string(message.device_id);
+    if (message.device_id !== 0n) {
+      if (BigInt.asIntN(64, message.device_id) !== message.device_id) {
+        throw new globalThis.Error("value provided for field message.device_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.device_id.toString());
     }
     if (message.device_name !== "") {
       writer.uint32(18).string(message.device_name);
@@ -38942,11 +40793,11 @@ export const LogedDevice = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.device_id = reader.string();
+          message.device_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -39015,7 +40866,7 @@ export const LogedDevice = {
 
   fromJSON(object: any): LogedDevice {
     return {
-      device_id: isSet(object.device_id) ? globalThis.String(object.device_id) : "",
+      device_id: isSet(object.device_id) ? BigInt(object.device_id) : 0n,
       device_name: isSet(object.device_name) ? globalThis.String(object.device_name) : "",
       login_at_seconds: isSet(object.login_at_seconds) ? globalThis.Number(object.login_at_seconds) : 0,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
@@ -39029,8 +40880,8 @@ export const LogedDevice = {
 
   toJSON(message: LogedDevice): unknown {
     const obj: any = {};
-    if (message.device_id !== "") {
-      obj.device_id = message.device_id;
+    if (message.device_id !== 0n) {
+      obj.device_id = message.device_id.toString();
     }
     if (message.device_name !== "") {
       obj.device_name = message.device_name;
@@ -39064,7 +40915,7 @@ export const LogedDevice = {
   },
   fromPartial<I extends Exact<DeepPartial<LogedDevice>, I>>(object: I): LogedDevice {
     const message = createBaseLogedDevice();
-    message.device_id = object.device_id ?? "";
+    message.device_id = object.device_id ?? 0n;
     message.device_name = object.device_name ?? "";
     message.login_at_seconds = object.login_at_seconds ?? 0;
     message.status = object.status ?? 0;
@@ -39082,10 +40933,10 @@ function createBaseDirectFcmProto(): DirectFcmProto {
     title: "",
     link: "",
     content: "",
-    channel_id: "",
-    sender_id: "",
+    channel_id: 0n,
+    sender_id: 0n,
     avatar: "",
-    clan_id: "",
+    clan_id: 0n,
     attachment_link: "",
     display_name: "",
     create_time_seconds: 0,
@@ -39097,7 +40948,7 @@ function createBaseDirectFcmProto(): DirectFcmProto {
     attachment_type: "",
     has_more_attachment: false,
     is_mention_role: [],
-    message_id: "",
+    message_id: 0n,
   };
 }
 
@@ -39112,17 +40963,26 @@ export const DirectFcmProto = {
     if (message.content !== "") {
       writer.uint32(26).string(message.content);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(34).string(message.channel_id);
+    if (message.channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.channel_id) !== message.channel_id) {
+        throw new globalThis.Error("value provided for field message.channel_id of type int64 too large");
+      }
+      writer.uint32(32).int64(message.channel_id.toString());
     }
-    if (message.sender_id !== "") {
-      writer.uint32(42).string(message.sender_id);
+    if (message.sender_id !== 0n) {
+      if (BigInt.asIntN(64, message.sender_id) !== message.sender_id) {
+        throw new globalThis.Error("value provided for field message.sender_id of type int64 too large");
+      }
+      writer.uint32(40).int64(message.sender_id.toString());
     }
     if (message.avatar !== "") {
       writer.uint32(50).string(message.avatar);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(58).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(56).int64(message.clan_id.toString());
     }
     if (message.attachment_link !== "") {
       writer.uint32(66).string(message.attachment_link);
@@ -39139,9 +40999,14 @@ export const DirectFcmProto = {
     if (message.username !== "") {
       writer.uint32(98).string(message.username);
     }
+    writer.uint32(106).fork();
     for (const v of message.mention_ids) {
-      writer.uint32(106).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field mention_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     writer.uint32(114).fork();
     for (const v of message.position_s) {
       writer.int32(v);
@@ -39163,8 +41028,11 @@ export const DirectFcmProto = {
       writer.bool(v);
     }
     writer.ldelim();
-    if (message.message_id !== "") {
-      writer.uint32(154).string(message.message_id);
+    if (message.message_id !== 0n) {
+      if (BigInt.asIntN(64, message.message_id) !== message.message_id) {
+        throw new globalThis.Error("value provided for field message.message_id of type int64 too large");
+      }
+      writer.uint32(152).int64(message.message_id.toString());
     }
     return writer;
   },
@@ -39198,18 +41066,18 @@ export const DirectFcmProto = {
           message.content = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToBigint(reader.int64() as Long);
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.sender_id = reader.string();
+          message.sender_id = longToBigint(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 50) {
@@ -39219,11 +41087,11 @@ export const DirectFcmProto = {
           message.avatar = reader.string();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 8:
           if (tag !== 66) {
@@ -39261,12 +41129,22 @@ export const DirectFcmProto = {
           message.username = reader.string();
           continue;
         case 13:
-          if (tag !== 106) {
-            break;
+          if (tag === 104) {
+            message.mention_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.mention_ids.push(reader.string());
-          continue;
+          if (tag === 106) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.mention_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 14:
           if (tag === 112) {
             message.position_s.push(reader.int32());
@@ -39333,11 +41211,11 @@ export const DirectFcmProto = {
 
           break;
         case 19:
-          if (tag !== 154) {
+          if (tag !== 152) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -39353,18 +41231,16 @@ export const DirectFcmProto = {
       title: isSet(object.title) ? globalThis.String(object.title) : "",
       link: isSet(object.link) ? globalThis.String(object.link) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
+      channel_id: isSet(object.channel_id) ? BigInt(object.channel_id) : 0n,
+      sender_id: isSet(object.sender_id) ? BigInt(object.sender_id) : 0n,
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       attachment_link: isSet(object.attachment_link) ? globalThis.String(object.attachment_link) : "",
       display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
       username: isSet(object.username) ? globalThis.String(object.username) : "",
-      mention_ids: globalThis.Array.isArray(object?.mention_ids)
-        ? object.mention_ids.map((e: any) => globalThis.String(e))
-        : [],
+      mention_ids: globalThis.Array.isArray(object?.mention_ids) ? object.mention_ids.map((e: any) => BigInt(e)) : [],
       position_s: globalThis.Array.isArray(object?.position_s)
         ? object.position_s.map((e: any) => globalThis.Number(e))
         : [],
@@ -39376,7 +41252,7 @@ export const DirectFcmProto = {
       is_mention_role: globalThis.Array.isArray(object?.is_mention_role)
         ? object.is_mention_role.map((e: any) => globalThis.Boolean(e))
         : [],
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      message_id: isSet(object.message_id) ? BigInt(object.message_id) : 0n,
     };
   },
 
@@ -39391,17 +41267,17 @@ export const DirectFcmProto = {
     if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id !== 0n) {
+      obj.channel_id = message.channel_id.toString();
     }
-    if (message.sender_id !== "") {
-      obj.sender_id = message.sender_id;
+    if (message.sender_id !== 0n) {
+      obj.sender_id = message.sender_id.toString();
     }
     if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.attachment_link !== "") {
       obj.attachment_link = message.attachment_link;
@@ -39419,7 +41295,7 @@ export const DirectFcmProto = {
       obj.username = message.username;
     }
     if (message.mention_ids?.length) {
-      obj.mention_ids = message.mention_ids;
+      obj.mention_ids = message.mention_ids.map((e) => e.toString());
     }
     if (message.position_s?.length) {
       obj.position_s = message.position_s.map((e) => Math.round(e));
@@ -39436,8 +41312,8 @@ export const DirectFcmProto = {
     if (message.is_mention_role?.length) {
       obj.is_mention_role = message.is_mention_role;
     }
-    if (message.message_id !== "") {
-      obj.message_id = message.message_id;
+    if (message.message_id !== 0n) {
+      obj.message_id = message.message_id.toString();
     }
     return obj;
   },
@@ -39450,10 +41326,10 @@ export const DirectFcmProto = {
     message.title = object.title ?? "";
     message.link = object.link ?? "";
     message.content = object.content ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.sender_id = object.sender_id ?? "";
+    message.channel_id = object.channel_id ?? 0n;
+    message.sender_id = object.sender_id ?? 0n;
     message.avatar = object.avatar ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.attachment_link = object.attachment_link ?? "";
     message.display_name = object.display_name ?? "";
     message.create_time_seconds = object.create_time_seconds ?? 0;
@@ -39465,7 +41341,7 @@ export const DirectFcmProto = {
     message.attachment_type = object.attachment_type ?? "";
     message.has_more_attachment = object.has_more_attachment ?? false;
     message.is_mention_role = object.is_mention_role?.map((e) => e) || [];
-    message.message_id = object.message_id ?? "";
+    message.message_id = object.message_id ?? 0n;
     return message;
   },
 };
@@ -39711,13 +41587,16 @@ export const MessageReactionList = {
 };
 
 function createBaseListClanBadgeCountRequest(): ListClanBadgeCountRequest {
-  return { clan_id: "" };
+  return { clan_id: 0n };
 }
 
 export const ListClanBadgeCountRequest = {
   encode(message: ListClanBadgeCountRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     return writer;
   },
@@ -39730,11 +41609,11 @@ export const ListClanBadgeCountRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -39746,13 +41625,13 @@ export const ListClanBadgeCountRequest = {
   },
 
   fromJSON(object: any): ListClanBadgeCountRequest {
-    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+    return { clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n };
   },
 
   toJSON(message: ListClanBadgeCountRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     return obj;
   },
@@ -39762,7 +41641,7 @@ export const ListClanBadgeCountRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListClanBadgeCountRequest>, I>>(object: I): ListClanBadgeCountRequest {
     const message = createBaseListClanBadgeCountRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     return message;
   },
 };
@@ -39826,9 +41705,9 @@ export const ListClanBadgeCountResponse = {
 
 function createBaseClanDiscover(): ClanDiscover {
   return {
-    clan_id: "",
+    clan_id: 0n,
     clan_name: "",
-    invite_id: "",
+    invite_id: 0n,
     clan_logo: "",
     online_members: 0,
     total_members: 0,
@@ -39843,14 +41722,20 @@ function createBaseClanDiscover(): ClanDiscover {
 
 export const ClanDiscover = {
   encode(message: ClanDiscover, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== 0n) {
+      if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
+        throw new globalThis.Error("value provided for field message.clan_id of type int64 too large");
+      }
+      writer.uint32(8).int64(message.clan_id.toString());
     }
     if (message.clan_name !== "") {
       writer.uint32(18).string(message.clan_name);
     }
-    if (message.invite_id !== "") {
-      writer.uint32(26).string(message.invite_id);
+    if (message.invite_id !== 0n) {
+      if (BigInt.asIntN(64, message.invite_id) !== message.invite_id) {
+        throw new globalThis.Error("value provided for field message.invite_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.invite_id.toString());
     }
     if (message.clan_logo !== "") {
       writer.uint32(34).string(message.clan_logo);
@@ -39890,11 +41775,11 @@ export const ClanDiscover = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -39904,11 +41789,11 @@ export const ClanDiscover = {
           message.clan_name = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.invite_id = reader.string();
+          message.invite_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -39984,9 +41869,9 @@ export const ClanDiscover = {
 
   fromJSON(object: any): ClanDiscover {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
-      invite_id: isSet(object.invite_id) ? globalThis.String(object.invite_id) : "",
+      invite_id: isSet(object.invite_id) ? BigInt(object.invite_id) : 0n,
       clan_logo: isSet(object.clan_logo) ? globalThis.String(object.clan_logo) : "",
       online_members: isSet(object.online_members) ? globalThis.Number(object.online_members) : 0,
       total_members: isSet(object.total_members) ? globalThis.Number(object.total_members) : 0,
@@ -40001,14 +41886,14 @@ export const ClanDiscover = {
 
   toJSON(message: ClanDiscover): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
+    if (message.clan_id !== 0n) {
+      obj.clan_id = message.clan_id.toString();
     }
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.invite_id !== "") {
-      obj.invite_id = message.invite_id;
+    if (message.invite_id !== 0n) {
+      obj.invite_id = message.invite_id.toString();
     }
     if (message.clan_logo !== "") {
       obj.clan_logo = message.clan_logo;
@@ -40045,9 +41930,9 @@ export const ClanDiscover = {
   },
   fromPartial<I extends Exact<DeepPartial<ClanDiscover>, I>>(object: I): ClanDiscover {
     const message = createBaseClanDiscover();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? 0n;
     message.clan_name = object.clan_name ?? "";
-    message.invite_id = object.invite_id ?? "";
+    message.invite_id = object.invite_id ?? 0n;
     message.clan_logo = object.clan_logo ?? "";
     message.online_members = object.online_members ?? 0;
     message.total_members = object.total_members ?? 0;
@@ -40153,7 +42038,7 @@ export const ListClanDiscover = {
 };
 
 function createBaseGenerateMeetTokenExternalResponse(): GenerateMeetTokenExternalResponse {
-  return { token: "", guest_user_id: "", guest_access_token: "" };
+  return { token: "", guest_user_id: 0n, guest_access_token: "" };
 }
 
 export const GenerateMeetTokenExternalResponse = {
@@ -40161,8 +42046,11 @@ export const GenerateMeetTokenExternalResponse = {
     if (message.token !== "") {
       writer.uint32(10).string(message.token);
     }
-    if (message.guest_user_id !== "") {
-      writer.uint32(18).string(message.guest_user_id);
+    if (message.guest_user_id !== 0n) {
+      if (BigInt.asIntN(64, message.guest_user_id) !== message.guest_user_id) {
+        throw new globalThis.Error("value provided for field message.guest_user_id of type int64 too large");
+      }
+      writer.uint32(16).int64(message.guest_user_id.toString());
     }
     if (message.guest_access_token !== "") {
       writer.uint32(26).string(message.guest_access_token);
@@ -40185,11 +42073,11 @@ export const GenerateMeetTokenExternalResponse = {
           message.token = reader.string();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.guest_user_id = reader.string();
+          message.guest_user_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -40210,7 +42098,7 @@ export const GenerateMeetTokenExternalResponse = {
   fromJSON(object: any): GenerateMeetTokenExternalResponse {
     return {
       token: isSet(object.token) ? globalThis.String(object.token) : "",
-      guest_user_id: isSet(object.guest_user_id) ? globalThis.String(object.guest_user_id) : "",
+      guest_user_id: isSet(object.guest_user_id) ? BigInt(object.guest_user_id) : 0n,
       guest_access_token: isSet(object.guest_access_token) ? globalThis.String(object.guest_access_token) : "",
     };
   },
@@ -40220,8 +42108,8 @@ export const GenerateMeetTokenExternalResponse = {
     if (message.token !== "") {
       obj.token = message.token;
     }
-    if (message.guest_user_id !== "") {
-      obj.guest_user_id = message.guest_user_id;
+    if (message.guest_user_id !== 0n) {
+      obj.guest_user_id = message.guest_user_id.toString();
     }
     if (message.guest_access_token !== "") {
       obj.guest_access_token = message.guest_access_token;
@@ -40239,7 +42127,7 @@ export const GenerateMeetTokenExternalResponse = {
   ): GenerateMeetTokenExternalResponse {
     const message = createBaseGenerateMeetTokenExternalResponse();
     message.token = object.token ?? "";
-    message.guest_user_id = object.guest_user_id ?? "";
+    message.guest_user_id = object.guest_user_id ?? 0n;
     message.guest_access_token = object.guest_access_token ?? "";
     return message;
   },
@@ -40270,7 +42158,7 @@ function base64FromBytes(arr: Uint8Array): string {
   }
 }
 
-type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | bigint | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
   : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
@@ -40282,14 +42170,8 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
-function longToNumber(long: Long): number {
-  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  if (long.lt(globalThis.Number.MIN_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
-  }
-  return long.toNumber();
+function longToBigint(long: Long) {
+  return BigInt(long.toString());
 }
 
 if (_m0.util.Long !== Long) {

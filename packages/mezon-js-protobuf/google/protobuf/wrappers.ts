@@ -37,7 +37,7 @@ export interface FloatValue {
  */
 export interface Int64Value {
   /** The int64 value. */
-  value: number;
+  value: bigint;
 }
 
 /**
@@ -47,7 +47,7 @@ export interface Int64Value {
  */
 export interface UInt64Value {
   /** The uint64 value. */
-  value: number;
+  value: bigint;
 }
 
 /**
@@ -215,13 +215,16 @@ export const FloatValue = {
 };
 
 function createBaseInt64Value(): Int64Value {
-  return { value: 0 };
+  return { value: 0n };
 }
 
 export const Int64Value = {
   encode(message: Int64Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.value !== 0) {
-      writer.uint32(8).int64(message.value);
+    if (message.value !== 0n) {
+      if (BigInt.asIntN(64, message.value) !== message.value) {
+        throw new globalThis.Error("value provided for field message.value of type int64 too large");
+      }
+      writer.uint32(8).int64(message.value.toString());
     }
     return writer;
   },
@@ -238,7 +241,7 @@ export const Int64Value = {
             break;
           }
 
-          message.value = longToNumber(reader.int64() as Long);
+          message.value = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -250,13 +253,13 @@ export const Int64Value = {
   },
 
   fromJSON(object: any): Int64Value {
-    return { value: isSet(object.value) ? globalThis.Number(object.value) : 0 };
+    return { value: isSet(object.value) ? BigInt(object.value) : 0n };
   },
 
   toJSON(message: Int64Value): unknown {
     const obj: any = {};
-    if (message.value !== 0) {
-      obj.value = Math.round(message.value);
+    if (message.value !== 0n) {
+      obj.value = message.value.toString();
     }
     return obj;
   },
@@ -266,19 +269,22 @@ export const Int64Value = {
   },
   fromPartial<I extends Exact<DeepPartial<Int64Value>, I>>(object: I): Int64Value {
     const message = createBaseInt64Value();
-    message.value = object.value ?? 0;
+    message.value = object.value ?? 0n;
     return message;
   },
 };
 
 function createBaseUInt64Value(): UInt64Value {
-  return { value: 0 };
+  return { value: 0n };
 }
 
 export const UInt64Value = {
   encode(message: UInt64Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.value !== 0) {
-      writer.uint32(8).uint64(message.value);
+    if (message.value !== 0n) {
+      if (BigInt.asUintN(64, message.value) !== message.value) {
+        throw new globalThis.Error("value provided for field message.value of type uint64 too large");
+      }
+      writer.uint32(8).uint64(message.value.toString());
     }
     return writer;
   },
@@ -295,7 +301,7 @@ export const UInt64Value = {
             break;
           }
 
-          message.value = longToNumber(reader.uint64() as Long);
+          message.value = longToBigint(reader.uint64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -307,13 +313,13 @@ export const UInt64Value = {
   },
 
   fromJSON(object: any): UInt64Value {
-    return { value: isSet(object.value) ? globalThis.Number(object.value) : 0 };
+    return { value: isSet(object.value) ? BigInt(object.value) : 0n };
   },
 
   toJSON(message: UInt64Value): unknown {
     const obj: any = {};
-    if (message.value !== 0) {
-      obj.value = Math.round(message.value);
+    if (message.value !== 0n) {
+      obj.value = message.value.toString();
     }
     return obj;
   },
@@ -323,7 +329,7 @@ export const UInt64Value = {
   },
   fromPartial<I extends Exact<DeepPartial<UInt64Value>, I>>(object: I): UInt64Value {
     const message = createBaseUInt64Value();
-    message.value = object.value ?? 0;
+    message.value = object.value ?? 0n;
     return message;
   },
 };
@@ -638,7 +644,7 @@ function base64FromBytes(arr: Uint8Array): string {
   }
 }
 
-type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | bigint | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
   : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
@@ -650,14 +656,8 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
-function longToNumber(long: Long): number {
-  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  if (long.lt(globalThis.Number.MIN_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
-  }
-  return long.toNumber();
+function longToBigint(long: Long) {
+  return BigInt(long.toString());
 }
 
 if (_m0.util.Long !== Long) {

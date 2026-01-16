@@ -32,7 +32,7 @@ export default {
     plugins: [
         typescript({
             include: ["**/*.ts"],
-            target: "es5"
+            target: "es2020"
         }),
         nodeResolve({
             browser: true
