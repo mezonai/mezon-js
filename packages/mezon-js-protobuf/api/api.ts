@@ -3541,7 +3541,7 @@ export interface MezonOauthClient {
   backchannel_logout_session_required: boolean;
   backchannel_logout_uri: string;
   client_credentials_grant_access_token_lifespan: string;
-  client_id: bigint;
+  client_id: string;
   client_name: string;
   client_secret: string;
   client_secret_expires_at: number;
@@ -3586,7 +3586,7 @@ export interface MezonOauthClientList {
 }
 
 export interface GetMezonOauthClientRequest {
-  client_id: bigint;
+  client_id: string;
   client_name: string;
 }
 
@@ -3717,7 +3717,7 @@ export interface LogedDeviceList {
 }
 
 export interface LogedDevice {
-  device_id: bigint;
+  device_id: string;
   device_name: string;
   login_at_seconds: number;
   status: number;
@@ -37912,7 +37912,7 @@ function createBaseMezonOauthClient(): MezonOauthClient {
     backchannel_logout_session_required: false,
     backchannel_logout_uri: "",
     client_credentials_grant_access_token_lifespan: "",
-    client_id: 0n,
+    client_id: "",
     client_name: "",
     client_secret: "",
     client_secret_expires_at: 0,
@@ -37982,11 +37982,8 @@ export const MezonOauthClient = {
     if (message.client_credentials_grant_access_token_lifespan !== "") {
       writer.uint32(74).string(message.client_credentials_grant_access_token_lifespan);
     }
-    if (message.client_id !== 0n) {
-      if (BigInt.asIntN(64, message.client_id) !== message.client_id) {
-        throw new globalThis.Error("value provided for field message.client_id of type int64 too large");
-      }
-      writer.uint32(80).int64(message.client_id.toString());
+    if (message.client_id !== "") {
+      writer.uint32(82).string(message.client_id);
     }
     if (message.client_name !== "") {
       writer.uint32(90).string(message.client_name);
@@ -38173,11 +38170,11 @@ export const MezonOauthClient = {
           message.client_credentials_grant_access_token_lifespan = reader.string();
           continue;
         case 10:
-          if (tag !== 80) {
+          if (tag !== 82) {
             break;
           }
 
-          message.client_id = longToBigint(reader.int64() as Long);
+          message.client_id = reader.string();
           continue;
         case 11:
           if (tag !== 90) {
@@ -38472,7 +38469,7 @@ export const MezonOauthClient = {
       client_credentials_grant_access_token_lifespan: isSet(object.client_credentials_grant_access_token_lifespan)
         ? globalThis.String(object.client_credentials_grant_access_token_lifespan)
         : "",
-      client_id: isSet(object.client_id) ? BigInt(object.client_id) : 0n,
+      client_id: isSet(object.client_id) ? globalThis.String(object.client_id) : "",
       client_name: isSet(object.client_name) ? globalThis.String(object.client_name) : "",
       client_secret: isSet(object.client_secret) ? globalThis.String(object.client_secret) : "",
       client_secret_expires_at: isSet(object.client_secret_expires_at)
@@ -38586,8 +38583,8 @@ export const MezonOauthClient = {
     if (message.client_credentials_grant_access_token_lifespan !== "") {
       obj.client_credentials_grant_access_token_lifespan = message.client_credentials_grant_access_token_lifespan;
     }
-    if (message.client_id !== 0n) {
-      obj.client_id = message.client_id.toString();
+    if (message.client_id !== "") {
+      obj.client_id = message.client_id;
     }
     if (message.client_name !== "") {
       obj.client_name = message.client_name;
@@ -38720,7 +38717,7 @@ export const MezonOauthClient = {
     message.backchannel_logout_uri = object.backchannel_logout_uri ?? "";
     message.client_credentials_grant_access_token_lifespan = object.client_credentials_grant_access_token_lifespan ??
       "";
-    message.client_id = object.client_id ?? 0n;
+    message.client_id = object.client_id ?? "";
     message.client_name = object.client_name ?? "";
     message.client_secret = object.client_secret ?? "";
     message.client_secret_expires_at = object.client_secret_expires_at ?? 0;
@@ -38824,16 +38821,13 @@ export const MezonOauthClientList = {
 };
 
 function createBaseGetMezonOauthClientRequest(): GetMezonOauthClientRequest {
-  return { client_id: 0n, client_name: "" };
+  return { client_id: "", client_name: "" };
 }
 
 export const GetMezonOauthClientRequest = {
   encode(message: GetMezonOauthClientRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.client_id !== 0n) {
-      if (BigInt.asIntN(64, message.client_id) !== message.client_id) {
-        throw new globalThis.Error("value provided for field message.client_id of type int64 too large");
-      }
-      writer.uint32(8).int64(message.client_id.toString());
+    if (message.client_id !== "") {
+      writer.uint32(10).string(message.client_id);
     }
     if (message.client_name !== "") {
       writer.uint32(18).string(message.client_name);
@@ -38849,11 +38843,11 @@ export const GetMezonOauthClientRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.client_id = longToBigint(reader.int64() as Long);
+          message.client_id = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -38873,15 +38867,15 @@ export const GetMezonOauthClientRequest = {
 
   fromJSON(object: any): GetMezonOauthClientRequest {
     return {
-      client_id: isSet(object.client_id) ? BigInt(object.client_id) : 0n,
+      client_id: isSet(object.client_id) ? globalThis.String(object.client_id) : "",
       client_name: isSet(object.client_name) ? globalThis.String(object.client_name) : "",
     };
   },
 
   toJSON(message: GetMezonOauthClientRequest): unknown {
     const obj: any = {};
-    if (message.client_id !== 0n) {
-      obj.client_id = message.client_id.toString();
+    if (message.client_id !== "") {
+      obj.client_id = message.client_id;
     }
     if (message.client_name !== "") {
       obj.client_name = message.client_name;
@@ -38894,7 +38888,7 @@ export const GetMezonOauthClientRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<GetMezonOauthClientRequest>, I>>(object: I): GetMezonOauthClientRequest {
     const message = createBaseGetMezonOauthClientRequest();
-    message.client_id = object.client_id ?? 0n;
+    message.client_id = object.client_id ?? "";
     message.client_name = object.client_name ?? "";
     return message;
   },
@@ -40738,7 +40732,7 @@ export const LogedDeviceList = {
 
 function createBaseLogedDevice(): LogedDevice {
   return {
-    device_id: 0n,
+    device_id: "",
     device_name: "",
     login_at_seconds: 0,
     status: 0,
@@ -40752,11 +40746,8 @@ function createBaseLogedDevice(): LogedDevice {
 
 export const LogedDevice = {
   encode(message: LogedDevice, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.device_id !== 0n) {
-      if (BigInt.asIntN(64, message.device_id) !== message.device_id) {
-        throw new globalThis.Error("value provided for field message.device_id of type int64 too large");
-      }
-      writer.uint32(8).int64(message.device_id.toString());
+    if (message.device_id !== "") {
+      writer.uint32(10).string(message.device_id);
     }
     if (message.device_name !== "") {
       writer.uint32(18).string(message.device_name);
@@ -40793,11 +40784,11 @@ export const LogedDevice = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.device_id = longToBigint(reader.int64() as Long);
+          message.device_id = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -40866,7 +40857,7 @@ export const LogedDevice = {
 
   fromJSON(object: any): LogedDevice {
     return {
-      device_id: isSet(object.device_id) ? BigInt(object.device_id) : 0n,
+      device_id: isSet(object.device_id) ? globalThis.String(object.device_id) : "",
       device_name: isSet(object.device_name) ? globalThis.String(object.device_name) : "",
       login_at_seconds: isSet(object.login_at_seconds) ? globalThis.Number(object.login_at_seconds) : 0,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
@@ -40880,8 +40871,8 @@ export const LogedDevice = {
 
   toJSON(message: LogedDevice): unknown {
     const obj: any = {};
-    if (message.device_id !== 0n) {
-      obj.device_id = message.device_id.toString();
+    if (message.device_id !== "") {
+      obj.device_id = message.device_id;
     }
     if (message.device_name !== "") {
       obj.device_name = message.device_name;
@@ -40915,7 +40906,7 @@ export const LogedDevice = {
   },
   fromPartial<I extends Exact<DeepPartial<LogedDevice>, I>>(object: I): LogedDevice {
     const message = createBaseLogedDevice();
-    message.device_id = object.device_id ?? 0n;
+    message.device_id = object.device_id ?? "";
     message.device_name = object.device_name ?? "";
     message.login_at_seconds = object.login_at_seconds ?? 0;
     message.status = object.status ?? 0;

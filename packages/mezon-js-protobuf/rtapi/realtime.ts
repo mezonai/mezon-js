@@ -1753,8 +1753,8 @@ export interface MeetParticipantEvent {
 
 export interface TransferOwnershipEvent {
   clan_id: bigint;
-  prev_owner: string;
-  curr_owner: string;
+  prev_owner: bigint;
+  curr_owner: bigint;
 }
 
 export interface ActiveArchivedThread {
@@ -16791,7 +16791,7 @@ export const MeetParticipantEvent = {
 };
 
 function createBaseTransferOwnershipEvent(): TransferOwnershipEvent {
-  return { clan_id: 0n, prev_owner: "", curr_owner: "" };
+  return { clan_id: 0n, prev_owner: 0n, curr_owner: 0n };
 }
 
 export const TransferOwnershipEvent = {
@@ -16802,11 +16802,17 @@ export const TransferOwnershipEvent = {
       }
       writer.uint32(8).int64(message.clan_id.toString());
     }
-    if (message.prev_owner !== "") {
-      writer.uint32(18).string(message.prev_owner);
+    if (message.prev_owner !== 0n) {
+      if (BigInt.asIntN(64, message.prev_owner) !== message.prev_owner) {
+        throw new globalThis.Error("value provided for field message.prev_owner of type int64 too large");
+      }
+      writer.uint32(16).int64(message.prev_owner.toString());
     }
-    if (message.curr_owner !== "") {
-      writer.uint32(26).string(message.curr_owner);
+    if (message.curr_owner !== 0n) {
+      if (BigInt.asIntN(64, message.curr_owner) !== message.curr_owner) {
+        throw new globalThis.Error("value provided for field message.curr_owner of type int64 too large");
+      }
+      writer.uint32(24).int64(message.curr_owner.toString());
     }
     return writer;
   },
@@ -16826,18 +16832,18 @@ export const TransferOwnershipEvent = {
           message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.prev_owner = reader.string();
+          message.prev_owner = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.curr_owner = reader.string();
+          message.curr_owner = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -16851,8 +16857,8 @@ export const TransferOwnershipEvent = {
   fromJSON(object: any): TransferOwnershipEvent {
     return {
       clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
-      prev_owner: isSet(object.prev_owner) ? globalThis.String(object.prev_owner) : "",
-      curr_owner: isSet(object.curr_owner) ? globalThis.String(object.curr_owner) : "",
+      prev_owner: isSet(object.prev_owner) ? BigInt(object.prev_owner) : 0n,
+      curr_owner: isSet(object.curr_owner) ? BigInt(object.curr_owner) : 0n,
     };
   },
 
@@ -16861,11 +16867,11 @@ export const TransferOwnershipEvent = {
     if (message.clan_id !== 0n) {
       obj.clan_id = message.clan_id.toString();
     }
-    if (message.prev_owner !== "") {
-      obj.prev_owner = message.prev_owner;
+    if (message.prev_owner !== 0n) {
+      obj.prev_owner = message.prev_owner.toString();
     }
-    if (message.curr_owner !== "") {
-      obj.curr_owner = message.curr_owner;
+    if (message.curr_owner !== 0n) {
+      obj.curr_owner = message.curr_owner.toString();
     }
     return obj;
   },
@@ -16876,8 +16882,8 @@ export const TransferOwnershipEvent = {
   fromPartial<I extends Exact<DeepPartial<TransferOwnershipEvent>, I>>(object: I): TransferOwnershipEvent {
     const message = createBaseTransferOwnershipEvent();
     message.clan_id = object.clan_id ?? 0n;
-    message.prev_owner = object.prev_owner ?? "";
-    message.curr_owner = object.curr_owner ?? "";
+    message.prev_owner = object.prev_owner ?? 0n;
+    message.curr_owner = object.curr_owner ?? 0n;
     return message;
   },
 };
