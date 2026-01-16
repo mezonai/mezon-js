@@ -1192,10 +1192,10 @@ export interface RoleEvent {
   role: Role | undefined;
   status: number;
   user_id: bigint;
-  user_add_ids: string[];
-  user_remove_ids: string[];
-  active_permission_ids: string[];
-  remove_permission_ids: string[];
+  user_add_ids: bigint[];
+  user_remove_ids: bigint[];
+  active_permission_ids: bigint[];
+  remove_permission_ids: bigint[];
 }
 
 export interface ChannelDeletedEvent {
@@ -10102,18 +10102,38 @@ export const RoleEvent = {
       }
       writer.uint32(24).int64(message.user_id.toString());
     }
+    writer.uint32(34).fork();
     for (const v of message.user_add_ids) {
-      writer.uint32(34).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field user_add_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
+    writer.uint32(42).fork();
     for (const v of message.user_remove_ids) {
-      writer.uint32(42).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field user_remove_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
+    writer.uint32(50).fork();
     for (const v of message.active_permission_ids) {
-      writer.uint32(50).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field active_permission_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
+    writer.uint32(58).fork();
     for (const v of message.remove_permission_ids) {
-      writer.uint32(58).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field remove_permission_ids of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -10146,33 +10166,73 @@ export const RoleEvent = {
           message.user_id = longToBigint(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
-            break;
+          if (tag === 32) {
+            message.user_add_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_add_ids.push(reader.string());
-          continue;
+          if (tag === 34) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_add_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 5:
-          if (tag !== 42) {
-            break;
+          if (tag === 40) {
+            message.user_remove_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_remove_ids.push(reader.string());
-          continue;
+          if (tag === 42) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_remove_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 6:
-          if (tag !== 50) {
-            break;
+          if (tag === 48) {
+            message.active_permission_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.active_permission_ids.push(reader.string());
-          continue;
+          if (tag === 50) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.active_permission_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 7:
-          if (tag !== 58) {
-            break;
+          if (tag === 56) {
+            message.remove_permission_ids.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.remove_permission_ids.push(reader.string());
-          continue;
+          if (tag === 58) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.remove_permission_ids.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10188,16 +10248,16 @@ export const RoleEvent = {
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       user_id: isSet(object.user_id) ? BigInt(object.user_id) : 0n,
       user_add_ids: globalThis.Array.isArray(object?.user_add_ids)
-        ? object.user_add_ids.map((e: any) => globalThis.String(e))
+        ? object.user_add_ids.map((e: any) => BigInt(e))
         : [],
       user_remove_ids: globalThis.Array.isArray(object?.user_remove_ids)
-        ? object.user_remove_ids.map((e: any) => globalThis.String(e))
+        ? object.user_remove_ids.map((e: any) => BigInt(e))
         : [],
       active_permission_ids: globalThis.Array.isArray(object?.active_permission_ids)
-        ? object.active_permission_ids.map((e: any) => globalThis.String(e))
+        ? object.active_permission_ids.map((e: any) => BigInt(e))
         : [],
       remove_permission_ids: globalThis.Array.isArray(object?.remove_permission_ids)
-        ? object.remove_permission_ids.map((e: any) => globalThis.String(e))
+        ? object.remove_permission_ids.map((e: any) => BigInt(e))
         : [],
     };
   },
@@ -10214,16 +10274,16 @@ export const RoleEvent = {
       obj.user_id = message.user_id.toString();
     }
     if (message.user_add_ids?.length) {
-      obj.user_add_ids = message.user_add_ids;
+      obj.user_add_ids = message.user_add_ids.map((e) => e.toString());
     }
     if (message.user_remove_ids?.length) {
-      obj.user_remove_ids = message.user_remove_ids;
+      obj.user_remove_ids = message.user_remove_ids.map((e) => e.toString());
     }
     if (message.active_permission_ids?.length) {
-      obj.active_permission_ids = message.active_permission_ids;
+      obj.active_permission_ids = message.active_permission_ids.map((e) => e.toString());
     }
     if (message.remove_permission_ids?.length) {
-      obj.remove_permission_ids = message.remove_permission_ids;
+      obj.remove_permission_ids = message.remove_permission_ids.map((e) => e.toString());
     }
     return obj;
   },

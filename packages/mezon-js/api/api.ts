@@ -2829,7 +2829,7 @@ export interface RoleListEventResponse {
   /** cursor */
   cursor: string;
   /** clan_id */
-  clanId: string;
+  clanId: bigint;
   /** list of roles */
   roles: RoleList | undefined;
 }
@@ -29922,7 +29922,7 @@ export const RoleListEventRequest = {
 };
 
 function createBaseRoleListEventResponse(): RoleListEventResponse {
-  return { limit: 0, state: 0, cursor: "", clanId: "", roles: undefined };
+  return { limit: 0, state: 0, cursor: "", clanId: 0n, roles: undefined };
 }
 
 export const RoleListEventResponse = {
@@ -29936,8 +29936,11 @@ export const RoleListEventResponse = {
     if (message.cursor !== "") {
       writer.uint32(26).string(message.cursor);
     }
-    if (message.clanId !== "") {
-      writer.uint32(34).string(message.clanId);
+    if (message.clanId !== 0n) {
+      if (BigInt.asIntN(64, message.clanId) !== message.clanId) {
+        throw new globalThis.Error("value provided for field message.clanId of type int64 too large");
+      }
+      writer.uint32(32).int64(message.clanId.toString());
     }
     if (message.roles !== undefined) {
       RoleList.encode(message.roles, writer.uint32(42).fork()).ldelim();
@@ -29974,11 +29977,11 @@ export const RoleListEventResponse = {
           message.cursor = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.clanId = reader.string();
+          message.clanId = longToBigint(reader.int64() as Long);
           continue;
         case 5:
           if (tag !== 42) {
@@ -30001,7 +30004,7 @@ export const RoleListEventResponse = {
       limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
       state: isSet(object.state) ? globalThis.Number(object.state) : 0,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
-      clanId: isSet(object.clanId) ? globalThis.String(object.clanId) : "",
+      clanId: isSet(object.clanId) ? BigInt(object.clanId) : 0n,
       roles: isSet(object.roles) ? RoleList.fromJSON(object.roles) : undefined,
     };
   },
@@ -30017,8 +30020,8 @@ export const RoleListEventResponse = {
     if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
-    if (message.clanId !== "") {
-      obj.clanId = message.clanId;
+    if (message.clanId !== 0n) {
+      obj.clanId = message.clanId.toString();
     }
     if (message.roles !== undefined) {
       obj.roles = RoleList.toJSON(message.roles);
@@ -30034,7 +30037,7 @@ export const RoleListEventResponse = {
     message.limit = object.limit ?? 0;
     message.state = object.state ?? 0;
     message.cursor = object.cursor ?? "";
-    message.clanId = object.clanId ?? "";
+    message.clanId = object.clanId ?? 0n;
     message.roles = (object.roles !== undefined && object.roles !== null)
       ? RoleList.fromPartial(object.roles)
       : undefined;
