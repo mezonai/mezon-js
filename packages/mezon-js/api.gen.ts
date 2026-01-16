@@ -1866,7 +1866,7 @@ export interface ApiMezonOauthClient {
   //
   client_credentials_grant_access_token_lifespan?: string;
   //
-  client_id?: bigint;
+  client_id?: string;
   //
   client_name?: string;
   //
@@ -2500,7 +2500,7 @@ export interface ApiSessionLogoutRequest {
   //Session token to log out.
   token?: string;
   // device_id to log out.
-  device_id?: bigint;
+  device_id?: string;
   // platform
   platform?: string;
 }
@@ -3259,7 +3259,7 @@ export interface ApiMezonOauthClient {
   //
   client_credentials_grant_access_token_lifespan?: string;
   //
-  client_id?: bigint;
+  client_id?: string;
   //
   client_name?: string;
   //

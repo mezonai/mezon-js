@@ -1941,7 +1941,7 @@ export class Client {
     session: Session,
     token: string,
     refreshToken: string,
-    deviceId: bigint,
+    deviceId: string,
     platform: string
   ): Promise<boolean> {
     if (
