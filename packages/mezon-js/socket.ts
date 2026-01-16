@@ -77,7 +77,7 @@ export interface Presence {
   /** The id of the user. */
   user_id: bigint;
   /** The session id of the user. */
-  session_id: string;
+  session_id: bigint;
   /** The username of the user. */
   username: string;
   /** The node the user is connected to. */
@@ -98,21 +98,21 @@ export interface NotificationInfo {
   /** The UNIX time when the notification was created. */
   create_time?: string;
   /** ID of the Notification. */
-  id?: string;
+  id?: bigint;
   /** True if this notification was persisted to the database. */
   persistent?: boolean;
   /** ID of the sender, if a user. Otherwise 'null'. */
-  sender_id?: string;
+  sender_id?: bigint;
   /** Subject of the notification. */
   subject?: string;
   //
-  channel_id?: string;
+  channel_id?: bigint;
   //
-  clan_id?: string;
+  clan_id?: bigint;
   //
   channel?: ApiChannelDescription;
   //
-  topic_id?: string;
+  topic_id?: bigint;
 }
 
 /** A response from a channel join operation. */
@@ -321,7 +321,7 @@ export interface MessageTypingEvent {
   // sender display name
   sender_display_name: string;
   // topic id
-  topic_id?: string;
+  topic_id?: bigint;
 }
 
 // user profile updated event
@@ -390,7 +390,7 @@ interface ChannelMessageSend {
     // code
     code: number;
     //
-    topic_id?: string;
+    topic_id?: bigint;
   };
 }
 
@@ -429,7 +429,7 @@ interface QuickMenuEvent {
       // code
       code: number;
       //
-      topic_id?: string;
+      topic_id?: bigint;
     }
   }
 }
@@ -463,7 +463,7 @@ interface EphemeralMessageSend {
       // code
       code: number;
       //
-      topic_id?: string;
+      topic_id?: bigint;
     }
   }
 }
@@ -486,7 +486,7 @@ interface ChannelMessageUpdate {
     // Is public
     is_public: boolean;
     //
-    topic_id?: string;
+    topic_id?: bigint;
     //
     is_update_msg_topic?: boolean;
     //
@@ -512,7 +512,7 @@ interface ChannelMessageRemove {
     /** attachments */
     has_attachment?: boolean;
     //
-    topic_id?: string;
+    topic_id?: bigint;
     // mentions
     mentions: string;
     // references
@@ -642,9 +642,9 @@ export interface ChannelUpdatedEvent {
   //
   count_mess_unread: number;
   //
-  role_ids?: Array<string>;
+  role_ids?: Array<bigint>;
   // The users to add.
-  user_ids?: Array<string>;
+  user_ids?: Array<bigint>;
   // channel avatar
   channel_avatar: string;
 }
@@ -883,13 +883,13 @@ export interface ClanSticker {
   //
   category?: string;
   //
-  clan_id?: string;
+  clan_id?: bigint;
   //
   create_time?: string;
   //
-  creator_id?: string;
+  creator_id?: bigint;
   //
-  id?: string;
+  id?: bigint;
   //
   shortname?: string;
   //
@@ -930,9 +930,9 @@ export interface ClanEmoji {
   //
   category?: string;
   //
-  creator_id?: string;
+  creator_id?: bigint;
   //
-  id?: string;
+  id?: bigint;
   //
   shortname?: string;
   //
@@ -942,7 +942,7 @@ export interface ClanEmoji {
   //
   clan_name?: string;
   //
-  clan_id?: string;
+  clan_id?: bigint;
   //
   is_for_sale?: boolean;
 }
@@ -950,9 +950,9 @@ export interface ClanEmoji {
 /**  */
 export interface ChannelDescription {
   // The clan of this channel
-  clan_id?: string;
+  clan_id?: bigint;
   // The channel this message belongs to.
-  channel_id?: string;
+  channel_id?: bigint;
   // The channel type.
   type?: number;
   // The channel lable
@@ -966,7 +966,7 @@ export interface ChannelDescription {
   //
   clan_name?: string;
   //
-  parent_id?: string;
+  parent_id?: bigint;
   //
   last_sent_message?: ApiChannelMessageHeader;
 }
@@ -974,11 +974,11 @@ export interface ChannelDescription {
 // hashtagDM
 export interface HashtagDm {
   // The channel id.
-  channel_id?: string;
+  channel_id?: bigint;
   // The channel lable
   channel_label?: string;
   // The clan of this channel
-  clan_id?: string;
+  clan_id?: bigint;
   // The clan name
   clan_name?: string;
   //
@@ -988,12 +988,12 @@ export interface HashtagDm {
   //
   channel_private?: number;
   //
-  parent_id?: string;
+  parent_id?: bigint;
 }
 
 export interface NotificationSetting {
   //
-  id?: string;
+  id?: bigint;
   //
   notification_setting_type?: number;
 }
@@ -1251,17 +1251,17 @@ export interface ChannelCanvas {
   //
   content?: string;
   //
-  creator_id?: string;
+  creator_id?: bigint;
   //
-  editor_id?: string;
+  editor_id?: bigint;
   //
-  id?: string;
+  id?: bigint;
   //
   is_default?: boolean;
   //
   title?: string;
   //
-  channel_id?: string;
+  channel_id?: bigint;
   //
   status?: number;
 }
@@ -1451,13 +1451,13 @@ export interface Socket {
     is_public: boolean,
     message_id: bigint,
     has_attachment?: boolean,
-    topic_id?: string,
+    topic_id?: bigint,
     mentions?:string,
     references?: string
   ): Promise<ChannelMessageAck>;
 
   /** Execute an RPC function to the server. */
-  rpc(id?: string, payload?: string, http_key?: string): Promise<ApiRpc>;
+  rpc(id?: bigint, payload?: string, http_key?: string): Promise<ApiRpc>;
 
   /** Unfollow one or more users from their status updates. */
   unfollowUsers(user_ids: bigint[]): Promise<void>;
@@ -1473,7 +1473,7 @@ export interface Socket {
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
     hideEditted?: boolean,
-    topic_id?: string,
+    topic_id?: bigint,
     is_update_msg_topic?: boolean,
     old_mentions?: string
   ): Promise<ChannelMessageAck>;
@@ -1495,8 +1495,8 @@ export interface Socket {
     mention_everyone?: boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string,
-    id?: string
+    topic_id?: bigint,
+    id?: bigint
   ): Promise<ChannelMessageAck>;
 
   /** Send a chat message to a chat channel on the server. */
@@ -1514,7 +1514,7 @@ export interface Socket {
     mention_everyone?: boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string
+    topic_id?: bigint
   ): Promise<ChannelMessageAck>;
 
   /** Send a quick menu event to a chat channel on the server. */
@@ -1532,8 +1532,8 @@ export interface Socket {
     mention_everyone?: boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string,
-    id?: string
+    topic_id?: bigint,
+    id?: bigint
   ): Promise<QuickMenuEvent>;
 
   /** Send message typing */
@@ -1543,7 +1543,7 @@ export interface Socket {
     mode: number,
     is_public: boolean,
     sender_display_name: string,
-    topic_id?: string
+    topic_id?: bigint
   ): Promise<MessageTypingEvent>;
 
   /** Send message reaction */
@@ -1559,8 +1559,8 @@ export interface Socket {
     count: number,
     message_sender_id: bigint,
     action_delete: boolean,
-    topic_id?: string,
-    emoji_recent_id?: string,
+    topic_id?: bigint,
+    emoji_recent_id?: bigint,
     sender_name?: string
   ): Promise<ApiMessageReaction>;
 
@@ -2791,7 +2791,7 @@ export class DefaultSocket implements Socket {
     is_public: boolean,
     message_id: bigint,
     has_attachment?: boolean,
-    topic_id?: string,
+    topic_id?: bigint,
     mentions?: string,
     references?: string
   ): Promise<ChannelMessageAck> {
@@ -2812,7 +2812,7 @@ export class DefaultSocket implements Socket {
     return response.channel_message_ack;
   }
 
-  async rpc(id?: string, payload?: string, http_key?: string): Promise<ApiRpc> {
+  async rpc(id?: bigint, payload?: string, http_key?: string): Promise<ApiRpc> {
     const response = await this.send({
       rpc: {
         id: id,
@@ -2838,7 +2838,7 @@ export class DefaultSocket implements Socket {
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
     hideEditted?: boolean,
-    topic_id?: string,
+    topic_id?: bigint,
     is_update_msg_topic?: boolean,
     old_mentions?: string
   ): Promise<ChannelMessageAck> {
@@ -2879,7 +2879,7 @@ export class DefaultSocket implements Socket {
     mention_everyone?: Boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string
+    topic_id?: bigint
   ): Promise<QuickMenuEvent> {
     const response = await this.send({
       quick_menu_event: {
@@ -2918,8 +2918,8 @@ export class DefaultSocket implements Socket {
     mention_everyone?: Boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string,
-    id?: string
+    topic_id?: bigint,
+    id?: bigint
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       ephemeral_message_send: {
@@ -2958,7 +2958,7 @@ export class DefaultSocket implements Socket {
     mention_everyone?: Boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string
+    topic_id?: bigint
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_send: {
@@ -2992,8 +2992,8 @@ export class DefaultSocket implements Socket {
     count: number,
     message_sender_id: bigint,
     action_delete: boolean,
-    topic_id?: string,
-    emoji_recent_id?: string,
+    topic_id?: bigint,
+    emoji_recent_id?: bigint,
     sender_name?: string
   ): Promise<ApiMessageReaction> {
     const response = await this.send({
@@ -3023,7 +3023,7 @@ export class DefaultSocket implements Socket {
     mode: number,
     is_public: boolean,
     sender_display_name: string,
-    topic_id?: string
+    topic_id?: bigint
   ): Promise<MessageTypingEvent> {
     const response = await this.send({
       message_typing_event: {
