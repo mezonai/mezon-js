@@ -1108,7 +1108,7 @@ export interface User {
   /** dob */
   dob_seconds: number;
   /** Mezone id */
-  mezon_id: bigint;
+  mezon_id: string;
   /** list clan nick name */
   list_nick_names: string[];
   /** online, offline, invisible, idle, do not disturb */
@@ -11402,7 +11402,7 @@ function createBaseUser(): User {
     join_time_seconds: 0,
     is_mobile: false,
     dob_seconds: 0,
-    mezon_id: 0n,
+    mezon_id: "",
     list_nick_names: [],
     status: "",
   };
@@ -11464,11 +11464,8 @@ export const User = {
     if (message.dob_seconds !== 0) {
       writer.uint32(136).uint32(message.dob_seconds);
     }
-    if (message.mezon_id !== 0n) {
-      if (BigInt.asIntN(64, message.mezon_id) !== message.mezon_id) {
-        throw new globalThis.Error("value provided for field message.mezon_id of type int64 too large");
-      }
-      writer.uint32(144).int64(message.mezon_id.toString());
+    if (message.mezon_id !== "") {
+      writer.uint32(146).string(message.mezon_id);
     }
     for (const v of message.list_nick_names) {
       writer.uint32(154).string(v!);
@@ -11606,11 +11603,11 @@ export const User = {
           message.dob_seconds = reader.uint32();
           continue;
         case 18:
-          if (tag !== 144) {
+          if (tag !== 146) {
             break;
           }
 
-          message.mezon_id = longToBigint(reader.int64() as Long);
+          message.mezon_id = reader.string();
           continue;
         case 19:
           if (tag !== 154) {
@@ -11654,7 +11651,7 @@ export const User = {
       join_time_seconds: isSet(object.join_time_seconds) ? globalThis.Number(object.join_time_seconds) : 0,
       is_mobile: isSet(object.is_mobile) ? globalThis.Boolean(object.is_mobile) : false,
       dob_seconds: isSet(object.dob_seconds) ? globalThis.Number(object.dob_seconds) : 0,
-      mezon_id: isSet(object.mezon_id) ? BigInt(object.mezon_id) : 0n,
+      mezon_id: isSet(object.mezon_id) ? globalThis.String(object.mezon_id) : "",
       list_nick_names: globalThis.Array.isArray(object?.list_nick_names)
         ? object.list_nick_names.map((e: any) => globalThis.String(e))
         : [],
@@ -11715,8 +11712,8 @@ export const User = {
     if (message.dob_seconds !== 0) {
       obj.dob_seconds = Math.round(message.dob_seconds);
     }
-    if (message.mezon_id !== 0n) {
-      obj.mezon_id = message.mezon_id.toString();
+    if (message.mezon_id !== "") {
+      obj.mezon_id = message.mezon_id;
     }
     if (message.list_nick_names?.length) {
       obj.list_nick_names = message.list_nick_names;
@@ -11749,7 +11746,7 @@ export const User = {
     message.join_time_seconds = object.join_time_seconds ?? 0;
     message.is_mobile = object.is_mobile ?? false;
     message.dob_seconds = object.dob_seconds ?? 0;
-    message.mezon_id = object.mezon_id ?? 0n;
+    message.mezon_id = object.mezon_id ?? "";
     message.list_nick_names = object.list_nick_names?.map((e) => e) || [];
     message.status = object.status ?? "";
     return message;

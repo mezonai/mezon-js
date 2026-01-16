@@ -1509,7 +1509,7 @@ export interface UserProfileRedis {
   /** FCM token */
   fcm_tokens: FCMTokens[];
   /** clans */
-  joined_clans: string[];
+  joined_clans: bigint[];
   /** app token */
   app_token: string;
   /** create time */
@@ -13064,9 +13064,14 @@ export const UserProfileRedis = {
     for (const v of message.fcm_tokens) {
       FCMTokens.encode(v!, writer.uint32(66).fork()).ldelim();
     }
+    writer.uint32(74).fork();
     for (const v of message.joined_clans) {
-      writer.uint32(74).string(v!);
+      if (BigInt.asIntN(64, v) !== v) {
+        throw new globalThis.Error("a value provided in array field joined_clans of type int64 is too large");
+      }
+      writer.int64(v.toString());
     }
+    writer.ldelim();
     if (message.app_token !== "") {
       writer.uint32(82).string(message.app_token);
     }
@@ -13149,12 +13154,22 @@ export const UserProfileRedis = {
           message.fcm_tokens.push(FCMTokens.decode(reader, reader.uint32()));
           continue;
         case 9:
-          if (tag !== 74) {
-            break;
+          if (tag === 72) {
+            message.joined_clans.push(longToBigint(reader.int64() as Long));
+
+            continue;
           }
 
-          message.joined_clans.push(reader.string());
-          continue;
+          if (tag === 74) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.joined_clans.push(longToBigint(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 10:
           if (tag !== 82) {
             break;
@@ -13212,7 +13227,7 @@ export const UserProfileRedis = {
         ? object.fcm_tokens.map((e: any) => FCMTokens.fromJSON(e))
         : [],
       joined_clans: globalThis.Array.isArray(object?.joined_clans)
-        ? object.joined_clans.map((e: any) => globalThis.String(e))
+        ? object.joined_clans.map((e: any) => BigInt(e))
         : [],
       app_token: isSet(object.app_token) ? globalThis.String(object.app_token) : "",
       create_time_second: isSet(object.create_time_second) ? globalThis.Number(object.create_time_second) : 0,
@@ -13249,7 +13264,7 @@ export const UserProfileRedis = {
       obj.fcm_tokens = message.fcm_tokens.map((e) => FCMTokens.toJSON(e));
     }
     if (message.joined_clans?.length) {
-      obj.joined_clans = message.joined_clans;
+      obj.joined_clans = message.joined_clans.map((e) => e.toString());
     }
     if (message.app_token !== "") {
       obj.app_token = message.app_token;
