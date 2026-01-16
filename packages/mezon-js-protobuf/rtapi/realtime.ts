@@ -1125,7 +1125,7 @@ export interface StreamingJoinedEvent {
   /** streaming channel label */
   streaming_channel_label: string;
   /** streaming channel id */
-  streaming_channel_id: string;
+  streaming_channel_id: bigint;
 }
 
 /** Streaming start event */
@@ -9343,7 +9343,7 @@ function createBaseStreamingJoinedEvent(): StreamingJoinedEvent {
     participant: "",
     user_id: 0n,
     streaming_channel_label: "",
-    streaming_channel_id: "",
+    streaming_channel_id: 0n,
   };
 }
 
@@ -9376,8 +9376,11 @@ export const StreamingJoinedEvent = {
     if (message.streaming_channel_label !== "") {
       writer.uint32(50).string(message.streaming_channel_label);
     }
-    if (message.streaming_channel_id !== "") {
-      writer.uint32(58).string(message.streaming_channel_id);
+    if (message.streaming_channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.streaming_channel_id) !== message.streaming_channel_id) {
+        throw new globalThis.Error("value provided for field message.streaming_channel_id of type int64 too large");
+      }
+      writer.uint32(56).int64(message.streaming_channel_id.toString());
     }
     return writer;
   },
@@ -9432,11 +9435,11 @@ export const StreamingJoinedEvent = {
           message.streaming_channel_label = reader.string();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.streaming_channel_id = reader.string();
+          message.streaming_channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -9457,7 +9460,7 @@ export const StreamingJoinedEvent = {
       streaming_channel_label: isSet(object.streaming_channel_label)
         ? globalThis.String(object.streaming_channel_label)
         : "",
-      streaming_channel_id: isSet(object.streaming_channel_id) ? globalThis.String(object.streaming_channel_id) : "",
+      streaming_channel_id: isSet(object.streaming_channel_id) ? BigInt(object.streaming_channel_id) : 0n,
     };
   },
 
@@ -9481,8 +9484,8 @@ export const StreamingJoinedEvent = {
     if (message.streaming_channel_label !== "") {
       obj.streaming_channel_label = message.streaming_channel_label;
     }
-    if (message.streaming_channel_id !== "") {
-      obj.streaming_channel_id = message.streaming_channel_id;
+    if (message.streaming_channel_id !== 0n) {
+      obj.streaming_channel_id = message.streaming_channel_id.toString();
     }
     return obj;
   },
@@ -9498,7 +9501,7 @@ export const StreamingJoinedEvent = {
     message.participant = object.participant ?? "";
     message.user_id = object.user_id ?? 0n;
     message.streaming_channel_label = object.streaming_channel_label ?? "";
-    message.streaming_channel_id = object.streaming_channel_id ?? "";
+    message.streaming_channel_id = object.streaming_channel_id ?? 0n;
     return message;
   },
 };

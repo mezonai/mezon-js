@@ -247,7 +247,7 @@ export interface SessionLogoutRequest {
   /** Refresh token to invalidate. */
   refresh_token: string;
   /** Device Id */
-  device_id: bigint;
+  device_id: string;
   /** FCM token from firebase */
   fcm_token: string;
   /** platform */
@@ -4616,7 +4616,7 @@ export const SessionRefreshRequest_VarsEntry = {
 };
 
 function createBaseSessionLogoutRequest(): SessionLogoutRequest {
-  return { token: "", refresh_token: "", device_id: 0n, fcm_token: "", platform: "" };
+  return { token: "", refresh_token: "", device_id: "", fcm_token: "", platform: "" };
 }
 
 export const SessionLogoutRequest = {
@@ -4627,11 +4627,8 @@ export const SessionLogoutRequest = {
     if (message.refresh_token !== "") {
       writer.uint32(18).string(message.refresh_token);
     }
-    if (message.device_id !== 0n) {
-      if (BigInt.asIntN(64, message.device_id) !== message.device_id) {
-        throw new globalThis.Error("value provided for field message.device_id of type int64 too large");
-      }
-      writer.uint32(24).int64(message.device_id.toString());
+    if (message.device_id !== "") {
+      writer.uint32(26).string(message.device_id);
     }
     if (message.fcm_token !== "") {
       writer.uint32(34).string(message.fcm_token);
@@ -4664,11 +4661,11 @@ export const SessionLogoutRequest = {
           message.refresh_token = reader.string();
           continue;
         case 3:
-          if (tag !== 24) {
+          if (tag !== 26) {
             break;
           }
 
-          message.device_id = longToBigint(reader.int64() as Long);
+          message.device_id = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
@@ -4697,7 +4694,7 @@ export const SessionLogoutRequest = {
     return {
       token: isSet(object.token) ? globalThis.String(object.token) : "",
       refresh_token: isSet(object.refresh_token) ? globalThis.String(object.refresh_token) : "",
-      device_id: isSet(object.device_id) ? BigInt(object.device_id) : 0n,
+      device_id: isSet(object.device_id) ? globalThis.String(object.device_id) : "",
       fcm_token: isSet(object.fcm_token) ? globalThis.String(object.fcm_token) : "",
       platform: isSet(object.platform) ? globalThis.String(object.platform) : "",
     };
@@ -4711,8 +4708,8 @@ export const SessionLogoutRequest = {
     if (message.refresh_token !== "") {
       obj.refresh_token = message.refresh_token;
     }
-    if (message.device_id !== 0n) {
-      obj.device_id = message.device_id.toString();
+    if (message.device_id !== "") {
+      obj.device_id = message.device_id;
     }
     if (message.fcm_token !== "") {
       obj.fcm_token = message.fcm_token;
@@ -4730,7 +4727,7 @@ export const SessionLogoutRequest = {
     const message = createBaseSessionLogoutRequest();
     message.token = object.token ?? "";
     message.refresh_token = object.refresh_token ?? "";
-    message.device_id = object.device_id ?? 0n;
+    message.device_id = object.device_id ?? "";
     message.fcm_token = object.fcm_token ?? "";
     message.platform = object.platform ?? "";
     return message;
