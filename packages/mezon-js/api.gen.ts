@@ -24,7 +24,7 @@ export interface ChannelUserListChannelUser {
   //User.
   user_id?: bigint;
   //Added by
-  added_by?: string;
+  added_by?: bigint;
   // is banned
   is_banned?: boolean;
   // expired time

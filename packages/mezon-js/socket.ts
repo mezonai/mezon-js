@@ -1946,7 +1946,10 @@ export class DefaultSocket implements Socket {
 
     this.adapter.onMessage = async (message: any) => {
       if (this.verbose && window && window.console) {
-        console.log("Response: %o", JSON.stringify(message));
+        const jsonString = JSON.stringify(message, (_key, value) => 
+          typeof value === 'bigint' ? value.toString() : value
+        );
+        console.log("Response: %o", jsonString);
       }
       /** Inbound message from server. */
       if (!message.cid) {
