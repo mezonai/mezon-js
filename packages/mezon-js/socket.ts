@@ -65,7 +65,14 @@ import {
 } from "./api.gen";
 import { Session } from "./session";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
-import { decodeAttachments, decodeMentions, decodeNotificationFcm, decodeReactions, decodeRefs, safeJSONParse } from "./utils";
+import {
+  decodeAttachments,
+  decodeMentions,
+  decodeNotificationFcm,
+  decodeReactions,
+  decodeRefs,
+  safeJSONParse,
+} from "./utils";
 
 /** Stores function references for resolve/reject with a DOM Promise. */
 interface PromiseExecutor {
@@ -183,7 +190,7 @@ export interface BannedUserEvent {
   banner_id: bigint;
   channel_id: bigint;
   clan_id: bigint;
-  ban_time: number
+  ban_time: number;
 }
 
 export interface UserProfileRedis {
@@ -402,7 +409,7 @@ interface TransferOwnershipEvent {
 
 interface QuickMenuEvent {
   quick_menu_event: {
-    menu_name: string,
+    menu_name: string;
     message: {
       /** Clan Id */
       clan_id: bigint;
@@ -430,13 +437,13 @@ interface QuickMenuEvent {
       code: number;
       //
       topic_id?: bigint;
-    }
-  }
+    };
+  };
 }
 
 interface EphemeralMessageSend {
   ephemeral_message_send: {
-    receiver_id: bigint,
+    receiver_id: bigint;
     message: {
       /** Clan Id */
       clan_id: bigint;
@@ -464,8 +471,8 @@ interface EphemeralMessageSend {
       code: number;
       //
       topic_id?: bigint;
-    }
-  }
+    };
+  };
 }
 
 /** Update a message previously sent to a realtime chat channel. */
@@ -490,7 +497,7 @@ interface ChannelMessageUpdate {
     //
     is_update_msg_topic?: boolean;
     //
-    old_mentions?: string;
+    old_mentions?: Uint8Array;
   };
 }
 
@@ -514,9 +521,9 @@ interface ChannelMessageRemove {
     //
     topic_id?: bigint;
     // mentions
-    mentions: string;
+    mentions: Uint8Array;
     // references
-    references: string;
+    references: Uint8Array;
   };
 }
 
@@ -784,7 +791,7 @@ export interface ClanProfileUpdatedEvent {
   clan_id: bigint;
 }
 
-export interface MeetParticipantEvent { 
+export interface MeetParticipantEvent {
   username: string;
   room_name: string;
   channel_id: bigint;
@@ -1020,7 +1027,7 @@ export interface UserEmojiUsage {
 
 export interface AddFriend {
   //
-  user_id: bigint;// user id
+  user_id: bigint; // user id
   // username
   username: string;
   // display name
@@ -1205,7 +1212,7 @@ export interface VoiceReactionSend {
 }
 
 export interface MarkAsRead {
-   // channel id
+  // channel id
   channel_id: bigint;
   // category_id
   category_id: bigint;
@@ -1241,8 +1248,8 @@ export interface UserStatusEvent {
 }
 
 export interface JoinChannelAppData {
-  user_id : string;
-  username : string;
+  user_id: string;
+  username: string;
   hash: string;
 }
 
@@ -1404,7 +1411,7 @@ export interface Socket {
     createStatus: boolean,
     platform: string,
     connectTimeoutMs?: number,
-    signal?: AbortSignal
+    signal?: AbortSignal,
   ): Promise<Session>;
 
   /** Disconnect from the server. */
@@ -1423,7 +1430,7 @@ export interface Socket {
     clan_id: bigint,
     channel_id: bigint,
     channel_type: number,
-    is_public: boolean
+    is_public: boolean,
   ): Promise<Channel>;
 
   /** Leave a chat channel on the server. */
@@ -1431,17 +1438,17 @@ export interface Socket {
     clan_id: bigint,
     channel_id: bigint,
     channel_type: number,
-    is_public: boolean
+    is_public: boolean,
   ): Promise<void>;
 
   /** handle user join/leave channel voice on the server. */
-  handleParticipantMeetState (
+  handleParticipantMeetState(
     clan_id: bigint,
     channel_id: bigint,
     display_name: string,
     state: number,
-    room_name: string
-  ): Promise<void> 
+    room_name: string,
+  ): Promise<void>;
 
   /** Remove a chat message from a chat channel on the server. */
   removeChatMessage(
@@ -1452,8 +1459,8 @@ export interface Socket {
     message_id: bigint,
     has_attachment?: boolean,
     topic_id?: bigint,
-    mentions?:string,
-    references?: string
+    mentions?: Uint8Array,
+    references?: Uint8Array,
   ): Promise<ChannelMessageAck>;
 
   /** Execute an RPC function to the server. */
@@ -1475,7 +1482,7 @@ export interface Socket {
     hideEditted?: boolean,
     topic_id?: bigint,
     is_update_msg_topic?: boolean,
-    old_mentions?: string
+    old_mentions?: Uint8Array,
   ): Promise<ChannelMessageAck>;
 
   /** Update the status for the current user online. */
@@ -1496,7 +1503,7 @@ export interface Socket {
     avatar?: string,
     code?: number,
     topic_id?: bigint,
-    id?: bigint
+    id?: bigint,
   ): Promise<ChannelMessageAck>;
 
   /** Send a chat message to a chat channel on the server. */
@@ -1514,7 +1521,7 @@ export interface Socket {
     mention_everyone?: boolean,
     avatar?: string,
     code?: number,
-    topic_id?: bigint
+    topic_id?: bigint,
   ): Promise<ChannelMessageAck>;
 
   /** Send a quick menu event to a chat channel on the server. */
@@ -1533,7 +1540,7 @@ export interface Socket {
     avatar?: string,
     code?: number,
     topic_id?: bigint,
-    id?: bigint
+    id?: bigint,
   ): Promise<QuickMenuEvent>;
 
   /** Send message typing */
@@ -1543,7 +1550,7 @@ export interface Socket {
     mode: number,
     is_public: boolean,
     sender_display_name: string,
-    topic_id?: bigint
+    topic_id?: bigint,
   ): Promise<MessageTypingEvent>;
 
   /** Send message reaction */
@@ -1561,7 +1568,7 @@ export interface Socket {
     action_delete: boolean,
     topic_id?: bigint,
     emoji_recent_id?: bigint,
-    sender_name?: string
+    sender_name?: string,
   ): Promise<ApiMessageReaction>;
 
   /** Send last seen message */
@@ -1571,7 +1578,7 @@ export interface Socket {
     mode: number,
     message_id: bigint,
     timestamp_seconds: number,
-    badge_count: number
+    badge_count: number,
   ): Promise<LastSeenMessageEvent>;
 
   /** Send last pin message */
@@ -1596,13 +1603,10 @@ export interface Socket {
     clan_id: bigint,
     status: string,
     time_reset: number,
-    no_clear: boolean
+    no_clear: boolean,
   ): Promise<CustomStatusEvent>;
 
-  writeActiveArchivedThread(
-    clan_id: bigint,
-    channel_id: bigint
-  ): Promise<void>;
+  writeActiveArchivedThread(clan_id: bigint, channel_id: bigint): Promise<void>;
 
   /* Set the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   setHeartbeatTimeoutMs(ms: number): void;
@@ -1625,7 +1629,7 @@ export interface Socket {
     button_id: bigint,
     sender_id: bigint,
     user_id: bigint,
-    extra_data: string
+    extra_data: string,
   ) => Promise<MessageButtonClicked>;
 
   handleDropdownBoxSelected: (
@@ -1634,38 +1638,36 @@ export interface Socket {
     selectbox_id: bigint,
     sender_id: bigint,
     user_id: bigint,
-    value: Array<string>
+    value: Array<string>,
   ) => Promise<DropdownBoxSelected>;
 
   writeVoiceReaction: (
     emojis: Array<string>,
-    channel_id: bigint
-  ) => Promise<VoiceReactionSend>
+    channel_id: bigint,
+  ) => Promise<VoiceReactionSend>;
 
   forwardWebrtcSignaling: (
     receiverId: bigint,
     dataType: number,
     jsonData: string,
     channelId: bigint,
-    caller_id: bigint
+    caller_id: bigint,
   ) => Promise<WebrtcSignalingFwd>;
 
   makeCallPush: (
     receiverId: bigint,
     jsonData: string,
     channelId: bigint,
-    caller_id: bigint
+    caller_id: bigint,
   ) => Promise<IncomingCallPush>;
 
   writeChannelAppEvent: (
     clan_id: bigint,
     channel_id: bigint,
-    action: number
+    action: number,
   ) => Promise<ChannelAppEvent>;
 
-  listDataSocket(
-    request: ListDataSocket
-  ): Promise<any>;
+  listDataSocket(request: ListDataSocket): Promise<any>;
 
   /** Handle disconnect events received from the socket. */
   ondisconnect: (evt: Event) => void;
@@ -1797,7 +1799,9 @@ export interface Socket {
 
   oneventemoji: (event_emoji: EventEmoji) => void;
 
-  oneventnotiuserchannel: (noti_user_channel: ApiNotificationUserChannel) => void;
+  oneventnotiuserchannel: (
+    noti_user_channel: ApiNotificationUserChannel,
+  ) => void;
 
   oneventwebhook: (webhook_event: ApiWebhook) => void;
 
@@ -1810,23 +1814,23 @@ export interface Socket {
   onallowanonymousevent: (event: AllowAnonymousEvent) => void;
 
   onstreamingchannelstarted: (
-    streaming_started_event: StreamingStartedEvent
+    streaming_started_event: StreamingStartedEvent,
   ) => void;
 
   onstreamingchannelended: (streaming_ended_event: StreamingEndedEvent) => void;
 
   onstreamingchanneljoined: (
-    streaming_joined_event: StreamingJoinedEvent
+    streaming_joined_event: StreamingJoinedEvent,
   ) => void;
 
   onstreamingchannelleaved: (
-    streaming_leaved_event: StreamingLeavedEvent
+    streaming_leaved_event: StreamingLeavedEvent,
   ) => void;
 
   onpermissionset: (permission_set_event: PermissionSet) => void;
 
   onpermissionchanged: (
-    permission_changed_event: PermissionChangedEvent
+    permission_changed_event: PermissionChangedEvent,
   ) => void;
 
   onunmuteevent: (unmute_event: UnmuteEvent) => void;
@@ -1843,7 +1847,7 @@ export interface Socket {
 
   onjoinchannelappevent: (join_channel_app_data: JoinChannelAppData) => void;
 
-  onunpinmessageevent: (unpin_message_event: UnpinMessageEvent)=> void;
+  onunpinmessageevent: (unpin_message_event: UnpinMessageEvent) => void;
 
   onquickmenuevent: (event: QuickMenuEvent) => void;
 
@@ -1869,7 +1873,8 @@ export const ConnectionState = {
   CONNECTED: "connected",
 } as const;
 
-export type ConnectionStateType = typeof ConnectionState[keyof typeof ConnectionState];
+export type ConnectionStateType =
+  (typeof ConnectionState)[keyof typeof ConnectionState];
 
 export class DefaultSocket implements Socket {
   public static readonly DefaultHeartbeatTimeoutMs = 10000;
@@ -1890,7 +1895,7 @@ export class DefaultSocket implements Socket {
     readonly useSSL: boolean = false,
     public verbose: boolean = false,
     readonly adapter: WebSocketAdapter = new WebSocketAdapterText(),
-    readonly sendTimeoutMs: number = DefaultSocket.DefaultSendTimeoutMs
+    readonly sendTimeoutMs: number = DefaultSocket.DefaultSendTimeoutMs,
   ) {
     this.cIds = {};
     this.nextCid = 1;
@@ -1913,13 +1918,16 @@ export class DefaultSocket implements Socket {
     createStatus: boolean = false,
     platform: string = "",
     connectTimeoutMs: number = DefaultSocket.DefaultConnectTimeoutMs,
-    signal?: AbortSignal
+    signal?: AbortSignal,
   ): Promise<Session> {
     if (this._connectionState === ConnectionState.CONNECTED) {
       return Promise.resolve(session);
     }
 
-    if (this._connectionState === ConnectionState.CONNECTING && this._connectPromise) {
+    if (
+      this._connectionState === ConnectionState.CONNECTING &&
+      this._connectPromise
+    ) {
       return this._connectPromise;
     }
 
@@ -1934,7 +1942,7 @@ export class DefaultSocket implements Socket {
       createStatus,
       session.token,
       platform,
-      signal
+      signal,
     );
 
     this.adapter.onClose = (evt: Event) => {
@@ -1946,8 +1954,8 @@ export class DefaultSocket implements Socket {
 
     this.adapter.onMessage = async (message: any) => {
       if (this.verbose && window && window.console) {
-        const jsonString = JSON.stringify(message, (_key, value) => 
-          typeof value === 'bigint' ? value.toString() : value
+        const jsonString = JSON.stringify(message, (_key, value) =>
+          typeof value === "bigint" ? value.toString() : value,
         );
         console.log("Response: %o", jsonString);
       }
@@ -1955,7 +1963,9 @@ export class DefaultSocket implements Socket {
       if (!message.cid) {
         if (message.notifications) {
           message.notifications.notifications.forEach((n: ApiNotification) => {
-            n.content = n.content ? decodeNotificationFcm(n.content) : undefined;
+            n.content = n.content
+              ? decodeNotificationFcm(n.content)
+              : undefined;
             this.onnotification(n);
           });
         } else if (message.voice_started_event) {
@@ -2000,32 +2010,32 @@ export class DefaultSocket implements Socket {
           this.onlastseenupdated(message.last_seen_message_event);
         } else if (message.status_presence_event) {
           this.onstatuspresence(
-            <StatusPresenceEvent>message.status_presence_event
+            <StatusPresenceEvent>message.status_presence_event,
           );
         } else if (message.stream_presence_event) {
           this.onstreampresence(
-            <StreamPresenceEvent>message.stream_presence_event
+            <StreamPresenceEvent>message.stream_presence_event,
           );
         } else if (message.stream_data) {
           this.onstreamdata(<StreamData>message.stream_data);
-        } else if (message.channel_message) {          
+        } else if (message.channel_message) {
           const channelMessage = CreateChannelMessageFromEvent(message);
           this.onchannelmessage(channelMessage);
         } else if (message.message_typing_event) {
           this.onmessagetyping(
-            <MessageTypingEvent>message.message_typing_event
+            <MessageTypingEvent>message.message_typing_event,
           );
         } else if (message.message_reaction_event) {
           this.onmessagereaction(
-            <ApiMessageReaction>message.message_reaction_event
+            <ApiMessageReaction>message.message_reaction_event,
           );
         } else if (message.channel_presence_event) {
           this.onchannelpresence(
-            <ChannelPresenceEvent>message.channel_presence_event
+            <ChannelPresenceEvent>message.channel_presence_event,
           );
         } else if (message.last_pin_message_event) {
           this.onpinmessage(
-            <LastPinMessageEvent>message.last_pin_message_event
+            <LastPinMessageEvent>message.last_pin_message_event,
           );
         } else if (message.custom_status_event) {
           this.oncustomstatus(<CustomStatusEvent>message.custom_status_event);
@@ -2033,17 +2043,17 @@ export class DefaultSocket implements Socket {
           this.oncanvasevent(<ChannelCanvas>message.canvas_event);
         } else if (message.user_channel_added_event) {
           this.onuserchanneladded(
-            <UserChannelAddedEvent>message.user_channel_added_event
+            <UserChannelAddedEvent>message.user_channel_added_event,
           );
         } else if (message.add_clan_user_event) {
           this.onuserclanadded(<AddClanUserEvent>message.add_clan_user_event);
         } else if (message.user_profile_updated_event) {
           this.onuserprofileupdate(
-            <UserProfileUpdatedEvent>message.user_profile_updated_event
+            <UserProfileUpdatedEvent>message.user_profile_updated_event,
           );
         } else if (message.user_channel_removed_event) {
           this.onuserchannelremoved(
-            <UserChannelRemovedEvent>message.user_channel_removed_event
+            <UserChannelRemovedEvent>message.user_channel_removed_event,
           );
         } else if (message.block_friend) {
           this.onblockfriend(<BlockFriend>message.block_friend);
@@ -2055,7 +2065,7 @@ export class DefaultSocket implements Socket {
           this.onremovefriend(<RemoveFriend>message.remove_friend);
         } else if (message.user_clan_removed_event) {
           this.onuserclanremoved(
-            <UserClanRemovedEvent>message.user_clan_removed_event
+            <UserClanRemovedEvent>message.user_clan_removed_event,
           );
         } else if (message.clan_event_created) {
           this.oneventcreated(message.clan_event_created);
@@ -2065,25 +2075,25 @@ export class DefaultSocket implements Socket {
           this.onroleassign(<RoleAssignedEvent>message.role_assign_event);
         } else if (message.streaming_started_event) {
           this.onstreamingchannelstarted(
-            <StreamingStartedEvent>message.streaming_started_event
+            <StreamingStartedEvent>message.streaming_started_event,
           );
         } else if (message.streaming_ended_event) {
           this.onstreamingchannelended(
-            <StreamingEndedEvent>message.streaming_ended_event
+            <StreamingEndedEvent>message.streaming_ended_event,
           );
         } else if (message.streaming_joined_event) {
           this.onstreamingchanneljoined(
-            <StreamingJoinedEvent>message.streaming_joined_event
+            <StreamingJoinedEvent>message.streaming_joined_event,
           );
         } else if (message.streaming_leaved_event) {
           this.onstreamingchannelleaved(
-            <StreamingLeavedEvent>message.streaming_leaved_event
+            <StreamingLeavedEvent>message.streaming_leaved_event,
           );
         } else if (message.permission_set_event) {
           this.onpermissionset(<PermissionSet>message.permission_set_event);
         } else if (message.permission_changed_event) {
           this.onpermissionchanged(
-            <PermissionChangedEvent>message.permission_changed_event
+            <PermissionChangedEvent>message.permission_changed_event,
           );
         } else if (message.unmute_event) {
           this.onunmuteevent(<UnmuteEvent>message.unmute_event);
@@ -2091,23 +2101,21 @@ export class DefaultSocket implements Socket {
           this.ontokensent(<ApiTokenSentEvent>message.token_sent_event);
         } else if (message.message_button_clicked) {
           this.onmessagebuttonclicked(
-            <MessageButtonClicked>message.message_button_clicked
+            <MessageButtonClicked>message.message_button_clicked,
           );
         } else if (message.dropdown_box_selected) {
           this.onmessagedropdownboxselected(
-            <DropdownBoxSelected>message.dropdown_box_selected
+            <DropdownBoxSelected>message.dropdown_box_selected,
           );
         } else if (message.mark_as_read) {
-          this.onmarkasread(
-            <MarkAsRead>message.mark_as_read
-          );
+          this.onmarkasread(<MarkAsRead>message.mark_as_read);
         } else if (message.voice_reaction_send) {
           this.onvoicereactionmessage(
-            <VoiceReactionSend>message.voice_reaction_send
+            <VoiceReactionSend>message.voice_reaction_send,
           );
         } else if (message.webrtc_signaling_fwd) {
           this.onwebrtcsignalingfwd(
-            <WebrtcSignalingFwd>message.webrtc_signaling_fwd
+            <WebrtcSignalingFwd>message.webrtc_signaling_fwd,
           );
         } else if (message.list_activity) {
           this.onactivityupdated(<ListActivity>message.list_activity);
@@ -2118,19 +2126,29 @@ export class DefaultSocket implements Socket {
         } else if (message.user_status_event) {
           this.onuserstatusevent(<UserStatusEvent>message.user_status_event);
         } else if (message.join_channel_app_data) {
-          this.onjoinchannelappevent(<JoinChannelAppData>message.join_channel_app_data);
+          this.onjoinchannelappevent(
+            <JoinChannelAppData>message.join_channel_app_data,
+          );
         } else if (message.unpin_message_event) {
-          this.onunpinmessageevent(<UnpinMessageEvent>message.unpin_message_event);
+          this.onunpinmessageevent(
+            <UnpinMessageEvent>message.unpin_message_event,
+          );
         } else if (message.quick_menu_event) {
           this.onquickmenuevent(<QuickMenuEvent>message.quick_menu_event);
         } else if (message.meet_participant_event) {
-          this.onmeetparticipantevent(<MeetParticipantEvent>message.meet_participant_event);
+          this.onmeetparticipantevent(
+            <MeetParticipantEvent>message.meet_participant_event,
+          );
         } else if (message.transfer_ownership_event) {
-          this.ontransferownership(<TransferOwnershipEvent>message.transfer_ownership_event);
+          this.ontransferownership(
+            <TransferOwnershipEvent>message.transfer_ownership_event,
+          );
         } else if (message.ban_user_event) {
           this.onbanneduser(<BannedUserEvent>message.ban_user_event);
         } else if (message.allow_anonymous_event) {
-          this.onallowanonymousevent(<AllowAnonymousEvent>message.allow_anonymous_event);
+          this.onallowanonymousevent(
+            <AllowAnonymousEvent>message.allow_anonymous_event,
+          );
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -2167,7 +2185,7 @@ export class DefaultSocket implements Socket {
         this._connectionState = ConnectionState.CONNECTED;
         this.startHeartbeatLoop();
         this._connectPromise = undefined;
-        
+
         resolve(session);
 
         if (isReconnect) {
@@ -2609,7 +2627,7 @@ export class DefaultSocket implements Socket {
       console.log(join_channel_app_data);
     }
   }
-  
+
   onunpinmessageevent(unpin_message_event: UnpinMessageEvent) {
     if (this.verbose && window && window.console) {
       console.log(unpin_message_event);
@@ -2630,7 +2648,7 @@ export class DefaultSocket implements Socket {
 
   onbanneduser(event: BannedUserEvent) {
     if (this.verbose && window && window.console) {
-      console.log(event)
+      console.log(event);
     }
   }
 
@@ -2670,7 +2688,7 @@ export class DefaultSocket implements Socket {
       | VoiceReactionSend
       | ListDataSocket
       | QuickMenuEvent,
-    sendTimeout = DefaultSocket.DefaultSendTimeoutMs
+    sendTimeout = DefaultSocket.DefaultSendTimeoutMs,
   ): Promise<any> {
     const untypedMessage = message as any;
 
@@ -2680,20 +2698,21 @@ export class DefaultSocket implements Socket {
       } else {
         if (untypedMessage.channel_message_send) {
           untypedMessage.channel_message_send.content = JSON.stringify(
-            untypedMessage.channel_message_send.content
+            untypedMessage.channel_message_send.content,
           );
         } else if (untypedMessage.channel_message_update) {
           untypedMessage.channel_message_update.content = JSON.stringify(
-            untypedMessage.channel_message_update.content
+            untypedMessage.channel_message_update.content,
           );
         } else if (untypedMessage.ephemeral_message_send) {
-          untypedMessage.ephemeral_message_send.message.content = JSON.stringify(
-            untypedMessage.ephemeral_message_send.message?.content
-          ); 
+          untypedMessage.ephemeral_message_send.message.content =
+            JSON.stringify(
+              untypedMessage.ephemeral_message_send.message?.content,
+            );
         } else if (untypedMessage.quick_menu_event) {
           untypedMessage.quick_menu_event.message.content = JSON.stringify(
-            untypedMessage.quick_menu_event.message?.content
-          ); 
+            untypedMessage.quick_menu_event.message?.content,
+          );
         }
 
         const cid = this.generatecid();
@@ -2737,7 +2756,7 @@ export class DefaultSocket implements Socket {
     clan_id: bigint,
     channel_id: bigint,
     channel_type: number,
-    is_public: boolean
+    is_public: boolean,
   ): Promise<Channel> {
     const response = await this.send({
       channel_join: {
@@ -2751,7 +2770,7 @@ export class DefaultSocket implements Socket {
     return response.channel;
   }
 
-  async handleParticipantMeetState (
+  async handleParticipantMeetState(
     clan_id: bigint,
     channel_id: bigint,
     display_name: string,
@@ -2775,7 +2794,7 @@ export class DefaultSocket implements Socket {
     clan_id: bigint,
     channel_id: bigint,
     channel_type: number,
-    is_public: boolean
+    is_public: boolean,
   ): Promise<void> {
     return this.send({
       channel_leave: {
@@ -2795,8 +2814,8 @@ export class DefaultSocket implements Socket {
     message_id: bigint,
     has_attachment?: boolean,
     topic_id?: bigint,
-    mentions?: string,
-    references?: string
+    mentions?: Uint8Array,
+    references?: Uint8Array,
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_remove: {
@@ -2808,7 +2827,7 @@ export class DefaultSocket implements Socket {
         has_attachment: has_attachment,
         topic_id: topic_id,
         mentions: mentions,
-        references: references
+        references: references,
       },
     });
 
@@ -2843,7 +2862,7 @@ export class DefaultSocket implements Socket {
     hideEditted?: boolean,
     topic_id?: bigint,
     is_update_msg_topic?: boolean,
-    old_mentions?: string
+    old_mentions?: Uint8Array,
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_update: {
@@ -2858,7 +2877,7 @@ export class DefaultSocket implements Socket {
         hide_editted: hideEditted,
         topic_id: topic_id,
         is_update_msg_topic: is_update_msg_topic,
-        old_mentions: old_mentions
+        old_mentions: old_mentions,
       },
     });
     return response.channel_message_ack;
@@ -2882,7 +2901,7 @@ export class DefaultSocket implements Socket {
     mention_everyone?: Boolean,
     avatar?: string,
     code?: number,
-    topic_id?: bigint
+    topic_id?: bigint,
   ): Promise<QuickMenuEvent> {
     const response = await this.send({
       quick_menu_event: {
@@ -2901,8 +2920,8 @@ export class DefaultSocket implements Socket {
           avatar: avatar,
           code: code,
           topic_id: topic_id,
-        }
-      }
+        },
+      },
     });
     return response.ephemeral_message_send;
   }
@@ -2922,7 +2941,7 @@ export class DefaultSocket implements Socket {
     avatar?: string,
     code?: number,
     topic_id?: bigint,
-    id?: bigint
+    id?: bigint,
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       ephemeral_message_send: {
@@ -2942,8 +2961,8 @@ export class DefaultSocket implements Socket {
           code: code,
           topic_id: topic_id,
           id: id,
-        }
-      }
+        },
+      },
     });
     return response.ephemeral_message_send;
   }
@@ -2961,25 +2980,28 @@ export class DefaultSocket implements Socket {
     mention_everyone?: Boolean,
     avatar?: string,
     code?: number,
-    topic_id?: bigint
+    topic_id?: bigint,
   ): Promise<ChannelMessageAck> {
-    const response = await this.send({
-      channel_message_send: {
-        clan_id: clan_id,
-        channel_id: channel_id,
-        mode: mode,
-        is_public: is_public,
-        content: content,
-        mentions: mentions,
-        attachments: attachments,
-        references: references,
-        anonymous_message: anonymous_message,
-        mention_everyone: mention_everyone,
-        avatar: avatar,
-        code: code,
-        topic_id: topic_id,
+    const response = await this.send(
+      {
+        channel_message_send: {
+          clan_id: clan_id,
+          channel_id: channel_id,
+          mode: mode,
+          is_public: is_public,
+          content: content,
+          mentions: mentions,
+          attachments: attachments,
+          references: references,
+          anonymous_message: anonymous_message,
+          mention_everyone: mention_everyone,
+          avatar: avatar,
+          code: code,
+          topic_id: topic_id,
+        },
       },
-    }, Infinity);
+      Infinity,
+    );
     return response.channel_message_ack;
   }
 
@@ -2997,7 +3019,7 @@ export class DefaultSocket implements Socket {
     action_delete: boolean,
     topic_id?: bigint,
     emoji_recent_id?: bigint,
-    sender_name?: string
+    sender_name?: string,
   ): Promise<ApiMessageReaction> {
     const response = await this.send({
       message_reaction_event: {
@@ -3014,7 +3036,7 @@ export class DefaultSocket implements Socket {
         action: action_delete,
         topic_id: topic_id,
         emoji_recent_id: emoji_recent_id,
-        sender_name: sender_name
+        sender_name: sender_name,
       },
     });
     return response.message_reaction_event;
@@ -3026,7 +3048,7 @@ export class DefaultSocket implements Socket {
     mode: number,
     is_public: boolean,
     sender_display_name: string,
-    topic_id?: bigint
+    topic_id?: bigint,
   ): Promise<MessageTypingEvent> {
     const response = await this.send({
       message_typing_event: {
@@ -3035,7 +3057,7 @@ export class DefaultSocket implements Socket {
         mode: mode,
         is_public: is_public,
         sender_display_name: sender_display_name,
-        topic_id: topic_id
+        topic_id: topic_id,
       },
     });
     return response.message_typing_event;
@@ -3047,7 +3069,7 @@ export class DefaultSocket implements Socket {
     mode: number,
     message_id: bigint,
     timestamp_seconds: number,
-    badge_count: number
+    badge_count: number,
   ): Promise<LastSeenMessageEvent> {
     const response = await this.send({
       last_seen_message_event: {
@@ -3101,7 +3123,7 @@ export class DefaultSocket implements Socket {
     clan_id: bigint,
     status: string,
     time_reset: number,
-    no_clear: boolean
+    no_clear: boolean,
   ): Promise<CustomStatusEvent> {
     const response = await this.send({
       custom_status_event: {
@@ -3116,12 +3138,12 @@ export class DefaultSocket implements Socket {
 
   async writeActiveArchivedThread(
     clan_id: bigint,
-    channel_id: bigint
+    channel_id: bigint,
   ): Promise<void> {
     const response = await this.send({
       active_archived_thread: {
         clan_id: clan_id,
-        channel_id: channel_id
+        channel_id: channel_id,
       },
     });
     return response.active_archived_thread;
@@ -3138,7 +3160,7 @@ export class DefaultSocket implements Socket {
         name: name,
         condition_id: condition_id,
         type: type,
-        clan_id: clan_id
+        clan_id: clan_id,
       },
     });
     return response.check_name_existed_event;
@@ -3146,13 +3168,13 @@ export class DefaultSocket implements Socket {
 
   async writeVoiceReaction(
     emojis: Array<string>,
-    channel_id: bigint
+    channel_id: bigint,
   ): Promise<VoiceReactionSend> {
     const response = await this.send({
       voice_reaction_send: {
         emojis: emojis,
-        channel_id: channel_id
-      }
+        channel_id: channel_id,
+      },
     });
     return response.voice_reaction_send;
   }
@@ -3162,7 +3184,7 @@ export class DefaultSocket implements Socket {
     data_type: number,
     json_data: string,
     channel_id: bigint,
-    caller_id: bigint
+    caller_id: bigint,
   ): Promise<WebrtcSignalingFwd> {
     const response = await this.send({
       webrtc_signaling_fwd: {
@@ -3180,7 +3202,7 @@ export class DefaultSocket implements Socket {
     receiver_id: bigint,
     json_data: string,
     channel_id: bigint,
-    caller_id: bigint
+    caller_id: bigint,
   ): Promise<IncomingCallPush> {
     const response = await this.send({
       incoming_call_push: {
@@ -3199,7 +3221,7 @@ export class DefaultSocket implements Socket {
     selectbox_id: bigint,
     sender_id: bigint,
     user_id: bigint,
-    value: Array<string>
+    value: Array<string>,
   ): Promise<DropdownBoxSelected> {
     const response = await this.send({
       dropdown_box_selected: {
@@ -3220,7 +3242,7 @@ export class DefaultSocket implements Socket {
     button_id: bigint,
     sender_id: bigint,
     user_id: bigint,
-    extra_data: string
+    extra_data: string,
   ): Promise<MessageButtonClicked> {
     const response = await this.send({
       message_button_clicked: {
@@ -3238,7 +3260,7 @@ export class DefaultSocket implements Socket {
   async writeChannelAppEvent(
     clan_id: bigint,
     channel_id: bigint,
-    action: number
+    action: number,
   ): Promise<ChannelAppEvent> {
     const response = await this.send({
       channel_app_event: {
@@ -3250,9 +3272,7 @@ export class DefaultSocket implements Socket {
     return response.channel_app_event;
   }
 
-  async listDataSocket(
-    request: ListDataSocket
-  ): Promise<any> {
+  async listDataSocket(request: ListDataSocket): Promise<any> {
     const response = await this.send({
       list_data_socket: request,
     });
@@ -3289,7 +3309,7 @@ export class DefaultSocket implements Socket {
     this.stopHeartbeatLoop();
     this._heartbeatTimer = setTimeout(
       () => this.pingPong(),
-      this._heartbeatTimeoutMs
+      this._heartbeatTimeoutMs,
     );
   }
 
@@ -3307,4 +3327,3 @@ export class DefaultSocket implements Socket {
     }
   }
 }
-
