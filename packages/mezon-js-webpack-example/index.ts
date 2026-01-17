@@ -14,20 +14,27 @@
  * limitations under the License.
  */
 
-import {Client, Session} from "mezon-js";
+import {Client} from "mezon-js";
 import {WebSocketAdapterPb} from "mezon-js-protobuf"
 
 var useSSL = true; // Enable if server is run with an SSL certificate.
 var clientgw = new Client("defaultkey", "dev-mezon.nccsoft.vn", "8088", useSSL);
 var client = new Client("defaultkey", "172.16.11.90", "7350", false);
 
-clientgw.authenticateEmail("pocolomos@gmail.com", "C0nandoiner123$").then(async session => {
+clientgw.authenticateEmail("pocolomos@gmail.com", "xxxxxxxxxx").then(async session => {
   console.log("authenticated.", session);
 
-  console.log(await client.listLogedDevice(session))
+  console.log(await client.listChannelMessages(session, 1775732550744936448n, 1803320023704408064n))
+
+  console.log(await client.listChannelDescs(session))
+
+  console.log(await client.sessionRefresh(session))
   
   const socket = client.createSocket(false, true, new WebSocketAdapterPb());
   const session2 = await socket.connect(session, true, "desktop");
+  
+  console.log('join clan', await socket.joinClanChat(0n));
+  console.log('join clan', await socket.joinClanChat(1775732550744936448n));
   console.log("session", session2);
   const resp = await socket.listDataSocket(
     { 
