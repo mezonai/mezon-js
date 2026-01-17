@@ -10,6 +10,7 @@ npx protoc \
 --plugin="./node_modules/.bin/protoc-gen-ts_proto" \
 --proto_path=$GOPATH/src/github.com/nccasia/mezon-server/common \
 --ts_proto_out=. \
+--ts_proto_opt=forceLong=bigint \
 --ts_proto_opt=snakeToCamel=false \
 --ts_proto_opt=esModuleInterop=true \
 $GOPATH/src/github.com/nccasia/mezon-server/common/rtapi/realtime.proto \

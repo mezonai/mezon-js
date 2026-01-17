@@ -19,7 +19,7 @@ const config = {
   logLevel: 'info',
   entryPoints: ['index.ts'],
   bundle: true,
-  target: 'es6',
+  target: 'es2020',
   globalName: 'mezonjs'
 };
 
