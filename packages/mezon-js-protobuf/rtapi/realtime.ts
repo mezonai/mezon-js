@@ -1081,11 +1081,11 @@ export interface VoiceJoinedEvent {
 /** Voice start event */
 export interface VoiceStartedEvent {
   /** id voice */
-  id: bigint;
+  id: string;
   /** The unique identifier of the chat clan. */
   clan_id: bigint;
   /** voice channel name */
-  voice_channel_id: string;
+  voice_channel_id: bigint;
 }
 
 /** Voice start event */
@@ -9039,16 +9039,13 @@ export const VoiceJoinedEvent = {
 };
 
 function createBaseVoiceStartedEvent(): VoiceStartedEvent {
-  return { id: 0n, clan_id: 0n, voice_channel_id: "" };
+  return { id: "", clan_id: 0n, voice_channel_id: 0n };
 }
 
 export const VoiceStartedEvent = {
   encode(message: VoiceStartedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== 0n) {
-      if (BigInt.asIntN(64, message.id) !== message.id) {
-        throw new globalThis.Error("value provided for field message.id of type int64 too large");
-      }
-      writer.uint32(8).int64(message.id.toString());
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
     }
     if (message.clan_id !== 0n) {
       if (BigInt.asIntN(64, message.clan_id) !== message.clan_id) {
@@ -9056,8 +9053,11 @@ export const VoiceStartedEvent = {
       }
       writer.uint32(16).int64(message.clan_id.toString());
     }
-    if (message.voice_channel_id !== "") {
-      writer.uint32(26).string(message.voice_channel_id);
+    if (message.voice_channel_id !== 0n) {
+      if (BigInt.asIntN(64, message.voice_channel_id) !== message.voice_channel_id) {
+        throw new globalThis.Error("value provided for field message.voice_channel_id of type int64 too large");
+      }
+      writer.uint32(24).int64(message.voice_channel_id.toString());
     }
     return writer;
   },
@@ -9070,11 +9070,11 @@ export const VoiceStartedEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.id = longToBigint(reader.int64() as Long);
+          message.id = reader.string();
           continue;
         case 2:
           if (tag !== 16) {
@@ -9084,11 +9084,11 @@ export const VoiceStartedEvent = {
           message.clan_id = longToBigint(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.voice_channel_id = reader.string();
+          message.voice_channel_id = longToBigint(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -9101,22 +9101,22 @@ export const VoiceStartedEvent = {
 
   fromJSON(object: any): VoiceStartedEvent {
     return {
-      id: isSet(object.id) ? BigInt(object.id) : 0n,
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
       clan_id: isSet(object.clan_id) ? BigInt(object.clan_id) : 0n,
-      voice_channel_id: isSet(object.voice_channel_id) ? globalThis.String(object.voice_channel_id) : "",
+      voice_channel_id: isSet(object.voice_channel_id) ? BigInt(object.voice_channel_id) : 0n,
     };
   },
 
   toJSON(message: VoiceStartedEvent): unknown {
     const obj: any = {};
-    if (message.id !== 0n) {
-      obj.id = message.id.toString();
+    if (message.id !== "") {
+      obj.id = message.id;
     }
     if (message.clan_id !== 0n) {
       obj.clan_id = message.clan_id.toString();
     }
-    if (message.voice_channel_id !== "") {
-      obj.voice_channel_id = message.voice_channel_id;
+    if (message.voice_channel_id !== 0n) {
+      obj.voice_channel_id = message.voice_channel_id.toString();
     }
     return obj;
   },
@@ -9126,9 +9126,9 @@ export const VoiceStartedEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<VoiceStartedEvent>, I>>(object: I): VoiceStartedEvent {
     const message = createBaseVoiceStartedEvent();
-    message.id = object.id ?? 0n;
+    message.id = object.id ?? "";
     message.clan_id = object.clan_id ?? 0n;
-    message.voice_channel_id = object.voice_channel_id ?? "";
+    message.voice_channel_id = object.voice_channel_id ?? 0n;
     return message;
   },
 };
