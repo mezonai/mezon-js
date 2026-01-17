@@ -1700,7 +1700,7 @@ export interface ApiMessageAttachment {
   //
   height?: number;
   //
-  size?: bigint;
+  size?: number;
   //
   url?: string;
   //

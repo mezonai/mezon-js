@@ -420,7 +420,7 @@ export interface MessageAttachment {
   /** Attachment file name */
   filename: string;
   /** Attachment file size */
-  size: bigint;
+  size: number;
   /** Attachment url */
   url: string;
   /** Attachment file type */
@@ -6238,7 +6238,7 @@ export const MessageReaction = {
 };
 
 function createBaseMessageAttachment(): MessageAttachment {
-  return { filename: "", size: 0n, url: "", filetype: "", width: 0, height: 0, thumbnail: "", duration: 0 };
+  return { filename: "", size: 0, url: "", filetype: "", width: 0, height: 0, thumbnail: "", duration: 0 };
 }
 
 export const MessageAttachment = {
@@ -6246,11 +6246,8 @@ export const MessageAttachment = {
     if (message.filename !== "") {
       writer.uint32(10).string(message.filename);
     }
-    if (message.size !== 0n) {
-      if (BigInt.asIntN(64, message.size) !== message.size) {
-        throw new globalThis.Error("value provided for field message.size of type int64 too large");
-      }
-      writer.uint32(16).int64(message.size.toString());
+    if (message.size !== 0) {
+      writer.uint32(16).int32(message.size);
     }
     if (message.url !== "") {
       writer.uint32(26).string(message.url);
@@ -6292,7 +6289,7 @@ export const MessageAttachment = {
             break;
           }
 
-          message.size = longToBigint(reader.int64() as Long);
+          message.size = reader.int32();
           continue;
         case 3:
           if (tag !== 26) {
@@ -6348,7 +6345,7 @@ export const MessageAttachment = {
   fromJSON(object: any): MessageAttachment {
     return {
       filename: isSet(object.filename) ? globalThis.String(object.filename) : "",
-      size: isSet(object.size) ? BigInt(object.size) : 0n,
+      size: isSet(object.size) ? globalThis.Number(object.size) : 0,
       url: isSet(object.url) ? globalThis.String(object.url) : "",
       filetype: isSet(object.filetype) ? globalThis.String(object.filetype) : "",
       width: isSet(object.width) ? globalThis.Number(object.width) : 0,
@@ -6363,8 +6360,8 @@ export const MessageAttachment = {
     if (message.filename !== "") {
       obj.filename = message.filename;
     }
-    if (message.size !== 0n) {
-      obj.size = message.size.toString();
+    if (message.size !== 0) {
+      obj.size = Math.round(message.size);
     }
     if (message.url !== "") {
       obj.url = message.url;
@@ -6393,7 +6390,7 @@ export const MessageAttachment = {
   fromPartial<I extends Exact<DeepPartial<MessageAttachment>, I>>(object: I): MessageAttachment {
     const message = createBaseMessageAttachment();
     message.filename = object.filename ?? "";
-    message.size = object.size ?? 0n;
+    message.size = object.size ?? 0;
     message.url = object.url ?? "";
     message.filetype = object.filetype ?? "";
     message.width = object.width ?? 0;
