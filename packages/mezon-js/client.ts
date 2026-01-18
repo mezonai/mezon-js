@@ -83,7 +83,6 @@ import {
   ApiSystemMessageRequest,
   MezonUpdateSystemMessageBody,
   ApiUpdateCategoryOrderRequest,
-  ApiGiveCoffeeEvent,
   ApiStreamingChannelUserList,
   ApiRegisterStreamingChannelRequest,
   ApiRegisterStreamingChannelResponse,
@@ -117,7 +116,6 @@ import {
   ApiPubKey,
   ApiGetKeyServerResp,
   MezonapiListAuditLog,
-  ApiTokenSentEvent,
   MezonDeleteWebhookByIdBody,
   ApiListOnboardingResponse,
   ApiCreateOnboardingRequest,
@@ -169,6 +167,10 @@ import {
   ApiIsBannedResponse,
   ApiLogedDeviceList,
   ChannelMessage,
+  ApiMessageReaction,
+  ApiMessageMention,
+  ApiMessageAttachment,
+  ApiMessageRef,
 } from "./api.gen";
 import { PinMessagesList } from "./api/api";
 
@@ -1082,7 +1084,22 @@ export class Client {
     return this.apiClient
       .listBannedUsers(session.token, clanId, channelId)
       .then((response: ApiBannedUserList) => {
-        return Promise.resolve(response);
+        const result: ApiBannedUserList = {
+          banned_users: [],
+        };
+
+        if (response.banned_users == null) {
+          return Promise.resolve(result);
+        }
+
+        response.banned_users!.forEach((b) => {
+          b.channel_id = String(b.channel_id || "");
+          b.banned_id = String(b.banned_id || "");
+          b.banner_id = String(b.banner_id || "");
+        });
+
+        result.banned_users = response.banned_users;
+        return Promise.resolve(result);
       });
   }
 
@@ -1190,6 +1207,25 @@ export class Client {
         if (response.messages == null) {
           return Promise.resolve(result);
         }
+
+        if (result.last_seen_message) {
+          result.last_seen_message.id = String(
+            response.last_seen_message?.id || "",
+          );
+          result.last_seen_message.sender_id = String(
+            response.last_seen_message?.sender_id || "",
+          );
+        }
+
+        if (result.last_sent_message) {
+          result.last_sent_message.id = String(
+            response.last_sent_message?.id || "",
+          );
+          result.last_sent_message.sender_id = String(
+            response.last_sent_message?.sender_id || "",
+          );
+        }
+
         response.messages!.forEach((m) => {
           var content, reactions, mentions, attachments, references;
           try {
@@ -1199,34 +1235,70 @@ export class Client {
           }
           try {
             reactions = decodeReactions(m.reactions || "");
+            if (reactions && reactions.reactions?.length > 0) {
+              reactions.reactions.forEach((r: ApiMessageReaction) => {
+                r.id = String(r.id || "");
+                r.emoji_id = String(r.emoji_id || "");
+                r.channel_id = String(r.channel_id || "");
+                r.message_id = String(r.message_id || "");
+                r.sender_id = String(r.sender_id || "");
+                r.topic_id = String(r.topic_id || "");
+                r.emoji_recent_id = String(r.emoji_recent_id || "");
+              });
+            }
           } catch (e) {
             console.log("error parse reactions", e);
           }
           try {
             mentions = decodeMentions(m.mentions || "");
+            if (mentions && mentions.mentions?.length > 0) {
+              mentions.mentions.forEach((m: ApiMessageMention) => {
+                m.id = String(m.id || "");
+                m.channel_id = String(m.channel_id || "");
+                m.message_id = String(m.message_id || "");
+                m.sender_id = String(m.sender_id || "");
+                m.role_id = String(m.role_id || "");
+                m.user_id = String(m.user_id || "");
+              });
+            }
           } catch (e) {
             console.log("error parse mentions", e);
           }
           try {
             attachments = decodeAttachments(m.attachments || "");
+            if (attachments && attachments.attachments?.length > 0) {
+              attachments.attachments.forEach((a: ApiMessageAttachment) => {
+                a.channel_id = String(a.channel_id || "");
+                a.message_id = String(a.message_id || "");
+                a.sender_id = String(a.sender_id || "");
+              });
+            }
           } catch (e) {
             console.log("error parse attachments", e);
           }
           try {
             references = decodeRefs(m.references || "");
+            if (references && references.refs?.length > 0) {
+              references.refs.forEach((r: ApiMessageRef) => {
+                r.channel_id = String(r.channel_id || "");
+                r.message_id = String(r.message_id || "");
+                r.message_ref_id = String(r.message_ref_id || "");
+                r.message_sender_id = String(r.message_sender_id || "");
+              });
+            }
           } catch (e) {
             console.log("error parse references", e);
           }
           result.messages!.push({
-            channel_id: m.channel_id,
+            channel_id: String(m.channel_id || ""),
             code: m.code ? Number(m.code) : 0,
-            id: m.message_id as string,
-            sender_id: m.sender_id,
+            id: String(m.message_id || ""),
+            sender_id: String(m.sender_id || ""),
             username: m.username,
             display_name: m.display_name,
             avatar: m.avatar,
             content: content,
-            channel_label: m.channel_label,
+            channel_label: m.channel_label || "",
             clan_logo: m.clan_logo,
             category_name: m.category_name,
             clan_nick: m.clan_nick,
@@ -1235,7 +1307,7 @@ export class Client {
             mentions: mentions?.mentions,
             reactions: reactions?.reactions,
             references: references?.refs,
-            clan_id: m.clan_id,
+            clan_id: String(m.clan_id || ""),
             create_time_seconds: m.create_time_seconds,
             update_time_seconds: m.update_time_seconds,
             hide_editted: m.hide_editted,
@@ -1284,10 +1356,10 @@ export class Client {
 
         response.voice_channel_users!.forEach((gu) => {
           result.voice_channel_users!.push({
-            id: gu.id,
-            channel_id: gu.channel_id,
-            user_id: gu.user_id,
-            participant: gu.participant,
+            id: String(gu.id || ""),
+            channel_id: String(gu.channel_id || ""),
+            user_id: String(gu.user_id || ""),
+            participant: String(gu.participant || ""),
           });
         });
         return Promise.resolve(result);
@@ -1335,15 +1407,16 @@ export class Client {
 
         response.channel_users!.forEach((gu) => {
           result.channel_users!.push({
-            user_id: gu.user_id,
-            role_id: gu!.role_id,
-            thread_id: gu.thread_id,
+            user_id: String(gu.user_id || ""),
+            role_id: gu.role_id?.map((id) => String(id || "")) || [],
+            thread_id: String(gu.thread_id || ""),
             clan_avatar: gu.clan_avatar,
             clan_nick: gu.clan_nick,
-            id: gu.id,
-            clan_id: gu.clan_id,
-            added_by: gu.added_by,
+            id: String(gu.id || ""),
+            clan_id: String(gu.clan_id || ""),
+            added_by: String(gu.added_by || ""),
             is_banned: gu.is_banned,
+            expired_ban_time: gu.expired_ban_time,
           });
         });
         return Promise.resolve(result);
@@ -1394,10 +1467,10 @@ export class Client {
             filename: at.filename,
             filesize: at.filesize,
             filetype: at.filetype,
-            id: at.id,
-            uploader: at.uploader,
-            url: at.url,
-            message_id: at.message_id,
+            id: String(at.id || ""),
+            uploader: String(at.uploader || ""),
+            url: String(at.url || ""),
+            message_id: String(at.message_id || ""),
             create_time: at.create_time,
             width: at.width,
             height: at.height,
@@ -1426,7 +1499,7 @@ export class Client {
         var result: ApiClanUserList = {
           clan_users: [],
           cursor: response.cursor,
-          clan_id: response.clan_id,
+          clan_id: String(response.clan_id || ""),
         };
 
         if (response.clan_users == null) {
@@ -1440,7 +1513,7 @@ export class Client {
               create_time: gu.user!.create_time,
               display_name: gu.user!.display_name,
               edge_count: gu.user!.edge_count ? Number(gu.user!.edge_count) : 0,
-              id: gu.user!.id,
+              id: String(gu.user!.id || ""),
               lang_tag: gu.user!.lang_tag,
               location: gu.user!.location,
               online: gu.user!.online,
@@ -1451,11 +1524,11 @@ export class Client {
               user_status: gu.user!.user_status,
               status: gu.user!.status,
               about_me: gu.user!.about_me,
-              mezon_id: gu.user!.mezon_id,
+              mezon_id: String(gu.user!.mezon_id || ""),
               list_nick_names: gu.user!.list_nick_names,
               phone_number: gu.user!.phone_number,
             },
-            role_id: gu!.role_id,
+            role_id: gu!.role_id?.map((id) => String(id || "")) || [],
             clan_nick: gu!.clan_nick,
             clan_avatar: gu!.clan_avatar,
           });
@@ -1479,6 +1552,29 @@ export class Client {
     return this.apiClient
       .listChannelDetail(session.token, channelId)
       .then((response: ApiChannelDescription) => {
+        if (response) {
+          response.app_id = String(response.app_id || "");
+          response.clan_id = String(response.clan_id || "");
+          response.user_ids = response.user_ids?.map((id) => String(id) || "");
+          response.parent_id = String(response.parent_id || "");
+          response.channel_id = String(response.channel_id || "");
+          response.creator_id = String(response.creator_id || "");
+          response.category_id = String(response.category_id || "");
+          response.last_sent_message = response.last_sent_message
+            ? {
+                ...response.last_sent_message,
+                id: String(response.last_sent_message?.id || ""),
+                sender_id: String(response.last_sent_message?.sender_id || ""),
+              }
+            : undefined;
+          response.last_seen_message = response.last_seen_message
+            ? {
+                ...response.last_seen_message,
+                id: String(response.last_seen_message?.id || ""),
+                sender_id: String(response.last_seen_message?.sender_id || ""),
+              }
+            : undefined;
+        }
         return Promise.resolve(response);
       });
   }
@@ -1523,6 +1619,29 @@ export class Client {
           return Promise.resolve(result);
         }
 
+        response.channeldesc!.forEach((c) => {
+          c.app_id = String(c.app_id || "");
+          c.clan_id = String(c.clan_id || "");
+          c.user_ids = c.user_ids?.map((id) => String(id) || "");
+          c.parent_id = String(c.parent_id || "");
+          c.channel_id = String(c.channel_id || "");
+          c.creator_id = String(c.creator_id || "");
+          c.category_id = String(c.category_id || "");
+          c.last_sent_message = c.last_sent_message
+            ? {
+                ...c.last_sent_message,
+                id: String(c.last_sent_message?.id || ""),
+                sender_id: String(c.last_sent_message?.sender_id || ""),
+              }
+            : undefined;
+          c.last_seen_message = c.last_seen_message
+            ? {
+                ...c.last_seen_message,
+                id: String(c.last_seen_message?.id || ""),
+                sender_id: String(c.last_seen_message?.sender_id || ""),
+              }
+            : undefined;
+        });
         result.channeldesc = response.channeldesc;
         return Promise.resolve(result);
       });
@@ -1574,7 +1693,27 @@ export class Client {
           return Promise.resolve(result);
         }
 
-        result.clandesc = response.clandesc;
+        response.clandesc.forEach((c) => {
+          result.clandesc!.push({
+            about: c.about,
+            badge_count: c.badge_count ? Number(c.badge_count) : 0,
+            banner: c.banner,
+            clan_id: String(c.clan_id || ""),
+            clan_name: c.clan_name,
+            community_banner: c.community_banner,
+            creator_id: String(c.creator_id || ""),
+            description: c.description,
+            has_unread_message: c.has_unread_message,
+            is_community: c.is_community,
+            is_onboarding: c.is_onboarding,
+            logo: c.logo,
+            onboarding_banner: c.onboarding_banner,
+            prevent_anonymous: c.prevent_anonymous,
+            short_url: c.short_url,
+            status: c.status,
+            welcome_channel_id: String(c.welcome_channel_id || ""),
+          });
+        });
         return Promise.resolve(result);
       });
   }
