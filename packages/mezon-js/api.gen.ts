@@ -12,19 +12,19 @@ export interface ChannelUserListChannelUser {
   //
   clan_avatar?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   clan_nick?: string;
   //
-  id?: bigint;
+  id?: string;
   //Their relationship to the role.
   role_id?: Array<bigint>;
   //
-  thread_id?: bigint;
+  thread_id?: string;
   //User.
-  user_id?: bigint;
+  user_id?: string;
   //Added by
-  added_by?: bigint;
+  added_by?: string;
   // is banned
   is_banned?: boolean;
   // expired time
@@ -34,15 +34,15 @@ export interface ChannelUserListChannelUser {
 /** A message sent on a channel. */
 export interface ChannelMessage {
   //The unique ID of this message.
-  id: bigint;
+  id: string;
   //
   avatar?: string;
   //The channel this message belongs to.
-  channel_id: bigint;
+  channel_id: string;
   //The name of the chat room, or an empty string if this message was not sent through a chat room.
   channel_label: string;
   //The clan this message belong to.
-  clan_id?: bigint;
+  clan_id?: string;
   //The code representing a message type or category.
   code: number;
   //The content payload.
@@ -60,7 +60,7 @@ export interface ChannelMessage {
   //True if the message was persisted to the channel's history, false otherwise.
   persistent?: boolean;
   //Message sender, usually a user ID.
-  sender_id: bigint;
+  sender_id: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
   update_time?: string;
   //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
@@ -82,13 +82,13 @@ export interface ChannelMessage {
   //
   mode?: number;
   //
-  message_id?: bigint;
+  message_id?: string;
   //
   hide_editted?: boolean;
   //
   is_public?: boolean;
   //
-  topic_id?: bigint;
+  topic_id?: string;
 }
 
 /**  */
@@ -96,11 +96,11 @@ export interface ApiBannedUser {
   //
   ban_time?: number;
   //The banned user.
-  banned_id?: bigint;
+  banned_id?: string;
   //
-  banner_id?: bigint;
+  banner_id?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
   reason?: string;
 }
@@ -116,7 +116,7 @@ export interface ClanUserListClanUser {
   //from the `avatar_url` field in the `clan_desc_profile` table.
   clan_avatar?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //from the `nick_name` field in the `clan_desc_profile` table.
   clan_nick?: string;
   //Their relationship to the role.
@@ -130,13 +130,13 @@ export interface GetPubKeysResponseUserPubKey {
   //
   PK?: ApiPubKey;
   //
-  user_id?: bigint;
+  user_id?: string;
 }
 
 /**  */
 export interface CountClanBadgeResponseBadge {
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   count?: number;
 }
@@ -144,9 +144,9 @@ export interface CountClanBadgeResponseBadge {
 /**  */
 export interface MezonChangeChannelCategoryBody {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
 }
 
 /**  */
@@ -158,9 +158,9 @@ export interface MezonSetChanEncryptionMethodBody {
 /**  */
 export interface MezonDeleteWebhookByIdBody {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
 }
 
 /** Update app information. */
@@ -184,7 +184,7 @@ export interface MezonUpdateAppBody {
 /**  */
 export interface MezonUpdateCategoryBody {
   //The ID of the group to update.
-  category_id?: bigint;
+  category_id?: string;
   //
   category_name?: string;
 }
@@ -200,7 +200,7 @@ export interface ApiAddAppRequest {
   //The appname.
   appname?: string;
   //Creator of the app.
-  creator_id?: bigint;
+  creator_id?: string;
   //Is shadow.
   is_shadow?: boolean;
   //Role of this app.
@@ -230,7 +230,7 @@ export interface MezonUpdateChannelDescBody {
   //
   age_restricted?: number;
   //
-  category_id?: bigint;
+  category_id?: string;
   //
   channel_label?: string;
   //
@@ -238,11 +238,11 @@ export interface MezonUpdateChannelDescBody {
   //
   topic?: string;
   /** The clan ID */
-  clan_id: bigint;
+  clan_id: string;
   /** The ID of the channel to update. */
-  channel_id: bigint;
+  channel_id: string;
   /** app url for channel type app */
-  app_id: bigint;
+  app_id: string;
   /** channel avatar */
   channel_avatar: string | undefined;
 }
@@ -250,7 +250,7 @@ export interface MezonUpdateChannelDescBody {
 /**  */
 export interface ApiLogedDevice {
   //
-  device_id?: bigint;
+  device_id?: string;
   //
   device_name?: string;
   //
@@ -282,7 +282,7 @@ export interface MezonUpdateClanDescBody {
   //
   clan_name?: string;
   //
-  creator_id?: bigint;
+  creator_id?: string;
   //
   logo?: string;
   //
@@ -290,7 +290,7 @@ export interface MezonUpdateClanDescBody {
   // is onboarding.
   is_onboarding?: boolean;
   // welcome channel id.
-  welcome_channel_id?: bigint;
+  welcome_channel_id?: string;
   //Onboarding_banner.
   onboarding_banner?: string;
   // is community.
@@ -321,9 +321,9 @@ export interface MezonUpdateClanDescProfileBody {
 
 /**  */
 export interface MezonUpdateClanEmojiByIdBody {
-  id: bigint;
+  id: string;
   shortname: string;
-  clan_id: bigint;
+  clan_id: string;
   source: string;
 }
 
@@ -332,7 +332,7 @@ export interface MezonUpdateClanStickerByIdBody {
   //
   category?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   shortname?: string;
   //
@@ -342,17 +342,17 @@ export interface MezonUpdateClanStickerByIdBody {
 /** update a event within clan. */
 export interface MezonUpdateEventBody {
   //
-  event_id?: bigint;
+  event_id?: string;
   //
   address?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  channel_voice_id?: bigint;
+  channel_voice_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
-  creator_id?: bigint;
+  creator_id?: string;
   //
   description?: string;
   //
@@ -364,7 +364,7 @@ export interface MezonUpdateEventBody {
   //
   title?: string;
   //
-  channel_id_old?: bigint;
+  channel_id_old?: string;
   //
   repeat_type?: number;
 }
@@ -378,7 +378,7 @@ export interface MezonUpdateRoleBody {
   //
   allow_mention?: number;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   color?: string;
   //
@@ -386,7 +386,7 @@ export interface MezonUpdateRoleBody {
   //
   display_online?: number;
   //
-  max_permission_id: bigint;
+  max_permission_id: string;
   //The permissions to remove.
   remove_permission_ids?: Array<bigint>;
   //The users to remove.
@@ -400,7 +400,7 @@ export interface MezonUpdateRoleBody {
 /** Delete a role the user has access to. */
 export interface MezonUpdateRoleDeleteBody {
   //
-  clan_id?: bigint;
+  clan_id?: string;
 }
 
 /** Request to get system message by clan and channel IDs. */
@@ -408,7 +408,7 @@ export interface MezonUpdateSystemMessageBody {
   //
   boost_message?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
   hide_audit_log?: string;
   //
@@ -432,11 +432,11 @@ export interface MezonUpdateWebhookByIdBody {
   //
   avatar?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  channel_id_update?: bigint;
+  channel_id_update?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   webhook_name?: string;
 }
@@ -448,7 +448,7 @@ export interface RoleUserListRoleUser {
   //The display name of the user.
   display_name?: string;
   //The id of the user's account.
-  id?: bigint;
+  id?: string;
   //The language expected to be a tag which follows the BCP-47 spec.
   lang_tag?: string;
   //The location set by the user.
@@ -462,7 +462,7 @@ export interface RoleUserListRoleUser {
 /**  */
 export interface UpdateClanOrderRequestClanOrder {
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   order?: number;
 }
@@ -476,7 +476,7 @@ export interface ApiUpdateClanOrderRequest {
 /** A user with additional account details. Always the current user. */
 export interface ApiAccount {
   //The custom id in the user's account.
-  custom_id?: bigint;
+  custom_id?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user's account was disabled/banned.
   disable_time?: string;
   //The email address of the user.
@@ -500,7 +500,7 @@ export interface ApiAccount {
 /** Send a app token to the server. Used with authenticate/link/unlink. */
 export interface ApiAccountApp {
   //
-  appid?: bigint;
+  appid?: string;
   //
   appname?: string;
   //The account token when create apps to access their profile API.
@@ -546,21 +546,21 @@ export interface ApiLinkAccountMezon {
 /**  */
 export interface ApiAddFavoriteChannelRequest {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
 }
 
 /**  */
 export interface ApiAddFavoriteChannelResponse {
   //
-  channel_id?: bigint;
+  channel_id?: string;
 }
 
 /** Add a role for channel. */
 export interface ApiAddRoleChannelDescRequest {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
   role_ids?: Array<bigint>;
 }
@@ -568,7 +568,7 @@ export interface ApiAddRoleChannelDescRequest {
 /**  */
 export interface ApiAllUsersAddChannelResponse {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
   limit?: number;
   //
@@ -600,13 +600,13 @@ export interface ApiApp {
   //
   appname?: string;
   //
-  creator_id?: bigint;
+  creator_id?: string;
   //The UNIX time when the app was disabled.
   disable_time?: string;
   //The UNIX time when the app was created.
   create_time?: string;
   //
-  id?: bigint;
+  id?: string;
   //
   is_shadow?: boolean;
   //
@@ -630,23 +630,23 @@ export interface ApiAuditLog {
   //
   action_log?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
   channel_label?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   details?: string;
   //
-  entity_id?: bigint;
+  entity_id?: string;
   //
   entity_name?: string;
   //
-  id?: bigint;
+  id?: string;
   //
   time_log?: string;
   //
-  user_id?: bigint;
+  user_id?: string;
 }
 
 /** Authenticate against the server with email+password. */
@@ -672,15 +672,15 @@ export interface ApiAuthenticateEmailRequest {
 /**  */
 export interface ApiCategoryDesc {
   //
-  category_id?: bigint;
+  category_id?: string;
   //
   category_name?: string;
   //
   category_order?: number;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
-  creator_id?: bigint;
+  creator_id?: string;
 }
 
 /**  */
@@ -698,7 +698,7 @@ export interface ApiUpdateUsernameRequest {
 /**  */
 export interface ApiCategoryOrderUpdate {
   //
-  category_id?: bigint;
+  category_id?: string;
   //
   order?: number;
 }
@@ -706,7 +706,7 @@ export interface ApiCategoryOrderUpdate {
 /**  */
 export interface ApiChanEncryptionMethod {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
   method?: string;
 }
@@ -719,9 +719,9 @@ export interface ApiListChannelAppsResponse {
 /** Update fields in a given channel. */
 export interface ApiChangeChannelPrivateRequest {
   //The clan id
-  clan_id?: bigint;
+  clan_id?: string;
   //The ID of the channel to update.
-  channel_id?: bigint;
+  channel_id?: string;
   //
   channel_private?: number;
   //
@@ -733,13 +733,13 @@ export interface ApiChangeChannelPrivateRequest {
 /**  */
 export interface ApiChannelAppResponse {
   //
-  app_id?: bigint;
+  app_id?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
-  id?: bigint;
+  id?: string;
   //
   app_url?: string;
   //
@@ -759,13 +759,13 @@ export interface ApiChannelAttachment {
   //
   filetype?: string;
   //
-  id?: bigint;
+  id?: string;
   //
   uploader?: string;
   //
   url?: string;
   //message id.
-  message_id?: bigint;
+  message_id?: string;
   //width.
   width?: number;
   //height.
@@ -783,11 +783,11 @@ export interface ApiChannelCanvasDetailResponse {
   //
   content?: string;
   //
-  creator_id?: bigint;
+  creator_id?: string;
   //
-  editor_id?: bigint;
+  editor_id?: string;
   //
-  id?: bigint;
+  id?: string;
   //
   is_default?: boolean;
   //
@@ -799,9 +799,9 @@ export interface ApiChannelCanvasItem {
   //
   content?: string;
   //
-  creator_id?: bigint;
+  creator_id?: string;
   //
-  id?: bigint;
+  id?: string;
   //
   is_default?: boolean;
   //
@@ -817,9 +817,9 @@ export interface ApiChannelCanvasListResponse {
   //
   channel_canvases?: Array<ApiChannelCanvasItem>;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   count?: number;
 }
@@ -827,13 +827,13 @@ export interface ApiChannelCanvasListResponse {
 /**  */
 export interface ApiEditChannelCanvasRequest {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   content?: string;
   //
-  id?: bigint;
+  id?: string;
   //
   is_default?: boolean;
   //
@@ -845,7 +845,7 @@ export interface ApiEditChannelCanvasRequest {
 /**  */
 export interface ApiEditChannelCanvasResponse {
   //
-  id?: bigint;
+  id?: string;
 }
 
 /** A list of channel description, usually a result of a list operation. */
@@ -869,7 +869,7 @@ export interface ApiAddChannelAppRequest {
   //The appname.
   appname?: string;
   //Creator of the app.
-  creator_id?: bigint;
+  creator_id?: string;
   //Role of this app.
   role?: number;
   //The password.
@@ -883,17 +883,17 @@ export interface ApiChannelDescription {
   //
   age_restricted?: number;
   //
-  category_id?: bigint;
+  category_id?: string;
   //
   category_name?: string;
   //The channel this message belongs to.
-  channel_id?: bigint;
+  channel_id?: string;
   //
   channel_label?: string;
   //
   channel_private?: number;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   clan_name?: string;
   //
@@ -901,7 +901,7 @@ export interface ApiChannelDescription {
   //
   create_time_seconds?: number;
   //creator ID.
-  creator_id?: bigint;
+  creator_id?: string;
   //
   creator_name?: string;
   //
@@ -919,13 +919,13 @@ export interface ApiChannelDescription {
   //
   channel_avatar?: string;
   //The parent channel this message belongs to.
-  parent_id?: bigint;
+  parent_id?: string;
   //The channel type.
   type?: number;
   //
   update_time_seconds?: number;
   //
-  app_id?: bigint;
+  app_id?: string;
   //
   topic?: string;
   //
@@ -949,7 +949,7 @@ export interface ApiChannelMessageHeader {
   //
   content?: string;
   //
-  id?: bigint;
+  id?: string;
   //
   mention?: Uint8Array;
   //
@@ -959,7 +959,7 @@ export interface ApiChannelMessageHeader {
   //
   repliers?: Array<bigint>;
   //
-  sender_id?: bigint;
+  sender_id?: string;
   //
   timestamp_seconds?: number;
 }
@@ -979,7 +979,7 @@ export interface ApiChannelSettingItem {
   //
   active?: number;
   //
-  category_id?: bigint;
+  category_id?: string;
   //
   channel_label?: string;
   //
@@ -987,9 +987,9 @@ export interface ApiChannelSettingItem {
   //
   channel_type?: number;
   //
-  creator_id?: bigint;
+  creator_id?: string;
   //
-  id?: bigint;
+  id?: string;
   //
   last_sent_message?: ApiChannelMessageHeader;
   //
@@ -997,7 +997,7 @@ export interface ApiChannelSettingItem {
   //
   message_count?: string;
   //
-  parent_id?: bigint;
+  parent_id?: string;
   //
   user_ids?: Array<bigint>;
 }
@@ -1009,7 +1009,7 @@ export interface ApiChannelSettingListResponse {
   //
   channel_setting_list?: Array<ApiChannelSettingItem>;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   thread_count?: number;
 }
@@ -1017,7 +1017,7 @@ export interface ApiChannelSettingListResponse {
 /** A list of users belonging to a channel, along with their role. */
 export interface ApiChannelUserList {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //User-role pairs for a channel.
   channel_users?: Array<ChannelUserListChannelUser>;
   //Cursor for the next page of results, if any.
@@ -1035,11 +1035,11 @@ export interface ApiClanDesc {
   //
   banner?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   clan_name?: string;
   //
-  creator_id?: bigint;
+  creator_id?: string;
   //
   logo?: string;
   //
@@ -1049,7 +1049,7 @@ export interface ApiClanDesc {
   // is onboarding.
   is_onboarding?: boolean;
   // welcome channel id.
-  welcome_channel_id?: bigint;
+  welcome_channel_id?: string;
   //Onboarding_banner.
   onboarding_banner?: string;
   // is community.
@@ -1079,13 +1079,13 @@ export interface ApiClanEmoji {
   //
   category?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   clan_name?: string;
   //
-  creator_id?: bigint;
+  creator_id?: string;
   //
-  id?: bigint;
+  id?: string;
   //
   logo?: string;
   //
@@ -1101,9 +1101,9 @@ export interface ApiClanEmojiCreateRequest {
   //
   category?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
-  id?: bigint;
+  id?: string;
   //
   shortname?: string;
   //
@@ -1117,11 +1117,11 @@ export interface ApiClanProfile {
   //
   avatar?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   nick_name?: string;
   //
-  user_id?: bigint;
+  user_id?: string;
   //
   about?: string;
 }
@@ -1131,15 +1131,15 @@ export interface ApiClanSticker {
   //
   category?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   clan_name?: string;
   //
   create_time?: string;
   //
-  creator_id?: bigint;
+  creator_id?: string;
   //
-  id?: bigint;
+  id?: string;
   //
   logo?: string;
   //
@@ -1157,9 +1157,9 @@ export interface ApiClanStickerAddRequest {
   //
   category?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
-  id?: bigint;
+  id?: string;
   //
   shortname?: string;
   //
@@ -1173,7 +1173,7 @@ export interface ApiClanStickerAddRequest {
 /** A list of users belonging to a clan, along with their role. */
 export interface ApiClanUserList {
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //User-role pairs for a clan.
   clan_users?: Array<ClanUserListClanUser>;
   //Cursor for the next page of results, if any.
@@ -1185,7 +1185,7 @@ export interface ApiConfirmLoginRequest {
   //Whether to enable "Remember Me" for extended session duration.
   is_remember?: boolean;
   //
-  login_id?: bigint;
+  login_id?: string;
 }
 
 /**  */
@@ -1197,7 +1197,7 @@ export interface ApiCreateActivityRequest {
   //
   activity_type?: number;
   //
-  application_id?: bigint;
+  application_id?: string;
   //
   //start_time?: string;
   //
@@ -1209,25 +1209,25 @@ export interface ApiCreateCategoryDescRequest {
   //
   category_name?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
 }
 
 /** Create a channel within clan. */
 export interface ApiCreateChannelDescRequest {
   //
-  app_id?: bigint;
+  app_id?: string;
   //
-  category_id?: bigint;
+  category_id?: string;
   //The channel this message belongs to.
-  channel_id?: bigint;
+  channel_id?: string;
   //
   channel_label?: string;
   //
   channel_private?: number;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //The parent channel this message belongs to.
-  parent_id?: bigint;
+  parent_id?: string;
   //The channel type.
   type?: number;
   //The users to add.
@@ -1241,7 +1241,7 @@ export interface ApiCreateClanDescRequest {
   //
   clan_name?: string;
   //
-  creator_id?: bigint;
+  creator_id?: string;
   //
   logo?: string;
 }
@@ -1251,9 +1251,9 @@ export interface ApiCreateEventRequest {
   //
   address?: string;
   //
-  channel_voice_id?: bigint;
+  channel_voice_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   description?: string;
   //
@@ -1265,7 +1265,7 @@ export interface ApiCreateEventRequest {
   //
   title?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
   action?: number;
   //
@@ -1273,9 +1273,9 @@ export interface ApiCreateEventRequest {
   //
   repeat_type?: number;
   //
-  creator_id?: bigint;
+  creator_id?: string;
   //
-  user_id?: bigint;
+  user_id?: string;
   //
   is_private?: boolean;
   //
@@ -1287,9 +1287,9 @@ export interface ApiUpdateEventRequest {
   //
   address?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  event_id?: bigint;
+  event_id?: string;
   //
   description?: string;
   //
@@ -1301,7 +1301,7 @@ export interface ApiUpdateEventRequest {
   //
   title?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
 }
 
 /** Create a role within clan. */
@@ -1313,7 +1313,7 @@ export interface ApiCreateRoleRequest {
   //
   allow_mention?: number;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   color?: string;
   //
@@ -1321,7 +1321,7 @@ export interface ApiCreateRoleRequest {
   //
   display_online?: number;
   //
-  max_permission_id: bigint;
+  max_permission_id: string;
   //
   role_icon?: string;
   //
@@ -1333,21 +1333,21 @@ export interface ApiCreateRoleRequest {
 /** Delete a channel the user has access to. */
 export interface ApiDeleteChannelDescRequest {
   //The clan id
-  clan_id?: bigint;
+  clan_id?: string;
   //The id of a channel.
-  channel_id?: bigint;
+  channel_id?: string;
 }
 
 /**  */
 export interface ApiDeleteEventRequest {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
-  creator_id?: bigint;
+  creator_id?: string;
   //The id of a event.
-  event_id?: bigint;
+  event_id?: string;
   //
   event_label?: string;
 }
@@ -1355,11 +1355,11 @@ export interface ApiDeleteEventRequest {
 /** Delete a role the user has access to. */
 export interface ApiDeleteRoleRequest {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //The id of a role.
-  role_id?: bigint;
+  role_id?: string;
   //
   role_label?: string;
 }
@@ -1395,17 +1395,17 @@ export interface ApiEvent {
 /**  */
 export interface ApiRegisterStreamingChannelRequest {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
 }
 
 /**  */
 export interface ApiRegisterStreamingChannelResponse {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   streaming_url?: string;
 }
@@ -1424,9 +1424,9 @@ export interface ApiEmojiListedResponse {
 /**  */
 export interface ApiEmojiRecent {
   //ID of the emoji.
-  emoji_recents_id?: bigint;
+  emoji_recents_id?: string;
   //
-  emoji_id?: bigint;
+  emoji_id?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the emoji was created.
   update_time?: string;
 }
@@ -1449,17 +1449,17 @@ export interface ApiEventManagement {
   //
   address?: string;
   //
-  channel_voice_id?: bigint;
+  channel_voice_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
-  creator_id?: bigint;
+  creator_id?: string;
   //
   description?: string;
   //
   end_time_seconds?: number;
   //
-  id?: bigint;
+  id?: string;
   //
   logo?: string;
   //
@@ -1475,7 +1475,7 @@ export interface ApiEventManagement {
   //
   create_time?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
   event_status?: number;
   //
@@ -1509,7 +1509,7 @@ export interface ApiFriend {
   //The user object.
   user?: ApiUser;
   //Source ID
-  source_id?: bigint;
+  source_id?: string;
 }
 
 /** A collection of zero or more friends of the user. */
@@ -1529,21 +1529,21 @@ export interface ApiGetKeyServerResp {
 /**  */
 export interface ApiGenerateMezonMeetResponse {
   //
-  meet_id?: bigint;
+  meet_id?: string;
   //
   room_name?: string;
   //
   external_link?: string;
   //
-  creator_id?: bigint;
+  creator_id?: string;
   //
-  event_id?: bigint;
+  event_id?: string;
 }
 
 /**  */
 export interface ApiGenerateMeetTokenExternalResponse {
   //
-  guest_user_id?: bigint;
+  guest_user_id?: string;
   //
   token?: string;
   //
@@ -1557,9 +1557,9 @@ export interface ApiMeetParticipantRequest {
   //
   username?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
 }
 
 /**  */
@@ -1571,15 +1571,15 @@ export interface ApiGetPubKeysResponse {
 /**  */
 export interface ApiGiveCoffeeEvent {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
-  message_ref_id?: bigint;
+  message_ref_id?: string;
   //
-  receiver_id?: bigint;
+  receiver_id?: string;
   //
-  sender_id?: bigint;
+  sender_id?: string;
   //
   token_count?: number;
 }
@@ -1587,19 +1587,19 @@ export interface ApiGiveCoffeeEvent {
 /**  */
 export interface ApiHashtagDm {
   //The channel id.
-  channel_id?: bigint;
+  channel_id?: string;
   //
   channel_label?: string;
   //
   channel_private?: number;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   clan_name?: string;
   //
   meeting_code?: string;
   //
-  parent_id?: bigint;
+  parent_id?: string;
   //
   type?: number;
 }
@@ -1615,11 +1615,11 @@ export interface ApiInviteUserRes {
   //
   channel_desc?: ApiChannelDescription;
   //id channel to add link to.
-  channel_id?: bigint;
+  channel_id?: string;
   //
   channel_label?: string;
   //id clan to add link to .
-  clan_id?: bigint;
+  clan_id?: string;
   //
   clan_name?: string;
   //
@@ -1635,17 +1635,17 @@ export interface ApiInviteUserRes {
 /** Add link invite users to. */
 export interface ApiLinkInviteUser {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   create_time?: string;
   //The user to add.
-  creator_id?: bigint;
+  creator_id?: string;
   //
   expiry_time?: string;
   //
-  id?: bigint;
+  id?: string;
   //
   invite_link?: string;
 }
@@ -1653,20 +1653,20 @@ export interface ApiLinkInviteUser {
 /** Add link invite users to. */
 export interface ApiLinkInviteUserRequest {
   //id channel to add link to.
-  channel_id?: bigint;
+  channel_id?: string;
   //id clan to add link to .
-  clan_id?: bigint;
+  clan_id?: string;
   //
   expiry_time?: number;
 }
 
 export interface ApiNotifiReactMessage {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  id?: bigint;
+  id?: string;
   //
-  user_id?: bigint;
+  user_id?: string;
 }
 
 /**  */
@@ -1674,13 +1674,13 @@ export interface ApiMessage2InboxRequest {
   //
   avatar?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   content?: string;
   //
-  message_id?: bigint;
+  message_id?: string;
   //
   reactions?: Array<ApiMessageReaction>;
   //
@@ -1708,15 +1708,15 @@ export interface ApiMessageAttachment {
   //
   thumbnail?: string;
   // The channel this message belongs to.
-  channel_id?: bigint;
+  channel_id?: string;
   // The mode
   mode?: number;
   // The channel label
   channel_label?: string;
   // The message that user react
-  message_id?: bigint;
+  message_id?: string;
   // Message sender, usually a user ID.
-  sender_id?: bigint;
+  sender_id?: string;
   // duration for video in seconds
   duration?: number;
 }
@@ -1726,7 +1726,7 @@ export interface ApiMessageDeleted {
   //
   deletor?: string;
   //
-  message_id?: bigint;
+  message_id?: string;
 }
 
 /**  */
@@ -1741,13 +1741,13 @@ export interface ApiLoginIDResponse {
   //
   create_time_second?: string;
   //
-  login_id?: bigint;
+  login_id?: string;
   //
   platform?: string;
   //
   status?: number;
   //
-  user_id?: bigint;
+  user_id?: string;
   //
   username?: string;
 }
@@ -1755,11 +1755,11 @@ export interface ApiLoginIDResponse {
 /**  */
 export interface ApiMarkAsReadRequest {
   //
-  category_id?: bigint;
+  category_id?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
 }
 
 /**  */
@@ -1767,13 +1767,13 @@ export interface ApiMessageMention {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time?: string;
   //
-  id?: bigint;
+  id?: string;
   //
-  user_id?: bigint;
+  user_id?: string;
   //
   username?: string;
   // role id
-  role_id?: bigint;
+  role_id?: string;
   // role name
   rolename?: string;
   // start position
@@ -1781,15 +1781,15 @@ export interface ApiMessageMention {
   // end position
   e?: number;
   /** The channel this message belongs to. */
-  channel_id?: bigint;
+  channel_id?: string;
   // The mode
   mode?: number;
   // The channel label
   channel_label?: string;
   /** The message that user react */
-  message_id?: bigint;
+  message_id?: string;
   /** Message sender, usually a user ID. */
-  sender_id?: bigint;
+  sender_id?: string;
 }
 
 /**  */
@@ -1805,13 +1805,13 @@ export interface ApiMessageReaction {
   //
   action?: boolean;
   //
-  emoji_id: bigint;
+  emoji_id: string;
   //
   emoji: string;
   //
-  id?: bigint;
+  id?: string;
   //
-  sender_id?: bigint;
+  sender_id?: string;
   //
   sender_name?: string;
   //
@@ -1819,7 +1819,7 @@ export interface ApiMessageReaction {
   // count of emoji
   count: number;
   /** The channel this message belongs to. */
-  channel_id: bigint;
+  channel_id: string;
   // The mode
   mode: number;
   // Is public
@@ -1827,11 +1827,11 @@ export interface ApiMessageReaction {
   // The channel label
   channel_label?: string;
   /** The message that user react */
-  message_id: bigint;
+  message_id: string;
   //
-  topic_id?: bigint;
+  topic_id?: string;
   //
-  emoji_recent_id?: bigint;
+  emoji_recent_id?: string;
 }
 
 export interface ApiListChannelAppsResponse {
@@ -1952,13 +1952,13 @@ export interface ApiMezonOauthClientList {
 /**  */
 export interface ApiMessageRef {
   //
-  message_id?: bigint;
+  message_id?: string;
   //
-  message_ref_id?: bigint;
+  message_ref_id?: string;
   //
   ref_type?: number;
   //
-  message_sender_id?: bigint;
+  message_sender_id?: string;
   // original message sendre username
   message_sender_username?: string;
   // original message sender avatar
@@ -1972,7 +1972,7 @@ export interface ApiMessageRef {
   //
   has_attachment: boolean;
   /** The channel this message belongs to. */
-  channel_id?: bigint;
+  channel_id?: string;
   // The mode
   mode?: number;
   // The channel label
@@ -1984,11 +1984,11 @@ export interface ApiNotification {
   //
   avatar_url?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
   channel_type?: number;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //Category code for this notification.
   code?: number;
   //Content of the notification in JSON.
@@ -1996,17 +1996,17 @@ export interface ApiNotification {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the notification was created.
   create_time?: string;
   //ID of the Notification.
-  id?: bigint;
+  id?: string;
   //True if this notification was persisted to the database.
   persistent?: boolean;
   //ID of the sender, if a user. Otherwise 'null'.
-  sender_id?: bigint;
+  sender_id?: string;
   //Subject of the notification.
   subject?: string;
   //category.
   category?: number;
   //
-  topic_id?: bigint;
+  topic_id?: string;
   //
   channel?: ApiChannelDescription;
 }
@@ -2014,7 +2014,7 @@ export interface ApiNotification {
 /**  */
 export interface ApiNotificationChannel {
   //
-  channel_id?: bigint;
+  channel_id?: string;
 }
 
 /**  */
@@ -2026,7 +2026,7 @@ export interface ApiNotificationChannelCategorySetting {
   //
   channel_category_title?: string;
   //
-  id?: bigint;
+  id?: string;
   //
   notification_setting_type?: number;
 }
@@ -2048,7 +2048,7 @@ export interface ApiNotificationList {
 /**  */
 export interface ApiNotificationSetting {
   //
-  id?: bigint;
+  id?: string;
   //
   notification_setting_type?: number;
 }
@@ -2058,13 +2058,13 @@ export interface ApiNotificationUserChannel {
   //
   active?: number;
   //
-  id?: bigint;
+  id?: string;
   //
   notification_setting_type?: number;
   //
   time_mute?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
 }
 
 /**  */
@@ -2074,7 +2074,7 @@ export interface ApiStreamHttpCallbackRequest {
   //
   app?: string;
   //
-  client_id?: bigint;
+  client_id?: string;
   //
   ip?: string;
   //
@@ -2082,13 +2082,13 @@ export interface ApiStreamHttpCallbackRequest {
   //
   param?: string;
   //
-  server_id?: bigint;
+  server_id?: string;
   //
-  service_id?: bigint;
+  service_id?: string;
   //
   stream?: string;
   //
-  stream_id?: bigint;
+  stream_id?: string;
   //
   stream_url?: string;
   //
@@ -2112,7 +2112,7 @@ export interface ApiPermission {
   //
   description?: string;
   //
-  id?: bigint;
+  id?: string;
   //
   level?: number;
   //
@@ -2136,25 +2136,25 @@ export interface ApiPermissionRoleChannel {
   //
   active?: boolean;
   //
-  permission_id?: bigint;
+  permission_id?: string;
 }
 
 /**  */
 export interface ApiPermissionRoleChannelListEventResponse {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
   permission_role_channel?: Array<ApiPermissionRoleChannel>;
   //
-  role_id?: bigint;
+  role_id?: string;
   //
-  user_id?: bigint;
+  user_id?: string;
 }
 
 /**  */
 export interface ApiPermissionUpdate {
   //
-  permission_id?: bigint;
+  permission_id?: string;
   //
   slug?: string;
   //
@@ -2166,7 +2166,7 @@ export interface ApiPinMessage {
   //
   avatar?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
   content?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
@@ -2174,11 +2174,11 @@ export interface ApiPinMessage {
   //
   create_time_seconds?: number;
   //
-  id?: bigint;
+  id?: string;
   //
-  message_id?: bigint;
+  message_id?: string;
   //
-  sender_id?: bigint;
+  sender_id?: string;
   //
   username?: string;
   //
@@ -2188,11 +2188,11 @@ export interface ApiPinMessage {
 /**  */
 export interface ApiPinMessageRequest {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
-  message_id?: bigint;
+  message_id?: string;
 }
 
 /**  */
@@ -2216,7 +2216,7 @@ export interface ApiPushPubKeyRequest {
 /**  */
 export interface ApiRegistFcmDeviceTokenResponse {
   //
-  device_id?: bigint;
+  device_id?: string;
   //
   platform?: string;
   //
@@ -2226,17 +2226,17 @@ export interface ApiRegistFcmDeviceTokenResponse {
 /**  */
 export interface ApiRegisterStreamingChannelRequest {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
 }
 
 /**  */
 export interface ApiRegisterStreamingChannelResponse {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   streaming_url?: string;
 }
@@ -2248,7 +2248,7 @@ export interface ApiReadStorageObjectId {
   //The key of the object within the collection.
   key?: string;
   //The user owner of the object.
-  user_id?: bigint;
+  user_id?: string;
 }
 
 /** Batch get storage objects. */
@@ -2280,7 +2280,7 @@ export interface ApiRegistrationEmailRequest {
 /**  */
 export interface ApiUpdateRoleOrderRequest {
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   roles?: Array<ApiRoleOrderUpdate>;
 }
@@ -2290,7 +2290,7 @@ export interface ApiRoleOrderUpdate {
   //
   order?: number;
   //
-  role_id?: bigint;
+  role_id?: string;
 }
 
 /**  */
@@ -2302,17 +2302,17 @@ export interface ApiRole {
   //
   channel_ids?: Array<bigint>;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   color?: string;
   //
-  creator_id?: bigint;
+  creator_id?: string;
   //
   description?: string;
   //
   display_online?: number;
   //
-  id?: bigint;
+  id?: string;
   //
   max_level_permission?: number;
   //
@@ -2348,7 +2348,7 @@ export interface ApiRoleList {
 /**  */
 export interface ApiRoleListEventResponse {
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   cursor?: string;
   //
@@ -2372,7 +2372,7 @@ export interface ApiRpc {
   //The authentication key used when executed as a non-client HTTP request.
   http_key?: string;
   //The identifier of the function.
-  id?: bigint;
+  id?: string;
   //The payload of the function which must be a JSON object.
   payload?: string;
 }
@@ -2380,19 +2380,19 @@ export interface ApiRpc {
 /**  */
 export interface ApiSdTopic {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   create_time?: string;
   //
-  creator_id?: bigint;
+  creator_id?: string;
   //
-  id?: bigint;
+  id?: string;
   //
   last_sent_message?: ApiChannelMessageHeader;
   //
-  message_id?: bigint;
+  message_id?: string;
   //
   status?: number;
   //
@@ -2412,11 +2412,11 @@ export interface ApiSdTopicList {
 /**  */
 export interface ApiSdTopicRequest {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
-  message_id?: bigint;
+  message_id?: string;
 }
 
 /**  */
@@ -2426,13 +2426,13 @@ export interface ApiSearchMessageDocument {
   //
   avatar_url?: string;
   //The channel ID.
-  channel_id?: bigint;
+  channel_id?: string;
   //
   channel_label?: string;
   //
   channel_type?: number;
   //The clan ID.
-  clan_id?: bigint;
+  clan_id?: string;
   //
   clan_name?: string;
   //
@@ -2444,13 +2444,13 @@ export interface ApiSearchMessageDocument {
   //
   mentions?: string;
   //The message ID.
-  message_id?: bigint;
+  message_id?: string;
   //
   reactions?: string;
   //
   references?: string;
   //The user ID of sender.
-  sender_id?: bigint;
+  sender_id?: string;
   //
   update_time?: string;
   //
@@ -2518,9 +2518,9 @@ export interface ApiSessionRefreshRequest {
 /**  */
 export interface ApiSetDefaultNotificationRequest {
   //
-  category_id?: bigint;
+  category_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   notification_type?: number;
 }
@@ -2530,21 +2530,21 @@ export interface ApiSetMuteRequest {
   //
   active?: number;
   //
-  id?: bigint;
+  id?: string;
   //
   mute_time?: number;
   //
-  clan_id?: bigint;
+  clan_id?: string;
 }
 
 /**  */
 export interface ApiSetNotificationRequest {
   //
-  channel_category_id?: bigint;
+  channel_category_id?: string;
   //
   notification_type?: number;
   // clan_id
-  clan_id?: bigint;
+  clan_id?: string;
 }
 
 /**  */
@@ -2564,9 +2564,9 @@ export interface ApiStickerListedResponse {
 /**  */
 export interface ApiStreamingChannelResponse {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   is_streaming?: boolean;
   //
@@ -2576,13 +2576,13 @@ export interface ApiStreamingChannelResponse {
 /** A list of users belonging to a channel, along with their role. */
 export interface ApiStreamingChannelUser {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  id?: bigint;
+  id?: string;
   //
   participant?: string;
   //user for a channel.
-  user_id?: bigint;
+  user_id?: string;
 }
 
 /** A list of users belonging to a channel, along with their role. */
@@ -2596,13 +2596,13 @@ export interface ApiSystemMessage {
   //
   boost_message?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   hide_audit_log?: string;
   //
-  id?: bigint;
+  id?: string;
   //
   setup_tips?: string;
   //
@@ -2616,9 +2616,9 @@ export interface ApiSystemMessageRequest {
   //
   boost_message?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   hide_audit_log?: string;
   //
@@ -2642,9 +2642,9 @@ export interface ApiTokenSentEvent {
   //
   note?: string;
   //
-  receiver_id?: bigint;
+  receiver_id?: string;
   //
-  sender_id?: bigint;
+  sender_id?: string;
   //
   sender_name?: string;
   //
@@ -2662,17 +2662,17 @@ export interface ApiTransactionDetail {
   //
   update_time?: string;
   //
-  receiver_id?: bigint;
+  receiver_id?: string;
   //
   receiver_username?: string;
   //
-  sender_id?: bigint;
+  sender_id?: string;
   //
   sender_username?: string;
   //
   metadata?: string;
   //
-  trans_id?: bigint;
+  trans_id?: string;
 }
 
 /** Update a user's account details. */
@@ -2704,34 +2704,34 @@ export interface ApiUpdateAccountRequest {
 /**  */
 export interface ApiUpdateCategoryDescRequest {
   //The ID of the group to update.
-  category_id?: bigint;
+  category_id?: string;
   //
   category_name?: string;
   // clan ID
-  Clanid: bigint;
+  Clanid: string;
 }
 /**  */
 export interface ApiUpdateCategoryOrderRequest {
   //
   categories?: Array<ApiCategoryOrderUpdate>;
   //
-  clan_id?: bigint;
+  clan_id?: string;
 }
 
 /**  */
 export interface ApiUpdateRoleChannelRequest {
   //
-  channel_id: bigint;
+  channel_id: string;
   //
-  max_permission_id: bigint;
+  max_permission_id: string;
   //The permissions to add.
   permission_update?: Array<ApiPermissionUpdate>;
   //The ID of the role to update.
-  role_id?: bigint;
+  role_id?: string;
   //
   role_label?: string;
   //The ID of the role to update.
-  user_id?: bigint;
+  user_id?: string;
 }
 
 /** Fetch a batch of zero or more users from the server. */
@@ -2779,7 +2779,7 @@ export interface ApiUser {
   //Number of related edges to this user.
   edge_count?: number;
   //The id of the user's account.
-  id?: bigint;
+  id?: string;
   //
   is_mobile?: boolean;
   //
@@ -2801,7 +2801,7 @@ export interface ApiUser {
   //The username of the user's account.
   username?: string;
   // mezon_id
-  mezon_id?: bigint;
+  mezon_id?: string;
   // list nick name
   list_nick_names?: Array<string>;
   // phone number
@@ -2817,7 +2817,7 @@ export interface ApiUserActivity {
   //
   activity_type?: number;
   //
-  application_id?: bigint;
+  application_id?: string;
   //
   end_time_seconds?: number;
   //
@@ -2825,7 +2825,7 @@ export interface ApiUserActivity {
   //
   status?: number;
   //
-  user_id?: bigint;
+  user_id?: string;
 }
 
 /**  */
@@ -2835,13 +2835,13 @@ export interface ApiQuickMenuAccess {
   //
   background?: string;
   //
-  bot_id?: bigint;
+  bot_id?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
-  id?: bigint;
+  id?: string;
   //
   menu_name?: string;
   //
@@ -2861,13 +2861,13 @@ export interface ApiQuickMenuAccessRequest {
   //
   background?: string;
   //
-  bot_id?: bigint;
+  bot_id?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
-  id?: bigint;
+  id?: string;
   //
   menu_name?: string;
   //
@@ -2877,9 +2877,9 @@ export interface ApiQuickMenuAccessRequest {
 /**  */
 export interface ApiUserPermissionInChannelListResponse {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //A list of permission.
   permissions?: ApiPermissionList;
 }
@@ -2889,7 +2889,7 @@ export interface ApiUserStatus {
   //
   status?: string;
   //
-  user_id?: bigint;
+  user_id?: string;
 }
 
 /**  */
@@ -2911,13 +2911,13 @@ export interface ApiUsers {
 /** A list of users belonging to a channel, along with their role. */
 export interface ApiVoiceChannelUser {
   //Cursor for the next page of results, if any.
-  id?: bigint;
+  id?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
   participant?: string;
   //User for a channel.
-  user_id?: bigint;
+  user_id?: string;
 }
 
 /** A list of users belonging to a channel, along with their role. */
@@ -2933,13 +2933,13 @@ export interface ApiWebhook {
   //
   avatar?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
   create_time?: string;
   //
-  creator_id?: bigint;
+  creator_id?: string;
   //
-  id?: bigint;
+  id?: string;
   //
   status?: number;
   //
@@ -2949,7 +2949,7 @@ export interface ApiWebhook {
   //
   webhook_name?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
 }
 
 /**  */
@@ -2957,9 +2957,9 @@ export interface ApiWebhookCreateRequest {
   //
   avatar?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   webhook_name?: string;
 }
@@ -2969,7 +2969,7 @@ export interface ApiWebhookGenerateResponse {
   //
   avatar?: string;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
   hook_name?: string;
   //
@@ -3051,7 +3051,7 @@ export interface ApiOnboardingContent {
   //
   answers?: Array<OnboardingAnswer>;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
   content?: string;
   //
@@ -3069,9 +3069,9 @@ export interface MezonUpdateOnboardingBody {
   //
   answers?: Array<OnboardingAnswer>;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   content?: string;
   //
@@ -3085,7 +3085,7 @@ export interface MezonUpdateOnboardingBody {
 /**  */
 export interface ApiCreateOnboardingRequest {
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   contents?: Array<ApiOnboardingContent>;
 }
@@ -3095,9 +3095,9 @@ export interface ApiOnboardingItem {
   //
   answers?: Array<OnboardingAnswer>;
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   content?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
@@ -3105,7 +3105,7 @@ export interface ApiOnboardingItem {
   //
   guide_type?: number;
   //
-  id?: bigint;
+  id?: string;
   //
   task_type?: number;
   //
@@ -3121,7 +3121,7 @@ export interface MezonUpdateClanWebhookByIdBody {
   //avatar.
   avatar?: string;
   //clan id.
-  clan_id?: bigint;
+  clan_id?: string;
   //reset token.
   reset_token?: boolean;
   //webhook name.
@@ -3135,13 +3135,13 @@ export interface ApiClanWebhook {
   //
   avatar?: string;
   //clan id.
-  clan_id?: bigint;
+  clan_id?: string;
   //create time.
   create_time?: string;
   //creator id.
-  creator_id?: bigint;
+  creator_id?: string;
   //id.
-  id?: bigint;
+  id?: string;
   //update time.
   update_time?: string;
   //URL of the webhook, which is automatically generated and different from the avatar.
@@ -3155,7 +3155,7 @@ export interface ApiGenerateClanWebhookRequest {
   //avatar.
   avatar?: string;
   //clan id.
-  clan_id?: bigint;
+  clan_id?: string;
   //webhook name.
   webhook_name?: string;
 }
@@ -3165,7 +3165,7 @@ export interface ApiGenerateClanWebhookResponse {
   //avatar.
   avatar?: string;
   //clan id.
-  clan_id?: bigint;
+  clan_id?: string;
   //url.
   url?: string;
   //webhook name.
@@ -3193,19 +3193,19 @@ export interface ApiListOnboardingStepResponse {
 /**  */
 export interface ApiOnboardingSteps {
   //clan id.
-  clan_id?: bigint;
+  clan_id?: string;
   //id.
-  id?: bigint;
+  id?: string;
   //onboarding step.
   onboarding_step?: number;
   //user id.
-  user_id?: bigint;
+  user_id?: string;
 }
 
 /**  */
 export interface MezonapiCreateRoomChannelApps {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
   room_name?: string;
 }
@@ -3213,7 +3213,7 @@ export interface MezonapiCreateRoomChannelApps {
 /**  */
 export interface ApiGenerateMeetTokenRequest {
   //
-  channel_id?: bigint;
+  channel_id?: string;
   //
   room_name?: string;
 }
@@ -3227,7 +3227,7 @@ export interface ApiGenerateMeetTokenResponse {
 /**  */
 export interface ApiUnlockedItemRequest {
   //
-  item_id?: bigint;
+  item_id?: string;
   //
   item_type?: number;
 }
@@ -3345,9 +3345,9 @@ export interface ApiCreateHashChannelAppsResponse {
 /**  */
 export interface ApiUserEventRequest {
   // The ID of the clan to be updated.
-  clan_id?: bigint;
+  clan_id?: string;
   //The ID of the event to be updated.
-  event_id?: bigint;
+  event_id?: string;
 }
 
 /**  */
@@ -3357,7 +3357,7 @@ export interface ApiClanDiscover {
   //
   banner?: string;
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   clan_logo?: string;
   //
@@ -3365,7 +3365,7 @@ export interface ApiClanDiscover {
   //
   description?: string;
   //
-  invite_id?: bigint;
+  invite_id?: string;
   //
   online_members?: number;
   //
@@ -3417,7 +3417,7 @@ export interface ApiListClanUnreadMsgIndicatorResponse {
 /**  */
 export interface ApiClanDiscoverRequest {
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
   item_per_page?: number;
   //
@@ -3427,7 +3427,7 @@ export interface ApiClanDiscoverRequest {
 /**  */
 export interface ApiIsFollowerRequest {
   //
-  follow_id?: bigint;
+  follow_id?: string;
 }
 
 /**  */
@@ -3435,7 +3435,7 @@ export interface ApiLinkAccountConfirmRequest {
   //
   otp_code?: string;
   //
-  req_id?: bigint;
+  req_id?: string;
   //
   status?: number;
 }
@@ -3445,15 +3445,15 @@ export interface ApiIsFollowerResponse {
   //
   is_follower?: boolean;
   //
-  follow_id?: bigint;
+  follow_id?: string;
 }
 
 /**  */
 export interface ApiTransferOwnershipRequest {
   //
-  clan_id?: bigint;
+  clan_id?: string;
   //
-  new_owner_id?: bigint;
+  new_owner_id?: string;
 }
 
 export class MezonApi {
@@ -4032,7 +4032,10 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.LinkAccountConfirmRequest.encode(
-      tsproto.LinkAccountConfirmRequest.fromPartial(body),
+      tsproto.LinkAccountConfirmRequest.fromPartial({
+        ...body,
+        req_id: 
+      }),
     );
     const encodedBody = bodyWriter.finish();
 
