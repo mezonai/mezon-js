@@ -4034,7 +4034,7 @@ export class MezonApi {
     const bodyWriter = tsproto.LinkAccountConfirmRequest.encode(
       tsproto.LinkAccountConfirmRequest.fromPartial({
         ...body,
-        req_id: 
+        req_id: BigInt(body.req_id as string),
       }),
     );
     const encodedBody = bodyWriter.finish();
@@ -4307,7 +4307,10 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.CreateActivityRequest.encode(
-      tsproto.CreateActivityRequest.fromPartial(body),
+      tsproto.CreateActivityRequest.fromPartial({
+        ...body,
+        application_id: BigInt(body.application_id as string),
+      }),
     );
     const encodedBody = bodyWriter.finish();
 
@@ -4355,7 +4358,10 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.AddAppRequest.encode(
-      tsproto.AddAppRequest.fromPartial(body),
+      tsproto.AddAppRequest.fromPartial({
+        ...body,
+        creator_id: BigInt(body.creator_id as string),
+      }),
     );
     const encodedBody = bodyWriter.finish();
 
@@ -4687,7 +4693,16 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.UpdateCategoryOrderRequest.encode(
-      tsproto.UpdateCategoryOrderRequest.fromPartial(body),
+      tsproto.UpdateCategoryOrderRequest.fromPartial({
+        ...body,
+        clan_id: BigInt(body.clan_id as string),
+        categories: body.categories?.map((cat) => {
+          return {
+            ...cat,
+            category_id: BigInt(cat.category_id as string)
+          }
+        })
+      }),
     );
     const encodedBody = bodyWriter.finish();
 
@@ -4888,7 +4903,11 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.AddFavoriteChannelRequest.encode(
-      tsproto.AddFavoriteChannelRequest.fromPartial(body),
+      tsproto.AddFavoriteChannelRequest.fromPartial({
+        ...body,
+        channel_id: BigInt(body.channel_id as string),
+        clan_id: BigInt(body.clan_id as string)
+      }),
     );
     const encodedBody = bodyWriter.finish();
 
