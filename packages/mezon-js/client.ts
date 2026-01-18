@@ -559,7 +559,7 @@ export class Client {
   async addChannelUsers(
     session: Session,
     channelId: string,
-    ids?: Array<bigint>,
+    ids?: Array<string>,
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -579,7 +579,7 @@ export class Client {
   /** Add friends by ID or username to a user's account. */
   async addFriends(
     session: Session,
-    ids?: Array<bigint>,
+    ids?: Array<string>,
     usernames?: Array<string>,
   ): Promise<ApiAddFriendsResponse> {
     if (
@@ -596,7 +596,7 @@ export class Client {
   /** Block one or more users by ID or username. */
   async blockFriends(
     session: Session,
-    ids?: Array<bigint>,
+    ids?: Array<string>,
     usernames?: Array<string>,
   ): Promise<boolean> {
     if (
@@ -617,7 +617,7 @@ export class Client {
   /** Block one or more users by ID or username. */
   async unblockFriends(
     session: Session,
-    ids?: Array<bigint>,
+    ids?: Array<string>,
     usernames?: Array<string>,
   ): Promise<boolean> {
     if (
@@ -843,7 +843,7 @@ export class Client {
   /** Delete one or more users by ID or username. */
   async deleteFriends(
     session: Session,
-    ids?: Array<bigint>,
+    ids?: Array<string>,
     usernames?: Array<string>,
   ): Promise<boolean> {
     if (
@@ -924,7 +924,7 @@ export class Client {
   /** Delete one or more notifications */
   async deleteNotifications(
     session: Session,
-    ids?: Array<bigint>,
+    ids?: Array<string>,
     category?: number,
   ): Promise<boolean> {
     if (
@@ -958,7 +958,7 @@ export class Client {
     }
 
     return this.apiClient
-      .deleteRole(session.token, roleId, 0n, clanId, roleLabel)
+      .deleteRole(session.token, roleId, "", clanId, roleLabel)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -1049,7 +1049,7 @@ export class Client {
   async removeClanUsers(
     session: Session,
     clanId: string,
-    ids?: Array<bigint>,
+    ids?: Array<string>,
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -1091,7 +1091,7 @@ export class Client {
     session: Session,
     clanId: string,
     channelId?: string,
-    userIds?: Array<bigint>,
+    userIds?: Array<string>,
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -1113,7 +1113,7 @@ export class Client {
     session: Session,
     clanId: string,
     channelId?: string,
-    userIds?: Array<bigint>,
+    userIds?: Array<string>,
     banTime?: number,
   ): Promise<boolean> {
     if (
@@ -1135,7 +1135,7 @@ export class Client {
   async removeChannelUsers(
     session: Session,
     channelId: string,
-    ids?: Array<bigint>,
+    ids?: Array<string>,
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -1220,7 +1220,7 @@ export class Client {
           result.messages!.push({
             channel_id: m.channel_id,
             code: m.code ? Number(m.code) : 0,
-            id: m.message_id as bigint,
+            id: m.message_id as string,
             sender_id: m.sender_id,
             username: m.username,
             display_name: m.display_name,
@@ -2582,13 +2582,13 @@ export class Client {
 
         response.pin_messages_list!.forEach((p) => {
           result.pin_messages_list!.push({
-            id: p.id,
+            id: String(p.id),
             avatar: p.avatar,
-            channel_id: p.channel_id,
+            channel_id: String(p.channel_id),
             content: p.content,
             create_time_seconds: p.create_time_seconds,
-            message_id: p.message_id,
-            sender_id: p.sender_id,
+            message_id: String(p.message_id),
+            sender_id: String(p.sender_id),
             username: p.username,
             attachment: p.attachment,
           });
@@ -3034,41 +3034,6 @@ export class Client {
       .updateCategoryOrder(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
-      });
-  }
-
-  async givecoffee(
-    session: Session,
-    request: ApiGiveCoffeeEvent,
-  ): Promise<any> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .giveMeACoffee(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  async sendToken(session: Session, request: ApiTokenSentEvent): Promise<any> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .sendToken(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
       });
   }
 
@@ -3863,7 +3828,7 @@ export class Client {
 
   async getPubKeys(
     session: Session,
-    userIds: Array<bigint>,
+    userIds: Array<string>,
   ): Promise<ApiGetPubKeysResponse> {
     if (
       this.autoRefreshSession &&
