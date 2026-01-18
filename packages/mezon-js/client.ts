@@ -229,7 +229,7 @@ export enum WebrtcSignalingType {
 /** Response for an RPC function executed on the server. */
 export interface RpcResponse {
   /** The identifier of the function. */
-  id?: bigint;
+  id?: string;
   /** The payload of the function which must be a JSON object. */
   payload?: object;
 }
@@ -273,11 +273,11 @@ export interface Notification {
   /** The UNIX time when the notification was created. */
   create_time?: string;
   /** ID of the Notification. */
-  id?: bigint;
+  id?: string;
   /** True if this notification was persisted to the database. */
   persistent?: boolean;
   /** ID of the sender, if a user. Otherwise 'null'. */
-  sender_id?: bigint;
+  sender_id?: string;
   /** Subject of the notification. */
   subject?: string;
 }
@@ -293,13 +293,13 @@ export interface NotificationList {
 /** Update fields in a given channel. */
 export interface ApiUpdateChannelDescRequest {
   /** The ID of the channel to update. */
-  channel_id: bigint;
+  channel_id: string;
   /** The channel lable */
   channel_label: string | undefined;
   /** The category of channel */
-  category_id: bigint | undefined;
+  category_id: string | undefined;
   /** The app url of channel */
-  app_id: bigint | undefined;
+  app_id: string | undefined;
   //
   e2ee?: number;
   //
@@ -313,7 +313,7 @@ export interface ApiUpdateChannelDescRequest {
 /** Add users to a channel. */
 export interface ApiAddChannelUsersRequest {
   /** The channel to add users to. */
-  channel_id: bigint;
+  channel_id: string;
   /** The users to add. */
   user_ids: string[];
 }
@@ -321,7 +321,7 @@ export interface ApiAddChannelUsersRequest {
 /** Kick a set of users from a channel. */
 export interface ApiKickChannelUsersRequest {
   /** The channel ID to kick from. */
-  channel_id: bigint;
+  channel_id: string;
   /** The users to kick. */
   user_ids: string[];
 }
@@ -329,13 +329,13 @@ export interface ApiKickChannelUsersRequest {
 /** Leave a channel. */
 export interface ApiLeaveChannelRequest {
   /** The channel ID to leave. */
-  channel_id: bigint;
+  channel_id: string;
 }
 
 /** Update Clan profile information */
 export interface ApiUpdateClanDescProfileRequest {
   /** Clan id */
-  clan_id: bigint;
+  clan_id: string;
   /** Clan nick name */
   nick_name: string;
   /** Clan profile banner */
@@ -348,7 +348,7 @@ export interface ApiUpdateClanDescProfileRequest {
 
 export interface ApiUpdateClanProfileRequest {
   /** Clan id*/
-  clan_id: bigint;
+  clan_id: string;
   /** Clan nick name */
   nick_name: string;
   /** Clan profile avatar */
@@ -358,18 +358,18 @@ export interface ApiUpdateClanProfileRequest {
 /** Update fields in a given role. */
 export interface ApiUpdateRoleRequest {
   /** The ID of the role to update. */
-  role_id: bigint;
+  role_id: string;
   /** The users to add. */
-  add_user_ids: bigint[];
+  add_user_ids: string[];
   /** The permissions to add. */
-  active_permission_ids: bigint[];
+  active_permission_ids: string[];
   /** The users to remove. */
-  remove_user_ids: bigint[];
+  remove_user_ids: string[];
   /** The permissions to remove. */
-  remove_permission_ids: bigint[];
+  remove_permission_ids: string[];
   //
-  clan_id: bigint;
-  max_permission_id: bigint;
+  clan_id: string;
+  max_permission_id: string;
   title?: string | undefined;
   color?: string | undefined;
   role_icon?: string | undefined;
@@ -558,7 +558,7 @@ export class Client {
   /** Add users to a channel, or accept their join requests. */
   async addChannelUsers(
     session: Session,
-    channelId: bigint,
+    channelId: string,
     ids?: Array<bigint>,
   ): Promise<boolean> {
     if (
@@ -807,7 +807,7 @@ export class Client {
       });
   }
 
-  async deleteApp(session: Session, appId: bigint): Promise<boolean> {
+  async deleteApp(session: Session, appId: string): Promise<boolean> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -864,8 +864,8 @@ export class Client {
   /** Delete a channel by ID. */
   async deleteChannelDesc(
     session: Session,
-    clanId: bigint,
-    channelId: bigint,
+    clanId: string,
+    channelId: string,
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -883,7 +883,7 @@ export class Client {
   }
 
   /** Delete a clan desc by ID. */
-  async deleteClanDesc(session: Session, clanDescId: bigint): Promise<boolean> {
+  async deleteClanDesc(session: Session, clanDescId: string): Promise<boolean> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -902,8 +902,8 @@ export class Client {
   /** Delete a category by ID. */
   async deleteCategoryDesc(
     session: Session,
-    categoryId: bigint,
-    clanId: bigint,
+    categoryId: string,
+    clanId: string,
     categoryLabel?: string,
   ): Promise<boolean> {
     if (
@@ -945,8 +945,8 @@ export class Client {
   /** Delete a role by ID. */
   async deleteRole(
     session: Session,
-    roleId: bigint,
-    clanId: bigint,
+    roleId: string,
+    clanId: string,
     roleLabel?: string,
   ): Promise<boolean> {
     if (
@@ -967,11 +967,11 @@ export class Client {
   /** Delete a event by ID. */
   async deleteEvent(
     session: Session,
-    eventId: bigint,
-    clanId: bigint,
-    creatorId: bigint,
+    eventId: string,
+    clanId: string,
+    creatorId: string,
     eventLabel?: string,
-    channelId?: bigint,
+    channelId?: string,
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -1048,7 +1048,7 @@ export class Client {
   /** Kick a set of users from a clan. */
   async removeClanUsers(
     session: Session,
-    clanId: bigint,
+    clanId: string,
     ids?: Array<bigint>,
   ): Promise<boolean> {
     if (
@@ -1068,8 +1068,8 @@ export class Client {
 
   async listBannedUsers(
     session: Session,
-    clanId?: bigint,
-    channelId?: bigint,
+    clanId?: string,
+    channelId?: string,
   ): Promise<ApiBannedUserList> {
     if (
       this.autoRefreshSession &&
@@ -1089,8 +1089,8 @@ export class Client {
   /** Ban a set of users from a clan. */
   async unbanClanUsers(
     session: Session,
-    clanId: bigint,
-    channelId?: bigint,
+    clanId: string,
+    channelId?: string,
     userIds?: Array<bigint>,
   ): Promise<boolean> {
     if (
@@ -1111,8 +1111,8 @@ export class Client {
   /** Ban a set of users from a clan. */
   async banClanUsers(
     session: Session,
-    clanId: bigint,
-    channelId?: bigint,
+    clanId: string,
+    channelId?: string,
     userIds?: Array<bigint>,
     banTime?: number,
   ): Promise<boolean> {
@@ -1134,7 +1134,7 @@ export class Client {
   /** Kick users from a channel, or decline their join requests. */
   async removeChannelUsers(
     session: Session,
-    channelId: bigint,
+    channelId: string,
     ids?: Array<bigint>,
   ): Promise<boolean> {
     if (
@@ -1155,12 +1155,12 @@ export class Client {
   /** List a channel's message history. */
   async listChannelMessages(
     session: Session,
-    clanId: bigint,
-    channelId: bigint,
-    messageId?: bigint,
+    clanId: string,
+    channelId: string,
+    messageId?: string,
     direction?: number,
     limit?: number,
-    topicId?: bigint,
+    topicId?: string,
   ): Promise<ChannelMessageList> {
     if (
       this.autoRefreshSession &&
@@ -1248,8 +1248,8 @@ export class Client {
   /** List a channel's users. */
   async listChannelVoiceUsers(
     session: Session,
-    clanId: bigint,
-    channelId: bigint,
+    clanId: string,
+    channelId: string,
     channelType: number,
     state?: number,
     limit?: number,
@@ -1297,8 +1297,8 @@ export class Client {
   /** List a channel's users. */
   async listChannelUsers(
     session: Session,
-    clanId: bigint,
-    channelId: bigint,
+    clanId: string,
+    channelId: string,
     channelType: number,
     state?: number,
     limit?: number,
@@ -1353,8 +1353,8 @@ export class Client {
   /** List a channel's attachment. */
   async listChannelAttachments(
     session: Session,
-    clanId: bigint,
-    channelId: bigint,
+    clanId: string,
+    channelId: string,
     fileType: string,
     state?: number,
     limit?: number,
@@ -1410,7 +1410,7 @@ export class Client {
   /** List a channel's users. */
   async listClanUsers(
     session: Session,
-    clanId: bigint,
+    clanId: string,
   ): Promise<ApiClanUserList> {
     if (
       this.autoRefreshSession &&
@@ -1466,7 +1466,7 @@ export class Client {
 
   async listChannelDetail(
     session: Session,
-    channelId: bigint,
+    channelId: string,
   ): Promise<ApiChannelDescription> {
     if (
       this.autoRefreshSession &&
@@ -1489,7 +1489,7 @@ export class Client {
     limit?: number,
     state?: number,
     cursor?: string,
-    clanId?: bigint,
+    clanId?: string,
     channelType?: number,
     isMobile?: boolean,
   ): Promise<ApiChannelDescList> {
@@ -1531,7 +1531,7 @@ export class Client {
   /** List clans */
   async listClanUnreadMsgIndicator(
     session: Session,
-    clanId: bigint,
+    clanId: string,
   ): Promise<ApiListClanUnreadMsgIndicatorResponse> {
     if (
       this.autoRefreshSession &&
@@ -1582,8 +1582,8 @@ export class Client {
   /** List categories. */
   async listCategoryDescs(
     session: Session,
-    clanId: bigint,
-    creatorId?: bigint,
+    clanId: string,
+    creatorId?: string,
     categoryName?: string,
   ): Promise<ApiCategoryDescList> {
     if (
@@ -1611,7 +1611,7 @@ export class Client {
   }
 
   /** List event */
-  async listEvents(session: Session, clanId?: bigint): Promise<ApiEventList> {
+  async listEvents(session: Session, clanId?: string): Promise<ApiEventList> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -1647,7 +1647,7 @@ export class Client {
   /** List user roles */
   async listRolePermissions(
     session: Session,
-    roleId: bigint,
+    roleId: string,
   ): Promise<ApiPermissionList> {
     if (
       this.autoRefreshSession &&
@@ -1667,7 +1667,7 @@ export class Client {
   /** List user roles */
   async listRoleUsers(
     session: Session,
-    roleId: bigint,
+    roleId: string,
     limit?: number,
     cursor?: string,
   ): Promise<ApiRoleUserList> {
@@ -1716,7 +1716,7 @@ export class Client {
 
   async getUserProfileOnClan(
     session: Session,
-    clanId: bigint,
+    clanId: string,
   ): Promise<ApiClanProfile> {
     if (
       this.autoRefreshSession &&
@@ -1887,9 +1887,9 @@ export class Client {
   /** Fetch list of notifications. */
   async listNotifications(
     session: Session,
-    clanId: bigint,
+    clanId: string,
     limit?: number,
-    notificationId?: bigint,
+    notificationId?: string,
     category?: number,
     direction?: number,
   ): Promise<ApiNotificationList> {
@@ -2085,7 +2085,7 @@ export class Client {
   /** Update fields in a given channel */
   async updateChannelDesc(
     session: Session,
-    channelId: bigint,
+    channelId: string,
     request: ApiUpdateChannelDescRequest,
   ): Promise<boolean> {
     if (
@@ -2106,7 +2106,7 @@ export class Client {
   /** Update fields in a given clan. */
   async updateClanDesc(
     session: Session,
-    clanId: bigint,
+    clanId: string,
     request: MezonUpdateClanDescBody,
   ): Promise<boolean> {
     if (
@@ -2127,7 +2127,7 @@ export class Client {
   /** Update fields in a given category. */
   async updateCategory(
     session: Session,
-    clanId: bigint,
+    clanId: string,
     request: ApiUpdateCategoryDescRequest,
   ): Promise<boolean> {
     if (
@@ -2147,7 +2147,7 @@ export class Client {
 
   async updateUserProfileByClan(
     session: Session,
-    clanId: bigint,
+    clanId: string,
     request: ApiUpdateClanProfileRequest,
   ): Promise<boolean> {
     if (
@@ -2168,7 +2168,7 @@ export class Client {
   /** Update fields in a given role. */
   async updateRole(
     session: Session,
-    roleId: bigint,
+    roleId: string,
     request: ApiUpdateRoleRequest,
   ): Promise<boolean> {
     if (
@@ -2189,7 +2189,7 @@ export class Client {
   /** Update fields in a given event. */
   async updateEvent(
     session: Session,
-    roleId: bigint,
+    roleId: string,
     request: MezonUpdateEventBody,
   ): Promise<boolean> {
     if (
@@ -2210,7 +2210,7 @@ export class Client {
   /** Update fields in a given event. */
   async updateApp(
     session: Session,
-    roleId: bigint,
+    roleId: string,
     request: MezonUpdateAppBody,
   ): Promise<ApiApp> {
     if (
@@ -2249,7 +2249,7 @@ export class Client {
   }
 
   /** Get link invite user */
-  async getLinkInvite(inviteId: bigint): Promise<ApiInviteUserRes> {
+  async getLinkInvite(inviteId: string): Promise<ApiInviteUserRes> {
     return this.apiClient
       .getLinkInvite(this.serverkey, "", inviteId)
       .then((response: ApiInviteUserRes) => {
@@ -2260,7 +2260,7 @@ export class Client {
   /** Get permission of user in the clan */
   async GetRoleOfUserInTheClan(
     session: Session,
-    clanId: bigint,
+    clanId: string,
   ): Promise<ApiRoleList> {
     if (
       this.autoRefreshSession &&
@@ -2280,7 +2280,7 @@ export class Client {
   /** invite user */
   async inviteUser(
     session: Session,
-    inviteId: bigint,
+    inviteId: string,
   ): Promise<ApiInviteUserRes> {
     if (
       this.autoRefreshSession &&
@@ -2419,7 +2419,7 @@ export class Client {
 
   async deleteNotificationCategory(
     session: Session,
-    category_id: bigint,
+    category_id: string,
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -2438,7 +2438,7 @@ export class Client {
 
   async deleteNotificationChannel(
     session: Session,
-    channel_id: bigint,
+    channel_id: string,
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -2458,7 +2458,7 @@ export class Client {
   /** */
   async setNotificationReactMessage(
     session: Session,
-    channel_id: bigint,
+    channel_id: string,
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -2478,7 +2478,7 @@ export class Client {
   //** */
   async deleteNotiReactMessage(
     session: Session,
-    channel_id: bigint,
+    channel_id: string,
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -2557,9 +2557,9 @@ export class Client {
 
   async pinMessagesList(
     session: Session,
-    messageId: bigint,
-    channelId: bigint,
-    clanId: bigint,
+    messageId: string,
+    channelId: string,
+    clanId: string,
   ): Promise<ApiPinMessagesList> {
     if (
       this.autoRefreshSession &&
@@ -2600,10 +2600,10 @@ export class Client {
   //** */
   async deletePinMessage(
     session: Session,
-    id?: bigint,
-    messageId?: bigint,
-    channelId?: bigint,
-    clanId?: bigint,
+    id?: string,
+    messageId?: string,
+    channelId?: string,
+    clanId?: string,
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -2640,7 +2640,7 @@ export class Client {
   //**update clan emoji by id */
   async updateClanEmojiById(
     session: Session,
-    id: bigint,
+    id: string,
     request: MezonUpdateClanEmojiByIdBody,
   ) {
     if (
@@ -2661,8 +2661,8 @@ export class Client {
   //**delete clan emoji by id */
   async deleteByIdClanEmoji(
     session: Session,
-    id: bigint,
-    clan_id: bigint,
+    id: string,
+    clan_id: string,
     emojiLabel?: string,
   ) {
     if (
@@ -2703,8 +2703,8 @@ export class Client {
   //**list webhook belong to the channel */
   async listWebhookByChannelId(
     session: Session,
-    channel_id: bigint,
-    clan_id: bigint,
+    channel_id: string,
+    clan_id: string,
   ): Promise<ApiWebhookListResponse> {
     if (
       this.autoRefreshSession &&
@@ -2724,7 +2724,7 @@ export class Client {
   //**update webhook name by id */
   async updateWebhookById(
     session: Session,
-    id: bigint,
+    id: string,
     request: MezonUpdateWebhookByIdBody,
   ) {
     if (
@@ -2745,7 +2745,7 @@ export class Client {
   //**disabled webhook by id */
   async deleteWebhookById(
     session: Session,
-    id: bigint,
+    id: string,
     request: MezonDeleteWebhookByIdBody,
   ) {
     if (
@@ -2783,8 +2783,8 @@ export class Client {
   //**Delete a sticker by ID*/
   async deleteClanStickerById(
     session: Session,
-    id: bigint,
-    clan_id: bigint,
+    id: string,
+    clan_id: string,
     stickerLabel?: string,
   ) {
     if (
@@ -2805,7 +2805,7 @@ export class Client {
   //**Update a sticker by ID*/
   async updateClanStickerById(
     session: Session,
-    id: bigint,
+    id: string,
     request: MezonUpdateClanStickerByIdBody,
   ) {
     if (
@@ -2826,7 +2826,7 @@ export class Client {
   //** update the category of a channel */
   async changeChannelCategory(
     session: Session,
-    id: bigint,
+    id: string,
     request: MezonChangeChannelCategoryBody,
   ) {
     if (
@@ -2880,7 +2880,7 @@ export class Client {
       });
   }
 
-  async getApp(session: Session, id: bigint): Promise<ApiApp> {
+  async getApp(session: Session, id: string): Promise<ApiApp> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -2910,7 +2910,7 @@ export class Client {
       });
   }
 
-  async addAppToClan(session: Session, appId: bigint, clanId: bigint) {
+  async addAppToClan(session: Session, appId: string, clanId: string) {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -2946,7 +2946,7 @@ export class Client {
 
   async getSystemMessageByClanId(
     session: Session,
-    clanId: bigint,
+    clanId: string,
   ): Promise<ApiSystemMessage> {
     if (
       this.autoRefreshSession &&
@@ -2984,7 +2984,7 @@ export class Client {
 
   async updateSystemMessage(
     session: Session,
-    clanId: bigint,
+    clanId: string,
     request: MezonUpdateSystemMessageBody,
   ): Promise<any> {
     if (
@@ -3002,7 +3002,7 @@ export class Client {
       });
   }
 
-  async deleteSystemMessage(session: Session, clanId: bigint): Promise<any> {
+  async deleteSystemMessage(session: Session, clanId: string): Promise<any> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -3075,8 +3075,8 @@ export class Client {
   /** List a channel's users. */
   async listStreamingChannelUsers(
     session: Session,
-    clanId: bigint,
-    channelId: bigint,
+    clanId: string,
+    channelId: string,
     channelType: number,
     state?: number,
     limit?: number,
@@ -3143,7 +3143,7 @@ export class Client {
   /** List a channel's users. */
   async listChannelApps(
     session: Session,
-    clanId: bigint,
+    clanId: string,
   ): Promise<ApiListChannelAppsResponse> {
     if (
       this.autoRefreshSession &&
@@ -3181,7 +3181,7 @@ export class Client {
 
   async getChannelCategoryNotiSettingsList(
     session: Session,
-    clanId: bigint,
+    clanId: string,
   ): Promise<ApiNotificationChannelCategorySettingList> {
     if (
       this.autoRefreshSession &&
@@ -3200,7 +3200,7 @@ export class Client {
 
   async getNotificationCategory(
     session: Session,
-    categoryId: bigint,
+    categoryId: string,
   ): Promise<ApiNotificationUserChannel> {
     if (
       this.autoRefreshSession &&
@@ -3219,7 +3219,7 @@ export class Client {
 
   async getNotificationChannel(
     session: Session,
-    channelId: bigint,
+    channelId: string,
   ): Promise<ApiNotificationUserChannel> {
     if (
       this.autoRefreshSession &&
@@ -3238,7 +3238,7 @@ export class Client {
 
   async getNotificationClan(
     session: Session,
-    clanId: bigint,
+    clanId: string,
   ): Promise<ApiNotificationSetting> {
     if (
       this.autoRefreshSession &&
@@ -3257,7 +3257,7 @@ export class Client {
 
   async getNotificationReactMessage(
     session: Session,
-    channelId: bigint,
+    channelId: string,
   ): Promise<ApiNotifiReactMessage> {
     if (
       this.autoRefreshSession &&
@@ -3292,7 +3292,7 @@ export class Client {
 
   async listChannelUsersUC(
     session: Session,
-    channel_id: bigint,
+    channel_id: string,
     limit: number,
   ): Promise<ApiAllUsersAddChannelResponse> {
     if (
@@ -3380,7 +3380,7 @@ export class Client {
 
   async listRoles(
     session: Session,
-    clanId?: bigint,
+    clanId?: string,
     limit?: number,
     state?: number,
     cursor?: string,
@@ -3407,8 +3407,8 @@ export class Client {
 
   async listUserPermissionInChannel(
     session: Session,
-    clanId?: bigint,
-    channelId?: bigint,
+    clanId?: string,
+    channelId?: string,
   ): Promise<ApiUserPermissionInChannelListResponse> {
     if (
       this.autoRefreshSession &&
@@ -3433,9 +3433,9 @@ export class Client {
 
   async getPermissionByRoleIdChannelId(
     session: Session,
-    roleId?: bigint,
-    channelId?: bigint,
-    userId?: bigint,
+    roleId?: string,
+    channelId?: string,
+    userId?: string,
   ): Promise<ApiPermissionRoleChannelListEventResponse> {
     if (
       this.autoRefreshSession &&
@@ -3481,11 +3481,11 @@ export class Client {
   /** List Threads. */
   async listThreadDescs(
     session: Session,
-    channelId: bigint,
+    channelId: string,
     limit?: number,
     state?: number,
-    clanId?: bigint,
-    threadId?: bigint,
+    clanId?: string,
+    threadId?: string,
     page?: number,
   ): Promise<ApiChannelDescList> {
     if (
@@ -3522,8 +3522,8 @@ export class Client {
 
   async leaveThread(
     session: Session,
-    clanId: bigint,
-    channelId: bigint,
+    clanId: string,
+    channelId: string,
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
@@ -3542,9 +3542,9 @@ export class Client {
 
   async getChannelSettingInClan(
     session: Session,
-    clanId: bigint,
-    parentId?: bigint,
-    categoryId?: bigint,
+    clanId: string,
+    parentId?: string,
+    categoryId?: string,
     privateChannel?: number,
     active?: number,
     status?: number,
@@ -3582,8 +3582,8 @@ export class Client {
 
   async getChannelCanvasList(
     session: Session,
-    channelId: bigint,
-    clanId?: bigint,
+    channelId: string,
+    clanId?: string,
     limit?: number,
     page?: number,
   ): Promise<ApiChannelCanvasListResponse> {
@@ -3616,9 +3616,9 @@ export class Client {
 
   async getChannelCanvasDetail(
     session: Session,
-    id: bigint,
-    clanId?: bigint,
-    channelId?: bigint,
+    id: string,
+    clanId?: string,
+    channelId?: string,
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
@@ -3657,9 +3657,9 @@ export class Client {
   //** */
   async deleteChannelCanvas(
     session: Session,
-    canvasId: bigint,
-    clanId?: bigint,
-    channelId?: bigint,
+    canvasId: string,
+    clanId?: string,
+    channelId?: string,
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
@@ -3678,8 +3678,8 @@ export class Client {
 
   async addFavoriteChannel(
     session: Session,
-    channelId: bigint,
-    clanId: bigint,
+    channelId: string,
+    clanId: string,
   ): Promise<ApiAddFavoriteChannelResponse> {
     if (
       this.autoRefreshSession &&
@@ -3701,8 +3701,8 @@ export class Client {
 
   async removeFavoriteChannel(
     session: Session,
-    clanId: bigint,
-    channelId: bigint,
+    clanId: string,
+    channelId: string,
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
@@ -3719,7 +3719,7 @@ export class Client {
       });
   }
 
-  async getListFavoriteChannel(session: Session, clanId: bigint): Promise<any> {
+  async getListFavoriteChannel(session: Session, clanId: string): Promise<any> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -3824,7 +3824,7 @@ export class Client {
 
   async getChanEncryptionMethod(
     session: Session,
-    channelId: bigint,
+    channelId: string,
   ): Promise<ApiChanEncryptionMethod> {
     if (
       this.autoRefreshSession &&
@@ -3843,7 +3843,7 @@ export class Client {
 
   async setChanEncryptionMethod(
     session: Session,
-    channelId: bigint,
+    channelId: string,
     method: string,
   ): Promise<any> {
     if (
@@ -3918,8 +3918,8 @@ export class Client {
   async listAuditLog(
     session: Session,
     actionLog?: string,
-    userId?: bigint,
-    clanId?: bigint,
+    userId?: string,
+    clanId?: string,
     date_log?: string,
   ): Promise<MezonapiListAuditLog> {
     if (
@@ -3939,7 +3939,7 @@ export class Client {
 
   async listOnboarding(
     session: Session,
-    clanId?: bigint,
+    clanId?: string,
     guideType?: number,
     limit?: number,
     page?: number,
@@ -3961,8 +3961,8 @@ export class Client {
 
   async getOnboardingDetail(
     session: Session,
-    id: bigint,
-    clanId?: bigint,
+    id: string,
+    clanId?: string,
   ): Promise<ApiOnboardingItem> {
     if (
       this.autoRefreshSession &&
@@ -4000,7 +4000,7 @@ export class Client {
 
   async updateOnboarding(
     session: Session,
-    id: bigint,
+    id: string,
     request: MezonUpdateOnboardingBody,
   ) {
     if (
@@ -4020,8 +4020,8 @@ export class Client {
 
   async deleteOnboarding(
     session: Session,
-    id: bigint,
-    clanId?: bigint,
+    id: string,
+    clanId?: string,
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
@@ -4061,7 +4061,7 @@ export class Client {
   //**list webhook belong to the clan */
   async listClanWebhook(
     session: Session,
-    clan_id: bigint,
+    clan_id: string,
   ): Promise<ApiListClanWebhookResponse> {
     if (
       this.autoRefreshSession &&
@@ -4079,7 +4079,7 @@ export class Client {
   }
 
   //**disabled webhook by id */
-  async deleteClanWebhookById(session: Session, id: bigint, clan_id: bigint) {
+  async deleteClanWebhookById(session: Session, id: string, clan_id: string) {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4098,7 +4098,7 @@ export class Client {
   //**update webhook name by id */
   async updateClanWebhookById(
     session: Session,
-    id: bigint,
+    id: string,
     request: MezonUpdateClanWebhookByIdBody,
   ) {
     if (
@@ -4119,7 +4119,7 @@ export class Client {
   //**list onboarding step */
   async listOnboardingStep(
     session: Session,
-    clan_id?: bigint,
+    clan_id?: string,
     limit?: number,
     page?: number,
   ): Promise<ApiListOnboardingStepResponse> {
@@ -4141,7 +4141,7 @@ export class Client {
   //**update onboarding step by id */
   async updateOnboardingStepByClanId(
     session: Session,
-    clan_id: bigint,
+    clan_id: string,
     request: MezonUpdateOnboardingStepByClanIdBody,
   ) {
     if (
@@ -4196,7 +4196,7 @@ export class Client {
   //**list sd topic */
   async listSdTopic(
     session: Session,
-    clanId?: bigint,
+    clanId?: string,
     limit?: number,
   ): Promise<ApiSdTopicList> {
     if (
@@ -4237,7 +4237,7 @@ export class Client {
   //**list sd topic */
   async getTopicDetail(
     session: Session,
-    topicId?: bigint,
+    topicId?: string,
   ): Promise<ApiSdTopic> {
     if (
       this.autoRefreshSession &&
@@ -4355,8 +4355,8 @@ export class Client {
   //**search thread */
   async searchThread(
     session: Session,
-    clanId?: bigint,
-    channelId?: bigint,
+    clanId?: string,
+    channelId?: string,
     label?: string,
   ): Promise<ApiChannelDescList> {
     if (
@@ -4377,7 +4377,7 @@ export class Client {
   //**Generate Hash */
   async generateHashChannelApps(
     session: Session,
-    appId?: bigint,
+    appId?: string,
   ): Promise<ApiCreateHashChannelAppsResponse> {
     if (
       this.autoRefreshSession &&
@@ -4442,8 +4442,8 @@ export class Client {
   /** Delete user event */
   async deleteUserEvent(
     session: Session,
-    clanId?: bigint,
-    eventId?: bigint,
+    clanId?: string,
+    eventId?: string,
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
@@ -4596,8 +4596,8 @@ export class Client {
 
   async listQuickMenuAccess(
     session: Session,
-    botId: bigint,
-    channelId: bigint,
+    botId: string,
+    channelId: string,
     menuType: number,
   ): Promise<ApiQuickMenuAccessList> {
     if (
@@ -4617,8 +4617,8 @@ export class Client {
 
   async deleteQuickMenuAccess(
     session: Session,
-    id: bigint,
-    clanId: bigint,
+    id: string,
+    clanId: string,
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
@@ -4732,7 +4732,7 @@ export class Client {
 
   async isBanned(
     session: Session,
-    channelId: bigint,
+    channelId: string,
   ): Promise<ApiIsBannedResponse> {
     if (
       this.autoRefreshSession &&
@@ -4751,7 +4751,7 @@ export class Client {
 
   async reportMessageAbuse(
     session: Session,
-    messageId?: bigint,
+    messageId?: string,
     abuseType?: string,
   ): Promise<any> {
     if (

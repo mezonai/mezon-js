@@ -5111,7 +5111,7 @@ export class MezonApi {
     const bodyWriter = tsproto.AddChannelUsersRequest.encode(
       tsproto.AddChannelUsersRequest.fromPartial({
         channel_id: BigInt(channelId as string),
-        user_ids: userIds?.map(user => BigInt(user))
+        user_ids: userIds?.map((user) => BigInt(user)),
       }),
     );
     const encodedBody = bodyWriter.finish();
@@ -5370,9 +5370,11 @@ export class MezonApi {
     const bodyWriter = tsproto.RemoveChannelUsersRequest.encode(
       tsproto.RemoveChannelUsersRequest.fromPartial({
         channel_id: BigInt(channelId as string),
-        user_ids: userIds?.map(user => BigInt(user))?.map((user) => {
-          return BigInt(user);
-        }),
+        user_ids: userIds
+          ?.map((user) => BigInt(user))
+          ?.map((user) => {
+            return BigInt(user);
+          }),
       }),
     );
     const encodedBody = bodyWriter.finish();
@@ -5537,9 +5539,9 @@ export class MezonApi {
         channel_id: BigInt(body.channel_id as string),
         category_id: BigInt(body.category_id as string),
         app_id: BigInt(body.app_id as string),
-        user_ids: body.user_ids?.map(user => {
-          return BigInt(user)
-        })
+        user_ids: body.user_ids?.map((user) => {
+          return BigInt(user);
+        }),
       }),
     );
     const encodedBody = bodyWriter.finish();
@@ -5690,6 +5692,8 @@ export class MezonApi {
       tsproto.UpdateChannelDescRequest.fromPartial({
         ...body,
         channel_id: BigInt(channelId as string),
+        category_id: BigInt(body.category_id as string),
+        app_id: BigInt(body.app_id as string)
       }),
     );
     const encodedBody = bodyWriter.finish();
@@ -6002,7 +6006,9 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DeleteClanDescRequest.encode(
-      tsproto.DeleteClanDescRequest.fromPartial({ clan_desc_id: BigInt(clanDescId) }),
+      tsproto.DeleteClanDescRequest.fromPartial({
+        clan_desc_id: BigInt(clanDescId),
+      }),
     );
     const encodedBody = bodyWriter.finish();
 
@@ -6098,7 +6104,9 @@ export class MezonApi {
     const bodyWriter = tsproto.RemoveClanUsersRequest.encode(
       tsproto.RemoveClanUsersRequest.fromPartial({
         clan_id: BigInt(clanId as string),
-        user_ids: userIds?.map(user => BigInt(user))?.map(user => BigInt(user)),
+        user_ids: userIds
+          ?.map((user) => BigInt(user))
+          ?.map((user) => BigInt(user)),
       }),
     );
     const encodedBody = bodyWriter.finish();
@@ -6198,7 +6206,9 @@ export class MezonApi {
       tsproto.BanClanUsersRequest.fromPartial({
         clan_id: BigInt(clanId as string),
         channel_id: BigInt(channelId as string),
-        user_ids: userIds?.map(user => BigInt(user))?.map(user => BigInt(user)),
+        user_ids: userIds
+          ?.map((user) => BigInt(user))
+          ?.map((user) => BigInt(user)),
         ban_time: banTime,
       }),
     );
@@ -6252,7 +6262,7 @@ export class MezonApi {
       tsproto.BanClanUsersRequest.fromPartial({
         clan_id: BigInt(clanId as string),
         channel_id: BigInt(channelId as string),
-        user_ids: userIds?.map(user => BigInt(user)),
+        user_ids: userIds?.map((user) => BigInt(user)),
         ban_time: banTime,
       }),
     );
@@ -7193,7 +7203,10 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DeleteFriendsRequest.encode(
-      tsproto.DeleteFriendsRequest.fromPartial({ ids: ids?.map(id => BigInt(id)), usernames }),
+      tsproto.DeleteFriendsRequest.fromPartial({
+        ids: ids?.map((id) => BigInt(id)),
+        usernames,
+      }),
     );
     const encodedBody = bodyWriter.finish();
 
@@ -7276,7 +7289,10 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.AddFriendsRequest.encode(
-      tsproto.AddFriendsRequest.fromPartial({ ids: ids?.map(id => BigInt(id)), usernames }),
+      tsproto.AddFriendsRequest.fromPartial({
+        ids: ids?.map((id) => BigInt(id)),
+        usernames,
+      }),
     );
     const encodedBody = bodyWriter.finish();
 
@@ -7320,7 +7336,10 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.BlockFriendsRequest.encode(
-      tsproto.BlockFriendsRequest.fromPartial({ ids: ids?.map(id => BigInt(id)), usernames }),
+      tsproto.BlockFriendsRequest.fromPartial({
+        ids: ids?.map((id) => BigInt(id)),
+        usernames,
+      }),
     );
     const encodedBody = bodyWriter.finish();
 
@@ -7358,7 +7377,10 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.BlockFriendsRequest.encode(
-      tsproto.BlockFriendsRequest.fromPartial({ ids: ids?.map(id => BigInt(id)), usernames }),
+      tsproto.BlockFriendsRequest.fromPartial({
+        ids: ids?.map((id) => BigInt(id)),
+        usernames,
+      }),
     );
     const encodedBody = bodyWriter.finish();
 
@@ -8079,7 +8101,7 @@ export class MezonApi {
 
     const bodyWriter = tsproto.DeleteNotificationsRequest.encode(
       tsproto.DeleteNotificationsRequest.fromPartial({
-        ids: ids?.map(id => BigInt(id)),
+        ids: ids?.map((id) => BigInt(id)),
         category: category,
       }),
     );
@@ -8838,7 +8860,9 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.GetPubKeysRequest.encode(
-      tsproto.GetPubKeysRequest.fromPartial({ user_ids: userIds?.map(user => BigInt(user)) || [] }),
+      tsproto.GetPubKeysRequest.fromPartial({
+        user_ids: userIds?.map((user) => BigInt(user)) || [],
+      }),
     );
     const encodedBody = bodyWriter.finish();
 
@@ -8931,7 +8955,7 @@ export class MezonApi {
       tsproto.AddRoleChannelDescRequest.fromPartial({
         ...body,
         channel_id: BigInt(body.channel_id as string),
-        role_ids: body.role_ids?.map(r => BigInt(r))
+        role_ids: body.role_ids?.map((r) => BigInt(r)),
       }),
     );
     const encodedBody = bodyWriter.finish();
@@ -9129,8 +9153,10 @@ export class MezonApi {
         ...body,
         clan_id: BigInt(body.clan_id as string),
         max_permission_id: BigInt(body.max_permission_id as string),
-        add_user_ids: body.add_user_ids?.map(u => BigInt(u)),
-        active_permission_ids: body.active_permission_ids?.map(p => BigInt(p))
+        add_user_ids: body.add_user_ids?.map((u) => BigInt(u)),
+        active_permission_ids: body.active_permission_ids?.map((p) =>
+          BigInt(p),
+        ),
       }),
     );
     const encodedBody = bodyWriter.finish();
@@ -9292,10 +9318,14 @@ export class MezonApi {
         role_id: BigInt(roleId),
         clan_id: BigInt(body.clan_id as string),
         max_permission_id: BigInt(body.max_permission_id as string),
-        add_user_ids: body.add_user_ids?.map(u => BigInt(u)),
-        active_permission_ids: body.active_permission_ids?.map(p => BigInt(p)),
-        remove_permission_ids: body.remove_permission_ids?.map(p => BigInt(p)),
-        remove_user_ids: body.remove_permission_ids?.map(p => BigInt(p))
+        add_user_ids: body.add_user_ids?.map((u) => BigInt(u)),
+        active_permission_ids: body.active_permission_ids?.map((p) =>
+          BigInt(p),
+        ),
+        remove_permission_ids: body.remove_permission_ids?.map((p) =>
+          BigInt(p),
+        ),
+        remove_user_ids: body.remove_permission_ids?.map((p) => BigInt(p)),
       }),
     );
     const encodedBody = bodyWriter.finish();
@@ -10332,8 +10362,8 @@ export class MezonApi {
         ...body,
         clan_id: BigInt(body.clan_id as string),
         channel_id: BigInt(body.channel_id as string),
-        user_ids: body.user_ids?.map(u => BigInt(u)),
-        role_ids: body.role_ids?.map(r => BigInt(r))
+        user_ids: body.user_ids?.map((u) => BigInt(u)),
+        role_ids: body.role_ids?.map((r) => BigInt(r)),
       }),
     );
     const encodedBody = bodyWriter.finish();
