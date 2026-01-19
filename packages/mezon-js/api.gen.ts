@@ -2422,7 +2422,7 @@ export interface ApiSdTopicRequest {
 /**  */
 export interface ApiSearchMessageDocument {
   //
-  attachments?: Array<ApiMessageAttachment>;
+  attachments?: string;
   //
   avatar_url?: string;
   //The channel ID.

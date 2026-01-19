@@ -2109,11 +2109,11 @@ export class Client {
 
         response.notifications!.forEach((n) => {
           result.notifications!.push({
-            id: n.id,
+            id: String(n.id),
             subject: n.subject,
             content: n.content ? decodeNotificationFcm(n.content) : undefined,
             code: n.code ? Number(n.code) : 0,
-            sender_id: n.sender_id,
+            sender_id: String(n.sender_id),
             create_time: n.create_time,
             persistent: n.persistent,
             category: n.category,
@@ -2411,7 +2411,12 @@ export class Client {
     return this.apiClient
       .updateApp(session.token, roleId, request)
       .then((response: ApiApp) => {
-        return Promise.resolve(response);
+        var result = {
+          ...response,
+          id: String(response.id),
+          creator_id: String(response.creator_id)
+        }
+        return Promise.resolve(result);
       });
   }
 
@@ -2431,7 +2436,14 @@ export class Client {
     return this.apiClient
       .createLinkInviteUser(session.token, request)
       .then((response: ApiLinkInviteUser) => {
-        return Promise.resolve(response);
+        var result = {
+          ...response,
+          id: String(response.id),
+          creator_id: String(response.creator_id),
+          clan_id: String(response.clan_id),
+          channel_id: String(response.channel_id)
+        }
+        return Promise.resolve(result);
       });
   }
 
@@ -2460,6 +2472,15 @@ export class Client {
     return this.apiClient
       .getRoleOfUserInTheClan(session.token, clanId)
       .then((response: ApiRoleList) => {
+        response.roles?.map(r => {
+          return {
+            ...r,
+            id: String(r.id),
+            creator_id: String(r.creator_id),
+            clan_id: String(r.clan_id),
+            channel_ids: r.channel_ids?.map(c => String(c)),
+          }
+        });
         return Promise.resolve(response);
       });
   }
@@ -2480,7 +2501,19 @@ export class Client {
     return this.apiClient
       .inviteUser(session.token, inviteId)
       .then((response: ApiInviteUserRes) => {
-        return Promise.resolve(response);
+        var result = {
+          ...response,
+          channel_desc: {
+            ...response.channel_desc,
+            clan_id: String(response.channel_desc?.clan_id),
+            channel_id: String(response.channel_desc?.channel_id),
+            category_id: String(response.channel_desc?.category_id),
+            creator_id: String(response.channel_desc?.creator_id)
+          },
+          clan_id: String(response.clan_id),
+          channel_id: String(response.channel_id)
+        }
+        return Promise.resolve(result);
       });
   }
 
@@ -2698,6 +2731,15 @@ export class Client {
     return this.apiClient
       .searchMessage(session.token, request)
       .then((response: ApiSearchMessageResponse) => {
+        response.messages?.map(m => {
+          return {
+            ...m,
+            message_id: String(m.message_id),
+            clan_id: String(m.clan_id),
+            channel_id: String(m.channel_id),
+            sender_id: String(m.sender_id)            
+          }
+        });
         return Promise.resolve(response);
       });
   }
