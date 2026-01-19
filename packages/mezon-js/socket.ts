@@ -1969,45 +1969,73 @@ export class DefaultSocket implements Socket {
             this.onnotification(n);
           });
         } else if (message.voice_started_event) {
-          this.onvoicestarted(message.voice_started_event);
+          this.onvoicestarted(
+            this.mapVoiceStartedEvent(message.voice_started_event),
+          );
         } else if (message.voice_ended_event) {
-          this.onvoiceended(message.voice_ended_event);
+          this.onvoiceended(this.mapVoiceEndedEvent(message.voice_ended_event));
         } else if (message.voice_joined_event) {
-          this.onvoicejoined(message.voice_joined_event);
+          this.onvoicejoined(
+            this.mapVoiceJoinedEvent(message.voice_joined_event),
+          );
         } else if (message.voice_leaved_event) {
-          this.onvoiceleaved(message.voice_leaved_event);
+          this.onvoiceleaved(
+            this.mapVoiceLeavedEvent(message.voice_leaved_event),
+          );
         } else if (message.channel_created_event) {
-          this.onchannelcreated(message.channel_created_event);
+          this.onchannelcreated(
+            this.mapChannelCreatedEvent(message.channel_created_event),
+          );
         } else if (message.category_event) {
-          this.oncategoryevent(message.category_event);
+          this.oncategoryevent(this.mapCategoryEvent(message.category_event));
         } else if (message.role_event) {
-          this.onroleevent(message.role_event);
+          this.onroleevent(this.mapRoleEvent(message.role_event));
         } else if (message.event_emoji) {
-          this.oneventemoji(message.event_emoji);
+          this.oneventemoji(this.mapEventEmoji(message.event_emoji));
         } else if (message.noti_user_channel) {
           this.oneventnotiuserchannel(message.noti_user_channel);
         } else if (message.webhook_event) {
           this.oneventwebhook(message.webhook_event);
         } else if (message.channel_deleted_event) {
-          this.onchanneldeleted(message.channel_deleted_event);
+          this.onchanneldeleted(
+            this.mapChannelDeletedEvent(message.channel_deleted_event),
+          );
         } else if (message.clan_deleted_event) {
-          this.onclandeleted(message.clan_deleted_event);
+          this.onclandeleted(
+            this.mapClanDeletedEvent(message.clan_deleted_event),
+          );
         } else if (message.sticker_create_event) {
-          this.onstickercreated(message.sticker_create_event);
+          this.onstickercreated(
+            this.mapStickerCreateEvent(message.sticker_create_event),
+          );
         } else if (message.sticker_update_event) {
-          this.onstickerupdated(message.sticker_update_event);
+          this.onstickerupdated(
+            this.mapStickerUpdateEvent(message.sticker_update_event),
+          );
         } else if (message.sticker_delete_event) {
-          this.onstickerdeleted(message.sticker_delete_event);
+          this.onstickerdeleted(
+            this.mapStickerDeleteEvent(message.sticker_delete_event),
+          );
         } else if (message.channel_updated_event) {
-          this.onchannelupdated(message.channel_updated_event);
+          this.onchannelupdated(
+            this.mapChannelUpdatedEvent(message.channel_updated_event),
+          );
         } else if (message.delete_account_event) {
-          this.ondeleteaccount(message.delete_account_event);
+          this.ondeleteaccount(
+            this.mapDeleteAccountEvent(message.delete_account_event),
+          );
         } else if (message.clan_profile_updated_event) {
-          this.onclanprofileupdated(message.clan_profile_updated_event);
+          this.onclanprofileupdated(
+            this.mapClanProfileUpdatedEvent(message.clan_profile_updated_event),
+          );
         } else if (message.clan_updated_event) {
-          this.onclanupdated(message.clan_updated_event);
+          this.onclanupdated(
+            this.mapClanUpdatedEvent(message.clan_updated_event),
+          );
         } else if (message.last_seen_message_event) {
-          this.onlastseenupdated(message.last_seen_message_event);
+          this.onlastseenupdated(
+            this.mapLastSeenMessageEvent(message.last_seen_message_event),
+          );
         } else if (message.status_presence_event) {
           this.onstatuspresence(
             <StatusPresenceEvent>message.status_presence_event,
@@ -2023,7 +2051,7 @@ export class DefaultSocket implements Socket {
           this.onchannelmessage(channelMessage);
         } else if (message.message_typing_event) {
           this.onmessagetyping(
-            <MessageTypingEvent>message.message_typing_event,
+            this.mapMessageTypingEvent(message.message_typing_event),
           );
         } else if (message.message_reaction_event) {
           this.onmessagereaction(
@@ -2031,110 +2059,124 @@ export class DefaultSocket implements Socket {
           );
         } else if (message.channel_presence_event) {
           this.onchannelpresence(
-            <ChannelPresenceEvent>message.channel_presence_event,
+            this.mapChannelPresenceEvent(message.channel_presence_event),
           );
         } else if (message.last_pin_message_event) {
           this.onpinmessage(
-            <LastPinMessageEvent>message.last_pin_message_event,
+            this.mapLastPinMessageEvent(message.last_pin_message_event),
           );
         } else if (message.custom_status_event) {
-          this.oncustomstatus(<CustomStatusEvent>message.custom_status_event);
+          this.oncustomstatus(
+            this.mapCustomStatusEvent(message.custom_status_event),
+          );
         } else if (message.canvas_event) {
-          this.oncanvasevent(<ChannelCanvas>message.canvas_event);
+          this.oncanvasevent(this.mapChannelCanvas(message.canvas_event));
         } else if (message.user_channel_added_event) {
           this.onuserchanneladded(
-            <UserChannelAddedEvent>message.user_channel_added_event,
+            this.mapUserChannelAddedEvent(message.user_channel_added_event),
           );
         } else if (message.add_clan_user_event) {
-          this.onuserclanadded(<AddClanUserEvent>message.add_clan_user_event);
+          this.onuserclanadded(
+            this.mapAddClanUserEvent(message.add_clan_user_event),
+          );
         } else if (message.user_profile_updated_event) {
           this.onuserprofileupdate(
-            <UserProfileUpdatedEvent>message.user_profile_updated_event,
+            this.mapUserProfileUpdatedEvent(message.user_profile_updated_event),
           );
         } else if (message.user_channel_removed_event) {
           this.onuserchannelremoved(
-            <UserChannelRemovedEvent>message.user_channel_removed_event,
+            this.mapUserChannelRemovedEvent(message.user_channel_removed_event),
           );
         } else if (message.block_friend) {
-          this.onblockfriend(<BlockFriend>message.block_friend);
+          this.onblockfriend(this.mapBlockFriend(message.block_friend));
         } else if (message.un_block_friend) {
-          this.onunblockfriend(<UnblockFriend>message.un_block_friend);
+          this.onunblockfriend(this.mapUnblockFriend(message.un_block_friend));
         } else if (message.add_friend) {
-          this.onaddfriend(<AddFriend>message.add_friend);
+          this.onaddfriend(this.mapAddFriend(message.add_friend));
         } else if (message.remove_friend) {
-          this.onremovefriend(<RemoveFriend>message.remove_friend);
+          this.onremovefriend(this.mapRemoveFriend(message.remove_friend));
         } else if (message.user_clan_removed_event) {
           this.onuserclanremoved(
-            <UserClanRemovedEvent>message.user_clan_removed_event,
+            this.mapUserClanRemovedEvent(message.user_clan_removed_event),
           );
         } else if (message.clan_event_created) {
           this.oneventcreated(message.clan_event_created);
         } else if (message.give_coffee_event) {
           this.oncoffeegiven(<ApiGiveCoffeeEvent>message.give_coffee_event);
         } else if (message.role_assign_event) {
-          this.onroleassign(<RoleAssignedEvent>message.role_assign_event);
+          this.onroleassign(
+            this.mapRoleAssignedEvent(message.role_assign_event),
+          );
         } else if (message.streaming_started_event) {
           this.onstreamingchannelstarted(
-            <StreamingStartedEvent>message.streaming_started_event,
+            this.mapStreamingStartedEvent(message.streaming_started_event),
           );
         } else if (message.streaming_ended_event) {
           this.onstreamingchannelended(
-            <StreamingEndedEvent>message.streaming_ended_event,
+            this.mapStreamingEndedEvent(message.streaming_ended_event),
           );
         } else if (message.streaming_joined_event) {
           this.onstreamingchanneljoined(
-            <StreamingJoinedEvent>message.streaming_joined_event,
+            this.mapStreamingJoinedEvent(message.streaming_joined_event),
           );
         } else if (message.streaming_leaved_event) {
           this.onstreamingchannelleaved(
-            <StreamingLeavedEvent>message.streaming_leaved_event,
+            this.mapStreamingLeavedEvent(message.streaming_leaved_event),
           );
         } else if (message.permission_set_event) {
-          this.onpermissionset(<PermissionSet>message.permission_set_event);
+          this.onpermissionset(
+            this.mapPermissionSet(message.permission_set_event),
+          );
         } else if (message.permission_changed_event) {
           this.onpermissionchanged(
-            <PermissionChangedEvent>message.permission_changed_event,
+            this.mapPermissionChangedEvent(message.permission_changed_event),
           );
         } else if (message.unmute_event) {
-          this.onunmuteevent(<UnmuteEvent>message.unmute_event);
+          this.onunmuteevent(this.mapUnmuteEvent(message.unmute_event));
         } else if (message.token_sent_event) {
           this.ontokensent(<ApiTokenSentEvent>message.token_sent_event);
         } else if (message.message_button_clicked) {
           this.onmessagebuttonclicked(
-            <MessageButtonClicked>message.message_button_clicked,
+            this.mapMessageButtonClicked(message.message_button_clicked),
           );
         } else if (message.dropdown_box_selected) {
           this.onmessagedropdownboxselected(
-            <DropdownBoxSelected>message.dropdown_box_selected,
+            this.mapDropdownBoxSelected(message.dropdown_box_selected),
           );
         } else if (message.mark_as_read) {
-          this.onmarkasread(<MarkAsRead>message.mark_as_read);
+          this.onmarkasread(this.mapMarkAsRead(message.mark_as_read));
         } else if (message.voice_reaction_send) {
           this.onvoicereactionmessage(
-            <VoiceReactionSend>message.voice_reaction_send,
+            this.mapVoiceReactionSend(message.voice_reaction_send),
           );
         } else if (message.webrtc_signaling_fwd) {
           this.onwebrtcsignalingfwd(
-            <WebrtcSignalingFwd>message.webrtc_signaling_fwd,
+            this.mapWebrtcSignalingFwd(message.webrtc_signaling_fwd),
           );
         } else if (message.list_activity) {
           this.onactivityupdated(<ListActivity>message.list_activity);
         } else if (message.sd_topic_event) {
-          this.onsdtopicevent(<SdTopicEvent>message.sd_topic_event);
+          this.onsdtopicevent(this.mapSdTopicEvent(message.sd_topic_event));
         } else if (message.channel_app_event) {
-          this.onchannelappevent(<ChannelAppEvent>message.channel_app_event);
+          this.onchannelappevent(
+            this.mapChannelAppEvent(message.channel_app_event),
+          );
         } else if (message.user_status_event) {
-          this.onuserstatusevent(<UserStatusEvent>message.user_status_event);
+          this.onuserstatusevent(
+            this.mapUserStatusEvent(message.user_status_event),
+          );
         } else if (message.join_channel_app_data) {
           this.onjoinchannelappevent(
-            <JoinChannelAppData>message.join_channel_app_data,
+            this.mapJoinChannelAppData(message.join_channel_app_data),
           );
         } else if (message.unpin_message_event) {
           this.onunpinmessageevent(
-            <UnpinMessageEvent>message.unpin_message_event,
+            this.mapUnpinMessageEvent(message.unpin_message_event),
           );
         } else if (message.quick_menu_event) {
-          this.onquickmenuevent(<QuickMenuEvent>message.quick_menu_event);
+          this.onquickmenuevent(
+            this.mapQuickMenuEvent(message.quick_menu_event),
+          );
         } else if (message.meet_participant_event) {
           this.onmeetparticipantevent(
             this.mapMeetParticipantEvent(message.meet_participant_event),
@@ -2216,6 +2258,559 @@ export class DefaultSocket implements Socket {
     this._connectPromise = connectPromise;
     return this._connectPromise;
   }
+
+  mapVoiceStartedEvent(event: any): VoiceStartedEvent {
+    return {
+      ...event,
+      id: String(event.id || ""),
+      clan_id: String(event.clan_id || ""),
+      voice_channel_id: String(event.voice_channel_id || ""),
+    };
+  }
+
+  mapVoiceEndedEvent(event: any): VoiceEndedEvent {
+    return {
+      ...event,
+      id: String(event.id || ""),
+      clan_id: String(event.clan_id || ""),
+      voice_channel_id: String(event.voice_channel_id || ""),
+    };
+  }
+
+  mapVoiceJoinedEvent(event: any): VoiceJoinedEvent {
+    return {
+      ...event,
+      clan_id: String(event.clan_id || ""),
+      id: String(event.id || ""),
+      user_id: String(event.user_id || ""),
+      voice_channel_id: String(event.voice_channel_id || ""),
+      participant: String(event.participant || ""),
+    };
+  }
+
+  mapVoiceLeavedEvent(event: any): VoiceLeavedEvent {
+    return {
+      id: String(event.id || ""),
+      clan_id: String(event.clan_id || ""),
+      voice_channel_id: String(event.voice_channel_id || ""),
+      voice_user_id: String(event.voice_user_id || ""),
+    };
+  }
+
+  mapChannelCreatedEvent(event: any): ChannelCreatedEvent {
+    return {
+      ...event,
+      clan_id: String(event.clan_id || ""),
+      category_id: String(event.category_id || ""),
+      creator_id: String(event.creator_id || ""),
+      parent_id: String(event.parent_id || ""),
+      channel_id: String(event.channel_id || ""),
+      app_id: String(event.app_id || ""),
+    };
+  }
+
+  mapCategoryEvent(event: any): CategoryEvent {
+    return {
+      ...event,
+      clan_id: String(event.clan_id || ""),
+      id: String(event.id || ""),
+      creator_id: String(event.creator_id || ""),
+    };
+  }
+
+  mapRoleEvent(event: any): RoleEvent {
+    return {
+      ...event,
+      user_id: String(event.user_id || ""),
+      user_add_ids: (event.user_add_ids || []).map((id: any) =>
+        String(id || ""),
+      ),
+      user_remove_ids: (event.user_remove_ids || []).map((id: any) =>
+        String(id || ""),
+      ),
+      active_permission_ids: (event.active_permission_ids || []).map(
+        (id: any) => String(id || ""),
+      ),
+      remove_permission_ids: (event.remove_permission_ids || []).map(
+        (id: any) => String(id || ""),
+      ),
+      role: event.role
+        ? {
+            ...event.role,
+            id: String(event.role.id || ""),
+            clan_id: String(event.role.clan_id || ""),
+            creator_id: String(event.role.creator_id || ""),
+            role_user_list: event.role.role_user_list
+              ? {
+                  ...event.role.role_user_list,
+                  role_users: (event.role.role_user_list.role_users || []).map(
+                    (ru: any) => ({
+                      ...ru,
+                      id: String(ru.id || ""),
+                    }),
+                  ),
+                }
+              : undefined,
+          }
+        : undefined,
+    };
+  }
+
+  mapEventEmoji(event: any): EventEmoji {
+    return {
+      ...event,
+      id: String(event.id || ""),
+      clan_id: String(event.clan_id || ""),
+      user_id: String(event.user_id || ""),
+    };
+  }
+
+  mapChannelDeletedEvent(event: any): ChannelDeletedEvent {
+    return {
+      ...event,
+      clan_id: String(event.clan_id || ""),
+      category_id: String(event.category_id || ""),
+      channel_id: String(event.channel_id || ""),
+      parent_id: String(event.parent_id || ""),
+      deletor: String(event.deletor || ""),
+    };
+  }
+
+  mapClanDeletedEvent(event: any): ClanDeletedEvent {
+    return {
+      ...event,
+      clan_id: String(event.clan_id || ""),
+    };
+  }
+
+  mapStickerCreateEvent(event: any): StickerCreateEvent {
+    return {
+      ...event,
+      clan_id: String(event.clan_id || ""),
+      creator_id: String(event.creator_id || ""),
+      sticker_id: String(event.sticker_id || ""),
+    };
+  }
+
+  mapStickerUpdateEvent(event: any): StickerUpdateEvent {
+    return {
+      ...event,
+      sticker_id: String(event.sticker_id || ""),
+      user_id: String(event.user_id || ""),
+    };
+  }
+
+  mapStickerDeleteEvent(event: any): StickerDeleteEvent {
+    return {
+      ...event,
+      sticker_id: String(event.sticker_id || ""),
+      user_id: String(event.user_id || ""),
+    };
+  }
+
+  mapChannelUpdatedEvent(event: any): ChannelUpdatedEvent {
+    return {
+      ...event,
+      clan_id: String(event.clan_id || ""),
+      category_id: String(event.category_id || ""),
+      creator_id: String(event.creator_id || ""),
+      parent_id: String(event.parent_id || ""),
+      channel_id: String(event.channel_id || ""),
+      app_id: String(event.app_id || ""),
+      role_ids: event.role_ids
+        ? event.role_ids.map((id: any) => String(id || ""))
+        : undefined,
+      user_ids: event.user_ids
+        ? event.user_ids.map((id: any) => String(id || ""))
+        : undefined,
+    };
+  }
+
+  mapDeleteAccountEvent(event: any): DeleteAccountEvent {
+    return {
+      ...event,
+      user_id: String(event.user_id || ""),
+    };
+  }
+
+  mapClanProfileUpdatedEvent(event: any): ClanProfileUpdatedEvent {
+    return {
+      ...event,
+      user_id: String(event.user_id || ""),
+      clan_id: String(event.clan_id || ""),
+    };
+  }
+
+  mapClanUpdatedEvent(event: any): ClanUpdatedEvent {
+    return {
+      ...event,
+      clan_id: String(event.clan_id || ""),
+      welcome_channel_id: String(event.welcome_channel_id || ""),
+    };
+  }
+
+  mapLastSeenMessageEvent(event: any): LastSeenMessageEvent {
+    return {
+      ...event,
+      clan_id: String(event.clan_id || ""),
+      channel_id: String(event.channel_id || ""),
+      message_id: String(event.message_id || ""),
+    };
+  }
+
+  mapMessageTypingEvent(event: any): MessageTypingEvent {
+    return {
+      ...event,
+      channel_id: String(event.channel_id || ""),
+      sender_id: String(event.sender_id || ""),
+      topic_id: event.topic_id ? String(event.topic_id) : undefined,
+    };
+  }
+
+  mapChannelPresenceEvent(event: any): ChannelPresenceEvent {
+    return {
+      ...event,
+      channel_id: String(event.channel_id || ""),
+      joins:
+        event.joins || []
+          ? event.joins.map((j: Presence) => ({
+              ...j,
+              user_id: String(j.user_id || ""),
+              session_id: String(j.session_id || ""),
+            }))
+          : undefined,
+      leaves:
+        event.leaves || []
+          ? event.leaves.map((j: Presence) => ({
+              ...j,
+              user_id: String(j.user_id || ""),
+              session_id: String(j.session_id || ""),
+            }))
+          : undefined,
+    };
+  }
+
+  mapLastPinMessageEvent(event: any): LastPinMessageEvent {
+    return {
+      ...event,
+      channel_id: String(event.channel_id || ""),
+      message_id: String(event.message_id || ""),
+      user_id: String(event.user_id || ""),
+      clan_id: String(event.clan_id || ""),
+      message_sender_id: String(event.message_sender_id || ""),
+    };
+  }
+
+  mapCustomStatusEvent(event: any): CustomStatusEvent {
+    return {
+      ...event,
+      clan_id: String(event.clan_id || ""),
+      user_id: String(event.user_id || ""),
+    };
+  }
+
+  mapChannelCanvas(event: any): ChannelCanvas {
+    return {
+      ...event,
+      creator_id: event.creator_id ? String(event.creator_id) : undefined,
+      editor_id: event.editor_id ? String(event.editor_id) : undefined,
+      id: event.id ? String(event.id) : undefined,
+      channel_id: event.channel_id ? String(event.channel_id) : undefined,
+    };
+  }
+
+  // WIP - map user channel added event
+  mapUserChannelAddedEvent(event: any): UserChannelAddedEvent {
+    return {
+      ...event,
+      clan_id: String(event.clan_id || ""),
+      channel_desc: event.channel_desc
+        ? {
+            ...event.channel_desc,
+            clan_id: event.channel_desc.clan_id
+              ? String(event.channel_desc.clan_id)
+              : undefined,
+            channel_id: event.channel_desc.channel_id
+              ? String(event.channel_desc.channel_id)
+              : undefined,
+            parent_id: event.channel_desc.parent_id
+              ? String(event.channel_desc.parent_id)
+              : undefined,
+            last_sent_message: event.channel_desc.last_sent_message
+              ? {
+                  ...event.channel_desc.last_sent_message,
+                  id: event.channel_desc.last_sent_message.id
+                    ? String(event.channel_desc.last_sent_message.id)
+                    : undefined,
+                  sender_id: event.channel_desc.last_sent_message.sender_id
+                    ? String(event.channel_desc.last_sent_message.sender_id)
+                    : undefined,
+                }
+              : undefined,
+          }
+        : undefined,
+      users: (event.users || []).map((u: any) => ({
+        ...u,
+        user_id: String(u.user_id || ""),
+      })),
+      caller: event.caller
+        ? {
+            ...event.caller,
+            user_id: String(event.caller.user_id || ""),
+          }
+        : undefined,
+    };
+  }
+  //
+
+  mapAddClanUserEvent(event: any): AddClanUserEvent {
+    return {
+      ...event,
+      clan_id: String(event.clan_id || ""),
+      invitor: String(event.invitor || ""),
+      user: event.user
+        ? {
+            ...event.user,
+            user_id: String(event.user.user_id || ""),
+          }
+        : undefined,
+    };
+  }
+
+  mapUserProfileUpdatedEvent(event: any): UserProfileUpdatedEvent {
+    return {
+      ...event,
+      user_id: String(event.user_id || ""),
+      channel_id: String(event.channel_id || ""),
+      clan_id: String(event.clan_id || ""),
+    };
+  }
+
+  mapUserChannelRemovedEvent(event: any): UserChannelRemovedEvent {
+    return {
+      ...event,
+      channel_id: String(event.channel_id || ""),
+      user_ids: (event.user_ids || []).map((id: any) => String(id || "")),
+      clan_id: String(event.clan_id || ""),
+    };
+  }
+
+  mapBlockFriend(event: any): BlockFriend {
+    return {
+      ...event,
+      user_id: String(event.user_id || ""),
+    };
+  }
+
+  mapUnblockFriend(event: any): UnblockFriend {
+    return {
+      ...event,
+      user_id: String(event.user_id || ""),
+    };
+  }
+
+  mapAddFriend(event: any): AddFriend {
+    return {
+      ...event,
+      user_id: String(event.user_id || ""),
+    };
+  }
+
+  mapRemoveFriend(event: any): RemoveFriend {
+    return {
+      ...event,
+      user_id: String(event.user_id || ""),
+    };
+  }
+
+  mapUserClanRemovedEvent(event: any): UserClanRemovedEvent {
+    return {
+      ...event,
+      clan_id: String(event.clan_id || ""),
+      user_ids: (event.user_ids || []).map((id: any) => String(id || "")),
+    };
+  }
+
+  mapRoleAssignedEvent(event: any): RoleAssignedEvent {
+    return {
+      ...event,
+      ClanId: String(event.ClanId || ""),
+      role_id: String(event.role_id || ""),
+      user_ids_assigned: (event.user_ids_assigned || []).map((id: any) =>
+        String(id || ""),
+      ),
+      user_ids_removed: (event.user_ids_removed || []).map((id: any) =>
+        String(id || ""),
+      ),
+    };
+  }
+
+  mapStreamingStartedEvent(event: any): StreamingStartedEvent {
+    return {
+      ...event,
+      clan_id: String(event.clan_id || ""),
+      channel_id: String(event.channel_id || ""),
+    };
+  }
+
+  mapStreamingEndedEvent(event: any): StreamingEndedEvent {
+    return {
+      ...event,
+      clan_id: String(event.clan_id || ""),
+      channel_id: String(event.channel_id || ""),
+    };
+  }
+
+  mapStreamingJoinedEvent(event: any): StreamingJoinedEvent {
+    return {
+      ...event,
+      clan_id: String(event.clan_id || ""),
+      id: String(event.id || ""),
+      user_id: String(event.user_id || ""),
+      streaming_channel_id: String(event.streaming_channel_id || ""),
+    };
+  }
+
+  mapStreamingLeavedEvent(event: any): StreamingLeavedEvent {
+    return {
+      ...event,
+      id: String(event.id || ""),
+      clan_id: String(event.clan_id || ""),
+      streaming_channel_id: String(event.streaming_channel_id || ""),
+      streaming_user_id: String(event.streaming_user_id || ""),
+    };
+  }
+
+  mapPermissionSet(event: any): PermissionSet {
+    return {
+      ...event,
+      role_id: String(event.role_id || ""),
+      user_id: String(event.user_id || ""),
+      channel_id: String(event.channel_id || ""),
+    };
+  }
+
+  mapPermissionChangedEvent(event: any): PermissionChangedEvent {
+    return {
+      ...event,
+      user_id: String(event.user_id || ""),
+      channel_id: String(event.channel_id || ""),
+    };
+  }
+
+  mapUnmuteEvent(event: any): UnmuteEvent {
+    return {
+      ...event,
+      channel_id: String(event.channel_id || ""),
+      category_id: String(event.category_id || ""),
+      clan_id: String(event.clan_id || ""),
+    };
+  }
+
+  mapMessageButtonClicked(event: any): MessageButtonClicked {
+    return {
+      ...event,
+      message_id: String(event.message_id || ""),
+      channel_id: String(event.channel_id || ""),
+      sender_id: String(event.sender_id || ""),
+      user_id: String(event.user_id || ""),
+    };
+  }
+
+  mapDropdownBoxSelected(event: any): DropdownBoxSelected {
+    return {
+      ...event,
+      message_id: String(event.message_id || ""),
+      channel_id: String(event.channel_id || ""),
+      sender_id: String(event.sender_id || ""),
+      user_id: String(event.user_id || ""),
+    };
+  }
+
+  mapMarkAsRead(event: any): MarkAsRead {
+    return {
+      ...event,
+      channel_id: String(event.channel_id || ""),
+      category_id: String(event.category_id || ""),
+      clan_id: String(event.clan_id || ""),
+    };
+  }
+
+  mapSdTopicEvent(event: any): SdTopicEvent {
+    return {
+      ...event,
+      id: String(event.id || ""),
+      clan_id: String(event.clan_id || ""),
+      channel_id: String(event.channel_id || ""),
+      message_id: String(event.message_id || ""),
+      user_id: String(event.user_id || ""),
+    };
+  }
+
+  mapChannelAppEvent(event: any): ChannelAppEvent {
+    return {
+      ...event,
+      user_id: String(event.user_id || ""),
+      clan_id: String(event.clan_id || ""),
+      channel_id: String(event.channel_id || ""),
+    };
+  }
+
+  mapUserStatusEvent(event: any): UserStatusEvent {
+    return {
+      ...event,
+      user_id: String(event.user_id || ""),
+    };
+  }
+
+  mapJoinChannelAppData(event: any): JoinChannelAppData {
+    return {
+      ...event,
+      user_id: String(event.user_id || ""),
+    };
+  }
+
+  mapVoiceReactionSend(event: any): VoiceReactionSend {
+    return {
+      ...event,
+      channel_id: String(event.channel_id || ""),
+      sender_id: String(event.sender_id || ""),
+    };
+  }
+
+  mapWebrtcSignalingFwd(event: any): WebrtcSignalingFwd {
+    return {
+      ...event,
+      receiver_id: String(event.receiver_id || ""),
+      channel_id: String(event.channel_id || ""),
+      caller_id: String(event.caller_id || ""),
+    };
+  }
+
+  mapUnpinMessageEvent(event: any): UnpinMessageEvent {
+    return {
+      clan_id: String(event.clan_id || ""),
+      channel_id: String(event.channel_id || ""),
+      id: String(event.id || ""),
+      message_id: String(event.message_id || ""),
+    };
+  }
+
+  // WIP - map quick menu event
+  mapQuickMenuEvent(event: any): QuickMenuEvent {
+    return {
+      ...event,
+      quick_menu_event: {
+        menu_name: String(event.quick_menu_event.menu_name || ""),
+        message: {
+          clan_id: String(event.quick_menu_event.clan_id || ""),
+          channel_id: String(event.quick_menu_event.channel_id || ""),
+          topic_id: String(event.quick_menu_event.topic_id || ""),
+        },
+      },
+    };
+  }
+  //
 
   mapTransferOwnershipEvent(event: any): TransferOwnershipEvent {
     return {
