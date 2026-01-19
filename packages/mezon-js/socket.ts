@@ -2137,17 +2137,17 @@ export class DefaultSocket implements Socket {
           this.onquickmenuevent(<QuickMenuEvent>message.quick_menu_event);
         } else if (message.meet_participant_event) {
           this.onmeetparticipantevent(
-            <MeetParticipantEvent>message.meet_participant_event,
+            this.mapMeetParticipantEvent(message.meet_participant_event),
           );
         } else if (message.transfer_ownership_event) {
           this.ontransferownership(
-            <TransferOwnershipEvent>message.transfer_ownership_event,
+            this.mapTransferOwnershipEvent(message.transfer_ownership_event),
           );
         } else if (message.ban_user_event) {
-          this.onbanneduser(<BannedUserEvent>message.ban_user_event);
+          this.onbanneduser(this.mapBannedUserEvent(message.ban_user_event));
         } else if (message.allow_anonymous_event) {
           this.onallowanonymousevent(
-            <AllowAnonymousEvent>message.allow_anonymous_event,
+            this.mapAllowAnonymousEvent(message.allow_anonymous_event),
           );
         } else {
           if (this.verbose && window && window.console) {
@@ -2215,6 +2215,41 @@ export class DefaultSocket implements Socket {
 
     this._connectPromise = connectPromise;
     return this._connectPromise;
+  }
+
+  mapTransferOwnershipEvent(event: any): TransferOwnershipEvent {
+    return {
+      ...event,
+      clan_id: String(event.clan_id || ""),
+      new_owner_id: String(event.new_owner_id || ""),
+      old_owner_id: String(event.old_owner_id || ""),
+    };
+  }
+
+  mapMeetParticipantEvent(event: any): MeetParticipantEvent {
+    return {
+      ...event,
+      clan_id: String(event.clan_id || ""),
+      channel_id: String(event.channel_id || ""),
+      user_id: String(event.user_id || ""),
+    };
+  }
+
+  mapBannedUserEvent(event: any): BannedUserEvent {
+    return {
+      ...event,
+      clan_id: String(event.clan_id || ""),
+      banner_id: String(event.banner_id || ""),
+      channel_id: String(event.channel_id || ""),
+      user_ids: event.user_ids.map((id: any) => String(id || "")),
+    };
+  }
+
+  mapAllowAnonymousEvent(event: any): AllowAnonymousEvent {
+    return {
+      ...event,
+      clan_id: String(event.clan_id || ""),
+    };
   }
 
   disconnect(fireDisconnectEvent: boolean = true) {
