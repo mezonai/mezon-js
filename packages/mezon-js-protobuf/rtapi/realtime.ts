@@ -38,6 +38,8 @@ import {
   ListChannelDetailRequest,
   ListChannelMessagesRequest,
   ListChannelUsersRequest,
+  ListClanBadgeCountRequest,
+  ListClanBadgeCountResponse,
   ListClanDescRequest,
   ListClanUnreadMsgIndicatorRequest,
   ListClanUnreadMsgIndicatorResponse,
@@ -88,7 +90,6 @@ import {
   WebhookListRequest,
   WebhookListResponse,
 } from "../api/api";
-import { Timestamp } from "../google/protobuf/timestamp";
 import { BoolValue, Int32Value, StringValue } from "../google/protobuf/wrappers";
 
 export const protobufPackage = "mezon.realtime";
@@ -670,13 +671,9 @@ export interface ChannelMessageAck {
   /** Username of the message sender. */
   username: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
-  create_time:
-    | Date
-    | undefined;
+  create_time_seconds: number;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated. */
-  update_time:
-    | Date
-    | undefined;
+  update_time_seconds: number;
   /** True if the message was persisted to the channel's history, false otherwise. */
   persistent:
     | boolean
@@ -1166,9 +1163,7 @@ export interface ChannelCreatedEvent {
   /** channel private */
   channel_private: number;
   /** channel type */
-  channel_type:
-    | number
-    | undefined;
+  channel_type: number;
   /** status */
   status: number;
   /** app id */
@@ -1403,7 +1398,7 @@ export interface UserChannelAdded {
     | UserProfileRedis
     | undefined;
   /**  */
-  create_time_second: number;
+  create_time_seconds: number;
   /**  */
   active: number;
 }
@@ -1743,6 +1738,8 @@ export interface ListDataSocket {
   stream_user_list: StreamingChannelUserList | undefined;
   list_unread_msg_indicator_req: ListClanUnreadMsgIndicatorRequest | undefined;
   unread_msg_indicator: ListClanUnreadMsgIndicatorResponse | undefined;
+  list_clan_badge_count_req: ListClanBadgeCountRequest | undefined;
+  clan_badge_count: ListClanBadgeCountResponse | undefined;
 }
 
 export interface MeetParticipantEvent {
@@ -1773,7 +1770,7 @@ export interface FcmDataPayload {
   command_type: number;
   receiver_id: string;
   title: string;
-  body: string;
+  body: Uint8Array;
   user_role_ids: string[];
   user_sent_ids: string[];
   priority: number;
@@ -5610,8 +5607,8 @@ function createBaseChannelMessageAck(): ChannelMessageAck {
     message_id: "",
     code: 0,
     username: "",
-    create_time: undefined,
-    update_time: undefined,
+    create_time_seconds: 0,
+    update_time_seconds: 0,
     persistent: undefined,
     clan_logo: "",
     category_name: "",
@@ -5632,11 +5629,11 @@ export const ChannelMessageAck = {
     if (message.username !== "") {
       writer.uint32(34).string(message.username);
     }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(42).fork()).ldelim();
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(40).uint32(message.create_time_seconds);
     }
-    if (message.update_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(50).fork()).ldelim();
+    if (message.update_time_seconds !== 0) {
+      writer.uint32(48).uint32(message.update_time_seconds);
     }
     if (message.persistent !== undefined) {
       BoolValue.encode({ value: message.persistent! }, writer.uint32(58).fork()).ldelim();
@@ -5686,18 +5683,18 @@ export const ChannelMessageAck = {
           message.username = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.create_time_seconds = reader.uint32();
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.update_time_seconds = reader.uint32();
           continue;
         case 7:
           if (tag !== 58) {
@@ -5735,8 +5732,8 @@ export const ChannelMessageAck = {
       message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
       code: isSet(object.code) ? globalThis.Number(object.code) : 0,
       username: isSet(object.username) ? globalThis.String(object.username) : "",
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
-      update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
+      update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
       persistent: isSet(object.persistent) ? Boolean(object.persistent) : undefined,
       clan_logo: isSet(object.clan_logo) ? globalThis.String(object.clan_logo) : "",
       category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
@@ -5757,11 +5754,11 @@ export const ChannelMessageAck = {
     if (message.username !== "") {
       obj.username = message.username;
     }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
-    if (message.update_time !== undefined) {
-      obj.update_time = message.update_time.toISOString();
+    if (message.update_time_seconds !== 0) {
+      obj.update_time_seconds = Math.round(message.update_time_seconds);
     }
     if (message.persistent !== undefined) {
       obj.persistent = message.persistent;
@@ -5784,8 +5781,8 @@ export const ChannelMessageAck = {
     message.message_id = object.message_id ?? "";
     message.code = object.code ?? 0;
     message.username = object.username ?? "";
-    message.create_time = object.create_time ?? undefined;
-    message.update_time = object.update_time ?? undefined;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
+    message.update_time_seconds = object.update_time_seconds ?? 0;
     message.persistent = object.persistent ?? undefined;
     message.clan_logo = object.clan_logo ?? "";
     message.category_name = object.category_name ?? "";
@@ -9352,7 +9349,7 @@ function createBaseChannelCreatedEvent(): ChannelCreatedEvent {
     channel_id: "",
     channel_label: "",
     channel_private: 0,
-    channel_type: undefined,
+    channel_type: 0,
     status: 0,
     app_id: "",
     clan_name: "",
@@ -9383,8 +9380,8 @@ export const ChannelCreatedEvent = {
     if (message.channel_private !== 0) {
       writer.uint32(56).int32(message.channel_private);
     }
-    if (message.channel_type !== undefined) {
-      Int32Value.encode({ value: message.channel_type! }, writer.uint32(66).fork()).ldelim();
+    if (message.channel_type !== 0) {
+      writer.uint32(64).int32(message.channel_type);
     }
     if (message.status !== 0) {
       writer.uint32(72).int32(message.status);
@@ -9458,11 +9455,11 @@ export const ChannelCreatedEvent = {
           message.channel_private = reader.int32();
           continue;
         case 8:
-          if (tag !== 66) {
+          if (tag !== 64) {
             break;
           }
 
-          message.channel_type = Int32Value.decode(reader, reader.uint32()).value;
+          message.channel_type = reader.int32();
           continue;
         case 9:
           if (tag !== 72) {
@@ -9510,7 +9507,7 @@ export const ChannelCreatedEvent = {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
-      channel_type: isSet(object.channel_type) ? Number(object.channel_type) : undefined,
+      channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
@@ -9541,8 +9538,8 @@ export const ChannelCreatedEvent = {
     if (message.channel_private !== 0) {
       obj.channel_private = Math.round(message.channel_private);
     }
-    if (message.channel_type !== undefined) {
-      obj.channel_type = message.channel_type;
+    if (message.channel_type !== 0) {
+      obj.channel_type = Math.round(message.channel_type);
     }
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
@@ -9571,7 +9568,7 @@ export const ChannelCreatedEvent = {
     message.channel_id = object.channel_id ?? "";
     message.channel_label = object.channel_label ?? "";
     message.channel_private = object.channel_private ?? 0;
-    message.channel_type = object.channel_type ?? undefined;
+    message.channel_type = object.channel_type ?? 0;
     message.status = object.status ?? 0;
     message.app_id = object.app_id ?? "";
     message.clan_name = object.clan_name ?? "";
@@ -11452,7 +11449,7 @@ function createBaseUserChannelAdded(): UserChannelAdded {
     status: "",
     clan_id: "",
     caller: undefined,
-    create_time_second: 0,
+    create_time_seconds: 0,
     active: 0,
   };
 }
@@ -11474,8 +11471,8 @@ export const UserChannelAdded = {
     if (message.caller !== undefined) {
       UserProfileRedis.encode(message.caller, writer.uint32(42).fork()).ldelim();
     }
-    if (message.create_time_second !== 0) {
-      writer.uint32(48).uint32(message.create_time_second);
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(48).uint32(message.create_time_seconds);
     }
     if (message.active !== 0) {
       writer.uint32(56).int32(message.active);
@@ -11530,7 +11527,7 @@ export const UserChannelAdded = {
             break;
           }
 
-          message.create_time_second = reader.uint32();
+          message.create_time_seconds = reader.uint32();
           continue;
         case 7:
           if (tag !== 56) {
@@ -11555,7 +11552,7 @@ export const UserChannelAdded = {
       status: isSet(object.status) ? globalThis.String(object.status) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       caller: isSet(object.caller) ? UserProfileRedis.fromJSON(object.caller) : undefined,
-      create_time_second: isSet(object.create_time_second) ? globalThis.Number(object.create_time_second) : 0,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
     };
   },
@@ -11577,8 +11574,8 @@ export const UserChannelAdded = {
     if (message.caller !== undefined) {
       obj.caller = UserProfileRedis.toJSON(message.caller);
     }
-    if (message.create_time_second !== 0) {
-      obj.create_time_second = Math.round(message.create_time_second);
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
     if (message.active !== 0) {
       obj.active = Math.round(message.active);
@@ -11600,7 +11597,7 @@ export const UserChannelAdded = {
     message.caller = (object.caller !== undefined && object.caller !== null)
       ? UserProfileRedis.fromPartial(object.caller)
       : undefined;
-    message.create_time_second = object.create_time_second ?? 0;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
     message.active = object.active ?? 0;
     return message;
   },
@@ -14673,6 +14670,8 @@ function createBaseListDataSocket(): ListDataSocket {
     stream_user_list: undefined,
     list_unread_msg_indicator_req: undefined,
     unread_msg_indicator: undefined,
+    list_clan_badge_count_req: undefined,
+    clan_badge_count: undefined,
   };
 }
 
@@ -14877,6 +14876,12 @@ export const ListDataSocket = {
     }
     if (message.unread_msg_indicator !== undefined) {
       ListClanUnreadMsgIndicatorResponse.encode(message.unread_msg_indicator, writer.uint32(530).fork()).ldelim();
+    }
+    if (message.list_clan_badge_count_req !== undefined) {
+      ListClanBadgeCountRequest.encode(message.list_clan_badge_count_req, writer.uint32(538).fork()).ldelim();
+    }
+    if (message.clan_badge_count !== undefined) {
+      ListClanBadgeCountResponse.encode(message.clan_badge_count, writer.uint32(546).fork()).ldelim();
     }
     return writer;
   },
@@ -15353,6 +15358,20 @@ export const ListDataSocket = {
 
           message.unread_msg_indicator = ListClanUnreadMsgIndicatorResponse.decode(reader, reader.uint32());
           continue;
+        case 67:
+          if (tag !== 538) {
+            break;
+          }
+
+          message.list_clan_badge_count_req = ListClanBadgeCountRequest.decode(reader, reader.uint32());
+          continue;
+        case 68:
+          if (tag !== 546) {
+            break;
+          }
+
+          message.clan_badge_count = ListClanBadgeCountResponse.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -15517,6 +15536,12 @@ export const ListDataSocket = {
         : undefined,
       unread_msg_indicator: isSet(object.unread_msg_indicator)
         ? ListClanUnreadMsgIndicatorResponse.fromJSON(object.unread_msg_indicator)
+        : undefined,
+      list_clan_badge_count_req: isSet(object.list_clan_badge_count_req)
+        ? ListClanBadgeCountRequest.fromJSON(object.list_clan_badge_count_req)
+        : undefined,
+      clan_badge_count: isSet(object.clan_badge_count)
+        ? ListClanBadgeCountResponse.fromJSON(object.clan_badge_count)
         : undefined,
     };
   },
@@ -15724,6 +15749,12 @@ export const ListDataSocket = {
     }
     if (message.unread_msg_indicator !== undefined) {
       obj.unread_msg_indicator = ListClanUnreadMsgIndicatorResponse.toJSON(message.unread_msg_indicator);
+    }
+    if (message.list_clan_badge_count_req !== undefined) {
+      obj.list_clan_badge_count_req = ListClanBadgeCountRequest.toJSON(message.list_clan_badge_count_req);
+    }
+    if (message.clan_badge_count !== undefined) {
+      obj.clan_badge_count = ListClanBadgeCountResponse.toJSON(message.clan_badge_count);
     }
     return obj;
   },
@@ -15941,6 +15972,13 @@ export const ListDataSocket = {
         : undefined;
     message.unread_msg_indicator = (object.unread_msg_indicator !== undefined && object.unread_msg_indicator !== null)
       ? ListClanUnreadMsgIndicatorResponse.fromPartial(object.unread_msg_indicator)
+      : undefined;
+    message.list_clan_badge_count_req =
+      (object.list_clan_badge_count_req !== undefined && object.list_clan_badge_count_req !== null)
+        ? ListClanBadgeCountRequest.fromPartial(object.list_clan_badge_count_req)
+        : undefined;
+    message.clan_badge_count = (object.clan_badge_count !== undefined && object.clan_badge_count !== null)
+      ? ListClanBadgeCountResponse.fromPartial(object.clan_badge_count)
       : undefined;
     return message;
   },
@@ -16307,7 +16345,7 @@ function createBaseFcmDataPayload(): FcmDataPayload {
     command_type: 0,
     receiver_id: "",
     title: "",
-    body: "",
+    body: new Uint8Array(0),
     user_role_ids: [],
     user_sent_ids: [],
     priority: 0,
@@ -16332,8 +16370,8 @@ export const FcmDataPayload = {
     if (message.title !== "") {
       writer.uint32(26).string(message.title);
     }
-    if (message.body !== "") {
-      writer.uint32(34).string(message.body);
+    if (message.body.length !== 0) {
+      writer.uint32(34).bytes(message.body);
     }
     for (const v of message.user_role_ids) {
       writer.uint32(42).string(v!);
@@ -16401,7 +16439,7 @@ export const FcmDataPayload = {
             break;
           }
 
-          message.body = reader.string();
+          message.body = reader.bytes();
           continue;
         case 5:
           if (tag !== 42) {
@@ -16487,7 +16525,7 @@ export const FcmDataPayload = {
       command_type: isSet(object.command_type) ? globalThis.Number(object.command_type) : 0,
       receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
       title: isSet(object.title) ? globalThis.String(object.title) : "",
-      body: isSet(object.body) ? globalThis.String(object.body) : "",
+      body: isSet(object.body) ? bytesFromBase64(object.body) : new Uint8Array(0),
       user_role_ids: globalThis.Array.isArray(object?.user_role_ids)
         ? object.user_role_ids.map((e: any) => globalThis.String(e))
         : [],
@@ -16522,8 +16560,8 @@ export const FcmDataPayload = {
     if (message.title !== "") {
       obj.title = message.title;
     }
-    if (message.body !== "") {
-      obj.body = message.body;
+    if (message.body.length !== 0) {
+      obj.body = base64FromBytes(message.body);
     }
     if (message.user_role_ids?.length) {
       obj.user_role_ids = message.user_role_ids;
@@ -16566,7 +16604,7 @@ export const FcmDataPayload = {
     message.command_type = object.command_type ?? 0;
     message.receiver_id = object.receiver_id ?? "";
     message.title = object.title ?? "";
-    message.body = object.body ?? "";
+    message.body = object.body ?? new Uint8Array(0);
     message.user_role_ids = object.user_role_ids?.map((e) => e) || [];
     message.user_sent_ids = object.user_sent_ids?.map((e) => e) || [];
     message.priority = object.priority ?? 0;
@@ -16585,7 +16623,11 @@ export const FcmDataPayload = {
 
 function bytesFromBase64(b64: string): Uint8Array {
   if ((globalThis as any).Buffer) {
+<<<<<<< HEAD
     return Uint8Array.from((globalThis as any).Buffer.from(b64, "base64"));
+=======
+    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
+>>>>>>> ed15f1ec7289273d390a915411e48d9f948b3355
   } else {
     const bin = globalThis.atob(b64);
     const arr = new Uint8Array(bin.length);
@@ -16598,7 +16640,11 @@ function bytesFromBase64(b64: string): Uint8Array {
 
 function base64FromBytes(arr: Uint8Array): string {
   if ((globalThis as any).Buffer) {
+<<<<<<< HEAD
     return (globalThis as any).Buffer.from(arr).toString("base64");
+=======
+    return globalThis.Buffer.from(arr).toString("base64");
+>>>>>>> ed15f1ec7289273d390a915411e48d9f948b3355
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {
@@ -16619,28 +16665,6 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
-
-function toTimestamp(date: Date): Timestamp {
-  const seconds = Math.trunc(date.getTime() / 1_000);
-  const nanos = (date.getTime() % 1_000) * 1_000_000;
-  return { seconds, nanos };
-}
-
-function fromTimestamp(t: Timestamp): Date {
-  let millis = (t.seconds || 0) * 1_000;
-  millis += (t.nanos || 0) / 1_000_000;
-  return new globalThis.Date(millis);
-}
-
-function fromJsonTimestamp(o: any): Date {
-  if (o instanceof globalThis.Date) {
-    return o;
-  } else if (typeof o === "string") {
-    return new globalThis.Date(o);
-  } else {
-    return fromTimestamp(Timestamp.fromJSON(o));
-  }
-}
 
 function isObject(value: any): boolean {
   return typeof value === "object" && value !== null;
