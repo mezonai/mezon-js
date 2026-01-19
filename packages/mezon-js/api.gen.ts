@@ -2708,7 +2708,7 @@ export interface ApiUpdateCategoryDescRequest {
   //
   category_name?: string;
   // clan ID
-  Clanid: string;
+  clan_id: string;
 }
 /**  */
 export interface ApiUpdateCategoryOrderRequest {
@@ -3454,6 +3454,28 @@ export interface ApiTransferOwnershipRequest {
   clan_id?: string;
   //
   new_owner_id?: string;
+}
+
+export interface ApiDirectFcmProto {
+  title: string;
+  link: string;
+  content: string;
+  channel_id: string;
+  sender_id: string;
+  avatar: string;
+  clan_id: string;
+  attachment_link: string;
+  display_name: string;
+  create_time_seconds: number;
+  update_time_seconds: number;
+  username: string;
+  mention_ids: string[];
+  position_s: number[];
+  position_e: number[];
+  attachment_type: string;
+  has_more_attachment: boolean;
+  is_mention_role: boolean[];
+  message_id: string;
 }
 
 export class MezonApi {

@@ -1368,15 +1368,15 @@ function CreateChannelMessageFromEvent(message: any) {
     console.log("referenced messages is invalid", e);
   }
   var e: ChannelMessage = {
-    id: message.id || message.channel_message.message_id,
+    id: String(message.id) || String(message.channel_message.message_id),
     avatar: message.channel_message.avatar,
-    channel_id: message.channel_message.channel_id,
+    channel_id: String(message.channel_message.channel_id),
     mode: message.channel_message.mode,
     channel_label: message.channel_message.channel_label,
-    clan_id: message.channel_message.clan_id,
+    clan_id: String(message.channel_message.clan_id),
     code: message.channel_message.code,
-    message_id: message.channel_message.message_id,
-    sender_id: message.channel_message.sender_id,
+    message_id: String(message.channel_message.message_id),
+    sender_id: String(message.channel_message.sender_id),
     update_time: message.channel_message.update_time,
     clan_logo: message.channel_message.clan_logo,
     category_name: message.channel_message.category_name,
@@ -1394,7 +1394,7 @@ function CreateChannelMessageFromEvent(message: any) {
     is_public: message.channel_message.is_public,
     create_time_seconds: message.channel_message.create_time_seconds,
     update_time_seconds: message.channel_message.update_time_seconds,
-    topic_id: message.channel_message.topic_id,
+    topic_id: String(message.channel_message.topic_id),
   };
 
   return e;
