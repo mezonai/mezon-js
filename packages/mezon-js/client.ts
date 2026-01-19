@@ -171,6 +171,8 @@ import {
   ApiMessageMention,
   ApiMessageAttachment,
   ApiMessageRef,
+  ApiChannelCanvasDetailResponse,
+  ApiListFavoriteChannelResponse,
 } from "./api.gen";
 import { PinMessagesList } from "./api/api";
 
@@ -495,7 +497,11 @@ export class Client {
     return this.apiClient
       .AuthenticateEmailOTPRequest(this.serverkey, "", request, username)
       .then((response: ApiLinkAccountConfirmRequest) => {
-        return Promise.resolve(response);
+        var result = {
+          ...response,
+          req_id: String(response.req_id)
+        }
+        return Promise.resolve(result);
       });
   }
 
@@ -3161,18 +3167,22 @@ export class Client {
     return this.apiClient
       .listApps(session.token)
       .then((response: ApiAppList) => {
-        response.apps?.map(a => {
+        response.apps?.map((a) => {
           return {
             ...a,
             id: String(a.id),
-            creator_id: String(a.creator_id)
-          }
+            creator_id: String(a.creator_id),
+          };
         });
         return Promise.resolve(response);
       });
   }
 
-  async addAppToClan(session: Session, appId: string, clanId: string): Promise<Boolean> {
+  async addAppToClan(
+    session: Session,
+    appId: string,
+    clanId: string,
+  ): Promise<Boolean> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -3202,13 +3212,13 @@ export class Client {
     return this.apiClient
       .getSystemMessagesList(session.token)
       .then((response: ApiSystemMessagesList) => {
-        response.system_messages_list?.map(s => {
+        response.system_messages_list?.map((s) => {
           return {
             ...s,
             id: String(s.id),
             channel_id: String(s.channel_id),
-            clan_id: String(s.clan_id)
-          }
+            clan_id: String(s.clan_id),
+          };
         });
         return Promise.resolve(response);
       });
@@ -3233,8 +3243,8 @@ export class Client {
           ...response,
           id: String(response.id),
           channel_id: String(response.channel_id),
-          clan_id: String(response.clan_id)
-        }
+          clan_id: String(response.clan_id),
+        };
         return Promise.resolve(result);
       });
   }
@@ -3435,11 +3445,11 @@ export class Client {
     return this.apiClient
       .getChannelCategoryNotiSettingsList(session.token, clanId)
       .then((response: ApiNotificationChannelCategorySettingList) => {
-        response.notification_channel_category_settings_list?.map(n => {
+        response.notification_channel_category_settings_list?.map((n) => {
           return {
             ...n,
-            id: String(n.id)
-          }
+            id: String(n.id),
+          };
         });
         return Promise.resolve(response);
       });
@@ -3463,8 +3473,8 @@ export class Client {
         var result = {
           ...response,
           id: String(response.id),
-          channel_id: String(response.channel_id)
-        }
+          channel_id: String(response.channel_id),
+        };
         return Promise.resolve(result);
       });
   }
@@ -3487,8 +3497,8 @@ export class Client {
         var result = {
           ...response,
           id: String(response.id),
-          channel_id: String(response.channel_id)
-        }
+          channel_id: String(response.channel_id),
+        };
         return Promise.resolve(result);
       });
   }
@@ -3510,8 +3520,8 @@ export class Client {
       .then((response: ApiNotificationSetting) => {
         var result = {
           ...response,
-          id: String(response.id)
-        }
+          id: String(response.id),
+        };
         return Promise.resolve(result);
       });
   }
@@ -3535,8 +3545,8 @@ export class Client {
           ...response,
           id: String(response.id),
           channel_id: String(response.channel_id),
-          user_id: String(response.user_id)
-        }
+          user_id: String(response.user_id),
+        };
         return Promise.resolve(result);
       });
   }
@@ -3553,7 +3563,7 @@ export class Client {
     return this.apiClient
       .listChannelByUserId(session.token)
       .then((response: ApiChannelDescList) => {
-        response.channeldesc?.map(c => {
+        response.channeldesc?.map((c) => {
           return {
             ...c,
             clan_id: String(c.clan_id),
@@ -3561,8 +3571,8 @@ export class Client {
             creator_id: String(c.creator_id),
             category_id: String(c.category_id),
             parent_id: String(c.parent_id),
-            app_id: String(c.app_id)
-          }
+            app_id: String(c.app_id),
+          };
         });
         return Promise.resolve(response);
       });
@@ -3587,8 +3597,8 @@ export class Client {
         var result = {
           ...response,
           channel_id: String(response.channel_id),
-          user_ids: response.user_ids?.map(u => String(u))
-        }
+          user_ids: response.user_ids?.map((u) => String(u)),
+        };
         return Promise.resolve(result);
       });
   }
@@ -3607,13 +3617,13 @@ export class Client {
     return this.apiClient
       .getListEmojisByUserId(session.token)
       .then((response: ApiEmojiListedResponse) => {
-        response.emoji_list?.map(e => {
+        response.emoji_list?.map((e) => {
           return {
             ...e,
             clan_id: String(e.clan_id),
             creator_id: String(e.creator_id),
             id: String(e.id),
-          }
+          };
         });
         return Promise.resolve(response);
       });
@@ -3631,12 +3641,12 @@ export class Client {
     return this.apiClient
       .emojiRecentList(session.token)
       .then((response: ApiEmojiRecentList) => {
-        response.emoji_recents?.map(e => {
+        response.emoji_recents?.map((e) => {
           return {
             ...e,
             emoji_id: String(e.emoji_id),
-            emoji_recents_id: String(e.emoji_recents_id)
-          }
+            emoji_recents_id: String(e.emoji_recents_id),
+          };
         });
         return Promise.resolve(response);
       });
@@ -3655,7 +3665,15 @@ export class Client {
 
     return this.apiClient
       .getListStickersByUserId(session.token)
-      .then((response: any) => {
+      .then((response: ApiStickerListedResponse) => {
+        response.stickers?.map((s) => {
+          return {
+            ...s,
+            clan_id: String(s.clan_id),
+            creator_id: String(s.creator_id),
+            id: String(s.id),
+          };
+        });
         return Promise.resolve(response);
       });
   }
@@ -3695,8 +3713,20 @@ export class Client {
       .listRoles(session.token, clanId, limit, state, cursor)
       .then((response: ApiRoleListEventResponse) => {
         var result: ApiRoleListEventResponse = {
-          clan_id: clanId,
-          roles: response.roles,
+          ...response,
+          clan_id: String(clanId),
+          roles: {
+            ...response.roles,
+            roles: response.roles?.roles?.map((r) => {
+              return {
+                ...r,
+                id: String(r.id),
+                clan_id: String(r.clan_id),
+                creator_id: String(r.creator_id),
+                channel_ids: r.channel_ids?.map((c) => String(c)),
+              };
+            }),
+          },
         };
 
         return Promise.resolve(result);
@@ -3720,9 +3750,16 @@ export class Client {
       .listUserPermissionInChannel(session.token, clanId, channelId)
       .then((response: ApiUserPermissionInChannelListResponse) => {
         var result: ApiUserPermissionInChannelListResponse = {
-          clan_id: clanId,
-          channel_id: channelId,
-          permissions: response.permissions,
+          clan_id: String(clanId),
+          channel_id: String(channelId),
+          permissions: {
+            ...response.permissions,
+            permissions: response.permissions?.permissions?.map((p) => {
+              return {
+                id: String(p.id),
+              };
+            }),
+          },
         };
 
         return Promise.resolve(result);
@@ -3749,7 +3786,14 @@ export class Client {
         var result: ApiPermissionRoleChannelListEventResponse = {
           role_id: roleId,
           channel_id: channelId,
-          permission_role_channel: response.permission_role_channel,
+          permission_role_channel: response.permission_role_channel?.map(
+            (p) => {
+              return {
+                ...p,
+                permission_id: String(p.permission_id),
+              };
+            },
+          ),
           user_id: userId,
         };
 
@@ -3813,7 +3857,16 @@ export class Client {
           return Promise.resolve(result);
         }
 
-        result.channeldesc = response.channeldesc;
+        result.channeldesc = response.channeldesc?.map((c) => {
+          return {
+            ...c,
+            clan_id: String(c.clan_id),
+            channel_id: String(c.channel_id),
+            category_id: String(c.category_id),
+            creator_id: String(c.creator_id),
+            parent_id: String(c.parent_id),
+          };
+        });
         return Promise.resolve(result);
       });
   }
@@ -3873,8 +3926,22 @@ export class Client {
         page,
         channelLabel,
       )
-      .then((response: any) => {
-        return Promise.resolve(response);
+      .then((response: ApiChannelSettingListResponse) => {
+        var result = {
+          ...response,
+          clan_id: clanId,
+          channel_setting_list: response.channel_setting_list?.map((c) => {
+            return {
+              ...c,
+              category_id: String(c.category_id),
+              parent_id: String(c.parent_id),
+              creator_id: String(c.creator_id),
+              id: String(c.id),
+              user_ids: c.user_ids?.map((u) => String(u)),
+            };
+          }),
+        };
+        return Promise.resolve(result);
       });
   }
 
@@ -3896,19 +3963,16 @@ export class Client {
     return this.apiClient
       .getChannelCanvasList(session.token, channelId, clanId, limit, page)
       .then((response: ApiChannelCanvasListResponse) => {
-        var result: ApiChannelCanvasListResponse = {
-          channel_canvases: [],
-        };
-
-        if (response.channel_canvases == null) {
-          return Promise.resolve(result);
-        }
-
-        result.clan_id = response.clan_id;
-        result.channel_id = response.channel_id;
-        result.channel_canvases = response.channel_canvases;
-        result.count = response.count;
-        return Promise.resolve(result);
+        response.channel_id = channelId;
+        response.clan_id = clanId;
+        response.channel_canvases?.map((c) => {
+          return {
+            ...c,
+            id: String(c.id),
+            creator_id: String(c.creator_id),
+          };
+        });
+        return Promise.resolve(response);
       });
   }
 
@@ -3917,7 +3981,7 @@ export class Client {
     id: string,
     clanId?: string,
     channelId?: string,
-  ): Promise<any> {
+  ): Promise<ApiChannelCanvasDetailResponse> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -3928,8 +3992,14 @@ export class Client {
 
     return this.apiClient
       .getChannelCanvasDetail(session.token, id, clanId, channelId)
-      .then((response: any) => {
-        return Promise.resolve(response);
+      .then((response: ApiChannelCanvasDetailResponse) => {
+        var result = {
+          ...response,
+          id: String(response.id),
+          creator_id: String(response.creator_id),
+          editor_id: String(response.editor_id),
+        };
+        return Promise.resolve(result);
       });
   }
 
@@ -4017,7 +4087,10 @@ export class Client {
       });
   }
 
-  async getListFavoriteChannel(session: Session, clanId: string): Promise<any> {
+  async getListFavoriteChannel(
+    session: Session,
+    clanId: string,
+  ): Promise<ApiListFavoriteChannelResponse> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4028,10 +4101,12 @@ export class Client {
 
     return this.apiClient
       .getListFavoriteChannel(session.token, clanId)
-      .then((response: any) => {
+      .then((response: ApiListFavoriteChannelResponse) => {
+        response.channel_ids?.map((c) => String(c));
         return response;
       });
   }
+
   /** List activity */
   async listActivity(session: Session): Promise<ApiListUserActivity> {
     if (
@@ -4042,9 +4117,18 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listActivity(session.token).then((response: any) => {
-      return response;
-    });
+    return this.apiClient
+      .listActivity(session.token)
+      .then((response: ApiListUserActivity) => {
+        response.activities?.map((a) => {
+          return {
+            ...a,
+            user_id: String(a.user_id),
+            application_id: String(a.application_id),
+          };
+        });
+        return response;
+      });
   }
 
   async createActiviy(
