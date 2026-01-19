@@ -2737,7 +2737,7 @@ export class DefaultSocket implements Socket {
   async joinClanChat(clan_id: string): Promise<ClanJoin> {
     const response = await this.send({
       clan_join: {
-        clan_id: clan_id,
+        clan_id: BigInt(clan_id),
       },
     });
 
@@ -2760,8 +2760,8 @@ export class DefaultSocket implements Socket {
   ): Promise<Channel> {
     const response = await this.send({
       channel_join: {
-        clan_id: clan_id,
-        channel_id: channel_id,
+        clan_id: BigInt(clan_id),
+        channel_id: BigInt(channel_id),
         channel_type: channel_type,
         is_public: is_public,
       },
@@ -2779,8 +2779,8 @@ export class DefaultSocket implements Socket {
   ): Promise<void> {
     const response = await this.send({
       handle_participant_meet_state_event: {
-        clan_id: clan_id,
-        channel_id: channel_id,
+        clan_id: BigInt(clan_id),
+        channel_id: BigInt(channel_id),
         display_name: display_name,
         state: state,
         room_name: room_name,
@@ -2798,8 +2798,8 @@ export class DefaultSocket implements Socket {
   ): Promise<void> {
     return this.send({
       channel_leave: {
-        clan_id: clan_id,
-        channel_id: channel_id,
+        clan_id: BigInt(clan_id),
+        channel_id: BigInt(channel_id),
         channel_type: channel_type,
         is_public: is_public,
       },
@@ -2819,13 +2819,13 @@ export class DefaultSocket implements Socket {
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_remove: {
-        clan_id: clan_id,
-        channel_id: channel_id,
+        clan_id: BigInt(clan_id),
+        channel_id: BigInt(channel_id),
         mode: mode,
-        message_id: message_id,
+        message_id: BigInt(message_id),
         is_public: is_public,
         has_attachment: has_attachment,
-        topic_id: topic_id,
+        topic_id: BigInt(topic_id || 0),
         mentions: mentions,
         references: references,
       },
@@ -2837,7 +2837,7 @@ export class DefaultSocket implements Socket {
   async rpc(id?: string, payload?: string, http_key?: string): Promise<ApiRpc> {
     const response = await this.send({
       rpc: {
-        id: id,
+        id: BigInt(id || 0),
         payload: payload,
         http_key: http_key,
       },
@@ -2866,16 +2866,16 @@ export class DefaultSocket implements Socket {
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_update: {
-        clan_id: clan_id,
-        channel_id: channel_id,
-        message_id: message_id,
+        clan_id: BigInt(clan_id),
+        channel_id: BigInt(channel_id),
+        message_id: BigInt(message_id),
         content: content,
         mentions: mentions,
         attachments: attachments,
         mode: mode,
         is_public: is_public,
         hide_editted: hideEditted,
-        topic_id: topic_id,
+        topic_id: BigInt(topic_id || 0),
         is_update_msg_topic: is_update_msg_topic,
         old_mentions: old_mentions,
       },
@@ -2907,8 +2907,8 @@ export class DefaultSocket implements Socket {
       quick_menu_event: {
         menu_name: menu_name,
         message: {
-          clan_id: clan_id,
-          channel_id: channel_id,
+          clan_id: BigInt(clan_id),
+          channel_id: BigInt(channel_id),
           mode: mode,
           is_public: is_public,
           content: content,
@@ -2919,7 +2919,7 @@ export class DefaultSocket implements Socket {
           mention_everyone: mention_everyone,
           avatar: avatar,
           code: code,
-          topic_id: topic_id,
+          topic_id: BigInt(topic_id || 0),
         },
       },
     });
@@ -2947,8 +2947,8 @@ export class DefaultSocket implements Socket {
       ephemeral_message_send: {
         receiver_id: receiver_id,
         message: {
-          clan_id: clan_id,
-          channel_id: channel_id,
+          clan_id: BigInt(clan_id),
+          channel_id: BigInt(channel_id),
           mode: mode,
           is_public: is_public,
           content: content,
@@ -2959,8 +2959,8 @@ export class DefaultSocket implements Socket {
           mention_everyone: mention_everyone,
           avatar: avatar,
           code: code,
-          topic_id: topic_id,
-          id: id,
+          topic_id: BigInt(topic_id || 0),
+          id: BigInt(id || 0),
         },
       },
     });
@@ -2985,8 +2985,8 @@ export class DefaultSocket implements Socket {
     const response = await this.send(
       {
         channel_message_send: {
-          clan_id: clan_id,
-          channel_id: channel_id,
+          clan_id: BigInt(clan_id),
+          channel_id: BigInt(channel_id),
           mode: mode,
           is_public: is_public,
           content: content,
@@ -2997,7 +2997,7 @@ export class DefaultSocket implements Socket {
           mention_everyone: mention_everyone,
           avatar: avatar,
           code: code,
-          topic_id: topic_id,
+          topic_id: BigInt(topic_id || 0),
         },
       },
       Infinity,
@@ -3023,19 +3023,19 @@ export class DefaultSocket implements Socket {
   ): Promise<ApiMessageReaction> {
     const response = await this.send({
       message_reaction_event: {
-        id: id,
-        clan_id: clan_id,
-        channel_id: channel_id,
+        id: BigInt(id),
+        clan_id: BigInt(clan_id),
+        channel_id: BigInt(channel_id),
         mode: mode,
         is_public: is_public,
-        message_id: message_id,
-        emoji_id: emoji_id,
+        message_id: BigInt(message_id),
+        emoji_id: BigInt(emoji_id),
         emoji: emoji,
         count: count,
-        message_sender_id: message_sender_id,
+        message_sender_id: BigInt(message_sender_id),
         action: action_delete,
-        topic_id: topic_id,
-        emoji_recent_id: emoji_recent_id,
+        topic_id: BigInt(topic_id || 0),
+        emoji_recent_id: BigInt(emoji_recent_id || 0),
         sender_name: sender_name,
       },
     });
@@ -3052,12 +3052,12 @@ export class DefaultSocket implements Socket {
   ): Promise<MessageTypingEvent> {
     const response = await this.send({
       message_typing_event: {
-        clan_id: clan_id,
-        channel_id: channel_id,
+        clan_id: BigInt(clan_id),
+        channel_id: BigInt(channel_id),
         mode: mode,
         is_public: is_public,
         sender_display_name: sender_display_name,
-        topic_id: topic_id,
+        topic_id: BigInt(topic_id || 0),
       },
     });
     return response.message_typing_event;
@@ -3073,10 +3073,10 @@ export class DefaultSocket implements Socket {
   ): Promise<LastSeenMessageEvent> {
     const response = await this.send({
       last_seen_message_event: {
-        clan_id: clan_id,
-        channel_id: channel_id,
+        clan_id: BigInt(clan_id),
+        channel_id: BigInt(channel_id),
         mode: mode,
-        message_id: message_id,
+        message_id: BigInt(message_id),
         timestamp_seconds: timestamp_seconds,
         badge_count: badge_count,
       },
@@ -3101,15 +3101,15 @@ export class DefaultSocket implements Socket {
   ): Promise<LastPinMessageEvent> {
     const response = await this.send({
       last_pin_message_event: {
-        clan_id: clan_id,
-        channel_id: channel_id,
+        clan_id: BigInt(clan_id),
+        channel_id: BigInt(channel_id),
         mode: mode,
         is_public: is_public,
-        message_id: message_id,
+        message_id: BigInt(message_id),
         timestamp_seconds: timestamp_seconds,
         operation: operation,
         message_sender_avatar: message_sender_avatar,
-        message_sender_id: message_sender_id,
+        message_sender_id: BigInt(message_sender_id),
         message_sender_username: message_sender_username,
         message_content: message_content,
         message_attachment: message_attachment,
@@ -3127,7 +3127,7 @@ export class DefaultSocket implements Socket {
   ): Promise<CustomStatusEvent> {
     const response = await this.send({
       custom_status_event: {
-        clan_id: clan_id,
+        clan_id: BigInt(clan_id),
         status: status,
         time_reset: time_reset,
         no_clear: no_clear,
@@ -3142,8 +3142,8 @@ export class DefaultSocket implements Socket {
   ): Promise<void> {
     const response = await this.send({
       active_archived_thread: {
-        clan_id: clan_id,
-        channel_id: channel_id,
+        clan_id: BigInt(clan_id),
+        channel_id: BigInt(channel_id),
       },
     });
     return response.active_archived_thread;
@@ -3160,7 +3160,7 @@ export class DefaultSocket implements Socket {
         name: name,
         condition_id: condition_id,
         type: type,
-        clan_id: clan_id,
+        clan_id: BigInt(clan_id),
       },
     });
     return response.check_name_existed_event;
@@ -3173,7 +3173,7 @@ export class DefaultSocket implements Socket {
     const response = await this.send({
       voice_reaction_send: {
         emojis: emojis,
-        channel_id: channel_id,
+        channel_id: BigInt(channel_id),
       },
     });
     return response.voice_reaction_send;
@@ -3191,7 +3191,7 @@ export class DefaultSocket implements Socket {
         receiver_id: receiver_id,
         data_type: data_type,
         json_data: json_data,
-        channel_id: channel_id,
+        channel_id: BigInt(channel_id),
         caller_id: caller_id,
       },
     });
@@ -3208,7 +3208,7 @@ export class DefaultSocket implements Socket {
       incoming_call_push: {
         receiver_id: receiver_id,
         json_data: json_data,
-        channel_id: channel_id,
+        channel_id: BigInt(channel_id),
         caller_id: caller_id,
       },
     });
@@ -3225,8 +3225,8 @@ export class DefaultSocket implements Socket {
   ): Promise<DropdownBoxSelected> {
     const response = await this.send({
       dropdown_box_selected: {
-        message_id: message_id,
-        channel_id: channel_id,
+        message_id: BigInt(message_id),
+        channel_id: BigInt(channel_id),
         selectbox_id: selectbox_id,
         sender_id: sender_id,
         user_id: user_id,
@@ -3246,8 +3246,8 @@ export class DefaultSocket implements Socket {
   ): Promise<MessageButtonClicked> {
     const response = await this.send({
       message_button_clicked: {
-        message_id: message_id,
-        channel_id: channel_id,
+        message_id: BigInt(message_id),
+        channel_id: BigInt(channel_id),
         button_id: button_id,
         sender_id: sender_id,
         user_id: user_id,
@@ -3264,8 +3264,8 @@ export class DefaultSocket implements Socket {
   ): Promise<ChannelAppEvent> {
     const response = await this.send({
       channel_app_event: {
-        clan_id: clan_id,
-        channel_id: channel_id,
+        clan_id: BigInt(clan_id),
+        channel_id: BigInt(channel_id),
         action: action,
       },
     });
