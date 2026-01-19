@@ -2270,7 +2270,7 @@ export interface SearchMessageDocument {
   /** Reactions */
   reactions: string;
   /** Attachment */
-  attachments: MessageAttachment[];
+  attachments: string;
   /** Reference users */
   references: string;
   /** Message create time */
@@ -22758,7 +22758,7 @@ function createBaseSearchMessageDocument(): SearchMessageDocument {
     content: "",
     mentions: "",
     reactions: "",
-    attachments: [],
+    attachments: "",
     references: "",
     create_time: "",
     update_time: "",
@@ -22794,8 +22794,8 @@ export const SearchMessageDocument = {
     if (message.reactions !== "") {
       writer.uint32(58).string(message.reactions);
     }
-    for (const v of message.attachments) {
-      MessageAttachment.encode(v!, writer.uint32(66).fork()).ldelim();
+    if (message.attachments !== "") {
+      writer.uint32(66).string(message.attachments);
     }
     if (message.references !== "") {
       writer.uint32(74).string(message.references);
@@ -22888,7 +22888,7 @@ export const SearchMessageDocument = {
             break;
           }
 
-          message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
+          message.attachments = reader.string();
           continue;
         case 9:
           if (tag !== 74) {
@@ -22971,9 +22971,7 @@ export const SearchMessageDocument = {
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       mentions: isSet(object.mentions) ? globalThis.String(object.mentions) : "",
       reactions: isSet(object.reactions) ? globalThis.String(object.reactions) : "",
-      attachments: globalThis.Array.isArray(object?.attachments)
-        ? object.attachments.map((e: any) => MessageAttachment.fromJSON(e))
-        : [],
+      attachments: isSet(object.attachments) ? globalThis.String(object.attachments) : "",
       references: isSet(object.references) ? globalThis.String(object.references) : "",
       create_time: isSet(object.create_time) ? globalThis.String(object.create_time) : "",
       update_time: isSet(object.update_time) ? globalThis.String(object.update_time) : "",
@@ -23009,8 +23007,8 @@ export const SearchMessageDocument = {
     if (message.reactions !== "") {
       obj.reactions = message.reactions;
     }
-    if (message.attachments?.length) {
-      obj.attachments = message.attachments.map((e) => MessageAttachment.toJSON(e));
+    if (message.attachments !== "") {
+      obj.attachments = message.attachments;
     }
     if (message.references !== "") {
       obj.references = message.references;
@@ -23054,7 +23052,7 @@ export const SearchMessageDocument = {
     message.content = object.content ?? "";
     message.mentions = object.mentions ?? "";
     message.reactions = object.reactions ?? "";
-    message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
+    message.attachments = object.attachments ?? "";
     message.references = object.references ?? "";
     message.create_time = object.create_time ?? "";
     message.update_time = object.update_time ?? "";
