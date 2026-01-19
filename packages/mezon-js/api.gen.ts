@@ -1722,6 +1722,8 @@ export interface ApiMessageAttachment {
   sender_id?: string;
   // duration for video in seconds
   duration?: number;
+  // create_time_seconds
+  create_time_seconds?: number;
 }
 
 /**  */

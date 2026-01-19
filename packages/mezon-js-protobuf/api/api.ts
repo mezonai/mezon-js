@@ -22751,10 +22751,10 @@ export const FilterParam = {
 
 function createBaseSearchMessageDocument(): SearchMessageDocument {
   return {
-    message_id: "0",
-    channel_id: "0",
-    clan_id: "0",
-    sender_id: "0",
+    message_id: "",
+    channel_id: "",
+    clan_id: "",
+    sender_id: "",
     content: "",
     mentions: "",
     reactions: "",
@@ -22773,17 +22773,17 @@ function createBaseSearchMessageDocument(): SearchMessageDocument {
 
 export const SearchMessageDocument = {
   encode(message: SearchMessageDocument, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.message_id !== "0") {
-      writer.uint32(8).int64(message.message_id);
+    if (message.message_id !== "") {
+      writer.uint32(10).string(message.message_id);
     }
-    if (message.channel_id !== "0") {
-      writer.uint32(16).int64(message.channel_id);
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
     }
-    if (message.clan_id !== "0") {
-      writer.uint32(24).int64(message.clan_id);
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
     }
-    if (message.sender_id !== "0") {
-      writer.uint32(32).int64(message.sender_id);
+    if (message.sender_id !== "") {
+      writer.uint32(34).string(message.sender_id);
     }
     if (message.content !== "") {
       writer.uint32(42).string(message.content);
@@ -22835,32 +22835,32 @@ export const SearchMessageDocument = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.message_id = longToString(reader.int64() as Long);
+          message.message_id = reader.string();
           continue;
         case 2:
-          if (tag !== 16) {
+          if (tag !== 18) {
             break;
           }
 
-          message.channel_id = longToString(reader.int64() as Long);
+          message.channel_id = reader.string();
           continue;
         case 3:
-          if (tag !== 24) {
+          if (tag !== 26) {
             break;
           }
 
-          message.clan_id = longToString(reader.int64() as Long);
+          message.clan_id = reader.string();
           continue;
         case 4:
-          if (tag !== 32) {
+          if (tag !== 34) {
             break;
           }
 
-          message.sender_id = longToString(reader.int64() as Long);
+          message.sender_id = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
@@ -22964,10 +22964,10 @@ export const SearchMessageDocument = {
 
   fromJSON(object: any): SearchMessageDocument {
     return {
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
-      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "0",
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       mentions: isSet(object.mentions) ? globalThis.String(object.mentions) : "",
       reactions: isSet(object.reactions) ? globalThis.String(object.reactions) : "",
@@ -22986,16 +22986,16 @@ export const SearchMessageDocument = {
 
   toJSON(message: SearchMessageDocument): unknown {
     const obj: any = {};
-    if (message.message_id !== "0") {
+    if (message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.channel_id !== "0") {
+    if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== "0") {
+    if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.sender_id !== "0") {
+    if (message.sender_id !== "") {
       obj.sender_id = message.sender_id;
     }
     if (message.content !== "") {
@@ -23045,10 +23045,10 @@ export const SearchMessageDocument = {
   },
   fromPartial<I extends Exact<DeepPartial<SearchMessageDocument>, I>>(object: I): SearchMessageDocument {
     const message = createBaseSearchMessageDocument();
-    message.message_id = object.message_id ?? "0";
-    message.channel_id = object.channel_id ?? "0";
-    message.clan_id = object.clan_id ?? "0";
-    message.sender_id = object.sender_id ?? "0";
+    message.message_id = object.message_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.sender_id = object.sender_id ?? "";
     message.content = object.content ?? "";
     message.mentions = object.mentions ?? "";
     message.reactions = object.reactions ?? "";
