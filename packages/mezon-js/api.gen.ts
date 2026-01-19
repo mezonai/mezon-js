@@ -4032,10 +4032,7 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.LinkAccountConfirmRequest.encode(
-      tsproto.LinkAccountConfirmRequest.fromPartial({
-        ...body,
-        req_id: BigInt(body.req_id || "0"),
-      }),
+      tsproto.LinkAccountConfirmRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 

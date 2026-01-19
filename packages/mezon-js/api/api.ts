@@ -3648,7 +3648,7 @@ export interface AccountMezon_VarsEntry {
 
 export interface LinkAccountConfirmRequest {
   /** The request id */
-  req_id: bigint;
+  req_id: string;
   /** Status */
   status: number;
   /** The confirm code */
@@ -39678,16 +39678,13 @@ export const AccountMezon_VarsEntry = {
 };
 
 function createBaseLinkAccountConfirmRequest(): LinkAccountConfirmRequest {
-  return { req_id: 0n, status: 0, otp_code: "" };
+  return { req_id: "", status: 0, otp_code: "" };
 }
 
 export const LinkAccountConfirmRequest = {
   encode(message: LinkAccountConfirmRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.req_id !== 0n) {
-      if (BigInt.asIntN(64, message.req_id) !== message.req_id) {
-        throw new globalThis.Error("value provided for field message.req_id of type int64 too large");
-      }
-      writer.uint32(8).int64(message.req_id.toString());
+    if (message.req_id !== "") {
+      writer.uint32(10).string(message.req_id);
     }
     if (message.status !== 0) {
       writer.uint32(16).int32(message.status);
@@ -39706,11 +39703,11 @@ export const LinkAccountConfirmRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.req_id = longToBigint(reader.int64() as Long);
+          message.req_id = reader.string();
           continue;
         case 2:
           if (tag !== 16) {
@@ -39737,7 +39734,7 @@ export const LinkAccountConfirmRequest = {
 
   fromJSON(object: any): LinkAccountConfirmRequest {
     return {
-      req_id: isSet(object.req_id) ? BigInt(object.req_id) : 0n,
+      req_id: isSet(object.req_id) ? globalThis.String(object.req_id) : "",
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       otp_code: isSet(object.otp_code) ? globalThis.String(object.otp_code) : "",
     };
@@ -39745,8 +39742,8 @@ export const LinkAccountConfirmRequest = {
 
   toJSON(message: LinkAccountConfirmRequest): unknown {
     const obj: any = {};
-    if (message.req_id !== 0n) {
-      obj.req_id = message.req_id.toString();
+    if (message.req_id !== "") {
+      obj.req_id = message.req_id;
     }
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
@@ -39762,7 +39759,7 @@ export const LinkAccountConfirmRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<LinkAccountConfirmRequest>, I>>(object: I): LinkAccountConfirmRequest {
     const message = createBaseLinkAccountConfirmRequest();
-    message.req_id = object.req_id ?? 0n;
+    message.req_id = object.req_id ?? "";
     message.status = object.status ?? 0;
     message.otp_code = object.otp_code ?? "";
     return message;

@@ -497,11 +497,7 @@ export class Client {
     return this.apiClient
       .AuthenticateEmailOTPRequest(this.serverkey, "", request, username)
       .then((response: ApiLinkAccountConfirmRequest) => {
-        var result = {
-          ...response,
-          req_id: String(response.req_id)
-        }
-        return Promise.resolve(result);
+        return Promise.resolve(response);
       });
   }
 
@@ -1561,7 +1557,7 @@ export class Client {
         if (response) {
           response.app_id = String(response.app_id || "");
           response.clan_id = String(response.clan_id || "");
-          response.user_ids = response.user_ids?.map((id) => String(id) || "");
+          response.user_ids = response.user_ids = response.user_ids = response.user_ids?.map((id) => String(id) || "");
           response.parent_id = String(response.parent_id || "");
           response.channel_id = String(response.channel_id || "");
           response.creator_id = String(response.creator_id || "");
@@ -1776,7 +1772,7 @@ export class Client {
     return this.apiClient
       .listEvents(session.token, clanId)
       .then((response: ApiEventList) => {
-        response.events?.map((e) => {
+        response.events = response.events?.map((e) => {
           return {
             ...e,
             id: String(e.id),
@@ -1810,7 +1806,7 @@ export class Client {
     return this.apiClient
       .getListPermission(session.token)
       .then((response: ApiPermissionList) => {
-        response.permissions?.map((p) => {
+        response.permissions = response.permissions?.map((p) => {
           return {
             ...p,
             id: String(p.id),
@@ -1836,7 +1832,7 @@ export class Client {
     return this.apiClient
       .listRolePermissions(session.token, roleId)
       .then((response: ApiPermissionList) => {
-        response.permissions?.map((p) => {
+        response.permissions = response.permissions?.map((p) => {
           return {
             ...p,
             id: String(p.id),
@@ -1864,7 +1860,7 @@ export class Client {
     return this.apiClient
       .listRoleUsers(session.token, roleId, limit, cursor)
       .then((response: ApiRoleUserList) => {
-        response.role_users?.map((r) => {
+        response.role_users = response.role_users?.map((r) => {
           return {
             ...r,
             id: String(r.id),
@@ -2478,7 +2474,7 @@ export class Client {
     return this.apiClient
       .getRoleOfUserInTheClan(session.token, clanId)
       .then((response: ApiRoleList) => {
-        response.roles?.map((r) => {
+        response.roles = response.roles?.map((r) => {
           return {
             ...r,
             id: String(r.id),
@@ -2737,7 +2733,7 @@ export class Client {
     return this.apiClient
       .searchMessage(session.token, request)
       .then((response: ApiSearchMessageResponse) => {
-        response.messages?.map((m) => {
+        response.messages = response.messages?.map((m) => {
           return {
             ...m,
             message_id: String(m.message_id),
@@ -2956,7 +2952,7 @@ export class Client {
     return this.apiClient
       .listWebhookByChannelId(session.token, channel_id, clan_id)
       .then((response: ApiWebhookListResponse) => {
-        response.webhooks?.map((w) => {
+        response.webhooks = response.webhooks?.map((w) => {
           return {
             ...w,
             id: String(w.id),
@@ -3167,7 +3163,7 @@ export class Client {
     return this.apiClient
       .listApps(session.token)
       .then((response: ApiAppList) => {
-        response.apps?.map((a) => {
+        response.apps = response.apps?.map((a) => {
           return {
             ...a,
             id: String(a.id),
@@ -3212,7 +3208,7 @@ export class Client {
     return this.apiClient
       .getSystemMessagesList(session.token)
       .then((response: ApiSystemMessagesList) => {
-        response.system_messages_list?.map((s) => {
+        response.system_messages_list = response.system_messages_list?.map((s) => {
           return {
             ...s,
             id: String(s.id),
@@ -3445,7 +3441,7 @@ export class Client {
     return this.apiClient
       .getChannelCategoryNotiSettingsList(session.token, clanId)
       .then((response: ApiNotificationChannelCategorySettingList) => {
-        response.notification_channel_category_settings_list?.map((n) => {
+        response.notification_channel_category_settings_list = response.notification_channel_category_settings_list?.map((n) => {
           return {
             ...n,
             id: String(n.id),
@@ -3563,7 +3559,7 @@ export class Client {
     return this.apiClient
       .listChannelByUserId(session.token)
       .then((response: ApiChannelDescList) => {
-        response.channeldesc?.map((c) => {
+        response.channeldesc = response.channeldesc?.map((c) => {
           return {
             ...c,
             clan_id: String(c.clan_id),
@@ -3597,7 +3593,7 @@ export class Client {
         var result = {
           ...response,
           channel_id: String(response.channel_id),
-          user_ids: response.user_ids?.map((u) => String(u)),
+          user_ids: response.user_ids = response.user_ids?.map((u) => String(u)),
         };
         return Promise.resolve(result);
       });
@@ -3617,7 +3613,7 @@ export class Client {
     return this.apiClient
       .getListEmojisByUserId(session.token)
       .then((response: ApiEmojiListedResponse) => {
-        response.emoji_list?.map((e) => {
+        response.emoji_list = response.emoji_list?.map((e) => {
           return {
             ...e,
             clan_id: String(e.clan_id),
@@ -3641,7 +3637,7 @@ export class Client {
     return this.apiClient
       .emojiRecentList(session.token)
       .then((response: ApiEmojiRecentList) => {
-        response.emoji_recents?.map((e) => {
+        response.emoji_recents = response.emoji_recents?.map((e) => {
           return {
             ...e,
             emoji_id: String(e.emoji_id),
@@ -3666,7 +3662,7 @@ export class Client {
     return this.apiClient
       .getListStickersByUserId(session.token)
       .then((response: ApiStickerListedResponse) => {
-        response.stickers?.map((s) => {
+        response.stickers = response.stickers?.map((s) => {
           return {
             ...s,
             clan_id: String(s.clan_id),
@@ -3786,7 +3782,7 @@ export class Client {
         var result: ApiPermissionRoleChannelListEventResponse = {
           role_id: roleId,
           channel_id: channelId,
-          permission_role_channel: response.permission_role_channel?.map(
+          permission_role_channel: response.permission_role_channel = response.permission_role_channel?.map(
             (p) => {
               return {
                 ...p,
@@ -3857,7 +3853,7 @@ export class Client {
           return Promise.resolve(result);
         }
 
-        result.channeldesc = response.channeldesc?.map((c) => {
+        result.channeldesc = response.channeldesc = response.channeldesc?.map((c) => {
           return {
             ...c,
             clan_id: String(c.clan_id),
@@ -3930,7 +3926,7 @@ export class Client {
         var result = {
           ...response,
           clan_id: clanId,
-          channel_setting_list: response.channel_setting_list?.map((c) => {
+          channel_setting_list: response.channel_setting_list = response.channel_setting_list?.map((c) => {
             return {
               ...c,
               category_id: String(c.category_id),
@@ -3965,7 +3961,7 @@ export class Client {
       .then((response: ApiChannelCanvasListResponse) => {
         response.channel_id = channelId;
         response.clan_id = clanId;
-        response.channel_canvases?.map((c) => {
+        response.channel_canvases = response.channel_canvases?.map((c) => {
           return {
             ...c,
             id: String(c.id),
@@ -4102,7 +4098,9 @@ export class Client {
     return this.apiClient
       .getListFavoriteChannel(session.token, clanId)
       .then((response: ApiListFavoriteChannelResponse) => {
-        response.channel_ids?.map((c) => String(c));
+        console.log('response', response);
+        response.channel_ids = response.channel_ids?.map((c) => String(c));
+        console.log('response after map', response);
         return response;
       });
   }
@@ -4120,7 +4118,7 @@ export class Client {
     return this.apiClient
       .listActivity(session.token)
       .then((response: ApiListUserActivity) => {
-        response.activities?.map((a) => {
+        response.activities = response.activities?.map((a) => {
           return {
             ...a,
             user_id: String(a.user_id),
