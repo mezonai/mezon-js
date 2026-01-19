@@ -1744,7 +1744,15 @@ export class Client {
           return Promise.resolve(result);
         }
 
-        result.categorydesc = response.categorydesc;
+        response.categorydesc.forEach((c) => {
+          result.categorydesc!.push({
+            category_id: String(c.category_id),
+            category_name: c.category_name,
+            category_order: c.category_order,
+            clan_id: String(c.clan_id),
+            creator_id: String(c.creator_id)
+          });
+        });
         return Promise.resolve(result);
       });
   }
@@ -1762,6 +1770,23 @@ export class Client {
     return this.apiClient
       .listEvents(session.token, clanId)
       .then((response: ApiEventList) => {
+        response.events?.map((e) => {
+          return {
+            ...e,
+            id: String(e.id),
+            clan_id: String(e.clan_id),
+            channel_id: String(e.channel_id),
+            channel_voice_id: String(e.channel_voice_id),
+            creator_id: String(e.creator_id),
+            user_ids: e.user_ids?.map(u => String(u)),
+            meet_room: {
+              ...e.meet_room,
+              creator_id: String(e.meet_room?.creator_id),
+              event_id: String(e.meet_room?.event_id),
+              meet_id: String(e.meet_room?.meet_id)
+            },
+          }
+        });
         return Promise.resolve(response);
       });
   }
@@ -1779,6 +1804,12 @@ export class Client {
     return this.apiClient
       .getListPermission(session.token)
       .then((response: ApiPermissionList) => {
+        response.permissions?.map(p => {
+          return {
+            ...p,
+            id: String(p.id),            
+          }
+        });
         return Promise.resolve(response);
       });
   }
@@ -1799,6 +1830,12 @@ export class Client {
     return this.apiClient
       .listRolePermissions(session.token, roleId)
       .then((response: ApiPermissionList) => {
+        response.permissions?.map(p => {
+          return {
+            ...p,
+            id: String(p.id),
+          }
+        });
         return Promise.resolve(response);
       });
   }
@@ -1821,6 +1858,12 @@ export class Client {
     return this.apiClient
       .listRoleUsers(session.token, roleId, limit, cursor)
       .then((response: ApiRoleUserList) => {
+        response.role_users?.map(r => {
+          return {
+            ...r,
+            id: String(r.id),
+          }
+        });
         return Promise.resolve(response);
       });
   }
@@ -1868,7 +1911,12 @@ export class Client {
     return this.apiClient
       .getUserProfileOnClan(session.token, clanId)
       .then((response: ApiClanProfile) => {
-        return Promise.resolve(response);
+        var result = {
+          ...response,
+          clan_id: String(response.clan_id),
+          user_id: String(response.user_id)          
+        }
+        return Promise.resolve(result);
       });
   }
 
@@ -2000,7 +2048,7 @@ export class Client {
               create_time: f.user!.create_time,
               display_name: f.user!.display_name,
               edge_count: f.user!.edge_count ? Number(f.user!.edge_count) : 0,
-              id: f.user!.id,
+              id: String(f.user!.id),
               lang_tag: f.user!.lang_tag,
               location: f.user!.location,
               online: f.user!.online,
