@@ -10,6 +10,7 @@ npx protoc \
 --plugin="./node_modules/.bin/protoc-gen-ts_proto" \
 --proto_path=$GOPATH/src/github.com/nccasia/mezon-server/common \
 --ts_proto_out=. \
+--ts_proto_opt=forceLong=string \
 --ts_proto_opt=snakeToCamel=false \
 --ts_proto_opt=esModuleInterop=true \
 $GOPATH/src/github.com/nccasia/mezon-server/common/rtapi/realtime.proto \
@@ -17,7 +18,7 @@ $GOPATH/src/github.com/nccasia/mezon-server/common/api/api.proto
 ```
 
 ```
-npx protoc --plugin="./node_modules/.bin/protoc-gen-ts_proto.cmd" --proto_path=../../../mezon-server/common --ts_proto_out=. --ts_proto_opt=snakeToCamel=false --ts_proto_opt=esModuleInterop=true ../../../mezon-server/common/rtapi/realtime.proto ../../../mezon-server/common/api/api.proto
+npx protoc --plugin="./node_modules/.bin/protoc-gen-ts_proto.cmd" --proto_path=../../../mezon-server/common --ts_proto_out=. --ts_proto_opt=snakeToCamel=false --ts_proto_opt=esModuleInterop=true --ts_proto_opt=forceLong=string ../../../mezon-server/common/rtapi/realtime.proto ../../../mezon-server/common/api/api.proto
 ```
 
 

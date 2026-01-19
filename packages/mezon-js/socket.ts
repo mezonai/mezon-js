@@ -1475,7 +1475,7 @@ export interface Socket {
     hideEditted?: boolean,
     topic_id?: string,
     is_update_msg_topic?: boolean,
-    old_mentions?: string
+    old_mentions?: Uint8Array
   ): Promise<ChannelMessageAck>;
 
   /** Update the status for the current user online. */
@@ -2840,7 +2840,7 @@ export class DefaultSocket implements Socket {
     hideEditted?: boolean,
     topic_id?: string,
     is_update_msg_topic?: boolean,
-    old_mentions?: string
+    old_mentions?: Uint8Array
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_update: {
