@@ -754,7 +754,7 @@ export interface ApiChannelAppResponse {
 /**  */
 export interface ApiChannelAttachment {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the group was created.
-  create_time?: string;
+  create_time_seconds?: number;
   //
   filename?: string;
   //
@@ -2425,7 +2425,7 @@ export interface ApiSdTopicRequest {
 /**  */
 export interface ApiSearchMessageDocument {
   //
-  attachments?: Array<ApiMessageAttachment>;
+  attachments?: string;
   //
   avatar_url?: string;
   //The channel ID.
@@ -7429,7 +7429,7 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] =
         "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
-    fetchOptions.headers["Accept"] = "application/x-protobuf";
+    fetchOptions.headers["Accept"] = "application/json";
     fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
@@ -7437,8 +7437,7 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiInviteUserRes;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();      
-          return tsproto.InviteUserRes.decode(new Uint8Array(buffer)) as unknown as ApiInviteUserRes;
+          return response.json()
         } else {
           throw response;
         }
