@@ -1426,20 +1426,10 @@ export interface Socket {
   follower(): Promise<void>;
 
   /** Join a chat channel on the server. */
-  joinChat(
-    clan_id: string,
-    channel_id: string,
-    channel_type: number,
-    is_public: boolean,
-  ): Promise<Channel>;
+  joinChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<Channel>;
 
   /** Leave a chat channel on the server. */
-  leaveChat(
-    clan_id: string,
-    channel_id: string,
-    channel_type: number,
-    is_public: boolean,
-  ): Promise<void>;
+  leaveChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<void>;
 
   /** handle user join/leave channel voice on the server. */
   handleParticipantMeetState(
@@ -1599,12 +1589,7 @@ export interface Socket {
   ): Promise<LastPinMessageEvent>;
 
   /** Send custom user status */
-  writeCustomStatus(
-    clan_id: string,
-    status: string,
-    time_reset: number,
-    no_clear: boolean,
-  ): Promise<CustomStatusEvent>;
+  writeCustomStatus(clan_id: string, status: string, time_reset: number, no_clear: boolean): Promise<CustomStatusEvent>;
 
   writeActiveArchivedThread(clan_id: string, channel_id: string): Promise<void>;
 
@@ -1616,12 +1601,7 @@ export interface Socket {
 
   onreconnect: (evt: Event) => void;
 
-  checkDuplicateName(
-    name: string,
-    condition_id: string,
-    type: number,
-    clan_id: string,
-  ): Promise<CheckNameExistedEvent>;
+  checkDuplicateName(name: string, condition_id: string, type: number, clan_id: string): Promise<CheckNameExistedEvent>;
 
   handleMessageButtonClick: (
     message_id: string,
@@ -1641,10 +1621,7 @@ export interface Socket {
     value: Array<string>,
   ) => Promise<DropdownBoxSelected>;
 
-  writeVoiceReaction: (
-    emojis: Array<string>,
-    channel_id: string,
-  ) => Promise<VoiceReactionSend>;
+  writeVoiceReaction: (emojis: Array<string>, channel_id: string) => Promise<VoiceReactionSend>;
 
   forwardWebrtcSignaling: (
     receiverId: string,
@@ -1661,11 +1638,7 @@ export interface Socket {
     caller_id: string,
   ) => Promise<IncomingCallPush>;
 
-  writeChannelAppEvent: (
-    clan_id: string,
-    channel_id: string,
-    action: number,
-  ) => Promise<ChannelAppEvent>;
+  writeChannelAppEvent: (clan_id: string, channel_id: string, action: number) => Promise<ChannelAppEvent>;
 
   listDataSocket(request: ListDataSocket): Promise<any>;
 
@@ -1799,9 +1772,7 @@ export interface Socket {
 
   oneventemoji: (event_emoji: EventEmoji) => void;
 
-  oneventnotiuserchannel: (
-    noti_user_channel: ApiNotificationUserChannel,
-  ) => void;
+  oneventnotiuserchannel: (noti_user_channel: ApiNotificationUserChannel) => void;
 
   oneventwebhook: (webhook_event: ApiWebhook) => void;
 
@@ -1813,25 +1784,17 @@ export interface Socket {
 
   onallowanonymousevent: (event: AllowAnonymousEvent) => void;
 
-  onstreamingchannelstarted: (
-    streaming_started_event: StreamingStartedEvent,
-  ) => void;
+  onstreamingchannelstarted: (streaming_started_event: StreamingStartedEvent) => void;
 
   onstreamingchannelended: (streaming_ended_event: StreamingEndedEvent) => void;
 
-  onstreamingchanneljoined: (
-    streaming_joined_event: StreamingJoinedEvent,
-  ) => void;
+  onstreamingchanneljoined: (streaming_joined_event: StreamingJoinedEvent) => void;
 
-  onstreamingchannelleaved: (
-    streaming_leaved_event: StreamingLeavedEvent,
-  ) => void;
+  onstreamingchannelleaved: (streaming_leaved_event: StreamingLeavedEvent) => void;
 
   onpermissionset: (permission_set_event: PermissionSet) => void;
 
-  onpermissionchanged: (
-    permission_changed_event: PermissionChangedEvent,
-  ) => void;
+  onpermissionchanged: (permission_changed_event: PermissionChangedEvent) => void;
 
   onunmuteevent: (unmute_event: UnmuteEvent) => void;
 
@@ -1873,8 +1836,7 @@ export const ConnectionState = {
   CONNECTED: "connected",
 } as const;
 
-export type ConnectionStateType =
-  (typeof ConnectionState)[keyof typeof ConnectionState];
+export type ConnectionStateType = (typeof ConnectionState)[keyof typeof ConnectionState];
 
 export class DefaultSocket implements Socket {
   public static readonly DefaultHeartbeatTimeoutMs = 10000;
@@ -1924,10 +1886,7 @@ export class DefaultSocket implements Socket {
       return Promise.resolve(session);
     }
 
-    if (
-      this._connectionState === ConnectionState.CONNECTING &&
-      this._connectPromise
-    ) {
+    if (this._connectionState === ConnectionState.CONNECTING && this._connectPromise) {
       return this._connectPromise;
     }
 
@@ -1935,15 +1894,7 @@ export class DefaultSocket implements Socket {
     this._connectionState = ConnectionState.CONNECTING;
 
     const scheme = this.useSSL ? "wss://" : "ws://";
-    this.adapter.connect(
-      scheme,
-      this.host,
-      this.port,
-      createStatus,
-      session.token,
-      platform,
-      signal,
-    );
+    this.adapter.connect(scheme, this.host, this.port, createStatus, session.token, platform, signal);
 
     this.adapter.onClose = (evt: Event) => {
       this._connectionState = ConnectionState.DISCONNECTED;
@@ -1963,29 +1914,19 @@ export class DefaultSocket implements Socket {
       if (!message.cid) {
         if (message.notifications) {
           message.notifications.notifications.forEach((n: ApiNotification) => {
-            n.content = n.content
-              ? decodeNotificationFcm(n.content)
-              : undefined;
+            n.content = n.content ? decodeNotificationFcm(n.content) : undefined;
             this.onnotification(n);
           });
         } else if (message.voice_started_event) {
-          this.onvoicestarted(
-            this.mapVoiceStartedEvent(message.voice_started_event),
-          );
+          this.onvoicestarted(this.mapVoiceStartedEvent(message.voice_started_event));
         } else if (message.voice_ended_event) {
           this.onvoiceended(this.mapVoiceEndedEvent(message.voice_ended_event));
         } else if (message.voice_joined_event) {
-          this.onvoicejoined(
-            this.mapVoiceJoinedEvent(message.voice_joined_event),
-          );
+          this.onvoicejoined(this.mapVoiceJoinedEvent(message.voice_joined_event));
         } else if (message.voice_leaved_event) {
-          this.onvoiceleaved(
-            this.mapVoiceLeavedEvent(message.voice_leaved_event),
-          );
+          this.onvoiceleaved(this.mapVoiceLeavedEvent(message.voice_leaved_event));
         } else if (message.channel_created_event) {
-          this.onchannelcreated(
-            this.mapChannelCreatedEvent(message.channel_created_event),
-          );
+          this.onchannelcreated(this.mapChannelCreatedEvent(message.channel_created_event));
         } else if (message.category_event) {
           this.oncategoryevent(this.mapCategoryEvent(message.category_event));
         } else if (message.role_event) {
@@ -1993,100 +1934,58 @@ export class DefaultSocket implements Socket {
         } else if (message.event_emoji) {
           this.oneventemoji(this.mapEventEmoji(message.event_emoji));
         } else if (message.noti_user_channel) {
-          this.oneventnotiuserchannel(message.noti_user_channel);
+          this.oneventnotiuserchannel(this.mapEventNotiUserChannel(message.noti_user_channel));
         } else if (message.webhook_event) {
-          this.oneventwebhook(message.webhook_event);
+          this.oneventwebhook(this.mapApiWebhook(message.webhook_event));
         } else if (message.channel_deleted_event) {
-          this.onchanneldeleted(
-            this.mapChannelDeletedEvent(message.channel_deleted_event),
-          );
+          this.onchanneldeleted(this.mapChannelDeletedEvent(message.channel_deleted_event));
         } else if (message.clan_deleted_event) {
-          this.onclandeleted(
-            this.mapClanDeletedEvent(message.clan_deleted_event),
-          );
+          this.onclandeleted(this.mapClanDeletedEvent(message.clan_deleted_event));
         } else if (message.sticker_create_event) {
-          this.onstickercreated(
-            this.mapStickerCreateEvent(message.sticker_create_event),
-          );
+          this.onstickercreated(this.mapStickerCreateEvent(message.sticker_create_event));
         } else if (message.sticker_update_event) {
-          this.onstickerupdated(
-            this.mapStickerUpdateEvent(message.sticker_update_event),
-          );
+          this.onstickerupdated(this.mapStickerUpdateEvent(message.sticker_update_event));
         } else if (message.sticker_delete_event) {
-          this.onstickerdeleted(
-            this.mapStickerDeleteEvent(message.sticker_delete_event),
-          );
+          this.onstickerdeleted(this.mapStickerDeleteEvent(message.sticker_delete_event));
         } else if (message.channel_updated_event) {
-          this.onchannelupdated(
-            this.mapChannelUpdatedEvent(message.channel_updated_event),
-          );
+          this.onchannelupdated(this.mapChannelUpdatedEvent(message.channel_updated_event));
         } else if (message.delete_account_event) {
-          this.ondeleteaccount(
-            this.mapDeleteAccountEvent(message.delete_account_event),
-          );
+          this.ondeleteaccount(this.mapDeleteAccountEvent(message.delete_account_event));
         } else if (message.clan_profile_updated_event) {
-          this.onclanprofileupdated(
-            this.mapClanProfileUpdatedEvent(message.clan_profile_updated_event),
-          );
+          this.onclanprofileupdated(this.mapClanProfileUpdatedEvent(message.clan_profile_updated_event));
         } else if (message.clan_updated_event) {
-          this.onclanupdated(
-            this.mapClanUpdatedEvent(message.clan_updated_event),
-          );
+          this.onclanupdated(this.mapClanUpdatedEvent(message.clan_updated_event));
         } else if (message.last_seen_message_event) {
-          this.onlastseenupdated(
-            this.mapLastSeenMessageEvent(message.last_seen_message_event),
-          );
+          this.onlastseenupdated(this.mapLastSeenMessageEvent(message.last_seen_message_event));
         } else if (message.status_presence_event) {
-          this.onstatuspresence(
-            <StatusPresenceEvent>message.status_presence_event,
-          );
+          this.onstatuspresence(this.mapStatusPresenceEvent(message.status_presence_event));
         } else if (message.stream_presence_event) {
-          this.onstreampresence(
-            <StreamPresenceEvent>message.stream_presence_event,
-          );
+          this.onstreampresence(this.mapStreamPresenceEvent(message.stream_presence_event));
         } else if (message.stream_data) {
-          this.onstreamdata(<StreamData>message.stream_data);
+          this.onstreamdata(this.mapStreamData(message.stream_data));
         } else if (message.channel_message) {
           const channelMessage = CreateChannelMessageFromEvent(message);
           this.onchannelmessage(channelMessage);
         } else if (message.message_typing_event) {
-          this.onmessagetyping(
-            this.mapMessageTypingEvent(message.message_typing_event),
-          );
+          this.onmessagetyping(this.mapMessageTypingEvent(message.message_typing_event));
         } else if (message.message_reaction_event) {
-          this.onmessagereaction(
-            <ApiMessageReaction>message.message_reaction_event,
-          );
+          this.onmessagereaction(this.mapMessageReactionEvent(message.message_reaction_event));
         } else if (message.channel_presence_event) {
-          this.onchannelpresence(
-            this.mapChannelPresenceEvent(message.channel_presence_event),
-          );
+          this.onchannelpresence(this.mapChannelPresenceEvent(message.channel_presence_event));
         } else if (message.last_pin_message_event) {
-          this.onpinmessage(
-            this.mapLastPinMessageEvent(message.last_pin_message_event),
-          );
+          this.onpinmessage(this.mapLastPinMessageEvent(message.last_pin_message_event));
         } else if (message.custom_status_event) {
-          this.oncustomstatus(
-            this.mapCustomStatusEvent(message.custom_status_event),
-          );
+          this.oncustomstatus(this.mapCustomStatusEvent(message.custom_status_event));
         } else if (message.canvas_event) {
           this.oncanvasevent(this.mapChannelCanvas(message.canvas_event));
         } else if (message.user_channel_added_event) {
-          this.onuserchanneladded(
-            this.mapUserChannelAddedEvent(message.user_channel_added_event),
-          );
+          this.onuserchanneladded(this.mapUserChannelAddedEvent(message.user_channel_added_event));
         } else if (message.add_clan_user_event) {
-          this.onuserclanadded(
-            this.mapAddClanUserEvent(message.add_clan_user_event),
-          );
+          this.onuserclanadded(this.mapAddClanUserEvent(message.add_clan_user_event));
         } else if (message.user_profile_updated_event) {
-          this.onuserprofileupdate(
-            this.mapUserProfileUpdatedEvent(message.user_profile_updated_event),
-          );
+          this.onuserprofileupdate(this.mapUserProfileUpdatedEvent(message.user_profile_updated_event));
         } else if (message.user_channel_removed_event) {
-          this.onuserchannelremoved(
-            this.mapUserChannelRemovedEvent(message.user_channel_removed_event),
-          );
+          this.onuserchannelremoved(this.mapUserChannelRemovedEvent(message.user_channel_removed_event));
         } else if (message.block_friend) {
           this.onblockfriend(this.mapBlockFriend(message.block_friend));
         } else if (message.un_block_friend) {
@@ -2096,101 +1995,61 @@ export class DefaultSocket implements Socket {
         } else if (message.remove_friend) {
           this.onremovefriend(this.mapRemoveFriend(message.remove_friend));
         } else if (message.user_clan_removed_event) {
-          this.onuserclanremoved(
-            this.mapUserClanRemovedEvent(message.user_clan_removed_event),
-          );
+          this.onuserclanremoved(this.mapUserClanRemovedEvent(message.user_clan_removed_event));
         } else if (message.clan_event_created) {
-          this.oneventcreated(message.clan_event_created);
+          this.oneventcreated(this.mapApiCreateEventRequest(message.clan_event_created));
         } else if (message.give_coffee_event) {
-          this.oncoffeegiven(<ApiGiveCoffeeEvent>message.give_coffee_event);
+          this.oncoffeegiven(this.mapApiGiveCoffeeEvent(message.give_coffee_event));
         } else if (message.role_assign_event) {
-          this.onroleassign(
-            this.mapRoleAssignedEvent(message.role_assign_event),
-          );
+          this.onroleassign(this.mapRoleAssignedEvent(message.role_assign_event));
         } else if (message.streaming_started_event) {
-          this.onstreamingchannelstarted(
-            this.mapStreamingStartedEvent(message.streaming_started_event),
-          );
+          this.onstreamingchannelstarted(this.mapStreamingStartedEvent(message.streaming_started_event));
         } else if (message.streaming_ended_event) {
-          this.onstreamingchannelended(
-            this.mapStreamingEndedEvent(message.streaming_ended_event),
-          );
+          this.onstreamingchannelended(this.mapStreamingEndedEvent(message.streaming_ended_event));
         } else if (message.streaming_joined_event) {
-          this.onstreamingchanneljoined(
-            this.mapStreamingJoinedEvent(message.streaming_joined_event),
-          );
+          this.onstreamingchanneljoined(this.mapStreamingJoinedEvent(message.streaming_joined_event));
         } else if (message.streaming_leaved_event) {
-          this.onstreamingchannelleaved(
-            this.mapStreamingLeavedEvent(message.streaming_leaved_event),
-          );
+          this.onstreamingchannelleaved(this.mapStreamingLeavedEvent(message.streaming_leaved_event));
         } else if (message.permission_set_event) {
-          this.onpermissionset(
-            this.mapPermissionSet(message.permission_set_event),
-          );
+          this.onpermissionset(this.mapPermissionSet(message.permission_set_event));
         } else if (message.permission_changed_event) {
-          this.onpermissionchanged(
-            this.mapPermissionChangedEvent(message.permission_changed_event),
-          );
+          this.onpermissionchanged(this.mapPermissionChangedEvent(message.permission_changed_event));
         } else if (message.unmute_event) {
           this.onunmuteevent(this.mapUnmuteEvent(message.unmute_event));
         } else if (message.token_sent_event) {
-          this.ontokensent(<ApiTokenSentEvent>message.token_sent_event);
+          this.ontokensent(this.mapApiTokenSentEvent(message.token_sent_event));
         } else if (message.message_button_clicked) {
-          this.onmessagebuttonclicked(
-            this.mapMessageButtonClicked(message.message_button_clicked),
-          );
+          this.onmessagebuttonclicked(this.mapMessageButtonClicked(message.message_button_clicked));
         } else if (message.dropdown_box_selected) {
-          this.onmessagedropdownboxselected(
-            this.mapDropdownBoxSelected(message.dropdown_box_selected),
-          );
+          this.onmessagedropdownboxselected(this.mapDropdownBoxSelected(message.dropdown_box_selected));
         } else if (message.mark_as_read) {
           this.onmarkasread(this.mapMarkAsRead(message.mark_as_read));
         } else if (message.voice_reaction_send) {
-          this.onvoicereactionmessage(
-            this.mapVoiceReactionSend(message.voice_reaction_send),
-          );
+          this.onvoicereactionmessage(this.mapVoiceReactionSend(message.voice_reaction_send));
         } else if (message.webrtc_signaling_fwd) {
-          this.onwebrtcsignalingfwd(
-            this.mapWebrtcSignalingFwd(message.webrtc_signaling_fwd),
-          );
+          this.onwebrtcsignalingfwd(this.mapWebrtcSignalingFwd(message.webrtc_signaling_fwd));
         } else if (message.list_activity) {
-          this.onactivityupdated(<ListActivity>message.list_activity);
+          this.onactivityupdated(this.mapListActivity(message.list_activity));
         } else if (message.sd_topic_event) {
           this.onsdtopicevent(this.mapSdTopicEvent(message.sd_topic_event));
         } else if (message.channel_app_event) {
-          this.onchannelappevent(
-            this.mapChannelAppEvent(message.channel_app_event),
-          );
+          this.onchannelappevent(this.mapChannelAppEvent(message.channel_app_event));
         } else if (message.user_status_event) {
-          this.onuserstatusevent(
-            this.mapUserStatusEvent(message.user_status_event),
-          );
+          this.onuserstatusevent(this.mapUserStatusEvent(message.user_status_event));
         } else if (message.join_channel_app_data) {
-          this.onjoinchannelappevent(
-            this.mapJoinChannelAppData(message.join_channel_app_data),
-          );
+          this.onjoinchannelappevent(this.mapJoinChannelAppData(message.join_channel_app_data));
         } else if (message.unpin_message_event) {
-          this.onunpinmessageevent(
-            this.mapUnpinMessageEvent(message.unpin_message_event),
-          );
+          this.onunpinmessageevent(this.mapUnpinMessageEvent(message.unpin_message_event));
         } else if (message.quick_menu_event) {
-          this.onquickmenuevent(
-            this.mapQuickMenuEvent(message.quick_menu_event),
-          );
+          this.onquickmenuevent(this.mapQuickMenuEvent(message.quick_menu_event));
         } else if (message.meet_participant_event) {
-          this.onmeetparticipantevent(
-            this.mapMeetParticipantEvent(message.meet_participant_event),
-          );
+          this.onmeetparticipantevent(this.mapMeetParticipantEvent(message.meet_participant_event));
         } else if (message.transfer_ownership_event) {
-          this.ontransferownership(
-            this.mapTransferOwnershipEvent(message.transfer_ownership_event),
-          );
+          this.ontransferownership(this.mapTransferOwnershipEvent(message.transfer_ownership_event));
         } else if (message.ban_user_event) {
           this.onbanneduser(this.mapBannedUserEvent(message.ban_user_event));
         } else if (message.allow_anonymous_event) {
-          this.onallowanonymousevent(
-            this.mapAllowAnonymousEvent(message.allow_anonymous_event),
-          );
+          this.onallowanonymousevent(this.mapAllowAnonymousEvent(message.allow_anonymous_event));
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -2261,7 +2120,6 @@ export class DefaultSocket implements Socket {
 
   mapVoiceStartedEvent(event: any): VoiceStartedEvent {
     return {
-      ...event,
       id: String(event.id || ""),
       clan_id: String(event.clan_id || ""),
       voice_channel_id: String(event.voice_channel_id || ""),
@@ -2270,7 +2128,6 @@ export class DefaultSocket implements Socket {
 
   mapVoiceEndedEvent(event: any): VoiceEndedEvent {
     return {
-      ...event,
       id: String(event.id || ""),
       clan_id: String(event.clan_id || ""),
       voice_channel_id: String(event.voice_channel_id || ""),
@@ -2322,18 +2179,10 @@ export class DefaultSocket implements Socket {
     return {
       ...event,
       user_id: String(event.user_id || ""),
-      user_add_ids: (event.user_add_ids || []).map((id: any) =>
-        String(id || ""),
-      ),
-      user_remove_ids: (event.user_remove_ids || []).map((id: any) =>
-        String(id || ""),
-      ),
-      active_permission_ids: (event.active_permission_ids || []).map(
-        (id: any) => String(id || ""),
-      ),
-      remove_permission_ids: (event.remove_permission_ids || []).map(
-        (id: any) => String(id || ""),
-      ),
+      user_add_ids: (event.user_add_ids || []).map((id: any) => String(id || "")),
+      user_remove_ids: (event.user_remove_ids || []).map((id: any) => String(id || "")),
+      active_permission_ids: (event.active_permission_ids || []).map((id: any) => String(id || "")),
+      remove_permission_ids: (event.remove_permission_ids || []).map((id: any) => String(id || "")),
       role: event.role
         ? {
             ...event.role,
@@ -2343,12 +2192,10 @@ export class DefaultSocket implements Socket {
             role_user_list: event.role.role_user_list
               ? {
                   ...event.role.role_user_list,
-                  role_users: (event.role.role_user_list.role_users || []).map(
-                    (ru: any) => ({
-                      ...ru,
-                      id: String(ru.id || ""),
-                    }),
-                  ),
+                  role_users: (event.role.role_user_list.role_users || []).map((ru: any) => ({
+                    ...ru,
+                    id: String(ru.id || ""),
+                  })),
                 }
               : undefined,
           }
@@ -2362,6 +2209,24 @@ export class DefaultSocket implements Socket {
       id: String(event.id || ""),
       clan_id: String(event.clan_id || ""),
       user_id: String(event.user_id || ""),
+    };
+  }
+
+  mapEventNotiUserChannel(event: any): ApiNotificationUserChannel {
+    return {
+      ...event,
+      id: String(event.id || ""),
+      channel_id: String(event.channel_id || ""),
+    };
+  }
+
+  mapApiWebhook(event: any): ApiWebhook {
+    return {
+      ...event,
+      id: String(event.id || ""),
+      channel_id: String(event.channel_id || ""),
+      clan_id: String(event.clan_id || ""),
+      creator_id: String(event.creator_id || ""),
     };
   }
 
@@ -2417,12 +2282,8 @@ export class DefaultSocket implements Socket {
       parent_id: String(event.parent_id || ""),
       channel_id: String(event.channel_id || ""),
       app_id: String(event.app_id || ""),
-      role_ids: event.role_ids
-        ? event.role_ids.map((id: any) => String(id || ""))
-        : undefined,
-      user_ids: event.user_ids
-        ? event.user_ids.map((id: any) => String(id || ""))
-        : undefined,
+      role_ids: event.role_ids ? event.role_ids.map((id: any) => String(id || "")) : undefined,
+      user_ids: event.user_ids ? event.user_ids.map((id: any) => String(id || "")) : undefined,
     };
   }
 
@@ -2458,6 +2319,63 @@ export class DefaultSocket implements Socket {
     };
   }
 
+  mapStatusPresenceEvent(event: any): StatusPresenceEvent {
+    return {
+      joins: event.joins
+        ? (event.joins || []).map((j: Presence) => ({
+            ...j,
+            user_id: String(j.user_id || ""),
+            session_id: String(j.session_id || ""),
+          }))
+        : undefined,
+      leaves: event.leaves
+        ? (event.leaves || []).map((j: Presence) => ({
+            ...j,
+            user_id: String(j.user_id || ""),
+            session_id: String(j.session_id || ""),
+          }))
+        : undefined,
+    };
+  }
+
+  mapStreamPresenceEvent(event: any): StreamPresenceEvent {
+    return {
+      stream: {
+        ...event.stream,
+        subject: String(event.subject || ""),
+      },
+      joins: event.joins
+        ? (event.joins || []).map((j: Presence) => ({
+            ...j,
+            user_id: String(j.user_id || ""),
+            session_id: String(j.session_id || ""),
+          }))
+        : undefined,
+      leaves: event.leaves
+        ? (event.leaves || []).map((j: Presence) => ({
+            ...j,
+            user_id: String(j.user_id || ""),
+            session_id: String(j.session_id || ""),
+          }))
+        : undefined,
+    };
+  }
+
+  mapStreamData(event: any): StreamData {
+    return {
+      ...event,
+      stream: {
+        ...event.stream,
+        subject: String(event.subject || ""),
+      },
+      sender: {
+        ...event.sender,
+        user_id: String(event.sender?.user_id || ""),
+        session_id: String(event.sender?.session_id || ""),
+      },
+    };
+  }
+
   mapMessageTypingEvent(event: any): MessageTypingEvent {
     return {
       ...event,
@@ -2467,26 +2385,37 @@ export class DefaultSocket implements Socket {
     };
   }
 
+  mapMessageReactionEvent(event: any): ApiMessageReaction {
+    return {
+      ...event,
+      id: String(event.id || ""),
+      emoji_id: String(event.emoji_id || ""),
+      topic_id: String(event.topic_id || ""),
+      sender_id: String(event.sender_id || ""),
+      channel_id: String(event.channel_id || ""),
+      message_id: String(event.message_id || ""),
+      emoji_recent_id: String(event.emoji_recent_id || ""),
+    };
+  }
+
   mapChannelPresenceEvent(event: any): ChannelPresenceEvent {
     return {
       ...event,
       channel_id: String(event.channel_id || ""),
-      joins:
-        event.joins || []
-          ? event.joins.map((j: Presence) => ({
-              ...j,
-              user_id: String(j.user_id || ""),
-              session_id: String(j.session_id || ""),
-            }))
-          : undefined,
-      leaves:
-        event.leaves || []
-          ? event.leaves.map((j: Presence) => ({
-              ...j,
-              user_id: String(j.user_id || ""),
-              session_id: String(j.session_id || ""),
-            }))
-          : undefined,
+      joins: event.joins
+        ? (event.joins || []).map((j: Presence) => ({
+            ...j,
+            user_id: String(j.user_id || ""),
+            session_id: String(j.session_id || ""),
+          }))
+        : undefined,
+      leaves: event.leaves
+        ? (event.leaves || []).map((j: Presence) => ({
+            ...j,
+            user_id: String(j.user_id || ""),
+            session_id: String(j.session_id || ""),
+          }))
+        : undefined,
     };
   }
 
@@ -2527,15 +2456,9 @@ export class DefaultSocket implements Socket {
       channel_desc: event.channel_desc
         ? {
             ...event.channel_desc,
-            clan_id: event.channel_desc.clan_id
-              ? String(event.channel_desc.clan_id)
-              : undefined,
-            channel_id: event.channel_desc.channel_id
-              ? String(event.channel_desc.channel_id)
-              : undefined,
-            parent_id: event.channel_desc.parent_id
-              ? String(event.channel_desc.parent_id)
-              : undefined,
+            clan_id: event.channel_desc.clan_id ? String(event.channel_desc.clan_id) : undefined,
+            channel_id: event.channel_desc.channel_id ? String(event.channel_desc.channel_id) : undefined,
+            parent_id: event.channel_desc.parent_id ? String(event.channel_desc.parent_id) : undefined,
             last_sent_message: event.channel_desc.last_sent_message
               ? {
                   ...event.channel_desc.last_sent_message,
@@ -2631,17 +2554,35 @@ export class DefaultSocket implements Socket {
     };
   }
 
+  mapApiCreateEventRequest(event: any): ApiCreateEventRequest {
+    return {
+      ...event,
+      channel_voice_id: String(event.channel_voice_id || ""),
+      clan_id: String(event.clan_id || ""),
+      user_id: String(event.user_id || ""),
+      channel_id: String(event.channel_id || ""),
+      creator_id: String(event.creator_id || ""),
+    };
+  }
+
+  mapApiGiveCoffeeEvent(event: any): ApiGiveCoffeeEvent {
+    return {
+      ...event,
+      channel_id: String(event.channel_id || ""),
+      clan_id: String(event.clan_id || ""),
+      message_ref_id: String(event.message_ref_id || ""),
+      sender_id: String(event.sender_id || ""),
+      receiver_id: String(event.receiver_id || ""),
+    };
+  }
+
   mapRoleAssignedEvent(event: any): RoleAssignedEvent {
     return {
       ...event,
       ClanId: String(event.ClanId || ""),
       role_id: String(event.role_id || ""),
-      user_ids_assigned: (event.user_ids_assigned || []).map((id: any) =>
-        String(id || ""),
-      ),
-      user_ids_removed: (event.user_ids_removed || []).map((id: any) =>
-        String(id || ""),
-      ),
+      user_ids_assigned: (event.user_ids_assigned || []).map((id: any) => String(id || "")),
+      user_ids_removed: (event.user_ids_removed || []).map((id: any) => String(id || "")),
     };
   }
 
@@ -2704,6 +2645,15 @@ export class DefaultSocket implements Socket {
       channel_id: String(event.channel_id || ""),
       category_id: String(event.category_id || ""),
       clan_id: String(event.clan_id || ""),
+    };
+  }
+
+  mapApiTokenSentEvent(event: any): ApiTokenSentEvent {
+    return {
+      ...event,
+      receiver_id: String(event.receiver_id || ""),
+      sender_id: String(event.sender_id || ""),
+      transaction_id: String(event.transaction_id || ""),
     };
   }
 
@@ -2784,6 +2734,18 @@ export class DefaultSocket implements Socket {
       receiver_id: String(event.receiver_id || ""),
       channel_id: String(event.channel_id || ""),
       caller_id: String(event.caller_id || ""),
+    };
+  }
+
+  mapListActivity(event: any): ListActivity {
+    return {
+      acts: event.acts
+        ? (event.acts || []).map((act: ApiUserActivity) => ({
+            ...act,
+            application_id: String(act.application_id || ""),
+            user_id: String(act.user_id || ""),
+          }))
+        : undefined,
     };
   }
 
@@ -3327,18 +3289,13 @@ export class DefaultSocket implements Socket {
         reject("Socket connection has not been established yet.");
       } else {
         if (untypedMessage.channel_message_send) {
-          untypedMessage.channel_message_send.content = JSON.stringify(
-            untypedMessage.channel_message_send.content,
-          );
+          untypedMessage.channel_message_send.content = JSON.stringify(untypedMessage.channel_message_send.content);
         } else if (untypedMessage.channel_message_update) {
-          untypedMessage.channel_message_update.content = JSON.stringify(
-            untypedMessage.channel_message_update.content,
-          );
+          untypedMessage.channel_message_update.content = JSON.stringify(untypedMessage.channel_message_update.content);
         } else if (untypedMessage.ephemeral_message_send) {
-          untypedMessage.ephemeral_message_send.message.content =
-            JSON.stringify(
-              untypedMessage.ephemeral_message_send.message?.content,
-            );
+          untypedMessage.ephemeral_message_send.message.content = JSON.stringify(
+            untypedMessage.ephemeral_message_send.message?.content,
+          );
         } else if (untypedMessage.quick_menu_event) {
           untypedMessage.quick_menu_event.message.content = JSON.stringify(
             untypedMessage.quick_menu_event.message?.content,
@@ -3382,12 +3339,7 @@ export class DefaultSocket implements Socket {
     return response.follow_event;
   }
 
-  async joinChat(
-    clan_id: string,
-    channel_id: string,
-    channel_type: number,
-    is_public: boolean,
-  ): Promise<Channel> {
+  async joinChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<Channel> {
     const response = await this.send({
       channel_join: {
         clan_id: BigInt(clan_id),
@@ -3420,12 +3372,7 @@ export class DefaultSocket implements Socket {
     return response.handle_participant_meet_state_event;
   }
 
-  leaveChat(
-    clan_id: string,
-    channel_id: string,
-    channel_type: number,
-    is_public: boolean,
-  ): Promise<void> {
+  leaveChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<void> {
     return this.send({
       channel_leave: {
         clan_id: BigInt(clan_id),
@@ -3766,10 +3713,7 @@ export class DefaultSocket implements Socket {
     return response.custom_status_event;
   }
 
-  async writeActiveArchivedThread(
-    clan_id: string,
-    channel_id: string,
-  ): Promise<void> {
+  async writeActiveArchivedThread(clan_id: string, channel_id: string): Promise<void> {
     const response = await this.send({
       active_archived_thread: {
         clan_id: BigInt(clan_id),
@@ -3796,10 +3740,7 @@ export class DefaultSocket implements Socket {
     return response.check_name_existed_event;
   }
 
-  async writeVoiceReaction(
-    emojis: Array<string>,
-    channel_id: string,
-  ): Promise<VoiceReactionSend> {
+  async writeVoiceReaction(emojis: Array<string>, channel_id: string): Promise<VoiceReactionSend> {
     const response = await this.send({
       voice_reaction_send: {
         emojis: emojis,
@@ -3887,11 +3828,7 @@ export class DefaultSocket implements Socket {
     return response.webrtc_signaling_fwd;
   }
 
-  async writeChannelAppEvent(
-    clan_id: string,
-    channel_id: string,
-    action: number,
-  ): Promise<ChannelAppEvent> {
+  async writeChannelAppEvent(clan_id: string, channel_id: string, action: number): Promise<ChannelAppEvent> {
     const response = await this.send({
       channel_app_event: {
         clan_id: BigInt(clan_id),
@@ -3937,10 +3874,7 @@ export class DefaultSocket implements Socket {
 
   private startHeartbeatLoop() {
     this.stopHeartbeatLoop();
-    this._heartbeatTimer = setTimeout(
-      () => this.pingPong(),
-      this._heartbeatTimeoutMs,
-    );
+    this._heartbeatTimer = setTimeout(() => this.pingPong(), this._heartbeatTimeoutMs);
   }
 
   private stopHeartbeatLoop() {
