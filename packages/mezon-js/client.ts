@@ -3686,6 +3686,12 @@ export class Client {
     return this.apiClient
       .listUserClansByUserId(session.token)
       .then((response: ApiAllUserClans) => {
+        response.users = response.users?.map(u => {
+          return {
+            ...u,
+            id: String(u.id)
+          }
+        });
         return Promise.resolve(response);
       });
   }
@@ -3720,6 +3726,27 @@ export class Client {
                 clan_id: String(r.clan_id),
                 creator_id: String(r.creator_id),
                 channel_ids: r.channel_ids?.map((c) => String(c)),
+                permission_list: {
+                  ...r.permission_list,
+                  permission_list: {
+                    ...r.permission_list,
+                    permissions: r.permission_list?.permissions?.map(p => {
+                      return {
+                        ...p,
+                        id: String(p.id)
+                      }
+                    })
+                  },
+                },
+                role_user_list: {
+                  ...r.role_user_list,
+                  role_users: r.role_user_list?.role_users?.map(u => {
+                    return {
+                      ...u,
+                      id: String(u.id)
+                    }
+                  })
+                }
               };
             }),
           },
@@ -4098,9 +4125,7 @@ export class Client {
     return this.apiClient
       .getListFavoriteChannel(session.token, clanId)
       .then((response: ApiListFavoriteChannelResponse) => {
-        console.log('response', response);
         response.channel_ids = response.channel_ids?.map((c) => String(c));
-        console.log('response after map', response);
         return response;
       });
   }
