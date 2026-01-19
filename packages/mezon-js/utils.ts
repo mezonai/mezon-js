@@ -1,5 +1,6 @@
 import { encode, decode } from "js-base64";
 import * as tsproto from "./api/api";
+import { ApiDirectFcmProto } from "./api.gen";
 
 export function buildFetchOptions(
   method: string,
@@ -100,6 +101,14 @@ export function decodeMentions(data: any) {
     const buffer: ArrayBuffer = data;
     const uintBuffer: Uint8Array = new Uint8Array(buffer);
     const mentions = tsproto.MessageMentionList.decode(uintBuffer);
+    mentions.mentions?.map(m => {
+      return {
+        ...m,
+        id: String(m.id),
+        role_id: String(m.role_id),
+        user_id: String(m.user_id)
+      }
+    });
     return mentions;
   } catch (error) {
     return safeJSONParse(data);
@@ -140,6 +149,14 @@ export function decodeRefs(data: any) {
     const buffer: ArrayBuffer = data;
     const uintBuffer: Uint8Array = new Uint8Array(buffer);
     const refs = tsproto.MessageRefList.decode(uintBuffer);
+    refs.refs?.map(r => {
+      return {
+        ...r,
+        message_id: r.message_id,
+        message_ref_id: r.message_ref_id,
+        message_sender_id: r.message_sender_id
+      }
+    })
     return refs;
   } catch (error) {
     return safeJSONParse(data);
@@ -160,6 +177,20 @@ export function decodeReactions(data: any) {
     const buffer: ArrayBuffer = data;
     const uintBuffer: Uint8Array = new Uint8Array(buffer);
     const reactions = tsproto.MessageReactionList.decode(uintBuffer);
+    reactions.reactions?.map(r => {
+      return {
+        ...r,
+        id: String(r.id),
+        emoji_id: String(r.emoji_id),
+        emoji_recent_id: String(r.emoji_recent_id),
+        clan_id: String(r.clan_id),
+        channel_id: String(r.channel_id),
+        message_id: String(r.message_id),
+        sender_id: String(r.sender_id),
+        topic_id: String(r.topic_id),
+        message_sender_id: String(r.message_sender_id)
+      }
+    })
     return reactions;
   } catch (error) {
     return safeJSONParse(data);
@@ -180,7 +211,15 @@ export function decodeNotificationFcm(data: any) {
     const buffer: ArrayBuffer = data;
     const uintBuffer: Uint8Array = new Uint8Array(buffer);
     const noti = tsproto.DirectFcmProto.decode(uintBuffer);
-    return noti;
+    var result : ApiDirectFcmProto = {
+      ...noti,
+      clan_id: String(noti.clan_id),
+      channel_id: String(noti.channel_id),
+      message_id: String(noti.message_id),
+      sender_id: String(noti.sender_id),
+      mention_ids: noti.mention_ids.map(m => String(m))
+    }
+    return result;
   } catch (error) {
     return safeJSONParse(data);
   }
