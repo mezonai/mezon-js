@@ -1,7 +1,6 @@
-import { MezonApi } from "../../api";
+import { ApiChannelDescription, MezonApi } from "../../api";
 import { ChannelType } from "../../constants";
 import {
-  ApiChannelDescription,
   ApiCreateChannelDescRequest,
 } from "../../interfaces";
 import { isValidUserId } from "../../utils/helper";
@@ -24,10 +23,10 @@ export class ChannelManager {
     );
     if (!channels?.channeldesc || !channels?.channeldesc?.length) return;
     this.allDmChannels = channels?.channeldesc
-      .map((channel: { user_ids: string | string[]; channel_id: string; type?: number; }) => {
-        if (!channel?.user_ids?.length || channel?.type !== ChannelType.CHANNEL_TYPE_DM) return;
+      .map((channel: ApiChannelDescription) => {
+        if (!channel.user_ids || !channel.user_ids.length || channel.type !== ChannelType.CHANNEL_TYPE_DM) return;
         return {
-          [channel.user_ids[0]]: channel.channel_id,
+          [channel.user_ids[0]]: channel.channel_id!,
         };
       })
       .filter(Boolean)

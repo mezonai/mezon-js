@@ -1,6 +1,7 @@
 import { MezonApi } from "../../api";
 import { ChannelType } from "../../constants";
 import {
+  ApiChannelDescription,
   ApiRoleListEventResponse,
   ApiVoiceChannelUserList,
   MezonUpdateRoleBody,
@@ -46,7 +47,7 @@ export class Clan {
     socketManager: SocketManager,
     sessionToken: string,
     messageQueue: AsyncThrottleQueue,
-    messageDB: MessageDatabase
+    messageDB: MessageDatabase,
   ) {
     this.id = initClanData.id;
     this.name = initClanData.name;
@@ -75,21 +76,26 @@ export class Clan {
     this._loadingPromise = (async () => {
       const channels = await this.apiClient.listChannelDescs(
         this.sessionToken,
+        undefined,
+        undefined,
+        undefined,
+        this.id,
         ChannelType.CHANNEL_TYPE_CHANNEL,
-        this.id
       );
 
-      const validChannels =
-        channels?.channeldesc?.filter((c: any) => Object.keys(c).length > 0) ??
-        [];
+      const validChannels = channels?.channeldesc?.filter((c: any) => Object.keys(c).length > 0) ?? [];
       for (const channel of validChannels) {
         if (!channel?.channel_id) continue;
         const channelObj = new TextChannel(
-          { ...channel, type: channel?.channel_type || channel?.type },
+          {
+            ...channel,
+            type: channel?.type,
+            clan_id: channel?.clan_id ?? this.id,
+          } as ApiChannelDescription,
           this,
           this.socketManager,
           this.messageQueue,
-          this.messageDB
+          this.messageDB,
         );
         this.channels.set(channel.channel_id!, channelObj);
         this.client.channels.set(channel.channel_id!, channelObj);
@@ -106,7 +112,7 @@ export class Clan {
     channel_type: number = ChannelType.CHANNEL_TYPE_GMEET_VOICE,
     limit: number = 500,
     state?: number,
-    cursor?: string
+    cursor?: string,
   ) {
     const clanId = this.id;
 
@@ -115,15 +121,7 @@ export class Clan {
       throw new Error("0 < limit <= 500");
     }
     return this.apiClient
-      .listChannelVoiceUsers(
-        this.sessionToken,
-        clanId,
-        channel_id,
-        channel_type,
-        limit,
-        state,
-        cursor
-      )
+      .listChannelVoiceUsers(this.sessionToken, clanId, channel_id, channel_type, limit, state, cursor)
       .then((response: ApiVoiceChannelUserList) => {
         var result: ApiVoiceChannelUserList = {
           voice_channel_users: [],
@@ -145,20 +143,13 @@ export class Clan {
       });
   }
 
-  async updateRole(
-    roleId: string,
-    request: MezonUpdateRoleBody
-  ): Promise<boolean> {
+  async updateRole(roleId: string, request: MezonUpdateRoleBody): Promise<boolean> {
     const session = this.sessionToken;
     return this.apiClient.updateRole(session, roleId, request);
   }
 
-  async listRoles(
-    limit?: string,
-    state?: string,
-    cursor?: string
-  ): Promise<ApiRoleListEventResponse> {
+  async listRoles(limit?: number, state?: number, cursor?: string): Promise<ApiRoleListEventResponse> {
     const session = this.sessionToken;
-    return this.apiClient.listRoles(session, this.id, limit, state, cursor);
+    return (await this.apiClient.listRoles(session, this.id, limit, state, cursor)) as ApiRoleListEventResponse;
   }
 }

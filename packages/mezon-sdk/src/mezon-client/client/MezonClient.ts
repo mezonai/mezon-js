@@ -29,6 +29,7 @@ import {
 import { CreateEventRequest } from "../../api/api";
 import { User, UserInitData } from "../structures/User";
 import { Clan } from "../structures/Clan";
+import { decodeNotificationFcm } from "../utils/helper";
 
 export class MezonClient extends MezonClientCore {
   private _internalListenersBound = false;
@@ -332,16 +333,17 @@ export class MezonClient extends MezonClientCore {
     const notifications = e.notifications;
     if (notifications && notifications.length) {
       for (const noti of notifications) {
-        const content = JSON.parse(noti?.content ?? "{}");
+        const content = (noti.content = noti.content ? decodeNotificationFcm(noti.content) : undefined);
         if (noti.code === -2) {
           const session = this.sessionManager.getSession()!;
-          await this.apiClient.requestFriend(
+          await this.apiClient.addFriends(
             session.token,
-            content.username,
-            noti.sender_id
+            [content.username],
+            [noti.sender_id]
           );
         }
       }
     }
   }
+  
 }

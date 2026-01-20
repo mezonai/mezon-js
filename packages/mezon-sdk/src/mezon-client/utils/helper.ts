@@ -1,3 +1,5 @@
+import * as tsproto from "../../api/api";
+
 export function getRandomColor(): string {
   const colors: string[] = [
     '#1ABC9C', // Aqua
@@ -21,4 +23,58 @@ export function getRandomColor(): string {
   ];
   const randomIndex = Math.floor(Math.random() * colors.length);
   return colors[randomIndex] || '#F1C40F';
+}
+
+export function safeJSONParse(raw: any): any {
+  if (raw === null || raw === undefined) return { t: raw };
+
+  let jsonStr: string;
+
+  if (raw instanceof Uint8Array) {
+    jsonStr = new TextDecoder().decode(raw);
+  } else if (typeof raw === "string") {
+    jsonStr = raw;
+  } else {
+    return typeof raw === "object" ? raw : { t: raw };
+  }
+
+  if (!jsonStr || jsonStr === "" || jsonStr === "[]") {
+    return { t: jsonStr };
+  }
+
+  try {
+    return JSON.parse(jsonStr);
+  } catch (error) {
+    try {
+      const fixedJsonStr = jsonStr.replace(/\n/g, "\\n").replace(/\r/g, "\\r");
+      return JSON.parse(fixedJsonStr);
+    } catch (e) {
+      console.error("JSON Parse failed completely:", { original: jsonStr, error: e });
+      return { t: jsonStr };
+    }
+  }
+}
+
+const isEmpty = (data: any) => {
+  return !data || data === null || data === undefined || data === "" || data === "[]";
+};
+
+export function decodeNotificationFcm(data: any) {
+  if (isEmpty(data)) return;
+  // 91 is '[' (JSON Array) | 123 is '{' (JSON Object)
+  const firstByte = data[0];
+  const isJson = firstByte === 91 || firstByte === 123;
+
+  if (isJson) {
+    return safeJSONParse(data);
+  }
+
+  try {
+    const buffer: ArrayBuffer = data;
+    const uintBuffer: Uint8Array = new Uint8Array(buffer);
+    const noti = tsproto.DirectFcmProto.decode(uintBuffer);
+    return noti;
+  } catch (error) {
+    return safeJSONParse(data);
+  }
 }

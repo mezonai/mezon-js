@@ -1,5 +1,4 @@
-import { MezonApi } from "../../api";
-import { ApiSession } from "../../interfaces";
+import { ApiSession, MezonApi } from "../../api";
 import { Session } from "../../session";
 
 export class SessionManager {
@@ -11,14 +10,9 @@ export class SessionManager {
 
   async authenticate(botId: string, apiKey: string) {
     return this.apiClient
-      .mezonAuthenticate(apiKey, "", {
-        account: {
-          appid: botId,
-          token: apiKey,
-        },
-      })
-      .then(async (apiSession: ApiSession) => {
-        this.session = new Session(apiSession);
+      .authenticateMezon(apiKey, "", { token: botId, }, false)
+      .then((session: ApiSession) => {
+        this.session = new Session(session);
         return this.session;
       });
   }
@@ -31,11 +25,9 @@ export class SessionManager {
       refresh_token: this.session.refresh_token,
     };
 
-    return this.apiClient
-      .mezonAuthenticateLogout(this.session.token, request)
-      .then((response) => {
-        return response !== undefined;
-      });
+    return this.apiClient.sessionLogout(this.session.token, request).then((response) => {
+      return response !== undefined;
+    });
   }
 
   getSession(): Session | undefined {

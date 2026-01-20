@@ -220,31 +220,31 @@ export class TextChannel {
     });
   }
 
-  async playMedia(
-    url: string,
-    participantIdentity: string,
-    participantName: string,
-    name: string
-  ) {
-    const meetingCode = this.meeting_code;
-    if (!meetingCode) {
-      return { error: "Channel not voice channel." };
-    }
-    const token = this.clan.sessionToken;
-    if (!token) {
-      return { error: "Token not found." };
-    }
-    const payload = {
-      room_name: meetingCode,
-      participant_identity: participantIdentity,
-      participant_name: participantName,
-      url: url,
-      name: name,
-    };
-    try {
-      return await this.clan.apiClient.playMedia(token, payload);
-    } catch (error) {
-      throw error;
-    }
-  }
+  // async playMedia(
+  //   url: string,
+  //   participantIdentity: string,
+  //   participantName: string,
+  //   name: string
+  // ) {
+  //   const meetingCode = this.meeting_code;
+  //   if (!meetingCode) {
+  //     return { error: "Channel not voice channel." };
+  //   }
+  //   const token = this.clan.sessionToken;
+  //   if (!token) {
+  //     return { error: "Token not found." };
+  //   }
+  //   const payload = {
+  //     room_name: meetingCode,
+  //     participant_identity: participantIdentity,
+  //     participant_name: participantName,
+  //     url: url,
+  //     name: name,
+  //   };
+  //   try {
+  //     return await this.clan.apiClient.playMedia(token, payload);
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 }

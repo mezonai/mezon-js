@@ -6,7 +6,7 @@ import { ChannelMessageHeader } from "../api/api";
 export interface MMNExtraInfo extends ExtraInfo {}
 
 /**  */
-export interface ApiChannelDescription {
+export interface ApiChannelDescription{
   /** The clan of this channel */
   clan_id: string;
   /** The parent channel this message belongs to. */
@@ -18,9 +18,7 @@ export interface ApiChannelDescription {
   /** The category name */
   category_name: string;
   /** The channel type. */
-  type:
-    | number
-    | undefined;
+  type: number | undefined;
   /** creator ID. */
   creator_id: string;
   /** The channel lable */
@@ -32,13 +30,9 @@ export interface ApiChannelDescription {
   /** List DM user ids */
   user_ids: string[];
   /** last message id */
-  last_sent_message:
-    | ChannelMessageHeader
-    | undefined;
+  last_sent_message: ChannelMessageHeader | undefined;
   /** last seen message id */
-  last_seen_message:
-    | ChannelMessageHeader
-    | undefined;
+  last_seen_message: ChannelMessageHeader | undefined;
   /** DM status */
   onlines: boolean[];
   /** meeting code */

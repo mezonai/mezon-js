@@ -9,6 +9,7 @@ import { SessionManager } from "../manager/session_manager";
 import { EventManager } from "../manager/event_manager";
 import { WebSocketAdapterPb } from "../../web_socket_adapter_pb";
 import {
+  ApiChannelDescription,
   ApiGetZkProofRequest,
   ApiQuickMenuAccessPayload,
   ApiQuickMenuAccessRequest,
@@ -33,6 +34,7 @@ import {
   IZkProof,
   MmnClient,
   ZkClient,
+  IndexerClient,
 } from "mmn-client-js";
 
 const MAX_TIME_RETRY = 10;
@@ -62,6 +64,7 @@ export class MezonClientCore extends EventEmitter {
   protected apiClient!: MezonApi;
   protected _mmnClient!: MmnClient;
   protected _zkClient!: ZkClient;
+  protected _indexerClient!: IndexerClient;
   protected socketManager!: SocketManager;
   protected channelManager!: ChannelManager;
   protected sessionManager!: SessionManager;
@@ -123,7 +126,7 @@ export class MezonClientCore extends EventEmitter {
     this.channels = new CacheManager(this._fetchChannelFromAPI.bind(this));
     this.users = new CacheManager(this._fetchUserFromAPI.bind(this));
 
-    this.apiClient = new MezonApi(this.token, basePath, this.timeout);
+    this.apiClient = new MezonApi(this.token, this.timeout, basePath);
     this.sessionManager = new SessionManager(this.apiClient, sessionApi);
     this.socketManager = new SocketManager(
       this.host,
@@ -157,8 +160,8 @@ export class MezonClientCore extends EventEmitter {
   async handleClientLogin() {
     const tempApiClient = new MezonApi(
       this.token,
-      this.loginBasePath!,
-      this.timeout
+      this.timeout,
+      this.loginBasePath!
     );
     const tempSessionManager = new SessionManager(tempApiClient);
     let sessionApi = null;
@@ -370,25 +373,25 @@ export class MezonClientCore extends EventEmitter {
     this.eventManager = new EventManager();
   }
 
-  public getListFriends(limit?: number, state?: string, cursor?: string) {
+  public getListFriends(limit?: number, state?: number, cursor?: string) {
     const session = this.sessionManager.getSession()!;
-    return this.apiClient.getListFriends(session.token, limit, state, cursor);
+    return this.apiClient.listFriends(session.token, limit, state, cursor);
   }
 
   public acceptFriend(userId: string, username: string) {
     const session = this.sessionManager.getSession()!;
-    return this.apiClient.requestFriend(session.token, username, userId);
+    return this.apiClient.addFriends(session.token, [userId], [username]);
   }
 
   public addFriend(username: string) {
     const session = this.sessionManager.getSession()!;
-    return this.apiClient.requestFriend(session.token, username);
+    return this.apiClient.addFriends(session.token, [], [username]);
   }
 
-  public async listTransactionDetail(transactionId: string): Promise<any> {
-    const session = this.sessionManager.getSession()!;
-    return this.apiClient.listTransactionDetail(session.token, transactionId);
-  }
+  // public async listTransactionDetail(transactionId: string): Promise<any> {
+  //   const session = this.sessionManager.getSession()!;
+  //   return this.mmnClient.listTransactionDetail(session.token, transactionId);
+  // }
 
   protected async _fetchClanFromAPI(id: string): Promise<Clan> {
     throw Error(`Can not find clan ${id}!`);
@@ -405,7 +408,7 @@ export class MezonClientCore extends EventEmitter {
 
       const clan = this.clans.get(clanId)!;
       const channel = new TextChannel(
-        channelDetail,
+        channelDetail as ApiChannelDescription,
         clan,
         this.socketManager,
         this.messageQueue,
