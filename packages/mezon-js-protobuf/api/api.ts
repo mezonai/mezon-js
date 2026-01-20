@@ -2602,7 +2602,7 @@ export interface SystemMessageRequest {
   /** Setup tips */
   setup_tips: string;
   /** Hide audit log */
-  hide_audit_log: string;
+  hide_audit_log: boolean;
 }
 
 /** Request to delete a system message by clan ID. */
@@ -2932,7 +2932,7 @@ export interface ChannelCanvasListResponse {
   /** channel doc item */
   channel_canvases: ChannelCanvasItem[];
   /**  */
-  count: string;
+  count: number;
 }
 
 export interface ChannelCanvasDetailRequest {
@@ -27026,7 +27026,7 @@ function createBaseSystemMessageRequest(): SystemMessageRequest {
     welcome_sticker: "",
     boost_message: "",
     setup_tips: "",
-    hide_audit_log: "",
+    hide_audit_log: false,
   };
 }
 
@@ -27050,8 +27050,8 @@ export const SystemMessageRequest = {
     if (message.setup_tips !== "") {
       writer.uint32(50).string(message.setup_tips);
     }
-    if (message.hide_audit_log !== "") {
-      writer.uint32(58).string(message.hide_audit_log);
+    if (message.hide_audit_log !== false) {
+      writer.uint32(56).bool(message.hide_audit_log);
     }
     return writer;
   },
@@ -27106,11 +27106,11 @@ export const SystemMessageRequest = {
           message.setup_tips = reader.string();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.hide_audit_log = reader.string();
+          message.hide_audit_log = reader.bool();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -27129,7 +27129,7 @@ export const SystemMessageRequest = {
       welcome_sticker: isSet(object.welcome_sticker) ? globalThis.String(object.welcome_sticker) : "",
       boost_message: isSet(object.boost_message) ? globalThis.String(object.boost_message) : "",
       setup_tips: isSet(object.setup_tips) ? globalThis.String(object.setup_tips) : "",
-      hide_audit_log: isSet(object.hide_audit_log) ? globalThis.String(object.hide_audit_log) : "",
+      hide_audit_log: isSet(object.hide_audit_log) ? globalThis.Boolean(object.hide_audit_log) : false,
     };
   },
 
@@ -27153,7 +27153,7 @@ export const SystemMessageRequest = {
     if (message.setup_tips !== "") {
       obj.setup_tips = message.setup_tips;
     }
-    if (message.hide_audit_log !== "") {
+    if (message.hide_audit_log !== false) {
       obj.hide_audit_log = message.hide_audit_log;
     }
     return obj;
@@ -27170,7 +27170,7 @@ export const SystemMessageRequest = {
     message.welcome_sticker = object.welcome_sticker ?? "";
     message.boost_message = object.boost_message ?? "";
     message.setup_tips = object.setup_tips ?? "";
-    message.hide_audit_log = object.hide_audit_log ?? "";
+    message.hide_audit_log = object.hide_audit_log ?? false;
     return message;
   },
 };
@@ -30287,7 +30287,7 @@ export const ChannelCanvasItem = {
 };
 
 function createBaseChannelCanvasListResponse(): ChannelCanvasListResponse {
-  return { clan_id: "0", channel_id: "0", channel_canvases: [], count: "0" };
+  return { clan_id: "0", channel_id: "0", channel_canvases: [], count: 0 };
 }
 
 export const ChannelCanvasListResponse = {
@@ -30301,8 +30301,8 @@ export const ChannelCanvasListResponse = {
     for (const v of message.channel_canvases) {
       ChannelCanvasItem.encode(v!, writer.uint32(26).fork()).ldelim();
     }
-    if (message.count !== "0") {
-      writer.uint32(32).int64(message.count);
+    if (message.count !== 0) {
+      writer.uint32(32).int32(message.count);
     }
     return writer;
   },
@@ -30340,7 +30340,7 @@ export const ChannelCanvasListResponse = {
             break;
           }
 
-          message.count = longToString(reader.int64() as Long);
+          message.count = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -30358,7 +30358,7 @@ export const ChannelCanvasListResponse = {
       channel_canvases: globalThis.Array.isArray(object?.channel_canvases)
         ? object.channel_canvases.map((e: any) => ChannelCanvasItem.fromJSON(e))
         : [],
-      count: isSet(object.count) ? globalThis.String(object.count) : "0",
+      count: isSet(object.count) ? globalThis.Number(object.count) : 0,
     };
   },
 
@@ -30373,8 +30373,8 @@ export const ChannelCanvasListResponse = {
     if (message.channel_canvases?.length) {
       obj.channel_canvases = message.channel_canvases.map((e) => ChannelCanvasItem.toJSON(e));
     }
-    if (message.count !== "0") {
-      obj.count = message.count;
+    if (message.count !== 0) {
+      obj.count = Math.round(message.count);
     }
     return obj;
   },
@@ -30387,7 +30387,7 @@ export const ChannelCanvasListResponse = {
     message.clan_id = object.clan_id ?? "0";
     message.channel_id = object.channel_id ?? "0";
     message.channel_canvases = object.channel_canvases?.map((e) => ChannelCanvasItem.fromPartial(e)) || [];
-    message.count = object.count ?? "0";
+    message.count = object.count ?? 0;
     return message;
   },
 };
