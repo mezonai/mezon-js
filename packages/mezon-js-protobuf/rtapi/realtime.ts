@@ -5,6 +5,7 @@
 // source: rtapi/realtime.proto
 
 /* eslint-disable */
+import Long from "long";
 import _m0 from "protobufjs/minimal";
 import {
   AllUsersAddChannelRequest,
@@ -3633,12 +3634,16 @@ function createBaseUpdateLocalCacheEvent(): UpdateLocalCacheEvent {
 
 export const UpdateLocalCacheEvent = {
   encode(message: UpdateLocalCacheEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    writer.uint32(10).fork();
     for (const v of message.user_ids) {
-      writer.uint32(10).string(v!);
+      writer.int64(v);
     }
+    writer.ldelim();
+    writer.uint32(18).fork();
     for (const v of message.channel_ids) {
-      writer.uint32(18).string(v!);
+      writer.int64(v);
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -3650,19 +3655,39 @@ export const UpdateLocalCacheEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
+          if (tag === 8) {
+            message.user_ids.push(longToString(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 10) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
+          if (tag === 16) {
+            message.channel_ids.push(longToString(reader.int64() as Long));
+
+            continue;
           }
 
-          message.channel_ids.push(reader.string());
-          continue;
+          if (tag === 18) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.channel_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3747,25 +3772,27 @@ export const FollowEvent = {
 };
 
 function createBaseBannedUserEvent(): BannedUserEvent {
-  return { user_ids: [], action: 0, banner_id: "", channel_id: "", clan_id: "", ban_time: 0 };
+  return { user_ids: [], action: 0, banner_id: "0", channel_id: "0", clan_id: "0", ban_time: 0 };
 }
 
 export const BannedUserEvent = {
   encode(message: BannedUserEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    writer.uint32(10).fork();
     for (const v of message.user_ids) {
-      writer.uint32(10).string(v!);
+      writer.int64(v);
     }
+    writer.ldelim();
     if (message.action !== 0) {
       writer.uint32(16).int32(message.action);
     }
-    if (message.banner_id !== "") {
-      writer.uint32(26).string(message.banner_id);
+    if (message.banner_id !== "0") {
+      writer.uint32(24).int64(message.banner_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(34).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(32).int64(message.channel_id);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(42).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(40).int64(message.clan_id);
     }
     if (message.ban_time !== 0) {
       writer.uint32(48).int32(message.ban_time);
@@ -3781,12 +3808,22 @@ export const BannedUserEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
+          if (tag === 8) {
+            message.user_ids.push(longToString(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 10) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 2:
           if (tag !== 16) {
             break;
@@ -3795,25 +3832,25 @@ export const BannedUserEvent = {
           message.action = reader.int32();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.banner_id = reader.string();
+          message.banner_id = longToString(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 48) {
@@ -3835,9 +3872,9 @@ export const BannedUserEvent = {
     return {
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
       action: isSet(object.action) ? globalThis.Number(object.action) : 0,
-      banner_id: isSet(object.banner_id) ? globalThis.String(object.banner_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      banner_id: isSet(object.banner_id) ? globalThis.String(object.banner_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       ban_time: isSet(object.ban_time) ? globalThis.Number(object.ban_time) : 0,
     };
   },
@@ -3850,13 +3887,13 @@ export const BannedUserEvent = {
     if (message.action !== 0) {
       obj.action = Math.round(message.action);
     }
-    if (message.banner_id !== "") {
+    if (message.banner_id !== "0") {
       obj.banner_id = message.banner_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     if (message.ban_time !== 0) {
@@ -3872,9 +3909,9 @@ export const BannedUserEvent = {
     const message = createBaseBannedUserEvent();
     message.user_ids = object.user_ids?.map((e) => e) || [];
     message.action = object.action ?? 0;
-    message.banner_id = object.banner_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.banner_id = object.banner_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.clan_id = object.clan_id ?? "0";
     message.ban_time = object.ban_time ?? 0;
     return message;
   },
@@ -3882,21 +3919,21 @@ export const BannedUserEvent = {
 
 function createBaseChannelCanvas(): ChannelCanvas {
   return {
-    id: "",
+    id: "0",
     title: "",
     content: "",
-    creator_id: "",
-    editor_id: "",
+    creator_id: "0",
+    editor_id: "0",
     is_default: false,
-    channel_id: "",
+    channel_id: "0",
     status: 0,
   };
 }
 
 export const ChannelCanvas = {
   encode(message: ChannelCanvas, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== "0") {
+      writer.uint32(8).int64(message.id);
     }
     if (message.title !== "") {
       writer.uint32(18).string(message.title);
@@ -3904,17 +3941,17 @@ export const ChannelCanvas = {
     if (message.content !== "") {
       writer.uint32(26).string(message.content);
     }
-    if (message.creator_id !== "") {
-      writer.uint32(34).string(message.creator_id);
+    if (message.creator_id !== "0") {
+      writer.uint32(32).int64(message.creator_id);
     }
-    if (message.editor_id !== "") {
-      writer.uint32(42).string(message.editor_id);
+    if (message.editor_id !== "0") {
+      writer.uint32(40).int64(message.editor_id);
     }
     if (message.is_default !== false) {
       writer.uint32(48).bool(message.is_default);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(58).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(56).int64(message.channel_id);
     }
     if (message.status !== 0) {
       writer.uint32(64).int32(message.status);
@@ -3930,11 +3967,11 @@ export const ChannelCanvas = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -3951,18 +3988,18 @@ export const ChannelCanvas = {
           message.content = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToString(reader.int64() as Long);
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.editor_id = reader.string();
+          message.editor_id = longToString(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 48) {
@@ -3972,11 +4009,11 @@ export const ChannelCanvas = {
           message.is_default = reader.bool();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 8:
           if (tag !== 64) {
@@ -3996,20 +4033,20 @@ export const ChannelCanvas = {
 
   fromJSON(object: any): ChannelCanvas {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "0",
       title: isSet(object.title) ? globalThis.String(object.title) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      editor_id: isSet(object.editor_id) ? globalThis.String(object.editor_id) : "",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "0",
+      editor_id: isSet(object.editor_id) ? globalThis.String(object.editor_id) : "0",
       is_default: isSet(object.is_default) ? globalThis.Boolean(object.is_default) : false,
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
     };
   },
 
   toJSON(message: ChannelCanvas): unknown {
     const obj: any = {};
-    if (message.id !== "") {
+    if (message.id !== "0") {
       obj.id = message.id;
     }
     if (message.title !== "") {
@@ -4018,16 +4055,16 @@ export const ChannelCanvas = {
     if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.creator_id !== "") {
+    if (message.creator_id !== "0") {
       obj.creator_id = message.creator_id;
     }
-    if (message.editor_id !== "") {
+    if (message.editor_id !== "0") {
       obj.editor_id = message.editor_id;
     }
     if (message.is_default !== false) {
       obj.is_default = message.is_default;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
     if (message.status !== 0) {
@@ -4041,35 +4078,35 @@ export const ChannelCanvas = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelCanvas>, I>>(object: I): ChannelCanvas {
     const message = createBaseChannelCanvas();
-    message.id = object.id ?? "";
+    message.id = object.id ?? "0";
     message.title = object.title ?? "";
     message.content = object.content ?? "";
-    message.creator_id = object.creator_id ?? "";
-    message.editor_id = object.editor_id ?? "";
+    message.creator_id = object.creator_id ?? "0";
+    message.editor_id = object.editor_id ?? "0";
     message.is_default = object.is_default ?? false;
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? "0";
     message.status = object.status ?? 0;
     return message;
   },
 };
 
 function createBaseIncomingCallPush(): IncomingCallPush {
-  return { receiver_id: "", json_data: "", channel_id: "", caller_id: "" };
+  return { receiver_id: "0", json_data: "", channel_id: "0", caller_id: "0" };
 }
 
 export const IncomingCallPush = {
   encode(message: IncomingCallPush, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.receiver_id !== "") {
-      writer.uint32(10).string(message.receiver_id);
+    if (message.receiver_id !== "0") {
+      writer.uint32(8).int64(message.receiver_id);
     }
     if (message.json_data !== "") {
       writer.uint32(26).string(message.json_data);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(34).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(32).int64(message.channel_id);
     }
-    if (message.caller_id !== "") {
-      writer.uint32(42).string(message.caller_id);
+    if (message.caller_id !== "0") {
+      writer.uint32(40).int64(message.caller_id);
     }
     return writer;
   },
@@ -4082,11 +4119,11 @@ export const IncomingCallPush = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.receiver_id = reader.string();
+          message.receiver_id = longToString(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -4096,18 +4133,18 @@ export const IncomingCallPush = {
           message.json_data = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.caller_id = reader.string();
+          message.caller_id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -4120,25 +4157,25 @@ export const IncomingCallPush = {
 
   fromJSON(object: any): IncomingCallPush {
     return {
-      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
+      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "0",
       json_data: isSet(object.json_data) ? globalThis.String(object.json_data) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      caller_id: isSet(object.caller_id) ? globalThis.String(object.caller_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      caller_id: isSet(object.caller_id) ? globalThis.String(object.caller_id) : "0",
     };
   },
 
   toJSON(message: IncomingCallPush): unknown {
     const obj: any = {};
-    if (message.receiver_id !== "") {
+    if (message.receiver_id !== "0") {
       obj.receiver_id = message.receiver_id;
     }
     if (message.json_data !== "") {
       obj.json_data = message.json_data;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.caller_id !== "") {
+    if (message.caller_id !== "0") {
       obj.caller_id = message.caller_id;
     }
     return obj;
@@ -4149,22 +4186,22 @@ export const IncomingCallPush = {
   },
   fromPartial<I extends Exact<DeepPartial<IncomingCallPush>, I>>(object: I): IncomingCallPush {
     const message = createBaseIncomingCallPush();
-    message.receiver_id = object.receiver_id ?? "";
+    message.receiver_id = object.receiver_id ?? "0";
     message.json_data = object.json_data ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.caller_id = object.caller_id ?? "";
+    message.channel_id = object.channel_id ?? "0";
+    message.caller_id = object.caller_id ?? "0";
     return message;
   },
 };
 
 function createBaseWebrtcSignalingFwd(): WebrtcSignalingFwd {
-  return { receiver_id: "", data_type: 0, json_data: "", channel_id: "", caller_id: "" };
+  return { receiver_id: "0", data_type: 0, json_data: "", channel_id: "0", caller_id: "0" };
 }
 
 export const WebrtcSignalingFwd = {
   encode(message: WebrtcSignalingFwd, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.receiver_id !== "") {
-      writer.uint32(10).string(message.receiver_id);
+    if (message.receiver_id !== "0") {
+      writer.uint32(8).int64(message.receiver_id);
     }
     if (message.data_type !== 0) {
       writer.uint32(16).int32(message.data_type);
@@ -4172,11 +4209,11 @@ export const WebrtcSignalingFwd = {
     if (message.json_data !== "") {
       writer.uint32(26).string(message.json_data);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(34).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(32).int64(message.channel_id);
     }
-    if (message.caller_id !== "") {
-      writer.uint32(42).string(message.caller_id);
+    if (message.caller_id !== "0") {
+      writer.uint32(40).int64(message.caller_id);
     }
     return writer;
   },
@@ -4189,11 +4226,11 @@ export const WebrtcSignalingFwd = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.receiver_id = reader.string();
+          message.receiver_id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
@@ -4210,18 +4247,18 @@ export const WebrtcSignalingFwd = {
           message.json_data = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.caller_id = reader.string();
+          message.caller_id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -4234,17 +4271,17 @@ export const WebrtcSignalingFwd = {
 
   fromJSON(object: any): WebrtcSignalingFwd {
     return {
-      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
+      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "0",
       data_type: isSet(object.data_type) ? globalThis.Number(object.data_type) : 0,
       json_data: isSet(object.json_data) ? globalThis.String(object.json_data) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      caller_id: isSet(object.caller_id) ? globalThis.String(object.caller_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      caller_id: isSet(object.caller_id) ? globalThis.String(object.caller_id) : "0",
     };
   },
 
   toJSON(message: WebrtcSignalingFwd): unknown {
     const obj: any = {};
-    if (message.receiver_id !== "") {
+    if (message.receiver_id !== "0") {
       obj.receiver_id = message.receiver_id;
     }
     if (message.data_type !== 0) {
@@ -4253,10 +4290,10 @@ export const WebrtcSignalingFwd = {
     if (message.json_data !== "") {
       obj.json_data = message.json_data;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.caller_id !== "") {
+    if (message.caller_id !== "0") {
       obj.caller_id = message.caller_id;
     }
     return obj;
@@ -4267,26 +4304,26 @@ export const WebrtcSignalingFwd = {
   },
   fromPartial<I extends Exact<DeepPartial<WebrtcSignalingFwd>, I>>(object: I): WebrtcSignalingFwd {
     const message = createBaseWebrtcSignalingFwd();
-    message.receiver_id = object.receiver_id ?? "";
+    message.receiver_id = object.receiver_id ?? "0";
     message.data_type = object.data_type ?? 0;
     message.json_data = object.json_data ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.caller_id = object.caller_id ?? "";
+    message.channel_id = object.channel_id ?? "0";
+    message.caller_id = object.caller_id ?? "0";
     return message;
   },
 };
 
 function createBaseSFUSignalingFwd(): SFUSignalingFwd {
-  return { clan_id: "", channel_id: "", data_type: 0, json_data: "", user_id: "" };
+  return { clan_id: "0", channel_id: "0", data_type: 0, json_data: "", user_id: "0" };
 }
 
 export const SFUSignalingFwd = {
   encode(message: SFUSignalingFwd, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
     }
     if (message.data_type !== 0) {
       writer.uint32(24).int32(message.data_type);
@@ -4294,8 +4331,8 @@ export const SFUSignalingFwd = {
     if (message.json_data !== "") {
       writer.uint32(34).string(message.json_data);
     }
-    if (message.user_id !== "") {
-      writer.uint32(42).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(40).int64(message.user_id);
     }
     return writer;
   },
@@ -4308,18 +4345,18 @@ export const SFUSignalingFwd = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 24) {
@@ -4336,11 +4373,11 @@ export const SFUSignalingFwd = {
           message.json_data = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -4353,20 +4390,20 @@ export const SFUSignalingFwd = {
 
   fromJSON(object: any): SFUSignalingFwd {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       data_type: isSet(object.data_type) ? globalThis.Number(object.data_type) : 0,
       json_data: isSet(object.json_data) ? globalThis.String(object.json_data) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
     };
   },
 
   toJSON(message: SFUSignalingFwd): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
     if (message.data_type !== 0) {
@@ -4375,7 +4412,7 @@ export const SFUSignalingFwd = {
     if (message.json_data !== "") {
       obj.json_data = message.json_data;
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     return obj;
@@ -4386,23 +4423,23 @@ export const SFUSignalingFwd = {
   },
   fromPartial<I extends Exact<DeepPartial<SFUSignalingFwd>, I>>(object: I): SFUSignalingFwd {
     const message = createBaseSFUSignalingFwd();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
     message.data_type = object.data_type ?? 0;
     message.json_data = object.json_data ?? "";
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? "0";
     return message;
   },
 };
 
 function createBaseAddClanUserEvent(): AddClanUserEvent {
-  return { clan_id: "", user: undefined, invitor: "" };
+  return { clan_id: "0", user: undefined, invitor: "" };
 }
 
 export const AddClanUserEvent = {
   encode(message: AddClanUserEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
     if (message.user !== undefined) {
       UserProfileRedis.encode(message.user, writer.uint32(18).fork()).ldelim();
@@ -4421,11 +4458,11 @@ export const AddClanUserEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -4452,7 +4489,7 @@ export const AddClanUserEvent = {
 
   fromJSON(object: any): AddClanUserEvent {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       user: isSet(object.user) ? UserProfileRedis.fromJSON(object.user) : undefined,
       invitor: isSet(object.invitor) ? globalThis.String(object.invitor) : "",
     };
@@ -4460,7 +4497,7 @@ export const AddClanUserEvent = {
 
   toJSON(message: AddClanUserEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     if (message.user !== undefined) {
@@ -4477,7 +4514,7 @@ export const AddClanUserEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<AddClanUserEvent>, I>>(object: I): AddClanUserEvent {
     const message = createBaseAddClanUserEvent();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
     message.user = (object.user !== undefined && object.user !== null)
       ? UserProfileRedis.fromPartial(object.user)
       : undefined;
@@ -4487,7 +4524,7 @@ export const AddClanUserEvent = {
 };
 
 function createBaseRoleAssignedEvent(): RoleAssignedEvent {
-  return { ClanId: "", role_id: "", user_ids_assigned: [], user_ids_removed: [] };
+  return { ClanId: "", role_id: "0", user_ids_assigned: [], user_ids_removed: [] };
 }
 
 export const RoleAssignedEvent = {
@@ -4495,15 +4532,19 @@ export const RoleAssignedEvent = {
     if (message.ClanId !== "") {
       writer.uint32(10).string(message.ClanId);
     }
-    if (message.role_id !== "") {
-      writer.uint32(18).string(message.role_id);
+    if (message.role_id !== "0") {
+      writer.uint32(16).int64(message.role_id);
     }
+    writer.uint32(26).fork();
     for (const v of message.user_ids_assigned) {
-      writer.uint32(26).string(v!);
+      writer.int64(v);
     }
+    writer.ldelim();
+    writer.uint32(34).fork();
     for (const v of message.user_ids_removed) {
-      writer.uint32(34).string(v!);
+      writer.int64(v);
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -4522,26 +4563,46 @@ export const RoleAssignedEvent = {
           message.ClanId = reader.string();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.role_id = reader.string();
+          message.role_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
-            break;
+          if (tag === 24) {
+            message.user_ids_assigned.push(longToString(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids_assigned.push(reader.string());
-          continue;
+          if (tag === 26) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids_assigned.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 4:
-          if (tag !== 34) {
-            break;
+          if (tag === 32) {
+            message.user_ids_removed.push(longToString(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids_removed.push(reader.string());
-          continue;
+          if (tag === 34) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids_removed.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -4554,7 +4615,7 @@ export const RoleAssignedEvent = {
   fromJSON(object: any): RoleAssignedEvent {
     return {
       ClanId: isSet(object.ClanId) ? globalThis.String(object.ClanId) : "",
-      role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "",
+      role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "0",
       user_ids_assigned: globalThis.Array.isArray(object?.user_ids_assigned)
         ? object.user_ids_assigned.map((e: any) => globalThis.String(e))
         : [],
@@ -4569,7 +4630,7 @@ export const RoleAssignedEvent = {
     if (message.ClanId !== "") {
       obj.ClanId = message.ClanId;
     }
-    if (message.role_id !== "") {
+    if (message.role_id !== "0") {
       obj.role_id = message.role_id;
     }
     if (message.user_ids_assigned?.length) {
@@ -4587,7 +4648,7 @@ export const RoleAssignedEvent = {
   fromPartial<I extends Exact<DeepPartial<RoleAssignedEvent>, I>>(object: I): RoleAssignedEvent {
     const message = createBaseRoleAssignedEvent();
     message.ClanId = object.ClanId ?? "";
-    message.role_id = object.role_id ?? "";
+    message.role_id = object.role_id ?? "0";
     message.user_ids_assigned = object.user_ids_assigned?.map((e) => e) || [];
     message.user_ids_removed = object.user_ids_removed?.map((e) => e) || [];
     return message;
@@ -4595,13 +4656,13 @@ export const RoleAssignedEvent = {
 };
 
 function createBasePermissionRoleChannel(): PermissionRoleChannel {
-  return { permission_id: "", active: false };
+  return { permission_id: "0", active: false };
 }
 
 export const PermissionRoleChannel = {
   encode(message: PermissionRoleChannel, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.permission_id !== "") {
-      writer.uint32(10).string(message.permission_id);
+    if (message.permission_id !== "0") {
+      writer.uint32(8).int64(message.permission_id);
     }
     if (message.active !== false) {
       writer.uint32(16).bool(message.active);
@@ -4617,11 +4678,11 @@ export const PermissionRoleChannel = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.permission_id = reader.string();
+          message.permission_id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
@@ -4641,14 +4702,14 @@ export const PermissionRoleChannel = {
 
   fromJSON(object: any): PermissionRoleChannel {
     return {
-      permission_id: isSet(object.permission_id) ? globalThis.String(object.permission_id) : "",
+      permission_id: isSet(object.permission_id) ? globalThis.String(object.permission_id) : "0",
       active: isSet(object.active) ? globalThis.Boolean(object.active) : false,
     };
   },
 
   toJSON(message: PermissionRoleChannel): unknown {
     const obj: any = {};
-    if (message.permission_id !== "") {
+    if (message.permission_id !== "0") {
       obj.permission_id = message.permission_id;
     }
     if (message.active !== false) {
@@ -4662,7 +4723,7 @@ export const PermissionRoleChannel = {
   },
   fromPartial<I extends Exact<DeepPartial<PermissionRoleChannel>, I>>(object: I): PermissionRoleChannel {
     const message = createBasePermissionRoleChannel();
-    message.permission_id = object.permission_id ?? "";
+    message.permission_id = object.permission_id ?? "0";
     message.active = object.active ?? false;
     return message;
   },
@@ -4670,27 +4731,27 @@ export const PermissionRoleChannel = {
 
 function createBaseHashtagDm(): HashtagDm {
   return {
-    channel_id: "",
+    channel_id: "0",
     channel_label: "",
-    clan_id: "",
+    clan_id: "0",
     clan_name: "",
     meeting_code: "",
     type: 0,
     channel_private: 0,
-    parent_id: "",
+    parent_id: "0",
   };
 }
 
 export const HashtagDm = {
   encode(message: HashtagDm, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(8).int64(message.channel_id);
     }
     if (message.channel_label !== "") {
       writer.uint32(18).string(message.channel_label);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(24).int64(message.clan_id);
     }
     if (message.clan_name !== "") {
       writer.uint32(34).string(message.clan_name);
@@ -4704,8 +4765,8 @@ export const HashtagDm = {
     if (message.channel_private !== 0) {
       writer.uint32(56).int32(message.channel_private);
     }
-    if (message.parent_id !== "") {
-      writer.uint32(66).string(message.parent_id);
+    if (message.parent_id !== "0") {
+      writer.uint32(64).int64(message.parent_id);
     }
     return writer;
   },
@@ -4718,11 +4779,11 @@ export const HashtagDm = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -4732,11 +4793,11 @@ export const HashtagDm = {
           message.channel_label = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -4767,11 +4828,11 @@ export const HashtagDm = {
           message.channel_private = reader.int32();
           continue;
         case 8:
-          if (tag !== 66) {
+          if (tag !== 64) {
             break;
           }
 
-          message.parent_id = reader.string();
+          message.parent_id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -4784,26 +4845,26 @@ export const HashtagDm = {
 
   fromJSON(object: any): HashtagDm {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
       type: isSet(object.type) ? globalThis.Number(object.type) : 0,
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
-      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
+      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "0",
     };
   },
 
   toJSON(message: HashtagDm): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
     if (message.channel_label !== "") {
       obj.channel_label = message.channel_label;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     if (message.clan_name !== "") {
@@ -4818,7 +4879,7 @@ export const HashtagDm = {
     if (message.channel_private !== 0) {
       obj.channel_private = Math.round(message.channel_private);
     }
-    if (message.parent_id !== "") {
+    if (message.parent_id !== "0") {
       obj.parent_id = message.parent_id;
     }
     return obj;
@@ -4829,39 +4890,39 @@ export const HashtagDm = {
   },
   fromPartial<I extends Exact<DeepPartial<HashtagDm>, I>>(object: I): HashtagDm {
     const message = createBaseHashtagDm();
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? "0";
     message.channel_label = object.channel_label ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
     message.clan_name = object.clan_name ?? "";
     message.meeting_code = object.meeting_code ?? "";
     message.type = object.type ?? 0;
     message.channel_private = object.channel_private ?? 0;
-    message.parent_id = object.parent_id ?? "";
+    message.parent_id = object.parent_id ?? "0";
     return message;
   },
 };
 
 function createBaseChannelDescription(): ChannelDescription {
   return {
-    clan_id: "",
-    channel_id: "",
+    clan_id: "0",
+    channel_id: "0",
     type: undefined,
     channel_label: "",
     channel_private: 0,
     meeting_code: "",
     clan_name: "",
-    parent_id: "",
+    parent_id: "0",
     last_sent_message: undefined,
   };
 }
 
 export const ChannelDescription = {
   encode(message: ChannelDescription, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
     }
     if (message.type !== undefined) {
       Int32Value.encode({ value: message.type! }, writer.uint32(26).fork()).ldelim();
@@ -4878,8 +4939,8 @@ export const ChannelDescription = {
     if (message.clan_name !== "") {
       writer.uint32(58).string(message.clan_name);
     }
-    if (message.parent_id !== "") {
-      writer.uint32(66).string(message.parent_id);
+    if (message.parent_id !== "0") {
+      writer.uint32(64).int64(message.parent_id);
     }
     if (message.last_sent_message !== undefined) {
       ChannelMessageHeader.encode(message.last_sent_message, writer.uint32(98).fork()).ldelim();
@@ -4895,18 +4956,18 @@ export const ChannelDescription = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -4944,11 +5005,11 @@ export const ChannelDescription = {
           message.clan_name = reader.string();
           continue;
         case 8:
-          if (tag !== 66) {
+          if (tag !== 64) {
             break;
           }
 
-          message.parent_id = reader.string();
+          message.parent_id = longToString(reader.int64() as Long);
           continue;
         case 12:
           if (tag !== 98) {
@@ -4968,14 +5029,14 @@ export const ChannelDescription = {
 
   fromJSON(object: any): ChannelDescription {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       type: isSet(object.type) ? Number(object.type) : undefined,
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
       meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
-      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
+      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "0",
       last_sent_message: isSet(object.last_sent_message)
         ? ChannelMessageHeader.fromJSON(object.last_sent_message)
         : undefined,
@@ -4984,10 +5045,10 @@ export const ChannelDescription = {
 
   toJSON(message: ChannelDescription): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
     if (message.type !== undefined) {
@@ -5005,7 +5066,7 @@ export const ChannelDescription = {
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.parent_id !== "") {
+    if (message.parent_id !== "0") {
       obj.parent_id = message.parent_id;
     }
     if (message.last_sent_message !== undefined) {
@@ -5019,14 +5080,14 @@ export const ChannelDescription = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelDescription>, I>>(object: I): ChannelDescription {
     const message = createBaseChannelDescription();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
     message.type = object.type ?? undefined;
     message.channel_label = object.channel_label ?? "";
     message.channel_private = object.channel_private ?? 0;
     message.meeting_code = object.meeting_code ?? "";
     message.clan_name = object.clan_name ?? "";
-    message.parent_id = object.parent_id ?? "";
+    message.parent_id = object.parent_id ?? "0";
     message.last_sent_message = (object.last_sent_message !== undefined && object.last_sent_message !== null)
       ? ChannelMessageHeader.fromPartial(object.last_sent_message)
       : undefined;
@@ -5035,13 +5096,13 @@ export const ChannelDescription = {
 };
 
 function createBaseClanEmoji(): ClanEmoji {
-  return { id: "", src: "", shortname: "", category: "", creator_id: "", clan_id: "", logo: "", clan_name: "" };
+  return { id: "0", src: "", shortname: "", category: "", creator_id: "0", clan_id: "0", logo: "", clan_name: "" };
 }
 
 export const ClanEmoji = {
   encode(message: ClanEmoji, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== "0") {
+      writer.uint32(8).int64(message.id);
     }
     if (message.src !== "") {
       writer.uint32(18).string(message.src);
@@ -5052,11 +5113,11 @@ export const ClanEmoji = {
     if (message.category !== "") {
       writer.uint32(34).string(message.category);
     }
-    if (message.creator_id !== "") {
-      writer.uint32(42).string(message.creator_id);
+    if (message.creator_id !== "0") {
+      writer.uint32(40).int64(message.creator_id);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(50).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(48).int64(message.clan_id);
     }
     if (message.logo !== "") {
       writer.uint32(58).string(message.logo);
@@ -5075,11 +5136,11 @@ export const ClanEmoji = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -5103,18 +5164,18 @@ export const ClanEmoji = {
           message.category = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToString(reader.int64() as Long);
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 7:
           if (tag !== 58) {
@@ -5141,12 +5202,12 @@ export const ClanEmoji = {
 
   fromJSON(object: any): ClanEmoji {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "0",
       src: isSet(object.src) ? globalThis.String(object.src) : "",
       shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
       category: isSet(object.category) ? globalThis.String(object.category) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "0",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
     };
@@ -5154,7 +5215,7 @@ export const ClanEmoji = {
 
   toJSON(message: ClanEmoji): unknown {
     const obj: any = {};
-    if (message.id !== "") {
+    if (message.id !== "0") {
       obj.id = message.id;
     }
     if (message.src !== "") {
@@ -5166,10 +5227,10 @@ export const ClanEmoji = {
     if (message.category !== "") {
       obj.category = message.category;
     }
-    if (message.creator_id !== "") {
+    if (message.creator_id !== "0") {
       obj.creator_id = message.creator_id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     if (message.logo !== "") {
@@ -5186,12 +5247,12 @@ export const ClanEmoji = {
   },
   fromPartial<I extends Exact<DeepPartial<ClanEmoji>, I>>(object: I): ClanEmoji {
     const message = createBaseClanEmoji();
-    message.id = object.id ?? "";
+    message.id = object.id ?? "0";
     message.src = object.src ?? "";
     message.shortname = object.shortname ?? "";
     message.category = object.category ?? "";
-    message.creator_id = object.creator_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.creator_id = object.creator_id ?? "0";
+    message.clan_id = object.clan_id ?? "0";
     message.logo = object.logo ?? "";
     message.clan_name = object.clan_name ?? "";
     return message;
@@ -5199,13 +5260,13 @@ export const ClanEmoji = {
 };
 
 function createBaseChannel(): Channel {
-  return { id: "", presences: [], self: undefined, chanel_label: "", clan_logo: "", category_name: "" };
+  return { id: "0", presences: [], self: undefined, chanel_label: "", clan_logo: "", category_name: "" };
 }
 
 export const Channel = {
   encode(message: Channel, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== "0") {
+      writer.uint32(8).int64(message.id);
     }
     for (const v of message.presences) {
       UserPresence.encode(v!, writer.uint32(18).fork()).ldelim();
@@ -5233,11 +5294,11 @@ export const Channel = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -5285,7 +5346,7 @@ export const Channel = {
 
   fromJSON(object: any): Channel {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "0",
       presences: globalThis.Array.isArray(object?.presences)
         ? object.presences.map((e: any) => UserPresence.fromJSON(e))
         : [],
@@ -5298,7 +5359,7 @@ export const Channel = {
 
   toJSON(message: Channel): unknown {
     const obj: any = {};
-    if (message.id !== "") {
+    if (message.id !== "0") {
       obj.id = message.id;
     }
     if (message.presences?.length) {
@@ -5324,7 +5385,7 @@ export const Channel = {
   },
   fromPartial<I extends Exact<DeepPartial<Channel>, I>>(object: I): Channel {
     const message = createBaseChannel();
-    message.id = object.id ?? "";
+    message.id = object.id ?? "0";
     message.presences = object.presences?.map((e) => UserPresence.fromPartial(e)) || [];
     message.self = (object.self !== undefined && object.self !== null)
       ? UserPresence.fromPartial(object.self)
@@ -5337,13 +5398,13 @@ export const Channel = {
 };
 
 function createBaseClanJoin(): ClanJoin {
-  return { clan_id: "" };
+  return { clan_id: "0" };
 }
 
 export const ClanJoin = {
   encode(message: ClanJoin, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
     return writer;
   },
@@ -5356,11 +5417,11 @@ export const ClanJoin = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -5372,12 +5433,12 @@ export const ClanJoin = {
   },
 
   fromJSON(object: any): ClanJoin {
-    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0" };
   },
 
   toJSON(message: ClanJoin): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -5388,22 +5449,22 @@ export const ClanJoin = {
   },
   fromPartial<I extends Exact<DeepPartial<ClanJoin>, I>>(object: I): ClanJoin {
     const message = createBaseClanJoin();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
     return message;
   },
 };
 
 function createBaseChannelJoin(): ChannelJoin {
-  return { clan_id: "", channel_id: "", channel_type: 0, is_public: false };
+  return { clan_id: "0", channel_id: "0", channel_type: 0, is_public: false };
 }
 
 export const ChannelJoin = {
   encode(message: ChannelJoin, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
     }
     if (message.channel_type !== 0) {
       writer.uint32(24).int32(message.channel_type);
@@ -5422,18 +5483,18 @@ export const ChannelJoin = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 24) {
@@ -5460,8 +5521,8 @@ export const ChannelJoin = {
 
   fromJSON(object: any): ChannelJoin {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
     };
@@ -5469,10 +5530,10 @@ export const ChannelJoin = {
 
   toJSON(message: ChannelJoin): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
     if (message.channel_type !== 0) {
@@ -5489,8 +5550,8 @@ export const ChannelJoin = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelJoin>, I>>(object: I): ChannelJoin {
     const message = createBaseChannelJoin();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
     message.channel_type = object.channel_type ?? 0;
     message.is_public = object.is_public ?? false;
     return message;
@@ -5498,16 +5559,16 @@ export const ChannelJoin = {
 };
 
 function createBaseChannelLeave(): ChannelLeave {
-  return { clan_id: "", channel_id: "", channel_type: 0, is_public: false };
+  return { clan_id: "0", channel_id: "0", channel_type: 0, is_public: false };
 }
 
 export const ChannelLeave = {
   encode(message: ChannelLeave, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
     }
     if (message.channel_type !== 0) {
       writer.uint32(24).int32(message.channel_type);
@@ -5526,18 +5587,18 @@ export const ChannelLeave = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 24) {
@@ -5564,8 +5625,8 @@ export const ChannelLeave = {
 
   fromJSON(object: any): ChannelLeave {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
     };
@@ -5573,10 +5634,10 @@ export const ChannelLeave = {
 
   toJSON(message: ChannelLeave): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
     if (message.channel_type !== 0) {
@@ -5593,8 +5654,8 @@ export const ChannelLeave = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelLeave>, I>>(object: I): ChannelLeave {
     const message = createBaseChannelLeave();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
     message.channel_type = object.channel_type ?? 0;
     message.is_public = object.is_public ?? false;
     return message;
@@ -5603,8 +5664,8 @@ export const ChannelLeave = {
 
 function createBaseChannelMessageAck(): ChannelMessageAck {
   return {
-    channel_id: "",
-    message_id: "",
+    channel_id: "0",
+    message_id: "0",
     code: 0,
     username: "",
     create_time_seconds: 0,
@@ -5617,11 +5678,11 @@ function createBaseChannelMessageAck(): ChannelMessageAck {
 
 export const ChannelMessageAck = {
   encode(message: ChannelMessageAck, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(8).int64(message.channel_id);
     }
-    if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
+    if (message.message_id !== "0") {
+      writer.uint32(16).int64(message.message_id);
     }
     if (message.code !== 0) {
       writer.uint32(24).int32(message.code);
@@ -5655,18 +5716,18 @@ export const ChannelMessageAck = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToString(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 24) {
@@ -5728,8 +5789,8 @@ export const ChannelMessageAck = {
 
   fromJSON(object: any): ChannelMessageAck {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
       code: isSet(object.code) ? globalThis.Number(object.code) : 0,
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
@@ -5742,10 +5803,10 @@ export const ChannelMessageAck = {
 
   toJSON(message: ChannelMessageAck): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.message_id !== "") {
+    if (message.message_id !== "0") {
       obj.message_id = message.message_id;
     }
     if (message.code !== 0) {
@@ -5777,8 +5838,8 @@ export const ChannelMessageAck = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelMessageAck>, I>>(object: I): ChannelMessageAck {
     const message = createBaseChannelMessageAck();
-    message.channel_id = object.channel_id ?? "";
-    message.message_id = object.message_id ?? "";
+    message.channel_id = object.channel_id ?? "0";
+    message.message_id = object.message_id ?? "0";
     message.code = object.code ?? 0;
     message.username = object.username ?? "";
     message.create_time_seconds = object.create_time_seconds ?? 0;
@@ -5791,7 +5852,7 @@ export const ChannelMessageAck = {
 };
 
 function createBaseEphemeralMessageSend(): EphemeralMessageSend {
-  return { message: undefined, receiver_id: "" };
+  return { message: undefined, receiver_id: "0" };
 }
 
 export const EphemeralMessageSend = {
@@ -5799,8 +5860,8 @@ export const EphemeralMessageSend = {
     if (message.message !== undefined) {
       ChannelMessageSend.encode(message.message, writer.uint32(10).fork()).ldelim();
     }
-    if (message.receiver_id !== "") {
-      writer.uint32(18).string(message.receiver_id);
+    if (message.receiver_id !== "0") {
+      writer.uint32(16).int64(message.receiver_id);
     }
     return writer;
   },
@@ -5820,11 +5881,11 @@ export const EphemeralMessageSend = {
           message.message = ChannelMessageSend.decode(reader, reader.uint32());
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.receiver_id = reader.string();
+          message.receiver_id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -5838,7 +5899,7 @@ export const EphemeralMessageSend = {
   fromJSON(object: any): EphemeralMessageSend {
     return {
       message: isSet(object.message) ? ChannelMessageSend.fromJSON(object.message) : undefined,
-      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
+      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "0",
     };
   },
 
@@ -5847,7 +5908,7 @@ export const EphemeralMessageSend = {
     if (message.message !== undefined) {
       obj.message = ChannelMessageSend.toJSON(message.message);
     }
-    if (message.receiver_id !== "") {
+    if (message.receiver_id !== "0") {
       obj.receiver_id = message.receiver_id;
     }
     return obj;
@@ -5861,7 +5922,7 @@ export const EphemeralMessageSend = {
     message.message = (object.message !== undefined && object.message !== null)
       ? ChannelMessageSend.fromPartial(object.message)
       : undefined;
-    message.receiver_id = object.receiver_id ?? "";
+    message.receiver_id = object.receiver_id ?? "0";
     return message;
   },
 };
@@ -5943,7 +6004,7 @@ export const QuickMenuDataEvent = {
 };
 
 function createBaseVoiceReactionSend(): VoiceReactionSend {
-  return { emojis: [], channel_id: "", sender_id: "", media_type: 0 };
+  return { emojis: [], channel_id: "0", sender_id: "0", media_type: 0 };
 }
 
 export const VoiceReactionSend = {
@@ -5951,11 +6012,11 @@ export const VoiceReactionSend = {
     for (const v of message.emojis) {
       writer.uint32(10).string(v!);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
     }
-    if (message.sender_id !== "") {
-      writer.uint32(26).string(message.sender_id);
+    if (message.sender_id !== "0") {
+      writer.uint32(24).int64(message.sender_id);
     }
     if (message.media_type !== 0) {
       writer.uint32(32).int32(message.media_type);
@@ -5978,18 +6039,18 @@ export const VoiceReactionSend = {
           message.emojis.push(reader.string());
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.sender_id = reader.string();
+          message.sender_id = longToString(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 32) {
@@ -6010,8 +6071,8 @@ export const VoiceReactionSend = {
   fromJSON(object: any): VoiceReactionSend {
     return {
       emojis: globalThis.Array.isArray(object?.emojis) ? object.emojis.map((e: any) => globalThis.String(e)) : [],
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "0",
       media_type: isSet(object.media_type) ? globalThis.Number(object.media_type) : 0,
     };
   },
@@ -6021,10 +6082,10 @@ export const VoiceReactionSend = {
     if (message.emojis?.length) {
       obj.emojis = message.emojis;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.sender_id !== "") {
+    if (message.sender_id !== "0") {
       obj.sender_id = message.sender_id;
     }
     if (message.media_type !== 0) {
@@ -6039,27 +6100,27 @@ export const VoiceReactionSend = {
   fromPartial<I extends Exact<DeepPartial<VoiceReactionSend>, I>>(object: I): VoiceReactionSend {
     const message = createBaseVoiceReactionSend();
     message.emojis = object.emojis?.map((e) => e) || [];
-    message.channel_id = object.channel_id ?? "";
-    message.sender_id = object.sender_id ?? "";
+    message.channel_id = object.channel_id ?? "0";
+    message.sender_id = object.sender_id ?? "0";
     message.media_type = object.media_type ?? 0;
     return message;
   },
 };
 
 function createBaseMarkAsRead(): MarkAsRead {
-  return { channel_id: "", category_id: "", clan_id: "" };
+  return { channel_id: "0", category_id: "0", clan_id: "0" };
 }
 
 export const MarkAsRead = {
   encode(message: MarkAsRead, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(8).int64(message.channel_id);
     }
-    if (message.category_id !== "") {
-      writer.uint32(18).string(message.category_id);
+    if (message.category_id !== "0") {
+      writer.uint32(16).int64(message.category_id);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(24).int64(message.clan_id);
     }
     return writer;
   },
@@ -6072,25 +6133,25 @@ export const MarkAsRead = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.category_id = reader.string();
+          message.category_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -6103,21 +6164,21 @@ export const MarkAsRead = {
 
   fromJSON(object: any): MarkAsRead {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "0",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
     };
   },
 
   toJSON(message: MarkAsRead): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.category_id !== "") {
+    if (message.category_id !== "0") {
       obj.category_id = message.category_id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -6128,17 +6189,17 @@ export const MarkAsRead = {
   },
   fromPartial<I extends Exact<DeepPartial<MarkAsRead>, I>>(object: I): MarkAsRead {
     const message = createBaseMarkAsRead();
-    message.channel_id = object.channel_id ?? "";
-    message.category_id = object.category_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "0";
+    message.category_id = object.category_id ?? "0";
+    message.clan_id = object.clan_id ?? "0";
     return message;
   },
 };
 
 function createBaseChannelMessageSend(): ChannelMessageSend {
   return {
-    clan_id: "",
-    channel_id: "",
+    clan_id: "0",
+    channel_id: "0",
     content: "",
     mentions: [],
     attachments: [],
@@ -6149,18 +6210,18 @@ function createBaseChannelMessageSend(): ChannelMessageSend {
     avatar: "",
     is_public: false,
     code: 0,
-    topic_id: "",
-    id: "",
+    topic_id: "0",
+    id: "0",
   };
 }
 
 export const ChannelMessageSend = {
   encode(message: ChannelMessageSend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
     }
     if (message.content !== "") {
       writer.uint32(26).string(message.content);
@@ -6192,11 +6253,11 @@ export const ChannelMessageSend = {
     if (message.code !== 0) {
       writer.uint32(96).int32(message.code);
     }
-    if (message.topic_id !== "") {
-      writer.uint32(106).string(message.topic_id);
+    if (message.topic_id !== "0") {
+      writer.uint32(104).int64(message.topic_id);
     }
-    if (message.id !== "") {
-      writer.uint32(114).string(message.id);
+    if (message.id !== "0") {
+      writer.uint32(112).int64(message.id);
     }
     return writer;
   },
@@ -6209,18 +6270,18 @@ export const ChannelMessageSend = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -6293,18 +6354,18 @@ export const ChannelMessageSend = {
           message.code = reader.int32();
           continue;
         case 13:
-          if (tag !== 106) {
+          if (tag !== 104) {
             break;
           }
 
-          message.topic_id = reader.string();
+          message.topic_id = longToString(reader.int64() as Long);
           continue;
         case 14:
-          if (tag !== 114) {
+          if (tag !== 112) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -6317,8 +6378,8 @@ export const ChannelMessageSend = {
 
   fromJSON(object: any): ChannelMessageSend {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       mentions: globalThis.Array.isArray(object?.mentions)
         ? object.mentions.map((e: any) => MessageMention.fromJSON(e))
@@ -6335,17 +6396,17 @@ export const ChannelMessageSend = {
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
       code: isSet(object.code) ? globalThis.Number(object.code) : 0,
-      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "0",
+      id: isSet(object.id) ? globalThis.String(object.id) : "0",
     };
   },
 
   toJSON(message: ChannelMessageSend): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
     if (message.content !== "") {
@@ -6378,10 +6439,10 @@ export const ChannelMessageSend = {
     if (message.code !== 0) {
       obj.code = Math.round(message.code);
     }
-    if (message.topic_id !== "") {
+    if (message.topic_id !== "0") {
       obj.topic_id = message.topic_id;
     }
-    if (message.id !== "") {
+    if (message.id !== "0") {
       obj.id = message.id;
     }
     return obj;
@@ -6392,8 +6453,8 @@ export const ChannelMessageSend = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelMessageSend>, I>>(object: I): ChannelMessageSend {
     const message = createBaseChannelMessageSend();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
     message.content = object.content ?? "";
     message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
     message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
@@ -6404,24 +6465,24 @@ export const ChannelMessageSend = {
     message.avatar = object.avatar ?? "";
     message.is_public = object.is_public ?? false;
     message.code = object.code ?? 0;
-    message.topic_id = object.topic_id ?? "";
-    message.id = object.id ?? "";
+    message.topic_id = object.topic_id ?? "0";
+    message.id = object.id ?? "0";
     return message;
   },
 };
 
 function createBaseChannelMessageUpdate(): ChannelMessageUpdate {
   return {
-    clan_id: "",
-    channel_id: "",
-    message_id: "",
+    clan_id: "0",
+    channel_id: "0",
+    message_id: "0",
     content: "",
     mentions: [],
     attachments: [],
     mode: 0,
     is_public: false,
     hide_editted: false,
-    topic_id: "",
+    topic_id: "0",
     is_update_msg_topic: false,
     old_mentions: "",
   };
@@ -6429,14 +6490,14 @@ function createBaseChannelMessageUpdate(): ChannelMessageUpdate {
 
 export const ChannelMessageUpdate = {
   encode(message: ChannelMessageUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
     }
-    if (message.message_id !== "") {
-      writer.uint32(26).string(message.message_id);
+    if (message.message_id !== "0") {
+      writer.uint32(24).int64(message.message_id);
     }
     if (message.content !== "") {
       writer.uint32(34).string(message.content);
@@ -6456,8 +6517,8 @@ export const ChannelMessageUpdate = {
     if (message.hide_editted !== false) {
       writer.uint32(72).bool(message.hide_editted);
     }
-    if (message.topic_id !== "") {
-      writer.uint32(82).string(message.topic_id);
+    if (message.topic_id !== "0") {
+      writer.uint32(80).int64(message.topic_id);
     }
     if (message.is_update_msg_topic !== false) {
       writer.uint32(88).bool(message.is_update_msg_topic);
@@ -6476,25 +6537,25 @@ export const ChannelMessageUpdate = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToString(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -6539,11 +6600,11 @@ export const ChannelMessageUpdate = {
           message.hide_editted = reader.bool();
           continue;
         case 10:
-          if (tag !== 82) {
+          if (tag !== 80) {
             break;
           }
 
-          message.topic_id = reader.string();
+          message.topic_id = longToString(reader.int64() as Long);
           continue;
         case 11:
           if (tag !== 88) {
@@ -6570,9 +6631,9 @@ export const ChannelMessageUpdate = {
 
   fromJSON(object: any): ChannelMessageUpdate {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       mentions: globalThis.Array.isArray(object?.mentions)
         ? object.mentions.map((e: any) => MessageMention.fromJSON(e))
@@ -6583,7 +6644,7 @@ export const ChannelMessageUpdate = {
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
       hide_editted: isSet(object.hide_editted) ? globalThis.Boolean(object.hide_editted) : false,
-      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
+      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "0",
       is_update_msg_topic: isSet(object.is_update_msg_topic) ? globalThis.Boolean(object.is_update_msg_topic) : false,
       old_mentions: isSet(object.old_mentions) ? globalThis.String(object.old_mentions) : "",
     };
@@ -6591,13 +6652,13 @@ export const ChannelMessageUpdate = {
 
   toJSON(message: ChannelMessageUpdate): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.message_id !== "") {
+    if (message.message_id !== "0") {
       obj.message_id = message.message_id;
     }
     if (message.content !== "") {
@@ -6618,7 +6679,7 @@ export const ChannelMessageUpdate = {
     if (message.hide_editted !== false) {
       obj.hide_editted = message.hide_editted;
     }
-    if (message.topic_id !== "") {
+    if (message.topic_id !== "0") {
       obj.topic_id = message.topic_id;
     }
     if (message.is_update_msg_topic !== false) {
@@ -6635,16 +6696,16 @@ export const ChannelMessageUpdate = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelMessageUpdate>, I>>(object: I): ChannelMessageUpdate {
     const message = createBaseChannelMessageUpdate();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.message_id = object.message_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.message_id = object.message_id ?? "0";
     message.content = object.content ?? "";
     message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
     message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
     message.mode = object.mode ?? 0;
     message.is_public = object.is_public ?? false;
     message.hide_editted = object.hide_editted ?? false;
-    message.topic_id = object.topic_id ?? "";
+    message.topic_id = object.topic_id ?? "0";
     message.is_update_msg_topic = object.is_update_msg_topic ?? false;
     message.old_mentions = object.old_mentions ?? "";
     return message;
@@ -6653,13 +6714,13 @@ export const ChannelMessageUpdate = {
 
 function createBaseChannelMessageRemove(): ChannelMessageRemove {
   return {
-    clan_id: "",
-    channel_id: "",
-    message_id: "",
+    clan_id: "0",
+    channel_id: "0",
+    message_id: "0",
     mode: 0,
     is_public: false,
     has_attachment: false,
-    topic_id: "",
+    topic_id: "0",
     mentions: new Uint8Array(0),
     references: new Uint8Array(0),
   };
@@ -6667,14 +6728,14 @@ function createBaseChannelMessageRemove(): ChannelMessageRemove {
 
 export const ChannelMessageRemove = {
   encode(message: ChannelMessageRemove, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
     }
-    if (message.message_id !== "") {
-      writer.uint32(26).string(message.message_id);
+    if (message.message_id !== "0") {
+      writer.uint32(24).int64(message.message_id);
     }
     if (message.mode !== 0) {
       writer.uint32(32).int32(message.mode);
@@ -6685,8 +6746,8 @@ export const ChannelMessageRemove = {
     if (message.has_attachment !== false) {
       writer.uint32(48).bool(message.has_attachment);
     }
-    if (message.topic_id !== "") {
-      writer.uint32(58).string(message.topic_id);
+    if (message.topic_id !== "0") {
+      writer.uint32(56).int64(message.topic_id);
     }
     if (message.mentions.length !== 0) {
       writer.uint32(66).bytes(message.mentions);
@@ -6705,25 +6766,25 @@ export const ChannelMessageRemove = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToString(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 32) {
@@ -6747,11 +6808,11 @@ export const ChannelMessageRemove = {
           message.has_attachment = reader.bool();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.topic_id = reader.string();
+          message.topic_id = longToString(reader.int64() as Long);
           continue;
         case 8:
           if (tag !== 66) {
@@ -6778,13 +6839,13 @@ export const ChannelMessageRemove = {
 
   fromJSON(object: any): ChannelMessageRemove {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
       has_attachment: isSet(object.has_attachment) ? globalThis.Boolean(object.has_attachment) : false,
-      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
+      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "0",
       mentions: isSet(object.mentions) ? bytesFromBase64(object.mentions) : new Uint8Array(0),
       references: isSet(object.references) ? bytesFromBase64(object.references) : new Uint8Array(0),
     };
@@ -6792,13 +6853,13 @@ export const ChannelMessageRemove = {
 
   toJSON(message: ChannelMessageRemove): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.message_id !== "") {
+    if (message.message_id !== "0") {
       obj.message_id = message.message_id;
     }
     if (message.mode !== 0) {
@@ -6810,7 +6871,7 @@ export const ChannelMessageRemove = {
     if (message.has_attachment !== false) {
       obj.has_attachment = message.has_attachment;
     }
-    if (message.topic_id !== "") {
+    if (message.topic_id !== "0") {
       obj.topic_id = message.topic_id;
     }
     if (message.mentions.length !== 0) {
@@ -6827,13 +6888,13 @@ export const ChannelMessageRemove = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelMessageRemove>, I>>(object: I): ChannelMessageRemove {
     const message = createBaseChannelMessageRemove();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.message_id = object.message_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.message_id = object.message_id ?? "0";
     message.mode = object.mode ?? 0;
     message.is_public = object.is_public ?? false;
     message.has_attachment = object.has_attachment ?? false;
-    message.topic_id = object.topic_id ?? "";
+    message.topic_id = object.topic_id ?? "0";
     message.mentions = object.mentions ?? new Uint8Array(0);
     message.references = object.references ?? new Uint8Array(0);
     return message;
@@ -6841,13 +6902,13 @@ export const ChannelMessageRemove = {
 };
 
 function createBaseChannelPresenceEvent(): ChannelPresenceEvent {
-  return { channel_id: "", joins: [], leaves: [], clan_logo: "", category_name: "", mode: 0 };
+  return { channel_id: "0", joins: [], leaves: [], clan_logo: "", category_name: "", mode: 0 };
 }
 
 export const ChannelPresenceEvent = {
   encode(message: ChannelPresenceEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(8).int64(message.channel_id);
     }
     for (const v of message.joins) {
       UserPresence.encode(v!, writer.uint32(18).fork()).ldelim();
@@ -6875,11 +6936,11 @@ export const ChannelPresenceEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -6927,7 +6988,7 @@ export const ChannelPresenceEvent = {
 
   fromJSON(object: any): ChannelPresenceEvent {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       joins: globalThis.Array.isArray(object?.joins) ? object.joins.map((e: any) => UserPresence.fromJSON(e)) : [],
       leaves: globalThis.Array.isArray(object?.leaves) ? object.leaves.map((e: any) => UserPresence.fromJSON(e)) : [],
       clan_logo: isSet(object.clan_logo) ? globalThis.String(object.clan_logo) : "",
@@ -6938,7 +6999,7 @@ export const ChannelPresenceEvent = {
 
   toJSON(message: ChannelPresenceEvent): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
     if (message.joins?.length) {
@@ -6964,7 +7025,7 @@ export const ChannelPresenceEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelPresenceEvent>, I>>(object: I): ChannelPresenceEvent {
     const message = createBaseChannelPresenceEvent();
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? "0";
     message.joins = object.joins?.map((e) => UserPresence.fromPartial(e)) || [];
     message.leaves = object.leaves?.map((e) => UserPresence.fromPartial(e)) || [];
     message.clan_logo = object.clan_logo ?? "";
@@ -7218,13 +7279,13 @@ export const Notifications = {
 };
 
 function createBaseAddFriend(): AddFriend {
-  return { user_id: "", username: "", display_name: "", avatar: "" };
+  return { user_id: "0", username: "", display_name: "", avatar: "" };
 }
 
 export const AddFriend = {
   encode(message: AddFriend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(8).int64(message.user_id);
     }
     if (message.username !== "") {
       writer.uint32(18).string(message.username);
@@ -7246,11 +7307,11 @@ export const AddFriend = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -7284,7 +7345,7 @@ export const AddFriend = {
 
   fromJSON(object: any): AddFriend {
     return {
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
@@ -7293,7 +7354,7 @@ export const AddFriend = {
 
   toJSON(message: AddFriend): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     if (message.username !== "") {
@@ -7313,7 +7374,7 @@ export const AddFriend = {
   },
   fromPartial<I extends Exact<DeepPartial<AddFriend>, I>>(object: I): AddFriend {
     const message = createBaseAddFriend();
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? "0";
     message.username = object.username ?? "";
     message.display_name = object.display_name ?? "";
     message.avatar = object.avatar ?? "";
@@ -7322,13 +7383,13 @@ export const AddFriend = {
 };
 
 function createBaseRemoveFriend(): RemoveFriend {
-  return { user_id: "" };
+  return { user_id: "0" };
 }
 
 export const RemoveFriend = {
   encode(message: RemoveFriend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(8).int64(message.user_id);
     }
     return writer;
   },
@@ -7341,11 +7402,11 @@ export const RemoveFriend = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -7357,12 +7418,12 @@ export const RemoveFriend = {
   },
 
   fromJSON(object: any): RemoveFriend {
-    return { user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "" };
+    return { user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0" };
   },
 
   toJSON(message: RemoveFriend): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     return obj;
@@ -7373,19 +7434,19 @@ export const RemoveFriend = {
   },
   fromPartial<I extends Exact<DeepPartial<RemoveFriend>, I>>(object: I): RemoveFriend {
     const message = createBaseRemoveFriend();
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? "0";
     return message;
   },
 };
 
 function createBaseBlockFriend(): BlockFriend {
-  return { user_id: "" };
+  return { user_id: "0" };
 }
 
 export const BlockFriend = {
   encode(message: BlockFriend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(8).int64(message.user_id);
     }
     return writer;
   },
@@ -7398,11 +7459,11 @@ export const BlockFriend = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -7414,12 +7475,12 @@ export const BlockFriend = {
   },
 
   fromJSON(object: any): BlockFriend {
-    return { user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "" };
+    return { user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0" };
   },
 
   toJSON(message: BlockFriend): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     return obj;
@@ -7430,19 +7491,19 @@ export const BlockFriend = {
   },
   fromPartial<I extends Exact<DeepPartial<BlockFriend>, I>>(object: I): BlockFriend {
     const message = createBaseBlockFriend();
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? "0";
     return message;
   },
 };
 
 function createBaseUnblockFriend(): UnblockFriend {
-  return { user_id: "", username: "", avatar: "", display_name: "", status: "", user_status: "" };
+  return { user_id: "0", username: "", avatar: "", display_name: "", status: "", user_status: "" };
 }
 
 export const UnblockFriend = {
   encode(message: UnblockFriend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(8).int64(message.user_id);
     }
     if (message.username !== "") {
       writer.uint32(18).string(message.username);
@@ -7470,11 +7531,11 @@ export const UnblockFriend = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -7522,7 +7583,7 @@ export const UnblockFriend = {
 
   fromJSON(object: any): UnblockFriend {
     return {
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
@@ -7533,7 +7594,7 @@ export const UnblockFriend = {
 
   toJSON(message: UnblockFriend): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     if (message.username !== "") {
@@ -7559,7 +7620,7 @@ export const UnblockFriend = {
   },
   fromPartial<I extends Exact<DeepPartial<UnblockFriend>, I>>(object: I): UnblockFriend {
     const message = createBaseUnblockFriend();
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? "0";
     message.username = object.username ?? "";
     message.avatar = object.avatar ?? "";
     message.display_name = object.display_name ?? "";
@@ -7722,9 +7783,11 @@ function createBaseStatusFollow(): StatusFollow {
 
 export const StatusFollow = {
   encode(message: StatusFollow, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    writer.uint32(10).fork();
     for (const v of message.user_ids) {
-      writer.uint32(10).string(v!);
+      writer.int64(v);
     }
+    writer.ldelim();
     for (const v of message.usernames) {
       writer.uint32(18).string(v!);
     }
@@ -7739,12 +7802,22 @@ export const StatusFollow = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
+          if (tag === 8) {
+            message.user_ids.push(longToString(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 10) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 2:
           if (tag !== 18) {
             break;
@@ -7868,11 +7941,11 @@ export const StatusPresenceEvent = {
 
 function createBaseLastPinMessageEvent(): LastPinMessageEvent {
   return {
-    clan_id: "",
-    channel_id: "",
-    message_id: "",
+    clan_id: "0",
+    channel_id: "0",
+    message_id: "0",
     mode: 0,
-    user_id: "",
+    user_id: "0",
     timestamp_seconds: 0,
     operation: 0,
     is_public: false,
@@ -7887,20 +7960,20 @@ function createBaseLastPinMessageEvent(): LastPinMessageEvent {
 
 export const LastPinMessageEvent = {
   encode(message: LastPinMessageEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
     }
-    if (message.message_id !== "") {
-      writer.uint32(26).string(message.message_id);
+    if (message.message_id !== "0") {
+      writer.uint32(24).int64(message.message_id);
     }
     if (message.mode !== 0) {
       writer.uint32(32).int32(message.mode);
     }
-    if (message.user_id !== "") {
-      writer.uint32(42).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(40).int64(message.user_id);
     }
     if (message.timestamp_seconds !== 0) {
       writer.uint32(48).uint32(message.timestamp_seconds);
@@ -7940,25 +8013,25 @@ export const LastPinMessageEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToString(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 32) {
@@ -7968,11 +8041,11 @@ export const LastPinMessageEvent = {
           message.mode = reader.int32();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 48) {
@@ -8048,11 +8121,11 @@ export const LastPinMessageEvent = {
 
   fromJSON(object: any): LastPinMessageEvent {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
       timestamp_seconds: isSet(object.timestamp_seconds) ? globalThis.Number(object.timestamp_seconds) : 0,
       operation: isSet(object.operation) ? globalThis.Number(object.operation) : 0,
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
@@ -8069,19 +8142,19 @@ export const LastPinMessageEvent = {
 
   toJSON(message: LastPinMessageEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.message_id !== "") {
+    if (message.message_id !== "0") {
       obj.message_id = message.message_id;
     }
     if (message.mode !== 0) {
       obj.mode = Math.round(message.mode);
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     if (message.timestamp_seconds !== 0) {
@@ -8119,11 +8192,11 @@ export const LastPinMessageEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<LastPinMessageEvent>, I>>(object: I): LastPinMessageEvent {
     const message = createBaseLastPinMessageEvent();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.message_id = object.message_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.message_id = object.message_id ?? "0";
     message.mode = object.mode ?? 0;
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? "0";
     message.timestamp_seconds = object.timestamp_seconds ?? 0;
     message.operation = object.operation ?? 0;
     message.is_public = object.is_public ?? false;
@@ -8138,19 +8211,19 @@ export const LastPinMessageEvent = {
 };
 
 function createBaseLastSeenMessageEvent(): LastSeenMessageEvent {
-  return { clan_id: "", channel_id: "", message_id: "", mode: 0, timestamp_seconds: 0, badge_count: 0 };
+  return { clan_id: "0", channel_id: "0", message_id: "0", mode: 0, timestamp_seconds: 0, badge_count: 0 };
 }
 
 export const LastSeenMessageEvent = {
   encode(message: LastSeenMessageEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
     }
-    if (message.message_id !== "") {
-      writer.uint32(26).string(message.message_id);
+    if (message.message_id !== "0") {
+      writer.uint32(24).int64(message.message_id);
     }
     if (message.mode !== 0) {
       writer.uint32(32).int32(message.mode);
@@ -8172,25 +8245,25 @@ export const LastSeenMessageEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToString(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 32) {
@@ -8224,9 +8297,9 @@ export const LastSeenMessageEvent = {
 
   fromJSON(object: any): LastSeenMessageEvent {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
       timestamp_seconds: isSet(object.timestamp_seconds) ? globalThis.Number(object.timestamp_seconds) : 0,
       badge_count: isSet(object.badge_count) ? globalThis.Number(object.badge_count) : 0,
@@ -8235,13 +8308,13 @@ export const LastSeenMessageEvent = {
 
   toJSON(message: LastSeenMessageEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.message_id !== "") {
+    if (message.message_id !== "0") {
       obj.message_id = message.message_id;
     }
     if (message.mode !== 0) {
@@ -8261,9 +8334,9 @@ export const LastSeenMessageEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<LastSeenMessageEvent>, I>>(object: I): LastSeenMessageEvent {
     const message = createBaseLastSeenMessageEvent();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.message_id = object.message_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.message_id = object.message_id ?? "0";
     message.mode = object.mode ?? 0;
     message.timestamp_seconds = object.timestamp_seconds ?? 0;
     message.badge_count = object.badge_count ?? 0;
@@ -8273,27 +8346,27 @@ export const LastSeenMessageEvent = {
 
 function createBaseMessageTypingEvent(): MessageTypingEvent {
   return {
-    clan_id: "",
-    channel_id: "",
-    sender_id: "",
+    clan_id: "0",
+    channel_id: "0",
+    sender_id: "0",
     mode: 0,
     is_public: false,
     sender_username: "",
     sender_display_name: "",
-    topic_id: "",
+    topic_id: "0",
   };
 }
 
 export const MessageTypingEvent = {
   encode(message: MessageTypingEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
     }
-    if (message.sender_id !== "") {
-      writer.uint32(26).string(message.sender_id);
+    if (message.sender_id !== "0") {
+      writer.uint32(24).int64(message.sender_id);
     }
     if (message.mode !== 0) {
       writer.uint32(32).int32(message.mode);
@@ -8307,8 +8380,8 @@ export const MessageTypingEvent = {
     if (message.sender_display_name !== "") {
       writer.uint32(58).string(message.sender_display_name);
     }
-    if (message.topic_id !== "") {
-      writer.uint32(66).string(message.topic_id);
+    if (message.topic_id !== "0") {
+      writer.uint32(64).int64(message.topic_id);
     }
     return writer;
   },
@@ -8321,25 +8394,25 @@ export const MessageTypingEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.sender_id = reader.string();
+          message.sender_id = longToString(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 32) {
@@ -8370,11 +8443,11 @@ export const MessageTypingEvent = {
           message.sender_display_name = reader.string();
           continue;
         case 8:
-          if (tag !== 66) {
+          if (tag !== 64) {
             break;
           }
 
-          message.topic_id = reader.string();
+          message.topic_id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -8387,26 +8460,26 @@ export const MessageTypingEvent = {
 
   fromJSON(object: any): MessageTypingEvent {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "0",
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
       sender_username: isSet(object.sender_username) ? globalThis.String(object.sender_username) : "",
       sender_display_name: isSet(object.sender_display_name) ? globalThis.String(object.sender_display_name) : "",
-      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
+      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "0",
     };
   },
 
   toJSON(message: MessageTypingEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.sender_id !== "") {
+    if (message.sender_id !== "0") {
       obj.sender_id = message.sender_id;
     }
     if (message.mode !== 0) {
@@ -8421,7 +8494,7 @@ export const MessageTypingEvent = {
     if (message.sender_display_name !== "") {
       obj.sender_display_name = message.sender_display_name;
     }
-    if (message.topic_id !== "") {
+    if (message.topic_id !== "0") {
       obj.topic_id = message.topic_id;
     }
     return obj;
@@ -8432,20 +8505,20 @@ export const MessageTypingEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<MessageTypingEvent>, I>>(object: I): MessageTypingEvent {
     const message = createBaseMessageTypingEvent();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.sender_id = object.sender_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.sender_id = object.sender_id ?? "0";
     message.mode = object.mode ?? 0;
     message.is_public = object.is_public ?? false;
     message.sender_username = object.sender_username ?? "";
     message.sender_display_name = object.sender_display_name ?? "";
-    message.topic_id = object.topic_id ?? "";
+    message.topic_id = object.topic_id ?? "0";
     return message;
   },
 };
 
 function createBaseVoiceLeavedEvent(): VoiceLeavedEvent {
-  return { id: "", clan_id: "", voice_channel_id: "", voice_user_id: "" };
+  return { id: "", clan_id: "0", voice_channel_id: "0", voice_user_id: "0" };
 }
 
 export const VoiceLeavedEvent = {
@@ -8453,14 +8526,14 @@ export const VoiceLeavedEvent = {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(16).int64(message.clan_id);
     }
-    if (message.voice_channel_id !== "") {
-      writer.uint32(26).string(message.voice_channel_id);
+    if (message.voice_channel_id !== "0") {
+      writer.uint32(24).int64(message.voice_channel_id);
     }
-    if (message.voice_user_id !== "") {
-      writer.uint32(34).string(message.voice_user_id);
+    if (message.voice_user_id !== "0") {
+      writer.uint32(32).int64(message.voice_user_id);
     }
     return writer;
   },
@@ -8480,25 +8553,25 @@ export const VoiceLeavedEvent = {
           message.id = reader.string();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.voice_channel_id = reader.string();
+          message.voice_channel_id = longToString(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.voice_user_id = reader.string();
+          message.voice_user_id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -8512,9 +8585,9 @@ export const VoiceLeavedEvent = {
   fromJSON(object: any): VoiceLeavedEvent {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      voice_channel_id: isSet(object.voice_channel_id) ? globalThis.String(object.voice_channel_id) : "",
-      voice_user_id: isSet(object.voice_user_id) ? globalThis.String(object.voice_user_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      voice_channel_id: isSet(object.voice_channel_id) ? globalThis.String(object.voice_channel_id) : "0",
+      voice_user_id: isSet(object.voice_user_id) ? globalThis.String(object.voice_user_id) : "0",
     };
   },
 
@@ -8523,13 +8596,13 @@ export const VoiceLeavedEvent = {
     if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.voice_channel_id !== "") {
+    if (message.voice_channel_id !== "0") {
       obj.voice_channel_id = message.voice_channel_id;
     }
-    if (message.voice_user_id !== "") {
+    if (message.voice_user_id !== "0") {
       obj.voice_user_id = message.voice_user_id;
     }
     return obj;
@@ -8541,30 +8614,30 @@ export const VoiceLeavedEvent = {
   fromPartial<I extends Exact<DeepPartial<VoiceLeavedEvent>, I>>(object: I): VoiceLeavedEvent {
     const message = createBaseVoiceLeavedEvent();
     message.id = object.id ?? "";
-    message.clan_id = object.clan_id ?? "";
-    message.voice_channel_id = object.voice_channel_id ?? "";
-    message.voice_user_id = object.voice_user_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.voice_channel_id = object.voice_channel_id ?? "0";
+    message.voice_user_id = object.voice_user_id ?? "0";
     return message;
   },
 };
 
 function createBaseVoiceJoinedEvent(): VoiceJoinedEvent {
   return {
-    clan_id: "",
+    clan_id: "0",
     clan_name: "",
     id: "",
     participant: "",
-    user_id: "",
+    user_id: "0",
     voice_channel_label: "",
-    voice_channel_id: "",
+    voice_channel_id: "0",
     last_screenshot: "",
   };
 }
 
 export const VoiceJoinedEvent = {
   encode(message: VoiceJoinedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
     if (message.clan_name !== "") {
       writer.uint32(18).string(message.clan_name);
@@ -8575,14 +8648,14 @@ export const VoiceJoinedEvent = {
     if (message.participant !== "") {
       writer.uint32(34).string(message.participant);
     }
-    if (message.user_id !== "") {
-      writer.uint32(42).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(40).int64(message.user_id);
     }
     if (message.voice_channel_label !== "") {
       writer.uint32(50).string(message.voice_channel_label);
     }
-    if (message.voice_channel_id !== "") {
-      writer.uint32(58).string(message.voice_channel_id);
+    if (message.voice_channel_id !== "0") {
+      writer.uint32(56).int64(message.voice_channel_id);
     }
     if (message.last_screenshot !== "") {
       writer.uint32(66).string(message.last_screenshot);
@@ -8598,11 +8671,11 @@ export const VoiceJoinedEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -8626,11 +8699,11 @@ export const VoiceJoinedEvent = {
           message.participant = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 50) {
@@ -8640,11 +8713,11 @@ export const VoiceJoinedEvent = {
           message.voice_channel_label = reader.string();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.voice_channel_id = reader.string();
+          message.voice_channel_id = longToString(reader.int64() as Long);
           continue;
         case 8:
           if (tag !== 66) {
@@ -8664,20 +8737,20 @@ export const VoiceJoinedEvent = {
 
   fromJSON(object: any): VoiceJoinedEvent {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       participant: isSet(object.participant) ? globalThis.String(object.participant) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
       voice_channel_label: isSet(object.voice_channel_label) ? globalThis.String(object.voice_channel_label) : "",
-      voice_channel_id: isSet(object.voice_channel_id) ? globalThis.String(object.voice_channel_id) : "",
+      voice_channel_id: isSet(object.voice_channel_id) ? globalThis.String(object.voice_channel_id) : "0",
       last_screenshot: isSet(object.last_screenshot) ? globalThis.String(object.last_screenshot) : "",
     };
   },
 
   toJSON(message: VoiceJoinedEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     if (message.clan_name !== "") {
@@ -8689,13 +8762,13 @@ export const VoiceJoinedEvent = {
     if (message.participant !== "") {
       obj.participant = message.participant;
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     if (message.voice_channel_label !== "") {
       obj.voice_channel_label = message.voice_channel_label;
     }
-    if (message.voice_channel_id !== "") {
+    if (message.voice_channel_id !== "0") {
       obj.voice_channel_id = message.voice_channel_id;
     }
     if (message.last_screenshot !== "") {
@@ -8709,20 +8782,20 @@ export const VoiceJoinedEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<VoiceJoinedEvent>, I>>(object: I): VoiceJoinedEvent {
     const message = createBaseVoiceJoinedEvent();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
     message.clan_name = object.clan_name ?? "";
     message.id = object.id ?? "";
     message.participant = object.participant ?? "";
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? "0";
     message.voice_channel_label = object.voice_channel_label ?? "";
-    message.voice_channel_id = object.voice_channel_id ?? "";
+    message.voice_channel_id = object.voice_channel_id ?? "0";
     message.last_screenshot = object.last_screenshot ?? "";
     return message;
   },
 };
 
 function createBaseVoiceStartedEvent(): VoiceStartedEvent {
-  return { id: "", clan_id: "", voice_channel_id: "" };
+  return { id: "", clan_id: "0", voice_channel_id: "0" };
 }
 
 export const VoiceStartedEvent = {
@@ -8730,11 +8803,11 @@ export const VoiceStartedEvent = {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(16).int64(message.clan_id);
     }
-    if (message.voice_channel_id !== "") {
-      writer.uint32(26).string(message.voice_channel_id);
+    if (message.voice_channel_id !== "0") {
+      writer.uint32(24).int64(message.voice_channel_id);
     }
     return writer;
   },
@@ -8754,18 +8827,18 @@ export const VoiceStartedEvent = {
           message.id = reader.string();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.voice_channel_id = reader.string();
+          message.voice_channel_id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -8779,8 +8852,8 @@ export const VoiceStartedEvent = {
   fromJSON(object: any): VoiceStartedEvent {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      voice_channel_id: isSet(object.voice_channel_id) ? globalThis.String(object.voice_channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      voice_channel_id: isSet(object.voice_channel_id) ? globalThis.String(object.voice_channel_id) : "0",
     };
   },
 
@@ -8789,10 +8862,10 @@ export const VoiceStartedEvent = {
     if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.voice_channel_id !== "") {
+    if (message.voice_channel_id !== "0") {
       obj.voice_channel_id = message.voice_channel_id;
     }
     return obj;
@@ -8804,23 +8877,23 @@ export const VoiceStartedEvent = {
   fromPartial<I extends Exact<DeepPartial<VoiceStartedEvent>, I>>(object: I): VoiceStartedEvent {
     const message = createBaseVoiceStartedEvent();
     message.id = object.id ?? "";
-    message.clan_id = object.clan_id ?? "";
-    message.voice_channel_id = object.voice_channel_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.voice_channel_id = object.voice_channel_id ?? "0";
     return message;
   },
 };
 
 function createBaseVoiceEndedEvent(): VoiceEndedEvent {
-  return { id: "", clan_id: "", voice_channel_id: "" };
+  return { id: "0", clan_id: "0", voice_channel_id: "" };
 }
 
 export const VoiceEndedEvent = {
   encode(message: VoiceEndedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== "0") {
+      writer.uint32(8).int64(message.id);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(16).int64(message.clan_id);
     }
     if (message.voice_channel_id !== "") {
       writer.uint32(26).string(message.voice_channel_id);
@@ -8836,18 +8909,18 @@ export const VoiceEndedEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -8867,18 +8940,18 @@ export const VoiceEndedEvent = {
 
   fromJSON(object: any): VoiceEndedEvent {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "0",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       voice_channel_id: isSet(object.voice_channel_id) ? globalThis.String(object.voice_channel_id) : "",
     };
   },
 
   toJSON(message: VoiceEndedEvent): unknown {
     const obj: any = {};
-    if (message.id !== "") {
+    if (message.id !== "0") {
       obj.id = message.id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     if (message.voice_channel_id !== "") {
@@ -8892,24 +8965,24 @@ export const VoiceEndedEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<VoiceEndedEvent>, I>>(object: I): VoiceEndedEvent {
     const message = createBaseVoiceEndedEvent();
-    message.id = object.id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.id = object.id ?? "0";
+    message.clan_id = object.clan_id ?? "0";
     message.voice_channel_id = object.voice_channel_id ?? "";
     return message;
   },
 };
 
 function createBaseStreamingLeavedEvent(): StreamingLeavedEvent {
-  return { id: "", clan_id: "", streaming_channel_id: "", streaming_user_id: "" };
+  return { id: "0", clan_id: "0", streaming_channel_id: "", streaming_user_id: "" };
 }
 
 export const StreamingLeavedEvent = {
   encode(message: StreamingLeavedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== "0") {
+      writer.uint32(8).int64(message.id);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(16).int64(message.clan_id);
     }
     if (message.streaming_channel_id !== "") {
       writer.uint32(26).string(message.streaming_channel_id);
@@ -8928,18 +9001,18 @@ export const StreamingLeavedEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -8966,8 +9039,8 @@ export const StreamingLeavedEvent = {
 
   fromJSON(object: any): StreamingLeavedEvent {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "0",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       streaming_channel_id: isSet(object.streaming_channel_id) ? globalThis.String(object.streaming_channel_id) : "",
       streaming_user_id: isSet(object.streaming_user_id) ? globalThis.String(object.streaming_user_id) : "",
     };
@@ -8975,10 +9048,10 @@ export const StreamingLeavedEvent = {
 
   toJSON(message: StreamingLeavedEvent): unknown {
     const obj: any = {};
-    if (message.id !== "") {
+    if (message.id !== "0") {
       obj.id = message.id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     if (message.streaming_channel_id !== "") {
@@ -8995,8 +9068,8 @@ export const StreamingLeavedEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<StreamingLeavedEvent>, I>>(object: I): StreamingLeavedEvent {
     const message = createBaseStreamingLeavedEvent();
-    message.id = object.id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.id = object.id ?? "0";
+    message.clan_id = object.clan_id ?? "0";
     message.streaming_channel_id = object.streaming_channel_id ?? "";
     message.streaming_user_id = object.streaming_user_id ?? "";
     return message;
@@ -9005,38 +9078,38 @@ export const StreamingLeavedEvent = {
 
 function createBaseStreamingJoinedEvent(): StreamingJoinedEvent {
   return {
-    clan_id: "",
+    clan_id: "0",
     clan_name: "",
-    id: "",
+    id: "0",
     participant: "",
-    user_id: "",
+    user_id: "0",
     streaming_channel_label: "",
-    streaming_channel_id: "",
+    streaming_channel_id: "0",
   };
 }
 
 export const StreamingJoinedEvent = {
   encode(message: StreamingJoinedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
     if (message.clan_name !== "") {
       writer.uint32(18).string(message.clan_name);
     }
-    if (message.id !== "") {
-      writer.uint32(26).string(message.id);
+    if (message.id !== "0") {
+      writer.uint32(24).int64(message.id);
     }
     if (message.participant !== "") {
       writer.uint32(34).string(message.participant);
     }
-    if (message.user_id !== "") {
-      writer.uint32(42).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(40).int64(message.user_id);
     }
     if (message.streaming_channel_label !== "") {
       writer.uint32(50).string(message.streaming_channel_label);
     }
-    if (message.streaming_channel_id !== "") {
-      writer.uint32(58).string(message.streaming_channel_id);
+    if (message.streaming_channel_id !== "0") {
+      writer.uint32(56).int64(message.streaming_channel_id);
     }
     return writer;
   },
@@ -9049,11 +9122,11 @@ export const StreamingJoinedEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -9063,11 +9136,11 @@ export const StreamingJoinedEvent = {
           message.clan_name = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToString(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -9077,11 +9150,11 @@ export const StreamingJoinedEvent = {
           message.participant = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 50) {
@@ -9091,11 +9164,11 @@ export const StreamingJoinedEvent = {
           message.streaming_channel_label = reader.string();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.streaming_channel_id = reader.string();
+          message.streaming_channel_id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -9108,39 +9181,39 @@ export const StreamingJoinedEvent = {
 
   fromJSON(object: any): StreamingJoinedEvent {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "0",
       participant: isSet(object.participant) ? globalThis.String(object.participant) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
       streaming_channel_label: isSet(object.streaming_channel_label)
         ? globalThis.String(object.streaming_channel_label)
         : "",
-      streaming_channel_id: isSet(object.streaming_channel_id) ? globalThis.String(object.streaming_channel_id) : "",
+      streaming_channel_id: isSet(object.streaming_channel_id) ? globalThis.String(object.streaming_channel_id) : "0",
     };
   },
 
   toJSON(message: StreamingJoinedEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.id !== "") {
+    if (message.id !== "0") {
       obj.id = message.id;
     }
     if (message.participant !== "") {
       obj.participant = message.participant;
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     if (message.streaming_channel_label !== "") {
       obj.streaming_channel_label = message.streaming_channel_label;
     }
-    if (message.streaming_channel_id !== "") {
+    if (message.streaming_channel_id !== "0") {
       obj.streaming_channel_id = message.streaming_channel_id;
     }
     return obj;
@@ -9151,28 +9224,28 @@ export const StreamingJoinedEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<StreamingJoinedEvent>, I>>(object: I): StreamingJoinedEvent {
     const message = createBaseStreamingJoinedEvent();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
     message.clan_name = object.clan_name ?? "";
-    message.id = object.id ?? "";
+    message.id = object.id ?? "0";
     message.participant = object.participant ?? "";
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? "0";
     message.streaming_channel_label = object.streaming_channel_label ?? "";
-    message.streaming_channel_id = object.streaming_channel_id ?? "";
+    message.streaming_channel_id = object.streaming_channel_id ?? "0";
     return message;
   },
 };
 
 function createBaseStreamingStartedEvent(): StreamingStartedEvent {
-  return { clan_id: "", channel_id: "", streaming_url: "", is_streaming: false };
+  return { clan_id: "0", channel_id: "0", streaming_url: "", is_streaming: false };
 }
 
 export const StreamingStartedEvent = {
   encode(message: StreamingStartedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
     }
     if (message.streaming_url !== "") {
       writer.uint32(26).string(message.streaming_url);
@@ -9191,18 +9264,18 @@ export const StreamingStartedEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -9229,8 +9302,8 @@ export const StreamingStartedEvent = {
 
   fromJSON(object: any): StreamingStartedEvent {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       streaming_url: isSet(object.streaming_url) ? globalThis.String(object.streaming_url) : "",
       is_streaming: isSet(object.is_streaming) ? globalThis.Boolean(object.is_streaming) : false,
     };
@@ -9238,10 +9311,10 @@ export const StreamingStartedEvent = {
 
   toJSON(message: StreamingStartedEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
     if (message.streaming_url !== "") {
@@ -9258,8 +9331,8 @@ export const StreamingStartedEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<StreamingStartedEvent>, I>>(object: I): StreamingStartedEvent {
     const message = createBaseStreamingStartedEvent();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
     message.streaming_url = object.streaming_url ?? "";
     message.is_streaming = object.is_streaming ?? false;
     return message;
@@ -9267,16 +9340,16 @@ export const StreamingStartedEvent = {
 };
 
 function createBaseStreamingEndedEvent(): StreamingEndedEvent {
-  return { clan_id: "", channel_id: "" };
+  return { clan_id: "0", channel_id: "0" };
 }
 
 export const StreamingEndedEvent = {
   encode(message: StreamingEndedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
     }
     return writer;
   },
@@ -9289,18 +9362,18 @@ export const StreamingEndedEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -9313,17 +9386,17 @@ export const StreamingEndedEvent = {
 
   fromJSON(object: any): StreamingEndedEvent {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
     };
   },
 
   toJSON(message: StreamingEndedEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -9334,24 +9407,24 @@ export const StreamingEndedEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<StreamingEndedEvent>, I>>(object: I): StreamingEndedEvent {
     const message = createBaseStreamingEndedEvent();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
     return message;
   },
 };
 
 function createBaseChannelCreatedEvent(): ChannelCreatedEvent {
   return {
-    clan_id: "",
-    category_id: "",
-    creator_id: "",
-    parent_id: "",
-    channel_id: "",
+    clan_id: "0",
+    category_id: "0",
+    creator_id: "0",
+    parent_id: "0",
+    channel_id: "0",
     channel_label: "",
     channel_private: 0,
     channel_type: 0,
     status: 0,
-    app_id: "",
+    app_id: "0",
     clan_name: "",
     channel_avatar: "",
   };
@@ -9359,20 +9432,20 @@ function createBaseChannelCreatedEvent(): ChannelCreatedEvent {
 
 export const ChannelCreatedEvent = {
   encode(message: ChannelCreatedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
-    if (message.category_id !== "") {
-      writer.uint32(18).string(message.category_id);
+    if (message.category_id !== "0") {
+      writer.uint32(16).int64(message.category_id);
     }
-    if (message.creator_id !== "") {
-      writer.uint32(26).string(message.creator_id);
+    if (message.creator_id !== "0") {
+      writer.uint32(24).int64(message.creator_id);
     }
-    if (message.parent_id !== "") {
-      writer.uint32(34).string(message.parent_id);
+    if (message.parent_id !== "0") {
+      writer.uint32(32).int64(message.parent_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(42).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(40).int64(message.channel_id);
     }
     if (message.channel_label !== "") {
       writer.uint32(50).string(message.channel_label);
@@ -9386,8 +9459,8 @@ export const ChannelCreatedEvent = {
     if (message.status !== 0) {
       writer.uint32(72).int32(message.status);
     }
-    if (message.app_id !== "") {
-      writer.uint32(82).string(message.app_id);
+    if (message.app_id !== "0") {
+      writer.uint32(80).int64(message.app_id);
     }
     if (message.clan_name !== "") {
       writer.uint32(90).string(message.clan_name);
@@ -9406,39 +9479,39 @@ export const ChannelCreatedEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.category_id = reader.string();
+          message.category_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToString(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.parent_id = reader.string();
+          message.parent_id = longToString(reader.int64() as Long);
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 50) {
@@ -9469,11 +9542,11 @@ export const ChannelCreatedEvent = {
           message.status = reader.int32();
           continue;
         case 10:
-          if (tag !== 82) {
+          if (tag !== 80) {
             break;
           }
 
-          message.app_id = reader.string();
+          message.app_id = longToString(reader.int64() as Long);
           continue;
         case 11:
           if (tag !== 90) {
@@ -9500,16 +9573,16 @@ export const ChannelCreatedEvent = {
 
   fromJSON(object: any): ChannelCreatedEvent {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "0",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "0",
+      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
-      app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
+      app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "0",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       channel_avatar: isSet(object.channel_avatar) ? globalThis.String(object.channel_avatar) : "",
     };
@@ -9517,19 +9590,19 @@ export const ChannelCreatedEvent = {
 
   toJSON(message: ChannelCreatedEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.category_id !== "") {
+    if (message.category_id !== "0") {
       obj.category_id = message.category_id;
     }
-    if (message.creator_id !== "") {
+    if (message.creator_id !== "0") {
       obj.creator_id = message.creator_id;
     }
-    if (message.parent_id !== "") {
+    if (message.parent_id !== "0") {
       obj.parent_id = message.parent_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
     if (message.channel_label !== "") {
@@ -9544,7 +9617,7 @@ export const ChannelCreatedEvent = {
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
-    if (message.app_id !== "") {
+    if (message.app_id !== "0") {
       obj.app_id = message.app_id;
     }
     if (message.clan_name !== "") {
@@ -9561,16 +9634,16 @@ export const ChannelCreatedEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelCreatedEvent>, I>>(object: I): ChannelCreatedEvent {
     const message = createBaseChannelCreatedEvent();
-    message.clan_id = object.clan_id ?? "";
-    message.category_id = object.category_id ?? "";
-    message.creator_id = object.creator_id ?? "";
-    message.parent_id = object.parent_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.category_id = object.category_id ?? "0";
+    message.creator_id = object.creator_id ?? "0";
+    message.parent_id = object.parent_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
     message.channel_label = object.channel_label ?? "";
     message.channel_private = object.channel_private ?? 0;
     message.channel_type = object.channel_type ?? 0;
     message.status = object.status ?? 0;
-    message.app_id = object.app_id ?? "";
+    message.app_id = object.app_id ?? "0";
     message.clan_name = object.clan_name ?? "";
     message.channel_avatar = object.channel_avatar ?? "";
     return message;
@@ -9578,22 +9651,22 @@ export const ChannelCreatedEvent = {
 };
 
 function createBaseCategoryEvent(): CategoryEvent {
-  return { creator_id: "", clan_id: "", category_name: "", id: "", status: 0 };
+  return { creator_id: "0", clan_id: "0", category_name: "", id: "0", status: 0 };
 }
 
 export const CategoryEvent = {
   encode(message: CategoryEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.creator_id !== "") {
-      writer.uint32(10).string(message.creator_id);
+    if (message.creator_id !== "0") {
+      writer.uint32(8).int64(message.creator_id);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(16).int64(message.clan_id);
     }
     if (message.category_name !== "") {
       writer.uint32(26).string(message.category_name);
     }
-    if (message.id !== "") {
-      writer.uint32(34).string(message.id);
+    if (message.id !== "0") {
+      writer.uint32(32).int64(message.id);
     }
     if (message.status !== 0) {
       writer.uint32(40).int32(message.status);
@@ -9609,18 +9682,18 @@ export const CategoryEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -9630,11 +9703,11 @@ export const CategoryEvent = {
           message.category_name = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToString(reader.int64() as Long);
           continue;
         case 5:
           if (tag !== 40) {
@@ -9654,26 +9727,26 @@ export const CategoryEvent = {
 
   fromJSON(object: any): CategoryEvent {
     return {
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "0",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "0",
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
     };
   },
 
   toJSON(message: CategoryEvent): unknown {
     const obj: any = {};
-    if (message.creator_id !== "") {
+    if (message.creator_id !== "0") {
       obj.creator_id = message.creator_id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     if (message.category_name !== "") {
       obj.category_name = message.category_name;
     }
-    if (message.id !== "") {
+    if (message.id !== "0") {
       obj.id = message.id;
     }
     if (message.status !== 0) {
@@ -9687,10 +9760,10 @@ export const CategoryEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<CategoryEvent>, I>>(object: I): CategoryEvent {
     const message = createBaseCategoryEvent();
-    message.creator_id = object.creator_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.creator_id = object.creator_id ?? "0";
+    message.clan_id = object.clan_id ?? "0";
     message.category_name = object.category_name ?? "";
-    message.id = object.id ?? "";
+    message.id = object.id ?? "0";
     message.status = object.status ?? 0;
     return message;
   },
@@ -9700,7 +9773,7 @@ function createBaseRoleEvent(): RoleEvent {
   return {
     role: undefined,
     status: 0,
-    user_id: "",
+    user_id: "0",
     user_add_ids: [],
     user_remove_ids: [],
     active_permission_ids: [],
@@ -9716,21 +9789,29 @@ export const RoleEvent = {
     if (message.status !== 0) {
       writer.uint32(16).int32(message.status);
     }
-    if (message.user_id !== "") {
-      writer.uint32(26).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(24).int64(message.user_id);
     }
+    writer.uint32(34).fork();
     for (const v of message.user_add_ids) {
-      writer.uint32(34).string(v!);
+      writer.int64(v);
     }
+    writer.ldelim();
+    writer.uint32(42).fork();
     for (const v of message.user_remove_ids) {
-      writer.uint32(42).string(v!);
+      writer.int64(v);
     }
+    writer.ldelim();
+    writer.uint32(50).fork();
     for (const v of message.active_permission_ids) {
-      writer.uint32(50).string(v!);
+      writer.int64(v);
     }
+    writer.ldelim();
+    writer.uint32(58).fork();
     for (const v of message.remove_permission_ids) {
-      writer.uint32(58).string(v!);
+      writer.int64(v);
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -9756,40 +9837,80 @@ export const RoleEvent = {
           message.status = reader.int32();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
-            break;
+          if (tag === 32) {
+            message.user_add_ids.push(longToString(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_add_ids.push(reader.string());
-          continue;
+          if (tag === 34) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_add_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 5:
-          if (tag !== 42) {
-            break;
+          if (tag === 40) {
+            message.user_remove_ids.push(longToString(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_remove_ids.push(reader.string());
-          continue;
+          if (tag === 42) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_remove_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 6:
-          if (tag !== 50) {
-            break;
+          if (tag === 48) {
+            message.active_permission_ids.push(longToString(reader.int64() as Long));
+
+            continue;
           }
 
-          message.active_permission_ids.push(reader.string());
-          continue;
+          if (tag === 50) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.active_permission_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 7:
-          if (tag !== 58) {
-            break;
+          if (tag === 56) {
+            message.remove_permission_ids.push(longToString(reader.int64() as Long));
+
+            continue;
           }
 
-          message.remove_permission_ids.push(reader.string());
-          continue;
+          if (tag === 58) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.remove_permission_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -9803,7 +9924,7 @@ export const RoleEvent = {
     return {
       role: isSet(object.role) ? Role.fromJSON(object.role) : undefined,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
       user_add_ids: globalThis.Array.isArray(object?.user_add_ids)
         ? object.user_add_ids.map((e: any) => globalThis.String(e))
         : [],
@@ -9827,7 +9948,7 @@ export const RoleEvent = {
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     if (message.user_add_ids?.length) {
@@ -9852,7 +9973,7 @@ export const RoleEvent = {
     const message = createBaseRoleEvent();
     message.role = (object.role !== undefined && object.role !== null) ? Role.fromPartial(object.role) : undefined;
     message.status = object.status ?? 0;
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? "0";
     message.user_add_ids = object.user_add_ids?.map((e) => e) || [];
     message.user_remove_ids = object.user_remove_ids?.map((e) => e) || [];
     message.active_permission_ids = object.active_permission_ids?.map((e) => e) || [];
@@ -9862,22 +9983,22 @@ export const RoleEvent = {
 };
 
 function createBaseChannelDeletedEvent(): ChannelDeletedEvent {
-  return { clan_id: "", category_id: "", parent_id: "", channel_id: "", deletor: "" };
+  return { clan_id: "0", category_id: "0", parent_id: "0", channel_id: "0", deletor: "" };
 }
 
 export const ChannelDeletedEvent = {
   encode(message: ChannelDeletedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
-    if (message.category_id !== "") {
-      writer.uint32(18).string(message.category_id);
+    if (message.category_id !== "0") {
+      writer.uint32(16).int64(message.category_id);
     }
-    if (message.parent_id !== "") {
-      writer.uint32(26).string(message.parent_id);
+    if (message.parent_id !== "0") {
+      writer.uint32(24).int64(message.parent_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(34).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(32).int64(message.channel_id);
     }
     if (message.deletor !== "") {
       writer.uint32(42).string(message.deletor);
@@ -9893,32 +10014,32 @@ export const ChannelDeletedEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.category_id = reader.string();
+          message.category_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.parent_id = reader.string();
+          message.parent_id = longToString(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 5:
           if (tag !== 42) {
@@ -9938,26 +10059,26 @@ export const ChannelDeletedEvent = {
 
   fromJSON(object: any): ChannelDeletedEvent {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
-      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "0",
+      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       deletor: isSet(object.deletor) ? globalThis.String(object.deletor) : "",
     };
   },
 
   toJSON(message: ChannelDeletedEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.category_id !== "") {
+    if (message.category_id !== "0") {
       obj.category_id = message.category_id;
     }
-    if (message.parent_id !== "") {
+    if (message.parent_id !== "0") {
       obj.parent_id = message.parent_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
     if (message.deletor !== "") {
@@ -9971,26 +10092,26 @@ export const ChannelDeletedEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelDeletedEvent>, I>>(object: I): ChannelDeletedEvent {
     const message = createBaseChannelDeletedEvent();
-    message.clan_id = object.clan_id ?? "";
-    message.category_id = object.category_id ?? "";
-    message.parent_id = object.parent_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.category_id = object.category_id ?? "0";
+    message.parent_id = object.parent_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
     message.deletor = object.deletor ?? "";
     return message;
   },
 };
 
 function createBaseClanDeletedEvent(): ClanDeletedEvent {
-  return { clan_id: "", deletor: "" };
+  return { clan_id: "0", deletor: "0" };
 }
 
 export const ClanDeletedEvent = {
   encode(message: ClanDeletedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
-    if (message.deletor !== "") {
-      writer.uint32(18).string(message.deletor);
+    if (message.deletor !== "0") {
+      writer.uint32(16).int64(message.deletor);
     }
     return writer;
   },
@@ -10003,18 +10124,18 @@ export const ClanDeletedEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.deletor = reader.string();
+          message.deletor = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -10027,17 +10148,17 @@ export const ClanDeletedEvent = {
 
   fromJSON(object: any): ClanDeletedEvent {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      deletor: isSet(object.deletor) ? globalThis.String(object.deletor) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      deletor: isSet(object.deletor) ? globalThis.String(object.deletor) : "0",
     };
   },
 
   toJSON(message: ClanDeletedEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.deletor !== "") {
+    if (message.deletor !== "0") {
       obj.deletor = message.deletor;
     }
     return obj;
@@ -10048,20 +10169,20 @@ export const ClanDeletedEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<ClanDeletedEvent>, I>>(object: I): ClanDeletedEvent {
     const message = createBaseClanDeletedEvent();
-    message.clan_id = object.clan_id ?? "";
-    message.deletor = object.deletor ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.deletor = object.deletor ?? "0";
     return message;
   },
 };
 
 function createBaseStickerCreateEvent(): StickerCreateEvent {
   return {
-    clan_id: "",
+    clan_id: "0",
     source: "",
     shortname: "",
     category: "",
-    creator_id: "",
-    sticker_id: "",
+    creator_id: "0",
+    sticker_id: "0",
     logo: "",
     clan_name: "",
   };
@@ -10069,8 +10190,8 @@ function createBaseStickerCreateEvent(): StickerCreateEvent {
 
 export const StickerCreateEvent = {
   encode(message: StickerCreateEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
     if (message.source !== "") {
       writer.uint32(18).string(message.source);
@@ -10081,11 +10202,11 @@ export const StickerCreateEvent = {
     if (message.category !== "") {
       writer.uint32(34).string(message.category);
     }
-    if (message.creator_id !== "") {
-      writer.uint32(42).string(message.creator_id);
+    if (message.creator_id !== "0") {
+      writer.uint32(40).int64(message.creator_id);
     }
-    if (message.sticker_id !== "") {
-      writer.uint32(50).string(message.sticker_id);
+    if (message.sticker_id !== "0") {
+      writer.uint32(48).int64(message.sticker_id);
     }
     if (message.logo !== "") {
       writer.uint32(58).string(message.logo);
@@ -10104,11 +10225,11 @@ export const StickerCreateEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -10132,18 +10253,18 @@ export const StickerCreateEvent = {
           message.category = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToString(reader.int64() as Long);
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.sticker_id = reader.string();
+          message.sticker_id = longToString(reader.int64() as Long);
           continue;
         case 7:
           if (tag !== 58) {
@@ -10170,12 +10291,12 @@ export const StickerCreateEvent = {
 
   fromJSON(object: any): StickerCreateEvent {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       source: isSet(object.source) ? globalThis.String(object.source) : "",
       shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
       category: isSet(object.category) ? globalThis.String(object.category) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      sticker_id: isSet(object.sticker_id) ? globalThis.String(object.sticker_id) : "",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "0",
+      sticker_id: isSet(object.sticker_id) ? globalThis.String(object.sticker_id) : "0",
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
     };
@@ -10183,7 +10304,7 @@ export const StickerCreateEvent = {
 
   toJSON(message: StickerCreateEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     if (message.source !== "") {
@@ -10195,10 +10316,10 @@ export const StickerCreateEvent = {
     if (message.category !== "") {
       obj.category = message.category;
     }
-    if (message.creator_id !== "") {
+    if (message.creator_id !== "0") {
       obj.creator_id = message.creator_id;
     }
-    if (message.sticker_id !== "") {
+    if (message.sticker_id !== "0") {
       obj.sticker_id = message.sticker_id;
     }
     if (message.logo !== "") {
@@ -10215,12 +10336,12 @@ export const StickerCreateEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<StickerCreateEvent>, I>>(object: I): StickerCreateEvent {
     const message = createBaseStickerCreateEvent();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
     message.source = object.source ?? "";
     message.shortname = object.shortname ?? "";
     message.category = object.category ?? "";
-    message.creator_id = object.creator_id ?? "";
-    message.sticker_id = object.sticker_id ?? "";
+    message.creator_id = object.creator_id ?? "0";
+    message.sticker_id = object.sticker_id ?? "0";
     message.logo = object.logo ?? "";
     message.clan_name = object.clan_name ?? "";
     return message;
@@ -10228,7 +10349,7 @@ export const StickerCreateEvent = {
 };
 
 function createBaseStickerUpdateEvent(): StickerUpdateEvent {
-  return { shortname: "", sticker_id: "", user_id: "" };
+  return { shortname: "", sticker_id: "0", user_id: "0" };
 }
 
 export const StickerUpdateEvent = {
@@ -10236,11 +10357,11 @@ export const StickerUpdateEvent = {
     if (message.shortname !== "") {
       writer.uint32(10).string(message.shortname);
     }
-    if (message.sticker_id !== "") {
-      writer.uint32(18).string(message.sticker_id);
+    if (message.sticker_id !== "0") {
+      writer.uint32(16).int64(message.sticker_id);
     }
-    if (message.user_id !== "") {
-      writer.uint32(26).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(24).int64(message.user_id);
     }
     return writer;
   },
@@ -10260,18 +10381,18 @@ export const StickerUpdateEvent = {
           message.shortname = reader.string();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.sticker_id = reader.string();
+          message.sticker_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -10285,8 +10406,8 @@ export const StickerUpdateEvent = {
   fromJSON(object: any): StickerUpdateEvent {
     return {
       shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
-      sticker_id: isSet(object.sticker_id) ? globalThis.String(object.sticker_id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      sticker_id: isSet(object.sticker_id) ? globalThis.String(object.sticker_id) : "0",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
     };
   },
 
@@ -10295,10 +10416,10 @@ export const StickerUpdateEvent = {
     if (message.shortname !== "") {
       obj.shortname = message.shortname;
     }
-    if (message.sticker_id !== "") {
+    if (message.sticker_id !== "0") {
       obj.sticker_id = message.sticker_id;
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     return obj;
@@ -10310,23 +10431,23 @@ export const StickerUpdateEvent = {
   fromPartial<I extends Exact<DeepPartial<StickerUpdateEvent>, I>>(object: I): StickerUpdateEvent {
     const message = createBaseStickerUpdateEvent();
     message.shortname = object.shortname ?? "";
-    message.sticker_id = object.sticker_id ?? "";
-    message.user_id = object.user_id ?? "";
+    message.sticker_id = object.sticker_id ?? "0";
+    message.user_id = object.user_id ?? "0";
     return message;
   },
 };
 
 function createBaseStickerDeleteEvent(): StickerDeleteEvent {
-  return { sticker_id: "", user_id: "" };
+  return { sticker_id: "0", user_id: "0" };
 }
 
 export const StickerDeleteEvent = {
   encode(message: StickerDeleteEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.sticker_id !== "") {
-      writer.uint32(18).string(message.sticker_id);
+    if (message.sticker_id !== "0") {
+      writer.uint32(16).int64(message.sticker_id);
     }
-    if (message.user_id !== "") {
-      writer.uint32(26).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(24).int64(message.user_id);
     }
     return writer;
   },
@@ -10339,18 +10460,18 @@ export const StickerDeleteEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.sticker_id = reader.string();
+          message.sticker_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -10363,17 +10484,17 @@ export const StickerDeleteEvent = {
 
   fromJSON(object: any): StickerDeleteEvent {
     return {
-      sticker_id: isSet(object.sticker_id) ? globalThis.String(object.sticker_id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      sticker_id: isSet(object.sticker_id) ? globalThis.String(object.sticker_id) : "0",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
     };
   },
 
   toJSON(message: StickerDeleteEvent): unknown {
     const obj: any = {};
-    if (message.sticker_id !== "") {
+    if (message.sticker_id !== "0") {
       obj.sticker_id = message.sticker_id;
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     return obj;
@@ -10384,26 +10505,26 @@ export const StickerDeleteEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<StickerDeleteEvent>, I>>(object: I): StickerDeleteEvent {
     const message = createBaseStickerDeleteEvent();
-    message.sticker_id = object.sticker_id ?? "";
-    message.user_id = object.user_id ?? "";
+    message.sticker_id = object.sticker_id ?? "0";
+    message.user_id = object.user_id ?? "0";
     return message;
   },
 };
 
 function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
   return {
-    clan_id: "",
-    category_id: "",
-    creator_id: "",
-    parent_id: "",
-    channel_id: "",
+    clan_id: "0",
+    category_id: "0",
+    creator_id: "0",
+    parent_id: "0",
+    channel_id: "0",
     channel_label: "",
     channel_type: 0,
     status: 0,
     meeting_code: "",
     is_error: false,
     channel_private: false,
-    app_id: "",
+    app_id: "0",
     e2ee: 0,
     topic: "",
     age_restricted: 0,
@@ -10417,20 +10538,20 @@ function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
 
 export const ChannelUpdatedEvent = {
   encode(message: ChannelUpdatedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
-    if (message.category_id !== "") {
-      writer.uint32(18).string(message.category_id);
+    if (message.category_id !== "0") {
+      writer.uint32(16).int64(message.category_id);
     }
-    if (message.creator_id !== "") {
-      writer.uint32(26).string(message.creator_id);
+    if (message.creator_id !== "0") {
+      writer.uint32(24).int64(message.creator_id);
     }
-    if (message.parent_id !== "") {
-      writer.uint32(34).string(message.parent_id);
+    if (message.parent_id !== "0") {
+      writer.uint32(32).int64(message.parent_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(42).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(40).int64(message.channel_id);
     }
     if (message.channel_label !== "") {
       writer.uint32(50).string(message.channel_label);
@@ -10450,8 +10571,8 @@ export const ChannelUpdatedEvent = {
     if (message.channel_private !== false) {
       writer.uint32(88).bool(message.channel_private);
     }
-    if (message.app_id !== "") {
-      writer.uint32(98).string(message.app_id);
+    if (message.app_id !== "0") {
+      writer.uint32(96).int64(message.app_id);
     }
     if (message.e2ee !== 0) {
       writer.uint32(104).int32(message.e2ee);
@@ -10468,12 +10589,16 @@ export const ChannelUpdatedEvent = {
     if (message.count_mess_unread !== 0) {
       writer.uint32(136).int32(message.count_mess_unread);
     }
+    writer.uint32(146).fork();
     for (const v of message.user_ids) {
-      writer.uint32(146).string(v!);
+      writer.int64(v);
     }
+    writer.ldelim();
+    writer.uint32(154).fork();
     for (const v of message.role_ids) {
-      writer.uint32(154).string(v!);
+      writer.int64(v);
     }
+    writer.ldelim();
     if (message.channel_avatar !== "") {
       writer.uint32(162).string(message.channel_avatar);
     }
@@ -10488,39 +10613,39 @@ export const ChannelUpdatedEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.category_id = reader.string();
+          message.category_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.creator_id = longToString(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.parent_id = reader.string();
+          message.parent_id = longToString(reader.int64() as Long);
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 50) {
@@ -10565,11 +10690,11 @@ export const ChannelUpdatedEvent = {
           message.channel_private = reader.bool();
           continue;
         case 12:
-          if (tag !== 98) {
+          if (tag !== 96) {
             break;
           }
 
-          message.app_id = reader.string();
+          message.app_id = longToString(reader.int64() as Long);
           continue;
         case 13:
           if (tag !== 104) {
@@ -10607,19 +10732,39 @@ export const ChannelUpdatedEvent = {
           message.count_mess_unread = reader.int32();
           continue;
         case 18:
-          if (tag !== 146) {
-            break;
+          if (tag === 144) {
+            message.user_ids.push(longToString(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 146) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 19:
-          if (tag !== 154) {
-            break;
+          if (tag === 152) {
+            message.role_ids.push(longToString(reader.int64() as Long));
+
+            continue;
           }
 
-          message.role_ids.push(reader.string());
-          continue;
+          if (tag === 154) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.role_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 20:
           if (tag !== 162) {
             break;
@@ -10638,18 +10783,18 @@ export const ChannelUpdatedEvent = {
 
   fromJSON(object: any): ChannelUpdatedEvent {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "0",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "0",
+      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
       is_error: isSet(object.is_error) ? globalThis.Boolean(object.is_error) : false,
       channel_private: isSet(object.channel_private) ? globalThis.Boolean(object.channel_private) : false,
-      app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
+      app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "0",
       e2ee: isSet(object.e2ee) ? globalThis.Number(object.e2ee) : 0,
       topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
       age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
@@ -10663,19 +10808,19 @@ export const ChannelUpdatedEvent = {
 
   toJSON(message: ChannelUpdatedEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.category_id !== "") {
+    if (message.category_id !== "0") {
       obj.category_id = message.category_id;
     }
-    if (message.creator_id !== "") {
+    if (message.creator_id !== "0") {
       obj.creator_id = message.creator_id;
     }
-    if (message.parent_id !== "") {
+    if (message.parent_id !== "0") {
       obj.parent_id = message.parent_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
     if (message.channel_label !== "") {
@@ -10696,7 +10841,7 @@ export const ChannelUpdatedEvent = {
     if (message.channel_private !== false) {
       obj.channel_private = message.channel_private;
     }
-    if (message.app_id !== "") {
+    if (message.app_id !== "0") {
       obj.app_id = message.app_id;
     }
     if (message.e2ee !== 0) {
@@ -10731,18 +10876,18 @@ export const ChannelUpdatedEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelUpdatedEvent>, I>>(object: I): ChannelUpdatedEvent {
     const message = createBaseChannelUpdatedEvent();
-    message.clan_id = object.clan_id ?? "";
-    message.category_id = object.category_id ?? "";
-    message.creator_id = object.creator_id ?? "";
-    message.parent_id = object.parent_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.category_id = object.category_id ?? "0";
+    message.creator_id = object.creator_id ?? "0";
+    message.parent_id = object.parent_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
     message.channel_label = object.channel_label ?? "";
     message.channel_type = object.channel_type ?? 0;
     message.status = object.status ?? 0;
     message.meeting_code = object.meeting_code ?? "";
     message.is_error = object.is_error ?? false;
     message.channel_private = object.channel_private ?? false;
-    message.app_id = object.app_id ?? "";
+    message.app_id = object.app_id ?? "0";
     message.e2ee = object.e2ee ?? 0;
     message.topic = object.topic ?? "";
     message.age_restricted = object.age_restricted ?? 0;
@@ -10761,9 +10906,11 @@ function createBaseStatusUnfollow(): StatusUnfollow {
 
 export const StatusUnfollow = {
   encode(message: StatusUnfollow, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    writer.uint32(10).fork();
     for (const v of message.user_ids) {
-      writer.uint32(10).string(v!);
+      writer.int64(v);
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -10775,12 +10922,22 @@ export const StatusUnfollow = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
+          if (tag === 8) {
+            message.user_ids.push(longToString(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 10) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10872,7 +11029,7 @@ export const StatusUpdate = {
 };
 
 function createBaseStream(): Stream {
-  return { mode: 0, channel_id: "", clan_id: "", label: "" };
+  return { mode: 0, channel_id: "0", clan_id: "0", label: "" };
 }
 
 export const Stream = {
@@ -10880,11 +11037,11 @@ export const Stream = {
     if (message.mode !== 0) {
       writer.uint32(8).int32(message.mode);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(24).int64(message.clan_id);
     }
     if (message.label !== "") {
       writer.uint32(34).string(message.label);
@@ -10907,18 +11064,18 @@ export const Stream = {
           message.mode = reader.int32();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -10939,8 +11096,8 @@ export const Stream = {
   fromJSON(object: any): Stream {
     return {
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       label: isSet(object.label) ? globalThis.String(object.label) : "",
     };
   },
@@ -10950,10 +11107,10 @@ export const Stream = {
     if (message.mode !== 0) {
       obj.mode = Math.round(message.mode);
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     if (message.label !== "") {
@@ -10968,8 +11125,8 @@ export const Stream = {
   fromPartial<I extends Exact<DeepPartial<Stream>, I>>(object: I): Stream {
     const message = createBaseStream();
     message.mode = object.mode ?? 0;
-    message.channel_id = object.channel_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "0";
+    message.clan_id = object.clan_id ?? "0";
     message.label = object.label ?? "";
     return message;
   },
@@ -11175,13 +11332,13 @@ export const StreamPresenceEvent = {
 };
 
 function createBaseUserPresence(): UserPresence {
-  return { user_id: "", session_id: "", username: "", status: undefined, is_mobile: false, user_status: "" };
+  return { user_id: "0", session_id: "", username: "", status: undefined, is_mobile: false, user_status: "" };
 }
 
 export const UserPresence = {
   encode(message: UserPresence, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(8).int64(message.user_id);
     }
     if (message.session_id !== "") {
       writer.uint32(18).string(message.session_id);
@@ -11209,11 +11366,11 @@ export const UserPresence = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -11261,7 +11418,7 @@ export const UserPresence = {
 
   fromJSON(object: any): UserPresence {
     return {
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
       session_id: isSet(object.session_id) ? globalThis.String(object.session_id) : "",
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       status: isSet(object.status) ? String(object.status) : undefined,
@@ -11272,7 +11429,7 @@ export const UserPresence = {
 
   toJSON(message: UserPresence): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     if (message.session_id !== "") {
@@ -11298,7 +11455,7 @@ export const UserPresence = {
   },
   fromPartial<I extends Exact<DeepPartial<UserPresence>, I>>(object: I): UserPresence {
     const message = createBaseUserPresence();
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? "0";
     message.session_id = object.session_id ?? "";
     message.username = object.username ?? "";
     message.status = object.status ?? undefined;
@@ -11309,16 +11466,16 @@ export const UserPresence = {
 };
 
 function createBaseCustomStatusEvent(): CustomStatusEvent {
-  return { clan_id: "", user_id: "", username: "", status: "", time_reset: 0, no_clear: false };
+  return { clan_id: "0", user_id: "0", username: "", status: "", time_reset: 0, no_clear: false };
 }
 
 export const CustomStatusEvent = {
   encode(message: CustomStatusEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
-    if (message.user_id !== "") {
-      writer.uint32(18).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(16).int64(message.user_id);
     }
     if (message.username !== "") {
       writer.uint32(26).string(message.username);
@@ -11343,18 +11500,18 @@ export const CustomStatusEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -11395,8 +11552,8 @@ export const CustomStatusEvent = {
 
   fromJSON(object: any): CustomStatusEvent {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       status: isSet(object.status) ? globalThis.String(object.status) : "",
       time_reset: isSet(object.time_reset) ? globalThis.Number(object.time_reset) : 0,
@@ -11406,10 +11563,10 @@ export const CustomStatusEvent = {
 
   toJSON(message: CustomStatusEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     if (message.username !== "") {
@@ -11432,8 +11589,8 @@ export const CustomStatusEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<CustomStatusEvent>, I>>(object: I): CustomStatusEvent {
     const message = createBaseCustomStatusEvent();
-    message.clan_id = object.clan_id ?? "";
-    message.user_id = object.user_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.user_id = object.user_id ?? "0";
     message.username = object.username ?? "";
     message.status = object.status ?? "";
     message.time_reset = object.time_reset ?? 0;
@@ -11447,7 +11604,7 @@ function createBaseUserChannelAdded(): UserChannelAdded {
     channel_desc: undefined,
     users: [],
     status: "",
-    clan_id: "",
+    clan_id: "0",
     caller: undefined,
     create_time_seconds: 0,
     active: 0,
@@ -11465,8 +11622,8 @@ export const UserChannelAdded = {
     if (message.status !== "") {
       writer.uint32(26).string(message.status);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(34).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(32).int64(message.clan_id);
     }
     if (message.caller !== undefined) {
       UserProfileRedis.encode(message.caller, writer.uint32(42).fork()).ldelim();
@@ -11509,11 +11666,11 @@ export const UserChannelAdded = {
           message.status = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 5:
           if (tag !== 42) {
@@ -11550,7 +11707,7 @@ export const UserChannelAdded = {
       channel_desc: isSet(object.channel_desc) ? ChannelDescription1.fromJSON(object.channel_desc) : undefined,
       users: globalThis.Array.isArray(object?.users) ? object.users.map((e: any) => UserProfileRedis.fromJSON(e)) : [],
       status: isSet(object.status) ? globalThis.String(object.status) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       caller: isSet(object.caller) ? UserProfileRedis.fromJSON(object.caller) : undefined,
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
@@ -11568,7 +11725,7 @@ export const UserChannelAdded = {
     if (message.status !== "") {
       obj.status = message.status;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     if (message.caller !== undefined) {
@@ -11593,7 +11750,7 @@ export const UserChannelAdded = {
       : undefined;
     message.users = object.users?.map((e) => UserProfileRedis.fromPartial(e)) || [];
     message.status = object.status ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
     message.caller = (object.caller !== undefined && object.caller !== null)
       ? UserProfileRedis.fromPartial(object.caller)
       : undefined;
@@ -11604,22 +11761,24 @@ export const UserChannelAdded = {
 };
 
 function createBaseUserChannelRemoved(): UserChannelRemoved {
-  return { channel_id: "", user_ids: [], channel_type: 0, clan_id: "", badge_counts: [] };
+  return { channel_id: "0", user_ids: [], channel_type: 0, clan_id: "0", badge_counts: [] };
 }
 
 export const UserChannelRemoved = {
   encode(message: UserChannelRemoved, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(8).int64(message.channel_id);
     }
+    writer.uint32(18).fork();
     for (const v of message.user_ids) {
-      writer.uint32(18).string(v!);
+      writer.int64(v);
     }
+    writer.ldelim();
     if (message.channel_type !== 0) {
       writer.uint32(24).int32(message.channel_type);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(34).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(32).int64(message.clan_id);
     }
     writer.uint32(50).fork();
     for (const v of message.badge_counts) {
@@ -11637,19 +11796,29 @@ export const UserChannelRemoved = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
-            break;
+          if (tag === 16) {
+            message.user_ids.push(longToString(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 18) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 3:
           if (tag !== 24) {
             break;
@@ -11658,11 +11827,11 @@ export const UserChannelRemoved = {
           message.channel_type = reader.int32();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 6:
           if (tag === 48) {
@@ -11692,10 +11861,10 @@ export const UserChannelRemoved = {
 
   fromJSON(object: any): UserChannelRemoved {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       badge_counts: globalThis.Array.isArray(object?.badge_counts)
         ? object.badge_counts.map((e: any) => globalThis.Number(e))
         : [],
@@ -11704,7 +11873,7 @@ export const UserChannelRemoved = {
 
   toJSON(message: UserChannelRemoved): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
     if (message.user_ids?.length) {
@@ -11713,7 +11882,7 @@ export const UserChannelRemoved = {
     if (message.channel_type !== 0) {
       obj.channel_type = Math.round(message.channel_type);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     if (message.badge_counts?.length) {
@@ -11727,27 +11896,29 @@ export const UserChannelRemoved = {
   },
   fromPartial<I extends Exact<DeepPartial<UserChannelRemoved>, I>>(object: I): UserChannelRemoved {
     const message = createBaseUserChannelRemoved();
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id = object.channel_id ?? "0";
     message.user_ids = object.user_ids?.map((e) => e) || [];
     message.channel_type = object.channel_type ?? 0;
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
     message.badge_counts = object.badge_counts?.map((e) => e) || [];
     return message;
   },
 };
 
 function createBaseUserClanRemoved(): UserClanRemoved {
-  return { clan_id: "", user_ids: [] };
+  return { clan_id: "0", user_ids: [] };
 }
 
 export const UserClanRemoved = {
   encode(message: UserClanRemoved, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
+    writer.uint32(18).fork();
     for (const v of message.user_ids) {
-      writer.uint32(18).string(v!);
+      writer.int64(v);
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -11759,19 +11930,29 @@ export const UserClanRemoved = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
-            break;
+          if (tag === 16) {
+            message.user_ids.push(longToString(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_ids.push(reader.string());
-          continue;
+          if (tag === 18) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -11783,14 +11964,14 @@ export const UserClanRemoved = {
 
   fromJSON(object: any): UserClanRemoved {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
     };
   },
 
   toJSON(message: UserClanRemoved): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     if (message.user_ids?.length) {
@@ -11804,7 +11985,7 @@ export const UserClanRemoved = {
   },
   fromPartial<I extends Exact<DeepPartial<UserClanRemoved>, I>>(object: I): UserClanRemoved {
     const message = createBaseUserClanRemoved();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
     message.user_ids = object.user_ids?.map((e) => e) || [];
     return message;
   },
@@ -11812,13 +11993,13 @@ export const UserClanRemoved = {
 
 function createBaseClanUpdatedEvent(): ClanUpdatedEvent {
   return {
-    clan_id: "",
+    clan_id: "0",
     clan_name: "",
     logo: "",
     banner: "",
     status: 0,
     is_onboarding: false,
-    welcome_channel_id: "",
+    welcome_channel_id: "0",
     onboarding_banner: "",
     community_banner: "",
     is_community: false,
@@ -11830,8 +12011,8 @@ function createBaseClanUpdatedEvent(): ClanUpdatedEvent {
 
 export const ClanUpdatedEvent = {
   encode(message: ClanUpdatedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
     if (message.clan_name !== "") {
       writer.uint32(18).string(message.clan_name);
@@ -11848,8 +12029,8 @@ export const ClanUpdatedEvent = {
     if (message.is_onboarding !== false) {
       writer.uint32(48).bool(message.is_onboarding);
     }
-    if (message.welcome_channel_id !== "") {
-      writer.uint32(58).string(message.welcome_channel_id);
+    if (message.welcome_channel_id !== "0") {
+      writer.uint32(56).int64(message.welcome_channel_id);
     }
     if (message.onboarding_banner !== "") {
       writer.uint32(66).string(message.onboarding_banner);
@@ -11880,11 +12061,11 @@ export const ClanUpdatedEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -11922,11 +12103,11 @@ export const ClanUpdatedEvent = {
           message.is_onboarding = reader.bool();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.welcome_channel_id = reader.string();
+          message.welcome_channel_id = longToString(reader.int64() as Long);
           continue;
         case 8:
           if (tag !== 66) {
@@ -11981,13 +12162,13 @@ export const ClanUpdatedEvent = {
 
   fromJSON(object: any): ClanUpdatedEvent {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       banner: isSet(object.banner) ? globalThis.String(object.banner) : "",
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       is_onboarding: isSet(object.is_onboarding) ? globalThis.Boolean(object.is_onboarding) : false,
-      welcome_channel_id: isSet(object.welcome_channel_id) ? globalThis.String(object.welcome_channel_id) : "",
+      welcome_channel_id: isSet(object.welcome_channel_id) ? globalThis.String(object.welcome_channel_id) : "0",
       onboarding_banner: isSet(object.onboarding_banner) ? globalThis.String(object.onboarding_banner) : "",
       community_banner: isSet(object.community_banner) ? globalThis.String(object.community_banner) : "",
       is_community: isSet(object.is_community) ? globalThis.Boolean(object.is_community) : false,
@@ -11999,7 +12180,7 @@ export const ClanUpdatedEvent = {
 
   toJSON(message: ClanUpdatedEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     if (message.clan_name !== "") {
@@ -12017,7 +12198,7 @@ export const ClanUpdatedEvent = {
     if (message.is_onboarding !== false) {
       obj.is_onboarding = message.is_onboarding;
     }
-    if (message.welcome_channel_id !== "") {
+    if (message.welcome_channel_id !== "0") {
       obj.welcome_channel_id = message.welcome_channel_id;
     }
     if (message.onboarding_banner !== "") {
@@ -12046,13 +12227,13 @@ export const ClanUpdatedEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<ClanUpdatedEvent>, I>>(object: I): ClanUpdatedEvent {
     const message = createBaseClanUpdatedEvent();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
     message.clan_name = object.clan_name ?? "";
     message.logo = object.logo ?? "";
     message.banner = object.banner ?? "";
     message.status = object.status ?? 0;
     message.is_onboarding = object.is_onboarding ?? false;
-    message.welcome_channel_id = object.welcome_channel_id ?? "";
+    message.welcome_channel_id = object.welcome_channel_id ?? "0";
     message.onboarding_banner = object.onboarding_banner ?? "";
     message.community_banner = object.community_banner ?? "";
     message.is_community = object.is_community ?? false;
@@ -12064,13 +12245,13 @@ export const ClanUpdatedEvent = {
 };
 
 function createBaseClanProfileUpdatedEvent(): ClanProfileUpdatedEvent {
-  return { user_id: "", clan_nick: "", clan_avatar: "", clan_id: "" };
+  return { user_id: "0", clan_nick: "", clan_avatar: "", clan_id: "0" };
 }
 
 export const ClanProfileUpdatedEvent = {
   encode(message: ClanProfileUpdatedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(8).int64(message.user_id);
     }
     if (message.clan_nick !== "") {
       writer.uint32(18).string(message.clan_nick);
@@ -12078,8 +12259,8 @@ export const ClanProfileUpdatedEvent = {
     if (message.clan_avatar !== "") {
       writer.uint32(26).string(message.clan_avatar);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(34).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(32).int64(message.clan_id);
     }
     return writer;
   },
@@ -12092,11 +12273,11 @@ export const ClanProfileUpdatedEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -12113,11 +12294,11 @@ export const ClanProfileUpdatedEvent = {
           message.clan_avatar = reader.string();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -12130,16 +12311,16 @@ export const ClanProfileUpdatedEvent = {
 
   fromJSON(object: any): ClanProfileUpdatedEvent {
     return {
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
       clan_nick: isSet(object.clan_nick) ? globalThis.String(object.clan_nick) : "",
       clan_avatar: isSet(object.clan_avatar) ? globalThis.String(object.clan_avatar) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
     };
   },
 
   toJSON(message: ClanProfileUpdatedEvent): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     if (message.clan_nick !== "") {
@@ -12148,7 +12329,7 @@ export const ClanProfileUpdatedEvent = {
     if (message.clan_avatar !== "") {
       obj.clan_avatar = message.clan_avatar;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -12159,30 +12340,30 @@ export const ClanProfileUpdatedEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<ClanProfileUpdatedEvent>, I>>(object: I): ClanProfileUpdatedEvent {
     const message = createBaseClanProfileUpdatedEvent();
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? "0";
     message.clan_nick = object.clan_nick ?? "";
     message.clan_avatar = object.clan_avatar ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
     return message;
   },
 };
 
 function createBaseUserProfileUpdatedEvent(): UserProfileUpdatedEvent {
   return {
-    user_id: "",
+    user_id: "0",
     display_name: "",
     avatar: "",
     about_me: "",
-    channel_id: "",
-    clan_id: "",
+    channel_id: "0",
+    clan_id: "0",
     encrypt_private_key: "",
   };
 }
 
 export const UserProfileUpdatedEvent = {
   encode(message: UserProfileUpdatedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(8).int64(message.user_id);
     }
     if (message.display_name !== "") {
       writer.uint32(18).string(message.display_name);
@@ -12193,11 +12374,11 @@ export const UserProfileUpdatedEvent = {
     if (message.about_me !== "") {
       writer.uint32(34).string(message.about_me);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(42).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(40).int64(message.channel_id);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(50).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(48).int64(message.clan_id);
     }
     if (message.encrypt_private_key !== "") {
       writer.uint32(58).string(message.encrypt_private_key);
@@ -12213,11 +12394,11 @@ export const UserProfileUpdatedEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -12241,18 +12422,18 @@ export const UserProfileUpdatedEvent = {
           message.about_me = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 7:
           if (tag !== 58) {
@@ -12272,19 +12453,19 @@ export const UserProfileUpdatedEvent = {
 
   fromJSON(object: any): UserProfileUpdatedEvent {
     return {
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
       display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       about_me: isSet(object.about_me) ? globalThis.String(object.about_me) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       encrypt_private_key: isSet(object.encrypt_private_key) ? globalThis.String(object.encrypt_private_key) : "",
     };
   },
 
   toJSON(message: UserProfileUpdatedEvent): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     if (message.display_name !== "") {
@@ -12296,10 +12477,10 @@ export const UserProfileUpdatedEvent = {
     if (message.about_me !== "") {
       obj.about_me = message.about_me;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     if (message.encrypt_private_key !== "") {
@@ -12313,12 +12494,12 @@ export const UserProfileUpdatedEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<UserProfileUpdatedEvent>, I>>(object: I): UserProfileUpdatedEvent {
     const message = createBaseUserProfileUpdatedEvent();
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? "0";
     message.display_name = object.display_name ?? "";
     message.avatar = object.avatar ?? "";
     message.about_me = object.about_me ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "0";
+    message.clan_id = object.clan_id ?? "0";
     message.encrypt_private_key = object.encrypt_private_key ?? "";
     return message;
   },
@@ -12400,7 +12581,7 @@ export const ConfirmLinkMezonOTPData = {
 
 function createBaseUserProfileRedis(): UserProfileRedis {
   return {
-    user_id: "",
+    user_id: "0",
     username: "",
     avatar: "",
     display_name: "",
@@ -12419,8 +12600,8 @@ function createBaseUserProfileRedis(): UserProfileRedis {
 
 export const UserProfileRedis = {
   encode(message: UserProfileRedis, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(8).int64(message.user_id);
     }
     if (message.username !== "") {
       writer.uint32(18).string(message.username);
@@ -12443,9 +12624,11 @@ export const UserProfileRedis = {
     for (const v of message.fcm_tokens) {
       FCMTokens.encode(v!, writer.uint32(66).fork()).ldelim();
     }
+    writer.uint32(74).fork();
     for (const v of message.joined_clans) {
-      writer.uint32(74).string(v!);
+      writer.int64(v);
     }
+    writer.ldelim();
     if (message.app_token !== "") {
       writer.uint32(82).string(message.app_token);
     }
@@ -12472,11 +12655,11 @@ export const UserProfileRedis = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -12528,12 +12711,22 @@ export const UserProfileRedis = {
           message.fcm_tokens.push(FCMTokens.decode(reader, reader.uint32()));
           continue;
         case 9:
-          if (tag !== 74) {
-            break;
+          if (tag === 72) {
+            message.joined_clans.push(longToString(reader.int64() as Long));
+
+            continue;
           }
 
-          message.joined_clans.push(reader.string());
-          continue;
+          if (tag === 74) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.joined_clans.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 10:
           if (tag !== 82) {
             break;
@@ -12580,7 +12773,7 @@ export const UserProfileRedis = {
 
   fromJSON(object: any): UserProfileRedis {
     return {
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
@@ -12603,7 +12796,7 @@ export const UserProfileRedis = {
 
   toJSON(message: UserProfileRedis): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     if (message.username !== "") {
@@ -12653,7 +12846,7 @@ export const UserProfileRedis = {
   },
   fromPartial<I extends Exact<DeepPartial<UserProfileRedis>, I>>(object: I): UserProfileRedis {
     const message = createBaseUserProfileRedis();
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? "0";
     message.username = object.username ?? "";
     message.avatar = object.avatar ?? "";
     message.display_name = object.display_name ?? "";
@@ -12761,7 +12954,7 @@ export const FCMTokens = {
 };
 
 function createBaseCheckNameExistedEvent(): CheckNameExistedEvent {
-  return { name: "", condition_id: "", exist: false, type: 0, clan_id: "" };
+  return { name: "", condition_id: "0", exist: false, type: 0, clan_id: "0" };
 }
 
 export const CheckNameExistedEvent = {
@@ -12769,8 +12962,8 @@ export const CheckNameExistedEvent = {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.condition_id !== "") {
-      writer.uint32(18).string(message.condition_id);
+    if (message.condition_id !== "0") {
+      writer.uint32(16).int64(message.condition_id);
     }
     if (message.exist !== false) {
       writer.uint32(24).bool(message.exist);
@@ -12778,8 +12971,8 @@ export const CheckNameExistedEvent = {
     if (message.type !== 0) {
       writer.uint32(32).int32(message.type);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(42).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(40).int64(message.clan_id);
     }
     return writer;
   },
@@ -12799,11 +12992,11 @@ export const CheckNameExistedEvent = {
           message.name = reader.string();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.condition_id = reader.string();
+          message.condition_id = longToString(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 24) {
@@ -12820,11 +13013,11 @@ export const CheckNameExistedEvent = {
           message.type = reader.int32();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -12838,10 +13031,10 @@ export const CheckNameExistedEvent = {
   fromJSON(object: any): CheckNameExistedEvent {
     return {
       name: isSet(object.name) ? globalThis.String(object.name) : "",
-      condition_id: isSet(object.condition_id) ? globalThis.String(object.condition_id) : "",
+      condition_id: isSet(object.condition_id) ? globalThis.String(object.condition_id) : "0",
       exist: isSet(object.exist) ? globalThis.Boolean(object.exist) : false,
       type: isSet(object.type) ? globalThis.Number(object.type) : 0,
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
     };
   },
 
@@ -12850,7 +13043,7 @@ export const CheckNameExistedEvent = {
     if (message.name !== "") {
       obj.name = message.name;
     }
-    if (message.condition_id !== "") {
+    if (message.condition_id !== "0") {
       obj.condition_id = message.condition_id;
     }
     if (message.exist !== false) {
@@ -12859,7 +13052,7 @@ export const CheckNameExistedEvent = {
     if (message.type !== 0) {
       obj.type = Math.round(message.type);
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -12871,22 +13064,22 @@ export const CheckNameExistedEvent = {
   fromPartial<I extends Exact<DeepPartial<CheckNameExistedEvent>, I>>(object: I): CheckNameExistedEvent {
     const message = createBaseCheckNameExistedEvent();
     message.name = object.name ?? "";
-    message.condition_id = object.condition_id ?? "";
+    message.condition_id = object.condition_id ?? "0";
     message.exist = object.exist ?? false;
     message.type = object.type ?? 0;
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
     return message;
   },
 };
 
 function createBaseNotificationChannelCategorySetting(): NotificationChannelCategorySetting {
-  return { id: "", channel_category_label: "", notification_setting_type: 0, channel_category_title: "", action: 0 };
+  return { id: "0", channel_category_label: "", notification_setting_type: 0, channel_category_title: "", action: 0 };
 }
 
 export const NotificationChannelCategorySetting = {
   encode(message: NotificationChannelCategorySetting, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== "0") {
+      writer.uint32(8).int64(message.id);
     }
     if (message.channel_category_label !== "") {
       writer.uint32(18).string(message.channel_category_label);
@@ -12911,11 +13104,11 @@ export const NotificationChannelCategorySetting = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -12956,7 +13149,7 @@ export const NotificationChannelCategorySetting = {
 
   fromJSON(object: any): NotificationChannelCategorySetting {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "0",
       channel_category_label: isSet(object.channel_category_label)
         ? globalThis.String(object.channel_category_label)
         : "",
@@ -12972,7 +13165,7 @@ export const NotificationChannelCategorySetting = {
 
   toJSON(message: NotificationChannelCategorySetting): unknown {
     const obj: any = {};
-    if (message.id !== "") {
+    if (message.id !== "0") {
       obj.id = message.id;
     }
     if (message.channel_category_label !== "") {
@@ -12999,7 +13192,7 @@ export const NotificationChannelCategorySetting = {
     object: I,
   ): NotificationChannelCategorySetting {
     const message = createBaseNotificationChannelCategorySetting();
-    message.id = object.id ?? "";
+    message.id = object.id ?? "0";
     message.channel_category_label = object.channel_category_label ?? "";
     message.notification_setting_type = object.notification_setting_type ?? 0;
     message.channel_category_title = object.channel_category_title ?? "";
@@ -13010,13 +13203,13 @@ export const NotificationChannelCategorySetting = {
 
 function createBaseEventEmoji(): EventEmoji {
   return {
-    id: "",
-    clan_id: "",
+    id: "0",
+    clan_id: "0",
     short_name: "",
     source: "",
     category: "",
     action: 0,
-    user_id: "",
+    user_id: "0",
     logo: "",
     clan_name: "",
     is_for_sale: false,
@@ -13025,11 +13218,11 @@ function createBaseEventEmoji(): EventEmoji {
 
 export const EventEmoji = {
   encode(message: EventEmoji, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== "0") {
+      writer.uint32(8).int64(message.id);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(16).int64(message.clan_id);
     }
     if (message.short_name !== "") {
       writer.uint32(26).string(message.short_name);
@@ -13043,8 +13236,8 @@ export const EventEmoji = {
     if (message.action !== 0) {
       writer.uint32(48).int32(message.action);
     }
-    if (message.user_id !== "") {
-      writer.uint32(58).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(56).int64(message.user_id);
     }
     if (message.logo !== "") {
       writer.uint32(66).string(message.logo);
@@ -13066,18 +13259,18 @@ export const EventEmoji = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -13108,11 +13301,11 @@ export const EventEmoji = {
           message.action = reader.int32();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
         case 8:
           if (tag !== 66) {
@@ -13146,13 +13339,13 @@ export const EventEmoji = {
 
   fromJSON(object: any): EventEmoji {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "0",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       short_name: isSet(object.short_name) ? globalThis.String(object.short_name) : "",
       source: isSet(object.source) ? globalThis.String(object.source) : "",
       category: isSet(object.category) ? globalThis.String(object.category) : "",
       action: isSet(object.action) ? globalThis.Number(object.action) : 0,
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       is_for_sale: isSet(object.is_for_sale) ? globalThis.Boolean(object.is_for_sale) : false,
@@ -13161,10 +13354,10 @@ export const EventEmoji = {
 
   toJSON(message: EventEmoji): unknown {
     const obj: any = {};
-    if (message.id !== "") {
+    if (message.id !== "0") {
       obj.id = message.id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     if (message.short_name !== "") {
@@ -13179,7 +13372,7 @@ export const EventEmoji = {
     if (message.action !== 0) {
       obj.action = Math.round(message.action);
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     if (message.logo !== "") {
@@ -13199,13 +13392,13 @@ export const EventEmoji = {
   },
   fromPartial<I extends Exact<DeepPartial<EventEmoji>, I>>(object: I): EventEmoji {
     const message = createBaseEventEmoji();
-    message.id = object.id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.id = object.id ?? "0";
+    message.clan_id = object.clan_id ?? "0";
     message.short_name = object.short_name ?? "";
     message.source = object.source ?? "";
     message.category = object.category ?? "";
     message.action = object.action ?? 0;
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? "0";
     message.logo = object.logo ?? "";
     message.clan_name = object.clan_name ?? "";
     message.is_for_sale = object.is_for_sale ?? false;
@@ -13214,7 +13407,7 @@ export const EventEmoji = {
 };
 
 function createBasePermissionSetEvent(): PermissionSetEvent {
-  return { caller: "", role_id: "", user_id: "", channel_id: "", permission_updates: [] };
+  return { caller: "", role_id: "0", user_id: "0", channel_id: "0", permission_updates: [] };
 }
 
 export const PermissionSetEvent = {
@@ -13222,14 +13415,14 @@ export const PermissionSetEvent = {
     if (message.caller !== "") {
       writer.uint32(10).string(message.caller);
     }
-    if (message.role_id !== "") {
-      writer.uint32(18).string(message.role_id);
+    if (message.role_id !== "0") {
+      writer.uint32(16).int64(message.role_id);
     }
-    if (message.user_id !== "") {
-      writer.uint32(26).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(24).int64(message.user_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(34).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(32).int64(message.channel_id);
     }
     for (const v of message.permission_updates) {
       PermissionUpdate.encode(v!, writer.uint32(42).fork()).ldelim();
@@ -13252,25 +13445,25 @@ export const PermissionSetEvent = {
           message.caller = reader.string();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.role_id = reader.string();
+          message.role_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 5:
           if (tag !== 42) {
@@ -13291,9 +13484,9 @@ export const PermissionSetEvent = {
   fromJSON(object: any): PermissionSetEvent {
     return {
       caller: isSet(object.caller) ? globalThis.String(object.caller) : "",
-      role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "0",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       permission_updates: globalThis.Array.isArray(object?.permission_updates)
         ? object.permission_updates.map((e: any) => PermissionUpdate.fromJSON(e))
         : [],
@@ -13305,13 +13498,13 @@ export const PermissionSetEvent = {
     if (message.caller !== "") {
       obj.caller = message.caller;
     }
-    if (message.role_id !== "") {
+    if (message.role_id !== "0") {
       obj.role_id = message.role_id;
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
     if (message.permission_updates?.length) {
@@ -13326,25 +13519,25 @@ export const PermissionSetEvent = {
   fromPartial<I extends Exact<DeepPartial<PermissionSetEvent>, I>>(object: I): PermissionSetEvent {
     const message = createBasePermissionSetEvent();
     message.caller = object.caller ?? "";
-    message.role_id = object.role_id ?? "";
-    message.user_id = object.user_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.role_id = object.role_id ?? "0";
+    message.user_id = object.user_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
     message.permission_updates = object.permission_updates?.map((e) => PermissionUpdate.fromPartial(e)) || [];
     return message;
   },
 };
 
 function createBasePermissionChangedEvent(): PermissionChangedEvent {
-  return { user_id: "", channel_id: "", add_permissions: [], remove_permissions: [], default_permissions: [] };
+  return { user_id: "0", channel_id: "0", add_permissions: [], remove_permissions: [], default_permissions: [] };
 }
 
 export const PermissionChangedEvent = {
   encode(message: PermissionChangedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(8).int64(message.user_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
     }
     for (const v of message.add_permissions) {
       PermissionUpdate.encode(v!, writer.uint32(26).fork()).ldelim();
@@ -13366,18 +13559,18 @@ export const PermissionChangedEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -13411,8 +13604,8 @@ export const PermissionChangedEvent = {
 
   fromJSON(object: any): PermissionChangedEvent {
     return {
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       add_permissions: globalThis.Array.isArray(object?.add_permissions)
         ? object.add_permissions.map((e: any) => PermissionUpdate.fromJSON(e))
         : [],
@@ -13427,10 +13620,10 @@ export const PermissionChangedEvent = {
 
   toJSON(message: PermissionChangedEvent): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
     if (message.add_permissions?.length) {
@@ -13450,8 +13643,8 @@ export const PermissionChangedEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<PermissionChangedEvent>, I>>(object: I): PermissionChangedEvent {
     const message = createBasePermissionChangedEvent();
-    message.user_id = object.user_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.user_id = object.user_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
     message.add_permissions = object.add_permissions?.map((e) => PermissionUpdate.fromPartial(e)) || [];
     message.remove_permissions = object.remove_permissions?.map((e) => PermissionUpdate.fromPartial(e)) || [];
     message.default_permissions = object.default_permissions?.map((e) => PermissionUpdate.fromPartial(e)) || [];
@@ -13460,25 +13653,25 @@ export const PermissionChangedEvent = {
 };
 
 function createBaseMessageButtonClicked(): MessageButtonClicked {
-  return { message_id: "", channel_id: "", button_id: "", sender_id: "", user_id: "", extra_data: "" };
+  return { message_id: "0", channel_id: "0", button_id: "0", sender_id: "0", user_id: "0", extra_data: "" };
 }
 
 export const MessageButtonClicked = {
   encode(message: MessageButtonClicked, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.message_id !== "") {
-      writer.uint32(10).string(message.message_id);
+    if (message.message_id !== "0") {
+      writer.uint32(8).int64(message.message_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
     }
-    if (message.button_id !== "") {
-      writer.uint32(26).string(message.button_id);
+    if (message.button_id !== "0") {
+      writer.uint32(24).int64(message.button_id);
     }
-    if (message.sender_id !== "") {
-      writer.uint32(34).string(message.sender_id);
+    if (message.sender_id !== "0") {
+      writer.uint32(32).int64(message.sender_id);
     }
-    if (message.user_id !== "") {
-      writer.uint32(42).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(40).int64(message.user_id);
     }
     if (message.extra_data !== "") {
       writer.uint32(50).string(message.extra_data);
@@ -13494,39 +13687,39 @@ export const MessageButtonClicked = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.button_id = reader.string();
+          message.button_id = longToString(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.sender_id = reader.string();
+          message.sender_id = longToString(reader.int64() as Long);
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 50) {
@@ -13546,30 +13739,30 @@ export const MessageButtonClicked = {
 
   fromJSON(object: any): MessageButtonClicked {
     return {
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      button_id: isSet(object.button_id) ? globalThis.String(object.button_id) : "",
-      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      button_id: isSet(object.button_id) ? globalThis.String(object.button_id) : "0",
+      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "0",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
       extra_data: isSet(object.extra_data) ? globalThis.String(object.extra_data) : "",
     };
   },
 
   toJSON(message: MessageButtonClicked): unknown {
     const obj: any = {};
-    if (message.message_id !== "") {
+    if (message.message_id !== "0") {
       obj.message_id = message.message_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.button_id !== "") {
+    if (message.button_id !== "0") {
       obj.button_id = message.button_id;
     }
-    if (message.sender_id !== "") {
+    if (message.sender_id !== "0") {
       obj.sender_id = message.sender_id;
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     if (message.extra_data !== "") {
@@ -13583,30 +13776,30 @@ export const MessageButtonClicked = {
   },
   fromPartial<I extends Exact<DeepPartial<MessageButtonClicked>, I>>(object: I): MessageButtonClicked {
     const message = createBaseMessageButtonClicked();
-    message.message_id = object.message_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.button_id = object.button_id ?? "";
-    message.sender_id = object.sender_id ?? "";
-    message.user_id = object.user_id ?? "";
+    message.message_id = object.message_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.button_id = object.button_id ?? "0";
+    message.sender_id = object.sender_id ?? "0";
+    message.user_id = object.user_id ?? "0";
     message.extra_data = object.extra_data ?? "";
     return message;
   },
 };
 
 function createBaseUnmuteEvent(): UnmuteEvent {
-  return { channel_id: "", category_id: "", clan_id: "" };
+  return { channel_id: "0", category_id: "0", clan_id: "0" };
 }
 
 export const UnmuteEvent = {
   encode(message: UnmuteEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(8).int64(message.channel_id);
     }
-    if (message.category_id !== "") {
-      writer.uint32(18).string(message.category_id);
+    if (message.category_id !== "0") {
+      writer.uint32(16).int64(message.category_id);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(24).int64(message.clan_id);
     }
     return writer;
   },
@@ -13619,25 +13812,25 @@ export const UnmuteEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.category_id = reader.string();
+          message.category_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -13650,21 +13843,21 @@ export const UnmuteEvent = {
 
   fromJSON(object: any): UnmuteEvent {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "0",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
     };
   },
 
   toJSON(message: UnmuteEvent): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.category_id !== "") {
+    if (message.category_id !== "0") {
       obj.category_id = message.category_id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -13675,9 +13868,9 @@ export const UnmuteEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<UnmuteEvent>, I>>(object: I): UnmuteEvent {
     const message = createBaseUnmuteEvent();
-    message.channel_id = object.channel_id ?? "";
-    message.category_id = object.category_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "0";
+    message.category_id = object.category_id ?? "0";
+    message.clan_id = object.clan_id ?? "0";
     return message;
   },
 };
@@ -13742,25 +13935,25 @@ export const ListActivity = {
 };
 
 function createBaseDropdownBoxSelected(): DropdownBoxSelected {
-  return { message_id: "", channel_id: "", selectbox_id: "", sender_id: "", user_id: "", values: [] };
+  return { message_id: "0", channel_id: "0", selectbox_id: "0", sender_id: "0", user_id: "0", values: [] };
 }
 
 export const DropdownBoxSelected = {
   encode(message: DropdownBoxSelected, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.message_id !== "") {
-      writer.uint32(10).string(message.message_id);
+    if (message.message_id !== "0") {
+      writer.uint32(8).int64(message.message_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
     }
-    if (message.selectbox_id !== "") {
-      writer.uint32(26).string(message.selectbox_id);
+    if (message.selectbox_id !== "0") {
+      writer.uint32(24).int64(message.selectbox_id);
     }
-    if (message.sender_id !== "") {
-      writer.uint32(34).string(message.sender_id);
+    if (message.sender_id !== "0") {
+      writer.uint32(32).int64(message.sender_id);
     }
-    if (message.user_id !== "") {
-      writer.uint32(42).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(40).int64(message.user_id);
     }
     for (const v of message.values) {
       writer.uint32(50).string(v!);
@@ -13776,39 +13969,39 @@ export const DropdownBoxSelected = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.selectbox_id = reader.string();
+          message.selectbox_id = longToString(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.sender_id = reader.string();
+          message.sender_id = longToString(reader.int64() as Long);
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 50) {
@@ -13828,30 +14021,30 @@ export const DropdownBoxSelected = {
 
   fromJSON(object: any): DropdownBoxSelected {
     return {
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      selectbox_id: isSet(object.selectbox_id) ? globalThis.String(object.selectbox_id) : "",
-      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      selectbox_id: isSet(object.selectbox_id) ? globalThis.String(object.selectbox_id) : "0",
+      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "0",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
       values: globalThis.Array.isArray(object?.values) ? object.values.map((e: any) => globalThis.String(e)) : [],
     };
   },
 
   toJSON(message: DropdownBoxSelected): unknown {
     const obj: any = {};
-    if (message.message_id !== "") {
+    if (message.message_id !== "0") {
       obj.message_id = message.message_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.selectbox_id !== "") {
+    if (message.selectbox_id !== "0") {
       obj.selectbox_id = message.selectbox_id;
     }
-    if (message.sender_id !== "") {
+    if (message.sender_id !== "0") {
       obj.sender_id = message.sender_id;
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     if (message.values?.length) {
@@ -13865,11 +14058,11 @@ export const DropdownBoxSelected = {
   },
   fromPartial<I extends Exact<DeepPartial<DropdownBoxSelected>, I>>(object: I): DropdownBoxSelected {
     const message = createBaseDropdownBoxSelected();
-    message.message_id = object.message_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.selectbox_id = object.selectbox_id ?? "";
-    message.sender_id = object.sender_id ?? "";
-    message.user_id = object.user_id ?? "";
+    message.message_id = object.message_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.selectbox_id = object.selectbox_id ?? "0";
+    message.sender_id = object.sender_id ?? "0";
+    message.user_id = object.user_id ?? "0";
     message.values = object.values?.map((e) => e) || [];
     return message;
   },
@@ -13877,11 +14070,11 @@ export const DropdownBoxSelected = {
 
 function createBaseSdTopicEvent(): SdTopicEvent {
   return {
-    id: "",
-    clan_id: "",
-    channel_id: "",
-    message_id: "",
-    user_id: "",
+    id: "0",
+    clan_id: "0",
+    channel_id: "0",
+    message_id: "0",
+    user_id: "0",
     last_sent_message: undefined,
     message: undefined,
   };
@@ -13889,20 +14082,20 @@ function createBaseSdTopicEvent(): SdTopicEvent {
 
 export const SdTopicEvent = {
   encode(message: SdTopicEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== "0") {
+      writer.uint32(8).int64(message.id);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(16).int64(message.clan_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(24).int64(message.channel_id);
     }
-    if (message.message_id !== "") {
-      writer.uint32(34).string(message.message_id);
+    if (message.message_id !== "0") {
+      writer.uint32(32).int64(message.message_id);
     }
-    if (message.user_id !== "") {
-      writer.uint32(42).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(40).int64(message.user_id);
     }
     if (message.last_sent_message !== undefined) {
       ChannelMessageHeader.encode(message.last_sent_message, writer.uint32(50).fork()).ldelim();
@@ -13921,39 +14114,39 @@ export const SdTopicEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToString(reader.int64() as Long);
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 50) {
@@ -13980,11 +14173,11 @@ export const SdTopicEvent = {
 
   fromJSON(object: any): SdTopicEvent {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "0",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
       last_sent_message: isSet(object.last_sent_message)
         ? ChannelMessageHeader.fromJSON(object.last_sent_message)
         : undefined,
@@ -13994,19 +14187,19 @@ export const SdTopicEvent = {
 
   toJSON(message: SdTopicEvent): unknown {
     const obj: any = {};
-    if (message.id !== "") {
+    if (message.id !== "0") {
       obj.id = message.id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.message_id !== "") {
+    if (message.message_id !== "0") {
       obj.message_id = message.message_id;
     }
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     if (message.last_sent_message !== undefined) {
@@ -14023,11 +14216,11 @@ export const SdTopicEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<SdTopicEvent>, I>>(object: I): SdTopicEvent {
     const message = createBaseSdTopicEvent();
-    message.id = object.id ?? "";
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.message_id = object.message_id ?? "";
-    message.user_id = object.user_id ?? "";
+    message.id = object.id ?? "0";
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.message_id = object.message_id ?? "0";
+    message.user_id = object.user_id ?? "0";
     message.last_sent_message = (object.last_sent_message !== undefined && object.last_sent_message !== null)
       ? ChannelMessageHeader.fromPartial(object.last_sent_message)
       : undefined;
@@ -14039,22 +14232,22 @@ export const SdTopicEvent = {
 };
 
 function createBaseChannelAppEvent(): ChannelAppEvent {
-  return { user_id: "", username: "", clan_id: "", channel_id: "", action: 0 };
+  return { user_id: "0", username: "", clan_id: "0", channel_id: "0", action: 0 };
 }
 
 export const ChannelAppEvent = {
   encode(message: ChannelAppEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(8).int64(message.user_id);
     }
     if (message.username !== "") {
       writer.uint32(18).string(message.username);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(24).int64(message.clan_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(34).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(32).int64(message.channel_id);
     }
     if (message.action !== 0) {
       writer.uint32(40).int32(message.action);
@@ -14070,11 +14263,11 @@ export const ChannelAppEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -14084,18 +14277,18 @@ export const ChannelAppEvent = {
           message.username = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 5:
           if (tag !== 40) {
@@ -14115,26 +14308,26 @@ export const ChannelAppEvent = {
 
   fromJSON(object: any): ChannelAppEvent {
     return {
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
       username: isSet(object.username) ? globalThis.String(object.username) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       action: isSet(object.action) ? globalThis.Number(object.action) : 0,
     };
   },
 
   toJSON(message: ChannelAppEvent): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     if (message.username !== "") {
       obj.username = message.username;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
     if (message.action !== 0) {
@@ -14148,23 +14341,23 @@ export const ChannelAppEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelAppEvent>, I>>(object: I): ChannelAppEvent {
     const message = createBaseChannelAppEvent();
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? "0";
     message.username = object.username ?? "";
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
     message.action = object.action ?? 0;
     return message;
   },
 };
 
 function createBaseUserStatusEvent(): UserStatusEvent {
-  return { user_id: "", custom_status: "" };
+  return { user_id: "0", custom_status: "" };
 }
 
 export const UserStatusEvent = {
   encode(message: UserStatusEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(8).int64(message.user_id);
     }
     if (message.custom_status !== "") {
       writer.uint32(18).string(message.custom_status);
@@ -14180,11 +14373,11 @@ export const UserStatusEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -14204,14 +14397,14 @@ export const UserStatusEvent = {
 
   fromJSON(object: any): UserStatusEvent {
     return {
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
       custom_status: isSet(object.custom_status) ? globalThis.String(object.custom_status) : "",
     };
   },
 
   toJSON(message: UserStatusEvent): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     if (message.custom_status !== "") {
@@ -14225,20 +14418,20 @@ export const UserStatusEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<UserStatusEvent>, I>>(object: I): UserStatusEvent {
     const message = createBaseUserStatusEvent();
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? "0";
     message.custom_status = object.custom_status ?? "";
     return message;
   },
 };
 
 function createBaseJoinChannelAppData(): JoinChannelAppData {
-  return { user_id: "", username: "", hash: "" };
+  return { user_id: "0", username: "", hash: "" };
 }
 
 export const JoinChannelAppData = {
   encode(message: JoinChannelAppData, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(8).int64(message.user_id);
     }
     if (message.username !== "") {
       writer.uint32(18).string(message.username);
@@ -14257,11 +14450,11 @@ export const JoinChannelAppData = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -14288,7 +14481,7 @@ export const JoinChannelAppData = {
 
   fromJSON(object: any): JoinChannelAppData {
     return {
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       hash: isSet(object.hash) ? globalThis.String(object.hash) : "",
     };
@@ -14296,7 +14489,7 @@ export const JoinChannelAppData = {
 
   toJSON(message: JoinChannelAppData): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     if (message.username !== "") {
@@ -14313,7 +14506,7 @@ export const JoinChannelAppData = {
   },
   fromPartial<I extends Exact<DeepPartial<JoinChannelAppData>, I>>(object: I): JoinChannelAppData {
     const message = createBaseJoinChannelAppData();
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? "0";
     message.username = object.username ?? "";
     message.hash = object.hash ?? "";
     return message;
@@ -14321,22 +14514,22 @@ export const JoinChannelAppData = {
 };
 
 function createBaseUnpinMessageEvent(): UnpinMessageEvent {
-  return { id: "", message_id: "", channel_id: "", clan_id: "" };
+  return { id: "0", message_id: "0", channel_id: "0", clan_id: "0" };
 }
 
 export const UnpinMessageEvent = {
   encode(message: UnpinMessageEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.id !== "0") {
+      writer.uint32(8).int64(message.id);
     }
-    if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
+    if (message.message_id !== "0") {
+      writer.uint32(16).int64(message.message_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(24).int64(message.channel_id);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(34).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(32).int64(message.clan_id);
     }
     return writer;
   },
@@ -14349,32 +14542,32 @@ export const UnpinMessageEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.message_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -14387,25 +14580,25 @@ export const UnpinMessageEvent = {
 
   fromJSON(object: any): UnpinMessageEvent {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "0",
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
     };
   },
 
   toJSON(message: UnpinMessageEvent): unknown {
     const obj: any = {};
-    if (message.id !== "") {
+    if (message.id !== "0") {
       obj.id = message.id;
     }
-    if (message.message_id !== "") {
+    if (message.message_id !== "0") {
       obj.message_id = message.message_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     return obj;
@@ -14416,25 +14609,25 @@ export const UnpinMessageEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<UnpinMessageEvent>, I>>(object: I): UnpinMessageEvent {
     const message = createBaseUnpinMessageEvent();
-    message.id = object.id ?? "";
-    message.message_id = object.message_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.id = object.id ?? "0";
+    message.message_id = object.message_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.clan_id = object.clan_id ?? "0";
     return message;
   },
 };
 
 function createBaseHandleParticipantMeetStateEvent(): HandleParticipantMeetStateEvent {
-  return { clan_id: "", channel_id: "", display_name: "", state: 0, room_name: "" };
+  return { clan_id: "0", channel_id: "0", display_name: "", state: 0, room_name: "" };
 }
 
 export const HandleParticipantMeetStateEvent = {
   encode(message: HandleParticipantMeetStateEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
     }
     if (message.display_name !== "") {
       writer.uint32(26).string(message.display_name);
@@ -14456,18 +14649,18 @@ export const HandleParticipantMeetStateEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -14501,8 +14694,8 @@ export const HandleParticipantMeetStateEvent = {
 
   fromJSON(object: any): HandleParticipantMeetStateEvent {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
       state: isSet(object.state) ? globalThis.Number(object.state) : 0,
       room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
@@ -14511,10 +14704,10 @@ export const HandleParticipantMeetStateEvent = {
 
   toJSON(message: HandleParticipantMeetStateEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
     if (message.display_name !== "") {
@@ -14536,8 +14729,8 @@ export const HandleParticipantMeetStateEvent = {
     object: I,
   ): HandleParticipantMeetStateEvent {
     const message = createBaseHandleParticipantMeetStateEvent();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
     message.display_name = object.display_name ?? "";
     message.state = object.state ?? 0;
     message.room_name = object.room_name ?? "";
@@ -14546,13 +14739,13 @@ export const HandleParticipantMeetStateEvent = {
 };
 
 function createBaseDeleteAccountEvent(): DeleteAccountEvent {
-  return { user_id: "" };
+  return { user_id: "0" };
 }
 
 export const DeleteAccountEvent = {
   encode(message: DeleteAccountEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
+    if (message.user_id !== "0") {
+      writer.uint32(8).int64(message.user_id);
     }
     return writer;
   },
@@ -14565,11 +14758,11 @@ export const DeleteAccountEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user_id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -14581,12 +14774,12 @@ export const DeleteAccountEvent = {
   },
 
   fromJSON(object: any): DeleteAccountEvent {
-    return { user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "" };
+    return { user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0" };
   },
 
   toJSON(message: DeleteAccountEvent): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
+    if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
     return obj;
@@ -14597,7 +14790,7 @@ export const DeleteAccountEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<DeleteAccountEvent>, I>>(object: I): DeleteAccountEvent {
     const message = createBaseDeleteAccountEvent();
-    message.user_id = object.user_id ?? "";
+    message.user_id = object.user_id ?? "0";
     return message;
   },
 };
@@ -15985,7 +16178,7 @@ export const ListDataSocket = {
 };
 
 function createBaseMeetParticipantEvent(): MeetParticipantEvent {
-  return { username: "", room_name: "", channel_id: "", clan_id: "", action: 0 };
+  return { username: "", room_name: "", channel_id: "0", clan_id: "0", action: 0 };
 }
 
 export const MeetParticipantEvent = {
@@ -15996,11 +16189,11 @@ export const MeetParticipantEvent = {
     if (message.room_name !== "") {
       writer.uint32(18).string(message.room_name);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(24).int64(message.channel_id);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(34).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(32).int64(message.clan_id);
     }
     if (message.action !== 0) {
       writer.uint32(40).int32(message.action);
@@ -16030,18 +16223,18 @@ export const MeetParticipantEvent = {
           message.room_name = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 5:
           if (tag !== 40) {
@@ -16063,8 +16256,8 @@ export const MeetParticipantEvent = {
     return {
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       action: isSet(object.action) ? globalThis.Number(object.action) : 0,
     };
   },
@@ -16077,10 +16270,10 @@ export const MeetParticipantEvent = {
     if (message.room_name !== "") {
       obj.room_name = message.room_name;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     if (message.action !== 0) {
@@ -16096,27 +16289,27 @@ export const MeetParticipantEvent = {
     const message = createBaseMeetParticipantEvent();
     message.username = object.username ?? "";
     message.room_name = object.room_name ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "0";
+    message.clan_id = object.clan_id ?? "0";
     message.action = object.action ?? 0;
     return message;
   },
 };
 
 function createBaseTransferOwnershipEvent(): TransferOwnershipEvent {
-  return { clan_id: "", prev_owner: "", curr_owner: "" };
+  return { clan_id: "0", prev_owner: "0", curr_owner: "0" };
 }
 
 export const TransferOwnershipEvent = {
   encode(message: TransferOwnershipEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
-    if (message.prev_owner !== "") {
-      writer.uint32(18).string(message.prev_owner);
+    if (message.prev_owner !== "0") {
+      writer.uint32(16).int64(message.prev_owner);
     }
-    if (message.curr_owner !== "") {
-      writer.uint32(26).string(message.curr_owner);
+    if (message.curr_owner !== "0") {
+      writer.uint32(24).int64(message.curr_owner);
     }
     return writer;
   },
@@ -16129,25 +16322,25 @@ export const TransferOwnershipEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.prev_owner = reader.string();
+          message.prev_owner = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.curr_owner = reader.string();
+          message.curr_owner = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -16160,21 +16353,21 @@ export const TransferOwnershipEvent = {
 
   fromJSON(object: any): TransferOwnershipEvent {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      prev_owner: isSet(object.prev_owner) ? globalThis.String(object.prev_owner) : "",
-      curr_owner: isSet(object.curr_owner) ? globalThis.String(object.curr_owner) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      prev_owner: isSet(object.prev_owner) ? globalThis.String(object.prev_owner) : "0",
+      curr_owner: isSet(object.curr_owner) ? globalThis.String(object.curr_owner) : "0",
     };
   },
 
   toJSON(message: TransferOwnershipEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.prev_owner !== "") {
+    if (message.prev_owner !== "0") {
       obj.prev_owner = message.prev_owner;
     }
-    if (message.curr_owner !== "") {
+    if (message.curr_owner !== "0") {
       obj.curr_owner = message.curr_owner;
     }
     return obj;
@@ -16185,24 +16378,24 @@ export const TransferOwnershipEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<TransferOwnershipEvent>, I>>(object: I): TransferOwnershipEvent {
     const message = createBaseTransferOwnershipEvent();
-    message.clan_id = object.clan_id ?? "";
-    message.prev_owner = object.prev_owner ?? "";
-    message.curr_owner = object.curr_owner ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.prev_owner = object.prev_owner ?? "0";
+    message.curr_owner = object.curr_owner ?? "0";
     return message;
   },
 };
 
 function createBaseActiveArchivedThread(): ActiveArchivedThread {
-  return { clan_id: "", channel_id: "" };
+  return { clan_id: "0", channel_id: "0" };
 }
 
 export const ActiveArchivedThread = {
   encode(message: ActiveArchivedThread, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
     }
     return writer;
   },
@@ -16215,18 +16408,18 @@ export const ActiveArchivedThread = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -16239,17 +16432,17 @@ export const ActiveArchivedThread = {
 
   fromJSON(object: any): ActiveArchivedThread {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
     };
   },
 
   toJSON(message: ActiveArchivedThread): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
+    if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
     return obj;
@@ -16260,20 +16453,20 @@ export const ActiveArchivedThread = {
   },
   fromPartial<I extends Exact<DeepPartial<ActiveArchivedThread>, I>>(object: I): ActiveArchivedThread {
     const message = createBaseActiveArchivedThread();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
     return message;
   },
 };
 
 function createBaseAllowAnonymousEvent(): AllowAnonymousEvent {
-  return { clan_id: "", allow: false };
+  return { clan_id: "0", allow: false };
 }
 
 export const AllowAnonymousEvent = {
   encode(message: AllowAnonymousEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
     }
     if (message.allow !== false) {
       writer.uint32(16).bool(message.allow);
@@ -16289,11 +16482,11 @@ export const AllowAnonymousEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.clan_id = reader.string();
+          message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
@@ -16313,14 +16506,14 @@ export const AllowAnonymousEvent = {
 
   fromJSON(object: any): AllowAnonymousEvent {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       allow: isSet(object.allow) ? globalThis.Boolean(object.allow) : false,
     };
   },
 
   toJSON(message: AllowAnonymousEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
+    if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
     if (message.allow !== false) {
@@ -16334,7 +16527,7 @@ export const AllowAnonymousEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<AllowAnonymousEvent>, I>>(object: I): AllowAnonymousEvent {
     const message = createBaseAllowAnonymousEvent();
-    message.clan_id = object.clan_id ?? "";
+    message.clan_id = object.clan_id ?? "0";
     message.allow = object.allow ?? false;
     return message;
   },
@@ -16343,7 +16536,7 @@ export const AllowAnonymousEvent = {
 function createBaseFcmDataPayload(): FcmDataPayload {
   return {
     command_type: 0,
-    receiver_id: "",
+    receiver_id: "0",
     title: "",
     body: new Uint8Array(0),
     user_role_ids: [],
@@ -16364,8 +16557,8 @@ export const FcmDataPayload = {
     if (message.command_type !== 0) {
       writer.uint32(8).int32(message.command_type);
     }
-    if (message.receiver_id !== "") {
-      writer.uint32(18).string(message.receiver_id);
+    if (message.receiver_id !== "0") {
+      writer.uint32(16).int64(message.receiver_id);
     }
     if (message.title !== "") {
       writer.uint32(26).string(message.title);
@@ -16373,12 +16566,16 @@ export const FcmDataPayload = {
     if (message.body.length !== 0) {
       writer.uint32(34).bytes(message.body);
     }
+    writer.uint32(42).fork();
     for (const v of message.user_role_ids) {
-      writer.uint32(42).string(v!);
+      writer.int64(v);
     }
+    writer.ldelim();
+    writer.uint32(50).fork();
     for (const v of message.user_sent_ids) {
-      writer.uint32(50).string(v!);
+      writer.int64(v);
     }
+    writer.ldelim();
     if (message.priority !== 0) {
       writer.uint32(56).int32(message.priority);
     }
@@ -16421,11 +16618,11 @@ export const FcmDataPayload = {
           message.command_type = reader.int32();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.receiver_id = reader.string();
+          message.receiver_id = longToString(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -16442,19 +16639,39 @@ export const FcmDataPayload = {
           message.body = reader.bytes();
           continue;
         case 5:
-          if (tag !== 42) {
-            break;
+          if (tag === 40) {
+            message.user_role_ids.push(longToString(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_role_ids.push(reader.string());
-          continue;
+          if (tag === 42) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_role_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 6:
-          if (tag !== 50) {
-            break;
+          if (tag === 48) {
+            message.user_sent_ids.push(longToString(reader.int64() as Long));
+
+            continue;
           }
 
-          message.user_sent_ids.push(reader.string());
-          continue;
+          if (tag === 50) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_sent_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
         case 7:
           if (tag !== 56) {
             break;
@@ -16523,7 +16740,7 @@ export const FcmDataPayload = {
   fromJSON(object: any): FcmDataPayload {
     return {
       command_type: isSet(object.command_type) ? globalThis.Number(object.command_type) : 0,
-      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
+      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "0",
       title: isSet(object.title) ? globalThis.String(object.title) : "",
       body: isSet(object.body) ? bytesFromBase64(object.body) : new Uint8Array(0),
       user_role_ids: globalThis.Array.isArray(object?.user_role_ids)
@@ -16554,7 +16771,7 @@ export const FcmDataPayload = {
     if (message.command_type !== 0) {
       obj.command_type = Math.round(message.command_type);
     }
-    if (message.receiver_id !== "") {
+    if (message.receiver_id !== "0") {
       obj.receiver_id = message.receiver_id;
     }
     if (message.title !== "") {
@@ -16602,7 +16819,7 @@ export const FcmDataPayload = {
   fromPartial<I extends Exact<DeepPartial<FcmDataPayload>, I>>(object: I): FcmDataPayload {
     const message = createBaseFcmDataPayload();
     message.command_type = object.command_type ?? 0;
-    message.receiver_id = object.receiver_id ?? "";
+    message.receiver_id = object.receiver_id ?? "0";
     message.title = object.title ?? "";
     message.body = object.body ?? new Uint8Array(0);
     message.user_role_ids = object.user_role_ids?.map((e) => e) || [];
@@ -16657,6 +16874,15 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+function longToString(long: Long) {
+  return long.toString();
+}
+
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
+}
 
 function isObject(value: any): boolean {
   return typeof value === "object" && value !== null;

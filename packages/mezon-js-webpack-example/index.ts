@@ -21,7 +21,7 @@ var useSSL = true; // Enable if server is run with an SSL certificate.
 var clientgw = new Client("defaultkey", "dev-mezon.nccsoft.vn", "8088", useSSL);
 var client = new Client("defaultkey", "172.16.11.90", "7350", false);
 
-clientgw.authenticateEmail("pocolomos@gmail.com", "C0nandoiner123$").then(async session => {
+clientgw.authenticateEmail("pocolomos@gmail.com", "xxxxxxxx").then(async session => {
   console.log("authenticated.", session);
 
   console.log(await client.listLogedDevice(session))

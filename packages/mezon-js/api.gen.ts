@@ -754,7 +754,7 @@ export interface ApiChannelAppResponse {
 /**  */
 export interface ApiChannelAttachment {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the group was created.
-  create_time?: string;
+  create_time_seconds?: number;
   //
   filename?: string;
   //
@@ -1722,6 +1722,8 @@ export interface ApiMessageAttachment {
   sender_id?: string;
   // duration for video in seconds
   duration?: number;
+  // create_time_seconds
+  create_time_seconds?: number;
 }
 
 /**  */
@@ -2425,7 +2427,7 @@ export interface ApiSdTopicRequest {
 /**  */
 export interface ApiSearchMessageDocument {
   //
-  attachments?: Array<ApiMessageAttachment>;
+  attachments?: string;
   //
   avatar_url?: string;
   //The channel ID.
@@ -2711,7 +2713,7 @@ export interface ApiUpdateCategoryDescRequest {
   //
   category_name?: string;
   // clan ID
-  ClanId: string;
+  clan_id: string;
 }
 /**  */
 export interface ApiUpdateCategoryOrderRequest {
@@ -3458,6 +3460,28 @@ export interface ApiTransferOwnershipRequest {
   clan_id?: string;
   //
   new_owner_id?: string;
+}
+
+export interface ApiDirectFcmProto {
+  title: string;
+  link: string;
+  content: string;
+  channel_id: string;
+  sender_id: string;
+  avatar: string;
+  clan_id: string;
+  attachment_link: string;
+  display_name: string;
+  create_time_seconds: number;
+  update_time_seconds: number;
+  username: string;
+  mention_ids: string[];
+  position_s: number[];
+  position_e: number[];
+  attachment_type: string;
+  has_more_attachment: boolean;
+  is_mention_role: boolean[];
+  message_id: string;
 }
 
 export class MezonApi {
@@ -7407,7 +7431,7 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] =
         "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
-    fetchOptions.headers["Accept"] = "application/x-protobuf";
+    fetchOptions.headers["Accept"] = "application/json";
     fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
@@ -7415,8 +7439,7 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiInviteUserRes;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();      
-          return tsproto.InviteUserRes.decode(new Uint8Array(buffer)) as unknown as ApiInviteUserRes;
+          return response.json()
         } else {
           throw response;
         }
