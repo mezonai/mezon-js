@@ -378,6 +378,9 @@ export class Client {
 
   /** thre refreshTokenPromise */
   private refreshTokenPromise: Promise<Session> | null = null;
+  
+  private currentSession: Session | null = null;
+  
   host: string;
   port: string;
   useSSL: boolean;
@@ -396,7 +399,67 @@ export class Client {
     const scheme = useSSL ? "https://" : "http://";
     const basePath = `${scheme}${host}:${port}`;
 
-    this.apiClient = new MezonApi(serverkey, timeout, basePath);
+    this.apiClient = this.createApiClientWithRetry(new MezonApi(serverkey, timeout, basePath));
+    
+  }
+
+
+  private createApiClientWithRetry(originalClient: MezonApi): MezonApi {
+    const self = this;
+    
+    return new Proxy(originalClient, {
+      get(target, prop, receiver) {
+        const value = Reflect.get(target, prop, receiver);
+        
+        if (typeof value !== 'function') {
+          return value;
+        }
+        
+        const skipMethods = [
+          'sessionRefresh',
+          'setBasePath', 
+          'buildFullUrl',
+          'checkLoginRequest',
+          'createQRLogin',
+          'AuthenticateSMSOTPRequest',
+          'AuthenticateEmailOTPRequest',
+          'authenticateEmail',
+          'authenticateMezon',
+          'confirmAuthenticateOTP',
+          'getLinkInvite',
+          'clanDiscover'
+        ];
+
+        
+        if (skipMethods.includes(prop as string)) {
+          return value;
+        }
+        
+        return async function (...args: any[]) {
+          try {
+            return await value.apply(target, args);
+          } catch (error: any) {
+            const isUnauthorized = 
+              error?.status === 401 || 
+              error?.statusCode === 401 ||
+              error?.message?.includes('401') ||
+              error?.code === 16; 
+
+            if (!isUnauthorized || !self.currentSession?.refresh_token || !self.autoRefreshSession) {
+              throw error;
+            }
+
+            await self.sessionRefresh(self.currentSession);
+
+            if (args.length > 0 && typeof args[0] === 'string' && self.currentSession) {
+              args[0] = self.currentSession.token;
+            }
+            
+            return await value.apply(target, args);
+          }
+        };
+      }
+    });
   }
 
   /**
@@ -437,7 +500,7 @@ export class Client {
         options
       )
       .then((apiSession: ApiSession) => {
-        return new Session(
+        const session = new Session(
           apiSession.token || "",
           apiSession.refresh_token || "",
           apiSession.created || false,
@@ -445,6 +508,8 @@ export class Client {
           apiSession.id_token || "",
           apiSession.is_remember || false,
         );
+        this.currentSession = session;
+        return session;
       });
   }
 
@@ -496,7 +561,7 @@ export class Client {
     return this.apiClient
       .confirmAuthenticateOTP(this.serverkey, "", request)
       .then((apiSession: ApiSession) => {
-        return new Session(
+        const session = new Session(
           apiSession.token || "",
           apiSession.refresh_token || "",
           apiSession.created || false,          
@@ -504,6 +569,8 @@ export class Client {
           apiSession.id_token || "",
           apiSession.is_remember || false,
         );
+        this.currentSession = session;
+        return session;
       });
   }
 
@@ -526,7 +593,7 @@ export class Client {
     return this.apiClient
       .authenticateEmail(this.serverkey, "", request, username)
       .then((apiSession: ApiSession) => {
-        return new Session(
+        const session = new Session(
           apiSession.token || "",
           apiSession.refresh_token || "",
           apiSession.created || false,          
@@ -534,6 +601,8 @@ export class Client {
           apiSession.id_token || "",
           apiSession.is_remember || false,
         );
+        this.currentSession = session;
+        return session;
       });
   }
 
@@ -3781,7 +3850,7 @@ export class Client {
     if (!apiSession?.token) {
       return null;
     }
-    return new Session(
+    const session = new Session(
       apiSession.token || "",
       apiSession.refresh_token || "",
       apiSession.created || false,
@@ -3789,6 +3858,8 @@ export class Client {
       apiSession.id_token || "",
       apiSession.is_remember || false
     );
+    this.currentSession = session;
+    return session;
   }
 
   async confirmLogin(
