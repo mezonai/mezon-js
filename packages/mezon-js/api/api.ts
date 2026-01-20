@@ -8,7 +8,7 @@
 import Long from "long";
 import _m0 from "protobufjs/minimal";
 import { Struct } from "../google/protobuf/struct";
-import { BoolValue, Int32Value, StringValue } from "../google/protobuf/wrappers";
+import { BoolValue, StringValue } from "../google/protobuf/wrappers";
 
 export const protobufPackage = "mezon.api";
 
@@ -232,7 +232,7 @@ export interface SessionRefreshRequest {
   /** Extra information that will be bundled in the session token. */
   vars: { [key: string]: string };
   /** Whether to enable "Remember Me" for extended session duration. */
-  is_remember: boolean | undefined;
+  is_remember: boolean;
 }
 
 export interface SessionRefreshRequest_VarsEntry {
@@ -751,13 +751,9 @@ export interface ListChannelMessagesRequest {
   /** The current message ID. */
   message_id: string;
   /** Max number of records to return. Between 1 and 100. */
-  limit:
-    | number
-    | undefined;
+  limit: number;
   /** True if listing should be older messages to newer, false if reverse. */
-  direction:
-    | number
-    | undefined;
+  direction: number;
   /**  */
   topic_id: string;
 }
@@ -765,13 +761,9 @@ export interface ListChannelMessagesRequest {
 /** List friends for a user. */
 export interface ListFriendsRequest {
   /** Max number of records to return. Between 1 and 100. */
-  limit:
-    | number
-    | undefined;
+  limit: number;
   /** The friend state to list. */
-  state:
-    | number
-    | undefined;
+  state: number;
   /** An optional next page cursor. */
   cursor: string;
 }
@@ -783,17 +775,13 @@ export interface ListGroupsRequest {
   /** Optional pagination cursor. */
   cursor: string;
   /** Max number of groups to return. Between 1 and 100. */
-  limit:
-    | number
-    | undefined;
+  limit: number;
   /** Language tag filter */
   lang_tag: string;
   /** Number of group members */
-  members:
-    | number
-    | undefined;
+  members: number;
   /** Optional Open/Closed filter. */
-  open: boolean | undefined;
+  open: boolean;
 }
 
 /** List all users that are part of a group. */
@@ -801,13 +789,9 @@ export interface ListGroupUsersRequest {
   /** The group ID to list from. */
   group_id: string;
   /** Max number of records to return. Between 1 and 100. */
-  limit:
-    | number
-    | undefined;
+  limit: number;
   /** The group user state to list. */
-  state:
-    | number
-    | undefined;
+  state: number;
   /** An optional next page cursor. */
   cursor: string;
 }
@@ -821,13 +805,9 @@ export interface ListChannelUsersRequest {
   /** The channel type */
   channel_type: number;
   /** Max number of records to return. Between 1 and 100. */
-  limit:
-    | number
-    | undefined;
+  limit: number;
   /** The group user state to list. */
-  state:
-    | number
-    | undefined;
+  state: number;
   /** An optional next page cursor. */
   cursor: string;
 }
@@ -861,9 +841,7 @@ export interface ListClanUsersRequest {
 /** Get a list of unexpired notifications. */
 export interface ListNotificationsRequest {
   /** The number of notifications to get. Between 1 and 100. */
-  limit:
-    | number
-    | undefined;
+  limit: number;
   /** The clan id */
   clan_id: string;
   /** The current notification Id. */
@@ -871,7 +849,7 @@ export interface ListNotificationsRequest {
   /** The category (1: mentions, 2: mesages, 3: for you). */
   category: number;
   /** True if listing should be older notifications to newer, false if reverse. */
-  direction: number | undefined;
+  direction: number;
 }
 
 /** List the groups a user is part of, and their relationship to each. */
@@ -879,13 +857,9 @@ export interface ListUserGroupsRequest {
   /** ID of the user. */
   user_id: string;
   /** Max number of records to return. Between 1 and 100. */
-  limit:
-    | number
-    | undefined;
+  limit: number;
   /** The user group state to list. */
-  state:
-    | number
-    | undefined;
+  state: number;
   /** An optional next page cursor. */
   cursor: string;
 }
@@ -1061,7 +1035,7 @@ export interface UpdateGroupRequest {
     | string
     | undefined;
   /** Open is true if anyone should be allowed to join, or false if joins must be approved by a group admin. */
-  open: boolean | undefined;
+  open: boolean;
 }
 
 export interface UpdateCategoryDescRequest {
@@ -1265,13 +1239,9 @@ export interface DeleteClanDescRequest {
 /** List (and optionally filter) channels. */
 export interface ListClanDescRequest {
   /** Max number of records to return. Between 1 and 100. */
-  limit:
-    | number
-    | undefined;
+  limit: number;
   /** The friend state to list. */
-  state:
-    | number
-    | undefined;
+  state: number;
   /** Cursor to start from */
   cursor: string;
 }
@@ -1445,13 +1415,9 @@ export interface CategoryDescList {
 /** List (and optionally filter) channels. */
 export interface ListCategoryDescsRequest {
   /** Max number of records to return. Between 1 and 100. */
-  limit:
-    | number
-    | undefined;
+  limit: number;
   /** The friend state to list. */
-  state:
-    | number
-    | undefined;
+  state: number;
   /** Cursor to start from */
   cursor: string;
 }
@@ -1553,13 +1519,9 @@ export interface ChannelDescListNoPool {
 
 export interface ListThreadRequest {
   /** Max number of records to return. Between 1 and 100. */
-  limit:
-    | number
-    | undefined;
+  limit: number;
   /** The channel state to list. */
-  state:
-    | number
-    | undefined;
+  state: number;
   /** The clan of this channel */
   clan_id: string;
   /** channel id */
@@ -1567,19 +1529,15 @@ export interface ListThreadRequest {
   /** thread id */
   thread_id: string;
   /** Number of page */
-  page: number | undefined;
+  page: number;
 }
 
 /** List (and optionally filter) channels. */
 export interface ListChannelDescsRequest {
   /** Max number of records to return. Between 1 and 100. */
-  limit:
-    | number
-    | undefined;
+  limit: number;
   /** The channel state to list. */
-  state:
-    | number
-    | undefined;
+  state: number;
   /** Cursor to start from */
   cursor: string;
   /** The clan of this channel */
@@ -1924,37 +1882,6 @@ export interface SetMuteRequest {
   clan_id: string;
 }
 
-export interface HashtagDmListRequest {
-  /** user Id */
-  user_id: string[];
-  /** Max number of records to return. Between 1 and 100. */
-  limit: number | undefined;
-}
-
-export interface HashtagDmList {
-  hashtag_dm: HashtagDm[];
-}
-
-/** hashtagDM */
-export interface HashtagDm {
-  /** The channel id. */
-  channel_id: string;
-  /** The channel lable */
-  channel_label: string;
-  /** The clan of this channel */
-  clan_id: string;
-  /** The clan name */
-  clan_name: string;
-  /**  */
-  meeting_code: string;
-  /**  */
-  type: number;
-  /**  */
-  channel_private: number;
-  /**  */
-  parent_id: string;
-}
-
 export interface NotificationChannelCategorySettingList {
   notification_channel_category_settings_list: NotificationChannelCategorySetting[];
 }
@@ -2009,9 +1936,7 @@ export interface ListPermissionsRequest {
 export interface ListRoleUsersRequest {
   role_id: string;
   /** Max number of records to return. Between 1 and 100. */
-  limit:
-    | number
-    | undefined;
+  limit: number;
   /** An optional next page cursor. */
   cursor: string;
 }
@@ -2097,7 +2022,7 @@ export interface CreateEventRequest {
   repeat_type: number;
   creator_id: string;
   user_id: string;
-  is_private: boolean | undefined;
+  is_private: boolean;
   meet_room: GenerateMezonMeetResponse | undefined;
 }
 
@@ -2151,10 +2076,8 @@ export interface UpdateRoleRequest {
   color: string | undefined;
   role_icon: string | undefined;
   description: string | undefined;
-  display_online: number | undefined;
-  allow_mention:
-    | number
-    | undefined;
+  display_online: number;
+  allow_mention: number;
   /** The users to add. */
   add_user_ids: string[];
   /** The permissions to add. */
@@ -2208,13 +2131,9 @@ export interface UploadAttachmentRequest {
 
 export interface ListMessageMentionRequest {
   /** Max number of records to return. Between 1 and 100. */
-  limit:
-    | number
-    | undefined;
+  limit: number;
   /** True if listing should be older messages to newer, false if reverse. */
-  forward:
-    | boolean
-    | undefined;
+  forward: boolean;
   /** A pagination cursor, if any. */
   cursor: string;
 }
@@ -2229,13 +2148,9 @@ export interface UploadAttachment {
 export interface SearchMessageRequest {
   filters: FilterParam[];
   /** Offset value */
-  from:
-    | number
-    | undefined;
+  from: number;
   /** Page size */
-  size:
-    | number
-    | undefined;
+  size: number;
   /** Sort information */
   sorts: SortParam[];
 }
@@ -2367,13 +2282,13 @@ export interface ClanSticker {
 
 export interface AllUsersAddChannelRequest {
   channel_id: string;
-  limit: number | undefined;
+  limit: number;
 }
 
 export interface AllUsersAddChannelResponse {
   channel_id: string;
   user_ids: string[];
-  limit: number | undefined;
+  limit: number;
   usernames: string[];
   display_names: string[];
   avatars: string[];
@@ -2550,7 +2465,7 @@ export interface AppDeleteRequest {
   /** The unique identifier of the app. */
   id: string;
   /** Record the app deletion - used for GDPR compliance. */
-  record_deletion: boolean | undefined;
+  record_deletion: boolean;
 }
 
 /** A list of apps. */
@@ -2726,7 +2641,7 @@ export interface StreamHttpCallbackRequest {
 }
 
 export interface StreamHttpCallbackResponse {
-  code: number | undefined;
+  code: number;
   msg: string;
 }
 
@@ -2887,29 +2802,17 @@ export interface ChannelSettingListRequest {
   /** category id */
   category_id: string;
   /** is private channel */
-  private_channel:
-    | number
-    | undefined;
+  private_channel: number;
   /** is active */
-  active:
-    | number
-    | undefined;
+  active: number;
   /** status */
-  status:
-    | number
-    | undefined;
+  status: number;
   /** type */
-  type:
-    | number
-    | undefined;
+  type: number;
   /** limit */
-  limit:
-    | number
-    | undefined;
+  limit: number;
   /** page */
-  page:
-    | number
-    | undefined;
+  page: number;
   /** channel label */
   channel_label: string;
 }
@@ -2998,13 +2901,9 @@ export interface ChannelCanvasListRequest {
   /** channel id */
   channel_id: string;
   /** limit */
-  limit:
-    | number
-    | undefined;
+  limit: number;
   /** page */
-  page:
-    | number
-    | undefined;
+  page: number;
   /**  */
   cursor: string;
 }
@@ -3134,7 +3033,7 @@ export interface ConfirmLoginRequest {
   /** loginId */
   login_id: string;
   /** Whether to enable "Remember Me" for extended session duration. */
-  is_remember: boolean | undefined;
+  is_remember: boolean;
 }
 
 export interface PubKey {
@@ -3226,15 +3125,11 @@ export interface ListOnboardingRequest {
   /** clan id */
   clan_id: string;
   /** guide_type: 0 = greeting, 1 = rule, 2 = task, 3 = question */
-  guide_type:
-    | number
-    | undefined;
+  guide_type: number;
   /** limit */
-  limit:
-    | number
-    | undefined;
+  limit: number;
   /** page */
-  page: number | undefined;
+  page: number;
 }
 
 export interface ListOnboardingResponse {
@@ -3307,9 +3202,7 @@ export interface UpdateOnboardingRequest {
   /** clan id */
   clan_id: string;
   /** task type */
-  task_type:
-    | number
-    | undefined;
+  task_type: number;
   /** channel id */
   channel_id: string;
   /** title */
@@ -3449,18 +3342,16 @@ export interface ListOnboardingStepRequest {
   /** clan id. */
   clan_id: string;
   /** limit */
-  limit:
-    | number
-    | undefined;
+  limit: number;
   /** page */
-  page: number | undefined;
+  page: number;
 }
 
 export interface UpdateOnboardingStepRequest {
   /** clan id. */
   clan_id: string;
   /** onboarding step. */
-  onboarding_step: number | undefined;
+  onboarding_step: number;
 }
 
 export interface SdTopic {
@@ -4420,7 +4311,7 @@ export const AddGroupUsersRequest = {
 };
 
 function createBaseSessionRefreshRequest(): SessionRefreshRequest {
-  return { token: "", vars: {}, is_remember: undefined };
+  return { token: "", vars: {}, is_remember: false };
 }
 
 export const SessionRefreshRequest = {
@@ -4431,8 +4322,8 @@ export const SessionRefreshRequest = {
     Object.entries(message.vars).forEach(([key, value]) => {
       SessionRefreshRequest_VarsEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).ldelim();
     });
-    if (message.is_remember !== undefined) {
-      BoolValue.encode({ value: message.is_remember! }, writer.uint32(26).fork()).ldelim();
+    if (message.is_remember !== false) {
+      writer.uint32(24).bool(message.is_remember);
     }
     return writer;
   },
@@ -4462,11 +4353,11 @@ export const SessionRefreshRequest = {
           }
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.is_remember = BoolValue.decode(reader, reader.uint32()).value;
+          message.is_remember = reader.bool();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -4486,7 +4377,7 @@ export const SessionRefreshRequest = {
           return acc;
         }, {})
         : {},
-      is_remember: isSet(object.is_remember) ? Boolean(object.is_remember) : undefined,
+      is_remember: isSet(object.is_remember) ? globalThis.Boolean(object.is_remember) : false,
     };
   },
 
@@ -4504,7 +4395,7 @@ export const SessionRefreshRequest = {
         });
       }
     }
-    if (message.is_remember !== undefined) {
+    if (message.is_remember !== false) {
       obj.is_remember = message.is_remember;
     }
     return obj;
@@ -4522,7 +4413,7 @@ export const SessionRefreshRequest = {
       }
       return acc;
     }, {});
-    message.is_remember = object.is_remember ?? undefined;
+    message.is_remember = object.is_remember ?? false;
     return message;
   },
 };
@@ -8682,7 +8573,7 @@ export const RegistFcmDeviceTokenResponse = {
 };
 
 function createBaseListChannelMessagesRequest(): ListChannelMessagesRequest {
-  return { clan_id: "0", channel_id: "0", message_id: "0", limit: undefined, direction: undefined, topic_id: "0" };
+  return { clan_id: "0", channel_id: "0", message_id: "0", limit: 0, direction: 0, topic_id: "0" };
 }
 
 export const ListChannelMessagesRequest = {
@@ -8696,11 +8587,11 @@ export const ListChannelMessagesRequest = {
     if (message.message_id !== "0") {
       writer.uint32(24).int64(message.message_id);
     }
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(34).fork()).ldelim();
+    if (message.limit !== 0) {
+      writer.uint32(32).int32(message.limit);
     }
-    if (message.direction !== undefined) {
-      Int32Value.encode({ value: message.direction! }, writer.uint32(42).fork()).ldelim();
+    if (message.direction !== 0) {
+      writer.uint32(40).int32(message.direction);
     }
     if (message.topic_id !== "0") {
       writer.uint32(48).int64(message.topic_id);
@@ -8737,18 +8628,18 @@ export const ListChannelMessagesRequest = {
           message.message_id = longToString(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          message.limit = reader.int32();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.direction = Int32Value.decode(reader, reader.uint32()).value;
+          message.direction = reader.int32();
           continue;
         case 6:
           if (tag !== 48) {
@@ -8771,8 +8662,8 @@ export const ListChannelMessagesRequest = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      direction: isSet(object.direction) ? Number(object.direction) : undefined,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      direction: isSet(object.direction) ? globalThis.Number(object.direction) : 0,
       topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "0",
     };
   },
@@ -8788,11 +8679,11 @@ export const ListChannelMessagesRequest = {
     if (message.message_id !== "0") {
       obj.message_id = message.message_id;
     }
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
-    if (message.direction !== undefined) {
-      obj.direction = message.direction;
+    if (message.direction !== 0) {
+      obj.direction = Math.round(message.direction);
     }
     if (message.topic_id !== "0") {
       obj.topic_id = message.topic_id;
@@ -8808,24 +8699,24 @@ export const ListChannelMessagesRequest = {
     message.clan_id = object.clan_id ?? "0";
     message.channel_id = object.channel_id ?? "0";
     message.message_id = object.message_id ?? "0";
-    message.limit = object.limit ?? undefined;
-    message.direction = object.direction ?? undefined;
+    message.limit = object.limit ?? 0;
+    message.direction = object.direction ?? 0;
     message.topic_id = object.topic_id ?? "0";
     return message;
   },
 };
 
 function createBaseListFriendsRequest(): ListFriendsRequest {
-  return { limit: undefined, state: undefined, cursor: "" };
+  return { limit: 0, state: 0, cursor: "" };
 }
 
 export const ListFriendsRequest = {
   encode(message: ListFriendsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(10).fork()).ldelim();
+    if (message.limit !== 0) {
+      writer.uint32(8).int32(message.limit);
     }
-    if (message.state !== undefined) {
-      Int32Value.encode({ value: message.state! }, writer.uint32(18).fork()).ldelim();
+    if (message.state !== 0) {
+      writer.uint32(16).int32(message.state);
     }
     if (message.cursor !== "") {
       writer.uint32(26).string(message.cursor);
@@ -8841,18 +8732,18 @@ export const ListFriendsRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          message.limit = reader.int32();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.state = Int32Value.decode(reader, reader.uint32()).value;
+          message.state = reader.int32();
           continue;
         case 3:
           if (tag !== 26) {
@@ -8872,19 +8763,19 @@ export const ListFriendsRequest = {
 
   fromJSON(object: any): ListFriendsRequest {
     return {
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      state: isSet(object.state) ? Number(object.state) : undefined,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      state: isSet(object.state) ? globalThis.Number(object.state) : 0,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: ListFriendsRequest): unknown {
     const obj: any = {};
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
-    if (message.state !== undefined) {
-      obj.state = message.state;
+    if (message.state !== 0) {
+      obj.state = Math.round(message.state);
     }
     if (message.cursor !== "") {
       obj.cursor = message.cursor;
@@ -8897,15 +8788,15 @@ export const ListFriendsRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListFriendsRequest>, I>>(object: I): ListFriendsRequest {
     const message = createBaseListFriendsRequest();
-    message.limit = object.limit ?? undefined;
-    message.state = object.state ?? undefined;
+    message.limit = object.limit ?? 0;
+    message.state = object.state ?? 0;
     message.cursor = object.cursor ?? "";
     return message;
   },
 };
 
 function createBaseListGroupsRequest(): ListGroupsRequest {
-  return { name: "", cursor: "", limit: undefined, lang_tag: "", members: undefined, open: undefined };
+  return { name: "", cursor: "", limit: 0, lang_tag: "", members: 0, open: false };
 }
 
 export const ListGroupsRequest = {
@@ -8916,17 +8807,17 @@ export const ListGroupsRequest = {
     if (message.cursor !== "") {
       writer.uint32(18).string(message.cursor);
     }
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(26).fork()).ldelim();
+    if (message.limit !== 0) {
+      writer.uint32(24).int32(message.limit);
     }
     if (message.lang_tag !== "") {
       writer.uint32(34).string(message.lang_tag);
     }
-    if (message.members !== undefined) {
-      Int32Value.encode({ value: message.members! }, writer.uint32(42).fork()).ldelim();
+    if (message.members !== 0) {
+      writer.uint32(40).int32(message.members);
     }
-    if (message.open !== undefined) {
-      BoolValue.encode({ value: message.open! }, writer.uint32(50).fork()).ldelim();
+    if (message.open !== false) {
+      writer.uint32(48).bool(message.open);
     }
     return writer;
   },
@@ -8953,11 +8844,11 @@ export const ListGroupsRequest = {
           message.cursor = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          message.limit = reader.int32();
           continue;
         case 4:
           if (tag !== 34) {
@@ -8967,18 +8858,18 @@ export const ListGroupsRequest = {
           message.lang_tag = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.members = Int32Value.decode(reader, reader.uint32()).value;
+          message.members = reader.int32();
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.open = BoolValue.decode(reader, reader.uint32()).value;
+          message.open = reader.bool();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -8993,10 +8884,10 @@ export const ListGroupsRequest = {
     return {
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
       lang_tag: isSet(object.lang_tag) ? globalThis.String(object.lang_tag) : "",
-      members: isSet(object.members) ? Number(object.members) : undefined,
-      open: isSet(object.open) ? Boolean(object.open) : undefined,
+      members: isSet(object.members) ? globalThis.Number(object.members) : 0,
+      open: isSet(object.open) ? globalThis.Boolean(object.open) : false,
     };
   },
 
@@ -9008,16 +8899,16 @@ export const ListGroupsRequest = {
     if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
     if (message.lang_tag !== "") {
       obj.lang_tag = message.lang_tag;
     }
-    if (message.members !== undefined) {
-      obj.members = message.members;
+    if (message.members !== 0) {
+      obj.members = Math.round(message.members);
     }
-    if (message.open !== undefined) {
+    if (message.open !== false) {
       obj.open = message.open;
     }
     return obj;
@@ -9030,16 +8921,16 @@ export const ListGroupsRequest = {
     const message = createBaseListGroupsRequest();
     message.name = object.name ?? "";
     message.cursor = object.cursor ?? "";
-    message.limit = object.limit ?? undefined;
+    message.limit = object.limit ?? 0;
     message.lang_tag = object.lang_tag ?? "";
-    message.members = object.members ?? undefined;
-    message.open = object.open ?? undefined;
+    message.members = object.members ?? 0;
+    message.open = object.open ?? false;
     return message;
   },
 };
 
 function createBaseListGroupUsersRequest(): ListGroupUsersRequest {
-  return { group_id: "0", limit: undefined, state: undefined, cursor: "" };
+  return { group_id: "0", limit: 0, state: 0, cursor: "" };
 }
 
 export const ListGroupUsersRequest = {
@@ -9047,11 +8938,11 @@ export const ListGroupUsersRequest = {
     if (message.group_id !== "0") {
       writer.uint32(8).int64(message.group_id);
     }
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
+    if (message.limit !== 0) {
+      writer.uint32(16).int32(message.limit);
     }
-    if (message.state !== undefined) {
-      Int32Value.encode({ value: message.state! }, writer.uint32(26).fork()).ldelim();
+    if (message.state !== 0) {
+      writer.uint32(24).int32(message.state);
     }
     if (message.cursor !== "") {
       writer.uint32(34).string(message.cursor);
@@ -9074,18 +8965,18 @@ export const ListGroupUsersRequest = {
           message.group_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          message.limit = reader.int32();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.state = Int32Value.decode(reader, reader.uint32()).value;
+          message.state = reader.int32();
           continue;
         case 4:
           if (tag !== 34) {
@@ -9106,8 +8997,8 @@ export const ListGroupUsersRequest = {
   fromJSON(object: any): ListGroupUsersRequest {
     return {
       group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "0",
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      state: isSet(object.state) ? Number(object.state) : undefined,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      state: isSet(object.state) ? globalThis.Number(object.state) : 0,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
@@ -9117,11 +9008,11 @@ export const ListGroupUsersRequest = {
     if (message.group_id !== "0") {
       obj.group_id = message.group_id;
     }
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
-    if (message.state !== undefined) {
-      obj.state = message.state;
+    if (message.state !== 0) {
+      obj.state = Math.round(message.state);
     }
     if (message.cursor !== "") {
       obj.cursor = message.cursor;
@@ -9135,15 +9026,15 @@ export const ListGroupUsersRequest = {
   fromPartial<I extends Exact<DeepPartial<ListGroupUsersRequest>, I>>(object: I): ListGroupUsersRequest {
     const message = createBaseListGroupUsersRequest();
     message.group_id = object.group_id ?? "0";
-    message.limit = object.limit ?? undefined;
-    message.state = object.state ?? undefined;
+    message.limit = object.limit ?? 0;
+    message.state = object.state ?? 0;
     message.cursor = object.cursor ?? "";
     return message;
   },
 };
 
 function createBaseListChannelUsersRequest(): ListChannelUsersRequest {
-  return { clan_id: "0", channel_id: "0", channel_type: 0, limit: undefined, state: undefined, cursor: "" };
+  return { clan_id: "0", channel_id: "0", channel_type: 0, limit: 0, state: 0, cursor: "" };
 }
 
 export const ListChannelUsersRequest = {
@@ -9157,11 +9048,11 @@ export const ListChannelUsersRequest = {
     if (message.channel_type !== 0) {
       writer.uint32(24).int32(message.channel_type);
     }
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(34).fork()).ldelim();
+    if (message.limit !== 0) {
+      writer.uint32(32).int32(message.limit);
     }
-    if (message.state !== undefined) {
-      Int32Value.encode({ value: message.state! }, writer.uint32(42).fork()).ldelim();
+    if (message.state !== 0) {
+      writer.uint32(40).int32(message.state);
     }
     if (message.cursor !== "") {
       writer.uint32(50).string(message.cursor);
@@ -9198,18 +9089,18 @@ export const ListChannelUsersRequest = {
           message.channel_type = reader.int32();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          message.limit = reader.int32();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.state = Int32Value.decode(reader, reader.uint32()).value;
+          message.state = reader.int32();
           continue;
         case 6:
           if (tag !== 50) {
@@ -9232,8 +9123,8 @@ export const ListChannelUsersRequest = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      state: isSet(object.state) ? Number(object.state) : undefined,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      state: isSet(object.state) ? globalThis.Number(object.state) : 0,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
@@ -9249,11 +9140,11 @@ export const ListChannelUsersRequest = {
     if (message.channel_type !== 0) {
       obj.channel_type = Math.round(message.channel_type);
     }
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
-    if (message.state !== undefined) {
-      obj.state = message.state;
+    if (message.state !== 0) {
+      obj.state = Math.round(message.state);
     }
     if (message.cursor !== "") {
       obj.cursor = message.cursor;
@@ -9269,8 +9160,8 @@ export const ListChannelUsersRequest = {
     message.clan_id = object.clan_id ?? "0";
     message.channel_id = object.channel_id ?? "0";
     message.channel_type = object.channel_type ?? 0;
-    message.limit = object.limit ?? undefined;
-    message.state = object.state ?? undefined;
+    message.limit = object.limit ?? 0;
+    message.state = object.state ?? 0;
     message.cursor = object.cursor ?? "";
     return message;
   },
@@ -9498,13 +9389,13 @@ export const ListClanUsersRequest = {
 };
 
 function createBaseListNotificationsRequest(): ListNotificationsRequest {
-  return { limit: undefined, clan_id: "0", notification_id: "0", category: 0, direction: undefined };
+  return { limit: 0, clan_id: "0", notification_id: "0", category: 0, direction: 0 };
 }
 
 export const ListNotificationsRequest = {
   encode(message: ListNotificationsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(10).fork()).ldelim();
+    if (message.limit !== 0) {
+      writer.uint32(8).int32(message.limit);
     }
     if (message.clan_id !== "0") {
       writer.uint32(16).int64(message.clan_id);
@@ -9515,8 +9406,8 @@ export const ListNotificationsRequest = {
     if (message.category !== 0) {
       writer.uint32(32).int32(message.category);
     }
-    if (message.direction !== undefined) {
-      Int32Value.encode({ value: message.direction! }, writer.uint32(42).fork()).ldelim();
+    if (message.direction !== 0) {
+      writer.uint32(40).int32(message.direction);
     }
     return writer;
   },
@@ -9529,11 +9420,11 @@ export const ListNotificationsRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          message.limit = reader.int32();
           continue;
         case 2:
           if (tag !== 16) {
@@ -9557,11 +9448,11 @@ export const ListNotificationsRequest = {
           message.category = reader.int32();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.direction = Int32Value.decode(reader, reader.uint32()).value;
+          message.direction = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -9574,18 +9465,18 @@ export const ListNotificationsRequest = {
 
   fromJSON(object: any): ListNotificationsRequest {
     return {
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       notification_id: isSet(object.notification_id) ? globalThis.String(object.notification_id) : "0",
       category: isSet(object.category) ? globalThis.Number(object.category) : 0,
-      direction: isSet(object.direction) ? Number(object.direction) : undefined,
+      direction: isSet(object.direction) ? globalThis.Number(object.direction) : 0,
     };
   },
 
   toJSON(message: ListNotificationsRequest): unknown {
     const obj: any = {};
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
     if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
@@ -9596,8 +9487,8 @@ export const ListNotificationsRequest = {
     if (message.category !== 0) {
       obj.category = Math.round(message.category);
     }
-    if (message.direction !== undefined) {
-      obj.direction = message.direction;
+    if (message.direction !== 0) {
+      obj.direction = Math.round(message.direction);
     }
     return obj;
   },
@@ -9607,17 +9498,17 @@ export const ListNotificationsRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListNotificationsRequest>, I>>(object: I): ListNotificationsRequest {
     const message = createBaseListNotificationsRequest();
-    message.limit = object.limit ?? undefined;
+    message.limit = object.limit ?? 0;
     message.clan_id = object.clan_id ?? "0";
     message.notification_id = object.notification_id ?? "0";
     message.category = object.category ?? 0;
-    message.direction = object.direction ?? undefined;
+    message.direction = object.direction ?? 0;
     return message;
   },
 };
 
 function createBaseListUserGroupsRequest(): ListUserGroupsRequest {
-  return { user_id: "0", limit: undefined, state: undefined, cursor: "" };
+  return { user_id: "0", limit: 0, state: 0, cursor: "" };
 }
 
 export const ListUserGroupsRequest = {
@@ -9625,11 +9516,11 @@ export const ListUserGroupsRequest = {
     if (message.user_id !== "0") {
       writer.uint32(8).int64(message.user_id);
     }
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
+    if (message.limit !== 0) {
+      writer.uint32(16).int32(message.limit);
     }
-    if (message.state !== undefined) {
-      Int32Value.encode({ value: message.state! }, writer.uint32(26).fork()).ldelim();
+    if (message.state !== 0) {
+      writer.uint32(24).int32(message.state);
     }
     if (message.cursor !== "") {
       writer.uint32(34).string(message.cursor);
@@ -9652,18 +9543,18 @@ export const ListUserGroupsRequest = {
           message.user_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          message.limit = reader.int32();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.state = Int32Value.decode(reader, reader.uint32()).value;
+          message.state = reader.int32();
           continue;
         case 4:
           if (tag !== 34) {
@@ -9684,8 +9575,8 @@ export const ListUserGroupsRequest = {
   fromJSON(object: any): ListUserGroupsRequest {
     return {
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      state: isSet(object.state) ? Number(object.state) : undefined,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      state: isSet(object.state) ? globalThis.Number(object.state) : 0,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
@@ -9695,11 +9586,11 @@ export const ListUserGroupsRequest = {
     if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
-    if (message.state !== undefined) {
-      obj.state = message.state;
+    if (message.state !== 0) {
+      obj.state = Math.round(message.state);
     }
     if (message.cursor !== "") {
       obj.cursor = message.cursor;
@@ -9713,8 +9604,8 @@ export const ListUserGroupsRequest = {
   fromPartial<I extends Exact<DeepPartial<ListUserGroupsRequest>, I>>(object: I): ListUserGroupsRequest {
     const message = createBaseListUserGroupsRequest();
     message.user_id = object.user_id ?? "0";
-    message.limit = object.limit ?? undefined;
-    message.state = object.state ?? undefined;
+    message.limit = object.limit ?? 0;
+    message.state = object.state ?? 0;
     message.cursor = object.cursor ?? "";
     return message;
   },
@@ -10929,7 +10820,7 @@ function createBaseUpdateGroupRequest(): UpdateGroupRequest {
     description: undefined,
     lang_tag: undefined,
     avatar_url: undefined,
-    open: undefined,
+    open: false,
   };
 }
 
@@ -10950,8 +10841,8 @@ export const UpdateGroupRequest = {
     if (message.avatar_url !== undefined) {
       StringValue.encode({ value: message.avatar_url! }, writer.uint32(42).fork()).ldelim();
     }
-    if (message.open !== undefined) {
-      BoolValue.encode({ value: message.open! }, writer.uint32(50).fork()).ldelim();
+    if (message.open !== false) {
+      writer.uint32(48).bool(message.open);
     }
     return writer;
   },
@@ -10999,11 +10890,11 @@ export const UpdateGroupRequest = {
           message.avatar_url = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.open = BoolValue.decode(reader, reader.uint32()).value;
+          message.open = reader.bool();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -11021,7 +10912,7 @@ export const UpdateGroupRequest = {
       description: isSet(object.description) ? String(object.description) : undefined,
       lang_tag: isSet(object.lang_tag) ? String(object.lang_tag) : undefined,
       avatar_url: isSet(object.avatar_url) ? String(object.avatar_url) : undefined,
-      open: isSet(object.open) ? Boolean(object.open) : undefined,
+      open: isSet(object.open) ? globalThis.Boolean(object.open) : false,
     };
   },
 
@@ -11042,7 +10933,7 @@ export const UpdateGroupRequest = {
     if (message.avatar_url !== undefined) {
       obj.avatar_url = message.avatar_url;
     }
-    if (message.open !== undefined) {
+    if (message.open !== false) {
       obj.open = message.open;
     }
     return obj;
@@ -11058,7 +10949,7 @@ export const UpdateGroupRequest = {
     message.description = object.description ?? undefined;
     message.lang_tag = object.lang_tag ?? undefined;
     message.avatar_url = object.avatar_url ?? undefined;
-    message.open = object.open ?? undefined;
+    message.open = object.open ?? false;
     return message;
   },
 };
@@ -12635,16 +12526,16 @@ export const DeleteClanDescRequest = {
 };
 
 function createBaseListClanDescRequest(): ListClanDescRequest {
-  return { limit: undefined, state: undefined, cursor: "" };
+  return { limit: 0, state: 0, cursor: "" };
 }
 
 export const ListClanDescRequest = {
   encode(message: ListClanDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(10).fork()).ldelim();
+    if (message.limit !== 0) {
+      writer.uint32(8).int32(message.limit);
     }
-    if (message.state !== undefined) {
-      Int32Value.encode({ value: message.state! }, writer.uint32(18).fork()).ldelim();
+    if (message.state !== 0) {
+      writer.uint32(16).int32(message.state);
     }
     if (message.cursor !== "") {
       writer.uint32(26).string(message.cursor);
@@ -12660,18 +12551,18 @@ export const ListClanDescRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          message.limit = reader.int32();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.state = Int32Value.decode(reader, reader.uint32()).value;
+          message.state = reader.int32();
           continue;
         case 3:
           if (tag !== 26) {
@@ -12691,19 +12582,19 @@ export const ListClanDescRequest = {
 
   fromJSON(object: any): ListClanDescRequest {
     return {
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      state: isSet(object.state) ? Number(object.state) : undefined,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      state: isSet(object.state) ? globalThis.Number(object.state) : 0,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: ListClanDescRequest): unknown {
     const obj: any = {};
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
-    if (message.state !== undefined) {
-      obj.state = message.state;
+    if (message.state !== 0) {
+      obj.state = Math.round(message.state);
     }
     if (message.cursor !== "") {
       obj.cursor = message.cursor;
@@ -12716,8 +12607,8 @@ export const ListClanDescRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListClanDescRequest>, I>>(object: I): ListClanDescRequest {
     const message = createBaseListClanDescRequest();
-    message.limit = object.limit ?? undefined;
-    message.state = object.state ?? undefined;
+    message.limit = object.limit ?? 0;
+    message.state = object.state ?? 0;
     message.cursor = object.cursor ?? "";
     return message;
   },
@@ -14520,16 +14411,16 @@ export const CategoryDescList = {
 };
 
 function createBaseListCategoryDescsRequest(): ListCategoryDescsRequest {
-  return { limit: undefined, state: undefined, cursor: "" };
+  return { limit: 0, state: 0, cursor: "" };
 }
 
 export const ListCategoryDescsRequest = {
   encode(message: ListCategoryDescsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(10).fork()).ldelim();
+    if (message.limit !== 0) {
+      writer.uint32(8).int32(message.limit);
     }
-    if (message.state !== undefined) {
-      Int32Value.encode({ value: message.state! }, writer.uint32(18).fork()).ldelim();
+    if (message.state !== 0) {
+      writer.uint32(16).int32(message.state);
     }
     if (message.cursor !== "") {
       writer.uint32(26).string(message.cursor);
@@ -14545,18 +14436,18 @@ export const ListCategoryDescsRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          message.limit = reader.int32();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.state = Int32Value.decode(reader, reader.uint32()).value;
+          message.state = reader.int32();
           continue;
         case 3:
           if (tag !== 26) {
@@ -14576,19 +14467,19 @@ export const ListCategoryDescsRequest = {
 
   fromJSON(object: any): ListCategoryDescsRequest {
     return {
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      state: isSet(object.state) ? Number(object.state) : undefined,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      state: isSet(object.state) ? globalThis.Number(object.state) : 0,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: ListCategoryDescsRequest): unknown {
     const obj: any = {};
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
-    if (message.state !== undefined) {
-      obj.state = message.state;
+    if (message.state !== 0) {
+      obj.state = Math.round(message.state);
     }
     if (message.cursor !== "") {
       obj.cursor = message.cursor;
@@ -14601,8 +14492,8 @@ export const ListCategoryDescsRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListCategoryDescsRequest>, I>>(object: I): ListCategoryDescsRequest {
     const message = createBaseListCategoryDescsRequest();
-    message.limit = object.limit ?? undefined;
-    message.state = object.state ?? undefined;
+    message.limit = object.limit ?? 0;
+    message.state = object.state ?? 0;
     message.cursor = object.cursor ?? "";
     return message;
   },
@@ -15427,16 +15318,16 @@ export const ChannelDescListNoPool = {
 };
 
 function createBaseListThreadRequest(): ListThreadRequest {
-  return { limit: undefined, state: undefined, clan_id: "0", channel_id: "0", thread_id: "0", page: undefined };
+  return { limit: 0, state: 0, clan_id: "0", channel_id: "0", thread_id: "0", page: 0 };
 }
 
 export const ListThreadRequest = {
   encode(message: ListThreadRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(10).fork()).ldelim();
+    if (message.limit !== 0) {
+      writer.uint32(8).int32(message.limit);
     }
-    if (message.state !== undefined) {
-      Int32Value.encode({ value: message.state! }, writer.uint32(18).fork()).ldelim();
+    if (message.state !== 0) {
+      writer.uint32(16).int32(message.state);
     }
     if (message.clan_id !== "0") {
       writer.uint32(24).int64(message.clan_id);
@@ -15447,8 +15338,8 @@ export const ListThreadRequest = {
     if (message.thread_id !== "0") {
       writer.uint32(40).int64(message.thread_id);
     }
-    if (message.page !== undefined) {
-      Int32Value.encode({ value: message.page! }, writer.uint32(50).fork()).ldelim();
+    if (message.page !== 0) {
+      writer.uint32(48).int32(message.page);
     }
     return writer;
   },
@@ -15461,18 +15352,18 @@ export const ListThreadRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          message.limit = reader.int32();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.state = Int32Value.decode(reader, reader.uint32()).value;
+          message.state = reader.int32();
           continue;
         case 3:
           if (tag !== 24) {
@@ -15496,11 +15387,11 @@ export const ListThreadRequest = {
           message.thread_id = longToString(reader.int64() as Long);
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.page = Int32Value.decode(reader, reader.uint32()).value;
+          message.page = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -15513,22 +15404,22 @@ export const ListThreadRequest = {
 
   fromJSON(object: any): ListThreadRequest {
     return {
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      state: isSet(object.state) ? Number(object.state) : undefined,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      state: isSet(object.state) ? globalThis.Number(object.state) : 0,
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       thread_id: isSet(object.thread_id) ? globalThis.String(object.thread_id) : "0",
-      page: isSet(object.page) ? Number(object.page) : undefined,
+      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
     };
   },
 
   toJSON(message: ListThreadRequest): unknown {
     const obj: any = {};
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
-    if (message.state !== undefined) {
-      obj.state = message.state;
+    if (message.state !== 0) {
+      obj.state = Math.round(message.state);
     }
     if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
@@ -15539,8 +15430,8 @@ export const ListThreadRequest = {
     if (message.thread_id !== "0") {
       obj.thread_id = message.thread_id;
     }
-    if (message.page !== undefined) {
-      obj.page = message.page;
+    if (message.page !== 0) {
+      obj.page = Math.round(message.page);
     }
     return obj;
   },
@@ -15550,27 +15441,27 @@ export const ListThreadRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListThreadRequest>, I>>(object: I): ListThreadRequest {
     const message = createBaseListThreadRequest();
-    message.limit = object.limit ?? undefined;
-    message.state = object.state ?? undefined;
+    message.limit = object.limit ?? 0;
+    message.state = object.state ?? 0;
     message.clan_id = object.clan_id ?? "0";
     message.channel_id = object.channel_id ?? "0";
     message.thread_id = object.thread_id ?? "0";
-    message.page = object.page ?? undefined;
+    message.page = object.page ?? 0;
     return message;
   },
 };
 
 function createBaseListChannelDescsRequest(): ListChannelDescsRequest {
-  return { limit: undefined, state: undefined, cursor: "", clan_id: "0", channel_type: 0, is_mobile: false };
+  return { limit: 0, state: 0, cursor: "", clan_id: "0", channel_type: 0, is_mobile: false };
 }
 
 export const ListChannelDescsRequest = {
   encode(message: ListChannelDescsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(10).fork()).ldelim();
+    if (message.limit !== 0) {
+      writer.uint32(8).int32(message.limit);
     }
-    if (message.state !== undefined) {
-      Int32Value.encode({ value: message.state! }, writer.uint32(18).fork()).ldelim();
+    if (message.state !== 0) {
+      writer.uint32(16).int32(message.state);
     }
     if (message.cursor !== "") {
       writer.uint32(26).string(message.cursor);
@@ -15595,18 +15486,18 @@ export const ListChannelDescsRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          message.limit = reader.int32();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.state = Int32Value.decode(reader, reader.uint32()).value;
+          message.state = reader.int32();
           continue;
         case 3:
           if (tag !== 26) {
@@ -15647,8 +15538,8 @@ export const ListChannelDescsRequest = {
 
   fromJSON(object: any): ListChannelDescsRequest {
     return {
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      state: isSet(object.state) ? Number(object.state) : undefined,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      state: isSet(object.state) ? globalThis.Number(object.state) : 0,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
@@ -15658,11 +15549,11 @@ export const ListChannelDescsRequest = {
 
   toJSON(message: ListChannelDescsRequest): unknown {
     const obj: any = {};
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
-    if (message.state !== undefined) {
-      obj.state = message.state;
+    if (message.state !== 0) {
+      obj.state = Math.round(message.state);
     }
     if (message.cursor !== "") {
       obj.cursor = message.cursor;
@@ -15684,8 +15575,8 @@ export const ListChannelDescsRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListChannelDescsRequest>, I>>(object: I): ListChannelDescsRequest {
     const message = createBaseListChannelDescsRequest();
-    message.limit = object.limit ?? undefined;
-    message.state = object.state ?? undefined;
+    message.limit = object.limit ?? 0;
+    message.state = object.state ?? 0;
     message.cursor = object.cursor ?? "";
     message.clan_id = object.clan_id ?? "0";
     message.channel_type = object.channel_type ?? 0;
@@ -19235,326 +19126,6 @@ export const SetMuteRequest = {
   },
 };
 
-function createBaseHashtagDmListRequest(): HashtagDmListRequest {
-  return { user_id: [], limit: undefined };
-}
-
-export const HashtagDmListRequest = {
-  encode(message: HashtagDmListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    writer.uint32(10).fork();
-    for (const v of message.user_id) {
-      writer.int64(v);
-    }
-    writer.ldelim();
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): HashtagDmListRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHashtagDmListRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag === 8) {
-            message.user_id.push(longToString(reader.int64() as Long));
-
-            continue;
-          }
-
-          if (tag === 10) {
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
-              message.user_id.push(longToString(reader.int64() as Long));
-            }
-
-            continue;
-          }
-
-          break;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): HashtagDmListRequest {
-    return {
-      user_id: globalThis.Array.isArray(object?.user_id) ? object.user_id.map((e: any) => globalThis.String(e)) : [],
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-    };
-  },
-
-  toJSON(message: HashtagDmListRequest): unknown {
-    const obj: any = {};
-    if (message.user_id?.length) {
-      obj.user_id = message.user_id;
-    }
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<HashtagDmListRequest>, I>>(base?: I): HashtagDmListRequest {
-    return HashtagDmListRequest.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<HashtagDmListRequest>, I>>(object: I): HashtagDmListRequest {
-    const message = createBaseHashtagDmListRequest();
-    message.user_id = object.user_id?.map((e) => e) || [];
-    message.limit = object.limit ?? undefined;
-    return message;
-  },
-};
-
-function createBaseHashtagDmList(): HashtagDmList {
-  return { hashtag_dm: [] };
-}
-
-export const HashtagDmList = {
-  encode(message: HashtagDmList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.hashtag_dm) {
-      HashtagDm.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): HashtagDmList {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHashtagDmList();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.hashtag_dm.push(HashtagDm.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): HashtagDmList {
-    return {
-      hashtag_dm: globalThis.Array.isArray(object?.hashtag_dm)
-        ? object.hashtag_dm.map((e: any) => HashtagDm.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: HashtagDmList): unknown {
-    const obj: any = {};
-    if (message.hashtag_dm?.length) {
-      obj.hashtag_dm = message.hashtag_dm.map((e) => HashtagDm.toJSON(e));
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<HashtagDmList>, I>>(base?: I): HashtagDmList {
-    return HashtagDmList.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<HashtagDmList>, I>>(object: I): HashtagDmList {
-    const message = createBaseHashtagDmList();
-    message.hashtag_dm = object.hashtag_dm?.map((e) => HashtagDm.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBaseHashtagDm(): HashtagDm {
-  return {
-    channel_id: "0",
-    channel_label: "",
-    clan_id: "0",
-    clan_name: "",
-    meeting_code: "",
-    type: 0,
-    channel_private: 0,
-    parent_id: "0",
-  };
-}
-
-export const HashtagDm = {
-  encode(message: HashtagDm, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "0") {
-      writer.uint32(8).int64(message.channel_id);
-    }
-    if (message.channel_label !== "") {
-      writer.uint32(18).string(message.channel_label);
-    }
-    if (message.clan_id !== "0") {
-      writer.uint32(24).int64(message.clan_id);
-    }
-    if (message.clan_name !== "") {
-      writer.uint32(34).string(message.clan_name);
-    }
-    if (message.meeting_code !== "") {
-      writer.uint32(42).string(message.meeting_code);
-    }
-    if (message.type !== 0) {
-      writer.uint32(48).int32(message.type);
-    }
-    if (message.channel_private !== 0) {
-      writer.uint32(56).int32(message.channel_private);
-    }
-    if (message.parent_id !== "0") {
-      writer.uint32(64).int64(message.parent_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): HashtagDm {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHashtagDm();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 8) {
-            break;
-          }
-
-          message.channel_id = longToString(reader.int64() as Long);
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.channel_label = reader.string();
-          continue;
-        case 3:
-          if (tag !== 24) {
-            break;
-          }
-
-          message.clan_id = longToString(reader.int64() as Long);
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.clan_name = reader.string();
-          continue;
-        case 5:
-          if (tag !== 42) {
-            break;
-          }
-
-          message.meeting_code = reader.string();
-          continue;
-        case 6:
-          if (tag !== 48) {
-            break;
-          }
-
-          message.type = reader.int32();
-          continue;
-        case 7:
-          if (tag !== 56) {
-            break;
-          }
-
-          message.channel_private = reader.int32();
-          continue;
-        case 8:
-          if (tag !== 64) {
-            break;
-          }
-
-          message.parent_id = longToString(reader.int64() as Long);
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): HashtagDm {
-    return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
-      channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
-      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
-      meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
-      type: isSet(object.type) ? globalThis.Number(object.type) : 0,
-      channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
-      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "0",
-    };
-  },
-
-  toJSON(message: HashtagDm): unknown {
-    const obj: any = {};
-    if (message.channel_id !== "0") {
-      obj.channel_id = message.channel_id;
-    }
-    if (message.channel_label !== "") {
-      obj.channel_label = message.channel_label;
-    }
-    if (message.clan_id !== "0") {
-      obj.clan_id = message.clan_id;
-    }
-    if (message.clan_name !== "") {
-      obj.clan_name = message.clan_name;
-    }
-    if (message.meeting_code !== "") {
-      obj.meeting_code = message.meeting_code;
-    }
-    if (message.type !== 0) {
-      obj.type = Math.round(message.type);
-    }
-    if (message.channel_private !== 0) {
-      obj.channel_private = Math.round(message.channel_private);
-    }
-    if (message.parent_id !== "0") {
-      obj.parent_id = message.parent_id;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<HashtagDm>, I>>(base?: I): HashtagDm {
-    return HashtagDm.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<HashtagDm>, I>>(object: I): HashtagDm {
-    const message = createBaseHashtagDm();
-    message.channel_id = object.channel_id ?? "0";
-    message.channel_label = object.channel_label ?? "";
-    message.clan_id = object.clan_id ?? "0";
-    message.clan_name = object.clan_name ?? "";
-    message.meeting_code = object.meeting_code ?? "";
-    message.type = object.type ?? 0;
-    message.channel_private = object.channel_private ?? 0;
-    message.parent_id = object.parent_id ?? "0";
-    return message;
-  },
-};
-
 function createBaseNotificationChannelCategorySettingList(): NotificationChannelCategorySettingList {
   return { notification_channel_category_settings_list: [] };
 }
@@ -20119,7 +19690,7 @@ export const ListPermissionsRequest = {
 };
 
 function createBaseListRoleUsersRequest(): ListRoleUsersRequest {
-  return { role_id: "0", limit: undefined, cursor: "" };
+  return { role_id: "0", limit: 0, cursor: "" };
 }
 
 export const ListRoleUsersRequest = {
@@ -20127,8 +19698,8 @@ export const ListRoleUsersRequest = {
     if (message.role_id !== "0") {
       writer.uint32(8).int64(message.role_id);
     }
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
+    if (message.limit !== 0) {
+      writer.uint32(16).int32(message.limit);
     }
     if (message.cursor !== "") {
       writer.uint32(26).string(message.cursor);
@@ -20151,11 +19722,11 @@ export const ListRoleUsersRequest = {
           message.role_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          message.limit = reader.int32();
           continue;
         case 3:
           if (tag !== 26) {
@@ -20176,7 +19747,7 @@ export const ListRoleUsersRequest = {
   fromJSON(object: any): ListRoleUsersRequest {
     return {
       role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "0",
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
@@ -20186,8 +19757,8 @@ export const ListRoleUsersRequest = {
     if (message.role_id !== "0") {
       obj.role_id = message.role_id;
     }
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
     if (message.cursor !== "") {
       obj.cursor = message.cursor;
@@ -20201,7 +19772,7 @@ export const ListRoleUsersRequest = {
   fromPartial<I extends Exact<DeepPartial<ListRoleUsersRequest>, I>>(object: I): ListRoleUsersRequest {
     const message = createBaseListRoleUsersRequest();
     message.role_id = object.role_id ?? "0";
-    message.limit = object.limit ?? undefined;
+    message.limit = object.limit ?? 0;
     message.cursor = object.cursor ?? "";
     return message;
   },
@@ -20903,7 +20474,7 @@ function createBaseCreateEventRequest(): CreateEventRequest {
     repeat_type: 0,
     creator_id: "0",
     user_id: "0",
-    is_private: undefined,
+    is_private: false,
     meet_room: undefined,
   };
 }
@@ -20955,8 +20526,8 @@ export const CreateEventRequest = {
     if (message.user_id !== "0") {
       writer.uint32(120).int64(message.user_id);
     }
-    if (message.is_private !== undefined) {
-      BoolValue.encode({ value: message.is_private! }, writer.uint32(130).fork()).ldelim();
+    if (message.is_private !== false) {
+      writer.uint32(128).bool(message.is_private);
     }
     if (message.meet_room !== undefined) {
       GenerateMezonMeetResponse.encode(message.meet_room, writer.uint32(138).fork()).ldelim();
@@ -21077,11 +20648,11 @@ export const CreateEventRequest = {
           message.user_id = longToString(reader.int64() as Long);
           continue;
         case 16:
-          if (tag !== 130) {
+          if (tag !== 128) {
             break;
           }
 
-          message.is_private = BoolValue.decode(reader, reader.uint32()).value;
+          message.is_private = reader.bool();
           continue;
         case 17:
           if (tag !== 138) {
@@ -21116,7 +20687,7 @@ export const CreateEventRequest = {
       repeat_type: isSet(object.repeat_type) ? globalThis.Number(object.repeat_type) : 0,
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "0",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
-      is_private: isSet(object.is_private) ? Boolean(object.is_private) : undefined,
+      is_private: isSet(object.is_private) ? globalThis.Boolean(object.is_private) : false,
       meet_room: isSet(object.meet_room) ? GenerateMezonMeetResponse.fromJSON(object.meet_room) : undefined,
     };
   },
@@ -21168,7 +20739,7 @@ export const CreateEventRequest = {
     if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
-    if (message.is_private !== undefined) {
+    if (message.is_private !== false) {
       obj.is_private = message.is_private;
     }
     if (message.meet_room !== undefined) {
@@ -21197,7 +20768,7 @@ export const CreateEventRequest = {
     message.repeat_type = object.repeat_type ?? 0;
     message.creator_id = object.creator_id ?? "0";
     message.user_id = object.user_id ?? "0";
-    message.is_private = object.is_private ?? undefined;
+    message.is_private = object.is_private ?? false;
     message.meet_room = (object.meet_room !== undefined && object.meet_room !== null)
       ? GenerateMezonMeetResponse.fromPartial(object.meet_room)
       : undefined;
@@ -21688,8 +21259,8 @@ function createBaseUpdateRoleRequest(): UpdateRoleRequest {
     color: undefined,
     role_icon: undefined,
     description: undefined,
-    display_online: undefined,
-    allow_mention: undefined,
+    display_online: 0,
+    allow_mention: 0,
     add_user_ids: [],
     active_permission_ids: [],
     remove_user_ids: [],
@@ -21716,11 +21287,11 @@ export const UpdateRoleRequest = {
     if (message.description !== undefined) {
       StringValue.encode({ value: message.description! }, writer.uint32(42).fork()).ldelim();
     }
-    if (message.display_online !== undefined) {
-      Int32Value.encode({ value: message.display_online! }, writer.uint32(50).fork()).ldelim();
+    if (message.display_online !== 0) {
+      writer.uint32(48).int32(message.display_online);
     }
-    if (message.allow_mention !== undefined) {
-      Int32Value.encode({ value: message.allow_mention! }, writer.uint32(58).fork()).ldelim();
+    if (message.allow_mention !== 0) {
+      writer.uint32(56).int32(message.allow_mention);
     }
     writer.uint32(66).fork();
     for (const v of message.add_user_ids) {
@@ -21794,18 +21365,18 @@ export const UpdateRoleRequest = {
           message.description = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.display_online = Int32Value.decode(reader, reader.uint32()).value;
+          message.display_online = reader.int32();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.allow_mention = Int32Value.decode(reader, reader.uint32()).value;
+          message.allow_mention = reader.int32();
           continue;
         case 8:
           if (tag === 64) {
@@ -21905,8 +21476,8 @@ export const UpdateRoleRequest = {
       color: isSet(object.color) ? String(object.color) : undefined,
       role_icon: isSet(object.role_icon) ? String(object.role_icon) : undefined,
       description: isSet(object.description) ? String(object.description) : undefined,
-      display_online: isSet(object.display_online) ? Number(object.display_online) : undefined,
-      allow_mention: isSet(object.allow_mention) ? Number(object.allow_mention) : undefined,
+      display_online: isSet(object.display_online) ? globalThis.Number(object.display_online) : 0,
+      allow_mention: isSet(object.allow_mention) ? globalThis.Number(object.allow_mention) : 0,
       add_user_ids: globalThis.Array.isArray(object?.add_user_ids)
         ? object.add_user_ids.map((e: any) => globalThis.String(e))
         : [],
@@ -21941,11 +21512,11 @@ export const UpdateRoleRequest = {
     if (message.description !== undefined) {
       obj.description = message.description;
     }
-    if (message.display_online !== undefined) {
-      obj.display_online = message.display_online;
+    if (message.display_online !== 0) {
+      obj.display_online = Math.round(message.display_online);
     }
-    if (message.allow_mention !== undefined) {
-      obj.allow_mention = message.allow_mention;
+    if (message.allow_mention !== 0) {
+      obj.allow_mention = Math.round(message.allow_mention);
     }
     if (message.add_user_ids?.length) {
       obj.add_user_ids = message.add_user_ids;
@@ -21978,8 +21549,8 @@ export const UpdateRoleRequest = {
     message.color = object.color ?? undefined;
     message.role_icon = object.role_icon ?? undefined;
     message.description = object.description ?? undefined;
-    message.display_online = object.display_online ?? undefined;
-    message.allow_mention = object.allow_mention ?? undefined;
+    message.display_online = object.display_online ?? 0;
+    message.allow_mention = object.allow_mention ?? 0;
     message.add_user_ids = object.add_user_ids?.map((e) => e) || [];
     message.active_permission_ids = object.active_permission_ids?.map((e) => e) || [];
     message.remove_user_ids = object.remove_user_ids?.map((e) => e) || [];
@@ -22335,16 +21906,16 @@ export const UploadAttachmentRequest = {
 };
 
 function createBaseListMessageMentionRequest(): ListMessageMentionRequest {
-  return { limit: undefined, forward: undefined, cursor: "" };
+  return { limit: 0, forward: false, cursor: "" };
 }
 
 export const ListMessageMentionRequest = {
   encode(message: ListMessageMentionRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(10).fork()).ldelim();
+    if (message.limit !== 0) {
+      writer.uint32(8).int32(message.limit);
     }
-    if (message.forward !== undefined) {
-      BoolValue.encode({ value: message.forward! }, writer.uint32(18).fork()).ldelim();
+    if (message.forward !== false) {
+      writer.uint32(16).bool(message.forward);
     }
     if (message.cursor !== "") {
       writer.uint32(26).string(message.cursor);
@@ -22360,18 +21931,18 @@ export const ListMessageMentionRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          message.limit = reader.int32();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.forward = BoolValue.decode(reader, reader.uint32()).value;
+          message.forward = reader.bool();
           continue;
         case 3:
           if (tag !== 26) {
@@ -22391,18 +21962,18 @@ export const ListMessageMentionRequest = {
 
   fromJSON(object: any): ListMessageMentionRequest {
     return {
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      forward: isSet(object.forward) ? Boolean(object.forward) : undefined,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      forward: isSet(object.forward) ? globalThis.Boolean(object.forward) : false,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: ListMessageMentionRequest): unknown {
     const obj: any = {};
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
-    if (message.forward !== undefined) {
+    if (message.forward !== false) {
       obj.forward = message.forward;
     }
     if (message.cursor !== "") {
@@ -22416,8 +21987,8 @@ export const ListMessageMentionRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListMessageMentionRequest>, I>>(object: I): ListMessageMentionRequest {
     const message = createBaseListMessageMentionRequest();
-    message.limit = object.limit ?? undefined;
-    message.forward = object.forward ?? undefined;
+    message.limit = object.limit ?? 0;
+    message.forward = object.forward ?? false;
     message.cursor = object.cursor ?? "";
     return message;
   },
@@ -22498,7 +22069,7 @@ export const UploadAttachment = {
 };
 
 function createBaseSearchMessageRequest(): SearchMessageRequest {
-  return { filters: [], from: undefined, size: undefined, sorts: [] };
+  return { filters: [], from: 0, size: 0, sorts: [] };
 }
 
 export const SearchMessageRequest = {
@@ -22506,11 +22077,11 @@ export const SearchMessageRequest = {
     for (const v of message.filters) {
       FilterParam.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if (message.from !== undefined) {
-      Int32Value.encode({ value: message.from! }, writer.uint32(26).fork()).ldelim();
+    if (message.from !== 0) {
+      writer.uint32(24).int32(message.from);
     }
-    if (message.size !== undefined) {
-      Int32Value.encode({ value: message.size! }, writer.uint32(34).fork()).ldelim();
+    if (message.size !== 0) {
+      writer.uint32(32).int32(message.size);
     }
     for (const v of message.sorts) {
       SortParam.encode(v!, writer.uint32(42).fork()).ldelim();
@@ -22533,18 +22104,18 @@ export const SearchMessageRequest = {
           message.filters.push(FilterParam.decode(reader, reader.uint32()));
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.from = Int32Value.decode(reader, reader.uint32()).value;
+          message.from = reader.int32();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.size = Int32Value.decode(reader, reader.uint32()).value;
+          message.size = reader.int32();
           continue;
         case 5:
           if (tag !== 42) {
@@ -22565,8 +22136,8 @@ export const SearchMessageRequest = {
   fromJSON(object: any): SearchMessageRequest {
     return {
       filters: globalThis.Array.isArray(object?.filters) ? object.filters.map((e: any) => FilterParam.fromJSON(e)) : [],
-      from: isSet(object.from) ? Number(object.from) : undefined,
-      size: isSet(object.size) ? Number(object.size) : undefined,
+      from: isSet(object.from) ? globalThis.Number(object.from) : 0,
+      size: isSet(object.size) ? globalThis.Number(object.size) : 0,
       sorts: globalThis.Array.isArray(object?.sorts) ? object.sorts.map((e: any) => SortParam.fromJSON(e)) : [],
     };
   },
@@ -22576,11 +22147,11 @@ export const SearchMessageRequest = {
     if (message.filters?.length) {
       obj.filters = message.filters.map((e) => FilterParam.toJSON(e));
     }
-    if (message.from !== undefined) {
-      obj.from = message.from;
+    if (message.from !== 0) {
+      obj.from = Math.round(message.from);
     }
-    if (message.size !== undefined) {
-      obj.size = message.size;
+    if (message.size !== 0) {
+      obj.size = Math.round(message.size);
     }
     if (message.sorts?.length) {
       obj.sorts = message.sorts.map((e) => SortParam.toJSON(e));
@@ -22594,8 +22165,8 @@ export const SearchMessageRequest = {
   fromPartial<I extends Exact<DeepPartial<SearchMessageRequest>, I>>(object: I): SearchMessageRequest {
     const message = createBaseSearchMessageRequest();
     message.filters = object.filters?.map((e) => FilterParam.fromPartial(e)) || [];
-    message.from = object.from ?? undefined;
-    message.size = object.size ?? undefined;
+    message.from = object.from ?? 0;
+    message.size = object.size ?? 0;
     message.sorts = object.sorts?.map((e) => SortParam.fromPartial(e)) || [];
     return message;
   },
@@ -23945,7 +23516,7 @@ export const ClanSticker = {
 };
 
 function createBaseAllUsersAddChannelRequest(): AllUsersAddChannelRequest {
-  return { channel_id: "0", limit: undefined };
+  return { channel_id: "0", limit: 0 };
 }
 
 export const AllUsersAddChannelRequest = {
@@ -23953,8 +23524,8 @@ export const AllUsersAddChannelRequest = {
     if (message.channel_id !== "0") {
       writer.uint32(8).int64(message.channel_id);
     }
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
+    if (message.limit !== 0) {
+      writer.uint32(16).int32(message.limit);
     }
     return writer;
   },
@@ -23974,11 +23545,11 @@ export const AllUsersAddChannelRequest = {
           message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          message.limit = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -23992,7 +23563,7 @@ export const AllUsersAddChannelRequest = {
   fromJSON(object: any): AllUsersAddChannelRequest {
     return {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
     };
   },
 
@@ -24001,8 +23572,8 @@ export const AllUsersAddChannelRequest = {
     if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
     return obj;
   },
@@ -24013,21 +23584,13 @@ export const AllUsersAddChannelRequest = {
   fromPartial<I extends Exact<DeepPartial<AllUsersAddChannelRequest>, I>>(object: I): AllUsersAddChannelRequest {
     const message = createBaseAllUsersAddChannelRequest();
     message.channel_id = object.channel_id ?? "0";
-    message.limit = object.limit ?? undefined;
+    message.limit = object.limit ?? 0;
     return message;
   },
 };
 
 function createBaseAllUsersAddChannelResponse(): AllUsersAddChannelResponse {
-  return {
-    channel_id: "0",
-    user_ids: [],
-    limit: undefined,
-    usernames: [],
-    display_names: [],
-    avatars: [],
-    onlines: [],
-  };
+  return { channel_id: "0", user_ids: [], limit: 0, usernames: [], display_names: [], avatars: [], onlines: [] };
 }
 
 export const AllUsersAddChannelResponse = {
@@ -24040,8 +23603,8 @@ export const AllUsersAddChannelResponse = {
       writer.int64(v);
     }
     writer.ldelim();
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(26).fork()).ldelim();
+    if (message.limit !== 0) {
+      writer.uint32(24).int32(message.limit);
     }
     for (const v of message.usernames) {
       writer.uint32(34).string(v!);
@@ -24092,11 +23655,11 @@ export const AllUsersAddChannelResponse = {
 
           break;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          message.limit = reader.int32();
           continue;
         case 4:
           if (tag !== 34) {
@@ -24149,7 +23712,7 @@ export const AllUsersAddChannelResponse = {
     return {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
       usernames: globalThis.Array.isArray(object?.usernames)
         ? object.usernames.map((e: any) => globalThis.String(e))
         : [],
@@ -24169,8 +23732,8 @@ export const AllUsersAddChannelResponse = {
     if (message.user_ids?.length) {
       obj.user_ids = message.user_ids;
     }
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
     if (message.usernames?.length) {
       obj.usernames = message.usernames;
@@ -24194,7 +23757,7 @@ export const AllUsersAddChannelResponse = {
     const message = createBaseAllUsersAddChannelResponse();
     message.channel_id = object.channel_id ?? "0";
     message.user_ids = object.user_ids?.map((e) => e) || [];
-    message.limit = object.limit ?? undefined;
+    message.limit = object.limit ?? 0;
     message.usernames = object.usernames?.map((e) => e) || [];
     message.display_names = object.display_names?.map((e) => e) || [];
     message.avatars = object.avatars?.map((e) => e) || [];
@@ -26348,7 +25911,7 @@ export const App = {
 };
 
 function createBaseAppDeleteRequest(): AppDeleteRequest {
-  return { id: "0", record_deletion: undefined };
+  return { id: "0", record_deletion: false };
 }
 
 export const AppDeleteRequest = {
@@ -26356,8 +25919,8 @@ export const AppDeleteRequest = {
     if (message.id !== "0") {
       writer.uint32(8).int64(message.id);
     }
-    if (message.record_deletion !== undefined) {
-      BoolValue.encode({ value: message.record_deletion! }, writer.uint32(18).fork()).ldelim();
+    if (message.record_deletion !== false) {
+      writer.uint32(16).bool(message.record_deletion);
     }
     return writer;
   },
@@ -26377,11 +25940,11 @@ export const AppDeleteRequest = {
           message.id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.record_deletion = BoolValue.decode(reader, reader.uint32()).value;
+          message.record_deletion = reader.bool();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -26395,7 +25958,7 @@ export const AppDeleteRequest = {
   fromJSON(object: any): AppDeleteRequest {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "0",
-      record_deletion: isSet(object.record_deletion) ? Boolean(object.record_deletion) : undefined,
+      record_deletion: isSet(object.record_deletion) ? globalThis.Boolean(object.record_deletion) : false,
     };
   },
 
@@ -26404,7 +25967,7 @@ export const AppDeleteRequest = {
     if (message.id !== "0") {
       obj.id = message.id;
     }
-    if (message.record_deletion !== undefined) {
+    if (message.record_deletion !== false) {
       obj.record_deletion = message.record_deletion;
     }
     return obj;
@@ -26416,7 +25979,7 @@ export const AppDeleteRequest = {
   fromPartial<I extends Exact<DeepPartial<AppDeleteRequest>, I>>(object: I): AppDeleteRequest {
     const message = createBaseAppDeleteRequest();
     message.id = object.id ?? "0";
-    message.record_deletion = object.record_deletion ?? undefined;
+    message.record_deletion = object.record_deletion ?? false;
     return message;
   },
 };
@@ -27957,13 +27520,13 @@ export const StreamHttpCallbackRequest = {
 };
 
 function createBaseStreamHttpCallbackResponse(): StreamHttpCallbackResponse {
-  return { code: undefined, msg: "" };
+  return { code: 0, msg: "" };
 }
 
 export const StreamHttpCallbackResponse = {
   encode(message: StreamHttpCallbackResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.code !== undefined) {
-      Int32Value.encode({ value: message.code! }, writer.uint32(10).fork()).ldelim();
+    if (message.code !== 0) {
+      writer.uint32(8).int32(message.code);
     }
     if (message.msg !== "") {
       writer.uint32(18).string(message.msg);
@@ -27979,11 +27542,11 @@ export const StreamHttpCallbackResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.code = Int32Value.decode(reader, reader.uint32()).value;
+          message.code = reader.int32();
           continue;
         case 2:
           if (tag !== 18) {
@@ -28003,15 +27566,15 @@ export const StreamHttpCallbackResponse = {
 
   fromJSON(object: any): StreamHttpCallbackResponse {
     return {
-      code: isSet(object.code) ? Number(object.code) : undefined,
+      code: isSet(object.code) ? globalThis.Number(object.code) : 0,
       msg: isSet(object.msg) ? globalThis.String(object.msg) : "",
     };
   },
 
   toJSON(message: StreamHttpCallbackResponse): unknown {
     const obj: any = {};
-    if (message.code !== undefined) {
-      obj.code = message.code;
+    if (message.code !== 0) {
+      obj.code = Math.round(message.code);
     }
     if (message.msg !== "") {
       obj.msg = message.msg;
@@ -28024,7 +27587,7 @@ export const StreamHttpCallbackResponse = {
   },
   fromPartial<I extends Exact<DeepPartial<StreamHttpCallbackResponse>, I>>(object: I): StreamHttpCallbackResponse {
     const message = createBaseStreamHttpCallbackResponse();
-    message.code = object.code ?? undefined;
+    message.code = object.code ?? 0;
     message.msg = object.msg ?? "";
     return message;
   },
@@ -29504,12 +29067,12 @@ function createBaseChannelSettingListRequest(): ChannelSettingListRequest {
     clan_id: "0",
     parent_id: "0",
     category_id: "0",
-    private_channel: undefined,
-    active: undefined,
-    status: undefined,
-    type: undefined,
-    limit: undefined,
-    page: undefined,
+    private_channel: 0,
+    active: 0,
+    status: 0,
+    type: 0,
+    limit: 0,
+    page: 0,
     channel_label: "",
   };
 }
@@ -29525,23 +29088,23 @@ export const ChannelSettingListRequest = {
     if (message.category_id !== "0") {
       writer.uint32(24).int64(message.category_id);
     }
-    if (message.private_channel !== undefined) {
-      Int32Value.encode({ value: message.private_channel! }, writer.uint32(34).fork()).ldelim();
+    if (message.private_channel !== 0) {
+      writer.uint32(32).int32(message.private_channel);
     }
-    if (message.active !== undefined) {
-      Int32Value.encode({ value: message.active! }, writer.uint32(42).fork()).ldelim();
+    if (message.active !== 0) {
+      writer.uint32(40).int32(message.active);
     }
-    if (message.status !== undefined) {
-      Int32Value.encode({ value: message.status! }, writer.uint32(50).fork()).ldelim();
+    if (message.status !== 0) {
+      writer.uint32(48).int32(message.status);
     }
-    if (message.type !== undefined) {
-      Int32Value.encode({ value: message.type! }, writer.uint32(58).fork()).ldelim();
+    if (message.type !== 0) {
+      writer.uint32(56).int32(message.type);
     }
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(66).fork()).ldelim();
+    if (message.limit !== 0) {
+      writer.uint32(64).int32(message.limit);
     }
-    if (message.page !== undefined) {
-      Int32Value.encode({ value: message.page! }, writer.uint32(74).fork()).ldelim();
+    if (message.page !== 0) {
+      writer.uint32(72).int32(message.page);
     }
     if (message.channel_label !== "") {
       writer.uint32(82).string(message.channel_label);
@@ -29578,46 +29141,46 @@ export const ChannelSettingListRequest = {
           message.category_id = longToString(reader.int64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.private_channel = Int32Value.decode(reader, reader.uint32()).value;
+          message.private_channel = reader.int32();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.active = Int32Value.decode(reader, reader.uint32()).value;
+          message.active = reader.int32();
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.status = Int32Value.decode(reader, reader.uint32()).value;
+          message.status = reader.int32();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.type = Int32Value.decode(reader, reader.uint32()).value;
+          message.type = reader.int32();
           continue;
         case 8:
-          if (tag !== 66) {
+          if (tag !== 64) {
             break;
           }
 
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          message.limit = reader.int32();
           continue;
         case 9:
-          if (tag !== 74) {
+          if (tag !== 72) {
             break;
           }
 
-          message.page = Int32Value.decode(reader, reader.uint32()).value;
+          message.page = reader.int32();
           continue;
         case 10:
           if (tag !== 82) {
@@ -29640,12 +29203,12 @@ export const ChannelSettingListRequest = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "0",
       category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "0",
-      private_channel: isSet(object.private_channel) ? Number(object.private_channel) : undefined,
-      active: isSet(object.active) ? Number(object.active) : undefined,
-      status: isSet(object.status) ? Number(object.status) : undefined,
-      type: isSet(object.type) ? Number(object.type) : undefined,
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      page: isSet(object.page) ? Number(object.page) : undefined,
+      private_channel: isSet(object.private_channel) ? globalThis.Number(object.private_channel) : 0,
+      active: isSet(object.active) ? globalThis.Number(object.active) : 0,
+      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
+      type: isSet(object.type) ? globalThis.Number(object.type) : 0,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
     };
   },
@@ -29661,23 +29224,23 @@ export const ChannelSettingListRequest = {
     if (message.category_id !== "0") {
       obj.category_id = message.category_id;
     }
-    if (message.private_channel !== undefined) {
-      obj.private_channel = message.private_channel;
+    if (message.private_channel !== 0) {
+      obj.private_channel = Math.round(message.private_channel);
     }
-    if (message.active !== undefined) {
-      obj.active = message.active;
+    if (message.active !== 0) {
+      obj.active = Math.round(message.active);
     }
-    if (message.status !== undefined) {
-      obj.status = message.status;
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
     }
-    if (message.type !== undefined) {
-      obj.type = message.type;
+    if (message.type !== 0) {
+      obj.type = Math.round(message.type);
     }
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
-    if (message.page !== undefined) {
-      obj.page = message.page;
+    if (message.page !== 0) {
+      obj.page = Math.round(message.page);
     }
     if (message.channel_label !== "") {
       obj.channel_label = message.channel_label;
@@ -29693,12 +29256,12 @@ export const ChannelSettingListRequest = {
     message.clan_id = object.clan_id ?? "0";
     message.parent_id = object.parent_id ?? "0";
     message.category_id = object.category_id ?? "0";
-    message.private_channel = object.private_channel ?? undefined;
-    message.active = object.active ?? undefined;
-    message.status = object.status ?? undefined;
-    message.type = object.type ?? undefined;
-    message.limit = object.limit ?? undefined;
-    message.page = object.page ?? undefined;
+    message.private_channel = object.private_channel ?? 0;
+    message.active = object.active ?? 0;
+    message.status = object.status ?? 0;
+    message.type = object.type ?? 0;
+    message.limit = object.limit ?? 0;
+    message.page = object.page ?? 0;
     message.channel_label = object.channel_label ?? "";
     return message;
   },
@@ -30448,7 +30011,7 @@ export const DeleteChannelCanvasRequest = {
 };
 
 function createBaseChannelCanvasListRequest(): ChannelCanvasListRequest {
-  return { clan_id: "0", channel_id: "0", limit: undefined, page: undefined, cursor: "" };
+  return { clan_id: "0", channel_id: "0", limit: 0, page: 0, cursor: "" };
 }
 
 export const ChannelCanvasListRequest = {
@@ -30459,11 +30022,11 @@ export const ChannelCanvasListRequest = {
     if (message.channel_id !== "0") {
       writer.uint32(16).int64(message.channel_id);
     }
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(26).fork()).ldelim();
+    if (message.limit !== 0) {
+      writer.uint32(24).int32(message.limit);
     }
-    if (message.page !== undefined) {
-      Int32Value.encode({ value: message.page! }, writer.uint32(34).fork()).ldelim();
+    if (message.page !== 0) {
+      writer.uint32(32).int32(message.page);
     }
     if (message.cursor !== "") {
       writer.uint32(42).string(message.cursor);
@@ -30493,18 +30056,18 @@ export const ChannelCanvasListRequest = {
           message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          message.limit = reader.int32();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.page = Int32Value.decode(reader, reader.uint32()).value;
+          message.page = reader.int32();
           continue;
         case 5:
           if (tag !== 42) {
@@ -30526,8 +30089,8 @@ export const ChannelCanvasListRequest = {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      page: isSet(object.page) ? Number(object.page) : undefined,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
@@ -30540,11 +30103,11 @@ export const ChannelCanvasListRequest = {
     if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
-    if (message.page !== undefined) {
-      obj.page = message.page;
+    if (message.page !== 0) {
+      obj.page = Math.round(message.page);
     }
     if (message.cursor !== "") {
       obj.cursor = message.cursor;
@@ -30559,8 +30122,8 @@ export const ChannelCanvasListRequest = {
     const message = createBaseChannelCanvasListRequest();
     message.clan_id = object.clan_id ?? "0";
     message.channel_id = object.channel_id ?? "0";
-    message.limit = object.limit ?? undefined;
-    message.page = object.page ?? undefined;
+    message.limit = object.limit ?? 0;
+    message.page = object.page ?? 0;
     message.cursor = object.cursor ?? "";
     return message;
   },
@@ -31986,7 +31549,7 @@ export const LoginRequest = {
 };
 
 function createBaseConfirmLoginRequest(): ConfirmLoginRequest {
-  return { login_id: "0", is_remember: undefined };
+  return { login_id: "0", is_remember: false };
 }
 
 export const ConfirmLoginRequest = {
@@ -31994,8 +31557,8 @@ export const ConfirmLoginRequest = {
     if (message.login_id !== "0") {
       writer.uint32(8).int64(message.login_id);
     }
-    if (message.is_remember !== undefined) {
-      BoolValue.encode({ value: message.is_remember! }, writer.uint32(18).fork()).ldelim();
+    if (message.is_remember !== false) {
+      writer.uint32(16).bool(message.is_remember);
     }
     return writer;
   },
@@ -32015,11 +31578,11 @@ export const ConfirmLoginRequest = {
           message.login_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.is_remember = BoolValue.decode(reader, reader.uint32()).value;
+          message.is_remember = reader.bool();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -32033,7 +31596,7 @@ export const ConfirmLoginRequest = {
   fromJSON(object: any): ConfirmLoginRequest {
     return {
       login_id: isSet(object.login_id) ? globalThis.String(object.login_id) : "0",
-      is_remember: isSet(object.is_remember) ? Boolean(object.is_remember) : undefined,
+      is_remember: isSet(object.is_remember) ? globalThis.Boolean(object.is_remember) : false,
     };
   },
 
@@ -32042,7 +31605,7 @@ export const ConfirmLoginRequest = {
     if (message.login_id !== "0") {
       obj.login_id = message.login_id;
     }
-    if (message.is_remember !== undefined) {
+    if (message.is_remember !== false) {
       obj.is_remember = message.is_remember;
     }
     return obj;
@@ -32054,7 +31617,7 @@ export const ConfirmLoginRequest = {
   fromPartial<I extends Exact<DeepPartial<ConfirmLoginRequest>, I>>(object: I): ConfirmLoginRequest {
     const message = createBaseConfirmLoginRequest();
     message.login_id = object.login_id ?? "0";
-    message.is_remember = object.is_remember ?? undefined;
+    message.is_remember = object.is_remember ?? false;
     return message;
   },
 };
@@ -33216,7 +32779,7 @@ export const UnlockedItemResponse = {
 };
 
 function createBaseListOnboardingRequest(): ListOnboardingRequest {
-  return { clan_id: "0", guide_type: undefined, limit: undefined, page: undefined };
+  return { clan_id: "0", guide_type: 0, limit: 0, page: 0 };
 }
 
 export const ListOnboardingRequest = {
@@ -33224,14 +32787,14 @@ export const ListOnboardingRequest = {
     if (message.clan_id !== "0") {
       writer.uint32(8).int64(message.clan_id);
     }
-    if (message.guide_type !== undefined) {
-      Int32Value.encode({ value: message.guide_type! }, writer.uint32(18).fork()).ldelim();
+    if (message.guide_type !== 0) {
+      writer.uint32(16).int32(message.guide_type);
     }
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(26).fork()).ldelim();
+    if (message.limit !== 0) {
+      writer.uint32(24).int32(message.limit);
     }
-    if (message.page !== undefined) {
-      Int32Value.encode({ value: message.page! }, writer.uint32(34).fork()).ldelim();
+    if (message.page !== 0) {
+      writer.uint32(32).int32(message.page);
     }
     return writer;
   },
@@ -33251,25 +32814,25 @@ export const ListOnboardingRequest = {
           message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.guide_type = Int32Value.decode(reader, reader.uint32()).value;
+          message.guide_type = reader.int32();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          message.limit = reader.int32();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.page = Int32Value.decode(reader, reader.uint32()).value;
+          message.page = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -33283,9 +32846,9 @@ export const ListOnboardingRequest = {
   fromJSON(object: any): ListOnboardingRequest {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
-      guide_type: isSet(object.guide_type) ? Number(object.guide_type) : undefined,
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      page: isSet(object.page) ? Number(object.page) : undefined,
+      guide_type: isSet(object.guide_type) ? globalThis.Number(object.guide_type) : 0,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
     };
   },
 
@@ -33294,14 +32857,14 @@ export const ListOnboardingRequest = {
     if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.guide_type !== undefined) {
-      obj.guide_type = message.guide_type;
+    if (message.guide_type !== 0) {
+      obj.guide_type = Math.round(message.guide_type);
     }
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
-    if (message.page !== undefined) {
-      obj.page = message.page;
+    if (message.page !== 0) {
+      obj.page = Math.round(message.page);
     }
     return obj;
   },
@@ -33312,9 +32875,9 @@ export const ListOnboardingRequest = {
   fromPartial<I extends Exact<DeepPartial<ListOnboardingRequest>, I>>(object: I): ListOnboardingRequest {
     const message = createBaseListOnboardingRequest();
     message.clan_id = object.clan_id ?? "0";
-    message.guide_type = object.guide_type ?? undefined;
-    message.limit = object.limit ?? undefined;
-    message.page = object.page ?? undefined;
+    message.guide_type = object.guide_type ?? 0;
+    message.limit = object.limit ?? 0;
+    message.page = object.page ?? 0;
     return message;
   },
 };
@@ -33935,16 +33498,7 @@ export const CreateOnboardingRequest = {
 };
 
 function createBaseUpdateOnboardingRequest(): UpdateOnboardingRequest {
-  return {
-    id: "0",
-    clan_id: "0",
-    task_type: undefined,
-    channel_id: "0",
-    title: "",
-    content: "",
-    image_url: "",
-    answers: [],
-  };
+  return { id: "0", clan_id: "0", task_type: 0, channel_id: "0", title: "", content: "", image_url: "", answers: [] };
 }
 
 export const UpdateOnboardingRequest = {
@@ -33955,8 +33509,8 @@ export const UpdateOnboardingRequest = {
     if (message.clan_id !== "0") {
       writer.uint32(16).int64(message.clan_id);
     }
-    if (message.task_type !== undefined) {
-      Int32Value.encode({ value: message.task_type! }, writer.uint32(26).fork()).ldelim();
+    if (message.task_type !== 0) {
+      writer.uint32(24).int32(message.task_type);
     }
     if (message.channel_id !== "0") {
       writer.uint32(32).int64(message.channel_id);
@@ -33998,11 +33552,11 @@ export const UpdateOnboardingRequest = {
           message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.task_type = Int32Value.decode(reader, reader.uint32()).value;
+          message.task_type = reader.int32();
           continue;
         case 4:
           if (tag !== 32) {
@@ -34052,7 +33606,7 @@ export const UpdateOnboardingRequest = {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "0",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
-      task_type: isSet(object.task_type) ? Number(object.task_type) : undefined,
+      task_type: isSet(object.task_type) ? globalThis.Number(object.task_type) : 0,
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       title: isSet(object.title) ? globalThis.String(object.title) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
@@ -34071,8 +33625,8 @@ export const UpdateOnboardingRequest = {
     if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.task_type !== undefined) {
-      obj.task_type = message.task_type;
+    if (message.task_type !== 0) {
+      obj.task_type = Math.round(message.task_type);
     }
     if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
@@ -34099,7 +33653,7 @@ export const UpdateOnboardingRequest = {
     const message = createBaseUpdateOnboardingRequest();
     message.id = object.id ?? "0";
     message.clan_id = object.clan_id ?? "0";
-    message.task_type = object.task_type ?? undefined;
+    message.task_type = object.task_type ?? 0;
     message.channel_id = object.channel_id ?? "0";
     message.title = object.title ?? "";
     message.content = object.content ?? "";
@@ -35372,7 +34926,7 @@ export const ListOnboardingStepResponse = {
 };
 
 function createBaseListOnboardingStepRequest(): ListOnboardingStepRequest {
-  return { clan_id: "0", limit: undefined, page: undefined };
+  return { clan_id: "0", limit: 0, page: 0 };
 }
 
 export const ListOnboardingStepRequest = {
@@ -35380,11 +34934,11 @@ export const ListOnboardingStepRequest = {
     if (message.clan_id !== "0") {
       writer.uint32(8).int64(message.clan_id);
     }
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
+    if (message.limit !== 0) {
+      writer.uint32(16).int32(message.limit);
     }
-    if (message.page !== undefined) {
-      Int32Value.encode({ value: message.page! }, writer.uint32(26).fork()).ldelim();
+    if (message.page !== 0) {
+      writer.uint32(24).int32(message.page);
     }
     return writer;
   },
@@ -35404,18 +34958,18 @@ export const ListOnboardingStepRequest = {
           message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          message.limit = reader.int32();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.page = Int32Value.decode(reader, reader.uint32()).value;
+          message.page = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -35429,8 +34983,8 @@ export const ListOnboardingStepRequest = {
   fromJSON(object: any): ListOnboardingStepRequest {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      page: isSet(object.page) ? Number(object.page) : undefined,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
     };
   },
 
@@ -35439,11 +34993,11 @@ export const ListOnboardingStepRequest = {
     if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
-    if (message.page !== undefined) {
-      obj.page = message.page;
+    if (message.page !== 0) {
+      obj.page = Math.round(message.page);
     }
     return obj;
   },
@@ -35454,14 +35008,14 @@ export const ListOnboardingStepRequest = {
   fromPartial<I extends Exact<DeepPartial<ListOnboardingStepRequest>, I>>(object: I): ListOnboardingStepRequest {
     const message = createBaseListOnboardingStepRequest();
     message.clan_id = object.clan_id ?? "0";
-    message.limit = object.limit ?? undefined;
-    message.page = object.page ?? undefined;
+    message.limit = object.limit ?? 0;
+    message.page = object.page ?? 0;
     return message;
   },
 };
 
 function createBaseUpdateOnboardingStepRequest(): UpdateOnboardingStepRequest {
-  return { clan_id: "0", onboarding_step: undefined };
+  return { clan_id: "0", onboarding_step: 0 };
 }
 
 export const UpdateOnboardingStepRequest = {
@@ -35469,8 +35023,8 @@ export const UpdateOnboardingStepRequest = {
     if (message.clan_id !== "0") {
       writer.uint32(8).int64(message.clan_id);
     }
-    if (message.onboarding_step !== undefined) {
-      Int32Value.encode({ value: message.onboarding_step! }, writer.uint32(18).fork()).ldelim();
+    if (message.onboarding_step !== 0) {
+      writer.uint32(16).int32(message.onboarding_step);
     }
     return writer;
   },
@@ -35490,11 +35044,11 @@ export const UpdateOnboardingStepRequest = {
           message.clan_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.onboarding_step = Int32Value.decode(reader, reader.uint32()).value;
+          message.onboarding_step = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -35508,7 +35062,7 @@ export const UpdateOnboardingStepRequest = {
   fromJSON(object: any): UpdateOnboardingStepRequest {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
-      onboarding_step: isSet(object.onboarding_step) ? Number(object.onboarding_step) : undefined,
+      onboarding_step: isSet(object.onboarding_step) ? globalThis.Number(object.onboarding_step) : 0,
     };
   },
 
@@ -35517,8 +35071,8 @@ export const UpdateOnboardingStepRequest = {
     if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.onboarding_step !== undefined) {
-      obj.onboarding_step = message.onboarding_step;
+    if (message.onboarding_step !== 0) {
+      obj.onboarding_step = Math.round(message.onboarding_step);
     }
     return obj;
   },
@@ -35529,7 +35083,7 @@ export const UpdateOnboardingStepRequest = {
   fromPartial<I extends Exact<DeepPartial<UpdateOnboardingStepRequest>, I>>(object: I): UpdateOnboardingStepRequest {
     const message = createBaseUpdateOnboardingStepRequest();
     message.clan_id = object.clan_id ?? "0";
-    message.onboarding_step = object.onboarding_step ?? undefined;
+    message.onboarding_step = object.onboarding_step ?? 0;
     return message;
   },
 };

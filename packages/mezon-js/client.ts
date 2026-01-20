@@ -952,7 +952,7 @@ export class Client {
     }
 
     return this.apiClient
-      .deleteRole(session.token, roleId, "", clanId, roleLabel)
+      .deleteRole(session.token, roleId, "0", clanId, roleLabel)
       .then((response: any) => {
         return response !== undefined;
       });
