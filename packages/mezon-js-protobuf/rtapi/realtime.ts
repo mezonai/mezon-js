@@ -30,8 +30,6 @@ import {
   EventList,
   FriendList,
   GiveCoffeeEvent,
-  HashtagDmList,
-  HashtagDmListRequest,
   ListChannelAppsRequest,
   ListChannelAppsResponse,
   ListChannelAttachmentRequest,
@@ -1689,9 +1687,13 @@ export interface ListDataSocket {
   voice_user_list: VoiceChannelUserList | undefined;
   channel_user_list: ChannelUserList | undefined;
   list_channel_attachment_req: ListChannelAttachmentRequest | undefined;
-  channel_attachment_list: ChannelAttachmentList | undefined;
-  hashtag_dm_req: HashtagDmListRequest | undefined;
-  hashtag_dm_list: HashtagDmList | undefined;
+  channel_attachment_list:
+    | ChannelAttachmentList
+    | undefined;
+  /**
+   * api.HashtagDmListRequest hashtag_dm_req = 18;
+   * api.HashtagDmList hashtag_dm_list = 19;
+   */
   channel_setting_req: ChannelSettingListRequest | undefined;
   channel_setting_list: ChannelSettingListResponse | undefined;
   favorite_channel_req: ListFavoriteChannelRequest | undefined;
@@ -13653,7 +13655,7 @@ export const PermissionChangedEvent = {
 };
 
 function createBaseMessageButtonClicked(): MessageButtonClicked {
-  return { message_id: "0", channel_id: "0", button_id: "0", sender_id: "0", user_id: "0", extra_data: "" };
+  return { message_id: "0", channel_id: "0", button_id: "", sender_id: "0", user_id: "0", extra_data: "" };
 }
 
 export const MessageButtonClicked = {
@@ -13664,8 +13666,8 @@ export const MessageButtonClicked = {
     if (message.channel_id !== "0") {
       writer.uint32(16).int64(message.channel_id);
     }
-    if (message.button_id !== "0") {
-      writer.uint32(24).int64(message.button_id);
+    if (message.button_id !== "") {
+      writer.uint32(26).string(message.button_id);
     }
     if (message.sender_id !== "0") {
       writer.uint32(32).int64(message.sender_id);
@@ -13701,11 +13703,11 @@ export const MessageButtonClicked = {
           message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 24) {
+          if (tag !== 26) {
             break;
           }
 
-          message.button_id = longToString(reader.int64() as Long);
+          message.button_id = reader.string();
           continue;
         case 4:
           if (tag !== 32) {
@@ -13741,7 +13743,7 @@ export const MessageButtonClicked = {
     return {
       message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
-      button_id: isSet(object.button_id) ? globalThis.String(object.button_id) : "0",
+      button_id: isSet(object.button_id) ? globalThis.String(object.button_id) : "",
       sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "0",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
       extra_data: isSet(object.extra_data) ? globalThis.String(object.extra_data) : "",
@@ -13756,7 +13758,7 @@ export const MessageButtonClicked = {
     if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.button_id !== "0") {
+    if (message.button_id !== "") {
       obj.button_id = message.button_id;
     }
     if (message.sender_id !== "0") {
@@ -13778,7 +13780,7 @@ export const MessageButtonClicked = {
     const message = createBaseMessageButtonClicked();
     message.message_id = object.message_id ?? "0";
     message.channel_id = object.channel_id ?? "0";
-    message.button_id = object.button_id ?? "0";
+    message.button_id = object.button_id ?? "";
     message.sender_id = object.sender_id ?? "0";
     message.user_id = object.user_id ?? "0";
     message.extra_data = object.extra_data ?? "";
@@ -13935,7 +13937,7 @@ export const ListActivity = {
 };
 
 function createBaseDropdownBoxSelected(): DropdownBoxSelected {
-  return { message_id: "0", channel_id: "0", selectbox_id: "0", sender_id: "0", user_id: "0", values: [] };
+  return { message_id: "0", channel_id: "0", selectbox_id: "", sender_id: "0", user_id: "0", values: [] };
 }
 
 export const DropdownBoxSelected = {
@@ -13946,8 +13948,8 @@ export const DropdownBoxSelected = {
     if (message.channel_id !== "0") {
       writer.uint32(16).int64(message.channel_id);
     }
-    if (message.selectbox_id !== "0") {
-      writer.uint32(24).int64(message.selectbox_id);
+    if (message.selectbox_id !== "") {
+      writer.uint32(26).string(message.selectbox_id);
     }
     if (message.sender_id !== "0") {
       writer.uint32(32).int64(message.sender_id);
@@ -13983,11 +13985,11 @@ export const DropdownBoxSelected = {
           message.channel_id = longToString(reader.int64() as Long);
           continue;
         case 3:
-          if (tag !== 24) {
+          if (tag !== 26) {
             break;
           }
 
-          message.selectbox_id = longToString(reader.int64() as Long);
+          message.selectbox_id = reader.string();
           continue;
         case 4:
           if (tag !== 32) {
@@ -14023,7 +14025,7 @@ export const DropdownBoxSelected = {
     return {
       message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
-      selectbox_id: isSet(object.selectbox_id) ? globalThis.String(object.selectbox_id) : "0",
+      selectbox_id: isSet(object.selectbox_id) ? globalThis.String(object.selectbox_id) : "",
       sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "0",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
       values: globalThis.Array.isArray(object?.values) ? object.values.map((e: any) => globalThis.String(e)) : [],
@@ -14038,7 +14040,7 @@ export const DropdownBoxSelected = {
     if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
-    if (message.selectbox_id !== "0") {
+    if (message.selectbox_id !== "") {
       obj.selectbox_id = message.selectbox_id;
     }
     if (message.sender_id !== "0") {
@@ -14060,7 +14062,7 @@ export const DropdownBoxSelected = {
     const message = createBaseDropdownBoxSelected();
     message.message_id = object.message_id ?? "0";
     message.channel_id = object.channel_id ?? "0";
-    message.selectbox_id = object.selectbox_id ?? "0";
+    message.selectbox_id = object.selectbox_id ?? "";
     message.sender_id = object.sender_id ?? "0";
     message.user_id = object.user_id ?? "0";
     message.values = object.values?.map((e) => e) || [];
@@ -14814,8 +14816,6 @@ function createBaseListDataSocket(): ListDataSocket {
     channel_user_list: undefined,
     list_channel_attachment_req: undefined,
     channel_attachment_list: undefined,
-    hashtag_dm_req: undefined,
-    hashtag_dm_list: undefined,
     channel_setting_req: undefined,
     channel_setting_list: undefined,
     favorite_channel_req: undefined,
@@ -14920,12 +14920,6 @@ export const ListDataSocket = {
     }
     if (message.channel_attachment_list !== undefined) {
       ChannelAttachmentList.encode(message.channel_attachment_list, writer.uint32(138).fork()).ldelim();
-    }
-    if (message.hashtag_dm_req !== undefined) {
-      HashtagDmListRequest.encode(message.hashtag_dm_req, writer.uint32(146).fork()).ldelim();
-    }
-    if (message.hashtag_dm_list !== undefined) {
-      HashtagDmList.encode(message.hashtag_dm_list, writer.uint32(154).fork()).ldelim();
     }
     if (message.channel_setting_req !== undefined) {
       ChannelSettingListRequest.encode(message.channel_setting_req, writer.uint32(162).fork()).ldelim();
@@ -15204,20 +15198,6 @@ export const ListDataSocket = {
           }
 
           message.channel_attachment_list = ChannelAttachmentList.decode(reader, reader.uint32());
-          continue;
-        case 18:
-          if (tag !== 146) {
-            break;
-          }
-
-          message.hashtag_dm_req = HashtagDmListRequest.decode(reader, reader.uint32());
-          continue;
-        case 19:
-          if (tag !== 154) {
-            break;
-          }
-
-          message.hashtag_dm_list = HashtagDmList.decode(reader, reader.uint32());
           continue;
         case 20:
           if (tag !== 162) {
@@ -15617,8 +15597,6 @@ export const ListDataSocket = {
       channel_attachment_list: isSet(object.channel_attachment_list)
         ? ChannelAttachmentList.fromJSON(object.channel_attachment_list)
         : undefined,
-      hashtag_dm_req: isSet(object.hashtag_dm_req) ? HashtagDmListRequest.fromJSON(object.hashtag_dm_req) : undefined,
-      hashtag_dm_list: isSet(object.hashtag_dm_list) ? HashtagDmList.fromJSON(object.hashtag_dm_list) : undefined,
       channel_setting_req: isSet(object.channel_setting_req)
         ? ChannelSettingListRequest.fromJSON(object.channel_setting_req)
         : undefined,
@@ -15791,12 +15769,6 @@ export const ListDataSocket = {
     }
     if (message.channel_attachment_list !== undefined) {
       obj.channel_attachment_list = ChannelAttachmentList.toJSON(message.channel_attachment_list);
-    }
-    if (message.hashtag_dm_req !== undefined) {
-      obj.hashtag_dm_req = HashtagDmListRequest.toJSON(message.hashtag_dm_req);
-    }
-    if (message.hashtag_dm_list !== undefined) {
-      obj.hashtag_dm_list = HashtagDmList.toJSON(message.hashtag_dm_list);
     }
     if (message.channel_setting_req !== undefined) {
       obj.channel_setting_req = ChannelSettingListRequest.toJSON(message.channel_setting_req);
@@ -16013,12 +15985,6 @@ export const ListDataSocket = {
       (object.channel_attachment_list !== undefined && object.channel_attachment_list !== null)
         ? ChannelAttachmentList.fromPartial(object.channel_attachment_list)
         : undefined;
-    message.hashtag_dm_req = (object.hashtag_dm_req !== undefined && object.hashtag_dm_req !== null)
-      ? HashtagDmListRequest.fromPartial(object.hashtag_dm_req)
-      : undefined;
-    message.hashtag_dm_list = (object.hashtag_dm_list !== undefined && object.hashtag_dm_list !== null)
-      ? HashtagDmList.fromPartial(object.hashtag_dm_list)
-      : undefined;
     message.channel_setting_req = (object.channel_setting_req !== undefined && object.channel_setting_req !== null)
       ? ChannelSettingListRequest.fromPartial(object.channel_setting_req)
       : undefined;
