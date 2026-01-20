@@ -59,6 +59,87 @@ const isEmpty = (data: any) => {
   return !data || data === null || data === undefined || data === "" || data === "[]";
 };
 
+export function decodeMentions(data: any) {
+  if (isEmpty(data)) return;
+  // 91 is '[' (JSON Array) | 123 is '{' (JSON Object)
+  const firstByte = data[0];
+  const isJson = firstByte === 91 || firstByte === 123;
+
+  if (isJson) {
+    return safeJSONParse(data);
+  }
+
+  try {
+    const buffer: ArrayBuffer = data;
+    const uintBuffer: Uint8Array = new Uint8Array(buffer);
+    const mentions = tsproto.MessageMentionList.decode(uintBuffer);
+    return mentions;
+  } catch (error) {
+    return safeJSONParse(data);
+  }
+}
+
+export function decodeAttachments(data: any) {
+  if (isEmpty(data)) return;
+  // 91 is '[' (JSON Array) | 123 is '{' (JSON Object)
+  const firstByte = data[0];
+  const isJson = firstByte === 91 || firstByte === 123;
+
+  if (isJson) {
+    return safeJSONParse(data);
+  }
+
+  try {
+    const buffer: ArrayBuffer = data;
+    const uintBuffer: Uint8Array = new Uint8Array(buffer);
+    const attachments = tsproto.MessageAttachmentList.decode(uintBuffer);
+    return attachments;
+  } catch (error) {
+    return safeJSONParse(data);
+  }
+}
+
+export function decodeRefs(data: any) {
+  if (isEmpty(data)) return;
+  // 91 is '[' (JSON Array) | 123 is '{' (JSON Object)
+  const firstByte = data[0];
+  const isJson = firstByte === 91 || firstByte === 123;
+
+  if (isJson) {
+    return safeJSONParse(data);
+  }
+
+  try {
+    const buffer: ArrayBuffer = data;
+    const uintBuffer: Uint8Array = new Uint8Array(buffer);
+    const refs = tsproto.MessageRefList.decode(uintBuffer);
+    return refs;
+  } catch (error) {
+    return safeJSONParse(data);
+  }
+}
+
+export function decodeReactions(data: any) {
+  if (isEmpty(data)) return;
+  // 91 is '[' (JSON Array) | 123 is '{' (JSON Object)
+  const firstByte = data[0];
+  const isJson = firstByte === 91 || firstByte === 123;
+
+  if (isJson) {
+    return safeJSONParse(data);
+  }
+
+  try {
+    const buffer: ArrayBuffer = data;
+    const uintBuffer: Uint8Array = new Uint8Array(buffer);
+    const reactions = tsproto.MessageReactionList.decode(uintBuffer);
+    return reactions;
+  } catch (error) {
+    return safeJSONParse(data);
+  }
+}
+
+
 export function decodeNotificationFcm(data: any) {
   if (isEmpty(data)) return;
   // 91 is '[' (JSON Array) | 123 is '{' (JSON Object)

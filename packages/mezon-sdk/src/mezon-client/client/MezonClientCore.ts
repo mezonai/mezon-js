@@ -34,7 +34,6 @@ import {
   IZkProof,
   MmnClient,
   ZkClient,
-  IndexerClient,
 } from "mmn-client-js";
 
 const MAX_TIME_RETRY = 10;
@@ -64,7 +63,6 @@ export class MezonClientCore extends EventEmitter {
   protected apiClient!: MezonApi;
   protected _mmnClient!: MmnClient;
   protected _zkClient!: ZkClient;
-  protected _indexerClient!: IndexerClient;
   protected socketManager!: SocketManager;
   protected channelManager!: ChannelManager;
   protected sessionManager!: SessionManager;
