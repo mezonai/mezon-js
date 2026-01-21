@@ -946,25 +946,15 @@ export interface ApiChannelDescription {
 }
 
 /**  */
-export interface ApiChannelMessageHeader {
-  //
-  attachment?: Uint8Array;
-  //
-  content?: string;
+export interface ApiChannelMessageHeader {  
   //
   id?: string;
-  //
-  mention?: Uint8Array;
-  //
-  reaction?: Uint8Array;
-  //
-  reference?: Uint8Array;
-  //
-  repliers?: Array<string>;
   //
   sender_id?: string;
   //
   timestamp_seconds?: number;
+  //
+  content?: string;
 }
 
 /** A list of channel messages, usually a result of a list operation. */
