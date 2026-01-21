@@ -769,8 +769,6 @@ export interface ChannelMessageUpdate {
   topic_id: string;
   /** update message topic */
   is_update_msg_topic: boolean;
-  /** old mentions */
-  old_mentions: string;
 }
 
 /** Remove a message previously sent to a realtime channel. */
@@ -6486,7 +6484,6 @@ function createBaseChannelMessageUpdate(): ChannelMessageUpdate {
     hide_editted: false,
     topic_id: "0",
     is_update_msg_topic: false,
-    old_mentions: "",
   };
 }
 
@@ -6524,9 +6521,6 @@ export const ChannelMessageUpdate = {
     }
     if (message.is_update_msg_topic !== false) {
       writer.uint32(88).bool(message.is_update_msg_topic);
-    }
-    if (message.old_mentions !== "") {
-      writer.uint32(98).string(message.old_mentions);
     }
     return writer;
   },
@@ -6615,13 +6609,6 @@ export const ChannelMessageUpdate = {
 
           message.is_update_msg_topic = reader.bool();
           continue;
-        case 12:
-          if (tag !== 98) {
-            break;
-          }
-
-          message.old_mentions = reader.string();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -6648,7 +6635,6 @@ export const ChannelMessageUpdate = {
       hide_editted: isSet(object.hide_editted) ? globalThis.Boolean(object.hide_editted) : false,
       topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "0",
       is_update_msg_topic: isSet(object.is_update_msg_topic) ? globalThis.Boolean(object.is_update_msg_topic) : false,
-      old_mentions: isSet(object.old_mentions) ? globalThis.String(object.old_mentions) : "",
     };
   },
 
@@ -6687,9 +6673,6 @@ export const ChannelMessageUpdate = {
     if (message.is_update_msg_topic !== false) {
       obj.is_update_msg_topic = message.is_update_msg_topic;
     }
-    if (message.old_mentions !== "") {
-      obj.old_mentions = message.old_mentions;
-    }
     return obj;
   },
 
@@ -6709,7 +6692,6 @@ export const ChannelMessageUpdate = {
     message.hide_editted = object.hide_editted ?? false;
     message.topic_id = object.topic_id ?? "0";
     message.is_update_msg_topic = object.is_update_msg_topic ?? false;
-    message.old_mentions = object.old_mentions ?? "";
     return message;
   },
 };
