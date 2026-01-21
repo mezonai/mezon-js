@@ -48,37 +48,33 @@ export class MezonClient extends MezonClientCore {
 
     this.on(
       Events.ChannelMessage.toString(),
-      this._onChannelMessageInternal.bind(this)
+      this._onChannelMessageInternal.bind(this),
     );
     this.on(
       Events.ChannelCreated.toString(),
-      this._onChannelCreatedInternal.bind(this)
+      this._onChannelCreatedInternal.bind(this),
     );
     this.on(
       Events.ChannelUpdated.toString(),
-      this._onChannelUpdatedInternal.bind(this)
+      this._onChannelUpdatedInternal.bind(this),
     );
     this.on(
       Events.ChannelDeleted.toString(),
-      this._onChannelDeletedInternal.bind(this)
+      this._onChannelDeletedInternal.bind(this),
     );
     this.on(
       Events.UserClanRemoved.toString(),
-      this._onUserClanRemovedInternal.bind(this)
+      this._onUserClanRemovedInternal.bind(this),
     );
     this.on(
       Events.AddClanUser.toString(),
-      this._onAddClanUserInternal.bind(this)
+      this._onAddClanUserInternal.bind(this),
     );
     this.on(
       Events.UserChannelAdded.toString(),
-      this._onUserChannelAddedInternal.bind(this)
+      this._onUserChannelAddedInternal.bind(this),
     );
     this.on(Events.TokenSend.toString(), this._onTokenSendInternal.bind(this));
-    this.on(
-      Events.Notifications.toString(),
-      this._onNotificationsInternal.bind(this)
-    );
   }
 
   public onChannelMessage(listener: (e: ChannelMessage) => void): this {
@@ -122,7 +118,7 @@ export class MezonClient extends MezonClientCore {
   }
 
   public onUserChannelAdded(
-    listener: (e: UserChannelAddedEvent) => void
+    listener: (e: UserChannelAddedEvent) => void,
   ): this {
     this.on(Events.UserChannelAdded.toString(), listener);
     return this;
@@ -159,28 +155,28 @@ export class MezonClient extends MezonClientCore {
   }
 
   public onMessageButtonClicked(
-    listener: (e: MessageButtonClicked) => void
+    listener: (e: MessageButtonClicked) => void,
   ): this {
     this.on(Events.MessageButtonClicked.toString(), listener);
     return this;
   }
 
   public onStreamingJoinedEvent(
-    listener: (e: StreamingJoinedEvent) => void
+    listener: (e: StreamingJoinedEvent) => void,
   ): this {
     this.on(Events.StreamingJoinedEvent.toString(), listener);
     return this;
   }
 
   public onStreamingLeavedEvent(
-    listener: (e: StreamingLeavedEvent) => void
+    listener: (e: StreamingLeavedEvent) => void,
   ): this {
     this.on(Events.StreamingLeavedEvent.toString(), listener);
     return this;
   }
 
   public onDropdownBoxSelected(
-    listener: (e: DropdownBoxSelected) => void
+    listener: (e: DropdownBoxSelected) => void,
   ): this {
     this.on(Events.DropdownBoxSelected.toString(), listener);
     return this;
@@ -264,7 +260,7 @@ export class MezonClient extends MezonClientCore {
           this.socketManager,
           this.sessionManager.getSession()?.token!,
           this.messageQueue,
-          this.messageDB
+          this.messageDB,
         );
         await clanObj.loadChannels();
         this.clans.set(e.clan_id, clanObj);
@@ -309,7 +305,7 @@ export class MezonClient extends MezonClientCore {
         e.clan_id,
         e.channel_desc.channel_id!,
         e.channel_desc.type!,
-        !e.channel_desc.channel_private
+        !e.channel_desc.channel_private,
       );
     }
   }
@@ -323,25 +319,8 @@ export class MezonClient extends MezonClientCore {
             e.note || "Transfer funds"
           }`,
         },
-        TypeMessage.SendToken
+        TypeMessage.SendToken,
       );
-    }
-  }
-
-  private async _onNotificationsInternal(e: Notifications) {
-    const notifications = e.notifications;
-    if (notifications && notifications.length) {
-      for (const noti of notifications) {
-        const content = JSON.parse(noti?.content ?? "{}");
-        if (noti.code === -2) {
-          const session = this.sessionManager.getSession()!;
-          await this.apiClient.requestFriend(
-            session.token,
-            content.username,
-            noti.sender_id
-          );
-        }
-      }
     }
   }
 }
