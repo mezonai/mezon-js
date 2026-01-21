@@ -1474,8 +1474,7 @@ export interface Socket {
     attachments?: Array<ApiMessageAttachment>,
     hideEditted?: boolean,
     topic_id?: string,
-    is_update_msg_topic?: boolean,
-    old_mentions?: Uint8Array
+    is_update_msg_topic?: boolean
   ): Promise<ChannelMessageAck>;
 
   /** Update the status for the current user online. */
@@ -2839,8 +2838,7 @@ export class DefaultSocket implements Socket {
     attachments?: Array<ApiMessageAttachment>,
     hideEditted?: boolean,
     topic_id?: string,
-    is_update_msg_topic?: boolean,
-    old_mentions?: Uint8Array
+    is_update_msg_topic?: boolean
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_update: {
@@ -2854,8 +2852,7 @@ export class DefaultSocket implements Socket {
         is_public: is_public,
         hide_editted: hideEditted,
         topic_id: topic_id,
-        is_update_msg_topic: is_update_msg_topic,
-        old_mentions: old_mentions
+        is_update_msg_topic: is_update_msg_topic
       },
     });
     return response.channel_message_ack;
