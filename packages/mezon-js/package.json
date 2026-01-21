@@ -1,6 +1,6 @@
 {
   "name": "mezon-js",
-  "version": "2.13.66",
+  "version": "2.14.50",
   "scripts": {
     "build": "npx tsc && npx rollup -c --bundleConfigAsCjs && node build.mjs"
   },
@@ -41,6 +41,7 @@
     "whatwg-fetch": "^3.6.2"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-typescript": "^11.0.0",
     "rollup": "^3.10.0",

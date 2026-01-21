@@ -19,7 +19,6 @@ import {
   ApiChannelAttachmentList,
   ApiChannelDescList,
   ApiChannelDescription,
-  ApiChannelMessage,
   ApiChannelMessageHeader,
   ApiChannelMessageList,
   ApiChannelSettingListResponse,
@@ -62,11 +61,11 @@ import {
   ApiListChannelAppsResponse,
   ApiListUserActivity,
   ApiListClanUnreadMsgIndicatorResponse,
+  ChannelMessage,
 } from "./api.gen";
 import { Session } from "./session";
-import { ChannelMessage } from "./client";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
-import { safeJSONParse } from "./utils";
+import { decodeAttachments, decodeMentions, decodeNotificationFcm, decodeReactions, decodeRefs, safeJSONParse } from "./utils";
 
 /** Stores function references for resolve/reject with a DOM Promise. */
 interface PromiseExecutor {
@@ -1233,7 +1232,7 @@ export interface SdTopicEvent {
   message_id: string;
   user_id: string;
   last_sent_message?: ApiChannelMessageHeader;
-  message?: ApiChannelMessage;
+  message?: ChannelMessage;
 }
 
 export interface UserStatusEvent {
@@ -1337,27 +1336,27 @@ function CreateChannelMessageFromEvent(message: any) {
     console.log("content is invalid", e);
   }
   try {
-    reactions = safeJSONParse(message.channel_message.reactions);
+    reactions = decodeReactions(message.channel_message.reactions);
   } catch (e) {
     console.log("reactions is invalid", e);
   }
   try {
-    mentions = safeJSONParse(message.channel_message.mentions);
+    mentions = decodeMentions(message.channel_message.mentions);
   } catch (e) {
     console.log("mentions is invalid", e);
   }
   try {
-    attachments = safeJSONParse(message.channel_message.attachments);
+    attachments = decodeAttachments(message.channel_message.attachments);
   } catch (e) {
     console.log("attachments is invalid", e);
   }
   try {
-    references = safeJSONParse(message.channel_message.references);
+    references = decodeRefs(message.channel_message.references);
   } catch (e) {
     console.log("references is invalid", e);
   }
   try {
-    referencedMessags = safeJSONParse(message.channel_message.referenced_message);
+    referencedMessags = message.channel_message.referenced_message;
   } catch (e) {
     console.log("referenced messages is invalid", e);
   }
@@ -1369,7 +1368,6 @@ function CreateChannelMessageFromEvent(message: any) {
     channel_label: message.channel_message.channel_label,
     clan_id: message.channel_message.clan_id,
     code: message.channel_message.code,
-    create_time: message.channel_message.create_time,
     message_id: message.channel_message.message_id,
     sender_id: message.channel_message.sender_id,
     update_time: message.channel_message.update_time,
@@ -1380,11 +1378,11 @@ function CreateChannelMessageFromEvent(message: any) {
     clan_avatar: message.channel_message.clan_avatar,
     display_name: message.channel_message.display_name,
     content: content,
-    reactions: reactions,
-    mentions: mentions,
-    attachments: attachments,
+    reactions: reactions?.reactions,
+    mentions: mentions?.mentions,
+    attachments: attachments?.attachments,
     referenced_message: referencedMessags,
-    references: references,
+    references: references?.refs,
     hide_editted: message.channel_message.hide_editted,
     is_public: message.channel_message.is_public,
     create_time_seconds: message.channel_message.create_time_seconds,
@@ -1477,7 +1475,7 @@ export interface Socket {
     hideEditted?: boolean,
     topic_id?: string,
     is_update_msg_topic?: boolean,
-    old_mentions?: string
+    old_mentions?: Uint8Array
   ): Promise<ChannelMessageAck>;
 
   /** Update the status for the current user online. */
@@ -1954,7 +1952,7 @@ export class DefaultSocket implements Socket {
       if (!message.cid) {
         if (message.notifications) {
           message.notifications.notifications.forEach((n: ApiNotification) => {
-            n.content = n.content ? safeJSONParse(n.content) : undefined;
+            n.content = n.content ? decodeNotificationFcm(n.content) : undefined;
             this.onnotification(n);
           });
         } else if (message.voice_started_event) {
@@ -2842,7 +2840,7 @@ export class DefaultSocket implements Socket {
     hideEditted?: boolean,
     topic_id?: string,
     is_update_msg_topic?: boolean,
-    old_mentions?: string
+    old_mentions?: Uint8Array
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_update: {

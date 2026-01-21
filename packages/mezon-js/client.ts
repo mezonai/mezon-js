@@ -16,7 +16,6 @@
 
 import {
   ApiAccount,
-  ApiAccountMezon,
   ApiAccountEmail,
   ApiChannelMessageList,
   ApiChannelDescList,
@@ -38,7 +37,6 @@ import {
   ApiEvent,
   ApiFriendList,
   ApiNotificationList,
-  ApiRpc,
   ApiUpdateAccountRequest,
   MezonApi,
   ApiSession,
@@ -50,10 +48,6 @@ import {
   ApiInviteUserRes,
   ApiUploadAttachmentRequest,
   ApiUploadAttachment,
-  ApiMessageReaction,
-  ApiMessageMention,
-  ApiMessageAttachment,
-  ApiMessageRef,
   ApiChannelMessageHeader,
   ApiVoiceChannelUserList,
   ApiChannelAttachmentList,
@@ -76,7 +70,6 @@ import {
   ApiWebhookListResponse,
   MezonUpdateWebhookByIdBody,
   ApiWebhookGenerateResponse,
-  ApiCheckDuplicateClanNameResponse,
   ApiClanStickerAddRequest,
   MezonUpdateClanStickerByIdBody,
   MezonChangeChannelCategoryBody,
@@ -91,7 +84,6 @@ import {
   MezonUpdateSystemMessageBody,
   ApiUpdateCategoryOrderRequest,
   ApiGiveCoffeeEvent,
-  ApiListStreamingChannelsResponse,
   ApiStreamingChannelUserList,
   ApiRegisterStreamingChannelRequest,
   ApiRegisterStreamingChannelResponse,
@@ -101,7 +93,6 @@ import {
   ApiNotificationUserChannel,
   ApiNotificationSetting,
   ApiNotifiReactMessage,
-  ApiHashtagDmList,
   ApiEmojiListedResponse,
   ApiStickerListedResponse,
   ApiAllUsersAddChannelResponse,
@@ -141,12 +132,10 @@ import {
   ApiUserStatus,
   ApiListOnboardingStepResponse,
   MezonUpdateOnboardingStepByClanIdBody,
-  ApiWalletLedgerList,
   ApiSdTopicList,
   ApiSdTopicRequest,
   ApiSdTopic,
   MezonUpdateEventBody,
-  ApiTransactionDetail,
   MezonapiCreateRoomChannelApps,
   ApiGenerateMeetTokenRequest,
   ApiGenerateMeetTokenResponse,
@@ -164,9 +153,7 @@ import {
   ApiClanDiscoverRequest,
   ApiQuickMenuAccessList,
   ApiQuickMenuAccessRequest,
-  ApiUnlockedItemRequest,
   ApiForSaleItemList,
-  ApiUnlockedItemResponse,
   ApiIsFollowerResponse,
   ApiIsFollowerRequest,
   ApiTransferOwnershipRequest,
@@ -180,11 +167,14 @@ import {
   ApiUpdateUsernameRequest,
   ApiBannedUserList,
   ApiIsBannedResponse,
+  ApiLogedDeviceList,
+  ChannelMessage,
 } from "./api.gen";
+import { PinMessagesList } from "./api/api";
 
 import { Session } from "./session";
 import { DefaultSocket, Socket } from "./socket";
-import { safeJSONParse } from "./utils";
+import { decodeAttachments, decodeMentions, decodeNotificationFcm, decodeReactions, decodeRefs, safeJSONParse } from "./utils";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
 
 const DEFAULT_HOST = "127.0.0.1";
@@ -235,68 +225,6 @@ export interface RpcResponse {
   id?: string;
   /** The payload of the function which must be a JSON object. */
   payload?: object;
-}
-
-/** A message sent on a channel. */
-export interface ChannelMessage {
-  //The unique ID of this message.
-  id: string;
-  //
-  avatar?: string;
-  //The channel this message belongs to.
-  channel_id: string;
-  //The name of the chat room, or an empty string if this message was not sent through a chat room.
-  channel_label: string;
-  //The clan this message belong to.
-  clan_id?: string;
-  //The code representing a message type or category.
-  code: number;
-  //The content payload.
-  content: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time: string;
-  //
-  reactions?: Array<ApiMessageReaction>;
-  //
-  mentions?: Array<ApiMessageMention>;
-  //
-  attachments?: Array<ApiMessageAttachment>;
-  //
-  references?: Array<ApiMessageRef>;
-  //
-  referenced_message?: string[];
-  //True if the message was persisted to the channel's history, false otherwise.
-  persistent?: boolean;
-  //Message sender, usually a user ID.
-  sender_id: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
-  update_time?: string;
-  //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
-  clan_logo?: string;
-  //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
-  category_name?: string;
-  //The username of the message sender, if any.
-  username?: string;
-  // The clan nick name
-  clan_nick?: string;
-  // The clan avatar
-  clan_avatar?: string;
-  //
-  display_name?: string;
-  //
-  create_time_seconds?: number;
-  //
-  update_time_seconds?: number;
-  //
-  mode?: number;
-  //
-  message_id?: string;
-  //
-  hide_editted?: boolean;
-  //
-  is_public?: boolean;
-  //
-  topic_id?: string;
 }
 
 /** A list of channel messages, usually a result of a list operation. */
@@ -1024,7 +952,7 @@ export class Client {
     }
 
     return this.apiClient
-      .deleteRole(session.token, roleId, "", clanId, roleLabel)
+      .deleteRole(session.token, roleId, "0", clanId, roleLabel)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -1268,32 +1196,30 @@ export class Client {
             console.log("error parse content", e);
           }
           try {
-            reactions = safeJSONParse(m.reactions || "[]");
+            reactions = decodeReactions(m.reactions || '');
           } catch (e) {
             console.log("error parse reactions", e);
           }
           try {
-            mentions = safeJSONParse(m.mentions || "[]");
+            mentions = decodeMentions(m.mentions || '');
           } catch (e) {
             console.log("error parse mentions", e);
           }
           try {
-            attachments = safeJSONParse(m.attachments || "[]");
+            attachments = decodeAttachments(m.attachments || '');
           } catch (e) {
             console.log("error parse attachments", e);
           }
           try {
-            references = safeJSONParse(m.references || "[]");
+            references = decodeRefs(m.references || '');
           } catch (e) {
             console.log("error parse references", e);
           }
           result.messages!.push({
             channel_id: m.channel_id,
             code: m.code ? Number(m.code) : 0,
-            create_time: m.create_time || "",
-            id: m.message_id,
+            id: m.message_id || '',
             sender_id: m.sender_id,
-            update_time: m.update_time,
             username: m.username,
             display_name: m.display_name,
             avatar: m.avatar,
@@ -1303,10 +1229,10 @@ export class Client {
             category_name: m.category_name,
             clan_nick: m.clan_nick,
             clan_avatar: m.clan_avatar,
-            attachments: attachments,
-            mentions: mentions,
-            reactions: reactions,
-            references: references,
+            attachments: attachments?.attachments,
+            mentions: mentions?.mentions,
+            reactions: reactions?.reactions,
+            references: references?.refs,
             clan_id: m.clan_id,
             create_time_seconds: m.create_time_seconds,
             update_time_seconds: m.update_time_seconds,
@@ -1470,7 +1396,7 @@ export class Client {
             uploader: at.uploader,
             url: at.url,
             message_id: at.message_id,
-            create_time: at.create_time,
+            create_time_seconds: at.create_time_seconds,
             width: at.width,
             height: at.height,
           });
@@ -1521,7 +1447,11 @@ export class Client {
               update_time: gu.user!.update_time,
               username: gu.user!.username,
               user_status: gu.user!.user_status,
-              status: gu.user!.status
+              status: gu.user!.status,
+              about_me: gu.user!.about_me,
+              mezon_id: gu.user!.mezon_id,
+              list_nick_names: gu.user!.list_nick_names,
+              phone_number: gu.user!.phone_number
             },
             role_id: gu!.role_id,
             clan_nick: gu!.clan_nick,
@@ -1854,7 +1784,7 @@ export class Client {
   }
 
   /** Add a custom ID to the social profiles on the current user's account. */
-  async linkMezon(
+  async linkSMS(
     session: Session,
     request: ApiLinkAccountMezon
   ): Promise<ApiLinkAccountConfirmRequest> {
@@ -1867,7 +1797,7 @@ export class Client {
     }
 
     return this.apiClient
-      .linkMezon(session.token, request)
+      .linkSMS(session.token, request)
       .then((response: ApiLinkAccountConfirmRequest) => {
         return Promise.resolve(response);
       });
@@ -1936,7 +1866,11 @@ export class Client {
               username: f.user!.username,
               is_mobile: f.user?.is_mobile,
               user_status: f.user!.user_status,
-              status: f.user!.status
+              status: f.user!.status,
+              mezon_id: f.user!.mezon_id,
+              list_nick_names: f.user!.list_nick_names,
+              phone_number: f.user!.phone_number,
+              about_me: f.user!.about_me
             },
             state: f.state,
             source_id: f.source_id,
@@ -1986,7 +1920,7 @@ export class Client {
           result.notifications!.push({
             id: n.id,
             subject: n.subject,
-            content: n.content ? safeJSONParse(n.content) : undefined,
+            content: n.content ? decodeNotificationFcm(n.content) : undefined,
             code: n.code ? Number(n.code) : 0,
             sender_id: n.sender_id,
             create_time: n.create_time,
@@ -1995,61 +1929,6 @@ export class Client {
           });
         });
         return Promise.resolve(result);
-      });
-  }
-
-  /** Execute an RPC function on the server. */
-  async rpc(
-    session: Session,
-    basicAuthUsername: string,
-    basicAuthPassword: string,
-    id: string,
-    input: object
-  ): Promise<RpcResponse> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .rpcFunc(
-        session.token,
-        basicAuthUsername,
-        basicAuthPassword,
-        id,
-        JSON.stringify(input)
-      )
-      .then((response: ApiRpc) => {
-        return Promise.resolve({
-          id: response.id,
-          payload: !response.payload
-            ? undefined
-            : safeJSONParse(response.payload),
-        });
-      });
-  }
-
-  /** Execute an RPC function on the server. */
-  async rpcHttpKey(
-    httpKey: string,
-    id: string,
-    input?: object
-  ): Promise<RpcResponse> {
-    return this.apiClient
-      .rpcFunc2("", id, (input && JSON.stringify(input)) || "", httpKey)
-      .then((response: ApiRpc) => {
-        return Promise.resolve({
-          id: response.id,
-          payload: !response.payload
-            ? undefined
-            : safeJSONParse(response.payload),
-        });
-      })
-      .catch((err: any) => {
-        throw err;
       });
   }
 
@@ -2133,26 +2012,6 @@ export class Client {
     });
 
     return this.refreshTokenPromise;
-  }
-
-  /** Remove custom ID from the social profiles on the current user's account. */
-  async unlinkCustom(
-    session: Session,
-    request: ApiAccountMezon
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .unlinkMezon(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
   }
 
   /** Remove an email+password from the social profiles on the current user's account. */
@@ -2706,8 +2565,29 @@ export class Client {
 
     return this.apiClient
       .getPinMessagesList(session.token, messageId, channelId, clanId)
-      .then((response: ApiPinMessagesList) => {
-        return Promise.resolve(response);
+      .then((response: PinMessagesList) => {
+        var result: ApiPinMessagesList = {
+          pin_messages_list: [],
+        };
+
+        if (response.pin_messages_list == null) {
+          return Promise.resolve(result);
+        }
+
+        response.pin_messages_list!.forEach((p) => {
+          result.pin_messages_list!.push({
+            id: p.id,
+            avatar: p.avatar,
+            channel_id: p.channel_id,
+            content: p.content,
+            create_time_seconds: p.create_time_seconds,
+            message_id: p.message_id,
+            sender_id: p.sender_id,
+            username: p.username,
+            attachment: p.attachment,
+          });
+        });
+        return Promise.resolve(result);
       });
   }
 
@@ -2874,26 +2754,6 @@ export class Client {
       .deleteWebhookById(session.token, id, request)
       .then((response: any) => {
         return response !== undefined;
-      });
-  }
-
-  //**check duplicate clan name */
-  async checkDuplicateClanName(
-    session: Session,
-    clan_name: string
-  ): Promise<ApiCheckDuplicateClanNameResponse> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .checkDuplicateClanName(session.token, clan_name)
-      .then((response: any) => {
-        return Promise.resolve(response);
       });
   }
 
@@ -3171,22 +3031,6 @@ export class Client {
       });
   }
 
-  async deleteCategoryOrder(session: Session, clanId: string): Promise<any> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .deleteCategoryOrder(session.token, clanId)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
-  }
-
   async givecoffee(session: Session, request: ApiGiveCoffeeEvent): Promise<any> {
     if (
       this.autoRefreshSession &&
@@ -3216,25 +3060,6 @@ export class Client {
       .sendToken(session.token, request)
       .then((response: any) => {
         return response !== undefined
-      });
-  }
-
-  async listStreamingChannels(
-    session: Session,
-    clanId: string
-  ): Promise<ApiListStreamingChannelsResponse> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .listStreamingChannels(session.token, clanId)
-      .then((response: ApiListStreamingChannelsResponse) => {
-        return Promise.resolve(response);
       });
   }
 
@@ -3436,26 +3261,6 @@ export class Client {
     return this.apiClient
       .getNotificationReactMessage(session.token, channelId)
       .then((response: ApiNotifiReactMessage) => {
-        return Promise.resolve(response);
-      });
-  }
-
-  async hashtagDMList(
-    session: Session,
-    userId: Array<string>,
-    limit: number
-  ): Promise<ApiHashtagDmList> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .hashtagDMList(session.token, userId, limit)
-      .then((response: ApiHashtagDmList) => {
         return Promise.resolve(response);
       });
   }
@@ -4377,49 +4182,6 @@ export class Client {
       });
   }
 
-  /** list transaction detail */
-  async listTransactionDetail(
-    session: Session,
-    transId:string
-  ): Promise<ApiTransactionDetail> {  
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .listTransactionDetail(session.token, transId)
-      .then((response: ApiTransactionDetail) => {
-        return Promise.resolve(response);
-      });
-  }
-
-  //**list wallet ledger */
-  async listWalletLedger(
-    session: Session,
-    limit?: number,
-    filter?: number,
-    transactionId?: string,
-    page?: number
-  ): Promise<ApiWalletLedgerList> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .listWalletLedger(session.token, limit, filter, transactionId, page)
-      .then((response: ApiWalletLedgerList) => {
-        return Promise.resolve(response);
-      });
-  }
-
   //**list sd topic */
   async listSdTopic(
     session: Session,
@@ -4904,22 +4666,6 @@ export class Client {
       });
   }
 
-  async unlockItem(session: Session, request: ApiUnlockedItemRequest): Promise<ApiUnlockedItemResponse> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .unlockItem(session.token, request)
-      .then((response: ApiUnlockedItemResponse) => {
-         return Promise.resolve(response);
-      });
-  }
-
   async listForSaleItems(session: Session, 
     page?: number): Promise<ApiForSaleItemList> {
     if (
@@ -5006,4 +4752,22 @@ export class Client {
         return response !== undefined;
       });
   }
+
+  async listLogedDevice(session: Session): Promise<ApiLogedDeviceList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listLogedDevice(session.token)
+      .then((response: ApiLogedDeviceList) => {
+        return Promise.resolve(response);
+      });
+  }
 }
+
+

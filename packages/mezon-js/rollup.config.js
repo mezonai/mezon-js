@@ -18,6 +18,7 @@
 
 import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 
 export default {
     input: './index.ts',
@@ -25,16 +26,29 @@ export default {
         format: 'umd',
         name: 'mezonjs',
         dir: "dist",
-        entryFileNames: "mezon-js.umd.js" // workaround for TS requirement that dir is specified in config
+        entryFileNames: "mezon-js.umd.js",
+        sourcemap: true
     },
     plugins: [
         typescript({
             include: ["**/*.ts"],
             target: "es5"
         }),
-        nodeResolve()
+        nodeResolve({
+            browser: true
+        }),
+        commonjs()
     ],
     moduleContext: {
         [require.resolve('whatwg-fetch')]: 'window'
+    },
+    onwarn(warning, warn) {
+        if (warning.code === 'EVAL' && warning.id.includes('protobufjs')) {
+            return;
+        }
+        if (warning.code === 'CIRCULAR_DEPENDENCY' && warning.ids.some(id => id.includes('protobufjs'))) {
+            return;
+        }
+        warn(warning);
     }
 };

@@ -25,4 +25,4 @@ export * from "./utils"
 /**
  * Reexported due to duplicate definition of ChannelMessage in [Client]{@link ./client.ts} and [Session]{@link ./session.ts}
  */
-export { ChannelMessage } from "./client";
+export { ChannelMessage } from "./api.gen";
