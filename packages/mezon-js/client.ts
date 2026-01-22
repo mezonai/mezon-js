@@ -1196,25 +1196,41 @@ export class Client {
             console.log("error parse content", e);
           }
           try {
-            reactions = decodeReactions(m.reactions || '');
+            const decodedReactions = decodeReactions(m.reactions);
+            reactions =
+              decodedReactions?.reactions || decodedReactions ||
+              safeJSONParse(m.reactions || "[]");
           } catch (e) {
-            console.log("error parse reactions", e);
+            reactions = safeJSONParse(m.reactions || "[]");
           }
+    
           try {
-            mentions = decodeMentions(m.mentions || '');
+            const decodedMentions = decodeMentions(m.mentions);
+            mentions =
+              decodedMentions?.mentions || decodedMentions ||
+              safeJSONParse(m.mentions || "[]");
           } catch (e) {
-            console.log("error parse mentions", e);
+            mentions = safeJSONParse(m.mentions || "[]");
           }
+          
           try {
-            attachments = decodeAttachments(m.attachments || '');
+            const decodedAttachments = decodeAttachments(m.attachments);
+            attachments =
+              decodedAttachments?.attachments || decodedAttachments ||
+              safeJSONParse(m.attachments || "[]");
           } catch (e) {
-            console.log("error parse attachments", e);
+            attachments = safeJSONParse(m.attachments || "[]");
           }
+          
           try {
-            references = decodeRefs(m.references || '');
+            const decodedReferences = decodeRefs(m.references);
+            references =
+              decodedReferences?.refs || decodedReferences ||
+              safeJSONParse(m.references || "[]");
           } catch (e) {
-            console.log("error parse references", e);
+            references = safeJSONParse(m.references || "[]");
           }
+          
           result.messages!.push({
             channel_id: m.channel_id,
             code: m.code ? Number(m.code) : 0,
@@ -1229,10 +1245,10 @@ export class Client {
             category_name: m.category_name,
             clan_nick: m.clan_nick,
             clan_avatar: m.clan_avatar,
-            attachments: attachments?.attachments,
-            mentions: mentions?.mentions,
-            reactions: reactions?.reactions,
-            references: references?.refs,
+            attachments: attachments,
+            mentions: mentions,
+            reactions: reactions,
+            references: references,
             clan_id: m.clan_id,
             create_time_seconds: m.create_time_seconds,
             update_time_seconds: m.update_time_seconds,
