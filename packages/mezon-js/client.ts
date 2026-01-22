@@ -1497,25 +1497,28 @@ export class Client {
         console.log("error parse reactions", e);
       }
       try {
+        const decodedMentions = decodeMentions(m.mentions);
         mentions =
-          decodeMentions(m.mentions)?.mentions ||
+          decodedMentions?.mentions || decodedMentions ||
           safeJSONParse(m.mentions || "[]");
       } catch (e) {
-        console.log("error parse mentions", e);
+        mentions = safeJSONParse(m.mentions || "[]");
       }
       try {
+        const decodedAttachments = decodeAttachments(m.attachments);
         attachments =
-          decodeAttachments(m.attachments)?.attachments ||
+          decodedAttachments?.attachments || decodedAttachments ||
           safeJSONParse(m.attachments || "[]");
       } catch (e) {
-        console.log("error parse attachments", e);
+        attachments = safeJSONParse(m.attachments || "[]");
       }
       try {
+        const decodedReferences = decodeRefs(m.references);
         references =
-          (decodeRefs(m.references)?.refs as unknown as ApiMessageRef[]) ||
+          decodedReferences?.refs || decodedReferences ||
           safeJSONParse(m.references || "[]");
       } catch (e) {
-        console.log("error parse references", e);
+        references = safeJSONParse(m.references || "[]");
       }
 
       response.messages!.push({
