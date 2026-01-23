@@ -37,15 +37,15 @@ export class TextChannel {
     clan: Clan,
     socketManager: SocketManager,
     messageQueue: AsyncThrottleQueue,
-    messageDB: MessageDatabase
+    messageDB: MessageDatabase,
   ) {
     this.id = initChannelData.channel_id;
     this.name = initChannelData.channel_label;
     this.channel_type = initChannelData?.type;
     this.is_private = !!initChannelData?.channel_private;
-    this.category_id = initChannelData?.category_id ?? "";
+    this.category_id = initChannelData?.category_id ?? "0";
     this.category_name = initChannelData?.category_name ?? "";
-    this.parent_id = initChannelData?.parent_id ?? "";
+    this.parent_id = initChannelData?.parent_id ?? "0";
     this.meeting_code = initChannelData?.meeting_code ?? "";
     this.clan = clan;
     this.socketManager = socketManager;
@@ -55,7 +55,7 @@ export class TextChannel {
       const messageDb = this.messageDB.getMessageById(
         message_id,
         this.id!,
-        this.clan.id!
+        this.clan.id!,
       );
       if (!messageDb) {
         throw Error(`Message ${message_id} not found on channel ${this.id}!`);
@@ -64,7 +64,7 @@ export class TextChannel {
         messageDb,
         this,
         this.socketManager,
-        this.messageQueue
+        this.messageQueue,
       );
       return newMessage;
     }, 200);
@@ -77,7 +77,7 @@ export class TextChannel {
     mention_everyone?: boolean,
     anonymous_message?: boolean,
     topic_id?: string,
-    code?: number
+    code?: number,
   ) {
     return this.messageQueue.enqueue(async () => {
       const dataSend: ReplyMessageData = {
@@ -98,7 +98,7 @@ export class TextChannel {
   }
 
   private async _buildEphemeralReferences(
-    reference_message_id?: string
+    reference_message_id?: string,
   ): Promise<{ references: ApiMessageRef[]; topic_id_from_ref?: string }> {
     if (!reference_message_id) {
       return { references: [], topic_id_from_ref: undefined };
@@ -154,7 +154,7 @@ export class TextChannel {
         anonymous_message: !!anonymous_message,
         mention_everyone: !!mention_everyone,
         code: TypeMessage.Ephemeral,
-        topic_id: topic_id_from_ref ?? topic_id,
+        topic_id: (topic_id_from_ref ?? topic_id) || "0",
         avatar: currentClient?.avartar ?? "",
       };
 
@@ -171,7 +171,7 @@ export class TextChannel {
     attachments?: Array<ApiMessageAttachment>,
     mentions?: Array<ApiMessageMention>,
     mention_everyone?: boolean,
-    anonymous_message?: boolean
+    anonymous_message?: boolean,
   ) {
     return this.messageQueue.enqueue(async () => {
       const base = this._buildEphemeralBase(receiver_id);
@@ -187,7 +187,7 @@ export class TextChannel {
         anonymous_message: !!anonymous_message,
         mention_everyone: !!mention_everyone,
         code: TypeMessage.UpdateEphemeralMsg,
-        topic_id: topic_id_from_ref ?? topic_id,
+        topic_id: (topic_id_from_ref ?? topic_id) || "0",
         message_id,
       };
 
@@ -198,7 +198,7 @@ export class TextChannel {
   async deleteEphemeral(
     receiver_id: string,
     message_id: string,
-    topic_id?: string
+    topic_id?: string,
   ) {
     return this.messageQueue.enqueue(async () => {
       const base = this._buildEphemeralBase(receiver_id);
@@ -212,7 +212,7 @@ export class TextChannel {
         anonymous_message: false,
         mention_everyone: false,
         code: TypeMessage.DeleteEphemeralMsg,
-        topic_id: topic_id ?? "",
+        topic_id: topic_id || '0',
         message_id,
       };
 
@@ -224,7 +224,7 @@ export class TextChannel {
     url: string,
     participantIdentity: string,
     participantName: string,
-    name: string
+    name: string,
   ) {
     const meetingCode = this.meeting_code;
     if (!meetingCode) {
