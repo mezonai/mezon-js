@@ -2484,6 +2484,8 @@ export interface ApiSession {
   is_remember?: boolean;
   // endpoint url that belong to user
   api_url?: string;
+  // socket url
+  ws_url?: string;
   // id token for zklogin
   id_token?: string;
 }

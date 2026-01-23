@@ -7,7 +7,6 @@
 /* eslint-disable */
 import Long from "long";
 import _m0 from "protobufjs/minimal";
-import { Struct } from "../google/protobuf/struct";
 import { BoolValue, StringValue } from "../google/protobuf/wrappers";
 
 export const protobufPackage = "mezon.api";
@@ -964,6 +963,8 @@ export interface Session {
   api_url: string;
   /** id token for zklogin */
   id_token: string;
+  /** ws_url */
+  ws_url: string;
 }
 
 /** Update username */
@@ -2381,12 +2382,6 @@ export interface WebhookGenerateResponse {
   hook_name: string;
   channel_id: string;
   avatar: string;
-}
-
-export interface WebhookHandlerRequest {
-  body: { [key: string]: any } | undefined;
-  channel_id: string;
-  token: string;
 }
 
 export interface CheckDuplicateClanNameRequest {
@@ -10370,7 +10365,16 @@ export const Rpc = {
 };
 
 function createBaseSession(): Session {
-  return { created: false, token: "", refresh_token: "", user_id: "0", is_remember: false, api_url: "", id_token: "" };
+  return {
+    created: false,
+    token: "",
+    refresh_token: "",
+    user_id: "0",
+    is_remember: false,
+    api_url: "",
+    id_token: "",
+    ws_url: "",
+  };
 }
 
 export const Session = {
@@ -10395,6 +10399,9 @@ export const Session = {
     }
     if (message.id_token !== "") {
       writer.uint32(58).string(message.id_token);
+    }
+    if (message.ws_url !== "") {
+      writer.uint32(66).string(message.ws_url);
     }
     return writer;
   },
@@ -10455,6 +10462,13 @@ export const Session = {
 
           message.id_token = reader.string();
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.ws_url = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10473,6 +10487,7 @@ export const Session = {
       is_remember: isSet(object.is_remember) ? globalThis.Boolean(object.is_remember) : false,
       api_url: isSet(object.api_url) ? globalThis.String(object.api_url) : "",
       id_token: isSet(object.id_token) ? globalThis.String(object.id_token) : "",
+      ws_url: isSet(object.ws_url) ? globalThis.String(object.ws_url) : "",
     };
   },
 
@@ -10499,6 +10514,9 @@ export const Session = {
     if (message.id_token !== "") {
       obj.id_token = message.id_token;
     }
+    if (message.ws_url !== "") {
+      obj.ws_url = message.ws_url;
+    }
     return obj;
   },
 
@@ -10514,6 +10532,7 @@ export const Session = {
     message.is_remember = object.is_remember ?? false;
     message.api_url = object.api_url ?? "";
     message.id_token = object.id_token ?? "";
+    message.ws_url = object.ws_url ?? "";
     return message;
   },
 };
@@ -24973,95 +24992,6 @@ export const WebhookGenerateResponse = {
     message.hook_name = object.hook_name ?? "";
     message.channel_id = object.channel_id ?? "0";
     message.avatar = object.avatar ?? "";
-    return message;
-  },
-};
-
-function createBaseWebhookHandlerRequest(): WebhookHandlerRequest {
-  return { body: undefined, channel_id: "0", token: "" };
-}
-
-export const WebhookHandlerRequest = {
-  encode(message: WebhookHandlerRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.body !== undefined) {
-      Struct.encode(Struct.wrap(message.body), writer.uint32(10).fork()).ldelim();
-    }
-    if (message.channel_id !== "0") {
-      writer.uint32(16).int64(message.channel_id);
-    }
-    if (message.token !== "") {
-      writer.uint32(26).string(message.token);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): WebhookHandlerRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseWebhookHandlerRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.body = Struct.unwrap(Struct.decode(reader, reader.uint32()));
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.channel_id = longToString(reader.int64() as Long);
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.token = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): WebhookHandlerRequest {
-    return {
-      body: isObject(object.body) ? object.body : undefined,
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
-      token: isSet(object.token) ? globalThis.String(object.token) : "",
-    };
-  },
-
-  toJSON(message: WebhookHandlerRequest): unknown {
-    const obj: any = {};
-    if (message.body !== undefined) {
-      obj.body = message.body;
-    }
-    if (message.channel_id !== "0") {
-      obj.channel_id = message.channel_id;
-    }
-    if (message.token !== "") {
-      obj.token = message.token;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<WebhookHandlerRequest>, I>>(base?: I): WebhookHandlerRequest {
-    return WebhookHandlerRequest.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<WebhookHandlerRequest>, I>>(object: I): WebhookHandlerRequest {
-    const message = createBaseWebhookHandlerRequest();
-    message.body = object.body ?? undefined;
-    message.channel_id = object.channel_id ?? "0";
-    message.token = object.token ?? "";
     return message;
   },
 };
