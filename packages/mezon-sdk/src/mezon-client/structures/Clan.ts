@@ -46,7 +46,7 @@ export class Clan {
     socketManager: SocketManager,
     sessionToken: string,
     messageQueue: AsyncThrottleQueue,
-    messageDB: MessageDatabase
+    messageDB: MessageDatabase,
   ) {
     this.id = initClanData.id;
     this.name = initClanData.name;
@@ -76,7 +76,7 @@ export class Clan {
       const channels = await this.apiClient.listChannelDescs(
         this.sessionToken,
         ChannelType.CHANNEL_TYPE_CHANNEL,
-        this.id
+        this.id,
       );
 
       const validChannels =
@@ -89,7 +89,7 @@ export class Clan {
           this,
           this.socketManager,
           this.messageQueue,
-          this.messageDB
+          this.messageDB,
         );
         this.channels.set(channel.channel_id!, channelObj);
         this.client.channels.set(channel.channel_id!, channelObj);
@@ -102,11 +102,11 @@ export class Clan {
   }
 
   async listChannelVoiceUsers(
-    channel_id: string = "",
     channel_type: number = ChannelType.CHANNEL_TYPE_GMEET_VOICE,
+    channel_id: string = "0",
     limit: number = 500,
     state?: number,
-    cursor?: string
+    cursor?: string,
   ) {
     const clanId = this.id;
 
@@ -122,7 +122,7 @@ export class Clan {
         channel_type,
         limit,
         state,
-        cursor
+        cursor,
       )
       .then((response: ApiVoiceChannelUserList) => {
         var result: ApiVoiceChannelUserList = {
@@ -147,7 +147,7 @@ export class Clan {
 
   async updateRole(
     roleId: string,
-    request: MezonUpdateRoleBody
+    request: MezonUpdateRoleBody,
   ): Promise<boolean> {
     const session = this.sessionToken;
     return this.apiClient.updateRole(session, roleId, request);
@@ -156,7 +156,7 @@ export class Clan {
   async listRoles(
     limit?: number,
     state?: number,
-    cursor?: string
+    cursor?: string,
   ): Promise<ApiRoleListEventResponse> {
     const session = this.sessionToken;
     return this.apiClient.listRoles(session, this.id, limit, state, cursor);

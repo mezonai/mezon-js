@@ -48,7 +48,7 @@ export class Message {
     initMessageData: MessageInitData,
     channel: TextChannel,
     socketManager: SocketManager,
-    messageQueue: AsyncThrottleQueue
+    messageQueue: AsyncThrottleQueue,
   ) {
     this.id = initMessageData.id;
     this.sender_id = initMessageData.sender_id;
@@ -66,52 +66,52 @@ export class Message {
   }
 
   async reply(
-  content: ChannelMessageContent,
-  mentions?: Array<ApiMessageMention>,
-  attachments?: Array<ApiMessageAttachment>,
-  mention_everyone?: boolean,
-  anonymous_message?: boolean,
-  topic_id?: string,
-  code?: number,
-) {
-  return await this.messageQueue.enqueue(async () => {
-    const client = this.channel.clan.getClient();
-    const user = await client.users.fetch(this.sender_id);
+    content: ChannelMessageContent,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    mention_everyone?: boolean,
+    anonymous_message?: boolean,
+    topic_id: string = "0",
+    code?: number,
+  ) {
+    return await this.messageQueue.enqueue(async () => {
+      const client = this.channel.clan.getClient();
+      const user = await client.users.fetch(this.sender_id);
 
-    const references: ApiMessageRef[] = [
-      {
-        message_ref_id: this.id,
-        message_sender_id: this.sender_id,
-        message_sender_username:
-          user.clan_nick || user.display_name || user.username,
-        mesages_sender_avatar: user.clan_avatar || user.avartar,
-        content: JSON.stringify(this.content),
-      },
-    ];
+      const references: ApiMessageRef[] = [
+        {
+          message_ref_id: this.id,
+          message_sender_id: this.sender_id,
+          message_sender_username:
+            user.clan_nick || user.display_name || user.username,
+          mesages_sender_avatar: user.clan_avatar || user.avartar,
+          content: JSON.stringify(this.content),
+        },
+      ];
 
-    const dataReply: ReplyMessageData = {
-      clan_id: this.channel.clan.id,
-      mode: convertChanneltypeToChannelMode(this.channel.channel_type!),
-      is_public: !this.channel.is_private,
-      channel_id: this.channel.id!,
-      content,
-      mentions,
-      attachments,
-      references,
-      anonymous_message,
-      mention_everyone,
-      code,
-      topic_id: topic_id || this.topic_id,
-    };
+      const dataReply: ReplyMessageData = {
+        clan_id: this.channel.clan.id,
+        mode: convertChanneltypeToChannelMode(this.channel.channel_type!),
+        is_public: !this.channel.is_private,
+        channel_id: this.channel.id!,
+        content,
+        mentions,
+        attachments,
+        references,
+        anonymous_message,
+        mention_everyone,
+        code,
+        topic_id: topic_id || this.topic_id,
+      };
 
-    return this.socketManager.writeChatMessage(dataReply);
-  });
-}
+      return this.socketManager.writeChatMessage(dataReply);
+    });
+  }
 
   async update(
     content: ChannelMessageContent,
     mentions?: Array<ApiMessageMention>,
-    attachments?: Array<ApiMessageAttachment>
+    attachments?: Array<ApiMessageAttachment>,
   ) {
     return await this.messageQueue.enqueue(() => {
       const dataUpdate: UpdateMessageData = {
@@ -123,7 +123,7 @@ export class Message {
         content,
         mentions,
         attachments,
-        topic_id: this.topic_id,
+        topic_id: this.topic_id || "0",
         is_update_msg_topic: !!this.topic_id,
       };
       return this.socketManager.updateChatMessage(dataUpdate);
@@ -139,10 +139,10 @@ export class Message {
         mode: convertChanneltypeToChannelMode(this.channel.channel_type!),
         is_public: !this.channel.is_private,
         message_id: this.id,
-        emoji_id: dataReactMessage.emoji_id,
+        emoji_id: dataReactMessage.emoji_id || "0",
         emoji: dataReactMessage.emoji,
         count: dataReactMessage.count,
-        message_sender_id: this.sender_id,
+        message_sender_id: this.sender_id || "0",
         action_delete: dataReactMessage?.action_delete ?? false,
       };
       return this.socketManager.writeMessageReaction(dataReact);
@@ -157,7 +157,7 @@ export class Message {
         mode: convertChanneltypeToChannelMode(this.channel.channel_type!),
         is_public: !this.channel.is_private,
         message_id: this.id,
-        topic_id: this.topic_id,
+        topic_id: this.topic_id || "0",
       };
       return this.socketManager.removeChatMessage(dataRemove);
     });
