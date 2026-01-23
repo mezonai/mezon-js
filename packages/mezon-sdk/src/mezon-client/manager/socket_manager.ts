@@ -98,7 +98,6 @@ export class SocketManager {
     try {
       const clans = await this.apiClient.listClanDescs(sessionToken);
       const clanList = clans?.clandesc ?? [];
-      console.log("clanList", clanList);
       clanList.push({ clan_id: "0", clan_name: "" });
       for (const clan of clanList) {
         try {

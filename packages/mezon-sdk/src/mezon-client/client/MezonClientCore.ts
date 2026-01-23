@@ -171,7 +171,6 @@ export class MezonClientCore extends EventEmitter {
       this.socketManager?.closeSocket();
       throw error;
     }
-    console.log("sessionApi", sessionApi);
     if (sessionApi?.api_url) {
       const { host, port, useSSL } = parseUrlToHostAndSSL(sessionApi.api_url);
       this.host = host;
@@ -190,18 +189,10 @@ export class MezonClientCore extends EventEmitter {
         console.error("Failed to init MMN:", error);
       }
     }
-    let sessionConnected;
-    try {
-      sessionConnected = await this.socketManager.connect(sessionApi!);
-    } catch (error) {
-      console.log("error socketManager.connect", error);
-    }
-    console.log("sessionConnected", sessionConnected);
-    if (sessionApi?.token) {
-      try {
-        await this.socketManager.connectSocket(sessionApi.token);
-      } catch (error) {}
-      await this.channelManager.initAllDmChannels(sessionApi.token);
+    const sessionConnected = await this.socketManager.connect(sessionApi!);
+    if (sessionConnected?.token) {
+      await this.socketManager.connectSocket(sessionConnected.token);
+      await this.channelManager.initAllDmChannels(sessionConnected.token);
     }
     this.emit("ready");
     return JSON.stringify(sessionApi ?? {});
@@ -268,15 +259,12 @@ export class MezonClientCore extends EventEmitter {
     this._mmnInitPromise = (async () => {
       if (!this.keyGen) {
         this.keyGen = await this.getEphemeralKeyPair();
-        console.log("this.keyGen", this.keyGen);
       }
 
       if (!this.addressMMN) {
-        console.log("this.clientId", this.clientId);
         this.addressMMN = await this.getAddress(this.clientId);
-        console.log("this.addressMMN", this.addressMMN);
       }
-      console.log("id_token", id_token);
+
       if (!this.zkProofs) {
         this.zkProofs = await this.getZkProofs({
           user_id: this.clientId,
@@ -284,7 +272,6 @@ export class MezonClientCore extends EventEmitter {
           address: this.addressMMN,
           ephemeral_public_key: this.keyGen.publicKey,
         });
-        console.log("this.zkProofs", this.zkProofs);
       }
     })();
 
@@ -318,7 +305,7 @@ export class MezonClientCore extends EventEmitter {
       recipient: receiver_id,
       amount: this._mmnClient.scaleAmountToDecimals(tokenEvent.amount),
       nonce: nonce.nonce + 1,
-      textData: tokenEvent?.note || "No note",
+      textData: tokenEvent?.note || "Transfer funds",
       extraInfo: mmn_extra_info,
       publicKey: this.keyGen.publicKey,
       privateKey: this.keyGen.privateKey,
