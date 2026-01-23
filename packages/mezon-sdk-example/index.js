@@ -16,15 +16,14 @@
 
 const { MezonClient } = require('mezon-sdk');
 
-var client = new MezonClient(
-  'tokenid',
-  'host',
-  'port',
-  true,
-  3000,
-  'https://mmn-api.mezon',
-  'https://zk-api.mezon'
-);
+var client = new MezonClient({
+  botId,
+  token,
+  host: 'dev-mezon.nccsoft.vn',
+  port: '8088',
+  mmnApiUrl: 'https://dev-mmn.nccsoft.vn/mmn-api/',
+  zkApiUrl: 'https://dev-mmn.nccsoft.vn/zk-api/',
+})
 
 /**
  * Enhanced token transfer function with all required steps
