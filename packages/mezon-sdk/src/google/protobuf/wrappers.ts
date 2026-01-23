@@ -37,7 +37,7 @@ export interface FloatValue {
  */
 export interface Int64Value {
   /** The int64 value. */
-  value: number;
+  value: string;
 }
 
 /**
@@ -47,7 +47,7 @@ export interface Int64Value {
  */
 export interface UInt64Value {
   /** The uint64 value. */
-  value: number;
+  value: string;
 }
 
 /**
@@ -215,12 +215,12 @@ export const FloatValue = {
 };
 
 function createBaseInt64Value(): Int64Value {
-  return { value: 0 };
+  return { value: "0" };
 }
 
 export const Int64Value = {
   encode(message: Int64Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.value !== 0) {
+    if (message.value !== "0") {
       writer.uint32(8).int64(message.value);
     }
     return writer;
@@ -238,7 +238,7 @@ export const Int64Value = {
             break;
           }
 
-          message.value = longToNumber(reader.int64() as Long);
+          message.value = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -250,13 +250,13 @@ export const Int64Value = {
   },
 
   fromJSON(object: any): Int64Value {
-    return { value: isSet(object.value) ? globalThis.Number(object.value) : 0 };
+    return { value: isSet(object.value) ? globalThis.String(object.value) : "0" };
   },
 
   toJSON(message: Int64Value): unknown {
     const obj: any = {};
-    if (message.value !== 0) {
-      obj.value = Math.round(message.value);
+    if (message.value !== "0") {
+      obj.value = message.value;
     }
     return obj;
   },
@@ -266,18 +266,18 @@ export const Int64Value = {
   },
   fromPartial<I extends Exact<DeepPartial<Int64Value>, I>>(object: I): Int64Value {
     const message = createBaseInt64Value();
-    message.value = object.value ?? 0;
+    message.value = object.value ?? "0";
     return message;
   },
 };
 
 function createBaseUInt64Value(): UInt64Value {
-  return { value: 0 };
+  return { value: "0" };
 }
 
 export const UInt64Value = {
   encode(message: UInt64Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.value !== 0) {
+    if (message.value !== "0") {
       writer.uint32(8).uint64(message.value);
     }
     return writer;
@@ -295,7 +295,7 @@ export const UInt64Value = {
             break;
           }
 
-          message.value = longToNumber(reader.uint64() as Long);
+          message.value = longToString(reader.uint64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -307,13 +307,13 @@ export const UInt64Value = {
   },
 
   fromJSON(object: any): UInt64Value {
-    return { value: isSet(object.value) ? globalThis.Number(object.value) : 0 };
+    return { value: isSet(object.value) ? globalThis.String(object.value) : "0" };
   },
 
   toJSON(message: UInt64Value): unknown {
     const obj: any = {};
-    if (message.value !== 0) {
-      obj.value = Math.round(message.value);
+    if (message.value !== "0") {
+      obj.value = message.value;
     }
     return obj;
   },
@@ -323,7 +323,7 @@ export const UInt64Value = {
   },
   fromPartial<I extends Exact<DeepPartial<UInt64Value>, I>>(object: I): UInt64Value {
     const message = createBaseUInt64Value();
-    message.value = object.value ?? 0;
+    message.value = object.value ?? "0";
     return message;
   },
 };
@@ -650,14 +650,8 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
-function longToNumber(long: Long): number {
-  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  if (long.lt(globalThis.Number.MIN_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
-  }
-  return long.toNumber();
+function longToString(long: Long) {
+  return long.toString();
 }
 
 if (_m0.util.Long !== Long) {

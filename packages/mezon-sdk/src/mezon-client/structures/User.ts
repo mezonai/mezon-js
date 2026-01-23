@@ -72,6 +72,8 @@ export class User {
         throw Error(`Can not get dmChannelId for this user ${this.id}!`);
       }
 
+      console.log('this.dmChannelId', this.dmChannelId)
+
       const dataSendDm = {
         clan_id: "0",
         channel_id: this.dmChannelId,
@@ -81,7 +83,7 @@ export class User {
         attachments,
         code,
       };
-
+      console.log('dataSendDm', dataSendDm)
       return this.socketManager.writeChatMessage(dataSendDm);
     });
   }

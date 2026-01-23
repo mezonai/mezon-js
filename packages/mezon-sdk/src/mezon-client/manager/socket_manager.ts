@@ -32,14 +32,14 @@ export class SocketManager {
     private apiClient: MezonApi,
     private messageQueue: AsyncThrottleQueue,
     private client: MezonClientCore,
-    private messageDB: MessageDatabase
+    private messageDB: MessageDatabase,
   ) {
     this.socket = new DefaultSocket(
       this.host,
       this.port,
       this.useSSL,
       false,
-      this.adapter
+      this.adapter,
     );
   }
 
@@ -50,7 +50,7 @@ export class SocketManager {
       this.port,
       this.useSSL,
       false,
-      this.adapter
+      this.adapter,
     );
   }
 
@@ -60,6 +60,9 @@ export class SocketManager {
 
   async connect(sockSession: Session) {
     this.isHardDisconnect = false;
+    if (this.socket.isOpen()) {
+      this.socket.close();
+    }
     const session = await this.socket.connect(sockSession, true);
     return session;
   }
@@ -95,9 +98,14 @@ export class SocketManager {
     try {
       const clans = await this.apiClient.listClanDescs(sessionToken);
       const clanList = clans?.clandesc ?? [];
+      console.log("clanList", clanList);
       clanList.push({ clan_id: "0", clan_name: "" });
       for (const clan of clanList) {
-        await this.socket.joinClanChat(clan.clan_id || "");
+        try {
+          await this.socket.joinClanChat(clan.clan_id || "");
+        } catch (error) {
+          console.log('joinClanChat error', error)
+        }
         await sleep(50);
         if (!this.client.clans.get(clan.clan_id!)) {
           const clanObj = new Clan(
@@ -112,7 +120,7 @@ export class SocketManager {
             this,
             sessionToken,
             this.messageQueue,
-            this.messageDB
+            this.messageDB,
           );
           this.client.clans.set(clan.clan_id!, clanObj);
         }
@@ -164,11 +172,11 @@ export class SocketManager {
 
   async writeChatMessage(dataWriteMessage: ReplyMessageData) {
     const currentContentLength = JSON.stringify(
-      dataWriteMessage.content ?? {}
+      dataWriteMessage.content ?? {},
     ).length;
     if (currentContentLength > 8000)
       throw new Error(
-        `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`
+        `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`,
       );
 
     const msgACK = await this.socket.writeChatMessage(
@@ -184,18 +192,18 @@ export class SocketManager {
       dataWriteMessage?.mention_everyone,
       dataWriteMessage?.avatar,
       dataWriteMessage?.code,
-      dataWriteMessage?.topic_id
+      dataWriteMessage?.topic_id,
     );
     return msgACK;
   }
 
   async writeEphemeralMessage(dataWriteMessage: EphemeralMessageData) {
     const currentContentLength = JSON.stringify(
-      dataWriteMessage.content ?? {}
+      dataWriteMessage.content ?? {},
     ).length;
     if (currentContentLength > 8000)
       throw new Error(
-        `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`
+        `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`,
       );
 
     const msgACK = await this.socket.writeEphemeralMessage(
@@ -213,18 +221,18 @@ export class SocketManager {
       dataWriteMessage?.avatar,
       dataWriteMessage?.code,
       dataWriteMessage?.topic_id,
-      dataWriteMessage?.message_id
+      dataWriteMessage?.message_id,
     );
     return msgACK;
   }
 
   async updateChatMessage(dataUpdateMessage: UpdateMessageData) {
     const currentContentLength = JSON.stringify(
-      dataUpdateMessage.content ?? {}
+      dataUpdateMessage.content ?? {},
     ).length;
     if (currentContentLength > 8000)
       throw new Error(
-        `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`
+        `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`,
       );
 
     const msgACK = await this.socket.updateChatMessage(
@@ -238,7 +246,7 @@ export class SocketManager {
       dataUpdateMessage?.attachments ?? [],
       dataUpdateMessage?.hideEditted ?? false,
       dataUpdateMessage?.topic_id,
-      dataUpdateMessage?.is_update_msg_topic
+      dataUpdateMessage?.is_update_msg_topic,
     );
     return msgACK;
   }
@@ -256,7 +264,7 @@ export class SocketManager {
         dataReactionMessage.emoji,
         dataReactionMessage.count,
         dataReactionMessage.message_sender_id,
-        dataReactionMessage?.action_delete ?? false
+        dataReactionMessage?.action_delete ?? false,
       );
       return msgACK;
     } catch (error) {
@@ -272,7 +280,7 @@ export class SocketManager {
         dataRemoveMessage.mode,
         dataRemoveMessage.is_public,
         dataRemoveMessage.message_id,
-        dataRemoveMessage.topic_id
+        dataRemoveMessage.topic_id,
       );
       return msgACK;
     } catch (error) {

@@ -855,6 +855,31 @@ export interface ApiQuickMenuAccessRequest {
   menu_type?:number;
 }
 
+/**  */
+export interface ApiQuickMenuAccess {
+  //
+  action_msg?: string;
+  //
+  background?: string;
+  //
+  bot_id?: string;
+  //
+  channel_id?: string;
+  //
+  clan_id?:string;
+  //
+  id?: string;
+  //
+  menu_name?: string;
+  //
+  menu_type?: number;
+}
+
+export interface ApiQuickMenuAccessList {
+  //
+  list_menus?: Array<ApiQuickMenuAccess>;
+}
+
 /** Quick Menu Access Payload*/
 export interface ApiQuickMenuAccessPayload {
   //
@@ -876,6 +901,8 @@ export interface Socket {
   socketEvents: EventEmitter;
   /** Connection is Open */
   isOpen(): boolean;
+
+  close(): void
 
   /** Connect to the server. */
   connect(session: Session, createStatus: boolean, connectTimeoutMs?: number, signal?: AbortSignal): Promise<Session>;

@@ -17,8 +17,8 @@
 const { MezonClient } = require('mezon-sdk');
 
 var client = new MezonClient({
-  botId,
-  token,
+  botId: '1840651530236071936',
+  token: 'HM__BUSOUu6OIXbn',
   host: 'dev-mezon.nccsoft.vn',
   port: '8088',
   mmnApiUrl: 'https://dev-mmn.nccsoft.vn/mmn-api/',
@@ -28,50 +28,6 @@ var client = new MezonClient({
 /**
  * Enhanced token transfer function with all required steps
  */
-async function transferTokensExample(senderId, receiverId, amount, note) {
-  try {
-    const keyPair = await client.getEphemeralKeyPair();
-
-    const recipientAddress = await client.getAddress(receiverId);
-
-    const nonce = await client.getCurrentNonce(senderId, 'pending');
-
-    const session = client.sessionManager.getSession();
-
-    const zkProofs = await client.getZkProofs({
-      user_id: senderId,
-      jwt: session.token,
-      address: recipientAddress,
-      ephemeral_public_key: keyPair.publicKey,
-    });
-
-    const tokenEvent = {
-      sender_id: senderId,
-      receiver_id: receiverId,
-      amount: amount,
-      note: note || 'Token transfer via SDK example',
-      nonce: nonce,
-      public_key: keyPair.publicKey,
-      private_key: keyPair.privateKey,
-      zk_proof: zkProofs.zkProof,
-      zk_pub: zkProofs.zkPub,
-      extra_attribute: JSON.stringify({
-        timestamp: Date.now(),
-        transaction_type: 'p2p_transfer',
-        sdk_version: '1.0.0',
-        example_app: true,
-      }),
-    };
-    const result = await client.sendToken(tokenEvent);
-
-    console.log('✅ Token transfer completed successfully!');
-
-    return result;
-  } catch (error) {
-    console.error('❌ Token transfer failed:', error.message);
-    throw error;
-  }
-}
 
 /**
  * Setup event listeners
@@ -102,12 +58,12 @@ async function main() {
 
     setupEventListeners();
 
-    await transferTokensExample(
-      'sender_user_id', // Replace with actual sender ID
-      'receiver_user_id', // Replace with actual receiver ID
-      '50000', // Amount in smallest unit
-      'Payment for SDK example demo'
-    );
+
+    // await client.sendToken({
+    //     receiver_id: 'receiver_id',
+    //     amount: 1 
+    //   }
+    // );
 
     console.log('\n🎉 All examples completed successfully!');
   } catch (error) {
@@ -115,3 +71,5 @@ async function main() {
     process.exit(1);
   }
 }
+
+main()
