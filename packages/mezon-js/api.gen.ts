@@ -2766,7 +2766,7 @@ export interface ApiUser {
   //A URL for an avatar image.
   avatar_url?: string;
   //
-  dob?: string;
+  dob_seconds?: number;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was created.
   create_time?: string;
   //The display name of the user.
