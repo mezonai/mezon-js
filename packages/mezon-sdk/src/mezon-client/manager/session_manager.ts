@@ -1,5 +1,4 @@
 import { MezonApi } from "../../api";
-import { ApiSession } from "../../interfaces";
 import { Session } from "../../session";
 
 export class SessionManager {
@@ -9,33 +8,20 @@ export class SessionManager {
     this.session = session;
   }
 
-  async authenticate(botId: string, apiKey: string) {
-    return this.apiClient
-      .mezonAuthenticate(apiKey, "", {
+  async authenticate(botId: string, apiKey: string): Promise<Session> {
+    try {
+      const apiSession = await this.apiClient.mezonAuthenticate(apiKey, "", {
         account: {
           appid: botId,
           token: apiKey,
         },
-      })
-      .then(async (apiSession: ApiSession) => {
-        this.session = new Session(apiSession);
-        return this.session;
       });
-  }
-
-  async logout() {
-    if (!this.session) return false;
-
-    const request = {
-      token: this.session.token,
-      refresh_token: this.session.refresh_token,
-    };
-
-    return this.apiClient
-      .mezonAuthenticateLogout(this.session.token, request)
-      .then((response) => {
-        return response !== undefined;
-      });
+      this.session = new Session(apiSession);
+      return this.session;
+    } catch (error) {
+      console.log('error', error)
+      throw new Error(`Authenticate failed: ${error}`);
+    }
   }
 
   getSession(): Session | undefined {

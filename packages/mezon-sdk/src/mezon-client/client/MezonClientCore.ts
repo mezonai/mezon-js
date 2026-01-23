@@ -133,12 +133,12 @@ export class MezonClientCore extends EventEmitter {
       this.apiClient,
       this.messageQueue,
       this,
-      this.messageDB
+      this.messageDB,
     );
     this.channelManager = new ChannelManager(
       this.apiClient,
       this.socketManager,
-      this.sessionManager
+      this.sessionManager,
     );
     if (this.mmnApiUrl) {
       this._mmnClient = new MmnClient({
@@ -158,20 +158,19 @@ export class MezonClientCore extends EventEmitter {
     const tempApiClient = new MezonApi(
       this.token,
       this.loginBasePath!,
-      this.timeout
+      this.timeout,
     );
     const tempSessionManager = new SessionManager(tempApiClient);
     let sessionApi = null;
     try {
       sessionApi = await tempSessionManager.authenticate(
         this.clientId,
-        this.token
+        this.token,
       );
     } catch (error) {
       this.socketManager?.closeSocket();
       throw error;
     }
-
     if (sessionApi?.api_url) {
       const { host, port, useSSL } = parseUrlToHostAndSSL(sessionApi.api_url);
       this.host = host;
@@ -190,7 +189,6 @@ export class MezonClientCore extends EventEmitter {
         console.error("Failed to init MMN:", error);
       }
     }
-
     const sessionConnected = await this.socketManager.connect(sessionApi!);
     if (sessionConnected?.token) {
       await this.socketManager.connectSocket(sessionConnected.token);
@@ -204,7 +202,7 @@ export class MezonClientCore extends EventEmitter {
     try {
       return await waitFor2nTimeout(
         () => this.handleClientLogin(),
-        MAX_TIME_RETRY
+        MAX_TIME_RETRY,
       );
     } catch (error) {
       this.socketManager?.closeSocket();
@@ -279,6 +277,8 @@ export class MezonClientCore extends EventEmitter {
 
     try {
       await this._mmnInitPromise;
+    } catch (error) {
+      throw error;
     } finally {
       if (!this.keyGen || !this.addressMMN || !this.zkProofs) {
         this._mmnInitPromise = undefined;
@@ -305,7 +305,7 @@ export class MezonClientCore extends EventEmitter {
       recipient: receiver_id,
       amount: this._mmnClient.scaleAmountToDecimals(tokenEvent.amount),
       nonce: nonce.nonce + 1,
-      textData: tokenEvent?.note || "No note",
+      textData: tokenEvent?.note || "Transfer funds",
       extraInfo: mmn_extra_info,
       publicKey: this.keyGen.publicKey,
       privateKey: this.keyGen.privateKey,
@@ -344,7 +344,7 @@ export class MezonClientCore extends EventEmitter {
     try {
       return await this.apiClient.addQuickMenuAccess(
         sessionToken.token,
-        payload
+        payload,
       );
     } catch (error) {
       throw error;
@@ -358,7 +358,7 @@ export class MezonClientCore extends EventEmitter {
     try {
       return await this.apiClient.deleteQuickMenuAccess(
         sessionToken.token,
-        botIdPayload
+        botIdPayload,
       );
     } catch (error) {
       throw error;
@@ -370,24 +370,8 @@ export class MezonClientCore extends EventEmitter {
     this.eventManager = new EventManager();
   }
 
-  public getListFriends(limit?: number, state?: string, cursor?: string) {
-    const session = this.sessionManager.getSession()!;
-    return this.apiClient.getListFriends(session.token, limit, state, cursor);
-  }
-
-  public acceptFriend(userId: string, username: string) {
-    const session = this.sessionManager.getSession()!;
-    return this.apiClient.requestFriend(session.token, username, userId);
-  }
-
-  public addFriend(username: string) {
-    const session = this.sessionManager.getSession()!;
-    return this.apiClient.requestFriend(session.token, username);
-  }
-
   public async listTransactionDetail(transactionId: string): Promise<any> {
-    const session = this.sessionManager.getSession()!;
-    return this.apiClient.listTransactionDetail(session.token, transactionId);
+    console.log("listTransactionDetail transactionId", transactionId);
   }
 
   protected async _fetchClanFromAPI(id: string): Promise<Clan> {
@@ -399,7 +383,7 @@ export class MezonClientCore extends EventEmitter {
       const session = this.sessionManager.getSession()!;
       const channelDetail = await this.apiClient.listChannelDetail(
         session.token,
-        id
+        id,
       );
       const clanId = channelDetail?.clan_id ?? "0";
 
@@ -409,7 +393,7 @@ export class MezonClientCore extends EventEmitter {
         clan,
         this.socketManager,
         this.messageQueue,
-        this.messageDB
+        this.messageDB,
       );
       this.channels.set(channel.id!, channel);
       clan?.channels.set(channel.id!, channel);
@@ -499,7 +483,7 @@ export class MezonClientCore extends EventEmitter {
         messageRaw,
         channel,
         this.socketManager,
-        this.messageQueue
+        this.messageQueue,
       );
       channel.messages.set(message_id, message);
     } catch (error) {
@@ -531,7 +515,7 @@ export class MezonClientCore extends EventEmitter {
             socketManager: this.socketManager,
             messageQueue: this.messageQueue,
             channelManager: this.channelManager,
-          }
+          },
         );
 
         this.users.set(id, user);
@@ -581,7 +565,7 @@ export class MezonClientCore extends EventEmitter {
       clan,
       this.socketManager,
       this.messageQueue,
-      this.messageDB
+      this.messageDB,
     );
     this.channels.set(e.channel_id!, channelObj);
     clan.channels.set(e.channel_id!, channelObj);

@@ -85,7 +85,7 @@ export class Clan {
       for (const channel of validChannels) {
         if (!channel?.channel_id) continue;
         const channelObj = new TextChannel(
-          { ...channel, type: channel?.channel_type || channel?.type },
+          { ...channel, type: channel?.type },
           this,
           this.socketManager,
           this.messageQueue,
@@ -154,8 +154,8 @@ export class Clan {
   }
 
   async listRoles(
-    limit?: string,
-    state?: string,
+    limit?: number,
+    state?: number,
     cursor?: string
   ): Promise<ApiRoleListEventResponse> {
     const session = this.sessionToken;

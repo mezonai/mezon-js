@@ -77,6 +77,38 @@ export interface ApiChannelDescription {
   member_count: number;
 }
 
+export interface ApiChannelDescList {
+  //Cacheable cursor to list newer channel description. Durable and designed to be stored, unlike next/prev cursors.
+  cacheable_cursor?: string;
+  //A list of channel.
+  channeldesc?: Array<ApiChannelDescription>;
+  //The cursor to send when retrieving the next page, if any.
+  next_cursor?: string;
+  //
+  page?: number;
+  //The cursor to send when retrieving the previous page, if any.
+  prev_cursor?: string;
+}
+
+export interface ApiVoiceChannelUserList {
+  //
+  voice_channel_users?: Array<ApiVoiceChannelUser>;
+}
+
+/**  */
+export interface ApiRoleListEventResponse {
+  //
+  clan_id?: string;
+  //
+  cursor?: string;
+  //
+  limit?: number;
+  //
+  roles?: ApiRoleList;
+  //
+  state?: number;
+}
+
 export interface MessagePayLoad {
   clan_id: string;
   channel_id: string;
@@ -742,19 +774,6 @@ export interface MezonUpdateRoleBody {
   role_icon?: string;
   //
   title?: string;
-}
-
-export interface ApiRoleListEventResponse {
-  //
-  clan_id?: string;
-  //
-  cursor?: string;
-  //
-  limit?: string;
-  //
-  roles?: ApiRoleList;
-  //
-  state?: string;
 }
 
 /** A list of role description, usually a result of a list operation. */

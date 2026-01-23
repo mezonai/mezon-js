@@ -81,7 +81,6 @@ export class User {
         attachments,
         code,
       };
-
       return this.socketManager.writeChatMessage(dataSendDm);
     });
   }

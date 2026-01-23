@@ -13,23 +13,34 @@ export class ChannelManager {
   constructor(
     private apiClient: MezonApi,
     private socketManager: SocketManager,
-    private sessionManager: SessionManager
+    private sessionManager: SessionManager,
   ) {}
 
   public async initAllDmChannels(sessionToken: string) {
     if (!sessionToken) return;
     const channels = await this.apiClient.listChannelDescs(
       sessionToken,
-      ChannelType.CHANNEL_TYPE_DM
+      ChannelType.CHANNEL_TYPE_DM,
     );
+
     if (!channels?.channeldesc || !channels?.channeldesc?.length) return;
     this.allDmChannels = channels?.channeldesc
-      .map((channel: { user_ids: string | string[]; channel_id: string; type?: number; }) => {
-        if (!channel?.user_ids?.length || channel?.type !== ChannelType.CHANNEL_TYPE_DM) return;
-        return {
-          [channel.user_ids[0]]: channel.channel_id,
-        };
-      })
+      .map(
+        (channel: {
+          user_ids: string | string[];
+          channel_id: string;
+          type?: number;
+        }) => {
+          if (
+            !channel?.user_ids?.length ||
+            channel?.type !== ChannelType.CHANNEL_TYPE_DM
+          )
+            return;
+          return {
+            [channel.user_ids[0]]: channel.channel_id,
+          };
+        },
+      )
       .filter(Boolean)
       .reduce((acc: any, curr: any) => Object.assign(acc, curr), {});
   }
@@ -44,7 +55,7 @@ export class ChannelManager {
       if (!isValidUserId(userId)) return null;
       const socket = this.socketManager.getSocket();
       const request: ApiCreateChannelDescRequest = {
-        clan_id: "",
+        clan_id: "0",
         channel_id: "0",
         category_id: "0",
         type: ChannelType.CHANNEL_TYPE_DM,
@@ -53,7 +64,7 @@ export class ChannelManager {
       };
       const channelDM = await this.apiClient.createChannelDesc(
         this.sessionManager.getSession()!.token,
-        request
+        request,
       );
 
       if (channelDM) {
@@ -61,7 +72,7 @@ export class ChannelManager {
           channelDM.clan_id!,
           channelDM.channel_id!,
           channelDM.type!,
-          false
+          false,
         );
         return channelDM;
       }
