@@ -75,11 +75,10 @@ function handlePageError(err) {
 }
 
 export const enum AdapterType {
-    Text = 0,
     Protobuf = 1
 }
 
-export const adapters = [AdapterType.Text, AdapterType.Protobuf];
+export const adapters = [AdapterType.Protobuf];
 
 export function createFacebookInstantGameAuthToken(id : string) : string {
     const testSecret = "fb-instant-test-secret";

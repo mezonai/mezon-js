@@ -15,92 +15,99 @@
  */
 
 import * as mezonjs from "mezon-js";
-import {StatusPresenceEvent} from "mezon-js/socket";
+import { StatusPresenceEvent } from "mezon-js/socket";
 import * as mezonjsprotobuf from "../mezon-js-protobuf";
-import {generateid, createPage, adapters, AdapterType} from "./utils";
-import {describe, expect, it} from '@jest/globals'
+import { generateid, createPage, adapters, AdapterType } from "./utils";
+import { describe, expect, it } from "@jest/globals";
 
-describe('Status Tests', () => {
-
-  it.each(adapters)('should create status, and then update it', async (adapter) => {
+describe("Status Tests", () => {
+  it.each(adapters)("should create status, and then update it", async (adapter) => {
     const page = await createPage();
 
     const customid = generateid();
 
-    const response = await page.evaluate(async (customid, adapter) => {
+    const response = await page.evaluate(
+      async (customid, adapter) => {
+        const client = new mezonjs.Client();
+        const socket = client.createSocket(false, false, new mezonjsprotobuf.WebSocketAdapterPb());
 
-      const client = new mezonjs.Client();
-      const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        const session = await client.authenticateCustom(customid);
+        await socket.connect(session, true);
 
-      const session = await client.authenticateCustom(customid);
-      await socket.connect(session, true);
-
-      return socket.updateStatus("hello-world");
-    }, customid, adapter);
+        return socket.updateStatus("hello-world");
+      },
+      customid,
+      adapter,
+    );
 
     expect(response).not.toBeNull();
   });
 
-  it.each(adapters)('should follow user2, and get status update when coming online', async (adapter) => {
+  it.each(adapters)("should follow user2, and get status update when coming online", async (adapter) => {
     const page = await createPage();
 
     const customid1 = generateid();
     const customid2 = generateid();
 
-    const response = await page.evaluate(async (customid1, customid2, adapter) => {
-      const client1 = new mezonjs.Client();
-      const client2 = new mezonjs.Client();
-      const socket2 = client2.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+    const response = await page.evaluate(
+      async (customid1, customid2, adapter) => {
+        const client1 = new mezonjs.Client();
+        const client2 = new mezonjs.Client();
+        const socket2 = client2.createSocket(false, false, new mezonjsprotobuf.WebSocketAdapterPb());
 
-      const socket1 = client1.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        const socket1 = client1.createSocket(false, false, new mezonjsprotobuf.WebSocketAdapterPb());
 
-      const session1 = await client1.authenticateCustom(customid1);
-      const session2 = await client2.authenticateCustom(customid2);
-      await socket1.connect(session1, true);
-      await socket1.followUsers([session2.user_id]);
+        const session1 = await client1.authenticateCustom(customid1);
+        const session2 = await client2.authenticateCustom(customid2);
+        await socket1.connect(session1, true);
+        await socket1.followUsers([session2.user_id]);
 
-      var promise1 = new Promise<StatusPresenceEvent>((resolve, reject) => {
-        socket1.onstatuspresence = (statusPresence) => {
-          resolve(statusPresence);
-        }
-      });
-
-      const promise2 = socket2.connect(session2, true).then((session) => {
-        return new Promise<null>((resolve, reject) => {
-          setTimeout(reject, 2500, "did not receive match data - timed out.");
+        var promise1 = new Promise<StatusPresenceEvent>((resolve, reject) => {
+          socket1.onstatuspresence = (statusPresence) => {
+            resolve(statusPresence);
+          };
         });
-      });
 
-      return Promise.race([promise1, promise2]);
-    }, customid1, customid2, adapter);
+        const promise2 = socket2.connect(session2, true).then((session) => {
+          return new Promise<null>((resolve, reject) => {
+            setTimeout(reject, 2500, "did not receive match data - timed out.");
+          });
+        });
+
+        return Promise.race([promise1, promise2]);
+      },
+      customid1,
+      customid2,
+      adapter,
+    );
 
     expect(response).not.toBeNull();
     expect(response.joins.length).toEqual(1);
   });
 
-  it.each(adapters)('should follow user2, and unfollow user2', async (adapter) => {
+  it.each(adapters)("should follow user2, and unfollow user2", async (adapter) => {
     const page = await createPage();
 
     const customid1 = generateid();
     const customid2 = generateid();
 
-    const response = await page.evaluate(async (customid1, customid2, adapter) => {
-      const client1 = new mezonjs.Client();
-      const client2 = new mezonjs.Client();
-      const socket1 = client1.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+    const response = await page.evaluate(
+      async (customid1, customid2, adapter) => {
+        const client1 = new mezonjs.Client();
+        const client2 = new mezonjs.Client();
+        const socket1 = client1.createSocket(false, false, new mezonjsprotobuf.WebSocketAdapterPb());
 
-      const session1 = await client1.authenticateCustom(customid1);
-      const session2 = await client2.authenticateCustom(customid2);
-      await socket1.connect(session1, true);
-      await socket1.followUsers([session2.user_id]);
-      return socket1.unfollowUsers([session2.user_id]);
-    }, customid1, customid2, adapter);
+        const session1 = await client1.authenticateCustom(customid1);
+        const session2 = await client2.authenticateCustom(customid2);
+        await socket1.connect(session1, true);
+        await socket1.followUsers([session2.user_id]);
+        return socket1.unfollowUsers([session2.user_id]);
+      },
+      customid1,
+      customid2,
+      adapter,
+    );
 
     expect(response).not.toBeNull();
   });
-
 });

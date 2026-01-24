@@ -2,8 +2,9 @@
   "compilerOptions": {
     "lib": [
       "dom",
-      "es2015",
-      "es2016"
+      "ES2015",
+      "ES2016",
+      "ES2020",
     ],
     "target": "es6",
     "module": "es2015",
@@ -25,7 +26,14 @@
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "alwaysStrict": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "composite": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "inlineSources": false,
+    "isolatedModules": true,
+    "preserveWatchOutput": true,
   },
   "exclude": [
     "node_modules"

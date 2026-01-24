@@ -14,33 +14,33 @@
  * limitations under the License.
  */
 
-
 import * as mezonjs from "mezon-js";
 import * as mezonjsprotobuf from "../mezon-js-protobuf";
-import {generateid, createPage, adapters, AdapterType} from "./utils";
-import {describe, expect, it} from '@jest/globals'
+import { generateid, createPage, adapters, AdapterType } from "./utils";
+import { describe, expect, it } from "@jest/globals";
 
-describe('Channel Tests', () => {
-
-  it.each(adapters)('should join a channel', async (adapter) => {
-
+describe("Channel Tests", () => {
+  it.each(adapters)("should join a channel", async (adapter) => {
     const page = await createPage();
     const customid = generateid();
     const channelid = generateid();
 
-    const response = await page.evaluate(async (customid, channelid, adapter) => {
+    const response = await page.evaluate(
+      async (customid, channelid, adapter) => {
+        const client = new mezonjs.Client();
 
-      const client = new mezonjs.Client();
+        const socket = client.createSocket(false, false, new mezonjsprotobuf.WebSocketAdapterPb());
 
-        const socket = client.createSocket(false, false,
-           adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
-
-        const session = await client.authenticateCustom(customid)
+        const session = await client.authenticateCustom(customid);
         await socket.connect(session, false);
 
         //chat type: 1 = room, 2 = Direct Message 3 = Group
         return await socket.joinChat(channelid, 1, true, false);
-    }, customid, channelid, adapter);
+      },
+      customid,
+      channelid,
+      adapter,
+    );
 
     expect(response).not.toBeNull();
     expect(response.id).not.toBeNull();
@@ -48,86 +48,96 @@ describe('Channel Tests', () => {
     expect(response.self).not.toBeNull();
   });
 
-  it.each(adapters)('should join a room, then leave it', async (adapter) => {
+  it.each(adapters)("should join a room, then leave it", async (adapter) => {
     const page = await createPage();
 
     const customid = generateid();
     const channelid = generateid();
 
-    const response = await page.evaluate(async (customid, channelid, adapter) => {
+    const response = await page.evaluate(
+      async (customid, channelid, adapter) => {
+        const client = new mezonjs.Client();
+        const socket = client.createSocket(false, true, new mezonjsprotobuf.WebSocketAdapterPb());
 
-      const client = new mezonjs.Client();
-      const socket = client.createSocket(false, true,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        const session = await client.authenticateCustom(customid);
+        await socket.connect(session, false);
+        //chat type: 1 = room, 2 = Direct Message 3 = Group
+        const channel = await socket.joinChat(channelid, 1, true, false);
 
-      const session = await client.authenticateCustom(customid)
-      await socket.connect(session, false);
-      //chat type: 1 = room, 2 = Direct Message 3 = Group
-      const channel = await socket.joinChat(channelid, 1, true, false);
-
-      return await socket.leaveChat(channel.id);
-    }, customid, channelid, adapter);
+        return await socket.leaveChat(channel.id);
+      },
+      customid,
+      channelid,
+      adapter,
+    );
 
     expect(response).not.toBeNull();
   });
 
-  it.each(adapters)('should create a group, join group chat, then leave it', async (adapter) => {
+  it.each(adapters)("should create a group, join group chat, then leave it", async (adapter) => {
     const page = await createPage();
 
     const customid = generateid();
     const group_name = generateid();
 
-    const response = await page.evaluate(async (customid, group_name, adapter) => {
+    const response = await page.evaluate(
+      async (customid, group_name, adapter) => {
+        const client = new mezonjs.Client();
+        const socket = client.createSocket(false, false, new mezonjsprotobuf.WebSocketAdapterPb());
 
-      const client = new mezonjs.Client();
-      const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        const session = await client.authenticateCustom(customid);
+        await socket.connect(session, false);
 
-      const session = await client.authenticateCustom(customid)
-      await socket.connect(session, false);
-
-      const group = await client.createGroup(session, { name: group_name, open: true });
-      //chat type: 1 = room, 2 = Direct Message 3 = Group
-      const channel = await socket.joinChat(group.id!, 3, true, false);
-      return await socket.leaveChat(channel.id);
-    }, customid, group_name, adapter);
+        const group = await client.createGroup(session, { name: group_name, open: true });
+        //chat type: 1 = room, 2 = Direct Message 3 = Group
+        const channel = await socket.joinChat(group.id!, 3, true, false);
+        return await socket.leaveChat(channel.id);
+      },
+      customid,
+      group_name,
+      adapter,
+    );
 
     expect(response).not.toBeNull();
   });
 
-  it.each(adapters)('should join a room, then send message, receive message', async (adapter) => {
-
+  it.each(adapters)("should join a room, then send message, receive message", async (adapter) => {
     const page = await createPage();
 
     const customid = generateid();
     const channelid = generateid();
-    const payload = { "hello": "world" };
+    const payload = { hello: "world" };
 
-    const message : mezonjs.ChannelMessage | null = await page.evaluate(async (customid, channelid, payload, adapter) => {
-      const client = new mezonjs.Client();
-      const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+    const message: mezonjs.ChannelMessage | null = await page.evaluate(
+      async (customid, channelid, payload, adapter) => {
+        const client = new mezonjs.Client();
+        const socket = client.createSocket(false, false, new mezonjsprotobuf.WebSocketAdapterPb());
 
-      var promise1 = new Promise<mezonjs.ChannelMessage>((resolve, reject) => {
-        socket.onchannelmessage = (channelmessage) => {
-          resolve(channelmessage);
-        }
-      });
+        var promise1 = new Promise<mezonjs.ChannelMessage>((resolve, reject) => {
+          socket.onchannelmessage = (channelmessage) => {
+            resolve(channelmessage);
+          };
+        });
 
-      const session = await client.authenticateCustom(customid)
-      await socket.connect(session, false);
+        const session = await client.authenticateCustom(customid);
+        await socket.connect(session, false);
 
-      // chat type: 1 = room, 2 = Direct Message 3 = Group
-      const channel = await socket.joinChat(channelid, 1, false, false);
+        // chat type: 1 = room, 2 = Direct Message 3 = Group
+        const channel = await socket.joinChat(channelid, 1, false, false);
 
-      await socket.writeChatMessage(channel.id, payload);
+        await socket.writeChatMessage(channel.id, payload);
 
-      var promise2 = new Promise<null>((resolve, reject) => {
-        setTimeout(reject, 5000, "did not receive channel message - timed out.")
-      });
+        var promise2 = new Promise<null>((resolve, reject) => {
+          setTimeout(reject, 5000, "did not receive channel message - timed out.");
+        });
 
-      return Promise.race([promise1, promise2]);
-    }, customid, channelid, payload, adapter);
+        return Promise.race([promise1, promise2]);
+      },
+      customid,
+      channelid,
+      payload,
+      adapter,
+    );
 
     expect(message).not.toBeNull();
     expect(message!.channel_id).not.toBeNull();
@@ -138,33 +148,36 @@ describe('Channel Tests', () => {
     expect(message!.persistent).toBe(false);
   });
 
-  it.each(adapters)('should join a room, then send message, update message, then list messages', async (adapter) => {
+  it.each(adapters)("should join a room, then send message, update message, then list messages", async (adapter) => {
     const page = await createPage();
 
     const customid = generateid();
     const channelid = generateid();
-    const payload = { "hello": "world" };
-    const updatedPayload = { "hello": "world2" };
+    const payload = { hello: "world" };
+    const updatedPayload = { hello: "world2" };
 
-    const response = await page.evaluate(async (customid, channelid, payload, updatedPayload, adapter) => {
-      const client = new mezonjs.Client();
-      const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+    const response = await page.evaluate(
+      async (customid, channelid, payload, updatedPayload, adapter) => {
+        const client = new mezonjs.Client();
+        const socket = client.createSocket(false, false, new mezonjsprotobuf.WebSocketAdapterPb());
 
-      const session = await client.authenticateCustom(customid)
-      await socket.connect(session, false);
+        const session = await client.authenticateCustom(customid);
+        await socket.connect(session, false);
 
-      //chat type: 1 = room, 2 = Direct Message 3 = Group
-      const channel = await socket.joinChat(channelid, 1, true, false);
+        //chat type: 1 = room, 2 = Direct Message 3 = Group
+        const channel = await socket.joinChat(channelid, 1, true, false);
 
-      const ack = await socket.writeChatMessage(channel.id, payload);
-      const ack2 = await socket.updateChatMessage(
-        ack.channel_id,
-        ack.message_id,
-        updatedPayload);
+        const ack = await socket.writeChatMessage(channel.id, payload);
+        const ack2 = await socket.updateChatMessage(ack.channel_id, ack.message_id, updatedPayload);
 
-      return await client.listChannelMessages(session, ack2.channel_id, 10)
-    }, customid, channelid, payload, updatedPayload, adapter);
+        return await client.listChannelMessages(session, ack2.channel_id, 10);
+      },
+      customid,
+      channelid,
+      payload,
+      updatedPayload,
+      adapter,
+    );
 
     console.log(response);
 
@@ -174,43 +187,45 @@ describe('Channel Tests', () => {
     expect(response.cacheable_cursor).not.toBeNull();
     expect(response.cacheable_cursor).not.toBeUndefined();
 
-    response.messages?.forEach(message => {
+    response.messages?.forEach((message) => {
       expect(message.content).toEqual(updatedPayload);
       expect(message.code).toEqual(0);
       expect(message.persistent).toBe(true);
-    })
+    });
   });
 
-  it.each(adapters)('should join a room, then send message, remove message, then list messages', async (adapter) => {
+  it.each(adapters)("should join a room, then send message, remove message, then list messages", async (adapter) => {
     const page = await createPage();
 
     const customid = generateid();
     const channelid = generateid();
-    const payload = { "hello": "world" };
+    const payload = { hello: "world" };
 
-    const response = await page.evaluate(async (customid, channelid, payload, adapter) => {
+    const response = await page.evaluate(
+      async (customid, channelid, payload, adapter) => {
+        const client = new mezonjs.Client();
+        const socket = client.createSocket(false, false, new mezonjsprotobuf.WebSocketAdapterPb());
 
-      const client = new mezonjs.Client();
-      const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        const session = await client.authenticateCustom(customid);
+        await socket.connect(session, false);
 
-      const session = await client.authenticateCustom(customid)
-      await socket.connect(session, false);
+        // chat type: 1 = room, 2 = Direct Message 3 = Group
+        const channel = await socket.joinChat(channelid, 1, true, false);
 
-      // chat type: 1 = room, 2 = Direct Message 3 = Group
-      const channel = await socket.joinChat(channelid, 1, true, false);
+        const ack = await socket.writeChatMessage(channel.id, payload);
 
-      const ack = await socket.writeChatMessage(channel.id, payload);
+        await socket.removeChatMessage(ack.channel_id, ack.message_id);
 
-      await socket.removeChatMessage(ack.channel_id,
-        ack.message_id);
-
-      return await client.listChannelMessages(session, ack.channel_id, 10)
-    }, customid, channelid, payload, adapter);
+        return await client.listChannelMessages(session, ack.channel_id, 10);
+      },
+      customid,
+      channelid,
+      payload,
+      adapter,
+    );
 
     expect(response).not.toBeNull();
     expect(response.messages).not.toBeNull();
     expect(response.messages!.length).toBe(0);
   });
-
 });

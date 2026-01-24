@@ -1,11 +1,7 @@
 import { encode, decode } from "js-base64";
-import * as tsproto from "./api/api";
+import * as tsproto from "mezon-js-protobuf/api";
 
-export function buildFetchOptions(
-  method: string,
-  options: any,
-  bodyJson: string,
-) {
+export function buildFetchOptions(method: string, options: any, bodyJson: string) {
   const fetchOptions = { ...{ method: method }, ...options };
   fetchOptions.headers = { ...options.headers };
 
@@ -32,12 +28,9 @@ export function buildFetchOptions(
 
 export function b64EncodeUnicode(str: string) {
   return encode(
-    encodeURIComponent(str).replace(
-      /%([0-9A-F]{2})/g,
-      function toSolidBytes(_match: string, p1) {
-        return String.fromCharCode(Number("0x" + p1));
-      },
-    ),
+    encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function toSolidBytes(_match: string, p1) {
+      return String.fromCharCode(Number("0x" + p1));
+    }),
   );
 }
 
@@ -59,10 +52,10 @@ export function safeJSONParse(raw: any): any {
 
   if (raw instanceof Uint8Array) {
     jsonStr = new TextDecoder().decode(raw);
-  } else if (typeof raw === 'string') {
+  } else if (typeof raw === "string") {
     jsonStr = raw;
   } else {
-    return typeof raw === 'object' ? raw : { t: raw };
+    return typeof raw === "object" ? raw : { t: raw };
   }
 
   if (!jsonStr || jsonStr === "" || jsonStr === "[]") {
@@ -175,7 +168,7 @@ export function decodeNotificationFcm(data: any) {
   if (isJson) {
     return safeJSONParse(data);
   }
-  
+
   try {
     const buffer: ArrayBuffer = data;
     const uintBuffer: Uint8Array = new Uint8Array(buffer);
@@ -187,45 +180,35 @@ export function decodeNotificationFcm(data: any) {
 }
 
 export function encodeMentions(data: tsproto.MessageMentionList) {
-  const mentionWriter = tsproto.MessageMentionList.encode(
-    tsproto.MessageMentionList.fromPartial(data),
-  );
+  const mentionWriter = tsproto.MessageMentionList.encode(tsproto.MessageMentionList.fromPartial(data));
   const encodedMsg = mentionWriter.finish();
 
   return encodedMsg;
 }
 
 export function encodeAttachments(data: tsproto.MessageAttachmentList) {
-  const attachmentWriter = tsproto.MessageAttachmentList.encode(
-    tsproto.MessageAttachmentList.fromPartial(data),
-  );
+  const attachmentWriter = tsproto.MessageAttachmentList.encode(tsproto.MessageAttachmentList.fromPartial(data));
   const encodedMsg = attachmentWriter.finish();
 
   return encodedMsg;
 }
 
 export function encodeRefs(data: tsproto.MessageRefList) {
-  const refsWriter = tsproto.MessageRefList.encode(
-    tsproto.MessageRefList.fromPartial(data),
-  );
+  const refsWriter = tsproto.MessageRefList.encode(tsproto.MessageRefList.fromPartial(data));
   const encodedMsg = refsWriter.finish();
 
   return encodedMsg;
 }
 
 export function encodeReactions(data: tsproto.MessageReactionList) {
-  const reactionWriter = tsproto.MessageReactionList.encode(
-    tsproto.MessageReactionList.fromPartial(data),
-  );
+  const reactionWriter = tsproto.MessageReactionList.encode(tsproto.MessageReactionList.fromPartial(data));
   const encodedMsg = reactionWriter.finish();
 
   return encodedMsg;
 }
 
 export function encodeNotificationFcm(data: tsproto.DirectFcmProto) {
-  const fcmWriter = tsproto.DirectFcmProto.encode(
-    tsproto.DirectFcmProto.fromPartial(data),
-  );
+  const fcmWriter = tsproto.DirectFcmProto.encode(tsproto.DirectFcmProto.fromPartial(data));
   const encodedMsg = fcmWriter.finish();
 
   return encodedMsg;

@@ -15,57 +15,64 @@
  */
 
 import * as mezonjs from "mezon-js";
-import {StreamData} from "mezon-js/socket"
+import { StreamData } from "mezon-js/socket";
 import * as mezonjsprotobuf from "../mezon-js-protobuf";
-import {generateid, createPage, adapters, AdapterType} from "./utils"
-import {describe, expect, it} from '@jest/globals'
+import { generateid, createPage, adapters, AdapterType } from "./utils";
+import { describe, expect, it } from "@jest/globals";
 
-describe('Socket Message Tests', () => {
-
-  it.each(adapters)('should connect', async (adapter) => {
+describe("Socket Message Tests", () => {
+  it.each(adapters)("should connect", async (adapter) => {
     const page = await createPage();
 
     const customid = generateid();
 
-    const session = await page.evaluate(async (customid, adapter) => {
-      const client = new mezonjs.Client();
-      const session = await client.authenticateCustom(customid);
+    const session = await page.evaluate(
+      async (customid, adapter) => {
+        const client = new mezonjs.Client();
+        const session = await client.authenticateCustom(customid);
 
-      const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        const socket = client.createSocket(false, false, new mezonjsprotobuf.WebSocketAdapterPb());
 
-      await socket.connect(session, false);
-      socket.disconnect(false);
-    }, customid, adapter);
+        await socket.connect(session, false);
+        socket.disconnect(false);
+      },
+      customid,
+      adapter,
+    );
   });
 
-  it.each(adapters)('should rpc and receive stream data', async (adapter) => {
+  it.each(adapters)("should rpc and receive stream data", async (adapter) => {
     const page = await createPage();
 
     const customid = generateid();
     const ID = "clientrpc.send_stream_data";
-    const PAYLOAD = JSON.stringify({ "hello": "world" });
+    const PAYLOAD = JSON.stringify({ hello: "world" });
 
-    const response = await page.evaluate(async (customid, id, payload, adapter) => {
-      const client = new mezonjs.Client();
-      const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+    const response = await page.evaluate(
+      async (customid, id, payload, adapter) => {
+        const client = new mezonjs.Client();
+        const socket = client.createSocket(false, false, new mezonjsprotobuf.WebSocketAdapterPb());
 
-      var promise1 = new Promise<StreamData>((resolve, reject) => {
-        socket.onstreamdata = (streamdata) => {
-          resolve(streamdata);
-        }
-      });
+        var promise1 = new Promise<StreamData>((resolve, reject) => {
+          socket.onstreamdata = (streamdata) => {
+            resolve(streamdata);
+          };
+        });
 
-      const session = await client.authenticateCustom(customid)
-      await socket.connect(session, false);
-      await socket.rpc(id, payload);
-      var promise2 = new Promise<null>((resolve, reject) => {
-        setTimeout(reject, 5000, "did not receive stream data - timed out.")
-      });
+        const session = await client.authenticateCustom(customid);
+        await socket.connect(session, false);
+        await socket.rpc(id, payload);
+        var promise2 = new Promise<null>((resolve, reject) => {
+          setTimeout(reject, 5000, "did not receive stream data - timed out.");
+        });
 
-      return Promise.race([promise1, promise2]);
-    }, customid, ID, PAYLOAD, adapter);
+        return Promise.race([promise1, promise2]);
+      },
+      customid,
+      ID,
+      PAYLOAD,
+      adapter,
+    );
 
     expect(response).not.toBeNull();
     expect(response.data).toBe(PAYLOAD);

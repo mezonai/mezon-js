@@ -31,7 +31,7 @@ describe('Party Tests', () => {
 
       const client = new mezonjs.Client();
       const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const session = await client.authenticateCustom(customid);
 
@@ -64,10 +64,10 @@ describe('Party Tests', () => {
       const client2 = new mezonjs.Client();
 
       const socket1 = client1.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const socket2 = client2.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const session1 = await client1.authenticateCustom(customid1);
       const session2 = await client2.authenticateCustom(customid2);
@@ -122,10 +122,10 @@ describe('Party Tests', () => {
       const client2 = new mezonjs.Client();
 
       const socket1 = client1.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const socket2 = client2.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const session1 = await client1.authenticateCustom(customid1);
       const session2 = await client2.authenticateCustom(customid2);
@@ -172,10 +172,10 @@ describe('Party Tests', () => {
       const client2 = new mezonjs.Client();
 
       const socket1 = client1.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const socket2 = client2.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const session1 = await client1.authenticateCustom(customid1);
       const session2 = await client2.authenticateCustom(customid2);
@@ -231,10 +231,10 @@ describe('Party Tests', () => {
       const client2 = new mezonjs.Client();
 
       const socket1 = client1.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const socket2 = client2.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const session1 = await client1.authenticateCustom(customid1);
       const session2 = await client2.authenticateCustom(customid2);
@@ -293,10 +293,10 @@ describe('Party Tests', () => {
       const client2 = new mezonjs.Client();
 
       const socket1 = client1.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const socket2 = client2.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const session1 = await client1.authenticateCustom(customid1);
       const session2 = await client2.authenticateCustom(customid2);
@@ -354,13 +354,13 @@ describe('Party Tests', () => {
       const client3 = new mezonjs.Client();
 
       const socket1 = client1.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const socket2 = client2.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const socket3 = client3.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
 
       const session1 = await client1.authenticateCustom(customid1);
@@ -422,10 +422,10 @@ describe('Party Tests', () => {
       const client2 = new mezonjs.Client();
 
       const socket1 = client1.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const socket2 = client2.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const session1 = await client1.authenticateCustom(customid1);
       const session2 = await client2.authenticateCustom(customid2);

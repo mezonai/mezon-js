@@ -225,7 +225,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-mezon-js-protobuf/dist/
-mezon-js/dist/
+packages/**/dist/
+
+.turbo
 
 # End of https://www.gitignore.io/api/node,linux,macos,windows,sublimetext,webstorm+all

@@ -64,7 +64,7 @@ import {
   ChannelMessage,
 } from "./api.gen";
 import { Session } from "./session";
-import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
+import { WebSocketAdapter, WebSocketAdapterPb } from "mezon-js-protobuf";
 import { decodeAttachments, decodeMentions, decodeNotificationFcm, decodeReactions, decodeRefs, safeJSONParse } from "./utils";
 
 /** Stores function references for resolve/reject with a DOM Promise. */
@@ -1888,8 +1888,8 @@ export class DefaultSocket implements Socket {
     readonly port: string,
     readonly useSSL: boolean = false,
     public verbose: boolean = false,
-    readonly adapter: WebSocketAdapter = new WebSocketAdapterText(),
-    readonly sendTimeoutMs: number = DefaultSocket.DefaultSendTimeoutMs
+    readonly adapter: WebSocketAdapter = new WebSocketAdapterPb(),
+    readonly sendTimeoutMs: number = DefaultSocket.DefaultSendTimeoutMs,
   ) {
     this.cIds = {};
     this.nextCid = 1;
@@ -1912,7 +1912,7 @@ export class DefaultSocket implements Socket {
     createStatus: boolean = false,
     platform: string = "",
     connectTimeoutMs: number = DefaultSocket.DefaultConnectTimeoutMs,
-    signal?: AbortSignal
+    signal?: AbortSignal,
   ): Promise<Session> {
     if (this._connectionState === ConnectionState.CONNECTED) {
       return Promise.resolve(session);
@@ -1926,15 +1926,7 @@ export class DefaultSocket implements Socket {
     this._connectionState = ConnectionState.CONNECTING;
 
     const scheme = this.useSSL ? "wss://" : "ws://";
-    this.adapter.connect(
-      scheme,
-      this.host,
-      this.port,
-      createStatus,
-      session.token,
-      platform,
-      signal
-    );
+    this.adapter.connect(scheme, this.host, this.port, createStatus, session.token, platform, signal);
 
     this.adapter.onClose = (evt: Event) => {
       this._connectionState = ConnectionState.DISCONNECTED;
@@ -1995,52 +1987,34 @@ export class DefaultSocket implements Socket {
         } else if (message.last_seen_message_event) {
           this.onlastseenupdated(message.last_seen_message_event);
         } else if (message.status_presence_event) {
-          this.onstatuspresence(
-            <StatusPresenceEvent>message.status_presence_event
-          );
+          this.onstatuspresence(<StatusPresenceEvent>message.status_presence_event);
         } else if (message.stream_presence_event) {
-          this.onstreampresence(
-            <StreamPresenceEvent>message.stream_presence_event
-          );
+          this.onstreampresence(<StreamPresenceEvent>message.stream_presence_event);
         } else if (message.stream_data) {
           this.onstreamdata(<StreamData>message.stream_data);
-        } else if (message.channel_message) {          
+        } else if (message.channel_message) {
           const channelMessage = CreateChannelMessageFromEvent(message);
           this.onchannelmessage(channelMessage);
         } else if (message.message_typing_event) {
-          this.onmessagetyping(
-            <MessageTypingEvent>message.message_typing_event
-          );
+          this.onmessagetyping(<MessageTypingEvent>message.message_typing_event);
         } else if (message.message_reaction_event) {
-          this.onmessagereaction(
-            <ApiMessageReaction>message.message_reaction_event
-          );
+          this.onmessagereaction(<ApiMessageReaction>message.message_reaction_event);
         } else if (message.channel_presence_event) {
-          this.onchannelpresence(
-            <ChannelPresenceEvent>message.channel_presence_event
-          );
+          this.onchannelpresence(<ChannelPresenceEvent>message.channel_presence_event);
         } else if (message.last_pin_message_event) {
-          this.onpinmessage(
-            <LastPinMessageEvent>message.last_pin_message_event
-          );
+          this.onpinmessage(<LastPinMessageEvent>message.last_pin_message_event);
         } else if (message.custom_status_event) {
           this.oncustomstatus(<CustomStatusEvent>message.custom_status_event);
         } else if (message.canvas_event) {
           this.oncanvasevent(<ChannelCanvas>message.canvas_event);
         } else if (message.user_channel_added_event) {
-          this.onuserchanneladded(
-            <UserChannelAddedEvent>message.user_channel_added_event
-          );
+          this.onuserchanneladded(<UserChannelAddedEvent>message.user_channel_added_event);
         } else if (message.add_clan_user_event) {
           this.onuserclanadded(<AddClanUserEvent>message.add_clan_user_event);
         } else if (message.user_profile_updated_event) {
-          this.onuserprofileupdate(
-            <UserProfileUpdatedEvent>message.user_profile_updated_event
-          );
+          this.onuserprofileupdate(<UserProfileUpdatedEvent>message.user_profile_updated_event);
         } else if (message.user_channel_removed_event) {
-          this.onuserchannelremoved(
-            <UserChannelRemovedEvent>message.user_channel_removed_event
-          );
+          this.onuserchannelremoved(<UserChannelRemovedEvent>message.user_channel_removed_event);
         } else if (message.block_friend) {
           this.onblockfriend(<BlockFriend>message.block_friend);
         } else if (message.un_block_friend) {
@@ -2050,9 +2024,7 @@ export class DefaultSocket implements Socket {
         } else if (message.remove_friend) {
           this.onremovefriend(<RemoveFriend>message.remove_friend);
         } else if (message.user_clan_removed_event) {
-          this.onuserclanremoved(
-            <UserClanRemovedEvent>message.user_clan_removed_event
-          );
+          this.onuserclanremoved(<UserClanRemovedEvent>message.user_clan_removed_event);
         } else if (message.clan_event_created) {
           this.oneventcreated(message.clan_event_created);
         } else if (message.give_coffee_event) {
@@ -2060,51 +2032,31 @@ export class DefaultSocket implements Socket {
         } else if (message.role_assign_event) {
           this.onroleassign(<RoleAssignedEvent>message.role_assign_event);
         } else if (message.streaming_started_event) {
-          this.onstreamingchannelstarted(
-            <StreamingStartedEvent>message.streaming_started_event
-          );
+          this.onstreamingchannelstarted(<StreamingStartedEvent>message.streaming_started_event);
         } else if (message.streaming_ended_event) {
-          this.onstreamingchannelended(
-            <StreamingEndedEvent>message.streaming_ended_event
-          );
+          this.onstreamingchannelended(<StreamingEndedEvent>message.streaming_ended_event);
         } else if (message.streaming_joined_event) {
-          this.onstreamingchanneljoined(
-            <StreamingJoinedEvent>message.streaming_joined_event
-          );
+          this.onstreamingchanneljoined(<StreamingJoinedEvent>message.streaming_joined_event);
         } else if (message.streaming_leaved_event) {
-          this.onstreamingchannelleaved(
-            <StreamingLeavedEvent>message.streaming_leaved_event
-          );
+          this.onstreamingchannelleaved(<StreamingLeavedEvent>message.streaming_leaved_event);
         } else if (message.permission_set_event) {
           this.onpermissionset(<PermissionSet>message.permission_set_event);
         } else if (message.permission_changed_event) {
-          this.onpermissionchanged(
-            <PermissionChangedEvent>message.permission_changed_event
-          );
+          this.onpermissionchanged(<PermissionChangedEvent>message.permission_changed_event);
         } else if (message.unmute_event) {
           this.onunmuteevent(<UnmuteEvent>message.unmute_event);
         } else if (message.token_sent_event) {
           this.ontokensent(<ApiTokenSentEvent>message.token_sent_event);
         } else if (message.message_button_clicked) {
-          this.onmessagebuttonclicked(
-            <MessageButtonClicked>message.message_button_clicked
-          );
+          this.onmessagebuttonclicked(<MessageButtonClicked>message.message_button_clicked);
         } else if (message.dropdown_box_selected) {
-          this.onmessagedropdownboxselected(
-            <DropdownBoxSelected>message.dropdown_box_selected
-          );
+          this.onmessagedropdownboxselected(<DropdownBoxSelected>message.dropdown_box_selected);
         } else if (message.mark_as_read) {
-          this.onmarkasread(
-            <MarkAsRead>message.mark_as_read
-          );
+          this.onmarkasread(<MarkAsRead>message.mark_as_read);
         } else if (message.voice_reaction_send) {
-          this.onvoicereactionmessage(
-            <VoiceReactionSend>message.voice_reaction_send
-          );
+          this.onvoicereactionmessage(<VoiceReactionSend>message.voice_reaction_send);
         } else if (message.webrtc_signaling_fwd) {
-          this.onwebrtcsignalingfwd(
-            <WebrtcSignalingFwd>message.webrtc_signaling_fwd
-          );
+          this.onwebrtcsignalingfwd(<WebrtcSignalingFwd>message.webrtc_signaling_fwd);
         } else if (message.list_activity) {
           this.onactivityupdated(<ListActivity>message.list_activity);
         } else if (message.sd_topic_event) {
@@ -2163,7 +2115,7 @@ export class DefaultSocket implements Socket {
         this._connectionState = ConnectionState.CONNECTED;
         this.startHeartbeatLoop();
         this._connectPromise = undefined;
-        
+
         resolve(session);
 
         if (isReconnect) {
@@ -2605,7 +2557,7 @@ export class DefaultSocket implements Socket {
       console.log(join_channel_app_data);
     }
   }
-  
+
   onunpinmessageevent(unpin_message_event: UnpinMessageEvent) {
     if (this.verbose && window && window.console) {
       console.log(unpin_message_event);
@@ -2626,7 +2578,7 @@ export class DefaultSocket implements Socket {
 
   onbanneduser(event: BannedUserEvent) {
     if (this.verbose && window && window.console) {
-      console.log(event)
+      console.log(event);
     }
   }
 
@@ -2666,7 +2618,7 @@ export class DefaultSocket implements Socket {
       | VoiceReactionSend
       | ListDataSocket
       | QuickMenuEvent,
-    sendTimeout = DefaultSocket.DefaultSendTimeoutMs
+    sendTimeout = DefaultSocket.DefaultSendTimeoutMs,
   ): Promise<any> {
     const untypedMessage = message as any;
 
@@ -2675,21 +2627,17 @@ export class DefaultSocket implements Socket {
         reject("Socket connection has not been established yet.");
       } else {
         if (untypedMessage.channel_message_send) {
-          untypedMessage.channel_message_send.content = JSON.stringify(
-            untypedMessage.channel_message_send.content
-          );
+          untypedMessage.channel_message_send.content = JSON.stringify(untypedMessage.channel_message_send.content);
         } else if (untypedMessage.channel_message_update) {
-          untypedMessage.channel_message_update.content = JSON.stringify(
-            untypedMessage.channel_message_update.content
-          );
+          untypedMessage.channel_message_update.content = JSON.stringify(untypedMessage.channel_message_update.content);
         } else if (untypedMessage.ephemeral_message_send) {
           untypedMessage.ephemeral_message_send.message.content = JSON.stringify(
-            untypedMessage.ephemeral_message_send.message?.content
-          ); 
+            untypedMessage.ephemeral_message_send.message?.content,
+          );
         } else if (untypedMessage.quick_menu_event) {
           untypedMessage.quick_menu_event.message.content = JSON.stringify(
-            untypedMessage.quick_menu_event.message?.content
-          ); 
+            untypedMessage.quick_menu_event.message?.content,
+          );
         }
 
         const cid = this.generatecid();
@@ -2729,12 +2677,7 @@ export class DefaultSocket implements Socket {
     return response.follow_event;
   }
 
-  async joinChat(
-    clan_id: string,
-    channel_id: string,
-    channel_type: number,
-    is_public: boolean
-  ): Promise<Channel> {
+  async joinChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<Channel> {
     const response = await this.send({
       channel_join: {
         clan_id: clan_id,
@@ -2747,7 +2690,7 @@ export class DefaultSocket implements Socket {
     return response.channel;
   }
 
-  async handleParticipantMeetState (
+  async handleParticipantMeetState(
     clan_id: string,
     channel_id: string,
     display_name: string,
@@ -2767,12 +2710,7 @@ export class DefaultSocket implements Socket {
     return response.handle_participant_meet_state_event;
   }
 
-  leaveChat(
-    clan_id: string,
-    channel_id: string,
-    channel_type: number,
-    is_public: boolean
-  ): Promise<void> {
+  leaveChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<void> {
     return this.send({
       channel_leave: {
         clan_id: clan_id,
@@ -2792,7 +2730,7 @@ export class DefaultSocket implements Socket {
     has_attachment?: boolean,
     topic_id?: string,
     mentions?: string,
-    references?: string
+    references?: string,
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_remove: {
@@ -2804,7 +2742,7 @@ export class DefaultSocket implements Socket {
         has_attachment: has_attachment,
         topic_id: topic_id,
         mentions: mentions,
-        references: references
+        references: references,
       },
     });
 
@@ -2838,7 +2776,7 @@ export class DefaultSocket implements Socket {
     attachments?: Array<ApiMessageAttachment>,
     hideEditted?: boolean,
     topic_id?: string,
-    is_update_msg_topic?: boolean
+    is_update_msg_topic?: boolean,
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_update: {
@@ -2852,7 +2790,7 @@ export class DefaultSocket implements Socket {
         is_public: is_public,
         hide_editted: hideEditted,
         topic_id: topic_id,
-        is_update_msg_topic: is_update_msg_topic
+        is_update_msg_topic: is_update_msg_topic,
       },
     });
     return response.channel_message_ack;
@@ -2876,7 +2814,7 @@ export class DefaultSocket implements Socket {
     mention_everyone?: Boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string
+    topic_id?: string,
   ): Promise<QuickMenuEvent> {
     const response = await this.send({
       quick_menu_event: {
@@ -2895,8 +2833,8 @@ export class DefaultSocket implements Socket {
           avatar: avatar,
           code: code,
           topic_id: topic_id,
-        }
-      }
+        },
+      },
     });
     return response.ephemeral_message_send;
   }
@@ -2916,7 +2854,7 @@ export class DefaultSocket implements Socket {
     avatar?: string,
     code?: number,
     topic_id?: string,
-    id?: string
+    id?: string,
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       ephemeral_message_send: {
@@ -2936,8 +2874,8 @@ export class DefaultSocket implements Socket {
           code: code,
           topic_id: topic_id,
           id: id,
-        }
-      }
+        },
+      },
     });
     return response.ephemeral_message_send;
   }
@@ -2955,25 +2893,28 @@ export class DefaultSocket implements Socket {
     mention_everyone?: Boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string
+    topic_id?: string,
   ): Promise<ChannelMessageAck> {
-    const response = await this.send({
-      channel_message_send: {
-        clan_id: clan_id,
-        channel_id: channel_id,
-        mode: mode,
-        is_public: is_public,
-        content: content,
-        mentions: mentions,
-        attachments: attachments,
-        references: references,
-        anonymous_message: anonymous_message,
-        mention_everyone: mention_everyone,
-        avatar: avatar,
-        code: code,
-        topic_id: topic_id,
+    const response = await this.send(
+      {
+        channel_message_send: {
+          clan_id: clan_id,
+          channel_id: channel_id,
+          mode: mode,
+          is_public: is_public,
+          content: content,
+          mentions: mentions,
+          attachments: attachments,
+          references: references,
+          anonymous_message: anonymous_message,
+          mention_everyone: mention_everyone,
+          avatar: avatar,
+          code: code,
+          topic_id: topic_id,
+        },
       },
-    }, Infinity);
+      Infinity,
+    );
     return response.channel_message_ack;
   }
 
@@ -2991,7 +2932,7 @@ export class DefaultSocket implements Socket {
     action_delete: boolean,
     topic_id?: string,
     emoji_recent_id?: string,
-    sender_name?: string
+    sender_name?: string,
   ): Promise<ApiMessageReaction> {
     const response = await this.send({
       message_reaction_event: {
@@ -3008,7 +2949,7 @@ export class DefaultSocket implements Socket {
         action: action_delete,
         topic_id: topic_id,
         emoji_recent_id: emoji_recent_id,
-        sender_name: sender_name
+        sender_name: sender_name,
       },
     });
     return response.message_reaction_event;
@@ -3020,7 +2961,7 @@ export class DefaultSocket implements Socket {
     mode: number,
     is_public: boolean,
     sender_display_name: string,
-    topic_id?: string
+    topic_id?: string,
   ): Promise<MessageTypingEvent> {
     const response = await this.send({
       message_typing_event: {
@@ -3029,7 +2970,7 @@ export class DefaultSocket implements Socket {
         mode: mode,
         is_public: is_public,
         sender_display_name: sender_display_name,
-        topic_id: topic_id
+        topic_id: topic_id,
       },
     });
     return response.message_typing_event;
@@ -3041,7 +2982,7 @@ export class DefaultSocket implements Socket {
     mode: number,
     message_id: string,
     timestamp_seconds: number,
-    badge_count: number
+    badge_count: number,
   ): Promise<LastSeenMessageEvent> {
     const response = await this.send({
       last_seen_message_event: {
@@ -3095,7 +3036,7 @@ export class DefaultSocket implements Socket {
     clan_id: string,
     status: string,
     time_reset: number,
-    no_clear: boolean
+    no_clear: boolean,
   ): Promise<CustomStatusEvent> {
     const response = await this.send({
       custom_status_event: {
@@ -3108,14 +3049,11 @@ export class DefaultSocket implements Socket {
     return response.custom_status_event;
   }
 
-  async writeActiveArchivedThread(
-    clan_id: string,
-    channel_id: string
-  ): Promise<void> {
+  async writeActiveArchivedThread(clan_id: string, channel_id: string): Promise<void> {
     const response = await this.send({
       active_archived_thread: {
         clan_id: clan_id,
-        channel_id: channel_id
+        channel_id: channel_id,
       },
     });
     return response.active_archived_thread;
@@ -3132,21 +3070,18 @@ export class DefaultSocket implements Socket {
         name: name,
         condition_id: condition_id,
         type: type,
-        clan_id: clan_id
+        clan_id: clan_id,
       },
     });
     return response.check_name_existed_event;
   }
 
-  async writeVoiceReaction(
-    emojis: Array<string>,
-    channel_id: string
-  ): Promise<VoiceReactionSend> {
+  async writeVoiceReaction(emojis: Array<string>, channel_id: string): Promise<VoiceReactionSend> {
     const response = await this.send({
       voice_reaction_send: {
         emojis: emojis,
-        channel_id: channel_id
-      }
+        channel_id: channel_id,
+      },
     });
     return response.voice_reaction_send;
   }
@@ -3156,7 +3091,7 @@ export class DefaultSocket implements Socket {
     data_type: number,
     json_data: string,
     channel_id: string,
-    caller_id: string
+    caller_id: string,
   ): Promise<WebrtcSignalingFwd> {
     const response = await this.send({
       webrtc_signaling_fwd: {
@@ -3174,7 +3109,7 @@ export class DefaultSocket implements Socket {
     receiver_id: string,
     json_data: string,
     channel_id: string,
-    caller_id: string
+    caller_id: string,
   ): Promise<IncomingCallPush> {
     const response = await this.send({
       incoming_call_push: {
@@ -3193,7 +3128,7 @@ export class DefaultSocket implements Socket {
     selectbox_id: string,
     sender_id: string,
     user_id: string,
-    value: Array<string>
+    value: Array<string>,
   ): Promise<DropdownBoxSelected> {
     const response = await this.send({
       dropdown_box_selected: {
@@ -3214,7 +3149,7 @@ export class DefaultSocket implements Socket {
     button_id: string,
     sender_id: string,
     user_id: string,
-    extra_data: string
+    extra_data: string,
   ): Promise<MessageButtonClicked> {
     const response = await this.send({
       message_button_clicked: {
@@ -3229,11 +3164,7 @@ export class DefaultSocket implements Socket {
     return response.webrtc_signaling_fwd;
   }
 
-  async writeChannelAppEvent(
-    clan_id: string,
-    channel_id: string,
-    action: number
-  ): Promise<ChannelAppEvent> {
+  async writeChannelAppEvent(clan_id: string, channel_id: string, action: number): Promise<ChannelAppEvent> {
     const response = await this.send({
       channel_app_event: {
         clan_id: clan_id,
@@ -3244,9 +3175,7 @@ export class DefaultSocket implements Socket {
     return response.channel_app_event;
   }
 
-  async listDataSocket(
-    request: ListDataSocket
-  ): Promise<any> {
+  async listDataSocket(request: ListDataSocket): Promise<any> {
     const response = await this.send({
       list_data_socket: request,
     });
@@ -3281,10 +3210,7 @@ export class DefaultSocket implements Socket {
 
   private startHeartbeatLoop() {
     this.stopHeartbeatLoop();
-    this._heartbeatTimer = setTimeout(
-      () => this.pingPong(),
-      this._heartbeatTimeoutMs
-    );
+    this._heartbeatTimer = setTimeout(() => this.pingPong(), this._heartbeatTimeoutMs);
   }
 
   private stopHeartbeatLoop() {

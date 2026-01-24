@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "js-base64": "^3.7.8",
-    "mezon-js": "^2.13.58",
-    "mezon-js-protobuf": "^1.8.66"
+    "mezon-js": "2.14.57",
+    "mezon-js-protobuf": "1.8.95"
   },
   "author": "mezonai",
   "license": "MIT",

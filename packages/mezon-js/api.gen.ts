@@ -3,9 +3,9 @@
 
 import { buildFetchOptions } from "./utils";
 import { encode } from "js-base64";
-import * as tsproto from "./api/api";
+import * as tsproto from "mezon-js-protobuf/api";
 import { ApiUpdateChannelDescRequest } from "./client";
-import { PinMessagesList } from "./api/api";
+import { PinMessagesList } from "mezon-js-protobuf/api";
 
 /** A single user-role pair. */
 export interface ChannelUserListChannelUser {

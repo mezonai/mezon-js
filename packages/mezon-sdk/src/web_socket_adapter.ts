@@ -149,7 +149,7 @@ export class WebSocketAdapterText implements WebSocketAdapter {
             msg.party_data_send.op_code = msg.party_data_send.op_code.toString();
             let payload = msg.party_data_send.data;
             if (payload && payload instanceof Uint8Array) {
-                msg.party_data_send.data = encode(payload.buffer);
+                msg.party_data_send.data = encode((payload as any).buffer);
             } else if (payload) { // it's a string
                 msg.party_data_send.data = btoa(payload);
             }

@@ -9,27 +9,40 @@
     "realtime chat"
   ],
   "scripts": {
-    "docs": "typedoc --tsconfig tsconfig.typedoc.json --entryPoints ./packages/mezon-js/index.ts --entryPoints ./packages/mezon-sdk/index.ts --gaID UA-89839802-1 --out docs"
+    "docs": "typedoc --tsconfig tsconfig.typedoc.json --entryPoints ./packages/mezon-js/index.ts --entryPoints ./packages/mezon-sdk/index.ts --gaID UA-89839802-1 --out docs",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "dev": "turbo run dev"
   },
   "repository": "https://github.com/nccasia/mezon-js",
   "homepage": "https://mezon.vn",
   "bugs": "https://github.com/nccasia/mezon-js/issues",
   "license": "Apache-2.0",
   "devDependencies": {
-    "esbuild": "^0.17.2",
-    "typedoc": "^0.23.24",
-    "typescript": "^4.9.4"
+    "@changesets/cli": "^2.29.8",
+    "@types/node": "^25.0.10",
+    "@typescript-eslint/eslint-plugin": "^8.53.1",
+    "@typescript-eslint/parser": "^8.53.1",
+    "esbuild": "^0.25.5",
+    "eslint": "^9.39.2",
+    "syncpack": "^13.0.4",
+    "turbo": "^2.7.5",
+    "typedoc": "^0.28.16",
+    "typescript": "^5.4.3"
   },
   "private": true,
+  "packageManager": "npm@10.2.3",
   "workspaces": [
-    "packages/mezon-js",
-    "packages/mezon-js-test",
-    "packages/mezon-sdk",
-    "packages/mezon-sdk-test",
+    "packages/mezon-light-sdk",
     "packages/mezon-js-create-react-app-example",
-    "packages/mezon-js-iife-example",
+    "packages/mezon-js-example",
     "packages/mezon-js-protobuf",
-    "packages/mezon-js-webpack-example"
+    "packages/mezon-js-test",
+    "packages/mezon-js-webpack-example",
+    "packages/mezon-js",
+    "packages/mezon-sdk-example",
+    "packages/mezon-sdk"
   ],
   "dependencies": {
     "@protobuf-ts/protoc": "^2.9.3"

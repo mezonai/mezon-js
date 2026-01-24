@@ -29,7 +29,7 @@ describe('Matchmaker Tests', () => {
     const response = await page.evaluate(async (customid, adapter) => {
       const client = new mezonjs.Client();
       const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
       const session = await client.authenticateCustom(customid);
       await socket.connect(session, false);
       return await socket.addMatchmaker("properties.a1:foo", 2, 2, {"a1": "bar"});
@@ -48,7 +48,7 @@ describe('Matchmaker Tests', () => {
     const response = await page.evaluate(async (customid, adapter) => {
       const client = new mezonjs.Client();
       const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
       const session = await client.authenticateCustom(customid);
       await socket.connect(session, false);
       const ticket = await socket.addMatchmaker("properties.a2:foo", 2, 2, {"a2": "bar"});
@@ -68,9 +68,9 @@ describe('Matchmaker Tests', () => {
       const client1 = new mezonjs.Client();
       const client2 = new mezonjs.Client();
       const socket1 = client1.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
       const socket2 = client2.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       var promise1 = new Promise<MatchmakerMatched>((resolve, reject) => {
         socket1.onmatchmakermatched = (matchmakermatched) => {
@@ -109,8 +109,8 @@ describe('Matchmaker Tests', () => {
       const client1 = new mezonjs.Client();
       const client2 = new mezonjs.Client();
       const socket1 = client1.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
-      const socket2 = client2.createSocket(false, false, adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
+      const socket2 = client2.createSocket(false, false, new mezonjsprotobuf.WebSocketAdapterPb());
 
       var promise1 = new Promise<MatchmakerMatched>((resolve, reject) => {
         socket1.onmatchmakermatched = (matchmakermatched) => {
@@ -149,9 +149,9 @@ describe('Matchmaker Tests', () => {
       const client1 = new mezonjs.Client();
       const client2 = new mezonjs.Client();
       const socket1 = client1.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
       const socket2 = client2.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       var promise1 = new Promise<MatchmakerMatched>((resolve, reject) => {
         socket1.onmatchmakermatched = (matchmakermatched) => {
@@ -189,9 +189,9 @@ describe('Matchmaker Tests', () => {
       const client1 = new mezonjs.Client();
       const client2 = new mezonjs.Client();
       const socket1 = client1.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
       const socket2 = client2.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       var promise1 = new Promise((resolve, reject) => {
         socket2.onmatchmakermatched = (matchmakermatched) => {
@@ -228,9 +228,9 @@ describe('Matchmaker Tests', () => {
       const client1 = new mezonjs.Client();
       const client2 = new mezonjs.Client();
       const socket1 = client1.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
       const socket2 = client2.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       var promise1 = new Promise((resolve, reject) => {
         socket1.onmatchmakermatched = (matchmakermatched) => {
@@ -267,9 +267,9 @@ describe('Matchmaker Tests', () => {
       const client1 = new mezonjs.Client();
       const client2 = new mezonjs.Client();
       const socket1 = client1.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
       const socket2 = client2.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       var promise1 = new Promise((resolve, reject) => {
         socket1.onmatchmakermatched = (matchmakermatched) => {
@@ -309,9 +309,9 @@ describe('Matchmaker Tests', () => {
       const client1 = new mezonjs.Client();
       const client2 = new mezonjs.Client();
       const socket1 = client1.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
       const socket2 = client2.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       var promise1 = new Promise((resolve, reject) => {
         socket1.onmatchmakermatched = (matchmakermatched) => {
@@ -350,13 +350,13 @@ describe('Matchmaker Tests', () => {
       const client3 = new mezonjs.Client();
 
       const socket1 = client1.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const socket2 = client2.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const socket3 = client3.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       var promise1 = new Promise((resolve, reject) => {
         socket3.onmatchmakermatched = (matchmakermatched) => {
@@ -394,10 +394,10 @@ describe('Matchmaker Tests', () => {
       const client2 = new mezonjs.Client();
 
       const socket1 = client1.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const socket2 = client2.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       var promise1 = new Promise<MatchmakerMatched>((resolve, reject) => {
         socket1.onmatchmakermatched = (matchmakermatched) => {

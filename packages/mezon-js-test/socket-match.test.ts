@@ -31,7 +31,7 @@ describe('Match Tests', () => {
     const match = await page.evaluate(async (customid, adapter) => {
       const client = new mezonjs.Client();
       const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const session = await client.authenticateCustom(customid);
       await socket.connect(session, false);
@@ -54,7 +54,7 @@ describe('Match Tests', () => {
     const match : Match = await page.evaluate(async (customid, adapter) => {
       const client = new mezonjs.Client();
       const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const session = await client.authenticateCustom(customid);
       await socket.connect(session, false);
@@ -80,7 +80,7 @@ describe('Match Tests', () => {
     const response = await page.evaluate(async (customid, adapter) => {
       const client = new mezonjs.Client();
       const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const session = await client.authenticateCustom(customid);
       await socket.connect(session, false);
@@ -104,10 +104,10 @@ describe('Match Tests', () => {
       const client2 = new mezonjs.Client();
 
       const socket1 = client1.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const socket2 = client2.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       var promise1 = new Promise<string>((resolve, reject) => {
         socket2.onmatchdata = (matchdata) => {
@@ -149,9 +149,9 @@ describe('Match Tests', () => {
       const client2 = new mezonjs.Client();
       const client3 = new mezonjs.Client();
 
-      const socket1 = client1.createSocket(false, false, adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
-      const socket2 = client2.createSocket(false, false, adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
-      const socket3 = client3.createSocket(false, false, adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+      const socket1 = client1.createSocket(false, false, new mezonjsprotobuf.WebSocketAdapterPb());
+      const socket2 = client2.createSocket(false, false, new mezonjsprotobuf.WebSocketAdapterPb());
+      const socket3 = client3.createSocket(false, false, new mezonjsprotobuf.WebSocketAdapterPb());
 
       const session1 = await client1.authenticateCustom(customid1);
       await socket1.connect(session1, false);
@@ -206,9 +206,9 @@ describe('Match Tests', () => {
       const client2 = new mezonjs.Client();
       const client3 = new mezonjs.Client();
 
-      const socket1 = client1.createSocket(false, false, adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
-      const socket2 = client2.createSocket(false, false, adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
-      const socket3 = client3.createSocket(false, false, adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+      const socket1 = client1.createSocket(false, false, new mezonjsprotobuf.WebSocketAdapterPb());
+      const socket2 = client2.createSocket(false, false, new mezonjsprotobuf.WebSocketAdapterPb());
+      const socket3 = client3.createSocket(false, false, new mezonjsprotobuf.WebSocketAdapterPb());
 
       const session1 = await client1.authenticateCustom(customid1);
       await socket1.connect(session1, false);
@@ -262,7 +262,7 @@ describe('Match Tests', () => {
 
     const response = await page.evaluate(async (customid, id, adapter) => {
       const client = new mezonjs.Client();
-      const socket = client.createSocket(false, false, adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+      const socket = client.createSocket(false, false, new mezonjsprotobuf.WebSocketAdapterPb());
 
       const session = await client.authenticateCustom(customid);
       await socket.connect(session, false);
@@ -283,7 +283,7 @@ describe('Match Tests', () => {
     const response = await page.evaluate(async (customid, id, adapter) => {
       const client = new mezonjs.Client();
       const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const session = await client.authenticateCustom(customid);
       await socket.connect(session, false);
@@ -307,7 +307,7 @@ describe('Match Tests', () => {
     const response = await page.evaluate(async (customid, id, adapter) => {
       const client = new mezonjs.Client();
       const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const session = await client.authenticateCustom(customid);
       await socket.connect(session, false);
@@ -341,7 +341,7 @@ describe('Match Tests', () => {
     const response = await page.evaluate(async (customid, id, convoId1, convoId2, convoId3, adapter) => {
       const client = new mezonjs.Client();
       const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+        new mezonjsprotobuf.WebSocketAdapterPb());
 
       const session = await client.authenticateCustom(customid);
       await socket.connect(session, false);
