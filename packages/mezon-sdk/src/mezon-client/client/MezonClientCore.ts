@@ -58,6 +58,7 @@ export class MezonClientCore extends EventEmitter {
   public addressMMN!: string;
   public zkProofs!: IZkProof;
   private _mmnInitPromise?: Promise<void>;
+  private loginInFlight?: Promise<string>;
 
   protected apiClient!: MezonApi;
   protected _mmnClient!: MmnClient;
@@ -116,7 +117,6 @@ export class MezonClientCore extends EventEmitter {
     return this._zkClient;
   }
 
-  // cho phép subclass override nếu cần
   public initManager(basePath: string, sessionApi?: Session) {
     this.eventManager = new EventManager();
     this.clans = new CacheManager(this._fetchClanFromAPI.bind(this));
@@ -155,47 +155,59 @@ export class MezonClientCore extends EventEmitter {
   }
 
   async handleClientLogin() {
-    const tempApiClient = new MezonApi(
-      this.token,
-      this.loginBasePath!,
-      this.timeout,
-    );
-    const tempSessionManager = new SessionManager(tempApiClient);
-    let sessionApi = null;
-    try {
-      sessionApi = await tempSessionManager.authenticate(
-        this.clientId,
-        this.token,
-      );
-    } catch (error) {
-      this.socketManager?.closeSocket();
-      throw error;
-    }
-    if (sessionApi?.api_url) {
-      const { host, port, useSSL } = parseUrlToHostAndSSL(sessionApi.api_url);
-      this.host = host;
-      this.port = port || (useSSL ? "443" : "80");
-      this.useSSL = useSSL;
+    if (this.loginInFlight) return this.loginInFlight;
 
-      const scheme = this.useSSL ? "https://" : "http://";
-      const basePath = `${scheme}${this.host}:${this.port}`;
-      this.initManager(basePath, sessionApi);
-    }
-
-    if (sessionApi?.id_token) {
+    this.loginInFlight = (async () => {
       try {
-        await this.mmnInitialized(sessionApi.id_token);
-      } catch (error) {
-        console.error("Failed to init MMN:", error);
+        const tempApiClient = new MezonApi(
+          this.token,
+          this.loginBasePath!,
+          this.timeout,
+        );
+        const tempSessionManager = new SessionManager(tempApiClient);
+        let sessionApi = null;
+        try {
+          sessionApi = await tempSessionManager.authenticate(
+            this.clientId,
+            this.token,
+          );
+        } catch (error) {
+          this.socketManager?.closeSocket();
+          throw error;
+        }
+        if (sessionApi?.api_url) {
+          const { host, port, useSSL } = parseUrlToHostAndSSL(
+            sessionApi.api_url,
+          );
+          this.host = host;
+          this.port = port || (useSSL ? "443" : "80");
+          this.useSSL = useSSL;
+
+          const scheme = this.useSSL ? "https://" : "http://";
+          const basePath = `${scheme}${this.host}:${this.port}`;
+          this.initManager(basePath, sessionApi);
+        }
+
+        if (sessionApi?.id_token) {
+          try {
+            await this.mmnInitialized(sessionApi.id_token);
+          } catch (error) {
+            console.error("Failed to init MMN:", error);
+          }
+        }
+        const sessionConnected = await this.socketManager.connect(sessionApi!);
+        if (sessionConnected?.token) {
+          await this.socketManager.connectSocket(sessionConnected.token);
+          await this.channelManager.initAllDmChannels(sessionConnected.token);
+        }
+        this.emit("ready");
+        return JSON.stringify(sessionApi ?? {});
+      } finally {
+        this.loginInFlight = undefined;
       }
-    }
-    const sessionConnected = await this.socketManager.connect(sessionApi!);
-    if (sessionConnected?.token) {
-      await this.socketManager.connectSocket(sessionConnected.token);
-      await this.channelManager.initAllDmChannels(sessionConnected.token);
-    }
-    this.emit("ready");
-    return JSON.stringify(sessionApi ?? {});
+    })();
+
+    return this.loginInFlight;
   }
 
   async login(): Promise<string> {

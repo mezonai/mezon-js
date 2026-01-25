@@ -2484,6 +2484,8 @@ export interface ApiSession {
   is_remember?: boolean;
   // endpoint url that belong to user
   api_url?: string;
+  // socket url
+  ws_url?: string;
   // id token for zklogin
   id_token?: string;
 }
@@ -2766,7 +2768,7 @@ export interface ApiUser {
   //A URL for an avatar image.
   avatar_url?: string;
   //
-  dob?: string;
+  dob_seconds?: number;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was created.
   create_time?: string;
   //The display name of the user.

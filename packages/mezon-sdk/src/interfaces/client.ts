@@ -573,7 +573,7 @@ export interface StartEndIndex {
 }
 
 export interface Hashtag {
-  channelid: string | undefined;
+  channelId: string | undefined;
 }
 export interface Emoji {
   emojiid: string | undefined;
