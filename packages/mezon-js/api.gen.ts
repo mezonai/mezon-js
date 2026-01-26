@@ -12029,7 +12029,7 @@ export class MezonApi {
           return {} as ChannelMessage;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.ChannelMessageSend.decode(new Uint8Array(buffer)) as ChannelMessage;
+          return tsproto.ChannelMessageSend.decode(new Uint8Array(buffer)) as unknown as ChannelMessage;
         } else {
           throw response;
         }
@@ -12058,7 +12058,19 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ChannelMessageUpdate.encode(
-      tsproto.ChannelMessageUpdate.fromPartial(body)
+      tsproto.ChannelMessageUpdate.fromPartial({
+        clan_id: clan_id,
+        channel_id: channel_id,
+        message_id: message_id,
+        mode: mode,
+        is_public: is_public,
+        content: content,
+        mentions: mentions,
+        attachments: attachments,
+        hide_editted: hideEditted,        
+        topic_id: topic_id,
+        is_update_msg_topic: is_update_msg_topic
+      })
     );
     const encodedBody = bodyWriter.finish();
 
@@ -12095,14 +12107,24 @@ export class MezonApi {
     message_id: string,
     has_attachment?: boolean,
     topic_id?: string,
-    mentions?:string,
-    references?: string): Promise<any> {
+    mentions?: Uint8Array,
+    references?: Uint8Array): Promise<any> {
     
     const urlPath = "/mezon.api.Mezon/DeleteChannelMessage";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ChannelMessageRemove.encode(
-      tsproto.ChannelMessageRemove.fromPartial(body)
+      tsproto.ChannelMessageRemove.fromPartial({
+        clan_id: clan_id,
+        channel_id: channel_id,
+        message_id: message_id,
+        mode: mode,
+        is_public: is_public,
+        has_attachment: has_attachment,
+        mentions: mentions,
+        references: references,
+        topic_id: topic_id
+      })
     );
     const encodedBody = bodyWriter.finish();
 
