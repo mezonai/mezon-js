@@ -11978,5 +11978,179 @@ export class MezonApi {
     ]);
   }
 
+  /**  */
+  sendChannelMessage(bearerToken: string,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymous_message?: boolean,
+    mention_everyone?: Boolean,
+    avatar?: string,
+    code?: number,
+    topic_id?: string): Promise<ChannelMessage> {
+    
+    const urlPath = "/mezon.api.Mezon/SendChannelMessage";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.ChannelMessageSend.encode(
+      tsproto.ChannelMessageSend.fromPartial({
+        clan_id: clan_id,
+        channel_id: channel_id,
+        mode: mode,
+        is_public: is_public,
+        content: content,
+        mentions: mentions,
+        attachments: attachments,
+        references: references,
+        anonymous_message: anonymous_message,
+        mention_everyone: mention_everyone as boolean,
+        avatar: avatar,
+        code: code,
+        topic_id: topic_id
+      })
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", {}, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+   
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as ChannelMessage;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();      
+          return tsproto.ChannelMessageSend.decode(new Uint8Array(buffer)) as unknown as ChannelMessage;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
+  /**  */
+  updateChannelMessage(bearerToken: string,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    message_id: string,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    hideEditted?: boolean,
+    topic_id?: string,
+    is_update_msg_topic?: boolean): Promise<any> {
+    
+    const urlPath = "/mezon.api.Mezon/UpdateChannelMessage";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.ChannelMessageUpdate.encode(
+      tsproto.ChannelMessageUpdate.fromPartial({
+        clan_id: clan_id,
+        channel_id: channel_id,
+        message_id: message_id,
+        mode: mode,
+        is_public: is_public,
+        content: content,
+        mentions: mentions,
+        attachments: attachments,
+        hide_editted: hideEditted,        
+        topic_id: topic_id,
+        is_update_msg_topic: is_update_msg_topic
+      })
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", {}, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as any;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();      
+          return tsproto.ChannelMessageUpdate.decode(new Uint8Array(buffer)) as any;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
+  /**  */
+  deleteChannelMessage(bearerToken: string,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    message_id: string,
+    has_attachment?: boolean,
+    topic_id?: string,
+    mentions?: Uint8Array,
+    references?: Uint8Array): Promise<any> {
+    
+    const urlPath = "/mezon.api.Mezon/DeleteChannelMessage";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.ChannelMessageRemove.encode(
+      tsproto.ChannelMessageRemove.fromPartial({
+        clan_id: clan_id,
+        channel_id: channel_id,
+        message_id: message_id,
+        mode: mode,
+        is_public: is_public,
+        has_attachment: has_attachment,
+        mentions: mentions,
+        references: references,
+        topic_id: topic_id
+      })
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", {}, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+   
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as any;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();      
+          return tsproto.ChannelMessageRemove.decode(new Uint8Array(buffer)) as any;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
 }
 

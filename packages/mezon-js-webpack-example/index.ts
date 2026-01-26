@@ -21,12 +21,12 @@ var useSSL = true; // Enable if server is run with an SSL certificate.
 var clientgw = new Client("defaultkey", "dev-mezon.nccsoft.vn", "8088", useSSL);
 var client = new Client("defaultkey", "172.16.11.90", "7350", false);
 
-clientgw.authenticateEmail("pocolomos@gmail.com", "xxxxxxxx").then(async session => {
-  console.log("authenticated.", session);
+clientgw.authenticateEmail("pocolomos@gmail.com", "C0nandoiner123$").then(async session => {
+  //console.log("authenticated.", session);
 
-  console.log(await client.listLogedDevice(session))
+  console.log(await client.listClanDescs(session))
   
-  const socket = client.createSocket(false, true, new WebSocketAdapterPb());
+  const socket = client.createSocket(false, "localhost", "8080", true, new WebSocketAdapterPb());
   const session2 = await socket.connect(session, true, "desktop");
   console.log("session", session2);
   const resp = await socket.listDataSocket(
@@ -40,6 +40,8 @@ clientgw.authenticateEmail("pocolomos@gmail.com", "xxxxxxxx").then(async session
   );
   console.log('resp', resp);
 
+  console.log(await socket.joinClanChat("0"))
+
 }).catch(e => {
-  console.log("error authenticating.");
+  console.log("error authenticating.", e);
 });

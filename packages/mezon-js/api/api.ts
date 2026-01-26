@@ -40234,3 +40234,773 @@ function isObject(value: any): boolean {
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
 }
+
+
+/** Send a message to a realtime channel. */
+export interface ChannelMessageSend {
+  /** The clan that channel belong to. */
+  clan_id: string;
+  /** The channel to sent to. */
+  channel_id: string;
+  /** Message content. */
+  content: string;
+  /** Message mention */
+  mentions: MessageMention[];
+  /** Message attachment */
+  attachments: MessageAttachment[];
+  /** Message reference */
+  references: MessageRef[];
+  /** Mode */
+  mode: number;
+  /** anonymous message */
+  anonymous_message: boolean;
+  /** mention everyone */
+  mention_everyone: boolean;
+  /** clan avatar */
+  avatar: string;
+  /** is public */
+  is_public: boolean;
+  /** code */
+  code: number;
+  /** topic id */
+  topic_id: string;
+  /** message id */
+  id: string;
+}
+
+/** Update a message previously sent to a realtime channel. */
+export interface ChannelMessageUpdate {
+  /** The clan that channel belong to. */
+  clan_id: string;
+  /** The channel the message was sent to. */
+  channel_id: string;
+  /** The ID assigned to the message to update. */
+  message_id: string;
+  /** New message content. */
+  content: string;
+  /** The mentions */
+  mentions: MessageMention[];
+  /** Message attachment */
+  attachments: MessageAttachment[];
+  /** The mode */
+  mode: number;
+  /** is public */
+  is_public: boolean;
+  /** hide editted */
+  hide_editted: boolean;
+  /** topic id */
+  topic_id: string;
+  /** update message topic */
+  is_update_msg_topic: boolean;
+}
+
+/** Remove a message previously sent to a realtime channel. */
+export interface ChannelMessageRemove {
+  /** The clan that channel belong to. */
+  clan_id: string;
+  /** The channel the message was sent to. */
+  channel_id: string;
+  /** The ID assigned to the message to update. */
+  message_id: string;
+  /** The mode */
+  mode: number;
+  /** is public */
+  is_public: boolean;
+  /** has_attachments. */
+  has_attachment: boolean;
+  /**  */
+  topic_id: string;
+  /** Message mention */
+  mentions: Uint8Array;
+  /** Message reference */
+  references: Uint8Array;
+}
+
+function createBaseChannelMessageSend(): ChannelMessageSend {
+  return {
+    clan_id: "0",
+    channel_id: "0",
+    content: "",
+    mentions: [],
+    attachments: [],
+    references: [],
+    mode: 0,
+    anonymous_message: false,
+    mention_everyone: false,
+    avatar: "",
+    is_public: false,
+    code: 0,
+    topic_id: "0",
+    id: "0",
+  };
+}
+
+export const ChannelMessageSend = {
+  encode(message: ChannelMessageSend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
+    }
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
+    }
+    if (message.content !== "") {
+      writer.uint32(26).string(message.content);
+    }
+    for (const v of message.mentions) {
+      MessageMention.encode(v!, writer.uint32(34).fork()).ldelim();
+    }
+    for (const v of message.attachments) {
+      MessageAttachment.encode(v!, writer.uint32(42).fork()).ldelim();
+    }
+    for (const v of message.references) {
+      MessageRef.encode(v!, writer.uint32(50).fork()).ldelim();
+    }
+    if (message.mode !== 0) {
+      writer.uint32(56).int32(message.mode);
+    }
+    if (message.anonymous_message !== false) {
+      writer.uint32(64).bool(message.anonymous_message);
+    }
+    if (message.mention_everyone !== false) {
+      writer.uint32(72).bool(message.mention_everyone);
+    }
+    if (message.avatar !== "") {
+      writer.uint32(82).string(message.avatar);
+    }
+    if (message.is_public !== false) {
+      writer.uint32(88).bool(message.is_public);
+    }
+    if (message.code !== 0) {
+      writer.uint32(96).int32(message.code);
+    }
+    if (message.topic_id !== "0") {
+      writer.uint32(104).int64(message.topic_id);
+    }
+    if (message.id !== "0") {
+      writer.uint32(112).int64(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMessageSend {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelMessageSend();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.clan_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.content = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.mentions.push(MessageMention.decode(reader, reader.uint32()));
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.references.push(MessageRef.decode(reader, reader.uint32()));
+          continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.mode = reader.int32();
+          continue;
+        case 8:
+          if (tag !== 64) {
+            break;
+          }
+
+          message.anonymous_message = reader.bool();
+          continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.mention_everyone = reader.bool();
+          continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.avatar = reader.string();
+          continue;
+        case 11:
+          if (tag !== 88) {
+            break;
+          }
+
+          message.is_public = reader.bool();
+          continue;
+        case 12:
+          if (tag !== 96) {
+            break;
+          }
+
+          message.code = reader.int32();
+          continue;
+        case 13:
+          if (tag !== 104) {
+            break;
+          }
+
+          message.topic_id = longToString(reader.int64() as Long);
+          continue;
+        case 14:
+          if (tag !== 112) {
+            break;
+          }
+
+          message.id = longToString(reader.int64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelMessageSend {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      content: isSet(object.content) ? globalThis.String(object.content) : "",
+      mentions: globalThis.Array.isArray(object?.mentions)
+        ? object.mentions.map((e: any) => MessageMention.fromJSON(e))
+        : [],
+      attachments: globalThis.Array.isArray(object?.attachments)
+        ? object.attachments.map((e: any) => MessageAttachment.fromJSON(e))
+        : [],
+      references: globalThis.Array.isArray(object?.references)
+        ? object.references.map((e: any) => MessageRef.fromJSON(e))
+        : [],
+      mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
+      anonymous_message: isSet(object.anonymous_message) ? globalThis.Boolean(object.anonymous_message) : false,
+      mention_everyone: isSet(object.mention_everyone) ? globalThis.Boolean(object.mention_everyone) : false,
+      avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
+      is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
+      code: isSet(object.code) ? globalThis.Number(object.code) : 0,
+      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "0",
+      id: isSet(object.id) ? globalThis.String(object.id) : "0",
+    };
+  },
+
+  toJSON(message: ChannelMessageSend): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "0") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.content !== "") {
+      obj.content = message.content;
+    }
+    if (message.mentions?.length) {
+      obj.mentions = message.mentions.map((e) => MessageMention.toJSON(e));
+    }
+    if (message.attachments?.length) {
+      obj.attachments = message.attachments.map((e) => MessageAttachment.toJSON(e));
+    }
+    if (message.references?.length) {
+      obj.references = message.references.map((e) => MessageRef.toJSON(e));
+    }
+    if (message.mode !== 0) {
+      obj.mode = Math.round(message.mode);
+    }
+    if (message.anonymous_message !== false) {
+      obj.anonymous_message = message.anonymous_message;
+    }
+    if (message.mention_everyone !== false) {
+      obj.mention_everyone = message.mention_everyone;
+    }
+    if (message.avatar !== "") {
+      obj.avatar = message.avatar;
+    }
+    if (message.is_public !== false) {
+      obj.is_public = message.is_public;
+    }
+    if (message.code !== 0) {
+      obj.code = Math.round(message.code);
+    }
+    if (message.topic_id !== "0") {
+      obj.topic_id = message.topic_id;
+    }
+    if (message.id !== "0") {
+      obj.id = message.id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelMessageSend>, I>>(base?: I): ChannelMessageSend {
+    return ChannelMessageSend.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ChannelMessageSend>, I>>(object: I): ChannelMessageSend {
+    const message = createBaseChannelMessageSend();
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.content = object.content ?? "";
+    message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
+    message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
+    message.references = object.references?.map((e) => MessageRef.fromPartial(e)) || [];
+    message.mode = object.mode ?? 0;
+    message.anonymous_message = object.anonymous_message ?? false;
+    message.mention_everyone = object.mention_everyone ?? false;
+    message.avatar = object.avatar ?? "";
+    message.is_public = object.is_public ?? false;
+    message.code = object.code ?? 0;
+    message.topic_id = object.topic_id ?? "0";
+    message.id = object.id ?? "0";
+    return message;
+  },
+};
+
+function createBaseChannelMessageUpdate(): ChannelMessageUpdate {
+  return {
+    clan_id: "0",
+    channel_id: "0",
+    message_id: "0",
+    content: "",
+    mentions: [],
+    attachments: [],
+    mode: 0,
+    is_public: false,
+    hide_editted: false,
+    topic_id: "0",
+    is_update_msg_topic: false,
+  };
+}
+
+export const ChannelMessageUpdate = {
+  encode(message: ChannelMessageUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
+    }
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
+    }
+    if (message.message_id !== "0") {
+      writer.uint32(24).int64(message.message_id);
+    }
+    if (message.content !== "") {
+      writer.uint32(34).string(message.content);
+    }
+    for (const v of message.mentions) {
+      MessageMention.encode(v!, writer.uint32(42).fork()).ldelim();
+    }
+    for (const v of message.attachments) {
+      MessageAttachment.encode(v!, writer.uint32(50).fork()).ldelim();
+    }
+    if (message.mode !== 0) {
+      writer.uint32(56).int32(message.mode);
+    }
+    if (message.is_public !== false) {
+      writer.uint32(64).bool(message.is_public);
+    }
+    if (message.hide_editted !== false) {
+      writer.uint32(72).bool(message.hide_editted);
+    }
+    if (message.topic_id !== "0") {
+      writer.uint32(80).int64(message.topic_id);
+    }
+    if (message.is_update_msg_topic !== false) {
+      writer.uint32(88).bool(message.is_update_msg_topic);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMessageUpdate {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelMessageUpdate();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.clan_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.message_id = longToString(reader.int64() as Long);
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.content = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.mentions.push(MessageMention.decode(reader, reader.uint32()));
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
+          continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.mode = reader.int32();
+          continue;
+        case 8:
+          if (tag !== 64) {
+            break;
+          }
+
+          message.is_public = reader.bool();
+          continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.hide_editted = reader.bool();
+          continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.topic_id = longToString(reader.int64() as Long);
+          continue;
+        case 11:
+          if (tag !== 88) {
+            break;
+          }
+
+          message.is_update_msg_topic = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelMessageUpdate {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
+      content: isSet(object.content) ? globalThis.String(object.content) : "",
+      mentions: globalThis.Array.isArray(object?.mentions)
+        ? object.mentions.map((e: any) => MessageMention.fromJSON(e))
+        : [],
+      attachments: globalThis.Array.isArray(object?.attachments)
+        ? object.attachments.map((e: any) => MessageAttachment.fromJSON(e))
+        : [],
+      mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
+      is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
+      hide_editted: isSet(object.hide_editted) ? globalThis.Boolean(object.hide_editted) : false,
+      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "0",
+      is_update_msg_topic: isSet(object.is_update_msg_topic) ? globalThis.Boolean(object.is_update_msg_topic) : false,
+    };
+  },
+
+  toJSON(message: ChannelMessageUpdate): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "0") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.message_id !== "0") {
+      obj.message_id = message.message_id;
+    }
+    if (message.content !== "") {
+      obj.content = message.content;
+    }
+    if (message.mentions?.length) {
+      obj.mentions = message.mentions.map((e) => MessageMention.toJSON(e));
+    }
+    if (message.attachments?.length) {
+      obj.attachments = message.attachments.map((e) => MessageAttachment.toJSON(e));
+    }
+    if (message.mode !== 0) {
+      obj.mode = Math.round(message.mode);
+    }
+    if (message.is_public !== false) {
+      obj.is_public = message.is_public;
+    }
+    if (message.hide_editted !== false) {
+      obj.hide_editted = message.hide_editted;
+    }
+    if (message.topic_id !== "0") {
+      obj.topic_id = message.topic_id;
+    }
+    if (message.is_update_msg_topic !== false) {
+      obj.is_update_msg_topic = message.is_update_msg_topic;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelMessageUpdate>, I>>(base?: I): ChannelMessageUpdate {
+    return ChannelMessageUpdate.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ChannelMessageUpdate>, I>>(object: I): ChannelMessageUpdate {
+    const message = createBaseChannelMessageUpdate();
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.message_id = object.message_id ?? "0";
+    message.content = object.content ?? "";
+    message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
+    message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
+    message.mode = object.mode ?? 0;
+    message.is_public = object.is_public ?? false;
+    message.hide_editted = object.hide_editted ?? false;
+    message.topic_id = object.topic_id ?? "0";
+    message.is_update_msg_topic = object.is_update_msg_topic ?? false;
+    return message;
+  },
+};
+
+function createBaseChannelMessageRemove(): ChannelMessageRemove {
+  return {
+    clan_id: "0",
+    channel_id: "0",
+    message_id: "0",
+    mode: 0,
+    is_public: false,
+    has_attachment: false,
+    topic_id: "0",
+    mentions: new Uint8Array(0),
+    references: new Uint8Array(0),
+  };
+}
+
+export const ChannelMessageRemove = {
+  encode(message: ChannelMessageRemove, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
+    }
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
+    }
+    if (message.message_id !== "0") {
+      writer.uint32(24).int64(message.message_id);
+    }
+    if (message.mode !== 0) {
+      writer.uint32(32).int32(message.mode);
+    }
+    if (message.is_public !== false) {
+      writer.uint32(40).bool(message.is_public);
+    }
+    if (message.has_attachment !== false) {
+      writer.uint32(48).bool(message.has_attachment);
+    }
+    if (message.topic_id !== "0") {
+      writer.uint32(56).int64(message.topic_id);
+    }
+    if (message.mentions.length !== 0) {
+      writer.uint32(66).bytes(message.mentions);
+    }
+    if (message.references.length !== 0) {
+      writer.uint32(74).bytes(message.references);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMessageRemove {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelMessageRemove();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.clan_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.message_id = longToString(reader.int64() as Long);
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.mode = reader.int32();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.is_public = reader.bool();
+          continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.has_attachment = reader.bool();
+          continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.topic_id = longToString(reader.int64() as Long);
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.mentions = reader.bytes();
+          continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.references = reader.bytes();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelMessageRemove {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
+      mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
+      is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
+      has_attachment: isSet(object.has_attachment) ? globalThis.Boolean(object.has_attachment) : false,
+      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "0",
+      mentions: isSet(object.mentions) ? bytesFromBase64(object.mentions) : new Uint8Array(0),
+      references: isSet(object.references) ? bytesFromBase64(object.references) : new Uint8Array(0),
+    };
+  },
+
+  toJSON(message: ChannelMessageRemove): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "0") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.message_id !== "0") {
+      obj.message_id = message.message_id;
+    }
+    if (message.mode !== 0) {
+      obj.mode = Math.round(message.mode);
+    }
+    if (message.is_public !== false) {
+      obj.is_public = message.is_public;
+    }
+    if (message.has_attachment !== false) {
+      obj.has_attachment = message.has_attachment;
+    }
+    if (message.topic_id !== "0") {
+      obj.topic_id = message.topic_id;
+    }
+    if (message.mentions.length !== 0) {
+      obj.mentions = base64FromBytes(message.mentions);
+    }
+    if (message.references.length !== 0) {
+      obj.references = base64FromBytes(message.references);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelMessageRemove>, I>>(base?: I): ChannelMessageRemove {
+    return ChannelMessageRemove.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ChannelMessageRemove>, I>>(object: I): ChannelMessageRemove {
+    const message = createBaseChannelMessageRemove();
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.message_id = object.message_id ?? "0";
+    message.mode = object.mode ?? 0;
+    message.is_public = object.is_public ?? false;
+    message.has_attachment = object.has_attachment ?? false;
+    message.topic_id = object.topic_id ?? "0";
+    message.mentions = object.mentions ?? new Uint8Array(0);
+    message.references = object.references ?? new Uint8Array(0);
+    return message;
+  },
+};
