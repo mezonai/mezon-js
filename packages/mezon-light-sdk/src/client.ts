@@ -265,7 +265,7 @@ export class LightClient {
    *
    * @returns True if the refresh token is expired, false otherwise
    */
-  isRefreshTokenExpired(): boolean {
+  isRefreshSessionExpired(): boolean {
     return this._session.isrefreshexpired(Date.now() / 1000);
   }
 
@@ -281,6 +281,13 @@ export class LightClient {
    */
   getRefreshToken(): string {
     return this._session.refresh_token;
+  }
+
+  /**
+   * Gets the current session.
+   */
+  getSession(): Session {
+    return this.session;
   }
 
   /**
