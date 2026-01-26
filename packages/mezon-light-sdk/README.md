@@ -14,7 +14,7 @@ npm install mezon-light-sdk
 - 💬 Real-time messaging via WebSocket (protobuf-based)
 - 📨 Direct message (DM) and group DM support
 - 🔄 Automatic session management with token refresh
-- 📎 Attachment support for messages
+- 📎 File upload and attachment support (presigned URLs)
 - 🎯 TypeScript-first with full type definitions
 - ⚡ Exponential backoff for socket connection reliability
 
@@ -73,7 +73,7 @@ Check and refresh the session before connecting:
 // Check if session token is expired
 if (client.isSessionExpired()) {
   // Check if refresh token is still valid
-  if (!client.isRefreshTokenExpired()) {
+  if (!client.isRefreshSessionExpired()) {
     await client.refreshSession();
     // Update stored session data
     localStorage.setItem('mezon_session', JSON.stringify(client.exportSession()));
@@ -130,15 +130,15 @@ unsubscribe2();
 ```typescript
 // Create a DM with a single user
 const dmChannel = await client.createDM('peer-user-id');
-await socket.joinChat(dmChannel.channel_id!, false); // false = DM
+await socket.joinDMChannel(dmChannel.channel_id!);
 
 // Create a group DM with multiple users
 const groupDM = await client.createGroupDM(['user-1', 'user-2', 'user-3']);
-await socket.joinChat(groupDM.channel_id!, true); // true = group
+await socket.joinGroupChannel(groupDM.channel_id!);
 
-// Leave a channel
-await socket.leaveChat(dmChannel.channel_id!, false);
-await socket.leaveChat(groupDM.channel_id!, true);
+// Leave channels
+await socket.leaveDMChannel(dmChannel.channel_id!);
+await socket.leaveGroupChannel(groupDM.channel_id!);
 ```
 
 ### 7. Send Messages
@@ -169,7 +169,72 @@ await socket.sendGroup({
 });
 ```
 
-### 8. Disconnect
+### 8. Upload Attachments
+
+**Upload Flow (Presigned URL):**
+
+Mezon uses **Presigned URLs** for secure file uploads:
+1. Client calls `uploadAttachment()` with file metadata → Server returns a **Presigned URL** (with temporary credentials in query params)
+2. Client uses the Presigned URL to **PUT file directly to CDN** (bypassing backend)
+3. After upload, Client **extracts the base URL** (removes query params) to use in message attachment
+
+**Example:**
+- Presigned URL: `https://cdn.mezon.ai/file.png?X-Amz-Signature=...` → Used for **upload**
+- CDN URL: `https://cdn.mezon.ai/file.png` → Used in **message**
+
+```typescript
+import * as fs from 'fs';
+import * as path from 'path';
+
+// Step 1: Get file information
+const imagePath = path.join(__dirname, 'image.png');
+const stats = fs.statSync(imagePath);
+
+// Step 2: Request presigned URL from server
+const uploadResponse = await client.uploadAttachment({
+  filename: 'image.png',
+  filetype: 'image/png',
+  size: stats.size,
+  width: 800,
+  height: 600
+});
+
+// uploadResponse.url = "https://cdn.mezon.ai/file.png?X-Amz-Algorithm=..."
+
+// Step 3: Upload file to CDN via presigned URL
+const fileBuffer = fs.readFileSync(imagePath);
+await fetch(uploadResponse.url!, {
+  method: 'PUT',
+  headers: { 'Content-Type': 'image/png' },
+  body: fileBuffer
+});
+
+// Step 4: Extract clean CDN URL (remove query params)
+const urlObj = new URL(uploadResponse.url!);
+const cdnUrl = `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
+// cdnUrl = "https://cdn.mezon.ai/file.png"
+
+// Step 5: Send message with attachment
+await socket.sendDM({
+  channelId: 'channel-123',
+  content: { t: 'Check out this image!' },
+  attachments: [{
+    filename: 'image.png',
+    url: cdnUrl,        // Use clean CDN URL
+    filetype: 'image/png',
+    size: stats.size,
+    width: 800,
+    height: 600
+  }]
+});
+```
+
+**⚠️ Important:**
+- Presigned URLs have **short expiration** (typically 10-60s), upload immediately after receiving
+- Only use **clean CDN URL** (without query params) in message attachment
+
+
+### 9. Disconnect
 
 ```typescript
 // Disconnect when done
@@ -189,13 +254,15 @@ socket.disconnect();
 | `client.client` | Get underlying MezonApi client |
 | `client.createDM(peerId)` | Create a DM channel with one user |
 | `client.createGroupDM(userIds)` | Create a group DM with multiple users |
+| `client.uploadAttachment(request)` | Upload file and get presigned URL + CDN URL |
 | `client.refreshSession()` | Refresh the session using refresh token |
 | `client.isSessionExpired()` | Check if session token is expired |
-| `client.isRefreshTokenExpired()` | Check if refresh token is expired |
+| `client.isRefreshSessionExpired()` | Check if refresh token is expired |
 | `client.getToken()` | Get the current auth token |
 | `client.getRefreshToken()` | Get the refresh token |
 | `client.exportSession()` | Export session data for persistence |
 | `client.createSocket(verbose?, adapter?, timeout?)` | Create a raw socket instance |
+
 
 ### LightSocket
 
@@ -207,8 +274,11 @@ socket.disconnect();
 | `socket.isConnected` | Check if socket is connected |
 | `socket.socket` | Get underlying Socket (throws if not connected) |
 | `socket.onChannelMessage(handler)` | Register message handler, returns unsubscribe fn |
-| `socket.joinChat(channelId, isGroup)` | Join a channel (DM or group) |
-| `socket.leaveChat(channelId, isGroup)` | Leave a channel |
+| `socket.setChannelMessageHandler(handler)` | Alias for onChannelMessage (no return) |
+| `socket.joinDMChannel(channelId)` | Join a DM channel |
+| `socket.joinGroupChannel(channelId)` | Join a group channel |
+| `socket.leaveDMChannel(channelId)` | Leave a DM channel |
+| `socket.leaveGroupChannel(channelId)` | Leave a group channel |
 | `socket.sendDM(payload)` | Send a DM message |
 | `socket.sendGroup(payload)` | Send a group message |
 | `socket.setErrorHandler(handler)` | Set custom error handler |
@@ -243,6 +313,30 @@ interface SocketConnectOptions {
   onError?: (error: unknown) => void;  // Error callback
   onDisconnect?: () => void;           // Disconnect callback
   verbose?: boolean;                    // Enable debug logging
+}
+
+interface ApiUploadAttachmentRequest {
+  filename?: string;     // File name
+  filetype?: string;     // MIME type (e.g., 'image/png')
+  size?: number;         // File size in bytes
+  width?: number;        // Image width (for images)
+  height?: number;       // Image height (for images)
+}
+
+interface ApiUploadAttachment {
+  filename?: string;     // Uploaded file name
+  url?: string;          // Presigned URL (with query params)
+}
+
+interface ApiMessageAttachment {
+  filename?: string;     // File name
+  url?: string;          // Clean CDN URL (without query params)
+  filetype?: string;     // MIME type
+  size?: number;         // File size in bytes
+  width?: number;        // Image width
+  height?: number;       // Image height
+  thumbnail?: string;    // Thumbnail URL (optional)
+  duration?: number;     // Video duration in seconds (optional)
 }
 ```
 

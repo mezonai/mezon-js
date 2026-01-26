@@ -125,7 +125,7 @@ export class LightSocket {
   private _errorHandler?: (error: unknown) => void;
   private _disconnectHandler?: () => void;
 
-  constructor(private readonly _client: LightClient, private readonly _session: Session) {}
+  constructor(private readonly _client: LightClient, private readonly _session: Session) { }
 
   /**
    * Gets whether the socket is currently connected.
@@ -211,6 +211,16 @@ export class LightSocket {
    * Multiple handlers can be registered and will all receive messages.
    *
    * @param handler - Callback function to handle messages
+   */
+  setChannelMessageHandler(cb: ChannelMessageHandler): void {
+    this.onChannelMessage(cb);
+  }
+
+  /**
+   * Registers a handler for incoming channel messages.
+   * Multiple handlers can be registered and will all receive messages.
+   *
+   * @param handler - Callback function to handle messages
    * @returns A function to unsubscribe the handler
    */
   onChannelMessage(handler: ChannelMessageHandler): () => void {
@@ -226,23 +236,43 @@ export class LightSocket {
   }
 
   /**
-   * Joins a direct message channel to receive messages from it.
+   * Joins a DM channel to receive messages from it.
    *
-   * @param channelId - The channel ID to join
+   * @param channelId - The DM channel ID to join
    * @throws {SocketError} If socket is not ready or join fails
    */
-  async joinChat(channelId: string, isGroup: boolean = false): Promise<void> {
+  async joinDMChannel(channelId: string): Promise<void> {
     await waitForSocketReady(this.socket);
-    await this.socket.joinChat(CLAN_DM, channelId, isGroup ? CHANNEL_TYPE_GROUP : CHANNEL_TYPE_DM, false);
+    await this.socket.joinChat(CLAN_DM, channelId, CHANNEL_TYPE_DM, false);
   }
 
   /**
-   * Leaves a previously joined channel.
+   * Joins a group channel to receive messages from it.
    *
-   * @param channelId - The channel ID to leave
+   * @param channelId - The group channel ID to join
+   * @throws {SocketError} If socket is not ready or join fails
    */
-  async leaveChat(channelId: string, isGroup: boolean = false): Promise<void> {
-    await this.socket.leaveChat(CLAN_DM, channelId, isGroup ? CHANNEL_TYPE_GROUP : CHANNEL_TYPE_DM, false);
+  async joinGroupChannel(channelId: string): Promise<void> {
+    await waitForSocketReady(this.socket);
+    await this.socket.joinChat(CLAN_DM, channelId, CHANNEL_TYPE_GROUP, false);
+  }
+
+  /**
+   * Leaves a DM channel.
+   *
+   * @param channelId - The DM channel ID to leave
+   */
+  async leaveDMChannel(channelId: string): Promise<void> {
+    await this.socket.leaveChat(CLAN_DM, channelId, CHANNEL_TYPE_DM, false);
+  }
+
+  /**
+   * Leaves a group channel.
+   *
+   * @param channelId - The group channel ID to leave
+   */
+  async leaveGroupChannel(channelId: string): Promise<void> {
+    await this.socket.leaveChat(CLAN_DM, channelId, CHANNEL_TYPE_GROUP, false);
   }
 
   /**

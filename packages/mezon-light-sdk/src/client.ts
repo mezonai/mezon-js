@@ -1,5 +1,5 @@
 import { Session } from "./session";
-import { ApiAuthenticationIdToken, ApiSession, MezonApi } from "./api.gen";
+import { ApiAuthenticationIdToken, ApiSession, MezonApi, ApiUploadAttachment, ApiUploadAttachmentRequest } from "./api.gen";
 import { MEZON_GW_URL, DEFAULT_SERVER_KEY, CHANNEL_TYPE_DM, CHANNEL_TYPE_GROUP } from "./constants";
 import { ClientInitConfig, AuthenticateConfig } from "./types";
 import { ApiChannelDescription } from "./api.gen";
@@ -178,6 +178,29 @@ export class LightClient {
   }
 
   /**
+   * Uploads an attachment file to Mezon server.
+   * Returns the URL of the uploaded file which can be used in messages.
+   *
+   * @param request - Upload request containing file metadata (filename, filetype, size, width, height)
+   * @returns A promise that resolves to the upload result with file URL
+   *
+   * @example
+   * ```typescript
+   * const result = await client.uploadAttachment({
+   *   filename: 'image.png',
+   *   filetype: 'image/png',
+   *   size: 1024,
+   *   width: 800,
+   *   height: 600
+   * });
+   * console.log('Uploaded file URL:', result.url);
+   * ```
+   */
+  async uploadAttachment(request: ApiUploadAttachmentRequest): Promise<ApiUploadAttachment> {
+    return this._client.uploadAttachmentFile(this._session.token, request);
+  }
+
+  /**
    * Refreshes the current session using the refresh token.
    * Call this before the session expires to maintain connectivity.
    *
@@ -265,7 +288,7 @@ export class LightClient {
    *
    * @returns True if the refresh token is expired, false otherwise
    */
-  isRefreshTokenExpired(): boolean {
+  isRefreshSessionExpired(): boolean {
     return this._session.isrefreshexpired(Date.now() / 1000);
   }
 
