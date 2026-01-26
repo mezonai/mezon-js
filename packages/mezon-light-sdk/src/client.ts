@@ -1,8 +1,7 @@
 import { Session } from "./session";
-import { ApiAuthenticationIdToken, ApiSession, MezonApi, ApiUploadAttachment, ApiUploadAttachmentRequest } from "./api.gen";
+import { ApiAuthenticationIdToken, ApiSession, MezonApi, ApiChannelDescription, ApiUploadAttachment, ApiUploadAttachmentRequest } from "./api.gen";
 import { MEZON_GW_URL, DEFAULT_SERVER_KEY, CHANNEL_TYPE_DM, CHANNEL_TYPE_GROUP } from "./constants";
 import { ClientInitConfig, AuthenticateConfig } from "./types";
-import { ApiChannelDescription } from "./api.gen";
 import { WebSocketAdapter, WebSocketAdapterPb } from "./web_socket_adapter_pb";
 import { DefaultSocket, Socket } from "./socket.gen";
 
