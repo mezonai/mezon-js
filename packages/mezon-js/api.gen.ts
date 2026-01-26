@@ -11997,13 +11997,28 @@ export class MezonApi {
     const urlPath = "/mezon.api.Mezon/SendChannelMessage";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.ReportMessageAbuseReqest.encode(
-      tsproto.ReportMessageAbuseReqest.fromPartial(body)
+    const bodyWriter = tsproto.ChannelMessageSend.encode(
+      tsproto.ChannelMessageSend.fromPartial({
+        clan_id: clan_id,
+        channel_id: channel_id,
+        mode: mode,
+        is_public: is_public,
+        content: content,
+        mentions: mentions,
+        attachments: attachments,
+        references: references,
+        anonymous_message: anonymous_message,
+        mention_everyone: mention_everyone as boolean,
+        avatar: avatar,
+        code: code,
+        topic_id: topic_id
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", {}, '');
+    fetchOptions.body = encodedBody;
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -12014,7 +12029,7 @@ export class MezonApi {
           return {} as ChannelMessage;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.ChannelMessage.decode(new Uint8Array(buffer)) as ChannelMessage;
+          return tsproto.ChannelMessageSend.decode(new Uint8Array(buffer)) as ChannelMessage;
         } else {
           throw response;
         }
@@ -12042,13 +12057,14 @@ export class MezonApi {
     const urlPath = "/mezon.api.Mezon/UpdateChannelMessage";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.ReportMessageAbuseReqest.encode(
-      tsproto.ReportMessageAbuseReqest.fromPartial(body)
+    const bodyWriter = tsproto.ChannelMessageUpdate.encode(
+      tsproto.ChannelMessageUpdate.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", {}, '');
+    fetchOptions.body = encodedBody;
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -12056,10 +12072,10 @@ export class MezonApi {
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return {} as ApiLogedDeviceList;
+          return {} as any;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.LogedDeviceList.decode(new Uint8Array(buffer)) as ApiLogedDeviceList;
+          return tsproto.ChannelMessageUpdate.decode(new Uint8Array(buffer)) as any;
         } else {
           throw response;
         }
@@ -12085,13 +12101,14 @@ export class MezonApi {
     const urlPath = "/mezon.api.Mezon/DeleteChannelMessage";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.ReportMessageAbuseReqest.encode(
-      tsproto.ReportMessageAbuseReqest.fromPartial(body)
+    const bodyWriter = tsproto.ChannelMessageRemove.encode(
+      tsproto.ChannelMessageRemove.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", {}, '');
+    fetchOptions.body = encodedBody;
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -12099,10 +12116,10 @@ export class MezonApi {
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return {} as ApiLogedDeviceList;
+          return {} as any;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.LogedDeviceList.decode(new Uint8Array(buffer)) as ApiLogedDeviceList;
+          return tsproto.ChannelMessageRemove.decode(new Uint8Array(buffer)) as any;
         } else {
           throw response;
         }
