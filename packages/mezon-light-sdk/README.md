@@ -73,7 +73,7 @@ Check and refresh the session before connecting:
 // Check if session token is expired
 if (client.isSessionExpired()) {
   // Check if refresh token is still valid
-  if (!client.isRefreshTokenExpired()) {
+  if (!client.isRefreshSessionExpired()) {
     await client.refreshSession();
     // Update stored session data
     localStorage.setItem('mezon_session', JSON.stringify(client.exportSession()));
@@ -83,9 +83,10 @@ if (client.isSessionExpired()) {
   }
 }
 
-// Access tokens directly if needed
+// Access tokens and session directly if needed
 const token = client.getToken();
 const refreshToken = client.getRefreshToken();
+const session = client.getSession();
 ```
 
 ### 4. Connect to Real-time Socket
@@ -115,6 +116,11 @@ const unsubscribe = socket.onChannelMessage((message) => {
   console.log('Timestamp:', message.create_time_seconds);
 });
 
+// Alternative: use setChannelMessageHandler (does not return unsubscribe)
+socket.setChannelMessageHandler((message) => {
+  console.log('Received:', message.content);
+});
+
 // Multiple handlers can be registered
 const unsubscribe2 = socket.onChannelMessage((message) => {
   // Another handler for the same messages
@@ -130,15 +136,15 @@ unsubscribe2();
 ```typescript
 // Create a DM with a single user
 const dmChannel = await client.createDM('peer-user-id');
-await socket.joinChat(dmChannel.channel_id!, false); // false = DM
+await socket.joinDMChannel(dmChannel.channel_id!);
 
 // Create a group DM with multiple users
 const groupDM = await client.createGroupDM(['user-1', 'user-2', 'user-3']);
-await socket.joinChat(groupDM.channel_id!, true); // true = group
+await socket.joinGroupChannel(groupDM.channel_id!);
 
-// Leave a channel
-await socket.leaveChat(dmChannel.channel_id!, false);
-await socket.leaveChat(groupDM.channel_id!, true);
+// Leave channels
+await socket.leaveDMChannel(dmChannel.channel_id!);
+await socket.leaveGroupChannel(groupDM.channel_id!);
 ```
 
 ### 7. Send Messages
@@ -191,9 +197,10 @@ socket.disconnect();
 | `client.createGroupDM(userIds)` | Create a group DM with multiple users |
 | `client.refreshSession()` | Refresh the session using refresh token |
 | `client.isSessionExpired()` | Check if session token is expired |
-| `client.isRefreshTokenExpired()` | Check if refresh token is expired |
+| `client.isRefreshSessionExpired()` | Check if refresh token is expired |
 | `client.getToken()` | Get the current auth token |
 | `client.getRefreshToken()` | Get the refresh token |
+| `client.getSession()` | Get the current session object |
 | `client.exportSession()` | Export session data for persistence |
 | `client.createSocket(verbose?, adapter?, timeout?)` | Create a raw socket instance |
 
@@ -207,8 +214,11 @@ socket.disconnect();
 | `socket.isConnected` | Check if socket is connected |
 | `socket.socket` | Get underlying Socket (throws if not connected) |
 | `socket.onChannelMessage(handler)` | Register message handler, returns unsubscribe fn |
-| `socket.joinChat(channelId, isGroup)` | Join a channel (DM or group) |
-| `socket.leaveChat(channelId, isGroup)` | Leave a channel |
+| `socket.setChannelMessageHandler(handler)` | Register message handler (alias) |
+| `socket.joinDMChannel(channelId)` | Join a DM channel |
+| `socket.joinGroupChannel(channelId)` | Join a group channel |
+| `socket.leaveDMChannel(channelId)` | Leave a DM channel |
+| `socket.leaveGroupChannel(channelId)` | Leave a group channel |
 | `socket.sendDM(payload)` | Send a DM message |
 | `socket.sendGroup(payload)` | Send a group message |
 | `socket.setErrorHandler(handler)` | Set custom error handler |
