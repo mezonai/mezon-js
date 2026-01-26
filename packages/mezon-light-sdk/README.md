@@ -1,84 +1,259 @@
-# Mezon-Light-SDK
+# Mezon Light SDK
 
-Lightweight SDK for mezon chat.
+A lightweight SDK for Mezon chat integration, providing simple APIs for authentication, real-time messaging, and direct message management.
 
-# Version SDK Example using to demo 
-`npm install mezon-light-sdk`
+## Installation
 
-# Frontend (Client) use SDK
-
-## 1: Import
-
-``` 
-import { LightClient, LightSocket, ChannelMessage } from 'mezon-light-sdk';
+```bash
+npm install mezon-light-sdk
 ```
 
-## 2: Create LightClient:
-```
-const light_client = await LightClient.authenticate({ id_token, user_id, username, serverkey });
-```
+## Features
 
-## 3: After login, the LightClient object loses its state due to page reloads or tab closures; only its raw data can be persisted, so a mechanism is required to reconstruct the object when chat functionality is needed.
+- 🔐 Simple authentication with ID tokens
+- 💬 Real-time messaging via WebSocket (protobuf-based)
+- 📨 Direct message (DM) and group DM support
+- 🔄 Automatic session management with token refresh
+- 📎 Attachment support for messages
+- 🎯 TypeScript-first with full type definitions
+- ⚡ Exponential backoff for socket connection reliability
 
-```
-const light_client =  LightClient.initClient({
-  token: '',
-  refresh_token: '',
-  api_url: '',
-  user_id: '',
-  serverkey: ''
-});
-```
-The input is retrieved from localStorage.
+## Quick Start
 
-## 4. Before establishing the socket connection, always check whether the token has expired and refresh it if necessary.
-```
-const isExpired = await light_client.isSessionExpired()
-if(isExpried) {
-   await light_client.refreshSession()
+### 1. Authenticate with ID Token
+
+```typescript
+import { LightClient, AuthenticationError } from 'mezon-light-sdk';
+
+try {
+  const client = await LightClient.authenticate({
+    id_token: 'your-id-token',
+    user_id: 'user-123',
+    username: 'johndoe',
+    serverkey: 'your-server-key',     // optional, uses DEFAULT_SERVER_KEY
+    gateway_url: 'https://gw.mezon.ai' // optional, uses MEZON_GW_URL
+  });
+  
+  console.log('Authenticated as:', client.userId);
+} catch (error) {
+  if (error instanceof AuthenticationError) {
+    console.error('Auth failed:', error.message, error.statusCode);
+  }
 }
 ```
-After that, the raw data of object light_client is stored in localStorage.
 
-## 5: Connect Socket:
-```
-  const light_socket = new LightSocket(light_client.getClient(), light_client.getSession());
-  await light_socket.connect();
+### 2. Restore Session from Storage
+
+After login, persist the session data and restore it later:
+
+```typescript
+import { LightClient, SessionError } from 'mezon-light-sdk';
+
+// Export session for storage
+const sessionData = client.exportSession();
+// Returns: { token, refresh_token, api_url, user_id }
+localStorage.setItem('mezon_session', JSON.stringify(sessionData));
+
+// Later: restore from storage
+try {
+  const savedData = JSON.parse(localStorage.getItem('mezon_session')!);
+  const client = LightClient.initClient(savedData);
+} catch (error) {
+  if (error instanceof SessionError) {
+    console.error('Session restore failed:', error.message);
+  }
+}
 ```
 
-## 6: Listen Message:
+### 3. Session Management
+
+Check and refresh the session before connecting:
+
+```typescript
+// Check if session token is expired
+if (client.isSessionExpired()) {
+  // Check if refresh token is still valid
+  if (!client.isRefreshSessionExpired()) {
+    await client.refreshSession();
+    // Update stored session data
+    localStorage.setItem('mezon_session', JSON.stringify(client.exportSession()));
+  } else {
+    // Both tokens expired - need to re-authenticate
+    console.log('Session fully expired, please login again');
+  }
+}
+
+// Access tokens and session directly if needed
+const token = client.getToken();
+const refreshToken = client.getRefreshToken();
+const session = client.getSession();
 ```
-light_socket.setChannelMessageHandler((msg: ChannelMessage) => {
-console.log('New message:', msg);
+
+### 4. Connect to Real-time Socket
+
+```typescript
+import { LightSocket, SocketError } from 'mezon-light-sdk';
+
+const socket = new LightSocket(client, client.session);
+
+await socket.connect({
+  onError: (error) => console.error('Socket error:', error),
+  onDisconnect: () => console.log('Socket disconnected'),
+  verbose: false // set to true for debug logging
 });
 
+// Check connection status
+console.log('Connected:', socket.isConnected);
 ```
 
-## 7: Start DM
+### 5. Listen for Messages
 
-```
-const channel = await light_client.createDM(peerId);
-await light_socket.joinDMChannel(channel.channel_id);
+```typescript
+// Register a message handler (returns unsubscribe function)
+const unsubscribe = socket.onChannelMessage((message) => {
+  console.log(`Message from ${message.sender_id}: ${message.content}`);
+  console.log('Channel:', message.channel_id);
+  console.log('Timestamp:', message.create_time_seconds);
+});
 
+// Alternative: use setChannelMessageHandler (does not return unsubscribe)
+socket.setChannelMessageHandler((message) => {
+  console.log('Received:', message.content);
+});
+
+// Multiple handlers can be registered
+const unsubscribe2 = socket.onChannelMessage((message) => {
+  // Another handler for the same messages
+});
+
+// Unsubscribe when no longer needed
+unsubscribe();
+unsubscribe2();
 ```
 
-## 8: Send Message:
+### 6. Create and Join Channels
 
-```
-await light_socket.sendDM(channelId, { t: inputMsg }, attachments);
-```
-```
-"attachments": [
-  {
-    "filename": "image.png",
-    "size": 42439,
-    "url": "https://cdn.mezon.ai/1940048388468772864/2001579269796401152.png",
-    "filetype": "image/png",
-    "width": 716,
-    "height": 522,
-    "thumbnail": "L56kYZxcRKW9sxabokoho,WGW7oa"
-  }
-]
-```
-<img width="767" height="775" alt="Screenshot 2025-12-15 132741" src="https://github.com/user-attachments/assets/3019ca86-de5f-49b7-a05a-3895c754029d" />
+```typescript
+// Create a DM with a single user
+const dmChannel = await client.createDM('peer-user-id');
+await socket.joinDMChannel(dmChannel.channel_id!);
 
+// Create a group DM with multiple users
+const groupDM = await client.createGroupDM(['user-1', 'user-2', 'user-3']);
+await socket.joinGroupChannel(groupDM.channel_id!);
+
+// Leave channels
+await socket.leaveDMChannel(dmChannel.channel_id!);
+await socket.leaveGroupChannel(groupDM.channel_id!);
+```
+
+### 7. Send Messages
+
+```typescript
+// Send a DM message
+await socket.sendDM({
+  channelId: 'channel-123',
+  content: { t: 'Hello, world!' },
+  hideLink: false // optional, whether to hide link previews
+});
+
+// Send a group message
+await socket.sendGroup({
+  channelId: 'group-channel-456',
+  content: { t: 'Hello everyone!' },
+  attachments: [
+    {
+      filename: 'image.png',
+      url: 'https://cdn.mezon.ai/path/to/image.png',
+      filetype: 'image/png',
+      size: 42439,
+      width: 716,
+      height: 522
+    }
+  ],
+  hideLink: true
+});
+```
+
+### 8. Disconnect
+
+```typescript
+// Disconnect when done
+socket.disconnect();
+```
+
+## API Reference
+
+### LightClient
+
+| Property/Method | Description |
+|-----------------|-------------|
+| `LightClient.authenticate(config)` | Static: Authenticate with ID token |
+| `LightClient.initClient(config)` | Static: Initialize from existing tokens |
+| `client.userId` | Get current user ID |
+| `client.session` | Get underlying Session object |
+| `client.client` | Get underlying MezonApi client |
+| `client.createDM(peerId)` | Create a DM channel with one user |
+| `client.createGroupDM(userIds)` | Create a group DM with multiple users |
+| `client.refreshSession()` | Refresh the session using refresh token |
+| `client.isSessionExpired()` | Check if session token is expired |
+| `client.isRefreshSessionExpired()` | Check if refresh token is expired |
+| `client.getToken()` | Get the current auth token |
+| `client.getRefreshToken()` | Get the refresh token |
+| `client.getSession()` | Get the current session object |
+| `client.exportSession()` | Export session data for persistence |
+| `client.createSocket(verbose?, adapter?, timeout?)` | Create a raw socket instance |
+
+### LightSocket
+
+| Property/Method | Description |
+|-----------------|-------------|
+| `new LightSocket(client, session)` | Create a new socket instance |
+| `socket.connect(options?)` | Connect to real-time server |
+| `socket.disconnect()` | Disconnect from server |
+| `socket.isConnected` | Check if socket is connected |
+| `socket.socket` | Get underlying Socket (throws if not connected) |
+| `socket.onChannelMessage(handler)` | Register message handler, returns unsubscribe fn |
+| `socket.setChannelMessageHandler(handler)` | Register message handler (alias) |
+| `socket.joinDMChannel(channelId)` | Join a DM channel |
+| `socket.joinGroupChannel(channelId)` | Join a group channel |
+| `socket.leaveDMChannel(channelId)` | Leave a DM channel |
+| `socket.leaveGroupChannel(channelId)` | Leave a group channel |
+| `socket.sendDM(payload)` | Send a DM message |
+| `socket.sendGroup(payload)` | Send a group message |
+| `socket.setErrorHandler(handler)` | Set custom error handler |
+
+### Types
+
+```typescript
+interface ClientInitConfig {
+  token: string;           // Auth token
+  refresh_token: string;   // Refresh token
+  api_url: string;         // API URL
+  user_id: string;         // User ID
+  serverkey?: string;      // Optional server key
+}
+
+interface AuthenticateConfig {
+  id_token: string;        // ID token from provider
+  user_id: string;         // User ID
+  username: string;        // Username
+  serverkey?: string;      // Optional server key
+  gateway_url?: string;    // Optional gateway URL
+}
+
+interface SendMessagePayload {
+  channelId: string;                  // Target channel
+  content: unknown;                   // Message content
+  attachments?: ApiMessageAttachment[]; // Optional attachments
+  hideLink?: boolean;                 // Hide link previews
+}
+
+interface SocketConnectOptions {
+  onError?: (error: unknown) => void;  // Error callback
+  onDisconnect?: () => void;           // Disconnect callback
+  verbose?: boolean;                    // Enable debug logging
+}
+```
+
+---

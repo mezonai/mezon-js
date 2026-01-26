@@ -1,23 +1,43 @@
 {
   "name": "mezon-light-sdk",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "description": "lightweight SDK for mezon chat.",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.mjs",
   "types": "dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.esm.mjs",
+      "require": "./dist/index.cjs.js"
+    }
+  },
   "files": [
     "dist"
   ],
+  "sideEffects": false,
   "scripts": {
-    "build": "tsc"
+    "build": "node build.mjs && tsc --emitDeclarationOnly",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:bundle": "node build.mjs"
   },
   "dependencies": {
     "js-base64": "^3.7.8",
-    "mezon-js": "2.14.57",
-    "mezon-js-protobuf": "1.8.95"
+    "protobufjs": "^8.0.0"
+  },
+  "peerDependencies": {
+    "long": "^5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "long": {
+      "optional": true
+    }
   },
   "author": "mezonai",
   "license": "MIT",
   "devDependencies": {
+    "esbuild": "^0.24.0",
     "typescript": "^5.4.3"
   }
 }

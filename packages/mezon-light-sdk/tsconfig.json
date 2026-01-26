@@ -3,15 +3,16 @@
   "compilerOptions": {
     "outDir": "dist",
     "declaration": true,
+    "emitDeclarationOnly": true,
     "sourceMap": false,
-    "module": "CommonJS",
-    "target": "ES2017",
-    "moduleResolution": "node",
+    "module": "ESNext",
+    "target": "es6",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["ES2017", "DOM"]
+    "lib": ["ES6", "DOM"]
   },
   "include": ["src/**/*"]
 }
