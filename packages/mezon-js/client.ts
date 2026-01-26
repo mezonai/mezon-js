@@ -822,14 +822,16 @@ export class Client {
 
   /** A socket created with the client's configuration. */
   createSocket(
-    useSSL = false,
+    useSSL = false,    
+    host: string,
+    port: string,
     verbose: boolean = false,
     adapter: WebSocketAdapter = new WebSocketAdapterText(),
     sendTimeoutMs: number = DefaultSocket.DefaultSendTimeoutMs
   ): Socket {
     return new DefaultSocket(
-      this.host,
-      this.port,
+      host,
+      port,
       useSSL,
       verbose,
       adapter,
