@@ -6,6 +6,7 @@ import { encode } from "js-base64";
 import * as tsproto from "./api/api";
 import { ApiUpdateChannelDescRequest } from "./client";
 import { PinMessagesList } from "./api/api";
+import { getFetcher } from "./config";
 
 /** A single user-role pair. */
 export interface ChannelUserListChannelUser {
@@ -5324,7 +5325,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiChannelDescList;
         } else if (response.status >= 200 && response.status < 300) {
