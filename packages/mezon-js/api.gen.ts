@@ -6,6 +6,7 @@ import { encode } from "js-base64";
 import * as tsproto from "./api/api";
 import { ApiUpdateChannelDescRequest } from "./client";
 import { PinMessagesList } from "./api/api";
+import { ChannelMessageAck } from "./socket";
 
 /** A single user-role pair. */
 export interface ChannelUserListChannelUser {
@@ -11992,7 +11993,7 @@ export class MezonApi {
     mention_everyone?: Boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string): Promise<ChannelMessage> {
+    topic_id?: string): Promise<ChannelMessageAck> {
     
     const urlPath = "/mezon.api.Mezon/SendChannelMessage";
     const queryParams = new Map<string, any>();
@@ -12026,10 +12027,10 @@ export class MezonApi {
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return {} as ChannelMessage;
+          return {} as ChannelMessageAck;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.ChannelMessageSend.decode(new Uint8Array(buffer)) as unknown as ChannelMessage;
+          return tsproto.ChannelMessageSend.decode(new Uint8Array(buffer)) as unknown as ChannelMessageAck;
         } else {
           throw response;
         }
