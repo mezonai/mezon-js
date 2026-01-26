@@ -20,9 +20,68 @@ import {Session} from "./session";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
 import { InternalEventsSocket } from "./constants";
 import { EventEmitter } from "stream";
-import { formatFunction } from "./utils/format_message_input";
 import HandleEvent from './message-socket-events';
 import { WebrtcSignalingFwd, IncomingCallPush, MessageButtonClicked, ChannelAppEvent, EphemeralMessageSend } from "./rtapi/realtime";
+import { decodeAttachments, decodeMentions, decodeReactions, decodeRefs, safeJSONParse } from "./utils";
+
+export interface ChannelMessage {
+  //The unique ID of this message.
+  id: string;
+  //
+  avatar?: string;
+  //The channel this message belongs to.
+  channel_id: string;
+  //The name of the chat room, or an empty string if this message was not sent through a chat room.
+  channel_label: string;
+  //The clan this message belong to.
+  clan_id?: string;
+  //The code representing a message type or category.
+  code: number;
+  //The content payload.
+  content: string;
+  //
+  reactions?: Array<ApiMessageReaction>;
+  //
+  mentions?: Array<ApiMessageMention>;
+  //
+  attachments?: Array<ApiMessageAttachment>;
+  //
+  references?: Array<ApiMessageRef>;
+  //
+  referenced_message?: string[];
+  //True if the message was persisted to the channel's history, false otherwise.
+  persistent?: boolean;
+  //Message sender, usually a user ID.
+  sender_id: string;
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
+  update_time?: string;
+  //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
+  clan_logo?: string;
+  //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
+  category_name?: string;
+  //The username of the message sender, if any.
+  username?: string;
+  // The clan nick name
+  clan_nick?: string;
+  // The clan avatar
+  clan_avatar?: string;
+  //
+  display_name?: string;
+  //
+  create_time_seconds?: number;
+  //
+  update_time_seconds?: number;
+  //
+  mode?: number;
+  //
+  message_id?: string;
+  //
+  hide_editted?: boolean;
+  //
+  is_public?: boolean;
+  //
+  topic_id?: string;
+}
 
 /** Stores function references for resolve/reject with a DOM Promise. */
 interface PromiseExecutor {
@@ -30,6 +89,70 @@ interface PromiseExecutor {
   reject: (reason?: any) => void;
 }
 
+function CreateChannelMessageFromEvent(message: any) {
+  var content, reactions, mentions, attachments, references, referencedMessags;
+  try {
+    content = safeJSONParse(message.channel_message.content);
+  } catch (e) {
+    console.log("content is invalid", e);
+  }
+  try {
+    reactions = decodeReactions(message.channel_message.reactions);
+  } catch (e) {
+    console.log("reactions is invalid", e);
+  }
+  try {
+    mentions = decodeMentions(message.channel_message.mentions);
+  } catch (e) {
+    console.log("mentions is invalid", e);
+  }
+  try {
+    attachments = decodeAttachments(message.channel_message.attachments);
+  } catch (e) {
+    console.log("attachments is invalid", e);
+  }
+  try {
+    references = decodeRefs(message.channel_message.references);
+  } catch (e) {
+    console.log("references is invalid", e);
+  }
+  try {
+    referencedMessags = message.channel_message.referenced_message;
+  } catch (e) {
+    console.log("referenced messages is invalid", e);
+  }
+  var e: ChannelMessage = {
+    id: message.id || message.channel_message.message_id,
+    avatar: message.channel_message.avatar,
+    channel_id: message.channel_message.channel_id,
+    mode: message.channel_message.mode,
+    channel_label: message.channel_message.channel_label,
+    clan_id: message.channel_message.clan_id,
+    code: message.channel_message.code,
+    message_id: message.channel_message.message_id,
+    sender_id: message.channel_message.sender_id,
+    update_time: message.channel_message.update_time,
+    clan_logo: message.channel_message.clan_logo,
+    category_name: message.channel_message.category_name,
+    username: message.channel_message.username,
+    clan_nick: message.channel_message.clan_nick,
+    clan_avatar: message.channel_message.clan_avatar,
+    display_name: message.channel_message.display_name,
+    content: content,
+    reactions: reactions?.reactions,
+    mentions: mentions?.mentions,
+    attachments: attachments?.attachments,
+    referenced_message: referencedMessags,
+    references: references?.refs,
+    hide_editted: message.channel_message.hide_editted,
+    is_public: message.channel_message.is_public,
+    create_time_seconds: message.channel_message.create_time_seconds,
+    update_time_seconds: message.channel_message.update_time_seconds,
+    topic_id: message.channel_message.topic_id,
+  };
+
+  return e;
+}
 
 /** A socket connection to Mezon server implemented with the DOM's WebSocket API. */
 export class DefaultSocket implements Socket {
@@ -71,6 +194,12 @@ export class DefaultSocket implements Socket {
   close() {
     this.adapter.close();
   }
+  
+  private formatFunction: Partial<Record<InternalEventsSocket, (msg: any) => any>> = {
+    [InternalEventsSocket.ChannelMessage]: (message: any) => {
+      return CreateChannelMessageFromEvent(message);
+    },
+  };
 
   connect(session: Session, createStatus: boolean = false, connectTimeoutMs: number = DefaultSocket.DefaultConnectTimeoutMs): Promise<Session> {
     this.session = session;
@@ -103,13 +232,19 @@ export class DefaultSocket implements Socket {
       if (!message.cid) {
         for (const event in InternalEventsSocket) {
           const fieldName = InternalEventsSocket[event as keyof typeof InternalEventsSocket];
-          if (Object.prototype.toString.call(message) === '[object Object]' && message.hasOwnProperty(fieldName) && message[fieldName]){
-            const input = formatFunction.hasOwnProperty(fieldName) ? formatFunction[fieldName](message) : message[fieldName]
+          if (
+            Object.prototype.toString.call(message) === '[object Object]' &&
+            message.hasOwnProperty(fieldName) &&
+            message[fieldName]
+          ){
+            const input = this.formatFunction[fieldName]
+              ? this.formatFunction[fieldName]!(message)
+              : message[fieldName];   
+
             this.socketEvents.emit(fieldName,input)
           }
         }
-    
-      } else {
+      }  else {
         const executor = this.cIds[message.cid];
         if (!executor) {
           if (this.verbose) {

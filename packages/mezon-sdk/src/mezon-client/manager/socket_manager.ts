@@ -103,7 +103,7 @@ export class SocketManager {
         try {
           await this.socket.joinClanChat(clan.clan_id || "");
         } catch (error) {
-          console.log('joinClanChat error', error)
+          console.log("joinClanChat error", error);
         }
         await sleep(50);
         if (!this.client.clans.get(clan.clan_id!)) {
@@ -145,7 +145,7 @@ export class SocketManager {
     const maxRetryInterval = 60000;
 
     console.log("Reconnecting...");
-
+    this.closeSocket();
     const retry = async () => {
       if (this.isRetrying || this.isHardDisconnect) return;
       this.isRetrying = true;
