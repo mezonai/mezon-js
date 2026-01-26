@@ -307,6 +307,13 @@ export class LightClient {
   }
 
   /**
+   * Gets the current session.
+   */
+  getSession(): Session {
+    return this.session;
+  }
+
+  /**
    * Exports session data for storage and later restoration.
    *
    * @returns Object containing all data needed to restore the session

@@ -83,9 +83,10 @@ if (client.isSessionExpired()) {
   }
 }
 
-// Access tokens directly if needed
+// Access tokens and session directly if needed
 const token = client.getToken();
 const refreshToken = client.getRefreshToken();
+const session = client.getSession();
 ```
 
 ### 4. Connect to Real-time Socket
@@ -113,6 +114,11 @@ const unsubscribe = socket.onChannelMessage((message) => {
   console.log(`Message from ${message.sender_id}: ${message.content}`);
   console.log('Channel:', message.channel_id);
   console.log('Timestamp:', message.create_time_seconds);
+});
+
+// Alternative: use setChannelMessageHandler (does not return unsubscribe)
+socket.setChannelMessageHandler((message) => {
+  console.log('Received:', message.content);
 });
 
 // Multiple handlers can be registered
@@ -260,6 +266,7 @@ socket.disconnect();
 | `client.isRefreshSessionExpired()` | Check if refresh token is expired |
 | `client.getToken()` | Get the current auth token |
 | `client.getRefreshToken()` | Get the refresh token |
+| `client.getSession()` | Get the current session object |
 | `client.exportSession()` | Export session data for persistence |
 | `client.createSocket(verbose?, adapter?, timeout?)` | Create a raw socket instance |
 
@@ -274,7 +281,7 @@ socket.disconnect();
 | `socket.isConnected` | Check if socket is connected |
 | `socket.socket` | Get underlying Socket (throws if not connected) |
 | `socket.onChannelMessage(handler)` | Register message handler, returns unsubscribe fn |
-| `socket.setChannelMessageHandler(handler)` | Alias for onChannelMessage (no return) |
+| `socket.setChannelMessageHandler(handler)` | Register message handler (alias) |
 | `socket.joinDMChannel(channelId)` | Join a DM channel |
 | `socket.joinGroupChannel(channelId)` | Join a group channel |
 | `socket.leaveDMChannel(channelId)` | Leave a DM channel |

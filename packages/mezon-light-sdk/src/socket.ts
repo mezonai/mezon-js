@@ -236,11 +236,11 @@ export class LightSocket {
   }
 
   /**
-   * Joins a DM channel to receive messages from it.
-   *
-   * @param channelId - The DM channel ID to join
-   * @throws {SocketError} If socket is not ready or join fails
-   */
+  * Joins a DM channel to receive messages from it.
+  *
+  * @param channelId - The DM channel ID to join
+  * @throws {SocketError} If socket is not ready or join fails
+  */
   async joinDMChannel(channelId: string): Promise<void> {
     await waitForSocketReady(this.socket);
     await this.socket.joinChat(CLAN_DM, channelId, CHANNEL_TYPE_DM, false);
