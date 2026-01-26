@@ -11978,5 +11978,140 @@ export class MezonApi {
     ]);
   }
 
+  /**  */
+  sendChannelMessage(bearerToken: string,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymous_message?: boolean,
+    mention_everyone?: Boolean,
+    avatar?: string,
+    code?: number,
+    topic_id?: string): Promise<ChannelMessage> {
+    
+    const urlPath = "/mezon.api.Mezon/SendChannelMessage";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.ReportMessageAbuseReqest.encode(
+      tsproto.ReportMessageAbuseReqest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", {}, '');
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+   
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as ChannelMessage;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();      
+          return tsproto.ChannelMessage.decode(new Uint8Array(buffer)) as ChannelMessage;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
+  /**  */
+  updateChannelMessage(bearerToken: string,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    message_id: string,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    hideEditted?: boolean,
+    topic_id?: string,
+    is_update_msg_topic?: boolean): Promise<any> {
+    
+    const urlPath = "/mezon.api.Mezon/UpdateChannelMessage";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.ReportMessageAbuseReqest.encode(
+      tsproto.ReportMessageAbuseReqest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", {}, '');
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as ApiLogedDeviceList;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();      
+          return tsproto.LogedDeviceList.decode(new Uint8Array(buffer)) as ApiLogedDeviceList;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
+  /**  */
+  deleteChannelMessage(bearerToken: string,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    message_id: string,
+    has_attachment?: boolean,
+    topic_id?: string,
+    mentions?:string,
+    references?: string): Promise<any> {
+    
+    const urlPath = "/mezon.api.Mezon/DeleteChannelMessage";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.ReportMessageAbuseReqest.encode(
+      tsproto.ReportMessageAbuseReqest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", {}, '');
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+   
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as ApiLogedDeviceList;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();      
+          return tsproto.LogedDeviceList.decode(new Uint8Array(buffer)) as ApiLogedDeviceList;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
 }
 
