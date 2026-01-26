@@ -11,7 +11,8 @@
     "build": "tsc"
   },
   "dependencies": {
-    "js-base64": "^3.7.8"
+    "js-base64": "^3.7.8",
+    "protobufjs": "^8.0.0"
   },
   "author": "mezonai",
   "license": "MIT",
