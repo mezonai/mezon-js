@@ -19,7 +19,7 @@ export class SessionManager {
       this.session = new Session(apiSession);
       return this.session;
     } catch (error) {
-      console.log('error', error)
+      this.session = undefined;
       throw new Error(`Authenticate failed: ${error}`);
     }
   }

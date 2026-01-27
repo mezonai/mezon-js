@@ -24,6 +24,7 @@ export class SocketManager {
   private socket: Socket;
   private isHardDisconnect: boolean | undefined;
   private isRetrying = false;
+  private eventsBound = false;
   constructor(
     private host: string,
     private port: string,
@@ -52,6 +53,7 @@ export class SocketManager {
       false,
       this.adapter,
     );
+    this.eventsBound = false;
   }
 
   getSocket() {
@@ -60,9 +62,7 @@ export class SocketManager {
 
   async connect(sockSession: Session) {
     this.isHardDisconnect = false;
-    if (this.socket.isOpen()) {
-      this.socket.close();
-    }
+    if (this.socket.isOpen()) return sockSession;
     const session = await this.socket.connect(sockSession, true);
     return session;
   }
@@ -79,9 +79,7 @@ export class SocketManager {
   async onerror(evt: ErrorEvent) {
     console.log("onerror", evt);
     if (this.isHardDisconnect) return;
-    if (this.socket.isOpen()) {
-      await this.retriesConnect();
-    }
+    await this.retriesConnect();
   }
 
   onheartbeattimeout() {
@@ -125,15 +123,19 @@ export class SocketManager {
         }
       }
 
-      ["ondisconnect", "onerror", "onheartbeattimeout"].forEach((event) => {
-        this.socket[event] = (this[event as keyof this] as Function).bind(this);
-      });
-
-      for (const event in Events) {
-        const key = Events[event as keyof typeof Events].toString();
-        this.socket.socketEvents.on(key, (...args: any[]) => {
-          this.client.emit(key, ...args);
+      if (!this.eventsBound) {
+        ["ondisconnect", "onerror", "onheartbeattimeout"].forEach((event) => {
+          this.socket[event] = (this[event as keyof this] as Function).bind(this);
         });
+
+        for (const event in Events) {
+          const key = Events[event as keyof typeof Events].toString();
+          this.socket.socketEvents.on(key, (...args: any[]) => {
+            this.client.emit(key, ...args);
+          });
+        }
+
+        this.eventsBound = true;
       }
     } catch (error) {
       throw error;
@@ -145,13 +147,13 @@ export class SocketManager {
     const maxRetryInterval = 60000;
 
     console.log("Reconnecting...");
-    this.closeSocket();
+
     const retry = async () => {
       if (this.isRetrying || this.isHardDisconnect) return;
       this.isRetrying = true;
 
       try {
-        await this.client.login();
+        await this.client.handleReconnectSocket();
 
         this.isRetrying = false;
         retryInterval = 5000;

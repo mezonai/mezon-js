@@ -175,6 +175,9 @@ export class MezonClientCore extends EventEmitter {
           this.socketManager?.closeSocket();
           throw error;
         }
+        if (!sessionApi) {
+          throw new Error("Authenticate returned empty session.");
+        }
         if (sessionApi?.api_url) {
           const { host, port, useSSL } = parseUrlToHostAndSSL(
             sessionApi.api_url,
@@ -187,6 +190,13 @@ export class MezonClientCore extends EventEmitter {
           const basePath = `${scheme}${this.host}:${this.port}`;
           this.initManager(basePath, sessionApi);
         }
+        if (
+          !this.socketManager ||
+          !this.channelManager ||
+          !this.sessionManager
+        ) {
+          this.initManager(this.loginBasePath!, sessionApi);
+        }
 
         if (sessionApi?.id_token) {
           try {
@@ -195,7 +205,7 @@ export class MezonClientCore extends EventEmitter {
             console.error("Failed to init MMN:", error);
           }
         }
-        const sessionConnected = await this.socketManager.connect(sessionApi!);
+        const sessionConnected = await this.socketManager.connect(sessionApi);
         if (sessionConnected?.token) {
           await this.socketManager.connectSocket(sessionConnected.token);
           await this.channelManager.initAllDmChannels(sessionConnected.token);
@@ -220,6 +230,24 @@ export class MezonClientCore extends EventEmitter {
       this.socketManager?.closeSocket();
       throw new Error(JSON.stringify(error ?? {}));
     }
+  }
+
+  async handleReconnectSocket() {
+    if (!this.sessionManager || !this.socketManager || !this.channelManager) {
+      this.initManager(this.loginBasePath!, undefined);
+    }
+
+    const session = this.sessionManager.getSession();
+    if (!session) {
+      return this.login();
+    }
+    const sessionConnected = await this.socketManager.connect(session);
+    const token = sessionConnected?.token;
+    if (!token) {
+      throw new Error("Missing session token after connect.");
+    }
+    await this.socketManager.connectSocket(token);
+    return JSON.stringify(session ?? {});
   }
 
   async getEphemeralKeyPair() {
