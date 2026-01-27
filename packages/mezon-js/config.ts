@@ -13,6 +13,10 @@ export const setFetchStrategy = (customFetcher: Fetcher): void => {
 	currentFetcher = customFetcher;
 };
 
+export const resetFetchStrategy = (): void => {
+	currentFetcher = fetch;
+};
+
 /**
  * Get the current fetch strategy
  * @returns The current fetcher function
