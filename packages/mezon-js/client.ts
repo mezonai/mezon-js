@@ -169,11 +169,14 @@ import {
   ApiIsBannedResponse,
   ApiLogedDeviceList,
   ChannelMessage,
+  ApiMessageMention,
+  ApiMessageAttachment,
+  ApiMessageRef,
 } from "./api.gen";
 import { PinMessagesList } from "./api/api";
 
 import { Session } from "./session";
-import { DefaultSocket, Socket } from "./socket";
+import { DefaultSocket, Socket, ChannelMessageAck } from "./socket";
 import { decodeAttachments, decodeMentions, decodeNotificationFcm, decodeReactions, decodeRefs, safeJSONParse } from "./utils";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
 
@@ -493,14 +496,14 @@ export class Client {
 
   async confirmAuthenticateOTP(
     request:  ApiLinkAccountConfirmRequest,
-  ): Promise<Session> {    
+  ): Promise<Session> {
     return this.apiClient
       .confirmAuthenticateOTP(this.serverkey, "", request)
       .then((apiSession: ApiSession) => {
         return new Session(
           apiSession.token || "",
           apiSession.refresh_token || "",
-          apiSession.created || false,          
+          apiSession.created || false,
           apiSession.api_url || "",
           apiSession.ws_url || "",
           apiSession.id_token || "",
@@ -531,7 +534,7 @@ export class Client {
         return new Session(
           apiSession.token || "",
           apiSession.refresh_token || "",
-          apiSession.created || false,          
+          apiSession.created || false,
           apiSession.api_url || "",
           apiSession.ws_url || "",
           apiSession.id_token || "",
@@ -547,7 +550,7 @@ export class Client {
     this.useSSL = useSSL;
     
     const scheme = useSSL ? "https://" : "http://";
-    const basePath = `${scheme}${host}:${port}`;    
+    const basePath = `${scheme}${host}:${port}`;
     return this.apiClient
       .setBasePath(basePath);
   }
@@ -822,7 +825,7 @@ export class Client {
 
   /** A socket created with the client's configuration. */
   createSocket(
-    useSSL = false,    
+    useSSL = false,
     host: string,
     port: string,
     verbose: boolean = false,
@@ -1877,7 +1880,7 @@ export class Client {
               avatar_url: f.user!.avatar_url,
               create_time: f.user!.create_time,
               display_name: f.user!.display_name,
-              edge_count: f.user!.edge_count ? Number(f.user!.edge_count) : 0,              
+              edge_count: f.user!.edge_count ? Number(f.user!.edge_count) : 0,
               id: f.user!.id,
               lang_tag: f.user!.lang_tag,
               location: f.user!.location,
@@ -4688,7 +4691,7 @@ export class Client {
       });
   }
 
-  async listForSaleItems(session: Session, 
+  async listForSaleItems(session: Session,
     page?: number): Promise<ApiForSaleItemList> {
     if (
       this.autoRefreshSession &&
@@ -4705,7 +4708,7 @@ export class Client {
       });
   }
 
-  async isFollower(session: Session, 
+  async isFollower(session: Session,
     req: ApiIsFollowerRequest): Promise<ApiIsFollowerResponse> {
     if (
       this.autoRefreshSession &&
@@ -4722,7 +4725,7 @@ export class Client {
       });
   }
 
-  async transferOwnership(session: Session, 
+  async transferOwnership(session: Session,
     req: ApiTransferOwnershipRequest): Promise<any> {
     if (
       this.autoRefreshSession &&
@@ -4739,7 +4742,7 @@ export class Client {
       });
   }
 
-  async isBanned(session: Session, 
+  async isBanned(session: Session,
     channelId: string): Promise<ApiIsBannedResponse> {
     if (
       this.autoRefreshSession &&
@@ -4813,6 +4816,132 @@ export class Client {
       });
   }
 
+
+  async sendChannelMessage(
+    session: Session,
+    clanId: string,
+    channelId: string,
+    mode: number,
+    isPublic: boolean,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymousMessage?: boolean,
+    mentionEveryone?: boolean,
+    avatar?: string,
+    code?: number,
+    topicId?: string
+  ): Promise<ChannelMessageAck> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .sendChannelMessage(
+        session.token,
+        clanId,
+        channelId,
+        mode,
+        isPublic,
+        content,
+        mentions,
+        attachments,
+        references,
+        anonymousMessage,
+        mentionEveryone,
+        avatar,
+        code,
+        topicId
+      )
+      .then((response: ChannelMessageAck) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async updateChannelMessage(
+    session: Session,
+    clanId: string,
+    channelId: string,
+    mode: number,
+    isPublic: boolean,
+    messageId: string,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    hideEditted?: boolean,
+    topicId?: string,
+    isUpdateMsgTopic?: boolean
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .updateChannelMessage(
+        session.token,
+        clanId,
+        channelId,
+        mode,
+        isPublic,
+        messageId,
+        content,
+        mentions,
+        attachments,
+        hideEditted,
+        topicId,
+        isUpdateMsgTopic
+      )
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async deleteChannelMessage(
+    session: Session,
+    clanId: string,
+    channelId: string,
+    mode: number,
+    isPublic: boolean,
+    messageId: string,
+    hasAttachment?: boolean,
+    topicId?: string,
+    mentions?: Uint8Array,
+    references?: Uint8Array
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .deleteChannelMessage(
+        session.token,
+        clanId,
+        channelId,
+        mode,
+        isPublic,
+        messageId,
+        hasAttachment,
+        topicId,
+        mentions,
+        references
+      )
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
 }
 
 
