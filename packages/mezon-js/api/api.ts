@@ -3006,7 +3006,7 @@ export interface LoginIDResponse {
   /** status login */
   status: number;
   /** create time */
-  create_time_seconds: string;
+  create_time_second: string;
   /** platform */
   platform: string;
   /** user_id */
@@ -3685,6 +3685,15 @@ export interface GenerateMeetTokenExternalResponse {
   token: string;
   guest_user_id: string;
   guest_access_token: string;
+}
+
+export interface KafkaActionMsg {
+  clan_id: string;
+  channel_id: string;
+  friend_ids: string[];
+  user_ids: string[];
+  mode: number;
+  stream: Uint8Array;
 }
 
 function createBaseAccount(): Account {
@@ -31256,19 +31265,19 @@ export const CreateActivityRequest = {
 };
 
 function createBaseLoginIDResponse(): LoginIDResponse {
-  return { login_id: "0", status: 0, create_time_seconds: "0", platform: "", user_id: "0", username: "", address: "" };
+  return { login_id: "", status: 0, create_time_second: "0", platform: "", user_id: "0", username: "", address: "" };
 }
 
 export const LoginIDResponse = {
   encode(message: LoginIDResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.login_id !== "0") {
-      writer.uint32(8).int64(message.login_id);
+    if (message.login_id !== "") {
+      writer.uint32(10).string(message.login_id);
     }
     if (message.status !== 0) {
       writer.uint32(16).int32(message.status);
     }
-    if (message.create_time_seconds !== "0") {
-      writer.uint32(24).int64(message.create_time_seconds);
+    if (message.create_time_second !== "0") {
+      writer.uint32(24).int64(message.create_time_second);
     }
     if (message.platform !== "") {
       writer.uint32(34).string(message.platform);
@@ -31293,11 +31302,11 @@ export const LoginIDResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.login_id = longToString(reader.int64() as Long);
+          message.login_id = reader.string();
           continue;
         case 2:
           if (tag !== 16) {
@@ -31311,7 +31320,7 @@ export const LoginIDResponse = {
             break;
           }
 
-          message.create_time_seconds = longToString(reader.int64() as Long);
+          message.create_time_second = longToString(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 34) {
@@ -31352,9 +31361,9 @@ export const LoginIDResponse = {
 
   fromJSON(object: any): LoginIDResponse {
     return {
-      login_id: isSet(object.login_id) ? globalThis.String(object.login_id) : "0",
+      login_id: isSet(object.login_id) ? globalThis.String(object.login_id) : "",
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
-      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.String(object.create_time_seconds) : "0",
+      create_time_second: isSet(object.create_time_second) ? globalThis.String(object.create_time_second) : "0",
       platform: isSet(object.platform) ? globalThis.String(object.platform) : "",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
       username: isSet(object.username) ? globalThis.String(object.username) : "",
@@ -31364,14 +31373,14 @@ export const LoginIDResponse = {
 
   toJSON(message: LoginIDResponse): unknown {
     const obj: any = {};
-    if (message.login_id !== "0") {
+    if (message.login_id !== "") {
       obj.login_id = message.login_id;
     }
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
-    if (message.create_time_seconds !== "0") {
-      obj.create_time_seconds = message.create_time_seconds;
+    if (message.create_time_second !== "0") {
+      obj.create_time_second = message.create_time_second;
     }
     if (message.platform !== "") {
       obj.platform = message.platform;
@@ -31393,9 +31402,9 @@ export const LoginIDResponse = {
   },
   fromPartial<I extends Exact<DeepPartial<LoginIDResponse>, I>>(object: I): LoginIDResponse {
     const message = createBaseLoginIDResponse();
-    message.login_id = object.login_id ?? "0";
+    message.login_id = object.login_id ?? "";
     message.status = object.status ?? 0;
-    message.create_time_seconds = object.create_time_seconds ?? "0";
+    message.create_time_second = object.create_time_second ?? "0";
     message.platform = object.platform ?? "";
     message.user_id = object.user_id ?? "0";
     message.username = object.username ?? "";
@@ -40181,6 +40190,166 @@ export const GenerateMeetTokenExternalResponse = {
   },
 };
 
+function createBaseKafkaActionMsg(): KafkaActionMsg {
+  return { clan_id: "0", channel_id: "0", friend_ids: [], user_ids: [], mode: 0, stream: new Uint8Array(0) };
+}
+
+export const KafkaActionMsg = {
+  encode(message: KafkaActionMsg, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
+    }
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
+    }
+    writer.uint32(26).fork();
+    for (const v of message.friend_ids) {
+      writer.int64(v);
+    }
+    writer.ldelim();
+    writer.uint32(34).fork();
+    for (const v of message.user_ids) {
+      writer.int64(v);
+    }
+    writer.ldelim();
+    if (message.mode !== 0) {
+      writer.uint32(40).int32(message.mode);
+    }
+    if (message.stream.length !== 0) {
+      writer.uint32(50).bytes(message.stream);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): KafkaActionMsg {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseKafkaActionMsg();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.clan_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag === 24) {
+            message.friend_ids.push(longToString(reader.int64() as Long));
+
+            continue;
+          }
+
+          if (tag === 26) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.friend_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
+        case 4:
+          if (tag === 32) {
+            message.user_ids.push(longToString(reader.int64() as Long));
+
+            continue;
+          }
+
+          if (tag === 34) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.mode = reader.int32();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.stream = reader.bytes();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): KafkaActionMsg {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      friend_ids: globalThis.Array.isArray(object?.friend_ids)
+        ? object.friend_ids.map((e: any) => globalThis.String(e))
+        : [],
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
+      stream: isSet(object.stream) ? bytesFromBase64(object.stream) : new Uint8Array(0),
+    };
+  },
+
+  toJSON(message: KafkaActionMsg): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "0") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.friend_ids?.length) {
+      obj.friend_ids = message.friend_ids;
+    }
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
+    }
+    if (message.mode !== 0) {
+      obj.mode = Math.round(message.mode);
+    }
+    if (message.stream.length !== 0) {
+      obj.stream = base64FromBytes(message.stream);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<KafkaActionMsg>, I>>(base?: I): KafkaActionMsg {
+    return KafkaActionMsg.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<KafkaActionMsg>, I>>(object: I): KafkaActionMsg {
+    const message = createBaseKafkaActionMsg();
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.friend_ids = object.friend_ids?.map((e) => e) || [];
+    message.user_ids = object.user_ids?.map((e) => e) || [];
+    message.mode = object.mode ?? 0;
+    message.stream = object.stream ?? new Uint8Array(0);
+    return message;
+  },
+};
+
 function bytesFromBase64(b64: string): Uint8Array {
   if ((globalThis as any).Buffer) {
     return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
@@ -40234,7 +40403,6 @@ function isObject(value: any): boolean {
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
 }
-
 
 /** Send a message to a realtime channel. */
 export interface ChannelMessageSend {
