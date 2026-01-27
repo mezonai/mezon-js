@@ -41172,3 +41172,137 @@ export const ChannelMessageRemove = {
     return message;
   },
 };
+
+export interface HandleParticipantMeetStateEvent {
+  /** clan id */
+  clan_id: string;
+  /** channel id */
+  channel_id: string;
+  /** display name */
+  display_name: string;
+  /** state (0: join, 1: leave) */
+  state: number;
+  /** room name */
+  room_name: string;
+}
+
+function createBaseHandleParticipantMeetStateEvent(): HandleParticipantMeetStateEvent {
+  return { clan_id: "0", channel_id: "0", display_name: "", state: 0, room_name: "" };
+}
+
+export const HandleParticipantMeetStateEvent = {
+  encode(message: HandleParticipantMeetStateEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
+    }
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
+    }
+    if (message.display_name !== "") {
+      writer.uint32(26).string(message.display_name);
+    }
+    if (message.state !== 0) {
+      writer.uint32(32).int32(message.state);
+    }
+    if (message.room_name !== "") {
+      writer.uint32(42).string(message.room_name);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HandleParticipantMeetStateEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHandleParticipantMeetStateEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.clan_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.display_name = reader.string();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.state = reader.int32();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.room_name = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): HandleParticipantMeetStateEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
+      state: isSet(object.state) ? globalThis.Number(object.state) : 0,
+      room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
+    };
+  },
+
+  toJSON(message: HandleParticipantMeetStateEvent): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "0") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.display_name !== "") {
+      obj.display_name = message.display_name;
+    }
+    if (message.state !== 0) {
+      obj.state = Math.round(message.state);
+    }
+    if (message.room_name !== "") {
+      obj.room_name = message.room_name;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<HandleParticipantMeetStateEvent>, I>>(base?: I): HandleParticipantMeetStateEvent {
+    return HandleParticipantMeetStateEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<HandleParticipantMeetStateEvent>, I>>(
+    object: I,
+  ): HandleParticipantMeetStateEvent {
+    const message = createBaseHandleParticipantMeetStateEvent();
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.display_name = object.display_name ?? "";
+    message.state = object.state ?? 0;
+    message.room_name = object.room_name ?? "";
+    return message;
+  },
+};

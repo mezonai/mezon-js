@@ -4790,6 +4790,29 @@ export class Client {
         return Promise.resolve(response);
       });
   }
+
+  async update(session: Session,
+    clanId?:string,
+    channelId?:string,
+    displayName?:string,
+    roomName?: string,
+    state?: number,
+  ) : Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .updateMezonVoiceState(session.token, clanId, channelId, displayName, roomName, state)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
+
 }
 
 

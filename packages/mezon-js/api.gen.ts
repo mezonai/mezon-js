@@ -12154,5 +12154,53 @@ export class MezonApi {
     ]);
   }
 
+  /**  */
+  updateMezonVoiceState(bearerToken: string,
+      clanId?:string,
+      channelId?:string,
+      displayName?:string,
+      roomName?: string,
+      state?: number,
+      options: any = {}): Promise<any> {
+    
+    const urlPath = "/mezon.api.Mezon/UpdateMezonVoiceState";
+    const queryParams = new Map<string, any>();
+
+    const body = {
+      clan_id: clanId,
+      channel_id: channelId,
+      display_name: displayName,
+      room_name: roomName,
+      state: state
+    };
+
+    const bodyWriter = tsproto.HandleParticipantMeetStateEvent.encode(
+      tsproto.HandleParticipantMeetStateEvent.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
 }
 
