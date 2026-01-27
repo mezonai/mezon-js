@@ -37,7 +37,7 @@ async function build() {
    if (isWatch) {
       const ctx = await esbuild.context({
          ...buildConfig,
-         outfile: 'dist/mezon-light-chat.js',
+         outfile: 'dist/mezon-chat-widget.js',
          format: 'iife',
          sourcemap: true,
          minify: false,
@@ -50,7 +50,7 @@ async function build() {
       // 1. Unminified build (for debugging/development)
       await esbuild.build({
          ...buildConfig,
-         outfile: 'dist/mezon-light-chat.js',
+         outfile: 'dist/mezon-chat-widget.js',
          format: 'iife', // Browser script tag ready
          sourcemap: true,
          legalComments: 'none',
@@ -63,7 +63,7 @@ async function build() {
       // 2. Minified build (Production/CDN ready)
       const result = await esbuild.build({
          ...buildConfig,
-         outfile: 'dist/mezon-light-chat.min.js',
+         outfile: 'dist/mezon-chat-widget.min.js',
          format: 'iife',
          sourcemap: false,
          minify: true,
@@ -73,11 +73,11 @@ async function build() {
 
       console.log('✅ Build complete!');
 
-      const stats = fs.statSync('dist/mezon-light-chat.min.js');
+      const stats = fs.statSync('dist/mezon-chat-widget.min.js');
       const sizeKB = (stats.size / 1024).toFixed(2);
 
-      console.log(`📦 Development: dist/mezon-light-chat.js`);
-      console.log(`📦 Production:  dist/mezon-light-chat.min.js (${sizeKB} KB) -> Ready for CDN`);
+      console.log(`📦 Development: dist/mezon-chat-widget.js`);
+      console.log(`📦 Production:  dist/mezon-chat-widget.min.js (${sizeKB} KB) -> Ready for CDN`);
    }
 }
 

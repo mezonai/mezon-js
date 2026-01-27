@@ -23,7 +23,8 @@ export class OAuthHandler {
   public async login(): Promise<{ client: LightClient; user: UserInfo } | null> {
     return new Promise((resolve, reject) => {
       const oauthPath = this.config.apiOauthPath ?? 'api/auth/url';
-      const url = new URL(oauthPath, this.config.apiBaseUrl).toString();
+      const full = this.config.apiBaseUrl.replace(/\/+$/, '') + '/' + oauthPath.replace(/^\/+/, ''); 
+      const url = new URL(full).toString();
 
       fetch(url)
         .then(res => res.json())

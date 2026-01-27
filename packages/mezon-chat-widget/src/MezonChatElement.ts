@@ -284,8 +284,14 @@ export class MezonChatElement extends HTMLElement {
 
       const element = document.querySelector('mezon-chat');
       if (element && element.hasAttribute('api-exchange-path')) {
-        const exchangePath = element.getAttribute('api-exchange-path');
-        exchangeUrl = `${window.location.origin}${exchangePath}`;
+        const baseUrl =
+          element.getAttribute('api-base-url') ?? window.location.origin;
+
+        const exchangePath =
+          element.getAttribute('api-exchange-path') ?? 'api/auth/exchange';
+
+        exchangeUrl = baseUrl.replace(/\/+$/, '') + '/' +
+          exchangePath.replace(/^\/+/, '');
       }
 
       console.log('🔄 Exchanging code at:', exchangeUrl);
