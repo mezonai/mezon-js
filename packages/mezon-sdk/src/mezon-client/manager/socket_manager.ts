@@ -98,11 +98,7 @@ export class SocketManager {
       const clanList = clans?.clandesc ?? [];
       clanList.push({ clan_id: "0", clan_name: "" });
       for (const clan of clanList) {
-        try {
-          await this.socket.joinClanChat(clan.clan_id || "");
-        } catch (error) {
-          console.log("joinClanChat error", error);
-        }
+        await this.socket.joinClanChat(clan.clan_id || "");
         await sleep(50);
         if (!this.client.clans.get(clan.clan_id!)) {
           const clanObj = new Clan(
@@ -125,7 +121,9 @@ export class SocketManager {
 
       if (!this.eventsBound) {
         ["ondisconnect", "onerror", "onheartbeattimeout"].forEach((event) => {
-          this.socket[event] = (this[event as keyof this] as Function).bind(this);
+          this.socket[event] = (this[event as keyof this] as Function).bind(
+            this,
+          );
         });
 
         for (const event in Events) {

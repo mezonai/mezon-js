@@ -324,7 +324,6 @@ export class DefaultSocket implements Socket {
       }
 
       this._connectTimeoutTimer = setTimeout(() => {
-        // if promise has resolved by now, the reject() is a no-op
         this._connectionState = ConnectionState.DISCONNECTED;
         this.stopHeartbeatLoop();
         this.adapter.close();
@@ -647,9 +646,6 @@ export class DefaultSocket implements Socket {
 
         return;
     }
-
-    // reuse the timeout as the interval for now.
-    // we can separate them out into separate values if needed later.
     this._heartbeatTimer = setTimeout(() => this.pingPong(), this._heartbeatTimeoutMs);
   }
 
