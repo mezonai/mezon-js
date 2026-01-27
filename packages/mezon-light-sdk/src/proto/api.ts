@@ -90,12 +90,12 @@ export interface ChannelDescription {
   user_ids: string[];
   /** last message id */
   last_sent_message:
-    | ChannelMessageHeader
-    | undefined;
+  | ChannelMessageHeader
+  | undefined;
   /** last seen message id */
   last_seen_message:
-    | ChannelMessageHeader
-    | undefined;
+  | ChannelMessageHeader
+  | undefined;
   /** DM status */
   onlines: boolean[];
   /** meeting code */
@@ -2620,3 +2620,219 @@ function base64FromBytes(arr: Uint8Array): string {
     return globalThis.btoa(bin.join(""));
   }
 }
+
+/**  */
+export interface UploadAttachmentRequest {
+  /** The name of file that need to upload */
+  filename: string;
+  /** The type of file that need to upload */
+  filetype: string;
+  /** The size of file that need to upload */
+  size: number;
+  /** width */
+  width: number;
+  /** Height */
+  height: number;
+}
+
+/**  */
+export interface UploadAttachment {
+  /** The name of file that need to upload */
+  filename: string;
+  /** The url */
+  url: string;
+}
+
+function createBaseUploadAttachmentRequest(): UploadAttachmentRequest {
+  return { filename: "", filetype: "", size: 0, width: 0, height: 0 };
+}
+
+export const UploadAttachmentRequest = {
+  encode(message: UploadAttachmentRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.filename !== "") {
+      writer.uint32(10).string(message.filename);
+    }
+    if (message.filetype !== "") {
+      writer.uint32(18).string(message.filetype);
+    }
+    if (message.size !== 0) {
+      writer.uint32(24).int32(message.size);
+    }
+    if (message.width !== 0) {
+      writer.uint32(32).int32(message.width);
+    }
+    if (message.height !== 0) {
+      writer.uint32(40).int32(message.height);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UploadAttachmentRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUploadAttachmentRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.filename = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.filetype = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.size = reader.int32();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.width = reader.int32();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.height = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UploadAttachmentRequest {
+    return {
+      filename: isSet(object.filename) ? globalThis.String(object.filename) : "",
+      filetype: isSet(object.filetype) ? globalThis.String(object.filetype) : "",
+      size: isSet(object.size) ? globalThis.Number(object.size) : 0,
+      width: isSet(object.width) ? globalThis.Number(object.width) : 0,
+      height: isSet(object.height) ? globalThis.Number(object.height) : 0,
+    };
+  },
+
+  toJSON(message: UploadAttachmentRequest): unknown {
+    const obj: any = {};
+    if (message.filename !== "") {
+      obj.filename = message.filename;
+    }
+    if (message.filetype !== "") {
+      obj.filetype = message.filetype;
+    }
+    if (message.size !== 0) {
+      obj.size = Math.round(message.size);
+    }
+    if (message.width !== 0) {
+      obj.width = Math.round(message.width);
+    }
+    if (message.height !== 0) {
+      obj.height = Math.round(message.height);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UploadAttachmentRequest>, I>>(base?: I): UploadAttachmentRequest {
+    return UploadAttachmentRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UploadAttachmentRequest>, I>>(object: I): UploadAttachmentRequest {
+    const message = createBaseUploadAttachmentRequest();
+    message.filename = object.filename ?? "";
+    message.filetype = object.filetype ?? "";
+    message.size = object.size ?? 0;
+    message.width = object.width ?? 0;
+    message.height = object.height ?? 0;
+    return message;
+  },
+};
+
+function createBaseUploadAttachment(): UploadAttachment {
+  return { filename: "", url: "" };
+}
+
+export const UploadAttachment = {
+  encode(message: UploadAttachment, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.filename !== "") {
+      writer.uint32(10).string(message.filename);
+    }
+    if (message.url !== "") {
+      writer.uint32(18).string(message.url);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UploadAttachment {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUploadAttachment();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.filename = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.url = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UploadAttachment {
+    return {
+      filename: isSet(object.filename) ? globalThis.String(object.filename) : "",
+      url: isSet(object.url) ? globalThis.String(object.url) : "",
+    };
+  },
+
+  toJSON(message: UploadAttachment): unknown {
+    const obj: any = {};
+    if (message.filename !== "") {
+      obj.filename = message.filename;
+    }
+    if (message.url !== "") {
+      obj.url = message.url;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UploadAttachment>, I>>(base?: I): UploadAttachment {
+    return UploadAttachment.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UploadAttachment>, I>>(object: I): UploadAttachment {
+    const message = createBaseUploadAttachment();
+    message.filename = object.filename ?? "";
+    message.url = object.url ?? "";
+    return message;
+  },
+};
+
