@@ -14,32 +14,62 @@
 
 import esbuild from 'esbuild';
 
+// External packages to avoid bundling runtime dependencies
+const external = [
+  'protobufjs',
+  'protobufjs/minimal',
+  'long',
+  'mezon-js-protobuf',
+  'whatwg-fetch',
+  'base64-arraybuffer',
+  'js-base64',
+];
+
 // Shared esbuild config
 const config = {
   logLevel: 'info',
   entryPoints: ['index.ts'],
   bundle: true,
   target: 'es6',
-  globalName: 'mezonjs'
+  platform: 'neutral',
+  treeShaking: true,
+  globalName: 'mezonjs',
+  external,
 };
 
-// Build CommonJS
+// Build CommonJS (minified)
 await esbuild.build({
   ...config,
   format: 'cjs',
-  outfile: 'dist/mezon-js.cjs.js'
+  outfile: 'dist/mezon-js.cjs.js',
+  minify: true,
+  minifyWhitespace: true,
+  minifyIdentifiers: true,
+  minifySyntax: true,
 });
 
-// Build ESM
+// Build ESM (minified)
 await esbuild.build({
   ...config,
   format: 'esm',
-  outfile: 'dist/mezon-js.esm.mjs'
+  outfile: 'dist/mezon-js.esm.mjs',
+  minify: true,
+  minifyWhitespace: true,
+  minifyIdentifiers: true,
+  minifySyntax: true,
 });
 
-// Build IIFE
+// Build IIFE (minified) - for direct browser script tag usage
 await esbuild.build({
   ...config,
   format: 'iife',
-  outfile: 'dist/mezon-js.iife.js'
+  outfile: 'dist/mezon-js.iife.js',
+  minify: true,
+  minifyWhitespace: true,
+  minifyIdentifiers: true,
+  minifySyntax: true,
 });
+
+// Note: UMD build is handled by Rollup for ES5/cocos2d-x-js compatibility
+
+console.log('Build completed successfully!');

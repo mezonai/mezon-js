@@ -19,6 +19,7 @@
 import typescript from "@rollup/plugin-typescript";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
+import terser from "@rollup/plugin-terser";
 
 export default {
   input: "./index.ts",
@@ -39,6 +40,16 @@ export default {
       browser: true,
     }),
     commonjs(),
+    terser({
+      compress: {
+        drop_console: false,
+        passes: 2,
+      },
+      mangle: true,
+      format: {
+        comments: false,
+      },
+    }),
   ],
   moduleContext: {
     [require.resolve("whatwg-fetch")]: "window",
