@@ -1,10 +1,10 @@
 {
-   "name": "mezon-light-chat-widget",
-   "version": "1.0.0",
+   "name": "mezon-chat-widget",
+   "version": "1.0.1",
    "description": "A customizable chat widget powered by Mezon SDK",
-   "main": "dist/mezon-light-chat.js",
-   "types": "dist/index.d.ts",
-   "type": "module",
+   "main": "dist/mezon-chat-widget.min.js",
+   "unpkg": "dist/mezon-chat-widget.min.js",
+   "jsdelivr": "dist/mezon-chat-widget.min.js",
    "scripts": {
       "dev": "node build-dev.js",
       "build": "node build-library.js",
@@ -16,7 +16,7 @@
       "mezon-light-sdk": "^1.0.5"
    },
    "files": [
-      "dist"
+      "dist/mezon-chat-widget.min.js"
    ],
    "keywords": [
       "chat",

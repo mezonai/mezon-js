@@ -36,11 +36,11 @@ export const AstraTheme: MezonTheme = {
   },
 };
 
-export const CalmVioletTheme: MezonTheme = {
-  name: 'calm-violet',
+export const VioletCoreTheme: MezonTheme = {
+  name: 'violet-core',
   tokens: {
-    primaryColor: '#8758A3',
-    hoverColor: '#73458C', 
+    primaryColor: '#6C5DB8',
+    hoverColor: '#5B4EA6', 
     backgroundColor: '#FFFFFF',
     textColor: '#1F2937',
     borderRadius: '8px',
@@ -53,6 +53,18 @@ export const ClearSkyTheme: MezonTheme = {
   tokens: {
     primaryColor: '#25AAE1',
     hoverColor: '#1E8FC0', 
+    backgroundColor: '#FFFFFF',
+    textColor: '#1F2937',
+    borderRadius: '8px',
+    fontFamily: 'Inter, system-ui, sans-serif',
+  },
+};
+
+export const DeepTealTheme: MezonTheme = {
+  name: 'deep-teal',
+  tokens: {
+    primaryColor: '#004037',
+    hoverColor: '#00352E', 
     backgroundColor: '#FFFFFF',
     textColor: '#1F2937',
     borderRadius: '8px',

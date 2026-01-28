@@ -91,10 +91,13 @@ export class ChatService {
       throw new Error('No active channel');
     }
 
+    const origin = window.location.origin;
+    const originMessage = `${origin}\n${content}`;
+
     try {
       await this.socket.sendDM({
         channelId: this.currentChannelId,
-        content: content,
+        content: originMessage,
         attachments: attachments
       }
       );
