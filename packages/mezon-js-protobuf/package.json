@@ -1,38 +1,54 @@
 {
-    "name": "mezon-js-protobuf",
-    "version": "1.8.95",
-    "description": "Websocket adapter adding protocol buffer support to the Mezon Javascript client.",
-    "main": "dist/mezon-js-protobuf.cjs.js",
-    "module": "dist/mezon-js-protobuf.esm.mjs",
-    "types": "dist/mezon-js-protobuf/index.d.ts",
-    "exports": {
-        "./package.json": "./package.json",
-        ".": {
-            "import": "./dist/mezon-js-protobuf.esm.mjs",
-            "require": "./dist/mezon-js-protobuf.cjs.js"
-        }
-    },
-    "scripts": {
-        "build": "npx tsc && node build.mjs"
-    },
-    "devDependencies": {
-        "ts-proto": "^1.80.1",
-        "ts-proto-descriptors": "1.2.1"
-    },
-    "keywords": [
-        "app server",
-        "client library",
-        "game server",
-        "mezon",
-        "realtime",
-        "realtime chat"
-    ]
-    ,
-    "repository": "https://github.com/nccasia/mezon-js",
-    "homepage": "https://mezon.vn",
-    "bugs": "https://github.com/nccasia/mezon-js/issues",
-    "license": "Apache-2.0",
-    "dependencies": {
-        "@scarf/scarf": "^1.1.1"
+  "name": "mezon-js-protobuf",
+  "version": "1.8.96",
+  "description": "Websocket adapter adding protocol buffer support to the Mezon Javascript client.",
+  "main": "dist/mezon-js-protobuf.cjs.js",
+  "module": "dist/mezon-js-protobuf.esm.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/mezon-js-protobuf.esm.mjs",
+      "require": "./dist/mezon-js-protobuf.cjs.js"
     }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "node build.mjs && tsc --emitDeclarationOnly",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:bundle": "node build.mjs"
+  },
+  "dependencies": {
+    "protobufjs": "^7.2.4"
+  },
+  "peerDependencies": {
+    "long": "^5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "long": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0",
+    "ts-proto": "^1.80.1",
+    "ts-proto-descriptors": "1.2.1",
+    "typescript": "^5.4.3"
+  },
+  "keywords": [
+    "app server",
+    "client library",
+    "game server",
+    "mezon",
+    "realtime",
+    "realtime chat"
+  ],
+  "repository": "https://github.com/nccasia/mezon-js",
+  "homepage": "https://mezon.vn",
+  "bugs": "https://github.com/nccasia/mezon-js/issues",
+  "license": "Apache-2.0"
 }

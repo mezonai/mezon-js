@@ -173,12 +173,10 @@ import {
   ApiMessageAttachment,
   ApiMessageRef,
 } from "./api.gen";
-import { PinMessagesList } from "./api/api";
-
 import { Session } from "./session";
 import { DefaultSocket, Socket, ChannelMessageAck } from "./socket";
 import { decodeAttachments, decodeMentions, decodeNotificationFcm, decodeReactions, decodeRefs, safeJSONParse } from "./utils";
-import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
+import { WebSocketAdapter, WebSocketAdapterPb } from "mezon-js-protobuf";
 
 const DEFAULT_HOST = "127.0.0.1";
 const DEFAULT_PORT = "7350";
@@ -829,7 +827,7 @@ export class Client {
     host: string,
     port: string,
     verbose: boolean = false,
-    adapter: WebSocketAdapter = new WebSocketAdapterText(),
+    adapter: WebSocketAdapter = new WebSocketAdapterPb(),
     sendTimeoutMs: number = DefaultSocket.DefaultSendTimeoutMs
   ): Socket {
     return new DefaultSocket(
@@ -2589,7 +2587,7 @@ export class Client {
 
     return this.apiClient
       .getPinMessagesList(session.token, messageId, channelId, clanId)
-      .then((response: PinMessagesList) => {
+      .then((response) => {
         var result: ApiPinMessagesList = {
           pin_messages_list: [],
         };

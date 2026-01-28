@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Client, Session} from "mezon-js";
+import {Client} from "mezon-js";
 import {WebSocketAdapterPb} from "mezon-js-protobuf"
 
 var useSSL = true; // Enable if server is run with an SSL certificate.

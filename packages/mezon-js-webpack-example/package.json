@@ -5,7 +5,8 @@
     "private": true,
     "license": "Apache-2.0",
     "dependencies": {
-        "mezon-js": "file:../mezon-js",
+        "mezon-js": "2.14.64",
+        "mezon-js-protobuf": "1.8.96",
         "ts-loader": "^8.0.14",
         "webpack": "^5.76.0",
         "webpack-cli": "^4.3.1"

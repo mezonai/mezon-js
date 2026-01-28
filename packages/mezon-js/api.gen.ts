@@ -3,9 +3,8 @@
 
 import { buildFetchOptions } from "./utils";
 import { encode } from "js-base64";
-import * as tsproto from "./api/api";
+import * as tsproto from "mezon-js-protobuf";
 import { ApiUpdateChannelDescRequest } from "./client";
-import { PinMessagesList } from "./api/api";
 import { ChannelMessageAck } from "./socket";
 import { getFetcher } from "./config";
 
@@ -8168,7 +8167,7 @@ export class MezonApi {
     channelId?: string,
     clanId?: string,
     options: any = {}
-  ): Promise<PinMessagesList> {
+  ): Promise<tsproto.PinMessagesList> {
     const urlPath = "/mezon.api.Mezon/GetPinMessagesList";
     const queryParams = new Map<string, any>();
 
@@ -8191,10 +8190,10 @@ export class MezonApi {
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return {} as PinMessagesList;
+          return {} as tsproto.PinMessagesList;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.PinMessagesList.decode(new Uint8Array(buffer)) as unknown as PinMessagesList;
+          return tsproto.PinMessagesList.decode(new Uint8Array(buffer)) as unknown as tsproto.PinMessagesList;
         } else {
           throw response;
         }

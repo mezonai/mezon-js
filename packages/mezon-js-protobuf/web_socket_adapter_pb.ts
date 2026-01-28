@@ -13,14 +13,74 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  WebSocketAdapter,
-  SocketCloseHandler,
-  SocketErrorHandler,
-  SocketMessageHandler,
-  SocketOpenHandler,
-} from "../mezon-js/web_socket_adapter";
 import * as tsproto from "./rtapi/realtime";
+
+/**
+ * An interface used by Mezon's web socket to determine the payload protocol.
+ */
+export interface WebSocketAdapter {
+  /**
+   * Dispatched when the web socket closes.
+   */
+  onClose: SocketCloseHandler | null;
+
+  /**
+   * Dispatched when the web socket receives an error.
+   */
+  onError: SocketErrorHandler | null;
+
+  /**
+   * Dispatched when the web socket receives a normal message.
+   */
+  onMessage: SocketMessageHandler | null;
+
+  /**
+   * Dispatched when the web socket opens.
+   */
+  onOpen: SocketOpenHandler | null;
+
+  isOpen(): boolean;
+  close(): void;
+  connect(
+    scheme: string,
+    host: string,
+    port: string,
+    createStatus: boolean,
+    token: string,
+    platform: string,
+    signal?: AbortSignal,
+  ): void;
+  send(message: any): void;
+}
+
+/**
+ * SocketCloseHandler defines a lambda that handles WebSocket close events.
+ */
+export interface SocketCloseHandler {
+  (this: WebSocket, evt: CloseEvent): void;
+}
+
+/**
+ * SocketErrorHandler defines a lambda that handles responses from the server via WebSocket
+ * that indicate an error.
+ */
+export interface SocketErrorHandler {
+  (this: WebSocket, evt: Event): void;
+}
+
+/**
+ * SocketMessageHandler defines a lambda that handles valid WebSocket messages.
+ */
+export interface SocketMessageHandler {
+  (message: any): void;
+}
+
+/**
+ * SocketOpenHandler defines a lambda that handles WebSocket open events.
+ */
+export interface SocketOpenHandler {
+  (this: WebSocket, evt: Event): void;
+}
 
 /**
  * A protocol buffer socket adapter that accepts and transmits payloads using the protobuf binary wire format.
@@ -28,8 +88,7 @@ import * as tsproto from "./rtapi/realtime";
 export class WebSocketAdapterPb implements WebSocketAdapter {
   private _socket?: WebSocket;
 
-  constructor() {
-  }
+  constructor() {}
 
   get onClose(): SocketCloseHandler | null {
     return this._socket!.onclose;
@@ -67,8 +126,7 @@ export class WebSocketAdapterPb implements WebSocketAdapter {
 
         value!(envelope);
       };
-    }
-    else {
+    } else {
       value = null;
     }
   }
@@ -97,7 +155,7 @@ export class WebSocketAdapterPb implements WebSocketAdapter {
     createStatus: boolean,
     token: string,
     platform: string,
-    signal?: AbortSignal
+    signal?: AbortSignal,
   ): void {
     if (signal) {
       signal.addEventListener("abort", () => {
@@ -105,18 +163,14 @@ export class WebSocketAdapterPb implements WebSocketAdapter {
       });
     }
     const url = `${scheme}${host}:${port}/ws?lang=en&status=${encodeURIComponent(
-      createStatus.toString()
-    )}&token=${encodeURIComponent(
-      token
-    )}&format=protobuf&platform=${encodeURIComponent(platform)}`;
+      createStatus.toString(),
+    )}&token=${encodeURIComponent(token)}&format=protobuf&platform=${encodeURIComponent(platform)}`;
     this._socket = new WebSocket(url);
     this._socket.binaryType = "arraybuffer";
   }
 
   send(msg: any): void {
-    const envelopeWriter = tsproto.Envelope.encode(
-      tsproto.Envelope.fromPartial(msg)
-    );
+    const envelopeWriter = tsproto.Envelope.encode(tsproto.Envelope.fromPartial(msg));
     const encodedMsg = envelopeWriter.finish();
     this._socket!.send(encodedMsg);
   }

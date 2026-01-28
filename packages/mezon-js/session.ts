@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-
-import * as base64 from "js-base64"
+import * as base64 from "js-base64";
 
 /** A session authenticated for a user with Mezon server. */
 export interface ISession {
@@ -23,7 +22,7 @@ export interface ISession {
   /** The authorization token used to construct this session. */
   token: string;
   /** If the user account for this session was just created. */
-  created: boolean
+  created: boolean;
   /** The UNIX timestamp when this session was created. */
   readonly created_at: number;
   /** The UNIX timestamp when this session will expire. */
@@ -47,8 +46,7 @@ export interface ISession {
 }
 
 export class Session implements ISession {
-
-  token : string;
+  token: string;
   readonly created_at: number;
   expires_at?: number;
   refresh_expires_at?: number;
@@ -65,7 +63,8 @@ export class Session implements ISession {
     readonly api_url: string,
     readonly ws_url: string,
     readonly id_token: string,
-    is_remember: boolean) {
+    is_remember: boolean,
+  ) {
     this.token = token;
     this.refresh_token = refresh_token;
     this.id_token = id_token;
@@ -77,48 +76,46 @@ export class Session implements ISession {
   }
 
   isexpired(currenttime: number): boolean {
-    return (this.expires_at! - currenttime) <= 0; // expired
+    return this.expires_at! - currenttime <= 0; // expired
   }
 
   isrefreshexpired(currenttime: number): boolean {
-      return (this.refresh_expires_at! - currenttime) <= 0;
+    return this.refresh_expires_at! - currenttime <= 0;
   }
 
   update(token: string, refreshToken: string, isRemember: boolean) {
-
-    const tokenParts = token.split('.');
+    const tokenParts = token.split(".");
     if (tokenParts.length != 3) {
-      throw 'jwt is not valid.';
+      throw "jwt is not valid.";
     }
 
     const tokenDecoded = JSON.parse(base64.atob(tokenParts[1]));
-    const tokenExpiresAt = Math.floor(parseInt(tokenDecoded['exp']));
+    const tokenExpiresAt = Math.floor(parseInt(tokenDecoded["exp"]));
 
     /** clients that have just updated to the refresh tokens */
     /** client release will not have a cached refresh token */
     if (refreshToken) {
+      const refreshTokenParts = refreshToken.split(".");
 
-        const refreshTokenParts = refreshToken.split('.');
+      if (refreshTokenParts.length != 3) {
+        throw "refresh jwt is not valid.";
+      }
 
-        if (refreshTokenParts.length != 3) {
-            throw 'refresh jwt is not valid.';
-        }
-
-        const refreshTokenDecoded = JSON.parse(base64.atob(refreshTokenParts[1]))
-        const refreshTokenExpiresAt = Math.floor(parseInt(refreshTokenDecoded['exp']));
-        this.refresh_expires_at = refreshTokenExpiresAt;
-        this.refresh_token = refreshToken;
-        this.is_remember = isRemember;
+      const refreshTokenDecoded = JSON.parse(base64.atob(refreshTokenParts[1]));
+      const refreshTokenExpiresAt = Math.floor(parseInt(refreshTokenDecoded["exp"]));
+      this.refresh_expires_at = refreshTokenExpiresAt;
+      this.refresh_token = refreshToken;
+      this.is_remember = isRemember;
     }
 
     this.token = token;
     this.expires_at = tokenExpiresAt;
-    this.username = tokenDecoded['usn'];
-    this.user_id = tokenDecoded['uid'];
-    this.vars = tokenDecoded['vrs'];
+    this.username = tokenDecoded["usn"];
+    this.user_id = tokenDecoded["uid"];
+    this.vars = tokenDecoded["vrs"];
   }
 
   static restore(token: string, refreshToken: string, api_url: string, ws_url: string, isRemember: boolean): Session {
-    return new Session(token, refreshToken, false, api_url, ws_url,  "", isRemember);
+    return new Session(token, refreshToken, false, api_url, ws_url, "", isRemember);
   }
 }

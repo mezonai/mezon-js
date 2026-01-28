@@ -4,10 +4,30 @@
     "./*",
   ],
   "compilerOptions": {
-    "outDir": "dist"
+    "outDir": "dist",
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationMap": false,
+    "sourceMap": true,
+    "module": "es2015",
+    "target": "es6",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": [
+      "dom",
+      "es6"
+    ],
   },
   "exclude": [
-    "node_modules" // Ensure this is here
+    "node_modules",
+    "dist"
   ],
-  "declarationDir": "dist"
+  "references": [
+    {
+      "path": "../mezon-js-protobuf"
+    }
+  ]
 }

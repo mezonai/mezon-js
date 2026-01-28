@@ -64,7 +64,7 @@ import {
   ChannelMessage,
 } from "./api.gen";
 import { Session } from "./session";
-import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
+import { WebSocketAdapter, WebSocketAdapterPb } from "mezon-js-protobuf";
 import { decodeAttachments, decodeMentions, decodeNotificationFcm, decodeReactions, decodeRefs, safeJSONParse } from "./utils";
 
 /** Stores function references for resolve/reject with a DOM Promise. */
@@ -1888,7 +1888,7 @@ export class DefaultSocket implements Socket {
     readonly port: string,
     readonly useSSL: boolean = false,
     public verbose: boolean = false,
-    readonly adapter: WebSocketAdapter = new WebSocketAdapterText(),
+    readonly adapter: WebSocketAdapter = new WebSocketAdapterPb(),
     readonly sendTimeoutMs: number = DefaultSocket.DefaultSendTimeoutMs
   ) {
     this.cIds = {};

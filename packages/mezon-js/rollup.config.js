@@ -16,39 +16,51 @@
 
 // Rollup is the legacy build system for mezon-js and is only used for cocos2d-x-js support.
 
-import typescript from '@rollup/plugin-typescript';
-import { nodeResolve } from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
+import typescript from "@rollup/plugin-typescript";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+import commonjs from "@rollup/plugin-commonjs";
+import terser from "@rollup/plugin-terser";
 
 export default {
-    input: './index.ts',
-    output:  {
-        format: 'umd',
-        name: 'mezonjs',
-        dir: "dist",
-        entryFileNames: "mezon-js.umd.js",
-        sourcemap: true
-    },
-    plugins: [
-        typescript({
-            include: ["**/*.ts"],
-            target: "es5"
-        }),
-        nodeResolve({
-            browser: true
-        }),
-        commonjs()
-    ],
-    moduleContext: {
-        [require.resolve('whatwg-fetch')]: 'window'
-    },
-    onwarn(warning, warn) {
-        if (warning.code === 'EVAL' && warning.id.includes('protobufjs')) {
-            return;
-        }
-        if (warning.code === 'CIRCULAR_DEPENDENCY' && warning.ids.some(id => id.includes('protobufjs'))) {
-            return;
-        }
-        warn(warning);
+  input: "./index.ts",
+  output: {
+    format: "umd",
+    name: "mezonjs",
+    dir: "dist",
+    entryFileNames: "mezon-js.umd.js",
+    sourcemap: true,
+  },
+  plugins: [
+    typescript({
+      include: ["./*.ts"],
+      exclude: ["../mezon-js-protobuf/**"],
+      target: "es5",
+    }),
+    nodeResolve({
+      browser: true,
+    }),
+    commonjs(),
+    terser({
+      compress: {
+        drop_console: false,
+        passes: 2,
+      },
+      mangle: true,
+      format: {
+        comments: false,
+      },
+    }),
+  ],
+  moduleContext: {
+    [require.resolve("whatwg-fetch")]: "window",
+  },
+  onwarn(warning, warn) {
+    if (warning.code === "EVAL" && warning.id.includes("protobufjs")) {
+      return;
     }
+    if (warning.code === "CIRCULAR_DEPENDENCY" && warning.ids.some((id) => id.includes("protobufjs"))) {
+      return;
+    }
+    warn(warning);
+  },
 };
