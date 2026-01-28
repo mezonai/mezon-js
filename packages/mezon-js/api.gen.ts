@@ -609,7 +609,7 @@ export interface ApiApp {
   //The UNIX time when the app was disabled.
   disable_time?: string;
   //The UNIX time when the app was created.
-  create_time?: string;
+  create_time_seconds?: number;
   //
   id?: string;
   //
@@ -814,7 +814,7 @@ export interface ApiChannelCanvasItem {
   // update time
   update_time?: string;
   // create time
-  create_time?: string;
+  create_time_seconds?: number;
 }
 
 /**  */
@@ -1130,7 +1130,7 @@ export interface ApiClanSticker {
   //
   clan_name?: string;
   //
-  create_time?: string;
+  create_time_seconds?: number;
   //
   creator_id?: string;
   //
@@ -1468,7 +1468,7 @@ export interface ApiEventManagement {
   //
   user_ids?: Array<string>;
   //
-  create_time?: string;
+  create_time_seconds?: number;
   //
   channel_id?: string;
   //
@@ -1634,7 +1634,7 @@ export interface ApiLinkInviteUser {
   //
   clan_id?: string;
   //
-  create_time?: string;
+  create_time_seconds?: number;
   //The user to add.
   creator_id?: string;
   //
@@ -1762,7 +1762,7 @@ export interface ApiMarkAsReadRequest {
 /**  */
 export interface ApiMessageMention {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time?: string;
+  create_time_seconds?: number;
   //
   id?: string;
   //
@@ -2166,8 +2166,6 @@ export interface ApiPinMessage {
   channel_id?: string;
   //
   content?: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time?: string;
   //
   create_time_seconds?: number;
   //
@@ -2381,7 +2379,7 @@ export interface ApiSdTopic {
   //
   clan_id?: string;
   //
-  create_time?: string;
+  create_time_seconds?: number;
   //
   creator_id?: string;
   //
@@ -2435,7 +2433,7 @@ export interface ApiSearchMessageDocument {
   //
   content?: string;
   //
-  create_time?: string;
+  create_time_seconds?: number;
   //
   display_name?: string;
   //
@@ -2657,7 +2655,7 @@ export interface ApiTransactionDetail {
   //
   amount?: number;
   //
-  create_time?: string;
+  create_time_seconds?: number;
   //
   update_time?: string;
   //
@@ -2772,7 +2770,7 @@ export interface ApiUser {
   //
   dob_seconds?: number;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was created.
-  create_time?: string;
+  create_time_seconds?: number;
   //The display name of the user.
   display_name?: string;
   //Number of related edges to this user.
@@ -2934,7 +2932,7 @@ export interface ApiWebhook {
   //
   channel_id?: string;
   //
-  create_time?: string;
+  create_time_seconds?: number;
   //
   creator_id?: string;
   //
@@ -3101,7 +3099,7 @@ export interface ApiOnboardingItem {
   //
   content?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time?: string;
+  create_time_seconds?: number;
   //
   guide_type?: number;
   //
@@ -3137,7 +3135,7 @@ export interface ApiClanWebhook {
   //clan id.
   clan_id?: string;
   //create time.
-  create_time?: string;
+  create_time_seconds?: number;
   //creator id.
   creator_id?: string;
   //id.
@@ -3375,7 +3373,7 @@ export interface ApiClanDiscover {
   //
   short_url?: string;
   //
-  create_time?: string;
+  create_time_seconds?: number;
 }
 
 /**  */
@@ -12176,6 +12174,106 @@ export class MezonApi {
 
     const bodyWriter = tsproto.HandleParticipantMeetStateEvent.encode(
       tsproto.HandleParticipantMeetStateEvent.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /**  */
+  messageButtonClick(bearerToken: string,
+      messageId?:string,
+      channelId?:string,
+      buttonId?:string,
+      senderId?: string,
+      userId?: string,
+      extraData?: string,
+      options: any = {}): Promise<any> {
+    
+    const urlPath = "/mezon.api.Mezon/MessageButtonClick";
+    const queryParams = new Map<string, any>();
+
+    const body = {
+      message_id: messageId,
+      channel_id: channelId,
+      button_id: buttonId,
+      sender_id: senderId,
+      user_id: userId,
+      extra_data: extraData
+    };
+
+    const bodyWriter = tsproto.MessageButtonClicked.encode(
+      tsproto.MessageButtonClicked.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /**  */
+  dropdownBoxSelected(bearerToken: string,
+      messageId?:string,
+      channelId?:string,
+      selectboxId?:string,
+      senderId?: string,
+      userId?: string,
+      values?: string[],
+      options: any = {}): Promise<any> {
+    
+    const urlPath = "/mezon.api.Mezon/DropdownBoxSelected";
+    const queryParams = new Map<string, any>();
+
+    const body = {
+      message_id: messageId,
+      channel_id: channelId,
+      selectbox_id: selectboxId,
+      sender_id: senderId,
+      user_id: userId,
+      values: values
+    };
+
+    const bodyWriter = tsproto.DropdownBoxSelected.encode(
+      tsproto.DropdownBoxSelected.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 

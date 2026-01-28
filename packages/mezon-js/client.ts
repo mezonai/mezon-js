@@ -267,7 +267,7 @@ export interface Notification {
   /** Content of the notification in JSON. */
   content?: {};
   /** The UNIX time when the notification was created. */
-  create_time?: string;
+  create_time_seconds?: number;
   /** ID of the Notification. */
   id?: string;
   /** True if this notification was persisted to the database. */
@@ -1459,7 +1459,7 @@ export class Client {
           result.clan_users!.push({
             user: {
               avatar_url: gu.user!.avatar_url,
-              create_time: gu.user!.create_time,
+              create_time_seconds: gu.user!.create_time_seconds,
               display_name: gu.user!.display_name,
               edge_count: gu.user!.edge_count ? Number(gu.user!.edge_count) : 0,
               id: gu.user!.id,
@@ -1878,7 +1878,7 @@ export class Client {
           result.friends!.push({
             user: {
               avatar_url: f.user!.avatar_url,
-              create_time: f.user!.create_time,
+              create_time_seconds: f.user!.create_time_seconds,
               display_name: f.user!.display_name,
               edge_count: f.user!.edge_count ? Number(f.user!.edge_count) : 0,
               id: f.user!.id,
@@ -4937,6 +4937,70 @@ export class Client {
         topicId,
         mentions,
         references
+      )
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async messageButtonClick(session: Session,
+      messageId?:string,
+      channelId?:string,
+      buttonId?:string,
+      senderId?: string,
+      userId?: string,
+      extraData?: string
+    ): Promise<any> {
+
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .messageButtonClick(
+        session.token,
+        messageId,
+        channelId,
+        buttonId,
+        senderId,
+        userId,
+        extraData
+      )
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async dropdownBoxSelected(session: Session,
+     messageId?:string,
+      channelId?:string,
+      selectboxId?:string,
+      senderId?: string,
+      userId?: string,
+      values?: string[]
+    ): Promise<any> {
+
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .dropdownBoxSelected(
+        session.token,
+        messageId,
+        channelId,
+        selectboxId,
+        senderId,
+        userId,
+        values
       )
       .then((response: any) => {
         return Promise.resolve(response);

@@ -41306,3 +41306,291 @@ export const HandleParticipantMeetStateEvent = {
     return message;
   },
 };
+
+export interface MessageButtonClicked {
+  message_id: string;
+  channel_id: string;
+  button_id: string;
+  sender_id: string;
+  user_id: string;
+  extra_data: string;
+}
+
+export interface DropdownBoxSelected {
+  message_id: string;
+  channel_id: string;
+  selectbox_id: string;
+  sender_id: string;
+  user_id: string;
+  values: string[];
+}
+
+
+function createBaseMessageButtonClicked(): MessageButtonClicked {
+  return { message_id: "0", channel_id: "0", button_id: "", sender_id: "0", user_id: "0", extra_data: "" };
+}
+
+export const MessageButtonClicked = {
+  encode(message: MessageButtonClicked, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.message_id !== "0") {
+      writer.uint32(8).int64(message.message_id);
+    }
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
+    }
+    if (message.button_id !== "") {
+      writer.uint32(26).string(message.button_id);
+    }
+    if (message.sender_id !== "0") {
+      writer.uint32(32).int64(message.sender_id);
+    }
+    if (message.user_id !== "0") {
+      writer.uint32(40).int64(message.user_id);
+    }
+    if (message.extra_data !== "") {
+      writer.uint32(50).string(message.extra_data);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MessageButtonClicked {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMessageButtonClicked();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.message_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.button_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.sender_id = longToString(reader.int64() as Long);
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.user_id = longToString(reader.int64() as Long);
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.extra_data = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MessageButtonClicked {
+    return {
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      button_id: isSet(object.button_id) ? globalThis.String(object.button_id) : "",
+      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "0",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
+      extra_data: isSet(object.extra_data) ? globalThis.String(object.extra_data) : "",
+    };
+  },
+
+  toJSON(message: MessageButtonClicked): unknown {
+    const obj: any = {};
+    if (message.message_id !== "0") {
+      obj.message_id = message.message_id;
+    }
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.button_id !== "") {
+      obj.button_id = message.button_id;
+    }
+    if (message.sender_id !== "0") {
+      obj.sender_id = message.sender_id;
+    }
+    if (message.user_id !== "0") {
+      obj.user_id = message.user_id;
+    }
+    if (message.extra_data !== "") {
+      obj.extra_data = message.extra_data;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MessageButtonClicked>, I>>(base?: I): MessageButtonClicked {
+    return MessageButtonClicked.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MessageButtonClicked>, I>>(object: I): MessageButtonClicked {
+    const message = createBaseMessageButtonClicked();
+    message.message_id = object.message_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.button_id = object.button_id ?? "";
+    message.sender_id = object.sender_id ?? "0";
+    message.user_id = object.user_id ?? "0";
+    message.extra_data = object.extra_data ?? "";
+    return message;
+  },
+};
+
+
+function createBaseDropdownBoxSelected(): DropdownBoxSelected {
+  return { message_id: "0", channel_id: "0", selectbox_id: "", sender_id: "0", user_id: "0", values: [] };
+}
+
+export const DropdownBoxSelected = {
+  encode(message: DropdownBoxSelected, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.message_id !== "0") {
+      writer.uint32(8).int64(message.message_id);
+    }
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
+    }
+    if (message.selectbox_id !== "") {
+      writer.uint32(26).string(message.selectbox_id);
+    }
+    if (message.sender_id !== "0") {
+      writer.uint32(32).int64(message.sender_id);
+    }
+    if (message.user_id !== "0") {
+      writer.uint32(40).int64(message.user_id);
+    }
+    for (const v of message.values) {
+      writer.uint32(50).string(v!);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DropdownBoxSelected {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDropdownBoxSelected();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.message_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.selectbox_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.sender_id = longToString(reader.int64() as Long);
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.user_id = longToString(reader.int64() as Long);
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.values.push(reader.string());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DropdownBoxSelected {
+    return {
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      selectbox_id: isSet(object.selectbox_id) ? globalThis.String(object.selectbox_id) : "",
+      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "0",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
+      values: globalThis.Array.isArray(object?.values) ? object.values.map((e: any) => globalThis.String(e)) : [],
+    };
+  },
+
+  toJSON(message: DropdownBoxSelected): unknown {
+    const obj: any = {};
+    if (message.message_id !== "0") {
+      obj.message_id = message.message_id;
+    }
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.selectbox_id !== "") {
+      obj.selectbox_id = message.selectbox_id;
+    }
+    if (message.sender_id !== "0") {
+      obj.sender_id = message.sender_id;
+    }
+    if (message.user_id !== "0") {
+      obj.user_id = message.user_id;
+    }
+    if (message.values?.length) {
+      obj.values = message.values;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DropdownBoxSelected>, I>>(base?: I): DropdownBoxSelected {
+    return DropdownBoxSelected.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<DropdownBoxSelected>, I>>(object: I): DropdownBoxSelected {
+    const message = createBaseDropdownBoxSelected();
+    message.message_id = object.message_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.selectbox_id = object.selectbox_id ?? "";
+    message.sender_id = object.sender_id ?? "0";
+    message.user_id = object.user_id ?? "0";
+    message.values = object.values?.map((e) => e) || [];
+    return message;
+  },
+};
