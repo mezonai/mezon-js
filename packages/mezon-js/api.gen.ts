@@ -1991,7 +1991,7 @@ export interface ApiNotification {
   //Content of the notification in JSON.
   content?: tsproto.DirectFcmProto;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the notification was created.
-  create_time?: string;
+  create_time_seconds?: number;
   //ID of the Notification.
   id?: string;
   //True if this notification was persisted to the database.
