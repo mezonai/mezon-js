@@ -1947,7 +1947,7 @@ export class Client {
             content: n.content ? decodeNotificationFcm(n.content) : undefined,
             code: n.code ? Number(n.code) : 0,
             sender_id: n.sender_id,
-            create_time: n.create_time,
+            create_time_seconds: n.create_time_seconds,
             persistent: n.persistent,
             category: n.category,
           });
@@ -4794,7 +4794,7 @@ export class Client {
       });
   }
 
-  async update(session: Session,
+  async updateMezonVoiceState(session: Session,
     clanId?:string,
     channelId?:string,
     displayName?:string,
