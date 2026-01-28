@@ -14,32 +14,56 @@
 
 import esbuild from 'esbuild';
 
+// External packages to avoid bundling runtime dependencies
+const external = [
+  'protobufjs',
+  'protobufjs/minimal',
+  'long',
+];
+
 // Shared esbuild config
 const config = {
   logLevel: 'info',
   entryPoints: ['index.ts'],
   bundle: true,
   target: 'es6',
-  globalName: 'mezonjsprotobuf'
+  platform: 'neutral',
+  treeShaking: true,
+  globalName: 'mezonjsprotobuf',
+  external,
 };
 
-// Build CommonJS
+// Build CommonJS (minified)
 await esbuild.build({
   ...config,
   format: 'cjs',
-  outfile: 'dist/mezon-js-protobuf.cjs.js'
+  outfile: 'dist/mezon-js-protobuf.cjs.js',
+  minify: true,
+  minifyWhitespace: true,
+  minifyIdentifiers: true,
+  minifySyntax: true,
 });
 
-// Build ESM
+// Build ESM (minified)
 await esbuild.build({
   ...config,
   format: 'esm',
-  outfile: 'dist/mezon-js-protobuf.esm.mjs'
+  outfile: 'dist/mezon-js-protobuf.esm.mjs',
+  minify: true,
+  minifyWhitespace: true,
+  minifyIdentifiers: true,
+  minifySyntax: true,
 });
 
-// Build IIFE
+// Build IIFE (minified) - for direct browser script tag usage
 await esbuild.build({
   ...config,
   format: 'iife',
-  outfile: 'dist/mezon-js-protobuf.iife.js'
+  outfile: 'dist/mezon-js-protobuf.iife.js',
+  minify: true,
+  minifyWhitespace: true,
+  minifyIdentifiers: true,
+  minifySyntax: true,
 });
+
+console.log('Build completed successfully!');

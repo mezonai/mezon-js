@@ -8,9 +8,26 @@
   ],
   "compilerOptions": {
     "outDir": "dist",
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationMap": false,
+    "sourceMap": false,
+    "module": "es2015",
+    "target": "es6",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": [
+      "dom",
+      "ES6"
+    ],
+    "removeComments": true
   },
   "exclude": [
-    "node_modules" // Ensure this is here
+    "node_modules",
+    "dist"
   ],
   "declarationDir": "dist"
 }
