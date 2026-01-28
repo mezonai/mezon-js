@@ -4942,6 +4942,70 @@ export class Client {
         return Promise.resolve(response);
       });
   }
+
+  async messageButtonClick(session: Session,
+      messageId?:string,
+      channelId?:string,
+      buttonId?:string,
+      senderId?: string,
+      userId?: string,
+      extraData?: string
+    ): Promise<any> {
+
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .messageButtonClick(
+        session.token,
+        messageId,
+        channelId,
+        buttonId,
+        senderId,
+        userId,
+        extraData
+      )
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async dropdownBoxSelected(session: Session,
+     messageId?:string,
+      channelId?:string,
+      selectboxId?:string,
+      senderId?: string,
+      userId?: string,
+      values?: string[]
+    ): Promise<any> {
+
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .dropdownBoxSelected(
+        session.token,
+        messageId,
+        channelId,
+        selectboxId,
+        senderId,
+        userId,
+        values
+      )
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
 }
 
 

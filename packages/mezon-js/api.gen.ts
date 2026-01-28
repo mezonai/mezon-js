@@ -12200,5 +12200,105 @@ export class MezonApi {
     ]);
   }
 
+  /**  */
+  messageButtonClick(bearerToken: string,
+      messageId?:string,
+      channelId?:string,
+      buttonId?:string,
+      senderId?: string,
+      userId?: string,
+      extraData?: string,
+      options: any = {}): Promise<any> {
+    
+    const urlPath = "/mezon.api.Mezon/MessageButtonClick";
+    const queryParams = new Map<string, any>();
+
+    const body = {
+      message_id: messageId,
+      channel_id: channelId,
+      button_id: buttonId,
+      sender_id: senderId,
+      user_id: userId,
+      extra_data: extraData
+    };
+
+    const bodyWriter = tsproto.MessageButtonClicked.encode(
+      tsproto.MessageButtonClicked.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /**  */
+  dropdownBoxSelected(bearerToken: string,
+      messageId?:string,
+      channelId?:string,
+      selectboxId?:string,
+      senderId?: string,
+      userId?: string,
+      values?: string[],
+      options: any = {}): Promise<any> {
+    
+    const urlPath = "/mezon.api.Mezon/DropdownBoxSelected";
+    const queryParams = new Map<string, any>();
+
+    const body = {
+      message_id: messageId,
+      channel_id: channelId,
+      selectbox_id: selectboxId,
+      sender_id: senderId,
+      user_id: userId,
+      values: values
+    };
+
+    const bodyWriter = tsproto.DropdownBoxSelected.encode(
+      tsproto.DropdownBoxSelected.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
 }
 
