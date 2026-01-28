@@ -6,6 +6,8 @@ import { encode } from "js-base64";
 import * as tsproto from "mezon-js-protobuf/api";
 import { ApiUpdateChannelDescRequest } from "./client";
 import { PinMessagesList } from "mezon-js-protobuf/api";
+import { ChannelMessageAck } from "./socket";
+import { getFetcher } from "./config";
 
 /** A single user-role pair. */
 export interface ChannelUserListChannelUser {
@@ -1989,7 +1991,7 @@ export interface ApiNotification {
   //Content of the notification in JSON.
   content?: tsproto.DirectFcmProto;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the notification was created.
-  create_time?: string;
+  create_time_seconds?: number;
   //ID of the Notification.
   id?: string;
   //True if this notification was persisted to the database.
@@ -3504,7 +3506,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -3534,7 +3536,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiAccount;
         } else if (response.status >= 200 && response.status < 300) {
@@ -3577,7 +3579,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -3619,7 +3621,7 @@ export class MezonApi {
     fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiSession;
         } else if (response.status >= 200 && response.status < 300) {
@@ -3662,7 +3664,7 @@ export class MezonApi {
     fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -3705,7 +3707,7 @@ export class MezonApi {
     fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -3746,7 +3748,7 @@ export class MezonApi {
     fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -3787,7 +3789,7 @@ export class MezonApi {
     fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -3828,7 +3830,7 @@ export class MezonApi {
     fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiSession;
         } else if (response.status >= 200 && response.status < 300) {
@@ -3875,7 +3877,7 @@ export class MezonApi {
     fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiSession;
         } else if (response.status >= 200 && response.status < 300) {
@@ -3920,7 +3922,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -3960,7 +3962,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -4001,7 +4003,7 @@ export class MezonApi {
     fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiSession;
         } else if (response.status >= 200 && response.status < 300) {
@@ -4042,7 +4044,7 @@ export class MezonApi {
     fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async(response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async(response) => {
         if (response.status == 204) {
           return {} as ApiSession;
         } else if (response.status >= 200 && response.status < 300) {
@@ -4083,7 +4085,7 @@ export class MezonApi {
     fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiSession;
         } else if (response.status >= 200 && response.status < 300) {
@@ -4128,7 +4130,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiSession;
         } else if (response.status >= 200 && response.status < 300) {
@@ -4171,7 +4173,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -4202,7 +4204,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiListUserActivity;
         } else if (response.status >= 200 && response.status < 300) {
@@ -4245,7 +4247,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiUserActivity;
         } else if (response.status >= 200 && response.status < 300) {
@@ -4288,7 +4290,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiApp;
         } else if (response.status >= 200 && response.status < 300) {
@@ -4332,7 +4334,7 @@ export class MezonApi {
     }
    
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiAppList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -4384,7 +4386,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -4426,7 +4428,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -4464,7 +4466,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiApp;
         } else if (response.status >= 200 && response.status < 300) {
@@ -4508,7 +4510,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiApp;
         } else if (response.status >= 200 && response.status < 300) {
@@ -4555,7 +4557,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as MezonapiListAuditLog;
         } else if (response.status >= 200 && response.status < 300) {
@@ -4597,7 +4599,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -4650,7 +4652,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiCategoryDescList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -4691,7 +4693,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiListChannelAppsResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -4742,7 +4744,7 @@ export class MezonApi {
     }
    
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiChannelCanvasListResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -4785,7 +4787,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -4829,7 +4831,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -4874,7 +4876,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiListFavoriteChannelResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -4930,7 +4932,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiChannelMessageList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -4977,7 +4979,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -5034,7 +5036,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiChannelAttachmentList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -5081,7 +5083,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiChanEncryptionMethod;
         } else if (response.status >= 200 && response.status < 300) {
@@ -5130,7 +5132,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -5173,7 +5175,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -5219,7 +5221,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -5273,7 +5275,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async(response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async(response) => {
         if (response.status == 204) {
           return {} as ApiChannelUserList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -5324,7 +5326,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiChannelDescList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -5367,7 +5369,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiChannelDescription;
         } else if (response.status >= 200 && response.status < 300) {
@@ -5409,7 +5411,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiAllUsersAddChannelResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -5450,7 +5452,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -5493,7 +5495,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -5555,7 +5557,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiChannelSettingListResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -5605,7 +5607,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiVoiceChannelUserList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -5645,7 +5647,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiListClanUnreadMsgIndicatorResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -5686,7 +5688,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiClanDescList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -5733,7 +5735,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiClanDesc;
         } else if (response.status >= 200 && response.status < 300) {
@@ -5776,7 +5778,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -5824,7 +5826,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -5870,7 +5872,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -5911,7 +5913,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async(response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async(response) => {
         if (response.status == 204) {
           return {} as ApiBannedUserList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -5959,7 +5961,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -6007,7 +6009,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -6050,7 +6052,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiClanUserList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -6093,7 +6095,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiCategoryDesc;
         } else if (response.status >= 200 && response.status < 300) {
@@ -6147,7 +6149,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -6193,7 +6195,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiRegistFcmDeviceTokenResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -6236,7 +6238,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -6279,7 +6281,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -6322,7 +6324,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -6365,7 +6367,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -6416,7 +6418,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -6449,7 +6451,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiEmojiRecentList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -6483,7 +6485,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiEmojiListedResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -6526,7 +6528,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiSearchMessageResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -6569,7 +6571,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -6606,7 +6608,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiEventList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -6649,7 +6651,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiEventManagement;
         } else if (response.status >= 200 && response.status < 300) {
@@ -6692,7 +6694,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as any;
         } else if (response.status >= 200 && response.status < 300) {
@@ -6744,7 +6746,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as any;
         } else if (response.status >= 200 && response.status < 300) {
@@ -6792,7 +6794,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as any;
         } else if (response.status >= 200 && response.status < 300) {
@@ -6830,7 +6832,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -6870,7 +6872,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiFriendList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -6909,7 +6911,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiAddFriendsResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -6948,7 +6950,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -6985,7 +6987,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7023,7 +7025,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiNotificationChannelCategorySettingList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7066,7 +7068,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiClanProfile;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7105,7 +7107,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiNotificationUserChannel;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7144,7 +7146,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiNotificationUserChannel;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7183,7 +7185,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiNotificationSetting;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7222,7 +7224,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async(response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async(response) => {
         if (response.status == 204) {
           return {} as ApiNotifiReactMessage;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7265,7 +7267,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as any;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7295,7 +7297,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiGetKeyServerResp;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7338,7 +7340,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiLinkInviteUser;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7381,7 +7383,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiInviteUserRes;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7427,7 +7429,7 @@ export class MezonApi {
     fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiInviteUserRes;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7458,7 +7460,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiChannelDescList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7501,7 +7503,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as any;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7531,7 +7533,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiMezonOauthClientList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7574,7 +7576,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as any;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7616,7 +7618,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as any;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7657,7 +7659,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7704,7 +7706,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiNotificationList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7747,7 +7749,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7789,7 +7791,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7831,7 +7833,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7868,7 +7870,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7905,7 +7907,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7942,7 +7944,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -7984,7 +7986,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -8026,7 +8028,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -8056,7 +8058,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiPermissionList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -8100,7 +8102,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiPermissionRoleChannelListEventResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -8146,7 +8148,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -8189,7 +8191,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as PinMessagesList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -8229,7 +8231,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiChannelMessageHeader;
         } else if (response.status >= 200 && response.status < 300) {
@@ -8272,7 +8274,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiChannelMessageHeader;
         } else if (response.status >= 200 && response.status < 300) {
@@ -8310,7 +8312,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiGetPubKeysResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -8353,7 +8355,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -8395,7 +8397,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -8446,7 +8448,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -8488,7 +8490,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -8533,7 +8535,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiRoleListEventResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -8576,7 +8578,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiRole;
         } else if (response.status >= 200 && response.status < 300) {
@@ -8625,7 +8627,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -8670,7 +8672,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -8718,7 +8720,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -8760,7 +8762,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiPermissionList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -8809,7 +8811,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiRoleUserList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -8856,7 +8858,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiRoleList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -8899,7 +8901,7 @@ export class MezonApi {
   }
   
   return Promise.race([
-    fetch(fullUrl, fetchOptions).then(async (response) => {
+    getFetcher()(fullUrl, fetchOptions).then(async (response) => {
       if (response.status == 204) {
         return {} as ApiChannelDescList;
       } else if (response.status >= 200 && response.status < 300) {
@@ -8942,7 +8944,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -8984,7 +8986,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -9026,7 +9028,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -9072,7 +9074,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -9118,7 +9120,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -9148,7 +9150,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiStickerListedResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -9191,7 +9193,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiRegisterStreamingChannelResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -9241,7 +9243,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiStreamingChannelUserList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -9272,7 +9274,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiSystemMessagesList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -9315,7 +9317,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -9356,7 +9358,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiSdTopicList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -9399,7 +9401,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiSdTopic;
         } else if (response.status >= 200 && response.status < 300) {
@@ -9442,7 +9444,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -9484,7 +9486,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiSystemMessage;
         } else if (response.status >= 200 && response.status < 300) {
@@ -9533,7 +9535,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -9587,7 +9589,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiChannelDescList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -9635,7 +9637,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -9677,7 +9679,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -9725,7 +9727,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -9764,7 +9766,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiUploadAttachment;
         } else if (response.status >= 200 && response.status < 300) {
@@ -9807,7 +9809,7 @@ export class MezonApi {
     }
     
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiUploadAttachment;
         } else if (response.status >= 200 && response.status < 300) {
@@ -9850,7 +9852,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -9881,7 +9883,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiAllUserClans;
         } else if (response.status >= 200 && response.status < 300) {
@@ -9923,7 +9925,7 @@ export class MezonApi {
     }
    
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiUserPermissionInChannelListResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -9954,7 +9956,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiUserStatus;
         } else if (response.status >= 200 && response.status < 300) {
@@ -9997,7 +9999,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -10039,7 +10041,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
@@ -10089,7 +10091,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -10136,7 +10138,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiWebhookListResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -10186,7 +10188,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -10252,7 +10254,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiEditChannelCanvasResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -10299,7 +10301,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiChannelCanvasDetailResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -10348,7 +10350,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -10394,7 +10396,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiListOnboardingResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -10437,7 +10439,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiListOnboardingResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -10482,7 +10484,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -10526,7 +10528,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiOnboardingItem;
         } else if (response.status >= 200 && response.status < 300) {
@@ -10576,7 +10578,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -10618,7 +10620,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiGenerateClanWebhookResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -10664,7 +10666,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiListClanWebhookResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -10711,7 +10713,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -10762,7 +10764,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -10803,7 +10805,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiSdTopic;
         } else if (response.status >= 200 && response.status < 300) {
@@ -10849,7 +10851,7 @@ export class MezonApi {
     }
    
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiListOnboardingStepResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -10903,7 +10905,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -10942,7 +10944,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as MezonapiCreateRoomChannelApps;
         } else if (response.status >= 200 && response.status < 300) {
@@ -10984,7 +10986,7 @@ export class MezonApi {
       }
 
       return Promise.race([
-        fetch(fullUrl, fetchOptions).then(async (response) => {
+        getFetcher()(fullUrl, fetchOptions).then(async (response) => {
           if (response.status == 204) {
             return {} as ApiGenerateMeetTokenResponse;
           } else if (response.status >= 200 && response.status < 300) {
@@ -11028,7 +11030,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiMezonOauthClient;
         } else if (response.status >= 200 && response.status < 300) {
@@ -11069,7 +11071,7 @@ export class MezonApi {
       }
 
       return Promise.race([
-        fetch(fullUrl, fetchOptions).then(async (response) => {
+        getFetcher()(fullUrl, fetchOptions).then(async (response) => {
           if (response.status == 204) {
             return {} as ApiMezonOauthClient;
           } else if (response.status >= 200 && response.status < 300) {
@@ -11110,7 +11112,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiCreateHashChannelAppsResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -11152,7 +11154,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -11196,7 +11198,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -11235,7 +11237,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -11264,7 +11266,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiGenerateMezonMeetResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -11308,7 +11310,7 @@ export class MezonApi {
     fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiGenerateMeetTokenExternalResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -11347,7 +11349,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -11386,7 +11388,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -11430,7 +11432,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiChannelDescription;
         } else if (response.status >= 200 && response.status < 300) {
@@ -11470,7 +11472,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -11510,7 +11512,7 @@ export class MezonApi {
     fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiListClanDiscover;
         } else if (response.status >= 200 && response.status < 300) {
@@ -11560,7 +11562,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -11605,7 +11607,7 @@ export class MezonApi {
      
   
       return Promise.race([
-        fetch(fullUrl, fetchOptions).then(async (response) => {
+        getFetcher()(fullUrl, fetchOptions).then(async (response) => {
           if (response.status == 204) {
             return {} as ApiQuickMenuAccessList;
           } else if (response.status >= 200 && response.status < 300) {
@@ -11645,7 +11647,7 @@ export class MezonApi {
       }
   
       return Promise.race([
-        fetch(fullUrl, fetchOptions).then((response) => {
+        getFetcher()(fullUrl, fetchOptions).then((response) => {
           if (response.status == 204) {
             return response;
           } else if (response.status >= 200 && response.status < 300) {
@@ -11684,7 +11686,7 @@ export class MezonApi {
       }
   
       return Promise.race([
-        fetch(fullUrl, fetchOptions).then((response) => {
+        getFetcher()(fullUrl, fetchOptions).then((response) => {
           if (response.status == 204) {
             return response;
           } else if (response.status >= 200 && response.status < 300) {
@@ -11724,7 +11726,7 @@ export class MezonApi {
       }
   
       return Promise.race([
-        fetch(fullUrl, fetchOptions).then(async (response) => {
+        getFetcher()(fullUrl, fetchOptions).then(async (response) => {
           if (response.status == 204) {
             return {} as ApiForSaleItemList;
           } else if (response.status >= 200 && response.status < 300) {
@@ -11764,7 +11766,7 @@ export class MezonApi {
       }
   
       return Promise.race([
-        fetch(fullUrl, fetchOptions).then(async (response) => {
+        getFetcher()(fullUrl, fetchOptions).then(async (response) => {
           if (response.status == 204) {
             return {} as ApiIsFollowerResponse;
           } else if (response.status >= 200 && response.status < 300) {
@@ -11804,7 +11806,7 @@ export class MezonApi {
       }
   
       return Promise.race([
-        fetch(fullUrl, fetchOptions).then((response) => {
+        getFetcher()(fullUrl, fetchOptions).then((response) => {
           if (response.status == 204) {
             return response;
           } else if (response.status >= 200 && response.status < 300) {
@@ -11844,7 +11846,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiSession;
         } else if (response.status >= 200 && response.status < 300) {
@@ -11889,7 +11891,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiIsBannedResponse;
         } else if (response.status >= 200 && response.status < 300) {
@@ -11932,7 +11934,7 @@ export class MezonApi {
     }
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
@@ -11962,7 +11964,7 @@ export class MezonApi {
    
 
     return Promise.race([
-      fetch(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiLogedDeviceList;
         } else if (response.status >= 200 && response.status < 300) {
@@ -11974,6 +11976,228 @@ export class MezonApi {
       }),
       new Promise<never>((_, reject) =>
         setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
+  /**  */
+  sendChannelMessage(bearerToken: string,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymous_message?: boolean,
+    mention_everyone?: Boolean,
+    avatar?: string,
+    code?: number,
+    topic_id?: string): Promise<ChannelMessageAck> {
+    
+    const urlPath = "/mezon.api.Mezon/SendChannelMessage";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.ChannelMessageSend.encode(
+      tsproto.ChannelMessageSend.fromPartial({
+        clan_id: clan_id,
+        channel_id: channel_id,
+        mode: mode,
+        is_public: is_public,
+        content: content,
+        mentions: mentions,
+        attachments: attachments,
+        references: references,
+        anonymous_message: anonymous_message,
+        mention_everyone: mention_everyone as boolean,
+        avatar: avatar,
+        code: code,
+        topic_id: topic_id
+      })
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", {}, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+   
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as ChannelMessageAck;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();      
+          return tsproto.ChannelMessageSend.decode(new Uint8Array(buffer)) as unknown as ChannelMessageAck;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
+  /**  */
+  updateChannelMessage(bearerToken: string,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    message_id: string,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    hideEditted?: boolean,
+    topic_id?: string,
+    is_update_msg_topic?: boolean): Promise<any> {
+    
+    const urlPath = "/mezon.api.Mezon/UpdateChannelMessage";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.ChannelMessageUpdate.encode(
+      tsproto.ChannelMessageUpdate.fromPartial({
+        clan_id: clan_id,
+        channel_id: channel_id,
+        message_id: message_id,
+        mode: mode,
+        is_public: is_public,
+        content: content,
+        mentions: mentions,
+        attachments: attachments,
+        hide_editted: hideEditted,        
+        topic_id: topic_id,
+        is_update_msg_topic: is_update_msg_topic
+      })
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", {}, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as any;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();      
+          return tsproto.ChannelMessageUpdate.decode(new Uint8Array(buffer)) as any;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
+  /**  */
+  deleteChannelMessage(bearerToken: string,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    message_id: string,
+    has_attachment?: boolean,
+    topic_id?: string,
+    mentions?: Uint8Array,
+    references?: Uint8Array): Promise<any> {
+    
+    const urlPath = "/mezon.api.Mezon/DeleteChannelMessage";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.ChannelMessageRemove.encode(
+      tsproto.ChannelMessageRemove.fromPartial({
+        clan_id: clan_id,
+        channel_id: channel_id,
+        message_id: message_id,
+        mode: mode,
+        is_public: is_public,
+        has_attachment: has_attachment,
+        mentions: mentions,
+        references: references,
+        topic_id: topic_id
+      })
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", {}, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+   
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as any;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();      
+          return tsproto.ChannelMessageRemove.decode(new Uint8Array(buffer)) as any;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
+  /**  */
+  updateMezonVoiceState(bearerToken: string,
+      clanId?:string,
+      channelId?:string,
+      displayName?:string,
+      roomName?: string,
+      state?: number,
+      options: any = {}): Promise<any> {
+    
+    const urlPath = "/mezon.api.Mezon/UpdateMezonVoiceState";
+    const queryParams = new Map<string, any>();
+
+    const body = {
+      clan_id: clanId,
+      channel_id: channelId,
+      display_name: displayName,
+      room_name: roomName,
+      state: state
+    };
+
+    const bodyWriter = tsproto.HandleParticipantMeetStateEvent.encode(
+      tsproto.HandleParticipantMeetStateEvent.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
   }

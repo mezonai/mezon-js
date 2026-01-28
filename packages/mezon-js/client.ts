@@ -169,10 +169,13 @@ import {
   ApiIsBannedResponse,
   ApiLogedDeviceList,
   ChannelMessage,
+  ApiMessageMention,
+  ApiMessageAttachment,
+  ApiMessageRef,
 } from "./api.gen";
 import { PinMessagesList } from "mezon-js-protobuf/api";
 import { Session } from "./session";
-import { DefaultSocket, Socket } from "./socket";
+import { DefaultSocket, Socket, ChannelMessageAck } from "./socket";
 import {
   decodeAttachments,
   decodeMentions,
@@ -489,18 +492,22 @@ export class Client {
       });
   }
 
-  async confirmAuthenticateOTP(request: ApiLinkAccountConfirmRequest): Promise<Session> {
-    return this.apiClient.confirmAuthenticateOTP(this.serverkey, "", request).then((apiSession: ApiSession) => {
-      return new Session(
-        apiSession.token || "",
-        apiSession.refresh_token || "",
-        apiSession.created || false,
-        apiSession.api_url || "",
-        apiSession.ws_url || "",
-        apiSession.id_token || "",
-        apiSession.is_remember || false,
-      );
-    });
+  async confirmAuthenticateOTP(
+    request:  ApiLinkAccountConfirmRequest,
+  ): Promise<Session> {    
+    return this.apiClient
+      .confirmAuthenticateOTP(this.serverkey, "", request)
+      .then((apiSession: ApiSession) => {
+        return new Session(
+          apiSession.token || "",
+          apiSession.refresh_token || "",
+          apiSession.created || false,          
+          apiSession.api_url || "",
+          apiSession.ws_url || "",
+          apiSession.id_token || "",
+          apiSession.is_remember || false,
+        );
+      });
   }
 
   /** Authenticate a user with an email+password against the server. */
@@ -519,17 +526,19 @@ export class Client {
       },
     };
 
-    return this.apiClient.authenticateEmail(this.serverkey, "", request, username).then((apiSession: ApiSession) => {
-      return new Session(
-        apiSession.token || "",
-        apiSession.refresh_token || "",
-        apiSession.created || false,
-        apiSession.api_url || "",
-        apiSession.ws_url || "",
-        apiSession.id_token || "",
-        apiSession.is_remember || false,
-      );
-    });
+    return this.apiClient
+      .authenticateEmail(this.serverkey, "", request, username)
+      .then((apiSession: ApiSession) => {
+        return new Session(
+          apiSession.token || "",
+          apiSession.refresh_token || "",
+          apiSession.created || false,          
+          apiSession.api_url || "",
+          apiSession.ws_url || "",
+          apiSession.id_token || "",
+          apiSession.is_remember || false,
+        );
+      });
   }
 
   /** set base path */
@@ -539,8 +548,9 @@ export class Client {
     this.useSSL = useSSL;
 
     const scheme = useSSL ? "https://" : "http://";
-    const basePath = `${scheme}${host}:${port}`;
-    return this.apiClient.setBasePath(basePath);
+    const basePath = `${scheme}${host}:${port}`;    
+    return this.apiClient
+      .setBasePath(basePath);
   }
 
   /** Add users to a channel, or accept their join requests. */
@@ -693,11 +703,20 @@ export class Client {
   /** A socket created with the client's configuration. */
   createSocket(
     useSSL = false,
+    host: string,
+    port: string,
     verbose: boolean = false,
     adapter: WebSocketAdapter = new WebSocketAdapterPb(),
     sendTimeoutMs: number = DefaultSocket.DefaultSendTimeoutMs,
   ): Socket {
-    return new DefaultSocket(this.host, this.port, useSSL, verbose, adapter, sendTimeoutMs);
+    return new DefaultSocket(
+      this.host,
+      this.port,
+      useSSL,
+      verbose,
+      adapter,
+      sendTimeoutMs
+    );
   }
 
   /** Delete one or more users by ID or username. */
@@ -1391,34 +1410,34 @@ export class Client {
         return Promise.resolve(result);
       }
 
-      response.friends!.forEach((f) => {
-        result.friends!.push({
-          user: {
-            avatar_url: f.user!.avatar_url,
-            create_time: f.user!.create_time,
-            display_name: f.user!.display_name,
-            edge_count: f.user!.edge_count ? Number(f.user!.edge_count) : 0,
-            id: f.user!.id,
-            lang_tag: f.user!.lang_tag,
-            location: f.user!.location,
-            online: f.user!.online,
-            timezone: f.user!.timezone,
-            update_time: f.user!.update_time,
-            username: f.user!.username,
-            is_mobile: f.user?.is_mobile,
-            user_status: f.user!.user_status,
-            status: f.user!.status,
-            mezon_id: f.user!.mezon_id,
-            list_nick_names: f.user!.list_nick_names,
-            phone_number: f.user!.phone_number,
-            about_me: f.user!.about_me,
-          },
-          state: f.state,
-          source_id: f.source_id,
+        response.friends!.forEach((f) => {
+          result.friends!.push({
+            user: {
+              avatar_url: f.user!.avatar_url,
+              create_time: f.user!.create_time,
+              display_name: f.user!.display_name,
+              edge_count: f.user!.edge_count ? Number(f.user!.edge_count) : 0,              
+              id: f.user!.id,
+              lang_tag: f.user!.lang_tag,
+              location: f.user!.location,
+              online: f.user!.online,
+              timezone: f.user!.timezone,
+              update_time: f.user!.update_time,
+              username: f.user!.username,
+              is_mobile: f.user?.is_mobile,
+              user_status: f.user!.user_status,
+              status: f.user!.status,
+              mezon_id: f.user!.mezon_id,
+              list_nick_names: f.user!.list_nick_names,
+              phone_number: f.user!.phone_number,
+              about_me: f.user!.about_me
+            },
+            state: f.state,
+            source_id: f.source_id,
+          });
         });
+        return Promise.resolve(result);
       });
-      return Promise.resolve(result);
-    });
   }
 
   /** Fetch list of notifications. */
@@ -1453,7 +1472,7 @@ export class Client {
             content: n.content ? decodeNotificationFcm(n.content) : undefined,
             code: n.code ? Number(n.code) : 0,
             sender_id: n.sender_id,
-            create_time: n.create_time,
+            create_time_seconds: n.create_time_seconds,
             persistent: n.persistent,
             category: n.category,
           });
@@ -3170,8 +3189,13 @@ export class Client {
     });
   }
 
-  async listForSaleItems(session: Session, page?: number): Promise<ApiForSaleItemList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async listForSaleItems(session: Session, 
+    page?: number): Promise<ApiForSaleItemList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -3180,8 +3204,13 @@ export class Client {
     });
   }
 
-  async isFollower(session: Session, req: ApiIsFollowerRequest): Promise<ApiIsFollowerResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async isFollower(session: Session, 
+    req: ApiIsFollowerRequest): Promise<ApiIsFollowerResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -3190,8 +3219,13 @@ export class Client {
     });
   }
 
-  async transferOwnership(session: Session, req: ApiTransferOwnershipRequest): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async transferOwnership(session: Session, 
+    req: ApiTransferOwnershipRequest): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -3200,8 +3234,13 @@ export class Client {
     });
   }
 
-  async isBanned(session: Session, channelId: string): Promise<ApiIsBannedResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async isBanned(session: Session, 
+    channelId: string): Promise<ApiIsBannedResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -3229,4 +3268,75 @@ export class Client {
       return Promise.resolve(response);
     });
   }
+
+  async updateMezonVoiceState(session: Session,
+    clanId?:string,
+    channelId?:string,
+    displayName?:string,
+    roomName?: string,
+    state?: number,
+  ) : Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .updateMezonVoiceState(session.token, clanId, channelId, displayName, roomName, state)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
+
+
+  async sendChannelMessage(
+    session: Session,
+    clanId: string,
+    channelId: string,
+    mode: number,
+    isPublic: boolean,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymousMessage?: boolean,
+    mentionEveryone?: boolean,
+    avatar?: string,
+    code?: number,
+    topicId?: string
+  ): Promise<ChannelMessageAck> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .sendChannelMessage(
+        session.token,
+        clanId,
+        channelId,
+        mode,
+        isPublic,
+        content,
+        mentions,
+        attachments,
+        references,
+        anonymousMessage,
+        mentionEveryone,
+        avatar,
+        code,
+        topicId
+      )
+      .then((response: ChannelMessageAck) => {
+        return Promise.resolve(response);
+      });
+  }
 }
+
+

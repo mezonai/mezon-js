@@ -20,6 +20,7 @@ export * from "./client";
 export * from "./session";
 export * from "./socket";
 export * from "./utils"
+export * from "./config"
 
 /**
  * Reexported due to duplicate definition of ChannelMessage in [Client]{@link ./client.ts} and [Session]{@link ./session.ts}

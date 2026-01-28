@@ -154,6 +154,14 @@ function CreateChannelMessageFromEvent(message: any) {
   return e;
 }
 
+const ConnectionState = {
+  CONNECTING: "connecting",
+  CONNECTED: "connected",
+  DISCONNECTED: "disconnected",
+};
+
+type ConnectionState = (typeof ConnectionState)[keyof typeof ConnectionState];
+
 /** A socket connection to Mezon server implemented with the DOM's WebSocket API. */
 export class DefaultSocket implements Socket {
   public static readonly DefaultHeartbeatTimeoutMs = 10000;
@@ -163,6 +171,11 @@ export class DefaultSocket implements Socket {
   private readonly cIds: { [key: string]: PromiseExecutor };
   private nextCid: number;
   private _heartbeatTimeoutMs: number;
+  private _connectionState: ConnectionState = ConnectionState.DISCONNECTED;
+  private _connectTimeoutTimer?: ReturnType<typeof setTimeout>;
+  private _connectPromise?: Promise<Session>;
+  private _heartbeatTimer?: ReturnType<typeof setTimeout>;
+  private _hasConnectedOnce: boolean = false;
 
   public socketEvents : EventEmitter = new EventEmitter();
   
@@ -188,10 +201,13 @@ export class DefaultSocket implements Socket {
   }
 
   isOpen(): boolean {
-    return this.adapter.isOpen();
+    return this._connectionState === ConnectionState.CONNECTED && this.adapter.isOpen();
   }
 
   close() {
+    this._connectionState = ConnectionState.DISCONNECTED;
+    this.stopHeartbeatLoop();
+    this.clearConnectTimeout();
     this.adapter.close();
   }
   
@@ -203,18 +219,34 @@ export class DefaultSocket implements Socket {
 
   connect(session: Session, createStatus: boolean = false, connectTimeoutMs: number = DefaultSocket.DefaultConnectTimeoutMs): Promise<Session> {
     this.session = session;
-    if (this.adapter.isOpen()) {
+
+    if (this._connectionState === ConnectionState.CONNECTED && this.adapter.isOpen()) {
       return Promise.resolve(session);
     }
+
+    if (this._connectionState === ConnectionState.CONNECTING && this._connectPromise) {
+      return this._connectPromise;
+    }
+
+    this.clearConnectTimeout();
+    this._connectionState = ConnectionState.CONNECTING;
 
     const scheme = (this.useSSL) ? "wss://" : "ws://";
     this.adapter.connect(scheme, this.host, this.port, createStatus, session.token);
 
     this.adapter.onClose = (evt: CloseEvent) => {
+      this._connectionState = ConnectionState.DISCONNECTED;
+      this.stopHeartbeatLoop();
+      this.clearConnectTimeout();
+      this._connectPromise = undefined;
       this.ondisconnect(evt);
     }
 
     this.adapter.onError = (evt: ErrorEvent) => {
+      this._connectionState = ConnectionState.DISCONNECTED;
+      this.stopHeartbeatLoop();
+      this.clearConnectTimeout();
+      this._connectPromise = undefined;
       this.onerror(evt);
     }
 
@@ -262,28 +294,53 @@ export class DefaultSocket implements Socket {
       }
     }
 
-    return new Promise((resolve, reject) => {
+    const connectPromise = new Promise<Session>((resolve, reject) => {
       this.adapter.onOpen = (evt: WebSocket.Event) => {
         if (this.verbose) {
           console.log(evt);
         }
 
-        this.pingPong();
+        const isReconnect = this._hasConnectedOnce;
+        this._hasConnectedOnce = true;
+
+        this.clearConnectTimeout();
+        this._connectionState = ConnectionState.CONNECTED;
+        this.startHeartbeatLoop();
+        this._connectPromise = undefined;
+
         resolve(session);
+
+        if (isReconnect) {
+          this.onreconnect(evt);
+        }
       }
       this.adapter.onError = (evt: WebSocket.Event) => {
+        this._connectionState = ConnectionState.DISCONNECTED;
+        this.stopHeartbeatLoop();
+        this.clearConnectTimeout();
+        this._connectPromise = undefined;
         reject(evt);
         this.adapter.close();
       }
 
-      setTimeout(() => {
-        // if promise has resolved by now, the reject() is a no-op
+      this._connectTimeoutTimer = setTimeout(() => {
+        this._connectionState = ConnectionState.DISCONNECTED;
+        this.stopHeartbeatLoop();
+        this.adapter.close();
+        this._connectPromise = undefined;
         reject("The socket timed out when trying to connect.");
+        this._connectTimeoutTimer = undefined;
       }, connectTimeoutMs);
     });
+
+    this._connectPromise = connectPromise;
+    return this._connectPromise;
   }
 
   disconnect(fireDisconnectEvent: boolean = true) {
+    this._connectionState = ConnectionState.DISCONNECTED;
+    this.stopHeartbeatLoop();
+    this.clearConnectTimeout();
     if (this.adapter.isOpen()) {
       this.adapter.close();
     }
@@ -303,6 +360,12 @@ export class DefaultSocket implements Socket {
   ondisconnect(evt: CloseEvent) {
     if (this.verbose) {
       console.log(evt);
+    }
+  }
+
+  onreconnect(evt: WebSocket.Event) {
+    if (this.verbose) {
+      console.log("Socket reconnected.", evt);
     }
   }
 
@@ -546,6 +609,25 @@ export class DefaultSocket implements Socket {
     return response.notifi_react_message_event
   }
 
+  private startHeartbeatLoop(): void {
+    this.stopHeartbeatLoop();
+    void this.pingPong();
+  }
+
+  private stopHeartbeatLoop(): void {
+    if (this._heartbeatTimer !== undefined) {
+      clearTimeout(this._heartbeatTimer);
+      this._heartbeatTimer = undefined;
+    }
+  }
+
+  private clearConnectTimeout(): void {
+    if (this._connectTimeoutTimer !== undefined) {
+      clearTimeout(this._connectTimeoutTimer);
+      this._connectTimeoutTimer = undefined;
+    }
+  }
+
   private async pingPong(): Promise<void> {
     if (!this.adapter.isOpen()) {
         return;
@@ -564,10 +646,7 @@ export class DefaultSocket implements Socket {
 
         return;
     }
-
-    // reuse the timeout as the interval for now.
-    // we can separate them out into separate values if needed later.
-    setTimeout(() => this.pingPong(), this._heartbeatTimeoutMs);
+    this._heartbeatTimer = setTimeout(() => this.pingPong(), this._heartbeatTimeoutMs);
   }
 
   async sendToken(receiver_id: string, amount: number) : Promise<TokenSentEvent> {
