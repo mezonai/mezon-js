@@ -175,14 +175,7 @@ import {
 } from "./api.gen";
 import { Session } from "./session";
 import { DefaultSocket, Socket, ChannelMessageAck } from "./socket";
-import {
-  decodeAttachments,
-  decodeMentions,
-  decodeNotificationFcm,
-  decodeReactions,
-  decodeRefs,
-  safeJSONParse,
-} from "./utils";
+import { decodeAttachments, decodeMentions, decodeNotificationFcm, decodeReactions, decodeRefs, safeJSONParse } from "./utils";
 import { WebSocketAdapter, WebSocketAdapterPb } from "mezon-js-protobuf";
 
 const DEFAULT_HOST = "127.0.0.1";
@@ -199,7 +192,7 @@ export enum ChannelType {
   CHANNEL_TYPE_THREAD = 7,
   CHANNEL_TYPE_APP = 8,
   CHANNEL_TYPE_ANNOUNCEMENT = 9,
-  CHANNEL_TYPE_MEZON_VOICE = 10,
+  CHANNEL_TYPE_MEZON_VOICE = 10
 }
 export enum ChannelStreamMode {
   STREAM_MODE_CHANNEL = 2,
@@ -224,7 +217,7 @@ export enum WebrtcSignalingType {
   WEBRTC_SDP_TIMEOUT = 5,
   WEBRTC_SDP_NOT_AVAILABLE = 6,
   WEBRTC_SDP_JOINED_OTHER_CALL = 7,
-  WEBRTC_SDP_STATUS_REMOTE_MEDIA = 8,
+  WEBRTC_SDP_STATUS_REMOTE_MEDIA = 8
 }
 
 /** Response for an RPC function executed on the server. */
@@ -272,7 +265,7 @@ export interface Notification {
   /** Content of the notification in JSON. */
   content?: {};
   /** The UNIX time when the notification was created. */
-  create_time?: string;
+  create_time_seconds?: number;
   /** ID of the Notification. */
   id?: string;
   /** True if this notification was persisted to the database. */
@@ -396,7 +389,7 @@ export class Client {
     port = DEFAULT_PORT,
     useSSL = false,
     readonly timeout = DEFAULT_TIMEOUT_MS,
-    readonly autoRefreshSession = true,
+    readonly autoRefreshSession = true
   ) {
     this.host = host;
     this.port = port;
@@ -418,7 +411,7 @@ export class Client {
 
   /** check session isexpired */
   isexpired(session: Session): boolean {
-    return session.isexpired(Date.now() / 1000);
+    return session.isexpired(Date.now() / 1000)
   }
 
   /** Authenticate a user with a custom id against the server. */
@@ -426,16 +419,24 @@ export class Client {
     token: string,
     create?: boolean,
     username?: string,
-    isRemember?: boolean,
+    isRemember?:boolean,
     vars: Record<string, string> = {},
-    options: any = {},
+    options: any = {}
   ): Promise<Session> {
     const request = {
       token: token,
       vars: vars,
     };
     return this.apiClient
-      .authenticateMezon(this.serverkey, "", request, create, username, isRemember, options)
+      .authenticateMezon(
+        this.serverkey,
+        "",
+        request,
+        create,
+        username,
+        isRemember,
+        options
+      )
       .then((apiSession: ApiSession) => {
         return new Session(
           apiSession.token || "",
@@ -453,14 +454,14 @@ export class Client {
   authenticateSMSOTPRequest(
     phoneno: string,
     username?: string,
-    vars?: Record<string, string>,
+    vars?: Record<string, string>
   ): Promise<ApiLinkAccountConfirmRequest> {
     const request = {
       username: username,
       account: {
         phoneno: phoneno,
         vars: vars,
-      },
+      }
     };
 
     return this.apiClient
@@ -474,14 +475,14 @@ export class Client {
   authenticateEmailOTPRequest(
     email: string,
     username?: string,
-    vars?: Record<string, string>,
+    vars?: Record<string, string>
   ): Promise<ApiLinkAccountConfirmRequest> {
     const request = {
       username: username,
       account: {
         email: email,
         vars: vars,
-      },
+      }
     };
 
     return this.apiClient
@@ -491,18 +492,22 @@ export class Client {
       });
   }
 
-  async confirmAuthenticateOTP(request: ApiLinkAccountConfirmRequest): Promise<Session> {
-    return this.apiClient.confirmAuthenticateOTP(this.serverkey, "", request).then((apiSession: ApiSession) => {
-      return new Session(
-        apiSession.token || "",
-        apiSession.refresh_token || "",
-        apiSession.created || false,
-        apiSession.api_url || "",
-        apiSession.ws_url || "",
-        apiSession.id_token || "",
-        apiSession.is_remember || false,
-      );
-    });
+  async confirmAuthenticateOTP(
+    request:  ApiLinkAccountConfirmRequest,
+  ): Promise<Session> {
+    return this.apiClient
+      .confirmAuthenticateOTP(this.serverkey, "", request)
+      .then((apiSession: ApiSession) => {
+        return new Session(
+          apiSession.token || "",
+          apiSession.refresh_token || "",
+          apiSession.created || false,
+          apiSession.api_url || "",
+          apiSession.ws_url || "",
+          apiSession.id_token || "",
+          apiSession.is_remember || false,
+        );
+      });
   }
 
   /** Authenticate a user with an email+password against the server. */
@@ -510,7 +515,7 @@ export class Client {
     email: string,
     password: string,
     username?: string,
-    vars?: Record<string, string>,
+    vars?: Record<string, string>
   ): Promise<Session> {
     const request = {
       username: username,
@@ -518,20 +523,22 @@ export class Client {
         email: email,
         password: password,
         vars: vars,
-      },
+      }
     };
 
-    return this.apiClient.authenticateEmail(this.serverkey, "", request, username).then((apiSession: ApiSession) => {
-      return new Session(
-        apiSession.token || "",
-        apiSession.refresh_token || "",
-        apiSession.created || false,
-        apiSession.api_url || "",
-        apiSession.ws_url || "",
-        apiSession.id_token || "",
-        apiSession.is_remember || false,
-      );
-    });
+    return this.apiClient
+      .authenticateEmail(this.serverkey, "", request, username)
+      .then((apiSession: ApiSession) => {
+        return new Session(
+          apiSession.token || "",
+          apiSession.refresh_token || "",
+          apiSession.created || false,
+          apiSession.api_url || "",
+          apiSession.ws_url || "",
+          apiSession.id_token || "",
+          apiSession.is_remember || false,
+        );
+      });
   }
 
   /** set base path */
@@ -539,26 +546,45 @@ export class Client {
     this.host = host;
     this.port = port;
     this.useSSL = useSSL;
-
+    
     const scheme = useSSL ? "https://" : "http://";
     const basePath = `${scheme}${host}:${port}`;
-    return this.apiClient.setBasePath(basePath);
+    return this.apiClient
+      .setBasePath(basePath);
   }
 
   /** Add users to a channel, or accept their join requests. */
-  async addChannelUsers(session: Session, channelId: string, ids?: Array<string>): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async addChannelUsers(
+    session: Session,
+    channelId: string,
+    ids?: Array<string>
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.addChannelUsers(session.token, channelId, ids).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .addChannelUsers(session.token, channelId, ids)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** Add friends by ID or username to a user's account. */
-  async addFriends(session: Session, ids?: Array<string>, usernames?: Array<string>): Promise<ApiAddFriendsResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async addFriends(
+    session: Session,
+    ids?: Array<string>,
+    usernames?: Array<string>
+  ): Promise<ApiAddFriendsResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -566,30 +592,57 @@ export class Client {
   }
 
   /** Block one or more users by ID or username. */
-  async blockFriends(session: Session, ids?: Array<string>, usernames?: Array<string>): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async blockFriends(
+    session: Session,
+    ids?: Array<string>,
+    usernames?: Array<string>
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.blockFriends(session.token, ids, usernames).then((response: any) => {
-      return Promise.resolve(response != undefined);
-    });
+    return this.apiClient
+      .blockFriends(session.token, ids, usernames)
+      .then((response: any) => {
+        return Promise.resolve(response != undefined);
+      });
   }
 
   /** Block one or more users by ID or username. */
-  async unblockFriends(session: Session, ids?: Array<string>, usernames?: Array<string>): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async unblockFriends(
+    session: Session,
+    ids?: Array<string>,
+    usernames?: Array<string>
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.unblockFriends(session.token, ids, usernames).then((response: any) => {
-      return Promise.resolve(response != undefined);
-    });
+    return this.apiClient
+      .unblockFriends(session.token, ids, usernames)
+      .then((response: any) => {
+        return Promise.resolve(response != undefined);
+      });
   }
 
   /** Create a new group with the current user as the creator and superadmin. */
-  async uploadOauthFile(session: Session, request: ApiUploadAttachmentRequest): Promise<ApiUploadAttachment> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async uploadOauthFile(
+    session: Session,
+    request: ApiUploadAttachmentRequest
+  ): Promise<ApiUploadAttachment> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -597,8 +650,15 @@ export class Client {
   }
 
   /** Create a new group with the current user as the creator and superadmin. */
-  async uploadAttachmentFile(session: Session, request: ApiUploadAttachmentRequest): Promise<ApiUploadAttachment> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async uploadAttachmentFile(
+    session: Session,
+    request: ApiUploadAttachmentRequest
+  ): Promise<ApiUploadAttachment> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -606,90 +666,159 @@ export class Client {
   }
 
   /** Create a channel within clan */
-  async createChannelDesc(session: Session, request: ApiCreateChannelDescRequest): Promise<ApiChannelDescription> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async createChannelDesc(
+    session: Session,
+    request: ApiCreateChannelDescRequest
+  ): Promise<ApiChannelDescription> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.createChannelDesc(session.token, request).then((response: ApiChannelDescription) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .createChannelDesc(session.token, request)
+      .then((response: ApiChannelDescription) => {
+        return Promise.resolve(response);
+      });
   }
 
   /** Create a clan */
-  async createClanDesc(session: Session, request: ApiCreateClanDescRequest): Promise<ApiClanDesc> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async createClanDesc(
+    session: Session,
+    request: ApiCreateClanDescRequest
+  ): Promise<ApiClanDesc> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.createClanDesc(session.token, request).then((response: ApiClanDesc) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .createClanDesc(session.token, request)
+      .then((response: ApiClanDesc) => {
+        return Promise.resolve(response);
+      });
   }
 
   /**  */
-  async createCategoryDesc(session: Session, request: ApiCreateCategoryDescRequest): Promise<ApiCategoryDesc> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async createCategoryDesc(
+    session: Session,
+    request: ApiCreateCategoryDescRequest
+  ): Promise<ApiCategoryDesc> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.createCategoryDesc(session.token, request).then((response: ApiCategoryDesc) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .createCategoryDesc(session.token, request)
+      .then((response: ApiCategoryDesc) => {
+        return Promise.resolve(response);
+      });
   }
 
   /** Create a new role for clan. */
-  async createRole(session: Session, request: ApiCreateRoleRequest): Promise<ApiRole> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async createRole(
+    session: Session,
+    request: ApiCreateRoleRequest
+  ): Promise<ApiRole> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.createRole(session.token, request).then((response: ApiRole) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .createRole(session.token, request)
+      .then((response: ApiRole) => {
+        return Promise.resolve(response);
+      });
   }
 
   /** Create a new event for clan. */
-  async createEvent(session: Session, request: ApiCreateEventRequest): Promise<ApiEventManagement> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async createEvent(
+    session: Session,
+    request: ApiCreateEventRequest
+  ): Promise<ApiEventManagement> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.createEvent(session.token, request).then((response: ApiEventManagement) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .createEvent(session.token, request)
+      .then((response: ApiEventManagement) => {
+        return Promise.resolve(response);
+      });
   }
 
   /** add role for channel. */
-  async addRolesChannelDesc(session: Session, request: ApiAddRoleChannelDescRequest): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async addRolesChannelDesc(
+    session: Session,
+    request: ApiAddRoleChannelDescRequest
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.addRolesChannelDesc(session.token, request).then((response: ApiRole) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .addRolesChannelDesc(session.token, request)
+      .then((response: ApiRole) => {
+        return response !== undefined;
+      });
   }
 
   /** Update action role when delete role */
-  async deleteRoleChannelDesc(session: Session, request: ApiDeleteRoleRequest): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async deleteRoleChannelDesc(
+    session: Session,
+    request: ApiDeleteRoleRequest
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteRoleChannelDesc(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .deleteRoleChannelDesc(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   async deleteApp(session: Session, appId: string): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteApp(session.token, appId).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .deleteApp(session.token, appId)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** A socket created with the client's configuration. */
@@ -699,42 +828,75 @@ export class Client {
     port: string,
     verbose: boolean = false,
     adapter: WebSocketAdapter = new WebSocketAdapterPb(),
-    sendTimeoutMs: number = DefaultSocket.DefaultSendTimeoutMs,
+    sendTimeoutMs: number = DefaultSocket.DefaultSendTimeoutMs
   ): Socket {
-    return new DefaultSocket(host, port, useSSL, verbose, adapter, sendTimeoutMs);
+    return new DefaultSocket(
+      host,
+      port,
+      useSSL,
+      verbose,
+      adapter,
+      sendTimeoutMs
+    );
   }
 
   /** Delete one or more users by ID or username. */
-  async deleteFriends(session: Session, ids?: Array<string>, usernames?: Array<string>): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async deleteFriends(
+    session: Session,
+    ids?: Array<string>,
+    usernames?: Array<string>
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteFriends(session.token, ids, usernames).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .deleteFriends(session.token, ids, usernames)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** Delete a channel by ID. */
-  async deleteChannelDesc(session: Session, clanId: string, channelId: string): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async deleteChannelDesc(
+    session: Session,
+    clanId: string,
+    channelId: string
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteChannelDesc(session.token, clanId, channelId).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .deleteChannelDesc(session.token, clanId, channelId)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** Delete a clan desc by ID. */
   async deleteClanDesc(session: Session, clanDescId: string): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteClanDesc(session.token, clanDescId).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .deleteClanDesc(session.token, clanDescId)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** Delete a category by ID. */
@@ -742,37 +904,64 @@ export class Client {
     session: Session,
     categoryId: string,
     clanId: string,
-    categoryLabel?: string,
+    categoryLabel?: string
   ): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteCategoryDesc(session.token, categoryId, clanId, categoryLabel).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .deleteCategoryDesc(session.token, categoryId, clanId, categoryLabel)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** Delete one or more notifications */
-  async deleteNotifications(session: Session, ids?: Array<string>, category?: number): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async deleteNotifications(
+    session: Session,
+    ids?: Array<string>,
+    category?: number
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteNotifications(session.token, ids, category).then((response: any) => {
-      return Promise.resolve(response != undefined);
-    });
+    return this.apiClient
+      .deleteNotifications(session.token, ids, category)
+      .then((response: any) => {
+        return Promise.resolve(response != undefined);
+      });
   }
 
   /** Delete a role by ID. */
-  async deleteRole(session: Session, roleId: string, clanId: string, roleLabel?: string): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async deleteRole(
+    session: Session,
+    roleId: string,
+    clanId: string,
+    roleLabel?: string
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteRole(session.token, roleId, "0", clanId, roleLabel).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .deleteRole(session.token, roleId, "0", clanId, roleLabel)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** Delete a event by ID. */
@@ -782,44 +971,74 @@ export class Client {
     clanId: string,
     creatorId: string,
     eventLabel?: string,
-    channelId?: string,
+    channelId?: string
   ): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
     return this.apiClient
-      .deleteEvent(session.token, eventId, clanId, creatorId, eventLabel, channelId)
+      .deleteEvent(
+        session.token,
+        eventId,
+        clanId,
+        creatorId,
+        eventLabel,
+        channelId
+      )
       .then((response: any) => {
         return response !== undefined;
       });
   }
 
   /** update user a event by ID. */
-  async updateEventUser(session: Session, request: ApiDeleteEventRequest): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async updateEventUser(
+    session: Session,
+    request: ApiDeleteEventRequest
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateEventUser(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .updateEventUser(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** Submit an event for processing in the server's registered runtime custom events handler. */
   async emitEvent(session: Session, request: ApiEvent): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.event(session.token, request).then((response: any) => {
-      return Promise.resolve(response != undefined);
-    });
+    return this.apiClient
+      .event(session.token, request)
+      .then((response: any) => {
+        return Promise.resolve(response != undefined);
+      });
   }
 
   /** Fetch the current user's account. */
   async getAccount(session: Session): Promise<ApiAccount> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -827,68 +1046,114 @@ export class Client {
   }
 
   /** Kick a set of users from a clan. */
-  async removeClanUsers(session: Session, clanId: string, ids?: Array<string>): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async removeClanUsers(
+    session: Session,
+    clanId: string,
+    ids?: Array<string>
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.removeClanUsers(session.token, clanId, ids).then((response: any) => {
-      return Promise.resolve(response != undefined);
-    });
+    return this.apiClient
+      .removeClanUsers(session.token, clanId, ids)
+      .then((response: any) => {
+        return Promise.resolve(response != undefined);
+      });
   }
 
-  async listBannedUsers(session: Session, clanId?: string, channelId?: string): Promise<ApiBannedUserList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async listBannedUsers(
+    session: Session,
+    clanId?:string,
+    channelId?:string,
+  ): Promise<ApiBannedUserList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listBannedUsers(session.token, clanId, channelId).then((response: ApiBannedUserList) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .listBannedUsers(
+        session.token,
+        clanId,
+        channelId,
+      )
+      .then((response: ApiBannedUserList) => {
+        return Promise.resolve(response);
+      });
   }
 
   /** Ban a set of users from a clan. */
   async unbanClanUsers(
     session: Session,
-    clanId: string,
-    channelId?: string,
-    userIds?: Array<string>,
+    clanId:string,
+    channelId?:string,
+    userIds?:Array<string>
   ): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.unbanClanUsers(session.token, clanId, channelId, userIds).then((response: any) => {
-      return Promise.resolve(response != undefined);
-    });
+    return this.apiClient
+      .unbanClanUsers(session.token, clanId, channelId, userIds)
+      .then((response: any) => {
+        return Promise.resolve(response != undefined);
+      });
   }
 
   /** Ban a set of users from a clan. */
   async banClanUsers(
     session: Session,
-    clanId: string,
-    channelId?: string,
-    userIds?: Array<string>,
-    banTime?: number,
+    clanId:string,
+    channelId?:string,
+    userIds?:Array<string>,
+    banTime?:number
   ): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.banClanUsers(session.token, clanId, channelId, userIds, banTime).then((response: any) => {
-      return Promise.resolve(response != undefined);
-    });
+    return this.apiClient
+      .banClanUsers(session.token, clanId, channelId, userIds, banTime)
+      .then((response: any) => {
+        return Promise.resolve(response != undefined);
+      });
   }
 
   /** Kick users from a channel, or decline their join requests. */
-  async removeChannelUsers(session: Session, channelId: string, ids?: Array<string>): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async removeChannelUsers(
+    session: Session,
+    channelId: string,
+    ids?: Array<string>
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.removeChannelUsers(session.token, channelId, ids).then((response: any) => {
-      return Promise.resolve(response != undefined);
-    });
+    return this.apiClient
+      .removeChannelUsers(session.token, channelId, ids)
+      .then((response: any) => {
+        return Promise.resolve(response != undefined);
+      });
   }
 
   /** List a channel's message history. */
@@ -899,14 +1164,26 @@ export class Client {
     messageId?: string,
     direction?: number,
     limit?: number,
-    topicId?: string,
+    topicId?: string
   ): Promise<ChannelMessageList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
     return this.apiClient
-      .listChannelMessages(session.token, clanId, channelId, messageId, direction, limit, topicId)
+      .listChannelMessages(
+        session.token,
+        clanId,
+        channelId,
+        messageId,
+        direction,
+        limit,
+        topicId
+      )
       .then((response: ApiChannelMessageList) => {
         var result: ChannelMessageList = {
           messages: [],
@@ -926,36 +1203,44 @@ export class Client {
           }
           try {
             const decodedReactions = decodeReactions(m.reactions);
-            reactions = decodedReactions?.reactions || decodedReactions || safeJSONParse(m.reactions || "[]");
+            reactions =
+              decodedReactions?.reactions || decodedReactions ||
+              safeJSONParse(m.reactions || "[]");
           } catch (e) {
             reactions = safeJSONParse(m.reactions || "[]");
           }
-
+    
           try {
             const decodedMentions = decodeMentions(m.mentions);
-            mentions = decodedMentions?.mentions || decodedMentions || safeJSONParse(m.mentions || "[]");
+            mentions =
+              decodedMentions?.mentions || decodedMentions ||
+              safeJSONParse(m.mentions || "[]");
           } catch (e) {
             mentions = safeJSONParse(m.mentions || "[]");
           }
-
+          
           try {
             const decodedAttachments = decodeAttachments(m.attachments);
-            attachments = decodedAttachments?.attachments || decodedAttachments || safeJSONParse(m.attachments || "[]");
+            attachments =
+              decodedAttachments?.attachments || decodedAttachments ||
+              safeJSONParse(m.attachments || "[]");
           } catch (e) {
             attachments = safeJSONParse(m.attachments || "[]");
           }
-
+          
           try {
             const decodedReferences = decodeRefs(m.references);
-            references = decodedReferences?.refs || decodedReferences || safeJSONParse(m.references || "[]");
+            references =
+              decodedReferences?.refs || decodedReferences ||
+              safeJSONParse(m.references || "[]");
           } catch (e) {
             references = safeJSONParse(m.references || "[]");
           }
-
+          
           result.messages!.push({
             channel_id: m.channel_id,
             code: m.code ? Number(m.code) : 0,
-            id: m.message_id || "",
+            id: m.message_id || '',
             sender_id: m.sender_id,
             username: m.username,
             display_name: m.display_name,
@@ -988,14 +1273,26 @@ export class Client {
     channelType: number,
     state?: number,
     limit?: number,
-    cursor?: string,
+    cursor?: string
   ): Promise<ApiVoiceChannelUserList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
     return this.apiClient
-      .listChannelVoiceUsers(session.token, clanId, channelId, channelType, limit, state, cursor)
+      .listChannelVoiceUsers(
+        session.token,
+        clanId,
+        channelId,
+        channelType,
+        limit,
+        state,
+        cursor
+      )
       .then((response: ApiVoiceChannelUserList) => {
         var result: ApiVoiceChannelUserList = {
           voice_channel_users: [],
@@ -1025,14 +1322,26 @@ export class Client {
     channelType: number,
     state?: number,
     limit?: number,
-    cursor?: string,
+    cursor?: string
   ): Promise<ApiChannelUserList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
     return this.apiClient
-      .listChannelUsers(session.token, clanId, channelId, channelType, limit, state, cursor)
+      .listChannelUsers(
+        session.token,
+        clanId,
+        channelId,
+        channelType,
+        limit,
+        state,
+        cursor
+      )
       .then((response: ApiChannelUserList) => {
         var result: ApiChannelUserList = {
           channel_users: [],
@@ -1054,7 +1363,7 @@ export class Client {
             id: gu.id,
             clan_id: gu.clan_id,
             added_by: gu.added_by,
-            is_banned: gu.is_banned,
+            is_banned: gu.is_banned
           });
         });
         return Promise.resolve(result);
@@ -1072,12 +1381,25 @@ export class Client {
     before?: number,
     after?: number,
   ): Promise<ApiChannelAttachmentList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
     return this.apiClient
-      .listChannelAttachment(session.token, channelId, clanId, fileType, limit, state, before, after)
+      .listChannelAttachment(
+        session.token,
+        channelId,
+        clanId,
+        fileType,
+        limit,
+        state,
+        before,
+        after,
+      )
       .then((response: ApiChannelAttachmentList) => {
         var result: ApiChannelAttachmentList = {
           attachments: [],
@@ -1106,61 +1428,82 @@ export class Client {
   }
 
   /** List a channel's users. */
-  async listClanUsers(session: Session, clanId: string): Promise<ApiClanUserList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async listClanUsers(
+    session: Session,
+    clanId: string
+  ): Promise<ApiClanUserList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listClanUsers(session.token, clanId).then((response: ApiClanUserList) => {
-      var result: ApiClanUserList = {
-        clan_users: [],
-        cursor: response.cursor,
-        clan_id: response.clan_id,
-      };
+    return this.apiClient
+      .listClanUsers(session.token, clanId)
+      .then((response: ApiClanUserList) => {
+        var result: ApiClanUserList = {
+          clan_users: [],
+          cursor: response.cursor,
+          clan_id: response.clan_id,
+        };
 
-      if (response.clan_users == null) {
-        return Promise.resolve(result);
-      }
+        if (response.clan_users == null) {
+          return Promise.resolve(result);
+        }
 
-      response.clan_users!.forEach((gu) => {
-        result.clan_users!.push({
-          user: {
-            avatar_url: gu.user!.avatar_url,
-            create_time: gu.user!.create_time,
-            display_name: gu.user!.display_name,
-            edge_count: gu.user!.edge_count ? Number(gu.user!.edge_count) : 0,
-            id: gu.user!.id,
-            lang_tag: gu.user!.lang_tag,
-            location: gu.user!.location,
-            online: gu.user!.online,
-            is_mobile: gu.user?.is_mobile,
-            timezone: gu.user!.timezone,
-            update_time: gu.user!.update_time,
-            username: gu.user!.username,
-            user_status: gu.user!.user_status,
-            status: gu.user!.status,
-            about_me: gu.user!.about_me,
-            mezon_id: gu.user!.mezon_id,
-            list_nick_names: gu.user!.list_nick_names,
-            phone_number: gu.user!.phone_number,
-          },
-          role_id: gu!.role_id,
-          clan_nick: gu!.clan_nick,
-          clan_avatar: gu!.clan_avatar,
+        response.clan_users!.forEach((gu) => {
+          result.clan_users!.push({
+            user: {
+              avatar_url: gu.user!.avatar_url,
+              create_time_seconds: gu.user!.create_time_seconds,
+              display_name: gu.user!.display_name,
+              edge_count: gu.user!.edge_count ? Number(gu.user!.edge_count) : 0,
+              id: gu.user!.id,
+              lang_tag: gu.user!.lang_tag,
+              location: gu.user!.location,
+              online: gu.user!.online,
+              is_mobile: gu.user?.is_mobile,
+              timezone: gu.user!.timezone,
+              update_time: gu.user!.update_time,
+              username: gu.user!.username,
+              user_status: gu.user!.user_status,
+              status: gu.user!.status,
+              about_me: gu.user!.about_me,
+              mezon_id: gu.user!.mezon_id,
+              list_nick_names: gu.user!.list_nick_names,
+              phone_number: gu.user!.phone_number
+            },
+            role_id: gu!.role_id,
+            clan_nick: gu!.clan_nick,
+            clan_avatar: gu!.clan_avatar,
+          });
         });
+        return Promise.resolve(result);
       });
-      return Promise.resolve(result);
-    });
   }
 
-  async listChannelDetail(session: Session, channelId: string): Promise<ApiChannelDescription> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async listChannelDetail(
+    session: Session,
+    channelId: string
+  ): Promise<ApiChannelDescription> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listChannelDetail(session.token, channelId).then((response: ApiChannelDescription) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .listChannelDetail(
+        session.token,
+        channelId
+      )
+      .then((response: ApiChannelDescription) => {
+        return Promise.resolve(response);
+      });
   }
 
   /** List channels. */
@@ -1171,14 +1514,26 @@ export class Client {
     cursor?: string,
     clanId?: string,
     channelType?: number,
-    isMobile?: boolean,
+    isMobile?: boolean
   ): Promise<ApiChannelDescList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
     return this.apiClient
-      .listChannelDescs(session.token, limit, state, cursor, clanId, channelType, isMobile)
+      .listChannelDescs(
+        session.token,
+        limit,
+        state,
+        cursor,
+        clanId,
+        channelType,
+        isMobile
+      )
       .then((response: ApiChannelDescList) => {
         var result: ApiChannelDescList = {
           channeldesc: [],
@@ -1197,8 +1552,15 @@ export class Client {
   }
 
   /** List clans */
-  async listClanUnreadMsgIndicator(session: Session, clanId: string): Promise<ApiListClanUnreadMsgIndicatorResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async listClanUnreadMsgIndicator(
+    session: Session,
+    clanId: string
+  ): Promise<ApiListClanUnreadMsgIndicatorResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -1210,23 +1572,34 @@ export class Client {
   }
 
   /** List clans */
-  async listClanDescs(session: Session, limit?: number, state?: number, cursor?: string): Promise<ApiClanDescList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async listClanDescs(
+    session: Session,
+    limit?: number,
+    state?: number,
+    cursor?: string
+  ): Promise<ApiClanDescList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listClanDescs(session.token, limit, state, cursor).then((response: ApiClanDescList) => {
-      var result: ApiClanDescList = {
-        clandesc: [],
-      };
+    return this.apiClient
+      .listClanDescs(session.token, limit, state, cursor)
+      .then((response: ApiClanDescList) => {
+        var result: ApiClanDescList = {
+          clandesc: [],
+        };
 
-      if (response.clandesc == null) {
+        if (response.clandesc == null) {
+          return Promise.resolve(result);
+        }
+
+        result.clandesc = response.clandesc;
         return Promise.resolve(result);
-      }
-
-      result.clandesc = response.clandesc;
-      return Promise.resolve(result);
-    });
+      });
   }
 
   /** List categories. */
@@ -1234,9 +1607,13 @@ export class Client {
     session: Session,
     clanId: string,
     creatorId?: string,
-    categoryName?: string,
+    categoryName?: string
   ): Promise<ApiCategoryDescList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -1258,46 +1635,78 @@ export class Client {
 
   /** List event */
   async listEvents(session: Session, clanId?: string): Promise<ApiEventList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listEvents(session.token, clanId).then((response: ApiEventList) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .listEvents(session.token, clanId)
+      .then((response: ApiEventList) => {
+        return Promise.resolve(response);
+      });
   }
 
   /** List permission */
   async getListPermission(session: Session): Promise<ApiPermissionList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.getListPermission(session.token).then((response: ApiPermissionList) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .getListPermission(session.token)
+      .then((response: ApiPermissionList) => {
+        return Promise.resolve(response);
+      });
   }
 
   /** List user roles */
-  async listRolePermissions(session: Session, roleId: string): Promise<ApiPermissionList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async listRolePermissions(
+    session: Session,
+    roleId: string
+  ): Promise<ApiPermissionList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listRolePermissions(session.token, roleId).then((response: ApiPermissionList) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .listRolePermissions(session.token, roleId)
+      .then((response: ApiPermissionList) => {
+        return Promise.resolve(response);
+      });
   }
 
   /** List user roles */
-  async listRoleUsers(session: Session, roleId: string, limit?: number, cursor?: string): Promise<ApiRoleUserList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async listRoleUsers(
+    session: Session,
+    roleId: string,
+    limit?: number,
+    cursor?: string
+  ): Promise<ApiRoleUserList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listRoleUsers(session.token, roleId, limit, cursor).then((response: ApiRoleUserList) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .listRoleUsers(session.token, roleId, limit, cursor)
+      .then((response: ApiRoleUserList) => {
+        return Promise.resolve(response);
+      });
   }
 
   async registFCMDeviceToken(
@@ -1305,9 +1714,13 @@ export class Client {
     tokenId: string,
     deviceId: string,
     platform: string,
-    voipToken?: string,
+    voipToken?: string
   ): Promise<ApiRegistFcmDeviceTokenResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -1318,111 +1731,175 @@ export class Client {
       });
   }
 
-  async getUserProfileOnClan(session: Session, clanId: string): Promise<ApiClanProfile> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async getUserProfileOnClan(
+    session: Session,
+    clanId: string
+  ): Promise<ApiClanProfile> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.getUserProfileOnClan(session.token, clanId).then((response: ApiClanProfile) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .getUserProfileOnClan(session.token, clanId)
+      .then((response: ApiClanProfile) => {
+        return Promise.resolve(response);
+      });
   }
 
   //
-  async closeDirectMess(session: Session, request: ApiDeleteChannelDescRequest): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async closeDirectMess(
+    session: Session,
+    request: ApiDeleteChannelDescRequest
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.closeDirectMess(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .closeDirectMess(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
   //
-  async openDirectMess(session: Session, request: ApiDeleteChannelDescRequest): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async openDirectMess(
+    session: Session,
+    request: ApiDeleteChannelDescRequest
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.openDirectMess(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .openDirectMess(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
-  async confirmLinkMezonOTP(session: Session, request: ApiLinkAccountConfirmRequest): Promise<ApiSession> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async confirmLinkMezonOTP(
+    session: Session,
+    request:  ApiLinkAccountConfirmRequest,
+  ): Promise<ApiSession>{
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.confirmLinkMezonOTP(session.token, request);
+    return this.apiClient
+      .confirmLinkMezonOTP(session.token, request);
   }
 
   /** Add a custom ID to the social profiles on the current user's account. */
-  async linkSMS(session: Session, request: ApiLinkAccountMezon): Promise<ApiLinkAccountConfirmRequest> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async linkSMS(
+    session: Session,
+    request: ApiLinkAccountMezon
+  ): Promise<ApiLinkAccountConfirmRequest> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.linkSMS(session.token, request).then((response: ApiLinkAccountConfirmRequest) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .linkSMS(session.token, request)
+      .then((response: ApiLinkAccountConfirmRequest) => {
+        return Promise.resolve(response);
+      });
   }
 
   /** Add an email+password to the social profiles on the current user's account. */
-  async linkEmail(session: Session, request: ApiAccountEmail): Promise<ApiLinkAccountConfirmRequest> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async linkEmail(
+    session: Session,
+    request: ApiAccountEmail
+  ): Promise<ApiLinkAccountConfirmRequest> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.linkEmail(session.token, request).then((response: ApiLinkAccountConfirmRequest) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .linkEmail(session.token, request)
+      .then((response: ApiLinkAccountConfirmRequest) => {
+        return Promise.resolve(response);
+      });
   }
 
   /** List all friends for the current user. */
-  async listFriends(session: Session, state?: number, limit?: number, cursor?: string): Promise<Friends> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async listFriends(
+    session: Session,
+    state?: number,
+    limit?: number,
+    cursor?: string
+  ): Promise<Friends> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listFriends(session.token, limit, state, cursor).then((response: ApiFriendList) => {
-      var result: Friends = {
-        friends: [],
-        cursor: response.cursor,
-      };
+    return this.apiClient
+      .listFriends(session.token, limit, state, cursor)
+      .then((response: ApiFriendList) => {
+        var result: Friends = {
+          friends: [],
+          cursor: response.cursor,
+        };
 
-      if (response.friends == null) {
-        return Promise.resolve(result);
-      }
+        if (response.friends == null) {
+          return Promise.resolve(result);
+        }
 
-      response.friends!.forEach((f) => {
-        result.friends!.push({
-          user: {
-            avatar_url: f.user!.avatar_url,
-            create_time: f.user!.create_time,
-            display_name: f.user!.display_name,
-            edge_count: f.user!.edge_count ? Number(f.user!.edge_count) : 0,
-            id: f.user!.id,
-            lang_tag: f.user!.lang_tag,
-            location: f.user!.location,
-            online: f.user!.online,
-            timezone: f.user!.timezone,
-            update_time: f.user!.update_time,
-            username: f.user!.username,
-            is_mobile: f.user?.is_mobile,
-            user_status: f.user!.user_status,
-            status: f.user!.status,
-            mezon_id: f.user!.mezon_id,
-            list_nick_names: f.user!.list_nick_names,
-            phone_number: f.user!.phone_number,
-            about_me: f.user!.about_me,
-          },
-          state: f.state,
-          source_id: f.source_id,
+        response.friends!.forEach((f) => {
+          result.friends!.push({
+            user: {
+              avatar_url: f.user!.avatar_url,
+              create_time_seconds: f.user!.create_time_seconds,
+              display_name: f.user!.display_name,
+              edge_count: f.user!.edge_count ? Number(f.user!.edge_count) : 0,
+              id: f.user!.id,
+              lang_tag: f.user!.lang_tag,
+              location: f.user!.location,
+              online: f.user!.online,
+              timezone: f.user!.timezone,
+              update_time: f.user!.update_time,
+              username: f.user!.username,
+              is_mobile: f.user?.is_mobile,
+              user_status: f.user!.user_status,
+              status: f.user!.status,
+              mezon_id: f.user!.mezon_id,
+              list_nick_names: f.user!.list_nick_names,
+              phone_number: f.user!.phone_number,
+              about_me: f.user!.about_me
+            },
+            state: f.state,
+            source_id: f.source_id,
+          });
         });
+        return Promise.resolve(result);
       });
-      return Promise.resolve(result);
-    });
   }
 
   /** Fetch list of notifications. */
@@ -1432,14 +1909,25 @@ export class Client {
     limit?: number,
     notificationId?: string,
     category?: number,
-    direction?: number,
+    direction?: number
   ): Promise<ApiNotificationList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
     return this.apiClient
-      .listNotifications(session.token, limit, clanId, notificationId, category, direction)
+      .listNotifications(
+        session.token,
+        limit,
+        clanId,
+        notificationId,
+        category,
+        direction
+      )
       .then((response: ApiNotificationList) => {
         var result: ApiNotificationList = {
           cacheable_cursor: response.cacheable_cursor,
@@ -1472,9 +1960,13 @@ export class Client {
     token: string,
     refreshToken: string,
     deviceId: string,
-    platform: string,
+    platform: string
   ): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -1483,7 +1975,7 @@ export class Client {
         refresh_token: refreshToken,
         token: token,
         device_id: deviceId,
-        platform: platform,
+        platform: platform
       })
       .then((response: any) => {
         return response !== undefined;
@@ -1491,7 +1983,10 @@ export class Client {
   }
 
   /** Refresh a user's session using a refresh token retrieved from a previous authentication request. */
-  async sessionRefresh(session: Session, vars: Record<string, string> = {}): Promise<Session> {
+  async sessionRefresh(
+    session: Session,
+    vars: Record<string, string> = {}
+  ): Promise<Session> {
     if (!session) {
       console.error("Cannot refresh a null session.");
       return session;
@@ -1499,13 +1994,16 @@ export class Client {
 
     if (session.created && session.expires_at! - session.created_at < 70) {
       console.warn(
-        "Session lifetime too short, please set '--session.token_expiry_sec' option. See the documentation for more info: https://mezon.vn/docs/mezon/getting-started/configuration/#session",
+        "Session lifetime too short, please set '--session.token_expiry_sec' option. See the documentation for more info: https://mezon.vn/docs/mezon/getting-started/configuration/#session"
       );
     }
 
-    if (session.created && session.refresh_expires_at! - session.created_at < 3700) {
+    if (
+      session.created &&
+      session.refresh_expires_at! - session.created_at < 3700
+    ) {
       console.warn(
-        "Session refresh lifetime too short, please set '--session.refresh_token_expiry_sec' option. See the documentation for more info: https://mezon.vn/docs/mezon/getting-started/configuration/#session",
+        "Session refresh lifetime too short, please set '--session.refresh_token_expiry_sec' option. See the documentation for more info: https://mezon.vn/docs/mezon/getting-started/configuration/#session"
       );
     }
 
@@ -1515,11 +2013,15 @@ export class Client {
 
     this.refreshTokenPromise = new Promise<Session>(async (resolve, reject) => {
       try {
-        const apiSession = await this.apiClient.sessionRefresh(this.serverkey, "", {
-          token: session.refresh_token,
-          vars: vars,
-          is_remember: session.is_remember,
-        });
+        const apiSession = await this.apiClient.sessionRefresh(
+          this.serverkey,
+          "",
+          {
+            token: session.refresh_token,
+            vars: vars,
+            is_remember:session.is_remember
+          }
+        );
         session.update(apiSession.token!, apiSession.refresh_token!, apiSession.is_remember || false);
         this.onRefreshSession(apiSession);
         resolve(session);
@@ -1535,333 +2037,580 @@ export class Client {
   }
 
   /** Remove an email+password from the social profiles on the current user's account. */
-  async unlinkEmail(session: Session, request: ApiAccountEmail): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async unlinkEmail(
+    session: Session,
+    request: ApiAccountEmail
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.unlinkEmail(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .unlinkEmail(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** Update fields in the current user's account. */
-  async updateUsername(session: Session, request: ApiUpdateUsernameRequest): Promise<ApiSession> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async updateUsername(
+    session: Session,
+    request: ApiUpdateUsernameRequest
+  ): Promise<ApiSession> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateUsername(session.token, request).then((response: ApiSession) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .updateUsername(session.token, request)
+      .then((response: ApiSession) => {
+        return Promise.resolve(response);
+      });
   }
 
   /** Update fields in the current user's account. */
-  async updateAccount(session: Session, request: ApiUpdateAccountRequest): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async updateAccount(
+    session: Session,
+    request: ApiUpdateAccountRequest
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateAccount(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .updateAccount(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** Update fields in a given channel */
-  async updateChannelDesc(session: Session, channelId: string, request: ApiUpdateChannelDescRequest): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async updateChannelDesc(
+    session: Session,
+    channelId: string,
+    request: ApiUpdateChannelDescRequest
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateChannelDesc(session.token, channelId, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .updateChannelDesc(session.token, channelId, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** Update fields in a given clan. */
-  async updateClanDesc(session: Session, clanId: string, request: MezonUpdateClanDescBody): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async updateClanDesc(
+    session: Session,
+    clanId: string,
+    request: MezonUpdateClanDescBody
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateClanDesc(session.token, clanId, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .updateClanDesc(session.token, clanId, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** Update fields in a given category. */
-  async updateCategory(session: Session, clanId: string, request: ApiUpdateCategoryDescRequest): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async updateCategory(
+    session: Session,
+    clanId: string,
+    request: ApiUpdateCategoryDescRequest
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateCategory(session.token, clanId, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .updateCategory(session.token, clanId, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   async updateUserProfileByClan(
     session: Session,
     clanId: string,
-    request: ApiUpdateClanProfileRequest,
+    request: ApiUpdateClanProfileRequest
   ): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateUserProfileByClan(session.token, clanId, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .updateUserProfileByClan(session.token, clanId, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** Update fields in a given role. */
-  async updateRole(session: Session, roleId: string, request: ApiUpdateRoleRequest): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async updateRole(
+    session: Session,
+    roleId: string,
+    request: ApiUpdateRoleRequest
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateRole(session.token, roleId, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .updateRole(session.token, roleId, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** Update fields in a given event. */
-  async updateEvent(session: Session, roleId: string, request: MezonUpdateEventBody): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async updateEvent(
+    session: Session,
+    roleId: string,
+    request: MezonUpdateEventBody
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateEvent(session.token, roleId, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .updateEvent(session.token, roleId, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** Update fields in a given event. */
-  async updateApp(session: Session, roleId: string, request: MezonUpdateAppBody): Promise<ApiApp> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async updateApp(
+    session: Session,
+    roleId: string,
+    request: MezonUpdateAppBody
+  ): Promise<ApiApp> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateApp(session.token, roleId, request).then((response: ApiApp) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .updateApp(session.token, roleId, request)
+      .then((response: ApiApp) => {
+        return Promise.resolve(response);
+      });
   }
 
   /** Update fields in a given clan profile. */
-  async createLinkInviteUser(session: Session, request: ApiLinkInviteUserRequest): Promise<ApiLinkInviteUser> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async createLinkInviteUser(
+    session: Session,
+    request: ApiLinkInviteUserRequest
+  ): Promise<ApiLinkInviteUser> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.createLinkInviteUser(session.token, request).then((response: ApiLinkInviteUser) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .createLinkInviteUser(session.token, request)
+      .then((response: ApiLinkInviteUser) => {
+        return Promise.resolve(response);
+      });
   }
 
   /** Get link invite user */
-  async getLinkInvite(inviteId: string): Promise<ApiInviteUserRes> {
-    return this.apiClient.getLinkInvite(this.serverkey, "", inviteId).then((response: ApiInviteUserRes) => {
-      return Promise.resolve(response);
-    });
+  async getLinkInvite(
+    inviteId: string
+  ): Promise<ApiInviteUserRes> {
+    return this.apiClient
+      .getLinkInvite( this.serverkey, "", inviteId)
+      .then((response: ApiInviteUserRes) => {
+        return Promise.resolve(response);
+      });
   }
 
   /** Get permission of user in the clan */
-  async GetRoleOfUserInTheClan(session: Session, clanId: string): Promise<ApiRoleList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async GetRoleOfUserInTheClan(
+    session: Session,
+    clanId: string
+  ): Promise<ApiRoleList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.getRoleOfUserInTheClan(session.token, clanId).then((response: ApiRoleList) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .getRoleOfUserInTheClan(session.token, clanId)
+      .then((response: ApiRoleList) => {
+        return Promise.resolve(response);
+      });
   }
 
   /** invite user */
-  async inviteUser(session: Session, inviteId: string): Promise<ApiInviteUserRes> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async inviteUser(
+    session: Session,
+    inviteId: string
+  ): Promise<ApiInviteUserRes> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.inviteUser(session.token, inviteId).then((response: ApiInviteUserRes) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .inviteUser(session.token, inviteId)
+      .then((response: ApiInviteUserRes) => {
+        return Promise.resolve(response);
+      });
   }
 
   /** Set default notification clan*/
-  async setNotificationClan(session: Session, request: ApiSetDefaultNotificationRequest): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async setNotificationClan(
+    session: Session,
+    request: ApiSetDefaultNotificationRequest
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.setNotificationClanSetting(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .setNotificationClanSetting(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** Set notification channel*/
-  async setNotificationChannel(session: Session, request: ApiSetNotificationRequest): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async setNotificationChannel(
+    session: Session,
+    request: ApiSetNotificationRequest
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.setNotificationChannelSetting(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .setNotificationChannelSetting(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** Set notification category*/
-  async setMuteCategory(session: Session, request: ApiSetMuteRequest): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async setMuteCategory(
+    session: Session,
+    request: ApiSetMuteRequest
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.setMuteCategory(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .setMuteCategory(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** Set notification channel*/
-  async setMuteChannel(session: Session, request: ApiSetMuteRequest): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async setMuteChannel(
+    session: Session,
+    request: ApiSetMuteRequest
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.setMuteChannel(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .setMuteChannel(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** update channel private*/
-  async updateChannelPrivate(session: Session, request: ApiChangeChannelPrivateRequest): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async updateChannelPrivate(
+    session: Session,
+    request: ApiChangeChannelPrivateRequest
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateChannelPrivate(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .updateChannelPrivate(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** Set default notification category*/
-  async setNotificationCategory(session: Session, request: ApiSetNotificationRequest): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async setNotificationCategory(
+    session: Session,
+    request: ApiSetNotificationRequest
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.setNotificationCategorySetting(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .setNotificationCategorySetting(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
-  async deleteNotificationCategory(session: Session, category_id: string): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async deleteNotificationCategory(
+    session: Session,
+    category_id: string
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteNotificationCategorySetting(session.token, category_id).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .deleteNotificationCategorySetting(session.token, category_id)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
-  async deleteNotificationChannel(session: Session, channel_id: string): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async deleteNotificationChannel(
+    session: Session,
+    channel_id: string
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteNotificationChannel(session.token, channel_id).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .deleteNotificationChannel(session.token, channel_id)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** */
-  async setNotificationReactMessage(session: Session, channel_id: string): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async setNotificationReactMessage(
+    session: Session,
+    channel_id: string
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.setNotificationReactMessage(session.token, { channel_id }).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .setNotificationReactMessage(session.token, { channel_id })
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   //** */
-  async deleteNotiReactMessage(session: Session, channel_id: string): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async deleteNotiReactMessage(
+    session: Session,
+    channel_id: string
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteNotiReactMessage(session.token, channel_id).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .deleteNotiReactMessage(session.token, channel_id)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** query message in elasticsearch */
-  async searchMessage(session: Session, request: ApiSearchMessageRequest): Promise<ApiSearchMessageResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async searchMessage(
+    session: Session,
+    request: ApiSearchMessageRequest
+  ): Promise<ApiSearchMessageResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.searchMessage(session.token, request).then((response: ApiSearchMessageResponse) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .searchMessage(session.token, request)
+      .then((response: ApiSearchMessageResponse) => {
+        return Promise.resolve(response);
+      });
   }
 
   /** */
-  async createMessage2Inbox(session: Session, request: ApiMessage2InboxRequest): Promise<ApiChannelMessageHeader> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async createMessage2Inbox(
+    session: Session,
+    request: ApiMessage2InboxRequest
+  ): Promise<ApiChannelMessageHeader> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.createMessage2Inbox(session.token, request).then((response: ApiChannelMessageHeader) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .createMessage2Inbox(session.token, request)
+      .then((response: ApiChannelMessageHeader) => {
+        return Promise.resolve(response);
+      });
   }
 
   /** */
-  async createPinMessage(session: Session, request: ApiPinMessageRequest): Promise<ApiChannelMessageHeader> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async createPinMessage(
+    session: Session,
+    request: ApiPinMessageRequest
+  ): Promise<ApiChannelMessageHeader> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.createPinMessage(session.token, request).then((response: ApiChannelMessageHeader) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .createPinMessage(session.token, request)
+      .then((response: ApiChannelMessageHeader) => {
+        return Promise.resolve(response);
+      });
   }
 
   async pinMessagesList(
     session: Session,
     messageId: string,
     channelId: string,
-    clanId: string,
+    clanId: string
   ): Promise<ApiPinMessagesList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.getPinMessagesList(session.token, messageId, channelId, clanId).then((response) => {
-      var result: ApiPinMessagesList = {
-        pin_messages_list: [],
-      };
+    return this.apiClient
+      .getPinMessagesList(session.token, messageId, channelId, clanId)
+      .then((response) => {
+        var result: ApiPinMessagesList = {
+          pin_messages_list: [],
+        };
 
-      if (response.pin_messages_list == null) {
-        return Promise.resolve(result);
-      }
+        if (response.pin_messages_list == null) {
+          return Promise.resolve(result);
+        }
 
-      response.pin_messages_list!.forEach((p) => {
-        result.pin_messages_list!.push({
-          id: p.id,
-          avatar: p.avatar,
-          channel_id: p.channel_id,
-          content: p.content,
-          create_time_seconds: p.create_time_seconds,
-          message_id: p.message_id,
-          sender_id: p.sender_id,
-          username: p.username,
-          attachment: p.attachment,
+        response.pin_messages_list!.forEach((p) => {
+          result.pin_messages_list!.push({
+            id: p.id,
+            avatar: p.avatar,
+            channel_id: p.channel_id,
+            content: p.content,
+            create_time_seconds: p.create_time_seconds,
+            message_id: p.message_id,
+            sender_id: p.sender_id,
+            username: p.username,
+            attachment: p.attachment,
+          });
         });
+        return Promise.resolve(result);
       });
-      return Promise.resolve(result);
-    });
   }
 
   //** */
@@ -1870,64 +2619,114 @@ export class Client {
     id?: string,
     messageId?: string,
     channelId?: string,
-    clanId?: string,
+    clanId?: string
   ): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deletePinMessage(session.token, id, messageId, channelId, clanId).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .deletePinMessage(session.token, id, messageId, channelId, clanId)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** create clan emoji */
   async createClanEmoji(session: Session, request: ApiClanEmojiCreateRequest) {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.createClanEmoji(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .createClanEmoji(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   //**update clan emoji by id */
-  async updateClanEmojiById(session: Session, id: string, request: MezonUpdateClanEmojiByIdBody) {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async updateClanEmojiById(
+    session: Session,
+    id: string,
+    request: MezonUpdateClanEmojiByIdBody
+  ) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateClanEmojiById(session.token, id, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .updateClanEmojiById(session.token, id, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   //**delete clan emoji by id */
-  async deleteByIdClanEmoji(session: Session, id: string, clan_id: string, emojiLabel?: string) {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async deleteByIdClanEmoji(
+    session: Session,
+    id: string,
+    clan_id: string,
+    emojiLabel?: string
+  ) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteClanEmojiById(session.token, id, clan_id, emojiLabel).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .deleteClanEmojiById(session.token, id, clan_id, emojiLabel)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   //**create webhook for chaneel */
-  async generateWebhookLink(session: Session, request: ApiWebhookCreateRequest): Promise<ApiWebhookGenerateResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async generateWebhookLink(
+    session: Session,
+    request: ApiWebhookCreateRequest
+  ): Promise<ApiWebhookGenerateResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.generateWebhook(session.token, request).then((response: any) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .generateWebhook(session.token, request)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
   }
 
   //**list webhook belong to the channel */
-  async listWebhookByChannelId(session: Session, channel_id: string, clan_id: string): Promise<ApiWebhookListResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async listWebhookByChannelId(
+    session: Session,
+    channel_id: string,
+    clan_id: string
+  ): Promise<ApiWebhookListResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -1939,94 +2738,170 @@ export class Client {
   }
 
   //**update webhook name by id */
-  async updateWebhookById(session: Session, id: string, request: MezonUpdateWebhookByIdBody) {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async updateWebhookById(
+    session: Session,
+    id: string,
+    request: MezonUpdateWebhookByIdBody
+  ) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateWebhookById(session.token, id, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .updateWebhookById(session.token, id, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   //**disabled webhook by id */
-  async deleteWebhookById(session: Session, id: string, request: MezonDeleteWebhookByIdBody) {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async deleteWebhookById(
+    session: Session,
+    id: string,
+    request: MezonDeleteWebhookByIdBody
+  ) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteWebhookById(session.token, id, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .deleteWebhookById(session.token, id, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   //**Add a new sticker */
   async addClanSticker(session: Session, request: ApiClanStickerAddRequest) {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.addClanSticker(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .addClanSticker(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   //**Delete a sticker by ID*/
-  async deleteClanStickerById(session: Session, id: string, clan_id: string, stickerLabel?: string) {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async deleteClanStickerById(
+    session: Session,
+    id: string,
+    clan_id: string,
+    stickerLabel?: string
+  ) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteClanStickerById(session.token, id, clan_id, stickerLabel).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .deleteClanStickerById(session.token, id, clan_id, stickerLabel)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   //**Update a sticker by ID*/
-  async updateClanStickerById(session: Session, id: string, request: MezonUpdateClanStickerByIdBody) {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async updateClanStickerById(
+    session: Session,
+    id: string,
+    request: MezonUpdateClanStickerByIdBody
+  ) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateClanStickerById(session.token, id, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .updateClanStickerById(session.token, id, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   //** update the category of a channel */
-  async changeChannelCategory(session: Session, id: string, request: MezonChangeChannelCategoryBody) {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async changeChannelCategory(
+    session: Session,
+    id: string,
+    request: MezonChangeChannelCategoryBody
+  ) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.changeChannelCategory(session.token, id, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .changeChannelCategory(session.token, id, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** */
-  async setRoleChannelPermission(session: Session, request: ApiUpdateRoleChannelRequest): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async setRoleChannelPermission(
+    session: Session,
+    request: ApiUpdateRoleChannelRequest
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.setRoleChannelPermission(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .setRoleChannelPermission(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   async addApp(session: Session, request: ApiAddAppRequest): Promise<ApiApp> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.addApp(session.token, request).then((response: any) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .addApp(session.token, request)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
   }
 
   async getApp(session: Session, id: string): Promise<ApiApp> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -2036,103 +2911,178 @@ export class Client {
   }
 
   async listApps(session: Session): Promise<ApiAppList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listApps(session.token).then((response: ApiAppList) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .listApps(session.token)
+      .then((response: ApiAppList) => {
+        return Promise.resolve(response);
+      });
   }
 
   async addAppToClan(session: Session, appId: string, clanId: string) {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.addAppToClan(session.token, appId, clanId).then((response: ApiAppList) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .addAppToClan(session.token, appId, clanId)
+      .then((response: ApiAppList) => {
+        return response !== undefined;
+      });
   }
 
-  async getSystemMessagesList(session: Session): Promise<ApiSystemMessagesList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async getSystemMessagesList(
+    session: Session
+  ): Promise<ApiSystemMessagesList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.getSystemMessagesList(session.token).then((response: ApiSystemMessagesList) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .getSystemMessagesList(session.token)
+      .then((response: ApiSystemMessagesList) => {
+        return Promise.resolve(response);
+      });
   }
 
-  async getSystemMessageByClanId(session: Session, clanId: string): Promise<ApiSystemMessage> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async getSystemMessageByClanId(
+    session: Session,
+    clanId: string
+  ): Promise<ApiSystemMessage> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.getSystemMessageByClanId(session.token, clanId).then((response: ApiSystemMessage) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .getSystemMessageByClanId(session.token, clanId)
+      .then((response: ApiSystemMessage) => {
+        return Promise.resolve(response);
+      });
   }
 
-  async createSystemMessage(session: Session, request: ApiSystemMessageRequest): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async createSystemMessage(
+    session: Session,
+    request: ApiSystemMessageRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.createSystemMessage(session.token, request).then((response: any) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .createSystemMessage(session.token, request)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
   }
 
-  async updateSystemMessage(session: Session, clanId: string, request: MezonUpdateSystemMessageBody): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async updateSystemMessage(
+    session: Session,
+    clanId: string,
+    request: MezonUpdateSystemMessageBody
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateSystemMessage(session.token, clanId, request).then((response: any) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .updateSystemMessage(session.token, clanId, request)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
   }
 
   async deleteSystemMessage(session: Session, clanId: string): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteSystemMessage(session.token, clanId).then((response: any) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .deleteSystemMessage(session.token, clanId)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
   }
 
-  async updateCategoryOrder(session: Session, request: ApiUpdateCategoryOrderRequest): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async updateCategoryOrder(
+    session: Session,
+    request: ApiUpdateCategoryOrderRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateCategoryOrder(session.token, request).then((response: any) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .updateCategoryOrder(session.token, request)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
   }
 
   async givecoffee(session: Session, request: ApiGiveCoffeeEvent): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.giveMeACoffee(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .giveMeACoffee(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   async sendToken(session: Session, request: ApiTokenSentEvent): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.sendToken(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .sendToken(session.token, request)
+      .then((response: any) => {
+        return response !== undefined
+      });
   }
 
   /** List a channel's users. */
@@ -2143,14 +3093,26 @@ export class Client {
     channelType: number,
     state?: number,
     limit?: number,
-    cursor?: string,
+    cursor?: string
   ): Promise<ApiStreamingChannelUserList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
     return this.apiClient
-      .listStreamingChannelUsers(session.token, clanId, channelId, channelType, limit, state, cursor)
+      .listStreamingChannelUsers(
+        session.token,
+        clanId,
+        channelId,
+        channelType,
+        limit,
+        state,
+        cursor
+      )
       .then((response: ApiStreamingChannelUserList) => {
         var result: ApiStreamingChannelUserList = {
           streaming_channel_users: [],
@@ -2172,8 +3134,15 @@ export class Client {
       });
   }
 
-  async registerStreamingChannel(session: Session, request: ApiRegisterStreamingChannelRequest) {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async registerStreamingChannel(
+    session: Session,
+    request: ApiRegisterStreamingChannelRequest
+  ) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -2185,40 +3154,53 @@ export class Client {
   }
 
   /** List a channel's users. */
-  async listChannelApps(session: Session, clanId: string): Promise<ApiListChannelAppsResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async listChannelApps(
+    session: Session,
+    clanId: string
+  ): Promise<ApiListChannelAppsResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listChannelApps(session.token, clanId).then((response: ApiListChannelAppsResponse) => {
-      var result: ApiListChannelAppsResponse = {
-        channel_apps: [],
-      };
+    return this.apiClient
+      .listChannelApps(session.token, clanId)
+      .then((response: ApiListChannelAppsResponse) => {
+        var result: ApiListChannelAppsResponse = {
+          channel_apps: [],
+        };
 
-      if (response.channel_apps == null) {
-        return Promise.resolve(result);
-      }
+        if (response.channel_apps == null) {
+          return Promise.resolve(result);
+        }
 
-      response.channel_apps!.forEach((gu) => {
-        result.channel_apps!.push({
-          id: gu.id,
-          channel_id: gu.channel_id,
-          app_id: gu.app_id,
-          clan_id: gu.clan_id,
-          app_url: gu.app_url,
-          app_name: gu.app_name,
-          app_logo: gu.app_logo,
+        response.channel_apps!.forEach((gu) => {
+          result.channel_apps!.push({
+            id: gu.id,
+            channel_id: gu.channel_id,
+            app_id: gu.app_id,
+            clan_id: gu.clan_id,
+            app_url: gu.app_url,
+            app_name: gu.app_name,
+            app_logo: gu.app_logo,
+          });
         });
+        return Promise.resolve(result);
       });
-      return Promise.resolve(result);
-    });
   }
 
   async getChannelCategoryNotiSettingsList(
     session: Session,
-    clanId: string,
+    clanId: string
   ): Promise<ApiNotificationChannelCategorySettingList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -2229,8 +3211,15 @@ export class Client {
       });
   }
 
-  async getNotificationCategory(session: Session, categoryId: string): Promise<ApiNotificationUserChannel> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async getNotificationCategory(
+    session: Session,
+    categoryId: string
+  ): Promise<ApiNotificationUserChannel> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -2241,8 +3230,15 @@ export class Client {
       });
   }
 
-  async getNotificationChannel(session: Session, channelId: string): Promise<ApiNotificationUserChannel> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async getNotificationChannel(
+    session: Session,
+    channelId: string
+  ): Promise<ApiNotificationUserChannel> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -2253,18 +3249,34 @@ export class Client {
       });
   }
 
-  async getNotificationClan(session: Session, clanId: string): Promise<ApiNotificationSetting> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async getNotificationClan(
+    session: Session,
+    clanId: string
+  ): Promise<ApiNotificationSetting> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.getNotificationClan(session.token, clanId).then((response: ApiNotificationSetting) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .getNotificationClan(session.token, clanId)
+      .then((response: ApiNotificationSetting) => {
+        return Promise.resolve(response);
+      });
   }
 
-  async getNotificationReactMessage(session: Session, channelId: string): Promise<ApiNotifiReactMessage> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async getNotificationReactMessage(
+    session: Session,
+    channelId: string
+  ): Promise<ApiNotifiReactMessage> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -2276,67 +3288,109 @@ export class Client {
   }
 
   async listChannelByUserId(session: Session): Promise<ApiChannelDescList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listChannelByUserId(session.token).then((response: ApiChannelDescList) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .listChannelByUserId(session.token)
+      .then((response: ApiChannelDescList) => {
+        return Promise.resolve(response);
+      });
   }
 
   async listChannelUsersUC(
     session: Session,
     channel_id: string,
-    limit: number,
+    limit: number
   ): Promise<ApiAllUsersAddChannelResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listChannelUsersUC(session.token, channel_id, limit).then((response: any) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .listChannelUsersUC(session.token, channel_id, limit)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
   }
 
-  async getListEmojisByUserId(session: Session): Promise<ApiEmojiListedResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async getListEmojisByUserId(
+    session: Session
+  ): Promise<ApiEmojiListedResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.getListEmojisByUserId(session.token).then((response: any) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .getListEmojisByUserId(session.token)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
   }
 
-  async emojiRecentList(session: Session): Promise<ApiEmojiRecentList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async emojiRecentList(
+    session: Session
+  ): Promise<ApiEmojiRecentList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.emojiRecentList(session.token).then((response: any) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .emojiRecentList(session.token)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
   }
 
-  async getListStickersByUserId(session: Session): Promise<ApiStickerListedResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async getListStickersByUserId(
+    session: Session
+  ): Promise<ApiStickerListedResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.getListStickersByUserId(session.token).then((response: any) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .getListStickersByUserId(session.token)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
   }
 
   async listUserClansByUserId(session: Session): Promise<ApiAllUserClans> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listUserClansByUserId(session.token).then((response: ApiAllUserClans) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .listUserClansByUserId(session.token)
+      .then((response: ApiAllUserClans) => {
+        return Promise.resolve(response);
+      });
   }
 
   async listRoles(
@@ -2344,9 +3398,13 @@ export class Client {
     clanId?: string,
     limit?: number,
     state?: number,
-    cursor?: string,
+    cursor?: string
   ): Promise<ApiRoleListEventResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -2365,9 +3423,13 @@ export class Client {
   async listUserPermissionInChannel(
     session: Session,
     clanId?: string,
-    channelId?: string,
+    channelId?: string
   ): Promise<ApiUserPermissionInChannelListResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -2388,9 +3450,13 @@ export class Client {
     session: Session,
     roleId?: string,
     channelId?: string,
-    userId?: string,
+    userId?: string
   ): Promise<ApiPermissionRoleChannelListEventResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -2408,14 +3474,23 @@ export class Client {
       });
   }
 
-  async markAsRead(session: Session, request: ApiMarkAsReadRequest): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async markAsRead(
+    session: Session,
+    request: ApiMarkAsReadRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.markAsRead(session.token, request).then((response: any) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .markAsRead(session.token, request)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
   }
 
   /** List Threads. */
@@ -2426,14 +3501,26 @@ export class Client {
     state?: number,
     clanId?: string,
     threadId?: string,
-    page?: number,
+    page?: number
   ): Promise<ApiChannelDescList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
     return this.apiClient
-      .listThreadDescs(session.token, channelId, limit, state, clanId, threadId, page)
+      .listThreadDescs(
+        session.token,
+        channelId,
+        limit,
+        state,
+        clanId,
+        threadId,
+        page
+      )
       .then((response: ApiChannelDescList) => {
         var result: ApiChannelDescList = {
           channeldesc: [],
@@ -2449,13 +3536,19 @@ export class Client {
   }
 
   async leaveThread(session: Session, clanId: string, channelId: string): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.leaveThread(session.token, clanId, channelId).then((response: any) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .leaveThread(session.token, clanId, channelId)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
   }
 
   async getChannelSettingInClan(
@@ -2469,9 +3562,13 @@ export class Client {
     type?: number,
     limit?: number,
     page?: number,
-    channelLabel?: string,
+    channelLabel?: string
   ): Promise<ApiChannelSettingListResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -2487,7 +3584,7 @@ export class Client {
         type,
         limit,
         page,
-        channelLabel,
+        channelLabel
       )
       .then((response: any) => {
         return Promise.resolve(response);
@@ -2499,9 +3596,13 @@ export class Client {
     channelId: string,
     clanId?: string,
     limit?: number,
-    page?: number,
+    page?: number
   ): Promise<ApiChannelCanvasListResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -2524,43 +3625,78 @@ export class Client {
       });
   }
 
-  async getChannelCanvasDetail(session: Session, id: string, clanId?: string, channelId?: string): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async getChannelCanvasDetail(
+    session: Session,
+    id: string,
+    clanId?: string,
+    channelId?: string
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.getChannelCanvasDetail(session.token, id, clanId, channelId).then((response: any) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .getChannelCanvasDetail(session.token, id, clanId, channelId)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
   }
 
-  async editChannelCanvases(session: Session, request: ApiEditChannelCanvasRequest): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async editChannelCanvases(
+    session: Session,
+    request: ApiEditChannelCanvasRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.editChannelCanvases(session.token, request).then((response: any) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .editChannelCanvases(session.token, request)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
   }
 
   //** */
-  async deleteChannelCanvas(session: Session, canvasId: string, clanId?: string, channelId?: string): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async deleteChannelCanvas(
+    session: Session,
+    canvasId: string,
+    clanId?: string,
+    channelId?: string
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteChannelCanvas(session.token, canvasId, clanId, channelId).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .deleteChannelCanvas(session.token, canvasId, clanId, channelId)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   async addFavoriteChannel(
     session: Session,
     channelId: string,
-    clanId: string,
+    clanId: string
   ): Promise<ApiAddFavoriteChannelResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -2574,28 +3710,48 @@ export class Client {
       });
   }
 
-  async removeFavoriteChannel(session: Session, clanId: string, channelId: string): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async removeFavoriteChannel(
+    session: Session,
+    clanId: string,
+    channelId: string
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.removeChannelFavorite(session.token, clanId, channelId).then((response: any) => {
-      return response;
-    });
+    return this.apiClient
+      .removeChannelFavorite(session.token, clanId, channelId)
+      .then((response: any) => {
+        return response;
+      });
   }
 
   async getListFavoriteChannel(session: Session, clanId: string): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.getListFavoriteChannel(session.token, clanId).then((response: any) => {
-      return response;
-    });
+    return this.apiClient
+      .getListFavoriteChannel(session.token, clanId)
+      .then((response: any) => {
+        return response;
+      });
   }
   /** List activity */
   async listActivity(session: Session): Promise<ApiListUserActivity> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -2604,18 +3760,31 @@ export class Client {
     });
   }
 
-  async createActiviy(session: Session, request: ApiCreateActivityRequest): Promise<ApiUserActivity> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async createActiviy(
+    session: Session,
+    request: ApiCreateActivityRequest
+  ): Promise<ApiUserActivity> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.createActiviy(session.token, request).then((response: any) => {
-      return response;
-    });
+    return this.apiClient
+      .createActiviy(session.token, request)
+      .then((response: any) => {
+        return response;
+      });
   }
 
   async createQRLogin(requet: ApiLoginRequest): Promise<ApiLoginIDResponse> {
-    const apiSession = await this.apiClient.createQRLogin(this.serverkey, "", requet);
+    const apiSession = await this.apiClient.createQRLogin(
+      this.serverkey,
+      "",
+      requet
+    );
     const response = {
       login_id: apiSession.login_id,
       create_time_second: apiSession.create_time_second,
@@ -2623,8 +3792,14 @@ export class Client {
     return response;
   }
 
-  async checkLoginRequest(requet: ApiConfirmLoginRequest): Promise<Session | null> {
-    const apiSession = await this.apiClient.checkLoginRequest(this.serverkey, "", requet);
+  async checkLoginRequest(
+    requet: ApiConfirmLoginRequest
+  ): Promise<Session | null> {
+    const apiSession = await this.apiClient.checkLoginRequest(
+      this.serverkey,
+      "",
+      requet
+    );
     if (!apiSession?.token) {
       return null;
     }
@@ -2635,22 +3810,39 @@ export class Client {
       apiSession.api_url || "",
       apiSession.ws_url || "",
       apiSession.id_token || "",
-      apiSession.is_remember || false,
+      apiSession.is_remember || false
     );
   }
 
-  async confirmLogin(session: Session, basePath: string, body: ApiConfirmLoginRequest): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async confirmLogin(
+    session: Session,
+    basePath: string,
+    body: ApiConfirmLoginRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.confirmLogin(session.token, basePath, body).then((response: any) => {
-      return response;
-    });
+    return this.apiClient
+      .confirmLogin(session.token, basePath, body)
+      .then((response: any) => {
+        return response;
+      });
   }
 
-  async getChanEncryptionMethod(session: Session, channelId: string): Promise<ApiChanEncryptionMethod> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async getChanEncryptionMethod(
+    session: Session,
+    channelId: string
+  ): Promise<ApiChanEncryptionMethod> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -2661,8 +3853,16 @@ export class Client {
       });
   }
 
-  async setChanEncryptionMethod(session: Session, channelId: string, method: string): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async setChanEncryptionMethod(
+    session: Session,
+    channelId: string,
+    method: string
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -2673,34 +3873,58 @@ export class Client {
       });
   }
 
-  async getPubKeys(session: Session, userIds: Array<string>): Promise<ApiGetPubKeysResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async getPubKeys(
+    session: Session,
+    userIds: Array<string>
+  ): Promise<ApiGetPubKeysResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.getPubKeys(session.token, userIds).then((response: ApiGetPubKeysResponse) => {
-      return response;
-    });
+    return this.apiClient
+      .getPubKeys(session.token, userIds)
+      .then((response: ApiGetPubKeysResponse) => {
+        return response;
+      });
   }
 
-  async pushPubKey(session: Session, PK: ApiPubKey): Promise<ApiGetPubKeysResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async pushPubKey(
+    session: Session,
+    PK: ApiPubKey
+  ): Promise<ApiGetPubKeysResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.pushPubKey(session.token, { PK: PK }).then((response: ApiGetPubKeysResponse) => {
-      return response;
-    });
+    return this.apiClient
+      .pushPubKey(session.token, { PK: PK })
+      .then((response: ApiGetPubKeysResponse) => {
+        return response;
+      });
   }
 
   async getKeyServer(session: Session): Promise<ApiGetKeyServerResp> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.getKeyServer(session.token).then((response: ApiGetKeyServerResp) => {
-      return response;
-    });
+    return this.apiClient
+      .getKeyServer(session.token)
+      .then((response: ApiGetKeyServerResp) => {
+        return response;
+      });
   }
 
   async listAuditLog(
@@ -2708,9 +3932,13 @@ export class Client {
     actionLog?: string,
     userId?: string,
     clanId?: string,
-    date_log?: string,
+    date_log?: string
   ): Promise<MezonapiListAuditLog> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -2726,9 +3954,13 @@ export class Client {
     clanId?: string,
     guideType?: number,
     limit?: number,
-    page?: number,
+    page?: number
   ): Promise<ApiListOnboardingResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -2739,91 +3971,161 @@ export class Client {
       });
   }
 
-  async getOnboardingDetail(session: Session, id: string, clanId?: string): Promise<ApiOnboardingItem> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async getOnboardingDetail(
+    session: Session,
+    id: string,
+    clanId?: string
+  ): Promise<ApiOnboardingItem> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.getOnboardingDetail(session.token, id, clanId).then((response: ApiOnboardingItem) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .getOnboardingDetail(session.token, id, clanId)
+      .then((response: ApiOnboardingItem) => {
+        return Promise.resolve(response);
+      });
   }
 
-  async createOnboarding(session: Session, request: ApiCreateOnboardingRequest): Promise<ApiListOnboardingResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async createOnboarding(
+    session: Session,
+    request: ApiCreateOnboardingRequest
+  ): Promise<ApiListOnboardingResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.createOnboarding(session.token, request).then((response: ApiListOnboardingResponse) => {
-      return response;
-    });
+    return this.apiClient
+      .createOnboarding(session.token, request)
+      .then((response: ApiListOnboardingResponse) => {
+        return response;
+      });
   }
 
-  async updateOnboarding(session: Session, id: string, request: MezonUpdateOnboardingBody) {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async updateOnboarding(
+    session: Session,
+    id: string,
+    request: MezonUpdateOnboardingBody
+  ) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateOnboarding(session.token, id, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .updateOnboarding(session.token, id, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
-  async deleteOnboarding(session: Session, id: string, clanId?: string): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async deleteOnboarding(
+    session: Session,
+    id: string,
+    clanId?: string
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteOnboarding(session.token, id, clanId).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .deleteOnboarding(session.token, id, clanId)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   //**create webhook for clan */
   async generateClanWebhook(
     session: Session,
-    request: ApiGenerateClanWebhookRequest,
+    request: ApiGenerateClanWebhookRequest
   ): Promise<ApiGenerateClanWebhookResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.generateClanWebhook(session.token, request).then((response: any) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .generateClanWebhook(session.token, request)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
   }
 
   //**list webhook belong to the clan */
-  async listClanWebhook(session: Session, clan_id: string): Promise<ApiListClanWebhookResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async listClanWebhook(
+    session: Session,
+    clan_id: string
+  ): Promise<ApiListClanWebhookResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listClanWebhook(session.token, clan_id).then((response: ApiListClanWebhookResponse) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .listClanWebhook(session.token, clan_id)
+      .then((response: ApiListClanWebhookResponse) => {
+        return Promise.resolve(response);
+      });
   }
 
   //**disabled webhook by id */
   async deleteClanWebhookById(session: Session, id: string, clan_id: string) {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteClanWebhookById(session.token, id, clan_id).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .deleteClanWebhookById(session.token, id, clan_id)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   //**update webhook name by id */
-  async updateClanWebhookById(session: Session, id: string, request: MezonUpdateClanWebhookByIdBody) {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async updateClanWebhookById(
+    session: Session,
+    id: string,
+    request: MezonUpdateClanWebhookByIdBody
+  ) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateClanWebhookById(session.token, id, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .updateClanWebhookById(session.token, id, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   //**list onboarding step */
@@ -2831,9 +4133,13 @@ export class Client {
     session: Session,
     clan_id?: string,
     limit?: number,
-    page?: number,
+    page?: number
   ): Promise<ApiListOnboardingStepResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -2848,110 +4154,187 @@ export class Client {
   async updateOnboardingStepByClanId(
     session: Session,
     clan_id: string,
-    request: MezonUpdateOnboardingStepByClanIdBody,
+    request: MezonUpdateOnboardingStepByClanIdBody
   ) {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateOnboardingStepByClanId(session.token, clan_id, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .updateOnboardingStepByClanId(session.token, clan_id, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   //**update status */
   async updateUserStatus(session: Session, request: ApiUserStatusUpdate) {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateUserStatus(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .updateUserStatus(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   //**get user status */
   async getUserStatus(session: Session): Promise<ApiUserStatus> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.getUserStatus(session.token).then((response: ApiUserStatus) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .getUserStatus(session.token)
+      .then((response: ApiUserStatus) => {
+        return Promise.resolve(response);
+      });
   }
 
   //**list sd topic */
-  async listSdTopic(session: Session, clanId?: string, limit?: number): Promise<ApiSdTopicList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async listSdTopic(
+    session: Session,
+    clanId?: string,
+    limit?: number
+  ): Promise<ApiSdTopicList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listSdTopic(session.token, clanId, limit).then((response: ApiSdTopicList) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .listSdTopic(session.token, clanId, limit)
+      .then((response: ApiSdTopicList) => {
+        return Promise.resolve(response);
+      });
   }
 
   //**post sd topic */
-  async createSdTopic(session: Session, request: ApiSdTopicRequest): Promise<ApiSdTopic> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async createSdTopic(
+    session: Session,
+    request: ApiSdTopicRequest
+  ): Promise<ApiSdTopic> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.createSdTopic(session.token, request).then((response: ApiSdTopic) => {
-      return response;
-    });
+    return this.apiClient
+      .createSdTopic(session.token, request)
+      .then((response: ApiSdTopic) => {
+        return response;
+      });
   }
 
   //**list sd topic */
-  async getTopicDetail(session: Session, topicId?: string): Promise<ApiSdTopic> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async getTopicDetail(
+    session: Session,
+    topicId?: string
+  ): Promise<ApiSdTopic> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.getTopicDetail(session.token, topicId).then((response: ApiSdTopic) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .getTopicDetail(session.token, topicId)
+      .then((response: ApiSdTopic) => {
+        return Promise.resolve(response);
+      });
   }
 
   //**create room channel apps */
   async createRoomChannelApps(
     session: Session,
-    body: MezonapiCreateRoomChannelApps,
+    body: MezonapiCreateRoomChannelApps
   ): Promise<MezonapiCreateRoomChannelApps> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.createRoomChannelApps(session.token, body).then((response: MezonapiCreateRoomChannelApps) => {
-      return Promise.resolve(response);
+    return this.apiClient
+      .createRoomChannelApps(session.token, body)
+      .then((response: MezonapiCreateRoomChannelApps) => {
+        return Promise.resolve(response);
     });
   }
 
   /** Generate Meet Token */
-  async generateMeetToken(session: Session, body: ApiGenerateMeetTokenRequest): Promise<ApiGenerateMeetTokenResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async generateMeetToken(
+    session: Session,
+    body: ApiGenerateMeetTokenRequest
+  ): Promise<ApiGenerateMeetTokenResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.generateMeetToken(session.token, body).then((response: ApiGenerateMeetTokenResponse) => {
-      return Promise.resolve(response);
+    return this.apiClient
+      .generateMeetToken(session.token, body)
+      .then((response: ApiGenerateMeetTokenResponse) => {
+        return Promise.resolve(response);
     });
   }
 
   //**list webhook belong to the clan */
-  async listMezonOauthClient(session: Session): Promise<ApiMezonOauthClientList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async listMezonOauthClient(
+    session: Session
+  ): Promise<ApiMezonOauthClientList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listMezonOauthClient(session.token).then((response: ApiMezonOauthClientList) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .listMezonOauthClient(session.token)
+      .then((response: ApiMezonOauthClientList) => {
+        return Promise.resolve(response);
+      });
   }
 
-  async getMezonOauthClient(session: Session, clientId?: string, clientName?: string): Promise<ApiMezonOauthClient> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async getMezonOauthClient(
+    session: Session,
+    clientId?:string,
+    clientName?:string,
+  ): Promise<ApiMezonOauthClient> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -2962,35 +4345,57 @@ export class Client {
       });
   }
 
-  async updateMezonOauthClient(session: Session, body: ApiMezonOauthClient): Promise<ApiMezonOauthClient> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async updateMezonOauthClient(
+    session: Session,
+    body:ApiMezonOauthClient,
+  ): Promise<ApiMezonOauthClient> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateMezonOauthClient(session.token, body).then((response: ApiMezonOauthClient) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .updateMezonOauthClient(session.token, body)
+      .then((response: ApiMezonOauthClient) => {
+        return Promise.resolve(response);
+      });
   }
 
   //**search thread */
   async searchThread(
     session: Session,
-    clanId?: string,
-    channelId?: string,
-    label?: string,
+    clanId?:string,
+    channelId?:string,
+    label?:string,
   ): Promise<ApiChannelDescList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.searchThread(session.token, clanId, channelId, label).then((response: ApiChannelDescList) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .searchThread(session.token, clanId, channelId, label)
+      .then((response: ApiChannelDescList) => {
+        return Promise.resolve(response);
+      });
   }
 
   //**Generate Hash */
-  async generateHashChannelApps(session: Session, appId?: string): Promise<ApiCreateHashChannelAppsResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async generateHashChannelApps(
+    session: Session,
+    appId?:string,
+  ): Promise<ApiCreateHashChannelAppsResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -3007,7 +4412,11 @@ export class Client {
     password?: string,
     oldPassword?: string,
   ): Promise<ApiSession> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -3015,7 +4424,7 @@ export class Client {
       .registrationEmail(session.token, {
         email: email,
         password: password,
-        old_password: oldPassword,
+        old_password: oldPassword
       })
       .then((response: ApiSession) => {
         return Promise.resolve(response);
@@ -3023,62 +4432,106 @@ export class Client {
   }
 
   /** Add user event */
-  async addUserEvent(session: Session, request: ApiUserEventRequest): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async addUserEvent(
+    session: Session,
+    request: ApiUserEventRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.addUserEvent(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .addUserEvent(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** Delete user event */
-  async deleteUserEvent(session: Session, clanId?: string, eventId?: string): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async deleteUserEvent(
+    session: Session,
+    clanId?:string,
+    eventId?:string,
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteUserEvent(session.token, clanId, eventId).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .deleteUserEvent(session.token, clanId, eventId)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
-  async updateRoleOrder(session: Session, request: ApiUpdateRoleOrderRequest): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async updateRoleOrder(
+    session: Session,
+    request: ApiUpdateRoleOrderRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateRoleOrder(session.token, request).then((response: any) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .updateRoleOrder(session.token, request)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+  
+  async deleteAccount(
+    session: Session
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .deleteAccount(session.token)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
   }
 
-  async deleteAccount(session: Session): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async createExternalMezonMeet(
+    session: Session
+  ): Promise<ApiGenerateMezonMeetResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteAccount(session.token).then((response: any) => {
-      return Promise.resolve(response);
-    });
-  }
-
-  async createExternalMezonMeet(session: Session): Promise<ApiGenerateMezonMeetResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.createExternalMezonMeet(session.token).then((response: ApiGenerateMezonMeetResponse) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .createExternalMezonMeet(session.token)
+      .then((response: ApiGenerateMezonMeetResponse) => {
+        return Promise.resolve(response);
+      });
   }
 
   async generateMeetTokenExternal(
     basePath: string,
-    token: string,
-    displayName?: string,
-    isGuest?: boolean,
+    token:string,
+    displayName?:string,
+    isGuest?: boolean
   ): Promise<ApiGenerateMeetTokenExternalResponse> {
     return this.apiClient
       .generateMeetTokenExternal("", basePath, token, displayName, isGuest)
@@ -3087,51 +4540,87 @@ export class Client {
       });
   }
 
-  async removeMezonMeetParticipant(session: Session, request: ApiMeetParticipantRequest): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async removeMezonMeetParticipant(
+    session: Session,
+    request: ApiMeetParticipantRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.removeParticipantMezonMeet(session.token, request).then((response: any) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .removeParticipantMezonMeet(session.token, request)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
   }
 
-  async muteMezonMeetParticipant(session: Session, request: ApiMeetParticipantRequest): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async muteMezonMeetParticipant(
+    session: Session,
+    request: ApiMeetParticipantRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.muteParticipantMezonMeet(session.token, request).then((response: any) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .muteParticipantMezonMeet(session.token, request)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
   }
 
   /** Update clan order to view. */
-  async updateClanOrder(session: Session, request: ApiUpdateClanOrderRequest): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async updateClanOrder(
+    session: Session,
+    request: ApiUpdateClanOrderRequest
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateClanOrder(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .updateClanOrder(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** list clan discover. */
-  async listClanDiscover(basePath: string, request: ApiClanDiscoverRequest): Promise<ApiListClanDiscover> {
-    return this.apiClient.clanDiscover(this.serverkey, "", basePath, request).then((response: ApiListClanDiscover) => {
-      return Promise.resolve(response);
-    });
+  async listClanDiscover(
+    basePath: string,
+    request: ApiClanDiscoverRequest
+  ): Promise<ApiListClanDiscover> {
+    return this.apiClient
+      .clanDiscover(this.serverkey, "", basePath, request)
+      .then((response: ApiListClanDiscover) => {
+        return Promise.resolve(response);
+      });
   }
 
   async listQuickMenuAccess(
     session: Session,
     botId: string,
     channelId: string,
-    menuType: number,
+    menuType: number
   ): Promise<ApiQuickMenuAccessList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -3142,105 +4631,179 @@ export class Client {
       });
   }
 
-  async deleteQuickMenuAccess(session: Session, id: string, clanId: string): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async deleteQuickMenuAccess(
+    session: Session,
+    id: string,
+    clanId: string
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteQuickMenuAccess(session.token, id, clanId).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .deleteQuickMenuAccess(session.token, id, clanId)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
-  async addQuickMenuAccess(session: Session, request: ApiQuickMenuAccessRequest): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async addQuickMenuAccess(
+    session: Session,
+    request: ApiQuickMenuAccessRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.addQuickMenuAccess(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .addQuickMenuAccess(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
-  async updateQuickMenuAccess(session: Session, request: ApiQuickMenuAccessRequest): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async updateQuickMenuAccess(
+    session: Session,
+    request: ApiQuickMenuAccessRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateQuickMenuAccess(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .updateQuickMenuAccess(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
-  async listForSaleItems(session: Session, page?: number): Promise<ApiForSaleItemList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async listForSaleItems(session: Session,
+    page?: number): Promise<ApiForSaleItemList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listForSaleItems(session.token, page).then((response: ApiForSaleItemList) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .listForSaleItems(session.token, page)
+      .then((response: ApiForSaleItemList) => {
+        return Promise.resolve(response);
+      });
   }
 
-  async isFollower(session: Session, req: ApiIsFollowerRequest): Promise<ApiIsFollowerResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async isFollower(session: Session,
+    req: ApiIsFollowerRequest): Promise<ApiIsFollowerResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.isFollower(session.token, req).then((response: ApiIsFollowerResponse) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .isFollower(session.token, req)
+      .then((response: ApiIsFollowerResponse) => {
+        return Promise.resolve(response);
+      });
   }
 
-  async transferOwnership(session: Session, req: ApiTransferOwnershipRequest): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async transferOwnership(session: Session,
+    req: ApiTransferOwnershipRequest): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.transferOwnership(session.token, req).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .transferOwnership(session.token, req)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
-  async isBanned(session: Session, channelId: string): Promise<ApiIsBannedResponse> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async isBanned(session: Session,
+    channelId: string): Promise<ApiIsBannedResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.isBanned(session.token, channelId).then((response: ApiIsBannedResponse) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .isBanned(session.token, channelId)
+      .then((response: ApiIsBannedResponse) => {
+        return Promise.resolve(response);
+      });
   }
 
-  async reportMessageAbuse(session: Session, messageId?: string, abuseType?: string): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  async reportMessageAbuse(session: Session,
+    messageId?:string,
+    abuseType?:string
+  ) : Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.reportMessageAbuse(session.token, messageId, abuseType).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .reportMessageAbuse(session.token, messageId, abuseType)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   async listLogedDevice(session: Session): Promise<ApiLogedDeviceList> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listLogedDevice(session.token).then((response: ApiLogedDeviceList) => {
-      return Promise.resolve(response);
-    });
+    return this.apiClient
+      .listLogedDevice(session.token)
+      .then((response: ApiLogedDeviceList) => {
+        return Promise.resolve(response);
+      });
   }
 
-  async updateMezonVoiceState(
-    session: Session,
-    clanId?: string,
-    channelId?: string,
-    displayName?: string,
+  async updateMezonVoiceState(session: Session,
+    clanId?:string,
+    channelId?:string,
+    displayName?:string,
     roomName?: string,
     state?: number,
-  ): Promise<any> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+  ) : Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -3250,6 +4813,7 @@ export class Client {
         return response !== undefined;
       });
   }
+
 
   async sendChannelMessage(
     session: Session,
@@ -3265,9 +4829,13 @@ export class Client {
     mentionEveryone?: boolean,
     avatar?: string,
     code?: number,
-    topicId?: string,
+    topicId?: string
   ): Promise<ChannelMessageAck> {
-    if (this.autoRefreshSession && session.refresh_token && session.isexpired(Date.now() / 1000)) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
       await this.sessionRefresh(session);
     }
 
@@ -3286,10 +4854,156 @@ export class Client {
         mentionEveryone,
         avatar,
         code,
-        topicId,
+        topicId
       )
       .then((response: ChannelMessageAck) => {
         return Promise.resolve(response);
       });
   }
+
+  async updateChannelMessage(
+    session: Session,
+    clanId: string,
+    channelId: string,
+    mode: number,
+    isPublic: boolean,
+    messageId: string,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    hideEditted?: boolean,
+    topicId?: string,
+    isUpdateMsgTopic?: boolean
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .updateChannelMessage(
+        session.token,
+        clanId,
+        channelId,
+        mode,
+        isPublic,
+        messageId,
+        content,
+        mentions,
+        attachments,
+        hideEditted,
+        topicId,
+        isUpdateMsgTopic
+      )
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async deleteChannelMessage(
+    session: Session,
+    clanId: string,
+    channelId: string,
+    mode: number,
+    isPublic: boolean,
+    messageId: string,
+    hasAttachment?: boolean,
+    topicId?: string,
+    mentions?: Uint8Array,
+    references?: Uint8Array
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .deleteChannelMessage(
+        session.token,
+        clanId,
+        channelId,
+        mode,
+        isPublic,
+        messageId,
+        hasAttachment,
+        topicId,
+        mentions,
+        references
+      )
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async messageButtonClick(session: Session,
+      messageId?:string,
+      channelId?:string,
+      buttonId?:string,
+      senderId?: string,
+      userId?: string,
+      extraData?: string
+    ): Promise<any> {
+
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .messageButtonClick(
+        session.token,
+        messageId,
+        channelId,
+        buttonId,
+        senderId,
+        userId,
+        extraData
+      )
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async dropdownBoxSelected(session: Session,
+     messageId?:string,
+      channelId?:string,
+      selectboxId?:string,
+      senderId?: string,
+      userId?: string,
+      values?: string[]
+    ): Promise<any> {
+
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .dropdownBoxSelected(
+        session.token,
+        messageId,
+        channelId,
+        selectboxId,
+        senderId,
+        userId,
+        values
+      )
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
 }
+
+

@@ -229,4 +229,6 @@ packages/**/dist/
 
 .turbo
 
+**/.rollup.cache/
+
 # End of https://www.gitignore.io/api/node,linux,macos,windows,sublimetext,webstorm+all

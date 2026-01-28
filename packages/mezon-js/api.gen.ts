@@ -32,6 +32,7 @@ export interface ChannelUserListChannelUser {
   expired_ban_time?: number;
 }
 
+
 /** A message sent on a channel. */
 export interface ChannelMessage {
   //The unique ID of this message.
@@ -147,7 +148,7 @@ export interface MezonChangeChannelCategoryBody {
   //
   channel_id?: string;
   //
-  clan_id?: string;
+  clan_id?:string;
 }
 
 /**  */
@@ -179,7 +180,7 @@ export interface MezonUpdateAppBody {
   //Token.
   token?: string;
   //Shadow true|false
-  is_shadow?: string;
+  is_shadow?:string;
 }
 
 /**  */
@@ -247,6 +248,7 @@ export interface MezonUpdateChannelDescBody {
   /** channel avatar */
   channel_avatar: string | undefined;
 }
+
 
 /**  */
 export interface ApiLogedDevice {
@@ -325,7 +327,7 @@ export interface MezonUpdateClanEmojiByIdBody {
   id: string;
   shortname: string;
   clan_id: string;
-  source: string;
+  source: string
 }
 
 /**  */
@@ -361,7 +363,7 @@ export interface MezonUpdateEventBody {
   //
   logo?: string;
   //
-  start_time_seconds?: number;
+start_time_seconds?: number;
   //
   title?: string;
   //
@@ -544,6 +546,7 @@ export interface ApiLinkAccountMezon {
   vars?: Record<string, string>;
 }
 
+
 /**  */
 export interface ApiAddFavoriteChannelRequest {
   //
@@ -581,7 +584,7 @@ export interface ApiAllUsersAddChannelResponse {
   //
   avatars?: Array<string>;
   //
-  onlines?: Array<boolean>;
+  onlines?: Array<boolean>;  
 }
 
 /**  */
@@ -605,7 +608,7 @@ export interface ApiApp {
   //The UNIX time when the app was disabled.
   disable_time?: string;
   //The UNIX time when the app was created.
-  create_time?: string;
+  create_time_seconds?: number;
   //
   id?: string;
   //
@@ -810,7 +813,7 @@ export interface ApiChannelCanvasItem {
   // update time
   update_time?: string;
   // create time
-  create_time?: string;
+  create_time_seconds?: number;
 }
 
 /**  */
@@ -944,7 +947,7 @@ export interface ApiChannelDescription {
 }
 
 /**  */
-export interface ApiChannelMessageHeader {
+export interface ApiChannelMessageHeader {  
   //
   id?: string;
   //
@@ -1043,7 +1046,7 @@ export interface ApiClanDesc {
   welcome_channel_id?: string;
   //Onboarding_banner.
   onboarding_banner?: string;
-  // is community.
+    // is community.
   is_community?: boolean;
   // community banner
   community_banner?: string;
@@ -1126,7 +1129,7 @@ export interface ApiClanSticker {
   //
   clan_name?: string;
   //
-  create_time?: string;
+  create_time_seconds?: number;
   //
   creator_id?: string;
   //
@@ -1137,7 +1140,7 @@ export interface ApiClanSticker {
   shortname?: string;
   //
   source?: string;
-  //
+  // 
   media_type?: number;
   //
   is_for_sale?: boolean;
@@ -1464,7 +1467,7 @@ export interface ApiEventManagement {
   //
   user_ids?: Array<string>;
   //
-  create_time?: string;
+  create_time_seconds?: number;
   //
   channel_id?: string;
   //
@@ -1630,7 +1633,7 @@ export interface ApiLinkInviteUser {
   //
   clan_id?: string;
   //
-  create_time?: string;
+  create_time_seconds?: number;
   //The user to add.
   creator_id?: string;
   //
@@ -1758,7 +1761,7 @@ export interface ApiMarkAsReadRequest {
 /**  */
 export interface ApiMessageMention {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time?: string;
+  create_time_seconds?: number;
   //
   id?: string;
   //
@@ -1999,7 +2002,7 @@ export interface ApiNotification {
   //category.
   category?: number;
   //
-  topic_id?: string;
+  topic_id?: string;  
   //
   channel?: ApiChannelDescription;
 }
@@ -2162,8 +2165,6 @@ export interface ApiPinMessage {
   channel_id?: string;
   //
   content?: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time?: string;
   //
   create_time_seconds?: number;
   //
@@ -2377,7 +2378,7 @@ export interface ApiSdTopic {
   //
   clan_id?: string;
   //
-  create_time?: string;
+  create_time_seconds?: number;
   //
   creator_id?: string;
   //
@@ -2431,7 +2432,7 @@ export interface ApiSearchMessageDocument {
   //
   content?: string;
   //
-  create_time?: string;
+  create_time_seconds?: number;
   //
   display_name?: string;
   //
@@ -2496,7 +2497,7 @@ export interface ApiSessionLogoutRequest {
   token?: string;
   // device_id to log out.
   device_id?: string;
-  // platform
+  // platform 
   platform?: string;
 }
 
@@ -2653,7 +2654,7 @@ export interface ApiTransactionDetail {
   //
   amount?: number;
   //
-  create_time?: string;
+  create_time_seconds?: number;
   //
   update_time?: string;
   //
@@ -2768,7 +2769,7 @@ export interface ApiUser {
   //
   dob_seconds?: number;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was created.
-  create_time?: string;
+  create_time_seconds?: number;
   //The display name of the user.
   display_name?: string;
   //Number of related edges to this user.
@@ -2834,7 +2835,7 @@ export interface ApiQuickMenuAccess {
   //
   channel_id?: string;
   //
-  clan_id?: string;
+  clan_id?:string;
   //
   id?: string;
   //
@@ -2866,7 +2867,7 @@ export interface ApiQuickMenuAccessRequest {
   //
   menu_name?: string;
   //
-  menu_type?: number;
+  menu_type?:number;
 }
 
 /**  */
@@ -2930,7 +2931,7 @@ export interface ApiWebhook {
   //
   channel_id?: string;
   //
-  create_time?: string;
+  create_time_seconds?: number;
   //
   creator_id?: string;
   //
@@ -2982,6 +2983,7 @@ export interface ApiEmojiRecentList {
   //Collection of emojiRecents.
   emoji_recents?: Array<ApiEmojiRecent>;
 }
+
 
 /** Represents an event to be passed through the server to registered event handlers. */
 export interface MezonapiEvent {
@@ -3096,7 +3098,7 @@ export interface ApiOnboardingItem {
   //
   content?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time?: string;
+  create_time_seconds?: number;
   //
   guide_type?: number;
   //
@@ -3132,7 +3134,7 @@ export interface ApiClanWebhook {
   //clan id.
   clan_id?: string;
   //create time.
-  create_time?: string;
+  create_time_seconds?: number;
   //creator id.
   creator_id?: string;
   //id.
@@ -3370,7 +3372,7 @@ export interface ApiClanDiscover {
   //
   short_url?: string;
   //
-  create_time?: string;
+  create_time_seconds?: number;
 }
 
 /**  */
@@ -3475,8 +3477,12 @@ export interface ApiDirectFcmProto {
 
 export class MezonApi {
   basePath: string;
-  constructor(readonly serverKey: string, readonly timeoutMs: number, basePath: string) {
-    this.basePath = basePath;
+  constructor(
+    readonly serverKey: string,
+    readonly timeoutMs: number,
+    basePath: string,
+  ) {
+    this.basePath = basePath
   }
 
   setBasePath(basePath: string) {
@@ -3506,7 +3512,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
@@ -3522,35 +3530,46 @@ export class MezonApi {
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiAccount;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.Account.decode(new Uint8Array(buffer)) as ApiAccount;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Update fields in the current user's account. */
-  updateAccount(bearerToken: string, body: ApiUpdateAccountRequest, options: any = {}): Promise<any> {
+  updateAccount(
+    bearerToken: string,
+    body: ApiUpdateAccountRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/UpdateAccount";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.UpdateAccountRequest.encode(tsproto.UpdateAccountRequest.fromPartial(body));
+    const bodyWriter = tsproto.UpdateAccountRequest.encode(
+      tsproto.UpdateAccountRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -3566,7 +3585,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
@@ -3574,10 +3595,12 @@ export class MezonApi {
     basicAuthUsername: string,
     basicAuthPassword: string,
     body: ApiConfirmLoginRequest,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiSession> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/v2/account/authenticate/checklogin";
     const queryParams = new Map<string, any>();
@@ -3588,7 +3611,8 @@ export class MezonApi {
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (basicAuthUsername) {
-      fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+      fetchOptions.headers["Authorization"] =
+        "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
     fetchOptions.headers["Accept"] = "application/x-protobuf";
     fetchOptions.headers["Content-Type"] = "application/json";
@@ -3598,20 +3622,29 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiSession;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /**  */
-  confirmLogin(bearerToken: string, basePath: string, body: ApiConfirmLoginRequest, options: any = {}): Promise<any> {
+  confirmLogin(
+    bearerToken: string,
+    basePath: string,
+    body: ApiConfirmLoginRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/v2/account/authenticate/confirmlogin";
     const queryParams = new Map<string, any>();
@@ -3637,7 +3670,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -3646,10 +3681,12 @@ export class MezonApi {
     basicAuthUsername: string,
     basicAuthPassword: string,
     body: ApiLoginRequest,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiLoginIDResponse> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/v2/account/authenticate/createqrlogin";
     const queryParams = new Map<string, any>();
@@ -3660,7 +3697,8 @@ export class MezonApi {
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (basicAuthUsername) {
-      fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+      fetchOptions.headers["Authorization"] =
+        "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
     fetchOptions.headers["Accept"] = "application/x-protobuf";
     fetchOptions.headers["Content-Type"] = "application/json";
@@ -3670,13 +3708,15 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.LoginIDResponse.decode(new Uint8Array(buffer)) as ApiLoginIDResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -3684,16 +3724,16 @@ export class MezonApi {
   AuthenticateSMSOTPRequest(
     basicAuthUsername: string,
     basicAuthPassword: string,
-    body: ApiAuthenticateSMSRequest,
-    options: any = {},
-  ): Promise<ApiLinkAccountConfirmRequest> {
+      body:ApiAuthenticateSMSRequest,
+      options: any = {}): Promise<ApiLinkAccountConfirmRequest> {
+    
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/account/authenticate/smsotp";
     const queryParams = new Map<string, any>();
 
-    let bodyJson: string = "";
+    let bodyJson : string = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
@@ -3709,13 +3749,15 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.LinkAccountConfirmRequest.decode(new Uint8Array(buffer)) as ApiLinkAccountConfirmRequest;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -3723,16 +3765,16 @@ export class MezonApi {
   AuthenticateEmailOTPRequest(
     basicAuthUsername: string,
     basicAuthPassword: string,
-    body: ApiAuthenticateEmailRequest,
-    options: any = {},
-  ): Promise<ApiLinkAccountConfirmRequest> {
+      body:ApiAuthenticateEmailRequest,
+      options: any = {}): Promise<ApiLinkAccountConfirmRequest> {
+    
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/account/authenticate/emailotp";
     const queryParams = new Map<string, any>();
 
-    let bodyJson: string = "";
+    let bodyJson : string = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
@@ -3748,13 +3790,15 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.LinkAccountConfirmRequest.decode(new Uint8Array(buffer)) as ApiLinkAccountConfirmRequest;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -3762,16 +3806,16 @@ export class MezonApi {
   authenticateEmail(
     basicAuthUsername: string,
     basicAuthPassword: string,
-    body: ApiAuthenticateEmailRequest,
-    options: any = {},
-  ): Promise<ApiSession> {
+      body:ApiAuthenticateEmailRequest,
+      options: any = {}): Promise<ApiSession> {
+    
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/account/authenticate/email";
     const queryParams = new Map<string, any>();
 
-    let bodyJson: string = "";
+    let bodyJson : string = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
@@ -3787,13 +3831,15 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiSession;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -3801,12 +3847,13 @@ export class MezonApi {
   authenticateMezon(
     basicAuthUsername: string,
     basicAuthPassword: string,
-    account: ApiAccountMezon,
-    create?: boolean,
-    username?: string,
-    isRemember?: boolean,
-    options: any = {},
+    account:ApiAccountMezon,
+    create?:boolean,
+    username?:string,
+    isRemember?:boolean,
+    options: any = {}
   ): Promise<ApiSession> {
+    
     if (account === null || account === undefined) {
       throw new Error("'account' is a required parameter but is null or undefined.");
     }
@@ -3816,14 +3863,14 @@ export class MezonApi {
     queryParams.set("username", username);
     queryParams.set("is_remember", isRemember);
 
-    let bodyJson: string = "";
+    let bodyJson : string = "";
     bodyJson = JSON.stringify(account || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (basicAuthUsername) {
-      fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
-    }
+		if (basicAuthUsername) {
+			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		}
     fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
@@ -3831,33 +3878,41 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiSession;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Add an email+password to the social profiles on the current user's account. */
-  linkEmail(bearerToken: string, body: ApiAccountEmail, options: any = {}): Promise<ApiLinkAccountConfirmRequest> {
+  linkEmail(
+    bearerToken: string,
+    body: ApiAccountEmail,
+    options: any = {}
+  ): Promise<ApiLinkAccountConfirmRequest> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/LinkEmail";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.UpdateAccountRequest.encode(
       tsproto.UpdateAccountRequest.fromPartial({
-        email: body.email,
-      }),
+        email: body.email
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -3868,32 +3923,39 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.LinkAccountConfirmRequest.decode(new Uint8Array(buffer)) as ApiLinkAccountConfirmRequest;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Add a mezon ID to the social profiles on the current user's account. */
-  linkSMS(bearerToken: string, body: ApiLinkAccountMezon, options: any = {}): Promise<ApiLinkAccountConfirmRequest> {
+  linkSMS(bearerToken: string,
+      body:ApiLinkAccountMezon,
+      options: any = {}): Promise<ApiLinkAccountConfirmRequest> {
+    
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
     const urlPath = "/mezon.api.Mezon/LinkSMS";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.AccountMezon.encode(tsproto.AccountMezon.fromPartial(body));
+    const bodyWriter = tsproto.AccountMezon.encode(
+      tsproto.AccountMezon.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -3901,32 +3963,39 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.LinkAccountConfirmRequest.decode(new Uint8Array(buffer)) as ApiLinkAccountConfirmRequest;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /**  */
-  confirmLinkMezonOTP(bearerToken: string, body: ApiLinkAccountConfirmRequest, options: any = {}): Promise<ApiSession> {
+  confirmLinkMezonOTP(bearerToken: string,
+      body:ApiLinkAccountConfirmRequest,
+    options: any = {}): Promise<ApiSession> {
+    
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
     const urlPath = "/mezon.api.Mezon/ConfirmLinkMezonOTP";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.LinkAccountConfirmRequest.encode(tsproto.LinkAccountConfirmRequest.fromPartial(body));
+    const bodyWriter = tsproto.LinkAccountConfirmRequest.encode(
+      tsproto.LinkAccountConfirmRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
     fetchOptions.headers["Accept"] = "application/x-protobuf";
 
@@ -3935,13 +4004,15 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiSession;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -3949,16 +4020,16 @@ export class MezonApi {
   confirmAuthenticateOTP(
     basicAuthUsername: string,
     basicAuthPassword: string,
-    body: ApiLinkAccountConfirmRequest,
-    options: any = {},
-  ): Promise<ApiSession> {
+      body:ApiLinkAccountConfirmRequest,
+      options: any = {}): Promise<ApiSession> {
+    
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/account/authenticate/confirmotp";
     const queryParams = new Map<string, any>();
 
-    let bodyJson: string = "";
+    let bodyJson : string = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
@@ -3970,24 +4041,32 @@ export class MezonApi {
     fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
-      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async(response) => {
         if (response.status == 204) {
           return {} as ApiSession;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Authenticate a user with an email+password against the server. */
-  registrationEmail(bearerToken: string, body: ApiRegistrationEmailRequest, options: any = {}): Promise<ApiSession> {
+  registrationEmail(
+    bearerToken: string,
+    body: ApiRegistrationEmailRequest,
+    options: any = {}
+  ): Promise<ApiSession> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/v2/account/registry";
     const queryParams = new Map<string, any>();
@@ -4007,13 +4086,15 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiSession;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -4022,52 +4103,67 @@ export class MezonApi {
     basicAuthUsername: string,
     basicAuthPassword: string,
     body: ApiSessionRefreshRequest,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiSession> {
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+  if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/SessionRefresh";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.SessionRefreshRequest.encode(tsproto.SessionRefreshRequest.fromPartial(body));
+    const bodyWriter = tsproto.SessionRefreshRequest.encode(
+      tsproto.SessionRefreshRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (basicAuthUsername) {
-      fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+      fetchOptions.headers["Authorization"] =
+        "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiSession;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Remove the email+password from the social profiles on the current user's account. */
-  unlinkEmail(bearerToken: string, body: ApiAccountEmail, options: any = {}): Promise<any> {
+  unlinkEmail(
+    bearerToken: string,
+    body: ApiAccountEmail,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/UnlinkEmail";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.AccountEmail.encode(tsproto.AccountEmail.fromPartial(body));
+    const bodyWriter = tsproto.AccountEmail.encode(
+      tsproto.AccountEmail.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -4083,49 +4179,65 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** List activity */
-  listActivity(bearerToken: string, options: any = {}): Promise<ApiListUserActivity> {
+  listActivity(
+    bearerToken: string,
+    options: any = {}
+  ): Promise<ApiListUserActivity> {
     const urlPath = "/mezon.api.Mezon/ListActivity";
     const queryParams = new Map<string, any>();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiListUserActivity;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ListUserActivity.decode(new Uint8Array(buffer)) as ApiListUserActivity;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Create user activity */
-  createActiviy(bearerToken: string, body: ApiCreateActivityRequest, options: any = {}): Promise<ApiUserActivity> {
+  createActiviy(
+    bearerToken: string,
+    body: ApiCreateActivityRequest,
+    options: any = {}
+  ): Promise<ApiUserActivity> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/CreateActiviy";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.CreateActivityRequest.encode(tsproto.CreateActivityRequest.fromPartial(body));
+    const bodyWriter = tsproto.CreateActivityRequest.encode(
+      tsproto.CreateActivityRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -4136,29 +4248,39 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiUserActivity;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.UserActivity.decode(new Uint8Array(buffer)) as ApiUserActivity;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Add a new apps. */
-  addApp(bearerToken: string, body: ApiAddAppRequest, options: any = {}): Promise<ApiApp> {
+  addApp(
+    bearerToken: string,
+    body: ApiAddAppRequest,
+    options: any = {}
+  ): Promise<ApiApp> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/AddApp";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.AddAppRequest.encode(tsproto.AddAppRequest.fromPartial(body));
+    const bodyWriter = tsproto.AddAppRequest.encode(
+      tsproto.AddAppRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -4169,13 +4291,15 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiApp;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.App.decode(new Uint8Array(buffer)) as ApiApp;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -4185,7 +4309,7 @@ export class MezonApi {
     filter?: string,
     tombstones?: boolean,
     cursor?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiAppList> {
     const urlPath = "/mezon.api.Mezon/ListApps";
     const queryParams = new Map<string, any>();
@@ -4194,40 +4318,51 @@ export class MezonApi {
       tsproto.ListAppsRequest.fromPartial({
         filter: filter,
         tombstones: tombstones,
-        cursor: cursor,
-      }),
+        cursor: cursor
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+   
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiAppList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.AppList.decode(new Uint8Array(buffer)) as ApiAppList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Add an app to clan. */
-  addAppToClan(bearerToken: string, appId: string, clanId: string, options: any = {}): Promise<any> {
+  addAppToClan(
+    bearerToken: string,
+    appId: string,
+    clanId: string,
+    options: any = {}
+  ): Promise<any> {
     if (appId === null || appId === undefined) {
-      throw new Error("'appId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'appId' is a required parameter but is null or undefined."
+      );
     }
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/AddAppToClan";
     const queryParams = new Map<string, any>();
@@ -4235,13 +4370,13 @@ export class MezonApi {
     const bodyWriter = tsproto.AppClan.encode(
       tsproto.AppClan.fromPartial({
         app_id: appId,
-        clan_id: clanId,
-      }),
+        clan_id: clanId
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -4257,12 +4392,18 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** Delete all information stored for an app. */
-  deleteApp(bearerToken: string, id: string, options: any = {}): Promise<any> {
+  deleteApp(
+    bearerToken: string,
+    id: string,
+    options: any = {}
+  ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
@@ -4271,13 +4412,13 @@ export class MezonApi {
 
     const bodyWriter = tsproto.App.encode(
       tsproto.App.fromPartial({
-        id: id,
-      }),
+        id: id
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -4293,7 +4434,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
@@ -4307,13 +4450,13 @@ export class MezonApi {
 
     const bodyWriter = tsproto.App.encode(
       tsproto.App.fromPartial({
-        id: id,
-      }),
+        id: id
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -4324,18 +4467,24 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiApp;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.App.decode(new Uint8Array(buffer)) as ApiApp;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Update one or more fields on a app. */
-  updateApp(bearerToken: string, id: string, body: MezonUpdateAppBody, options: any = {}): Promise<ApiApp> {
+    updateApp(bearerToken: string,
+      id:string,
+      body:MezonUpdateAppBody,
+      options: any = {}): Promise<ApiApp> {
+    
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
@@ -4345,14 +4494,16 @@ export class MezonApi {
     const urlPath = "/mezon.api.Mezon/UpdateApp";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.UpdateAppRequest.encode(tsproto.UpdateAppRequest.fromPartial({ ...body, id: id }));
+    const bodyWriter = tsproto.UpdateAppRequest.encode(
+      tsproto.UpdateAppRequest.fromPartial({...body, id: id})
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -4360,13 +4511,15 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiApp;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.App.decode(new Uint8Array(buffer)) as ApiApp;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -4377,55 +4530,66 @@ export class MezonApi {
     userId?: string,
     clanId?: string,
     dateLog?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<MezonapiListAuditLog> {
     const urlPath = "/mezon.api.Mezon/ListAuditLog";
     const queryParams = new Map<string, any>();
-
+    
     const bodyWriter = tsproto.ListAuditLogRequest.encode(
       tsproto.ListAuditLogRequest.fromPartial({
         clan_id: clanId,
         user_id: userId,
         action_log: actionLog,
-        date_log: dateLog,
-      }),
+        date_log: dateLog
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as MezonapiListAuditLog;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ListAuditLog.decode(new Uint8Array(buffer)) as unknown as MezonapiListAuditLog;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
   /**  */
-  updateCategoryOrder(bearerToken: string, body: ApiUpdateCategoryOrderRequest, options: any = {}): Promise<any> {
+  updateCategoryOrder(
+    bearerToken: string,
+    body: ApiUpdateCategoryOrderRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/UpdateCategoryOrder";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.UpdateCategoryOrderRequest.encode(tsproto.UpdateCategoryOrderRequest.fromPartial(body));
+    const bodyWriter = tsproto.UpdateCategoryOrderRequest.encode(
+      tsproto.UpdateCategoryOrderRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -4441,7 +4605,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
@@ -4453,10 +4619,12 @@ export class MezonApi {
     categoryName?: string,
     categoryId?: string,
     categoryOrder?: number,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiCategoryDescList> {
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/ListCategoryDescs";
     const queryParams = new Map<string, any>();
@@ -4467,64 +4635,74 @@ export class MezonApi {
         creator_id: creatorId,
         category_name: categoryName,
         category_id: categoryId,
-        category_order: categoryOrder,
-      }),
+        category_order: categoryOrder
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiCategoryDescList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.CategoryDescList.decode(new Uint8Array(buffer)) as ApiCategoryDescList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** List channel apps. */
-  listChannelApps(bearerToken: string, clanId?: string, options: any = {}): Promise<ApiListChannelAppsResponse> {
+  listChannelApps(
+    bearerToken: string,
+    clanId?: string,
+    options: any = {}
+  ): Promise<ApiListChannelAppsResponse> {
     const urlPath = "/mezon.api.Mezon/ListChannelApps";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListChannelAppsRequest.encode(
       tsproto.ListChannelAppsRequest.fromPartial({
-        clan_id: clanId,
-      }),
+        clan_id: clanId
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiListChannelAppsResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ListChannelAppsResponse.decode(new Uint8Array(buffer)) as ApiListChannelAppsResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -4535,10 +4713,12 @@ export class MezonApi {
     clanId?: string,
     limit?: number,
     page?: number,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiChannelCanvasListResponse> {
     if (channelId === null || channelId === undefined) {
-      throw new Error("'channelId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'channelId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/GetChannelCanvasList";
     const queryParams = new Map<string, any>();
@@ -4548,46 +4728,56 @@ export class MezonApi {
         channel_id: channelId,
         clan_id: clanId,
         limit: limit,
-        page: page,
-      }),
+        page: page
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+   
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiChannelCanvasListResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ChannelCanvasListResponse.decode(new Uint8Array(buffer)) as ApiChannelCanvasListResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /**  */
-  addChannelFavorite(bearerToken: string, body: ApiAddFavoriteChannelRequest, options: any = {}): Promise<any> {
+  addChannelFavorite(
+    bearerToken: string,
+    body: ApiAddFavoriteChannelRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/AddChannelFavorite";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.AddFavoriteChannelRequest.encode(tsproto.AddFavoriteChannelRequest.fromPartial(body));
+    const bodyWriter = tsproto.AddFavoriteChannelRequest.encode(
+      tsproto.AddFavoriteChannelRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -4604,12 +4794,18 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /**  */
-  removeChannelFavorite(bearerToken: string, channelId: string, clanId?: string, options: any = {}): Promise<any> {
+  removeChannelFavorite(bearerToken: string,
+      channelId:string,
+      clanId?:string,
+      options: any = {}): Promise<any> {
+    
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
@@ -4619,16 +4815,16 @@ export class MezonApi {
     const bodyWriter = tsproto.RemoveFavoriteChannelRequest.encode(
       tsproto.RemoveFavoriteChannelRequest.fromPartial({
         channel_id: channelId,
-        clan_id: clanId,
-      }),
+        clan_id: clanId
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -4641,7 +4837,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
@@ -4649,40 +4847,45 @@ export class MezonApi {
   getListFavoriteChannel(
     bearerToken: string,
     clanId: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiListFavoriteChannelResponse> {
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/GetListFavoriteChannel";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListFavoriteChannelRequest.encode(
       tsproto.ListFavoriteChannelRequest.fromPartial({
-        clan_id: clanId,
-      }),
+        clan_id: clanId
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiListFavoriteChannelResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ListFavoriteChannelResponse.decode(new Uint8Array(buffer)) as ApiListFavoriteChannelResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -4695,10 +4898,12 @@ export class MezonApi {
     direction?: number,
     limit?: number,
     topicId?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiChannelMessageList> {
     if (channelId === null || channelId === undefined) {
-      throw new Error("'channelId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'channelId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/ListChannelMessages";
     const queryParams = new Map<string, any>();
@@ -4710,37 +4915,47 @@ export class MezonApi {
         message_id: messageId,
         direction,
         limit,
-        topic_id: topicId,
-      }),
+        topic_id: topicId
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiChannelMessageList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ChannelMessageList.decode(new Uint8Array(buffer)) as unknown as ApiChannelMessageList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Add users to a channel. */
-  addChannelUsers(bearerToken: string, channelId: string, userIds?: Array<string>, options: any = {}): Promise<any> {
+  addChannelUsers(
+    bearerToken: string,
+    channelId: string,
+    userIds?: Array<string>,
+    options: any = {}
+  ): Promise<any> {
     if (channelId === null || channelId === undefined) {
-      throw new Error("'channelId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'channelId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/AddChannelUsers";
     const queryParams = new Map<string, any>();
@@ -4748,13 +4963,13 @@ export class MezonApi {
     const bodyWriter = tsproto.AddChannelUsersRequest.encode(
       tsproto.AddChannelUsersRequest.fromPartial({
         channel_id: channelId,
-        user_ids: userIds,
-      }),
+        user_ids: userIds
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -4770,28 +4985,30 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** List all attachment that are part of a channel. */
-  listChannelAttachment(
-    bearerToken: string,
-    channelId: string,
-    clanId?: string,
-    fileType?: string,
-    limit?: number,
-    state?: number,
-    before?: number,
-    after?: number,
-    around?: number,
-    options: any = {},
-  ): Promise<ApiChannelAttachmentList> {
+  listChannelAttachment(bearerToken: string,
+      channelId:string,
+      clanId?:string,
+      fileType?:string,
+      limit?:number,
+      state?:number,
+      before?:number,
+      after?:number,
+      around?:number,
+      options: any = {}): Promise<ApiChannelAttachmentList> {
+    
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
     const urlPath = "/mezon.api.Mezon/ListChannelAttachment";
     const queryParams = new Map<string, any>();
+
 
     const bodyWriter = tsproto.ListChannelAttachmentRequest.encode(
       tsproto.ListChannelAttachmentRequest.fromPartial({
@@ -4802,30 +5019,33 @@ export class MezonApi {
         state: state,
         before: before,
         after: after,
-        around: around,
-      }),
+        around: around
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiChannelAttachmentList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ChannelAttachmentList.decode(new Uint8Array(buffer)) as ApiChannelAttachmentList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -4834,10 +5054,12 @@ export class MezonApi {
     bearerToken: string,
     channelId: string,
     method?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiChanEncryptionMethod> {
     if (channelId === null || channelId === undefined) {
-      throw new Error("'channelId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'channelId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/GetChanEncryptionMethod";
     const queryParams = new Map<string, any>();
@@ -4845,13 +5067,13 @@ export class MezonApi {
     const bodyWriter = tsproto.ChanEncryptionMethod.encode(
       tsproto.ChanEncryptionMethod.fromPartial({
         channel_id: channelId,
-        method: method,
-      }),
+        method: method
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -4862,13 +5084,15 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiChanEncryptionMethod;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ChanEncryptionMethod.decode(new Uint8Array(buffer)) as ApiChanEncryptionMethod;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -4877,24 +5101,28 @@ export class MezonApi {
     bearerToken: string,
     channelId: string,
     body: MezonSetChanEncryptionMethodBody,
-    options: any = {},
+    options: any = {}
   ): Promise<any> {
     if (channelId === null || channelId === undefined) {
-      throw new Error("'channelId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'channelId' is a required parameter but is null or undefined."
+      );
     }
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/SetChanEncryptionMethod";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ChanEncryptionMethod.encode(
-      tsproto.ChanEncryptionMethod.fromPartial({ ...body, channel_id: channelId }),
+      tsproto.ChanEncryptionMethod.fromPartial({...body, channel_id: channelId})
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -4910,12 +5138,18 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** Leave a channel the user is a member of. */
-  leaveThread(bearerToken: string, clanId: string, channelId: string, options: any = {}): Promise<any> {
+  leaveThread(bearerToken: string,
+      clanId:string,  
+      channelId:string,
+      options: any = {}): Promise<any> {
+    
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
@@ -4925,16 +5159,16 @@ export class MezonApi {
     const bodyWriter = tsproto.LeaveThreadRequest.encode(
       tsproto.LeaveThreadRequest.fromPartial({
         channel_id: channelId,
-        clan_id: clanId,
-      }),
+        clan_id: clanId
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -4947,14 +5181,23 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** Kick a set of users from a channel. */
-  removeChannelUsers(bearerToken: string, channelId: string, userIds?: Array<string>, options: any = {}): Promise<any> {
+  removeChannelUsers(
+    bearerToken: string,
+    channelId: string,
+    userIds?: Array<string>,
+    options: any = {}
+  ): Promise<any> {
     if (channelId === null || channelId === undefined) {
-      throw new Error("'channelId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'channelId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/RemoveChannelUsers";
     const queryParams = new Map<string, any>();
@@ -4962,13 +5205,13 @@ export class MezonApi {
     const bodyWriter = tsproto.RemoveChannelUsersRequest.encode(
       tsproto.RemoveChannelUsersRequest.fromPartial({
         channel_id: channelId,
-        user_ids: userIds,
-      }),
+        user_ids: userIds
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -4984,7 +5227,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
@@ -4997,45 +5242,49 @@ export class MezonApi {
     limit?: number,
     state?: number,
     cursor?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiChannelUserList> {
     if (channelId === null || channelId === undefined) {
-      throw new Error("'channelId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'channelId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/ListChannelUsers";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListChannelUsersRequest.encode(
-      tsproto.ListChannelUsersRequest.fromPartial({
+      tsproto.ListChannelUsersRequest.fromPartial({ 
         clan_id: clanId,
         channel_id: channelId,
         channel_type: channelType,
         limit: limit,
         state: state,
-        cursor: cursor,
-      }),
+        cursor: cursor
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
-      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async(response) => {
         if (response.status == 204) {
           return {} as ApiChannelUserList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ChannelUserList.decode(new Uint8Array(buffer)) as ApiChannelUserList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -5048,42 +5297,45 @@ export class MezonApi {
     clanId?: string,
     channelType?: number,
     isMobile?: boolean,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiChannelDescList> {
     const urlPath = "/mezon.api.Mezon/ListChannelDescs";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListChannelDescsRequest.encode(
-      tsproto.ListChannelDescsRequest.fromPartial({
-        limit,
-        state,
-        cursor,
-        clan_id: clanId,
-        channel_type: channelType,
-        is_mobile: isMobile,
-      }),
+      tsproto.ListChannelDescsRequest.fromPartial({ 
+        limit, 
+        state, 
+        cursor, 
+        clan_id: clanId, 
+        channel_type: channelType, 
+        is_mobile: isMobile 
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiChannelDescList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ChannelDescList.decode(new Uint8Array(buffer)) as ApiChannelDescList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+       new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -5091,19 +5343,23 @@ export class MezonApi {
   createChannelDesc(
     bearerToken: string,
     body: ApiCreateChannelDescRequest,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiChannelDescription> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/CreateChannelDesc";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.CreateChannelDescRequest.encode(tsproto.CreateChannelDescRequest.fromPartial(body));
+    const bodyWriter = tsproto.CreateChannelDescRequest.encode(
+      tsproto.CreateChannelDescRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -5120,7 +5376,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -5129,21 +5387,21 @@ export class MezonApi {
     bearerToken: string,
     channelId?: string,
     limit?: number,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiAllUsersAddChannelResponse> {
     const urlPath = "/mezon.api.Mezon/ListChannelUsersUC";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.AllUsersAddChannelRequest.encode(
-      tsproto.AllUsersAddChannelRequest.fromPartial({
+      tsproto.AllUsersAddChannelRequest.fromPartial({ 
         channel_id: channelId,
-        limit: limit,
-      }),
+        limit: limit
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -5154,18 +5412,24 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiAllUsersAddChannelResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.AllUsersAddChannelResponse.decode(new Uint8Array(buffer)) as ApiAllUsersAddChannelResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Delete a channel by ID. */
-  deleteChannelDesc(bearerToken: string, clanId: string, channelId: string, options: any = {}): Promise<any> {
+  deleteChannelDesc(bearerToken: string,
+      clanId:string,
+      channelId:string,      
+      options: any = {}): Promise<any> {
+    
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
@@ -5173,15 +5437,15 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DeleteChannelDescRequest.encode(
-      tsproto.DeleteChannelDescRequest.fromPartial({ clan_id: clanId, channel_id: channelId }),
+      tsproto.DeleteChannelDescRequest.fromPartial({ clan_id: clanId, channel_id: channelId })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -5194,17 +5458,18 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** Update fields in a given channel. */
-  updateChannelDesc(
-    bearerToken: string,
-    channelId: string,
-    body: ApiUpdateChannelDescRequest,
-    options: any = {},
-  ): Promise<any> {
+  updateChannelDesc(bearerToken: string,
+      channelId:string,
+      body:ApiUpdateChannelDescRequest,
+      options: any = {}): Promise<any> {
+    
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
@@ -5215,15 +5480,15 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.UpdateChannelDescRequest.encode(
-      tsproto.UpdateChannelDescRequest.fromPartial({ ...body, channel_id: channelId }),
+      tsproto.UpdateChannelDescRequest.fromPartial({...body, channel_id: channelId})
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -5236,7 +5501,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
@@ -5253,16 +5520,18 @@ export class MezonApi {
     limit?: number,
     page?: number,
     channelLabel?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiChannelSettingListResponse> {
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/ListChannelSetting";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ChannelSettingListRequest.encode(
-      tsproto.ChannelSettingListRequest.fromPartial({
+      tsproto.ChannelSettingListRequest.fromPartial({ 
         clan_id: clanId,
         parent_id: parentId,
         category_id: categoryId,
@@ -5272,13 +5541,13 @@ export class MezonApi {
         type: type,
         limit: limit,
         page: page,
-        channel_label: channelLabel,
-      }),
+        channel_label: channelLabel
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -5289,13 +5558,15 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiChannelSettingListResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ChannelSettingListResponse.decode(new Uint8Array(buffer)) as ApiChannelSettingListResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -5308,25 +5579,25 @@ export class MezonApi {
     limit?: number,
     state?: number,
     cursor?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiVoiceChannelUserList> {
     const urlPath = "/mezon.api.Mezon/ListChannelVoiceUsers";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListChannelUsersRequest.encode(
-      tsproto.ListChannelUsersRequest.fromPartial({
+      tsproto.ListChannelUsersRequest.fromPartial({ 
         clan_id: clanId,
         channel_id: channelId,
         channel_type: channelType,
         limit: limit,
         state: state,
-        cursor: cursor,
-      }),
+        cursor: cursor
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -5337,22 +5608,23 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiVoiceChannelUserList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.VoiceChannelUserList.decode(new Uint8Array(buffer)) as ApiVoiceChannelUserList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** List clans */
-  listClanUnreadMsgIndicator(
-    bearerToken: string,
-    clanId: string,
-    options: any = {},
-  ): Promise<ApiListClanUnreadMsgIndicatorResponse> {
+  listClanUnreadMsgIndicator(bearerToken: string,
+      clanId:string,
+      options: any = {}): Promise<ApiListClanUnreadMsgIndicatorResponse> {
+    
     if (clanId === null || clanId === undefined) {
       throw new Error("'clanId' is a required parameter but is null or undefined.");
     }
@@ -5360,15 +5632,15 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListClanUnreadMsgIndicatorRequest.encode(
-      tsproto.ListClanUnreadMsgIndicatorRequest.fromPartial({ clan_id: clanId }),
+      tsproto.ListClanUnreadMsgIndicatorRequest.fromPartial({ clan_id: clanId })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -5376,15 +5648,15 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiListClanUnreadMsgIndicatorResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ListClanUnreadMsgIndicatorResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiListClanUnreadMsgIndicatorResponse;
+          const buffer = await response.arrayBuffer();      
+          return tsproto.ListClanUnreadMsgIndicatorResponse.decode(new Uint8Array(buffer)) as ApiListClanUnreadMsgIndicatorResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -5394,42 +5666,51 @@ export class MezonApi {
     limit?: number,
     state?: number,
     cursor?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiClanDescList> {
     const urlPath = "/mezon.api.Mezon/ListClanDescs";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListClanDescRequest.encode(
-      tsproto.ListClanDescRequest.fromPartial({ limit, state, cursor }),
+      tsproto.ListClanDescRequest.fromPartial({ limit, state, cursor })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiClanDescList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ClanDescList.decode(new Uint8Array(buffer)) as ApiClanDescList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Create a clan */
-  createClanDesc(bearerToken: string, body: ApiCreateClanDescRequest, options: any = {}): Promise<ApiClanDesc> {
+  createClanDesc(
+    bearerToken: string,
+    body: ApiCreateClanDescRequest,
+    options: any = {}
+  ): Promise<ApiClanDesc> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/CreateClanDesc";
     const queryParams = new Map<string, any>();
@@ -5439,12 +5720,12 @@ export class MezonApi {
         clan_name: body.clan_name,
         logo: body.logo,
         banner: body.banner,
-      }),
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -5461,25 +5742,33 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Delete a clan desc by ID. */
-  deleteClanDesc(bearerToken: string, clanDescId: string, options: any = {}): Promise<any> {
+  deleteClanDesc(
+    bearerToken: string,
+    clanDescId: string,
+    options: any = {}
+  ): Promise<any> {
     if (clanDescId === null || clanDescId === undefined) {
-      throw new Error("'clanDescId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanDescId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/DeleteClanDesc";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DeleteClanDescRequest.encode(
-      tsproto.DeleteClanDescRequest.fromPartial({ clan_desc_id: clanDescId }),
+      tsproto.DeleteClanDescRequest.fromPartial({ clan_desc_id: clanDescId })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -5495,28 +5784,39 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** Update fields in a given clan. */
-  updateClanDesc(bearerToken: string, clanId: string, body: {}, options: any = {}): Promise<any> {
+  updateClanDesc(
+    bearerToken: string,
+    clanId: string,
+    body: {},
+    options: any = {}
+  ): Promise<any> {
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
     }
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/UpdateClanDesc";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.UpdateClanDescRequest.encode(
-      tsproto.UpdateClanDescRequest.fromPartial({ clan_id: clanId, ...body }),
+      tsproto.UpdateClanDescRequest.fromPartial({ clan_id: clanId, ...body })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -5532,28 +5832,37 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** Kick a set of users from a clan. */
-  removeClanUsers(bearerToken: string, clanId: string, userIds?: Array<string>, options: any = {}): Promise<any> {
+  removeClanUsers(
+    bearerToken: string,
+    clanId: string,
+    userIds?: Array<string>,
+    options: any = {}
+  ): Promise<any> {
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/RemoveClanUsers";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.RemoveClanUsersRequest.encode(
-      tsproto.RemoveClanUsersRequest.fromPartial({
+      tsproto.RemoveClanUsersRequest.fromPartial({ 
         clan_id: clanId,
-        user_ids: userIds,
-      }),
+        user_ids: userIds
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -5570,59 +5879,61 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** List banned user */
-  listBannedUsers(
-    bearerToken: string,
-    clanId?: string,
-    channelId?: string,
-    options: any = {},
-  ): Promise<ApiBannedUserList> {
+  listBannedUsers(bearerToken: string,
+      clanId?:string,
+      channelId?:string,
+      options: any = {}): Promise<ApiBannedUserList> {
+    
     const urlPath = "/mezon.api.Mezon/ListBannedUsers";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.BannedUserListRequest.encode(
-      tsproto.BannedUserListRequest.fromPartial({
+      tsproto.BannedUserListRequest.fromPartial({ 
         clan_id: clanId,
-        channel_id: channelId,
-      }),
+        channel_id: channelId
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
-      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async(response) => {
         if (response.status == 204) {
           return {} as ApiBannedUserList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.BannedUserList.decode(new Uint8Array(buffer)) as ApiBannedUserList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Ban a set of users from a channel. */
-  unbanClanUsers(
-    bearerToken: string,
-    clanId: string,
-    channelId?: string,
-    userIds?: Array<string>,
-    banTime?: number,
-    options: any = {},
-  ): Promise<any> {
+  unbanClanUsers(bearerToken: string,
+      clanId:string,
+      channelId?:string,
+      userIds?:Array<string>,
+      banTime?:number,
+      options: any = {}): Promise<any> {
+    
     if (clanId === null || clanId === undefined) {
       throw new Error("'clanId' is a required parameter but is null or undefined.");
     }
@@ -5630,20 +5941,20 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.BanClanUsersRequest.encode(
-      tsproto.BanClanUsersRequest.fromPartial({
+      tsproto.BanClanUsersRequest.fromPartial({ 
         clan_id: clanId,
         channel_id: channelId,
         user_ids: userIds,
-        ban_time: banTime,
-      }),
+        ban_time: banTime
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -5657,19 +5968,20 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Ban a set of users from a channel. */
-  banClanUsers(
-    bearerToken: string,
-    clanId: string,
-    channelId?: string,
-    userIds?: Array<string>,
-    banTime?: number,
-    options: any = {},
-  ): Promise<any> {
+  banClanUsers(bearerToken: string,
+      clanId:string,
+      channelId?:string,
+      userIds?:Array<string>,
+      banTime?:number,
+      options: any = {}): Promise<any> {
+    
     if (clanId === null || clanId === undefined) {
       throw new Error("'clanId' is a required parameter but is null or undefined.");
     }
@@ -5677,20 +5989,20 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.BanClanUsersRequest.encode(
-      tsproto.BanClanUsersRequest.fromPartial({
+      tsproto.BanClanUsersRequest.fromPartial({ 
         clan_id: clanId,
         channel_id: channelId,
         user_ids: userIds,
-        ban_time: banTime,
-      }),
+        ban_time: banTime
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -5704,25 +6016,33 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** List all users that are part of a clan. */
-  listClanUsers(bearerToken: string, clanId: string, options: any = {}): Promise<ApiClanUserList> {
+  listClanUsers(
+    bearerToken: string,
+    clanId: string,
+    options: any = {}
+  ): Promise<ApiClanUserList> {
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/ListClanUsers";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListClanUsersRequest.encode(
-      tsproto.ListClanUsersRequest.fromPartial({ clan_id: clanId }),
+      tsproto.ListClanUsersRequest.fromPartial({ clan_id: clanId })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -5733,13 +6053,15 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiClanUserList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ClanUserList.decode(new Uint8Array(buffer)) as ApiClanUserList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -5747,19 +6069,23 @@ export class MezonApi {
   createCategoryDesc(
     bearerToken: string,
     body: ApiCreateCategoryDescRequest,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiCategoryDesc> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/CreateCategoryDesc";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.CreateCategoryDescRequest.encode(tsproto.CreateCategoryDescRequest.fromPartial(body));
+    const bodyWriter = tsproto.CreateCategoryDescRequest.encode(
+      tsproto.CreateCategoryDescRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -5776,7 +6102,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -5786,28 +6114,32 @@ export class MezonApi {
     categoryId: string,
     clanId: string,
     categoryLabel?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<any> {
     if (categoryId === null || categoryId === undefined) {
-      throw new Error("'categoryId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'categoryId' is a required parameter but is null or undefined."
+      );
     }
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/DeleteCategoryDesc";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DeleteCategoryDescRequest.encode(
-      tsproto.DeleteCategoryDescRequest.fromPartial({
-        category_id: categoryId,
+      tsproto.DeleteCategoryDescRequest.fromPartial({ 
+        category_id: categoryId, 
         clan_id: clanId,
-        category_label: categoryLabel,
-      }),
+        category_label: categoryLabel
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -5824,7 +6156,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
@@ -5835,23 +6169,23 @@ export class MezonApi {
     deviceId?: string,
     platform?: string,
     voipToken?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiRegistFcmDeviceTokenResponse> {
     const urlPath = "/mezon.api.Mezon/RegistFCMDeviceToken";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.RegistFcmDeviceTokenRequest.encode(
-      tsproto.RegistFcmDeviceTokenRequest.fromPartial({
-        token,
-        device_id: deviceId,
+      tsproto.RegistFcmDeviceTokenRequest.fromPartial({ 
+        token, 
+        device_id: deviceId, 
         platform,
-        voip_token: voipToken,
-      }),
+        voip_token: voipToken 
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -5862,29 +6196,39 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiRegistFcmDeviceTokenResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.RegistFcmDeviceTokenResponse.decode(new Uint8Array(buffer)) as ApiRegistFcmDeviceTokenResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** close direct message. */
-  closeDirectMess(bearerToken: string, body: ApiDeleteChannelDescRequest, options: any = {}): Promise<any> {
+  closeDirectMess(
+    bearerToken: string,
+    body: ApiDeleteChannelDescRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/CloseDMByChannelId";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.DeleteChannelDescRequest.encode(tsproto.DeleteChannelDescRequest.fromPartial(body));
+    const bodyWriter = tsproto.DeleteChannelDescRequest.encode(
+      tsproto.DeleteChannelDescRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -5901,23 +6245,33 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** open direct message. */
-  openDirectMess(bearerToken: string, body: ApiDeleteChannelDescRequest, options: any = {}): Promise<any> {
+  openDirectMess(
+    bearerToken: string,
+    body: ApiDeleteChannelDescRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/OpenDMByChannelId";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.DeleteChannelDescRequest.encode(tsproto.DeleteChannelDescRequest.fromPartial(body));
+    const bodyWriter = tsproto.DeleteChannelDescRequest.encode(
+      tsproto.DeleteChannelDescRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -5934,23 +6288,33 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Post clan Emoji  /v2/emoji/create */
-  createClanEmoji(bearerToken: string, body: ApiClanEmojiCreateRequest, options: any = {}): Promise<any> {
+  createClanEmoji(
+    bearerToken: string,
+    body: ApiClanEmojiCreateRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/CreateClanEmoji";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.ClanEmojiCreateRequest.encode(tsproto.ClanEmojiCreateRequest.fromPartial(body));
+    const bodyWriter = tsproto.ClanEmojiCreateRequest.encode(
+      tsproto.ClanEmojiCreateRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -5967,7 +6331,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -5977,7 +6343,7 @@ export class MezonApi {
     id: string,
     clanId?: string,
     emojiLabel?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
@@ -5986,12 +6352,12 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ClanEmojiDeleteRequest.encode(
-      tsproto.ClanEmojiDeleteRequest.fromPartial({ id, clan_id: clanId, emoji_label: emojiLabel }),
+      tsproto.ClanEmojiDeleteRequest.fromPartial({ id, clan_id: clanId, emoji_label: emojiLabel })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -6008,7 +6374,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -6017,13 +6385,15 @@ export class MezonApi {
     bearerToken: string,
     id: string,
     body: MezonUpdateClanEmojiByIdBody,
-    options: any = {},
+    options: any = {}
   ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/UpdateClanEmojiById";
     const queryParams = new Map<string, any>();
@@ -6032,13 +6402,13 @@ export class MezonApi {
       tsproto.ClanEmojiUpdateRequest.fromPartial({
         id: body.id,
         shortname: body.shortname,
-        clan_id: body.clan_id,
-      }),
+        clan_id: body.clan_id
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -6055,40 +6425,50 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** get list emoji recent by user id */
-  emojiRecentList(bearerToken: string, options: any = {}): Promise<ApiEmojiRecentList> {
+  emojiRecentList(bearerToken: string,
+      options: any = {}): Promise<ApiEmojiRecentList> {
+    
     const urlPath = "/mezon.api.Mezon/EmojiRecentList";
     const queryParams = new Map<string, any>();
 
-    let bodyJson: string = "";
+    let bodyJson : string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiEmojiRecentList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.EmojiRecentList.decode(new Uint8Array(buffer)) as ApiEmojiRecentList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** get list emoji by user id */
-  getListEmojisByUserId(bearerToken: string, options: any = {}): Promise<ApiEmojiListedResponse> {
+  getListEmojisByUserId(
+    bearerToken: string,
+    options: any = {}
+  ): Promise<ApiEmojiListedResponse> {
     const urlPath = "/mezon.api.Mezon/GetListEmojisByUserId";
     const queryParams = new Map<string, any>();
 
@@ -6099,19 +6479,22 @@ export class MezonApi {
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiEmojiListedResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.EmojiListedResponse.decode(new Uint8Array(buffer)) as ApiEmojiListedResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -6119,19 +6502,23 @@ export class MezonApi {
   searchMessage(
     bearerToken: string,
     body: ApiSearchMessageRequest,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiSearchMessageResponse> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/SearchMessage";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.SearchMessageRequest.encode(tsproto.SearchMessageRequest.fromPartial(body));
+    const bodyWriter = tsproto.SearchMessageRequest.encode(
+      tsproto.SearchMessageRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -6148,14 +6535,18 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Submit an event for processing in the server's registered runtime custom events handler. */
   event(bearerToken: string, body: ApiEvent, options: any = {}): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/CreateEvent";
     const queryParams = new Map<string, any>();
@@ -6163,14 +6554,14 @@ export class MezonApi {
     const bodyWriter = tsproto.Event.encode(
       tsproto.Event.fromPartial({
         external: body.external,
-        name: body.name,
-        properties: body.properties,
-      }),
+        name: body.name,        
+        properties: body.properties
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -6186,20 +6577,28 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** List user events */
-  listEvents(bearerToken: string, clanId?: string, options: any = {}): Promise<ApiEventList> {
+  listEvents(
+    bearerToken: string,
+    clanId?: string,
+    options: any = {}
+  ): Promise<ApiEventList> {
     const urlPath = "/mezon.api.Mezon/ListEvents";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.ListEventsRequest.encode(tsproto.ListEventsRequest.fromPartial({ clan_id: clanId }));
+    const bodyWriter = tsproto.ListEventsRequest.encode(
+      tsproto.ListEventsRequest.fromPartial({ clan_id: clanId })
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -6210,29 +6609,39 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiEventList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.EventList.decode(new Uint8Array(buffer)) as ApiEventList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Create a new event for clan. */
-  createEvent(bearerToken: string, body: ApiCreateEventRequest, options: any = {}): Promise<ApiEventManagement> {
+  createEvent(
+    bearerToken: string,
+    body: ApiCreateEventRequest,
+    options: any = {}
+  ): Promise<ApiEventManagement> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/CreateEvent";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.CreateEventRequest.encode(tsproto.CreateEventRequest.fromPartial(body));
+    const bodyWriter = tsproto.CreateEventRequest.encode(
+      tsproto.CreateEventRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -6249,23 +6658,33 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Update fields in a given event. */
-  updateEventUser(bearerToken: string, body: ApiDeleteEventRequest, options: any = {}): Promise<any> {
+  updateEventUser(
+    bearerToken: string,
+    body: ApiDeleteEventRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/UpdateEventUser";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.DeleteEventRequest.encode(tsproto.DeleteEventRequest.fromPartial(body));
+    const bodyWriter = tsproto.DeleteEventRequest.encode(
+      tsproto.DeleteEventRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -6281,7 +6700,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -6293,27 +6714,29 @@ export class MezonApi {
     creatorId?: string,
     eventLabel?: string,
     channelId?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<any> {
     if (eventId === null || eventId === undefined) {
-      throw new Error("'eventId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'eventId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/DeleteEvent";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DeleteEventRequest.encode(
-      tsproto.DeleteEventRequest.fromPartial({
+      tsproto.DeleteEventRequest.fromPartial({ 
         event_id: eventId,
         clan_id: clanId,
         creator_id: creatorId,
         event_label: eventLabel,
-        channel_id: channelId,
-      }),
+        channel_id: channelId
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -6329,26 +6752,39 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Update fields in a given event. */
-  updateEvent(bearerToken: string, eventId: string, body: MezonUpdateEventBody, options: any = {}): Promise<any> {
+  updateEvent(
+    bearerToken: string,
+    eventId: string,
+    body: MezonUpdateEventBody,
+    options: any = {}
+  ): Promise<any> {
     if (eventId === null || eventId === undefined) {
-      throw new Error("'eventId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'eventId' is a required parameter but is null or undefined."
+      );
     }
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/UpdateEvent";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.UpdateEventRequest.encode(tsproto.UpdateEventRequest.fromPartial(body));
+    const bodyWriter = tsproto.UpdateEventRequest.encode(
+      tsproto.UpdateEventRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -6364,22 +6800,29 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Delete one or more users by ID or username. */
-  deleteFriends(bearerToken: string, ids?: Array<string>, usernames?: Array<string>, options: any = {}): Promise<any> {
+  deleteFriends(
+    bearerToken: string,
+    ids?: Array<string>,
+    usernames?: Array<string>,
+    options: any = {}
+  ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteFriends";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DeleteFriendsRequest.encode(
-      tsproto.DeleteFriendsRequest.fromPartial({ ids, usernames }),
+      tsproto.DeleteFriendsRequest.fromPartial({ ids, usernames })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -6395,7 +6838,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
@@ -6405,35 +6850,38 @@ export class MezonApi {
     limit?: number,
     state?: number,
     cursor?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiFriendList> {
     const urlPath = "/mezon.api.Mezon/ListFriends";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListFriendsRequest.encode(
-      tsproto.ListFriendsRequest.fromPartial({ limit, state, cursor }),
+      tsproto.ListFriendsRequest.fromPartial({ limit, state, cursor })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiFriendList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.FriendList.decode(new Uint8Array(buffer)) as ApiFriendList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -6442,16 +6890,18 @@ export class MezonApi {
     bearerToken: string,
     ids?: Array<string>,
     usernames?: Array<string>,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiAddFriendsResponse> {
     const urlPath = "/mezon.api.Mezon/AddFriends";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.AddFriendsRequest.encode(tsproto.AddFriendsRequest.fromPartial({ ids, usernames }));
+    const bodyWriter = tsproto.AddFriendsRequest.encode(
+      tsproto.AddFriendsRequest.fromPartial({ ids, usernames })
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -6468,20 +6918,29 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Block one or more users by ID or username. */
-  blockFriends(bearerToken: string, ids?: Array<string>, usernames?: Array<string>, options: any = {}): Promise<any> {
+  blockFriends(
+    bearerToken: string,
+    ids?: Array<string>,
+    usernames?: Array<string>,
+    options: any = {}
+  ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/BlockFriends";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.BlockFriendsRequest.encode(tsproto.BlockFriendsRequest.fromPartial({ ids, usernames }));
+    const bodyWriter = tsproto.BlockFriendsRequest.encode(
+      tsproto.BlockFriendsRequest.fromPartial({ ids, usernames })
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -6497,23 +6956,31 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** Block one or more users by ID or username. */
-  unblockFriends(bearerToken: string, ids?: Array<string>, usernames?: Array<string>, options: any = {}): Promise<any> {
+  unblockFriends(bearerToken: string,
+      ids?:Array<string>,
+      usernames?:Array<string>,
+      options: any = {}): Promise<any> {
+    
     const urlPath = "/mezon.api.Mezon/UnblockFriends";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.BlockFriendsRequest.encode(tsproto.BlockFriendsRequest.fromPartial({ ids, usernames }));
+    const bodyWriter = tsproto.BlockFriendsRequest.encode(
+      tsproto.BlockFriendsRequest.fromPartial({ ids, usernames })
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -6526,7 +6993,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
@@ -6534,51 +7003,62 @@ export class MezonApi {
   getChannelCategoryNotiSettingsList(
     bearerToken: string,
     clanId?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiNotificationChannelCategorySettingList> {
     const urlPath = "/mezon.api.Mezon/GetChannelCategoryNotiSettingsList";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.NotificationClan.encode(tsproto.NotificationClan.fromPartial({ clan_id: clanId }));
+    const bodyWriter = tsproto.NotificationClan.encode(
+      tsproto.NotificationClan.fromPartial({ clan_id: clanId })
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiNotificationChannelCategorySettingList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.NotificationChannelCategorySettingList.decode(
-            new Uint8Array(buffer),
-          ) as ApiNotificationChannelCategorySettingList;
+          const buffer = await response.arrayBuffer();      
+          return tsproto.NotificationChannelCategorySettingList.decode(new Uint8Array(buffer)) as ApiNotificationChannelCategorySettingList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /**  */
-  getUserProfileOnClan(bearerToken: string, clanId: string, options: any = {}): Promise<ApiClanProfile> {
+  getUserProfileOnClan(
+    bearerToken: string,
+    clanId: string,
+    options: any = {}
+  ): Promise<ApiClanProfile> {
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/GetUserProfileOnClan";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.ClanProfileRequest.encode(tsproto.ClanProfileRequest.fromPartial({ clan_id: clanId }));
+    const bodyWriter = tsproto.ClanProfileRequest.encode(
+      tsproto.ClanProfileRequest.fromPartial({ clan_id: clanId })
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -6595,7 +7075,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -6603,35 +7085,38 @@ export class MezonApi {
   getNotificationCategory(
     bearerToken: string,
     categoryId?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiNotificationUserChannel> {
     const urlPath = "/mezon.api.Mezon/GetNotificationCategory";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DefaultNotificationCategory.encode(
-      tsproto.DefaultNotificationCategory.fromPartial({ category_id: categoryId }),
+      tsproto.DefaultNotificationCategory.fromPartial({ category_id: categoryId })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiNotificationUserChannel;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.NotificationUserChannel.decode(new Uint8Array(buffer)) as ApiNotificationUserChannel;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -6639,65 +7124,77 @@ export class MezonApi {
   getNotificationChannel(
     bearerToken: string,
     channelId?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiNotificationUserChannel> {
     const urlPath = "/mezon.api.Mezon/GetNotificationChannel";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.NotificationChannel.encode(
-      tsproto.NotificationChannel.fromPartial({ channel_id: channelId }),
+      tsproto.NotificationChannel.fromPartial({ channel_id: channelId })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiNotificationUserChannel;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.NotificationUserChannel.decode(new Uint8Array(buffer)) as ApiNotificationUserChannel;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** List GetNotificationClan */
-  getNotificationClan(bearerToken: string, clanId?: string, options: any = {}): Promise<ApiNotificationSetting> {
+  getNotificationClan(
+    bearerToken: string,
+    clanId?: string,
+    options: any = {}
+  ): Promise<ApiNotificationSetting> {
     const urlPath = "/mezon.api.Mezon/GetNotificationClan";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.NotificationClan.encode(tsproto.NotificationClan.fromPartial({ clan_id: clanId }));
+    const bodyWriter = tsproto.NotificationClan.encode(
+      tsproto.NotificationClan.fromPartial({ clan_id: clanId })
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiNotificationSetting;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.NotificationSetting.decode(new Uint8Array(buffer)) as ApiNotificationSetting;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -6705,51 +7202,62 @@ export class MezonApi {
   getNotificationReactMessage(
     bearerToken: string,
     channelId?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiNotifiReactMessage> {
     const urlPath = "/mezon.api.Mezon/GetNotificationReactMessage";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.NotifiReactMessage.encode(
-      tsproto.NotifiReactMessage.fromPartial({ channel_id: channelId }),
+      tsproto.NotifiReactMessage.fromPartial({ channel_id: channelId })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
-      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+      getFetcher()(fullUrl, fetchOptions).then(async(response) => {
         if (response.status == 204) {
           return {} as ApiNotifiReactMessage;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.NotifiReactMessage.decode(new Uint8Array(buffer)) as ApiNotifiReactMessage;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Give a coffee */
-  giveMeACoffee(bearerToken: string, body: ApiGiveCoffeeEvent, options: any = {}): Promise<any> {
+  giveMeACoffee(
+    bearerToken: string,
+    body: ApiGiveCoffeeEvent,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/GiveMeACoffee";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.GiveCoffeeEvent.encode(tsproto.GiveCoffeeEvent.fromPartial(body));
+    const bodyWriter = tsproto.GiveCoffeeEvent.encode(
+      tsproto.GiveCoffeeEvent.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -6765,17 +7273,22 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** get key server */
-  getKeyServer(bearerToken: string, options: any = {}): Promise<ApiGetKeyServerResp> {
+  getKeyServer(
+    bearerToken: string,
+    options: any = {}
+  ): Promise<ApiGetKeyServerResp> {
     const urlPath = "/mezon.api.Mezon/GetKeyServer";
     const queryParams = new Map<string, any>();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -6791,7 +7304,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -6799,19 +7314,23 @@ export class MezonApi {
   createLinkInviteUser(
     bearerToken: string,
     body: ApiLinkInviteUserRequest,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiLinkInviteUser> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/CreateLinkInviteUser";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.LinkInviteUserRequest.encode(tsproto.LinkInviteUserRequest.fromPartial(body));
+    const bodyWriter = tsproto.LinkInviteUserRequest.encode(
+      tsproto.LinkInviteUserRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -6828,23 +7347,33 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Add users to a channel. */
-  inviteUser(bearerToken: string, inviteId: string, options: any = {}): Promise<ApiInviteUserRes> {
+  inviteUser(
+    bearerToken: string,
+    inviteId: string,
+    options: any = {}
+  ): Promise<ApiInviteUserRes> {
     if (inviteId === null || inviteId === undefined) {
-      throw new Error("'inviteId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'inviteId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/InviteUser";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.InviteUserRequest.encode(tsproto.InviteUserRequest.fromPartial({ invite_id: inviteId }));
+    const bodyWriter = tsproto.InviteUserRequest.encode(
+      tsproto.InviteUserRequest.fromPartial({ invite_id: inviteId })
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -6861,7 +7390,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -6870,12 +7401,17 @@ export class MezonApi {
     basicAuthUsername: string,
     basicAuthPassword: string,
     inviteId: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiInviteUserRes> {
     if (inviteId === null || inviteId === undefined) {
-      throw new Error("'inviteId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'inviteId' is a required parameter but is null or undefined."
+      );
     }
-    const urlPath = "/v2/invite/{inviteId}".replace("{inviteId}", encodeURIComponent(String(inviteId)));
+    const urlPath = "/v2/invite/{inviteId}".replace(
+      "{inviteId}",
+      encodeURIComponent(String(inviteId))
+    );
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -6883,7 +7419,8 @@ export class MezonApi {
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (basicAuthUsername) {
-      fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+      fetchOptions.headers["Authorization"] =
+        "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
     fetchOptions.headers["Accept"] = "application/json";
     fetchOptions.headers["Content-Type"] = "application/json";
@@ -6893,54 +7430,70 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiInviteUserRes;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response.json()
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** List HashtagDMList */
-  listChannelByUserId(bearerToken: string, options: any = {}): Promise<ApiChannelDescList> {
+  listChannelByUserId(
+    bearerToken: string,
+    options: any = {}
+  ): Promise<ApiChannelDescList> {
     const urlPath = "/mezon.api.Mezon/ListChannelByUserId";
     const queryParams = new Map<string, any>();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiChannelDescList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ChannelDescList.decode(new Uint8Array(buffer)) as ApiChannelDescList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Mark as read */
-  markAsRead(bearerToken: string, body: ApiMarkAsReadRequest, options: any = {}): Promise<any> {
+  markAsRead(
+    bearerToken: string,
+    body: ApiMarkAsReadRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/MarkAsRead";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.MarkAsReadRequest.encode(tsproto.MarkAsReadRequest.fromPartial(body));
+    const bodyWriter = tsproto.MarkAsReadRequest.encode(
+      tsproto.MarkAsReadRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -6956,115 +7509,147 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
-
+  
   /** List mezon OAuth client */
-  listMezonOauthClient(bearerToken: string, options: any = {}): Promise<ApiMezonOauthClientList> {
+  listMezonOauthClient(bearerToken: string,
+      options: any = {}): Promise<ApiMezonOauthClientList> {
+    
     const urlPath = "/mezon.api.Mezon/ListMezonOauthClient";
     const queryParams = new Map<string, any>();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiMezonOauthClientList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.MezonOauthClientList.decode(new Uint8Array(buffer)) as ApiMezonOauthClientList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
-
+  
   /** set mute notification user channel. */
-  setMuteCategory(bearerToken: string, body: ApiSetMuteRequest, options: any = {}): Promise<any> {
+  setMuteCategory(
+    bearerToken: string,
+    body: ApiSetMuteRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/SetMuteCategory";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.SetMuteRequest.encode(tsproto.SetMuteRequest.fromPartial(body));
-    const encodedBody = bodyWriter.finish();
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return {} as any;
-        } else if (response.status >= 200 && response.status < 300) {
-          return {} as any;
-        } else {
-          throw response;
-        }
-      }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
-    ]);
-  }
-
-  /** set mute notification user channel. */
-  setMuteChannel(bearerToken: string, body: ApiSetMuteRequest, options: any = {}): Promise<any> {
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/mezon.api.Mezon/SetMuteChannel";
-    const queryParams = new Map<string, any>();
-
-    const bodyWriter = tsproto.SetMuteRequest.encode(tsproto.SetMuteRequest.fromPartial(body));
-    const encodedBody = bodyWriter.finish();
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return {} as any;
-        } else if (response.status >= 200 && response.status < 300) {
-          return {} as any;
-        } else {
-          throw response;
-        }
-      }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
-    ]);
-  }
-
-  /** Delete one or more notifications for the current user. */
-  deleteNotifications(bearerToken: string, ids?: Array<string>, category?: number, options: any = {}): Promise<any> {
-    const urlPath = "/mezon.api.Mezon/DeleteNotifications";
-    const queryParams = new Map<string, any>();
-
-    const bodyWriter = tsproto.DeleteNotificationsRequest.encode(
-      tsproto.DeleteNotificationsRequest.fromPartial({
-        ids: ids || [],
-        category: category,
-      }),
+    const bodyWriter = tsproto.SetMuteRequest.encode(
+      tsproto.SetMuteRequest.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as any;
+        } else if (response.status >= 200 && response.status < 300) {
+          return {} as any;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
+  /** set mute notification user channel. */
+  setMuteChannel(
+    bearerToken: string,
+    body: ApiSetMuteRequest,
+    options: any = {}
+  ): Promise<any> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/SetMuteChannel";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.SetMuteRequest.encode(
+      tsproto.SetMuteRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as any;
+        } else if (response.status >= 200 && response.status < 300) {
+          return {} as any;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
+  /** Delete one or more notifications for the current user. */
+  deleteNotifications(
+    bearerToken: string,
+    ids?: Array<string>,
+    category?: number,
+    options: any = {}
+  ): Promise<any> {
+    const urlPath = "/mezon.api.Mezon/DeleteNotifications";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.DeleteNotificationsRequest.encode(
+      tsproto.DeleteNotificationsRequest.fromPartial({ 
+        ids: ids || [], 
+        category: category 
+      })
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -7080,7 +7665,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
@@ -7092,57 +7679,67 @@ export class MezonApi {
     notificationId?: string,
     category?: number,
     direction?: number,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiNotificationList> {
     const urlPath = "/mezon.api.Mezon/ListNotifications";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListNotificationsRequest.encode(
-      tsproto.ListNotificationsRequest.fromPartial({
-        limit: limit,
-        clan_id: clanId,
-        notification_id: notificationId,
-        category: category,
-        direction: direction,
-      }),
+      tsproto.ListNotificationsRequest.fromPartial({ 
+        limit: limit, 
+        clan_id: clanId, 
+        notification_id: notificationId, 
+        category: category, 
+        direction: direction 
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiNotificationList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.NotificationList.decode(new Uint8Array(buffer)) as unknown as ApiNotificationList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** set notification user channel. */
-  setNotificationChannelSetting(bearerToken: string, body: ApiSetNotificationRequest, options: any = {}): Promise<any> {
+  setNotificationChannelSetting(
+    bearerToken: string,
+    body: ApiSetNotificationRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/SetNotificationChannelSetting";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.SetNotificationRequest.encode(tsproto.SetNotificationRequest.fromPartial(body));
+    const bodyWriter = tsproto.SetNotificationRequest.encode(
+      tsproto.SetNotificationRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -7158,7 +7755,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
@@ -7166,21 +7765,23 @@ export class MezonApi {
   setNotificationClanSetting(
     bearerToken: string,
     body: ApiSetDefaultNotificationRequest,
-    options: any = {},
+    options: any = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/SetNotificationClanSetting";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.SetDefaultNotificationRequest.encode(
-      tsproto.SetDefaultNotificationRequest.fromPartial(body),
+      tsproto.SetDefaultNotificationRequest.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -7196,7 +7797,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
@@ -7204,19 +7807,23 @@ export class MezonApi {
   setNotificationCategorySetting(
     bearerToken: string,
     body: ApiSetNotificationRequest,
-    options: any = {},
+    options: any = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/SetNotificationCategorySetting";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.SetNotificationRequest.encode(tsproto.SetNotificationRequest.fromPartial(body));
+    const bodyWriter = tsproto.SetNotificationRequest.encode(
+      tsproto.SetNotificationRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -7232,22 +7839,28 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /**  */
-  deleteNotificationCategorySetting(bearerToken: string, categoryId?: string, options: any = {}): Promise<any> {
+  deleteNotificationCategorySetting(
+    bearerToken: string,
+    categoryId?: string,
+    options: any = {}
+  ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteNotificationCategorySetting";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DefaultNotificationCategory.encode(
-      tsproto.DefaultNotificationCategory.fromPartial({ category_id: categoryId }),
+      tsproto.DefaultNotificationCategory.fromPartial({ category_id: categoryId })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -7263,22 +7876,28 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /**  */
-  deleteNotificationChannel(bearerToken: string, channelId?: string, options: any = {}): Promise<any> {
+  deleteNotificationChannel(
+    bearerToken: string,
+    channelId?: string,
+    options: any = {}
+  ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteNotificationChannel";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.NotificationChannel.encode(
-      tsproto.NotificationChannel.fromPartial({ channel_id: channelId }),
+      tsproto.NotificationChannel.fromPartial({ channel_id: channelId })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -7294,22 +7913,28 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /**  */
-  deleteNotiReactMessage(bearerToken: string, channelId?: string, options: any = {}): Promise<any> {
+  deleteNotiReactMessage(
+    bearerToken: string,
+    channelId?: string,
+    options: any = {}
+  ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteNotiReactMessage";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.NotificationChannel.encode(
-      tsproto.NotificationChannel.fromPartial({ channel_id: channelId }),
+      tsproto.NotificationChannel.fromPartial({ channel_id: channelId })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -7325,23 +7950,33 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /**  */
-  setNotificationReactMessage(bearerToken: string, body: ApiNotificationChannel, options: any = {}): Promise<any> {
+  setNotificationReactMessage(
+    bearerToken: string,
+    body: ApiNotificationChannel,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/SetNotificationReactMessage";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.NotificationChannel.encode(tsproto.NotificationChannel.fromPartial(body));
+    const bodyWriter = tsproto.NotificationChannel.encode(
+      tsproto.NotificationChannel.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -7357,23 +7992,33 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** set permission role channel. */
-  setRoleChannelPermission(bearerToken: string, body: ApiUpdateRoleChannelRequest, options: any = {}): Promise<any> {
+  setRoleChannelPermission(
+    bearerToken: string,
+    body: ApiUpdateRoleChannelRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/SetRoleChannelPermission";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.UpdateRoleChannelRequest.encode(tsproto.UpdateRoleChannelRequest.fromPartial(body));
+    const bodyWriter = tsproto.UpdateRoleChannelRequest.encode(
+      tsproto.UpdateRoleChannelRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -7389,33 +8034,40 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** Get permission list */
-  getListPermission(bearerToken: string, options: any = {}): Promise<ApiPermissionList> {
+  getListPermission(
+    bearerToken: string,
+    options: any = {}
+  ): Promise<ApiPermissionList> {
     const urlPath = "/mezon.api.Mezon/GetListPermission";
     const queryParams = new Map<string, any>();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiPermissionList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.PermissionList.decode(new Uint8Array(buffer)) as ApiPermissionList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -7425,41 +8077,41 @@ export class MezonApi {
     roleId?: string,
     channelId?: string,
     userId?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiPermissionRoleChannelListEventResponse> {
     const urlPath = "/mezon.api.Mezon/GetPermissionByRoleIdChannelId";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.PermissionRoleChannelListEventRequest.encode(
-      tsproto.PermissionRoleChannelListEventRequest.fromPartial({
-        role_id: roleId,
-        channel_id: channelId,
-        user_id: userId,
-      }),
+      tsproto.PermissionRoleChannelListEventRequest.fromPartial({ 
+        role_id: roleId, 
+        channel_id: channelId, 
+        user_id: userId 
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiPermissionRoleChannelListEventResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.PermissionRoleChannelListEventResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiPermissionRoleChannelListEventResponse;
+          const buffer = await response.arrayBuffer();      
+          return tsproto.PermissionRoleChannelListEventResponse.decode(new Uint8Array(buffer)) as ApiPermissionRoleChannelListEventResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -7470,23 +8122,23 @@ export class MezonApi {
     messageId?: string,
     channelId?: string,
     clanId?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeletePinMessage";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DeletePinMessage.encode(
-      tsproto.DeletePinMessage.fromPartial({
-        id: id,
-        message_id: messageId,
-        channel_id: channelId,
-        clan_id: clanId,
-      }),
+      tsproto.DeletePinMessage.fromPartial({ 
+        id: id, 
+        message_id: messageId, 
+        channel_id: channelId, 
+        clan_id: clanId 
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -7502,7 +8154,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
@@ -7512,62 +8166,65 @@ export class MezonApi {
     messageId?: string,
     channelId?: string,
     clanId?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<tsproto.PinMessagesList> {
     const urlPath = "/mezon.api.Mezon/GetPinMessagesList";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.PinMessageRequest.encode(
-      tsproto.PinMessageRequest.fromPartial({
-        message_id: messageId,
-        channel_id: channelId,
-        clan_id: clanId,
-      }),
+      tsproto.PinMessageRequest.fromPartial({ 
+        message_id: messageId, 
+        channel_id: channelId, 
+        clan_id: clanId 
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as tsproto.PinMessagesList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.PinMessagesList.decode(new Uint8Array(buffer)) as unknown as tsproto.PinMessagesList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** create message to inbox. */
-  createMessage2Inbox(
-    bearerToken: string,
-    body: ApiMessage2InboxRequest,
-    options: any = {},
-  ): Promise<ApiChannelMessageHeader> {
+  createMessage2Inbox(bearerToken: string,
+      body:ApiMessage2InboxRequest,
+      options: any = {}): Promise<ApiChannelMessageHeader> {
+    
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
     const urlPath = "/mezon.api.Mezon/CreateMessage2Inbox";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.Message2InboxRequest.encode(tsproto.Message2InboxRequest.fromPartial(body));
+    const bodyWriter = tsproto.Message2InboxRequest.encode(
+      tsproto.Message2InboxRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -7575,13 +8232,15 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiChannelMessageHeader;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ChannelMessageHeader.decode(new Uint8Array(buffer)) as ApiChannelMessageHeader;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -7589,19 +8248,23 @@ export class MezonApi {
   createPinMessage(
     bearerToken: string,
     body: ApiPinMessageRequest,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiChannelMessageHeader> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/CreatePinMessage";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.PinMessageRequest.encode(tsproto.PinMessageRequest.fromPartial(body));
+    const bodyWriter = tsproto.PinMessageRequest.encode(
+      tsproto.PinMessageRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -7612,28 +8275,34 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiChannelMessageHeader;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ChannelMessageHeader.decode(new Uint8Array(buffer)) as ApiChannelMessageHeader;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** get pubkey */
-  getPubKeys(bearerToken: string, userIds?: Array<string>, options: any = {}): Promise<ApiGetPubKeysResponse> {
+  getPubKeys(
+    bearerToken: string,
+    userIds?: Array<string>,
+    options: any = {}
+  ): Promise<ApiGetPubKeysResponse> {
     const urlPath = "/mezon.api.Mezon/GetPubKeys";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.GetPubKeysRequest.encode(
-      tsproto.GetPubKeysRequest.fromPartial({ user_ids: userIds || [] }),
+      tsproto.GetPubKeysRequest.fromPartial({ user_ids: userIds || [] })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -7644,29 +8313,39 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiGetPubKeysResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.GetPubKeysResponse.decode(new Uint8Array(buffer)) as ApiGetPubKeysResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** store pubkey for e2ee */
-  pushPubKey(bearerToken: string, body: ApiPushPubKeyRequest, options: any = {}): Promise<any> {
+  pushPubKey(
+    bearerToken: string,
+    body: ApiPushPubKeyRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/PushPubKey";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.PushPubKeyRequest.encode(tsproto.PushPubKeyRequest.fromPartial(body));
+    const bodyWriter = tsproto.PushPubKeyRequest.encode(
+      tsproto.PushPubKeyRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -7682,23 +8361,33 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /**  */
-  addRolesChannelDesc(bearerToken: string, body: ApiAddRoleChannelDescRequest, options: any = {}): Promise<any> {
+  addRolesChannelDesc(
+    bearerToken: string,
+    body: ApiAddRoleChannelDescRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/AddRolesChannelDesc";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.AddRoleChannelDescRequest.encode(tsproto.AddRoleChannelDescRequest.fromPartial(body));
+    const bodyWriter = tsproto.AddRoleChannelDescRequest.encode(
+      tsproto.AddRoleChannelDescRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -7714,7 +8403,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
@@ -7723,27 +8414,31 @@ export class MezonApi {
     bearerToken: string,
     newCategoryId: string,
     body: MezonChangeChannelCategoryBody,
-    options: any = {},
+    options: any = {}
   ): Promise<any> {
     if (newCategoryId === null || newCategoryId === undefined) {
-      throw new Error("'newCategoryId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'newCategoryId' is a required parameter but is null or undefined."
+      );
     }
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/ChangeChannelCategory";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ChangeChannelCategoryRequest.encode(
-      tsproto.ChangeChannelCategoryRequest.fromPartial({
-        ...body,
-        new_category_id: newCategoryId,
-      }),
+      tsproto.ChangeChannelCategoryRequest.fromPartial({ 
+        ...body, 
+        new_category_id: newCategoryId 
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -7759,23 +8454,33 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** Update a role when Delete a role by ID. */
-  deleteRoleChannelDesc(bearerToken: string, body: ApiDeleteRoleRequest, options: any = {}): Promise<any> {
+  deleteRoleChannelDesc(
+    bearerToken: string,
+    body: ApiDeleteRoleRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/DeleteRoleChannelDesc";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.DeleteRoleRequest.encode(tsproto.DeleteRoleRequest.fromPartial(body));
+    const bodyWriter = tsproto.DeleteRoleRequest.encode(
+      tsproto.DeleteRoleRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -7791,7 +8496,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
@@ -7802,56 +8509,66 @@ export class MezonApi {
     limit?: number,
     state?: number,
     cursor?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiRoleListEventResponse> {
     const urlPath = "/mezon.api.Mezon/ListRoles";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.RoleListEventRequest.encode(
-      tsproto.RoleListEventRequest.fromPartial({
-        clan_id: clanId,
-        limit: limit,
-        state: state,
-        cursor: cursor,
-      }),
+      tsproto.RoleListEventRequest.fromPartial({ 
+        clan_id: clanId, 
+        limit: limit, 
+        state: state, 
+        cursor: cursor 
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiRoleListEventResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.RoleListEventResponse.decode(new Uint8Array(buffer)) as ApiRoleListEventResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Create a new role for clan. */
-  createRole(bearerToken: string, body: ApiCreateRoleRequest, options: any = {}): Promise<ApiRole> {
+  createRole(
+    bearerToken: string,
+    body: ApiCreateRoleRequest,
+    options: any = {}
+  ): Promise<ApiRole> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/CreateRole";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.CreateRoleRequest.encode(tsproto.CreateRoleRequest.fromPartial(body));
+    const bodyWriter = tsproto.CreateRoleRequest.encode(
+      tsproto.CreateRoleRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -7868,7 +8585,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -7877,24 +8596,28 @@ export class MezonApi {
     bearerToken: string,
     roleId: string,
     body: MezonUpdateRoleDeleteBody,
-    options: any = {},
+    options: any = {}
   ): Promise<any> {
     if (roleId === null || roleId === undefined) {
-      throw new Error("'roleId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'roleId' is a required parameter but is null or undefined."
+      );
     }
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/DeleteRole";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DeleteRoleRequest.encode(
-      tsproto.DeleteRoleRequest.fromPartial({ ...body, role_id: roleId }),
+      tsproto.DeleteRoleRequest.fromPartial({ ...body, role_id: roleId })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -7910,7 +8633,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
@@ -7921,26 +8646,23 @@ export class MezonApi {
     channelId?: string,
     clanId?: string,
     roleLabel?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<any> {
     if (roleId === null || roleId === undefined) {
-      throw new Error("'roleId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'roleId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/DeleteRole";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DeleteRoleRequest.encode(
-      tsproto.DeleteRoleRequest.fromPartial({
-        role_id: roleId,
-        channel_id: channelId,
-        clan_id: clanId,
-        role_label: roleLabel,
-      }),
+      tsproto.DeleteRoleRequest.fromPartial({ role_id: roleId, channel_id: channelId, clan_id: clanId, role_label: roleLabel })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -7956,28 +8678,39 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** Update fields in a given role. */
-  updateRole(bearerToken: string, roleId: string, body: MezonUpdateRoleBody, options: any = {}): Promise<any> {
+  updateRole(
+    bearerToken: string,
+    roleId: string,
+    body: MezonUpdateRoleBody,
+    options: any = {}
+  ): Promise<any> {
     if (roleId === null || roleId === undefined) {
-      throw new Error("'roleId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'roleId' is a required parameter but is null or undefined."
+      );
     }
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/UpdateRole";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.UpdateRoleRequest.encode(
-      tsproto.UpdateRoleRequest.fromPartial({ ...body, role_id: roleId }),
+      tsproto.UpdateRoleRequest.fromPartial({ ...body, role_id: roleId })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -7993,42 +8726,52 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** List role permissions */
-  listRolePermissions(bearerToken: string, roleId: string, options: any = {}): Promise<ApiPermissionList> {
+  listRolePermissions(
+    bearerToken: string,
+    roleId: string,
+    options: any = {}
+  ): Promise<ApiPermissionList> {
     if (roleId === null || roleId === undefined) {
-      throw new Error("'roleId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'roleId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/ListRolePermissions";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListPermissionsRequest.encode(
-      tsproto.ListPermissionsRequest.fromPartial({ role_id: roleId }),
+      tsproto.ListPermissionsRequest.fromPartial({ role_id: roleId })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiPermissionList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.PermissionList.decode(new Uint8Array(buffer)) as ApiPermissionList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -8038,10 +8781,12 @@ export class MezonApi {
     roleId: string,
     limit?: number,
     cursor?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiRoleUserList> {
     if (roleId === null || roleId === undefined) {
-      throw new Error("'roleId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'roleId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/ListRoleUsers";
     const queryParams = new Map<string, any>();
@@ -8050,30 +8795,32 @@ export class MezonApi {
       tsproto.ListRoleUsersRequest.fromPartial({
         role_id: roleId,
         limit: limit,
-        cursor: cursor,
-      }),
+        cursor: cursor
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiRoleUserList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.RoleUserList.decode(new Uint8Array(buffer)) as ApiRoleUserList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -8082,10 +8829,12 @@ export class MezonApi {
     bearerToken: string,
     clanId: string,
     channelId?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiRoleList> {
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/GetRoleOfUserInTheClan";
     const queryParams = new Map<string, any>();
@@ -8093,93 +8842,104 @@ export class MezonApi {
     const bodyWriter = tsproto.ListPermissionOfUsersRequest.encode(
       tsproto.ListPermissionOfUsersRequest.fromPartial({
         clan_id: clanId,
-        channel_id: channelId,
-      }),
+        channel_id: channelId
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiRoleList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.RoleList.decode(new Uint8Array(buffer)) as ApiRoleList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
-
+  
   /**  */
-  searchThread(
-    bearerToken: string,
-    clanId?: string,
-    channelId?: string,
-    label?: string,
-    options: any = {},
-  ): Promise<ApiChannelDescList> {
-    const urlPath = "/mezon.api.Mezon/SearchThread";
-    const queryParams = new Map<string, any>();
+  searchThread(bearerToken: string,
+    clanId?:string,
+    channelId?:string,
+    label?:string,
+    options: any = {}): Promise<ApiChannelDescList> {
+  
+  const urlPath = "/mezon.api.Mezon/SearchThread";
+  const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.SearchThreadRequest.encode(
-      tsproto.SearchThreadRequest.fromPartial({
-        clan_id: clanId,
-        channel_id: channelId,
-        label: label,
-      }),
-    );
-    const encodedBody = bodyWriter.finish();
+  const bodyWriter = tsproto.SearchThreadRequest.encode(
+    tsproto.SearchThreadRequest.fromPartial({
+      clan_id: clanId,
+      channel_id: channelId,
+      label: label
+    })
+  );
+  const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-    if (bearerToken) {
+  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+  const fetchOptions = buildFetchOptions("POST", options, '');
+  fetchOptions.body = encodedBody;
+  if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiChannelDescList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ChannelDescList.decode(new Uint8Array(buffer)) as ApiChannelDescList;
-        } else {
-          throw response;
-        }
-      }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
-    ]);
   }
+  
+  return Promise.race([
+    getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+      if (response.status == 204) {
+        return {} as ApiChannelDescList;
+      } else if (response.status >= 200 && response.status < 300) {
+        const buffer = await response.arrayBuffer();      
+          return tsproto.ChannelDescList.decode(new Uint8Array(buffer)) as ApiChannelDescList;
+      } else {
+        throw response;
+      }
+    }),
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+    ),
+  ]);
+}
 
   /** UpdateWallets */
-  sendToken(bearerToken: string, body: ApiTokenSentEvent, options: any = {}): Promise<any> {
+  sendToken(
+    bearerToken: string,
+    body: ApiTokenSentEvent,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/SendToken";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.TokenSentEvent.encode(tsproto.TokenSentEvent.fromPartial(body));
+    const bodyWriter = tsproto.TokenSentEvent.encode(
+      tsproto.TokenSentEvent.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
@@ -8190,23 +8950,33 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user. */
-  sessionLogout(bearerToken: string, body: ApiSessionLogoutRequest, options: any = {}): Promise<any> {
+  sessionLogout(
+    bearerToken: string,
+    body: ApiSessionLogoutRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/SessionLogout";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.SessionLogoutRequest.encode(tsproto.SessionLogoutRequest.fromPartial(body));
+    const bodyWriter = tsproto.SessionLogoutRequest.encode(
+      tsproto.SessionLogoutRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -8222,28 +8992,38 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** Add a new sticker */
-  addClanSticker(bearerToken: string, body: ApiClanStickerAddRequest, options: any = {}): Promise<any> {
+  addClanSticker(
+    bearerToken: string,
+    body: ApiClanStickerAddRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/AddClanSticker";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.ClanStickerAddRequest.encode(tsproto.ClanStickerAddRequest.fromPartial(body));
+    const bodyWriter = tsproto.ClanStickerAddRequest.encode(
+      tsproto.ClanStickerAddRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
@@ -8254,7 +9034,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -8264,7 +9046,7 @@ export class MezonApi {
     id: string,
     clanId?: string,
     stickerLabel?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
@@ -8276,18 +9058,18 @@ export class MezonApi {
       tsproto.ClanStickerDeleteRequest.fromPartial({
         id: id,
         clan_id: clanId,
-        sticker_label: stickerLabel,
-      }),
+        sticker_label: stickerLabel
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
@@ -8298,7 +9080,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -8307,29 +9091,31 @@ export class MezonApi {
     bearerToken: string,
     id: string,
     body: MezonUpdateClanStickerByIdBody,
-    options: any = {},
+    options: any = {}
   ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/UpdateClanStickerById";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ClanStickerUpdateByIdRequest.encode(
-      tsproto.ClanStickerUpdateByIdRequest.fromPartial({ ...body, id: id }),
+      tsproto.ClanStickerUpdateByIdRequest.fromPartial({...body, id: id})
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
@@ -8340,33 +9126,40 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** get list sticker by user id */
-  getListStickersByUserId(bearerToken: string, options: any = {}): Promise<ApiStickerListedResponse> {
+  getListStickersByUserId(
+    bearerToken: string,
+    options: any = {}
+  ): Promise<ApiStickerListedResponse> {
     const urlPath = "/mezon.api.Mezon/GetListStickersByUserId";
     const queryParams = new Map<string, any>();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiStickerListedResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.StickerListedResponse.decode(new Uint8Array(buffer)) as ApiStickerListedResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -8374,40 +9167,42 @@ export class MezonApi {
   registerStreamingChannel(
     bearerToken: string,
     body: ApiRegisterStreamingChannelRequest,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiRegisterStreamingChannelResponse> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/RegisterStreamingChannel";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.RegisterStreamingChannelRequest.encode(
-      tsproto.RegisterStreamingChannelRequest.fromPartial(body),
+      tsproto.RegisterStreamingChannelRequest.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiRegisterStreamingChannelResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.RegisterStreamingChannelResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiRegisterStreamingChannelResponse;
+          const buffer = await response.arrayBuffer();      
+          return tsproto.RegisterStreamingChannelResponse.decode(new Uint8Array(buffer)) as ApiRegisterStreamingChannelResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -8420,7 +9215,7 @@ export class MezonApi {
     limit?: number,
     state?: number,
     cursor?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiStreamingChannelUserList> {
     const urlPath = "/mezon.api.Mezon/ListStreamingChannelUsers";
     const queryParams = new Map<string, any>();
@@ -8432,77 +9227,92 @@ export class MezonApi {
         channel_type: channelType,
         limit: limit,
         state: state,
-        cursor: cursor,
-      }),
+        cursor: cursor
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiStreamingChannelUserList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.StreamingChannelUserList.decode(new Uint8Array(buffer)) as ApiStreamingChannelUserList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Get the list of system messages. */
-  getSystemMessagesList(bearerToken: string, options: any = {}): Promise<ApiSystemMessagesList> {
+  getSystemMessagesList(
+    bearerToken: string,
+    options: any = {}
+  ): Promise<ApiSystemMessagesList> {
     const urlPath = "/mezon.api.Mezon/GetSystemMessagesList";
     const queryParams = new Map<string, any>();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiSystemMessagesList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.SystemMessagesList.decode(new Uint8Array(buffer)) as ApiSystemMessagesList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Create a system messages. */
-  createSystemMessage(bearerToken: string, body: ApiSystemMessageRequest, options: any = {}): Promise<any> {
+  createSystemMessage(
+    bearerToken: string,
+    body: ApiSystemMessageRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/CreateSystemMessage";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.SystemMessageRequest.encode(tsproto.SystemMessageRequest.fromPartial(body));
+    const bodyWriter = tsproto.SystemMessageRequest.encode(
+      tsproto.SystemMessageRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
@@ -8513,96 +9323,123 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** List Sd Topic */
-  listSdTopic(bearerToken: string, clanId?: string, limit?: number, options: any = {}): Promise<ApiSdTopicList> {
+  listSdTopic(
+    bearerToken: string,
+    clanId?: string,
+    limit?: number,
+    options: any = {}
+  ): Promise<ApiSdTopicList> {
     const urlPath = "/mezon.api.Mezon/ListSdTopic";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListSdTopicRequest.encode(
       tsproto.ListSdTopicRequest.fromPartial({
         clan_id: clanId,
-        limit: limit,
-      }),
+        limit: limit
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiSdTopicList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.SdTopicList.decode(new Uint8Array(buffer)) as ApiSdTopicList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Create Sd Topic */
-  createSdTopic(bearerToken: string, body: ApiSdTopicRequest, options: any = {}): Promise<ApiSdTopic> {
+  createSdTopic(
+    bearerToken: string,
+    body: ApiSdTopicRequest,
+    options: any = {}
+  ): Promise<ApiSdTopic> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/CreateSdTopic";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.SdTopicRequest.encode(tsproto.SdTopicRequest.fromPartial(body));
+    const bodyWriter = tsproto.SdTopicRequest.encode(
+      tsproto.SdTopicRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiSdTopic;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.SdTopic.decode(new Uint8Array(buffer)) as ApiSdTopic;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Delete a specific system messages. */
-  deleteSystemMessage(bearerToken: string, clanId: string, options: any = {}): Promise<any> {
+  deleteSystemMessage(
+    bearerToken: string,
+    clanId: string,
+    options: any = {}
+  ): Promise<any> {
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/DeleteSystemMessage";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.DeleteSystemMessage.encode(tsproto.DeleteSystemMessage.fromPartial({ clan_id: clanId }));
+    const bodyWriter = tsproto.DeleteSystemMessage.encode(
+      tsproto.DeleteSystemMessage.fromPartial({clan_id: clanId})
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
@@ -8613,40 +9450,52 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Get details of a specific system messages. */
-  getSystemMessageByClanId(bearerToken: string, clanId: string, options: any = {}): Promise<ApiSystemMessage> {
+  getSystemMessageByClanId(
+    bearerToken: string,
+    clanId: string,
+    options: any = {}
+  ): Promise<ApiSystemMessage> {
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/GetSystemMessageByClanId";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.GetSystemMessage.encode(tsproto.GetSystemMessage.fromPartial({ clan_id: clanId }));
+    const bodyWriter = tsproto.GetSystemMessage.encode(
+      tsproto.GetSystemMessage.fromPartial({clan_id: clanId})
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiSystemMessage;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.SystemMessage.decode(new Uint8Array(buffer)) as ApiSystemMessage;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -8655,29 +9504,33 @@ export class MezonApi {
     bearerToken: string,
     clanId: string,
     body: MezonUpdateSystemMessageBody,
-    options: any = {},
+    options: any = {}
   ): Promise<any> {
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
     }
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/UpdateSystemMessage";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.SystemMessageRequest.encode(
-      tsproto.SystemMessageRequest.fromPartial({ ...body, clan_id: clanId }),
+      tsproto.SystemMessageRequest.fromPartial({...body, clan_id: clanId})
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
@@ -8688,7 +9541,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -8701,10 +9556,12 @@ export class MezonApi {
     clanId?: string,
     threadId?: string,
     page?: number,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiChannelDescList> {
     if (channelId === null || channelId === undefined) {
-      throw new Error("'channelId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'channelId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/ListThreadDescs";
     const queryParams = new Map<string, any>();
@@ -8716,55 +9573,66 @@ export class MezonApi {
         state: state,
         clan_id: clanId,
         thread_id: threadId,
-        page: page,
-      }),
+        page: page
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiChannelDescList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ChannelDescListNoPool.decode(new Uint8Array(buffer)) as ApiChannelDescList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
   /** Update fields in a given category. */
-  updateCategory(bearerToken: string, clanId: string, body: MezonUpdateCategoryBody, options: any = {}): Promise<any> {
+  updateCategory(
+    bearerToken: string,
+    clanId: string,
+    body: MezonUpdateCategoryBody,
+    options: any = {}
+  ): Promise<any> {
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
     }
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/UpdateCategory";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.UpdateCategoryDescRequest.encode(
-      tsproto.UpdateCategoryDescRequest.fromPartial({ ...body, clan_id: clanId }),
+      tsproto.UpdateCategoryDescRequest.fromPartial({...body, clan_id: clanId})
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
@@ -8775,30 +9643,38 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Update channel private. */
-  updateChannelPrivate(bearerToken: string, body: ApiChangeChannelPrivateRequest, options: any = {}): Promise<any> {
+  updateChannelPrivate(
+    bearerToken: string,
+    body: ApiChangeChannelPrivateRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/UpdateChannelPrivate";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ChangeChannelPrivateRequest.encode(
-      tsproto.ChangeChannelPrivateRequest.fromPartial(body),
+      tsproto.ChangeChannelPrivateRequest.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
@@ -8809,7 +9685,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -8818,29 +9696,33 @@ export class MezonApi {
     bearerToken: string,
     clanId: string,
     body: MezonUpdateUserProfileByClanBody,
-    options: any = {},
+    options: any = {}
   ): Promise<any> {
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
     }
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/UpdateUserProfileByClan";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.UpdateClanProfileRequest.encode(
-      tsproto.UpdateClanProfileRequest.fromPartial({ ...body, clan_id: clanId }),
+      tsproto.UpdateClanProfileRequest.fromPartial({...body, clan_id: clanId})
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
@@ -8851,44 +9733,49 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Upload attachment */
-  uploadOauthFile(
-    bearerToken: string,
-    body: ApiUploadAttachmentRequest,
-    options: any = {},
-  ): Promise<ApiUploadAttachment> {
+  uploadOauthFile(bearerToken: string,
+      body:ApiUploadAttachmentRequest,
+      options: any = {}): Promise<ApiUploadAttachment> {
+    
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
     const urlPath = "/mezon.api.Mezon/UploadOauthFile";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.UploadAttachmentRequest.encode(tsproto.UploadAttachmentRequest.fromPartial(body));
+    const bodyWriter = tsproto.UploadAttachmentRequest.encode(
+      tsproto.UploadAttachmentRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiUploadAttachment;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.UploadAttachment.decode(new Uint8Array(buffer)) as ApiUploadAttachment;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -8896,52 +9783,66 @@ export class MezonApi {
   uploadAttachmentFile(
     bearerToken: string,
     body: ApiUploadAttachmentRequest,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiUploadAttachment> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/UploadAttachmentFile";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.UploadAttachmentRequest.encode(tsproto.UploadAttachmentRequest.fromPartial(body));
+    const bodyWriter = tsproto.UploadAttachmentRequest.encode(
+      tsproto.UploadAttachmentRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+    
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiUploadAttachment;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.UploadAttachment.decode(new Uint8Array(buffer)) as ApiUploadAttachment;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /**  */
-  updateUser(bearerToken: string, body: ApiUpdateUsersRequest, options: any = {}): Promise<any> {
+  updateUser(
+    bearerToken: string,
+    body: ApiUpdateUsersRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/UpdateUser";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.UpdateUsersRequest.encode(tsproto.UpdateUsersRequest.fromPartial(body));
+    const bodyWriter = tsproto.UpdateUsersRequest.encode(
+      tsproto.UpdateUsersRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -8957,33 +9858,41 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** ListUserClansByUserId */
-  listUserClansByUserId(bearerToken: string, options: any = {}): Promise<ApiAllUserClans> {
+  listUserClansByUserId(
+    bearerToken: string,
+    options: any = {}
+  ): Promise<ApiAllUserClans> {
     const urlPath = "/mezon.api.Mezon/ListUserClansByUserId";
     const queryParams = new Map<string, any>();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiAllUserClans;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.AllUserClans.decode(new Uint8Array(buffer)) as ApiAllUserClans;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -8992,7 +9901,7 @@ export class MezonApi {
     bearerToken: string,
     clanId?: string,
     channelId?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiUserPermissionInChannelListResponse> {
     const urlPath = "/mezon.api.Mezon/ListUserPermissionInChannel";
     const queryParams = new Map<string, any>();
@@ -9000,42 +9909,45 @@ export class MezonApi {
     const bodyWriter = tsproto.UserPermissionInChannelListRequest.encode(
       tsproto.UserPermissionInChannelListRequest.fromPartial({
         clan_id: clanId,
-        channel_id: channelId,
-      }),
+        channel_id: channelId
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+   
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiUserPermissionInChannelListResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.UserPermissionInChannelListResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiUserPermissionInChannelListResponse;
+          const buffer = await response.arrayBuffer();      
+          return tsproto.UserPermissionInChannelListResponse.decode(new Uint8Array(buffer)) as ApiUserPermissionInChannelListResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Get user status */
-  getUserStatus(bearerToken: string, options: any = {}): Promise<ApiUserStatus> {
+  getUserStatus(
+    bearerToken: string,
+    options: any = {}
+  ): Promise<ApiUserStatus> {
     const urlPath = "/mezon.api.Mezon/GetUserStatus";
     const queryParams = new Map<string, any>();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -9045,29 +9957,39 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiUserStatus;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.UserStatus.decode(new Uint8Array(buffer)) as ApiUserStatus;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Update user status */
-  updateUserStatus(bearerToken: string, body: ApiUserStatusUpdate, options: any = {}): Promise<any> {
+  updateUserStatus(
+    bearerToken: string,
+    body: ApiUserStatusUpdate,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/UpdateUserStatus";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.UserStatusUpdate.encode(tsproto.UserStatusUpdate.fromPartial(body));
+    const bodyWriter = tsproto.UserStatusUpdate.encode(
+      tsproto.UserStatusUpdate.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -9083,23 +10005,33 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** create webhook */
-  generateWebhook(bearerToken: string, body: ApiWebhookCreateRequest, options: any = {}): Promise<any> {
+  generateWebhook(
+    bearerToken: string,
+    body: ApiWebhookCreateRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/GenerateWebhook";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.WebhookCreateRequest.encode(tsproto.WebhookCreateRequest.fromPartial(body));
+    const bodyWriter = tsproto.WebhookCreateRequest.encode(
+      tsproto.WebhookCreateRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -9110,13 +10042,15 @@ export class MezonApi {
         if (response.status == 204) {
           return {};
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.WebhookGenerateResponse.decode(new Uint8Array(buffer));
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -9125,13 +10059,15 @@ export class MezonApi {
     bearerToken: string,
     id: string,
     body: MezonUpdateWebhookByIdBody,
-    options: any = {},
+    options: any = {}
   ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/UpdateWebhookById";
     const queryParams = new Map<string, any>();
@@ -9139,13 +10075,13 @@ export class MezonApi {
     const bodyWriter = tsproto.WebhookUpdateRequestById.encode(
       tsproto.WebhookUpdateRequestById.fromPartial({
         ...body,
-        id: id,
-      }),
+        id: id
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -9161,7 +10097,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
@@ -9170,10 +10108,12 @@ export class MezonApi {
     bearerToken: string,
     channelId: string,
     clanId?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiWebhookListResponse> {
     if (channelId === null || channelId === undefined) {
-      throw new Error("'channelId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'channelId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/ListWebhookByChannelId";
     const queryParams = new Map<string, any>();
@@ -9181,30 +10121,33 @@ export class MezonApi {
     const bodyWriter = tsproto.WebhookListRequest.encode(
       tsproto.WebhookListRequest.fromPartial({
         channel_id: channelId,
-        clan_id: clanId || "",
-      }),
+        clan_id: clanId || ''
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiWebhookListResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.WebhookListResponse.decode(new Uint8Array(buffer)) as ApiWebhookListResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -9213,13 +10156,15 @@ export class MezonApi {
     bearerToken: string,
     id: string,
     body: MezonDeleteWebhookByIdBody,
-    options: any = {},
+    options: any = {}
   ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/DeleteWebhookById";
     const queryParams = new Map<string, any>();
@@ -9227,13 +10172,13 @@ export class MezonApi {
     const bodyWriter = tsproto.WebhookDeleteRequestById.encode(
       tsproto.WebhookDeleteRequestById.fromPartial({
         ...body,
-        id: id,
-      }),
+        id: id
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -9249,17 +10194,25 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
-  buildFullUrl(basePath: string, fragment: string, queryParams: Map<string, any>) {
+  buildFullUrl(
+    basePath: string,
+    fragment: string,
+    queryParams: Map<string, any>
+  ) {
     let fullPath = basePath + fragment + "?";
 
     for (let [k, v] of queryParams) {
       if (v instanceof Array) {
         fullPath += v.reduce((prev: any, curr: any) => {
-          return prev + encodeURIComponent(k) + "=" + encodeURIComponent(curr) + "&";
+          return (
+            prev + encodeURIComponent(k) + "=" + encodeURIComponent(curr) + "&"
+          );
         }, "");
       } else {
         if (v != null) {
@@ -9275,19 +10228,23 @@ export class MezonApi {
   editChannelCanvases(
     bearerToken: string,
     body: ApiEditChannelCanvasRequest,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiEditChannelCanvasResponse> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/EditChannelCanvases";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.EditChannelCanvasRequest.encode(tsproto.EditChannelCanvasRequest.fromPartial(body));
+    const bodyWriter = tsproto.EditChannelCanvasRequest.encode(
+      tsproto.EditChannelCanvasRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -9298,13 +10255,15 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiEditChannelCanvasResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.EditChannelCanvasResponse.decode(new Uint8Array(buffer)) as ApiEditChannelCanvasResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -9314,7 +10273,7 @@ export class MezonApi {
     id: string,
     clanId?: string,
     channelId?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiChannelCanvasDetailResponse> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
@@ -9325,14 +10284,14 @@ export class MezonApi {
     const bodyWriter = tsproto.ChannelCanvasDetailRequest.encode(
       tsproto.ChannelCanvasDetailRequest.fromPartial({
         id: id,
-        clan_id: clanId || "",
-        channel_id: channelId || "",
-      }),
+        clan_id: clanId || '',
+        channel_id: channelId || ''
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -9343,13 +10302,15 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiChannelCanvasDetailResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ChannelCanvasDetailResponse.decode(new Uint8Array(buffer)) as ApiChannelCanvasDetailResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -9359,10 +10320,12 @@ export class MezonApi {
     canvasId: string,
     clanId?: string,
     channelId?: string,
-    options: any = {},
+    options: any = {}
   ): Promise<any> {
     if (canvasId === null || canvasId === undefined) {
-      throw new Error("'canvasId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'canvasId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/DeleteChannelCanvas";
     const queryParams = new Map<string, any>();
@@ -9370,14 +10333,14 @@ export class MezonApi {
     const bodyWriter = tsproto.DeleteChannelCanvasRequest.encode(
       tsproto.DeleteChannelCanvasRequest.fromPartial({
         canvas_id: canvasId,
-        clan_id: clanId || "",
-        channel_id: channelId || "",
-      }),
+        clan_id: clanId || '',
+        channel_id: channelId || ''
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -9393,7 +10356,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
@@ -9404,7 +10369,7 @@ export class MezonApi {
     guideType?: number,
     limit?: number,
     page?: number,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiListOnboardingResponse> {
     const urlPath = "/mezon.api.Mezon/ListOnboarding";
     const queryParams = new Map<string, any>();
@@ -9414,30 +10379,33 @@ export class MezonApi {
         clan_id: clanId,
         guide_type: guideType,
         limit: limit,
-        page: page,
-      }),
+        page: page
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiListOnboardingResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ListOnboardingResponse.decode(new Uint8Array(buffer)) as ApiListOnboardingResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -9445,19 +10413,23 @@ export class MezonApi {
   createOnboarding(
     bearerToken: string,
     body: ApiCreateOnboardingRequest,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiListOnboardingResponse> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/CreateOnboarding";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.CreateOnboardingRequest.encode(tsproto.CreateOnboardingRequest.fromPartial(body));
+    const bodyWriter = tsproto.CreateOnboardingRequest.encode(
+      tsproto.CreateOnboardingRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -9468,18 +10440,25 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiListOnboardingResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ListOnboardingResponse.decode(new Uint8Array(buffer)) as ApiListOnboardingResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** delete onboarding. */
-  deleteOnboarding(bearerToken: string, id: string, clanId?: string, options: any = {}): Promise<any> {
+  deleteOnboarding(
+    bearerToken: string,
+    id: string,
+    clanId?: string,
+    options: any = {}
+  ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
@@ -9489,13 +10468,13 @@ export class MezonApi {
     const bodyWriter = tsproto.OnboardingRequest.encode(
       tsproto.OnboardingRequest.fromPartial({
         id: id,
-        clan_id: clanId,
-      }),
+        clan_id: clanId
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -9511,12 +10490,19 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** get detailed onboarding information. */
-  getOnboardingDetail(bearerToken: string, id: string, clanId?: string, options: any = {}): Promise<ApiOnboardingItem> {
+  getOnboardingDetail(
+    bearerToken: string,
+    id: string,
+    clanId?: string,
+    options: any = {}
+  ): Promise<ApiOnboardingItem> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
@@ -9526,13 +10512,13 @@ export class MezonApi {
     const bodyWriter = tsproto.OnboardingRequest.encode(
       tsproto.OnboardingRequest.fromPartial({
         id: id,
-        clan_id: clanId || "",
-      }),
+        clan_id: clanId || ''
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -9543,23 +10529,32 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiOnboardingItem;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.OnboardingItem.decode(new Uint8Array(buffer)) as ApiOnboardingItem;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** update onboarding. */
-  updateOnboarding(bearerToken: string, id: string, body: MezonUpdateOnboardingBody, options: any = {}): Promise<any> {
+  updateOnboarding(
+    bearerToken: string,
+    id: string,
+    body: MezonUpdateOnboardingBody,
+    options: any = {}
+  ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/UpdateOnboarding";
     const queryParams = new Map<string, any>();
@@ -9567,13 +10562,13 @@ export class MezonApi {
     const bodyWriter = tsproto.UpdateOnboardingRequest.encode(
       tsproto.UpdateOnboardingRequest.fromPartial({
         ...body,
-        id: id,
-      }),
+        id: id
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -9589,7 +10584,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
@@ -9597,19 +10594,23 @@ export class MezonApi {
   generateClanWebhook(
     bearerToken: string,
     body: ApiGenerateClanWebhookRequest,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiGenerateClanWebhookResponse> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/GenerateClanWebhook";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.GenerateClanWebhookRequest.encode(tsproto.GenerateClanWebhookRequest.fromPartial(body));
+    const bodyWriter = tsproto.GenerateClanWebhookRequest.encode(
+      tsproto.GenerateClanWebhookRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -9620,55 +10621,71 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiGenerateClanWebhookResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.GenerateClanWebhookResponse.decode(new Uint8Array(buffer)) as ApiGenerateClanWebhookResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** List clan webhook. */
-  listClanWebhook(bearerToken: string, clanId: string, options: any = {}): Promise<ApiListClanWebhookResponse> {
+  listClanWebhook(
+    bearerToken: string,
+    clanId: string,
+    options: any = {}
+  ): Promise<ApiListClanWebhookResponse> {
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/ListClanWebhook";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListClanWebhookRequest.encode(
       tsproto.ListClanWebhookRequest.fromPartial({
-        clan_id: clanId,
-      }),
+        clan_id: clanId
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiListClanWebhookResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ListClanWebhookResponse.decode(new Uint8Array(buffer)) as ApiListClanWebhookResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Disabled clan webhook. */
-  deleteClanWebhookById(bearerToken: string, id: string, clanId?: string, options: any = {}): Promise<any> {
+  deleteClanWebhookById(
+    bearerToken: string,
+    id: string,
+    clanId?: string,
+    options: any = {}
+  ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
@@ -9677,14 +10694,16 @@ export class MezonApi {
 
     const body = {
       id: id,
-      clan_id: clanId,
+      clan_id: clanId
     };
 
-    const bodyWriter = tsproto.ClanWebhookRequest.encode(tsproto.ClanWebhookRequest.fromPartial(body));
+    const bodyWriter = tsproto.ClanWebhookRequest.encode(
+      tsproto.ClanWebhookRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -9700,7 +10719,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
@@ -9709,27 +10730,31 @@ export class MezonApi {
     bearerToken: string,
     id: string,
     body: MezonUpdateClanWebhookByIdBody,
-    options: any = {},
+    options: any = {}
   ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/UpdateClanWebhookById";
     const queryParams = new Map<string, any>();
 
     const bodyData = {
       ...body,
-      id: id,
+      id: id
     };
 
-    const bodyWriter = tsproto.UpdateClanWebhookRequest.encode(tsproto.UpdateClanWebhookRequest.fromPartial(bodyData));
+    const bodyWriter = tsproto.UpdateClanWebhookRequest.encode(
+      tsproto.UpdateClanWebhookRequest.fromPartial(bodyData)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -9745,24 +10770,32 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** Sd Topic */
-  getTopicDetail(bearerToken: string, topicId?: string, options: any = {}): Promise<ApiSdTopic> {
+  getTopicDetail(
+    bearerToken: string,
+    topicId?: string,
+    options: any = {}
+  ): Promise<ApiSdTopic> {
     const urlPath = "/mezon.api.Mezon/GetTopicDetail";
     const queryParams = new Map<string, any>();
 
     const body = {
-      topic_id: topicId,
+      topic_id: topicId
     };
 
-    const bodyWriter = tsproto.SdTopicDetailRequest.encode(tsproto.SdTopicDetailRequest.fromPartial(body));
+    const bodyWriter = tsproto.SdTopicDetailRequest.encode(
+      tsproto.SdTopicDetailRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -9779,7 +10812,9 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -9789,7 +10824,7 @@ export class MezonApi {
     clanId?: string,
     limit?: number,
     page?: number,
-    options: any = {},
+    options: any = {}
   ): Promise<ApiListOnboardingStepResponse> {
     const urlPath = "/mezon.api.Mezon/ListOnboardingStep";
     const queryParams = new Map<string, any>();
@@ -9797,31 +10832,35 @@ export class MezonApi {
     const body = {
       clan_id: clanId,
       limit: limit,
-      page: page,
+      page: page
     };
 
-    const bodyWriter = tsproto.ListOnboardingStepRequest.encode(tsproto.ListOnboardingStepRequest.fromPartial(body));
+    const bodyWriter = tsproto.ListOnboardingStepRequest.encode(
+      tsproto.ListOnboardingStepRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+   
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiListOnboardingStepResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ListOnboardingStepResponse.decode(new Uint8Array(buffer)) as ApiListOnboardingStepResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
@@ -9830,29 +10869,33 @@ export class MezonApi {
     bearerToken: string,
     clanId: string,
     body: MezonUpdateOnboardingStepByClanIdBody,
-    options: any = {},
+    options: any = {}
   ): Promise<any> {
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
     }
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/mezon.api.Mezon/UpdateOnboardingStep";
     const queryParams = new Map<string, any>();
 
     const bodyData = {
       ...body,
-      clan_id: clanId,
+      clan_id: clanId
     };
 
     const bodyWriter = tsproto.UpdateOnboardingStepRequest.encode(
-      tsproto.UpdateOnboardingStepRequest.fromPartial(bodyData),
+      tsproto.UpdateOnboardingStepRequest.fromPartial(bodyData)
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -9868,30 +10911,33 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** create meeting room */
-  createRoomChannelApps(
-    bearerToken: string,
-    body: MezonapiCreateRoomChannelApps,
-    options: any = {},
-  ): Promise<MezonapiCreateRoomChannelApps> {
+  createRoomChannelApps(bearerToken: string,
+    body:MezonapiCreateRoomChannelApps,
+    options: any = {}): Promise<MezonapiCreateRoomChannelApps> {
+  
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
     const urlPath = "/mezon.api.Mezon/CreateRoomChannelApps";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.CreateRoomChannelApps.encode(tsproto.CreateRoomChannelApps.fromPartial(body));
+    const bodyWriter = tsproto.CreateRoomChannelApps.encode(
+      tsproto.CreateRoomChannelApps.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -9900,153 +10946,166 @@ export class MezonApi {
           return {} as MezonapiCreateRoomChannelApps;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();
-          return tsproto.CreateRoomChannelApps.decode(
-            new Uint8Array(buffer),
-          ) as unknown as MezonapiCreateRoomChannelApps;
+          return tsproto.CreateRoomChannelApps.decode(new Uint8Array(buffer)) as unknown as MezonapiCreateRoomChannelApps;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Generate Meet Token */
   generateMeetToken(
     bearerToken: string,
-    body: ApiGenerateMeetTokenRequest,
-    options: any = {},
+    body:ApiGenerateMeetTokenRequest,
+    options: any = {}
   ): Promise<ApiGenerateMeetTokenResponse> {
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+    
+      if (body === null || body === undefined) {
+        throw new Error("'body' is a required parameter but is null or undefined.");
+      }
+      const urlPath = "/mezon.api.Mezon/GenerateMeetToken";
+      const queryParams = new Map<string, any>();
+
+      const bodyWriter = tsproto.GenerateMeetTokenRequest.encode(
+        tsproto.GenerateMeetTokenRequest.fromPartial(body)
+      );
+      const encodedBody = bodyWriter.finish();
+
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("POST", options, '');
+      fetchOptions.body = encodedBody;
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+
+      return Promise.race([
+        getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+          if (response.status == 204) {
+            return {} as ApiGenerateMeetTokenResponse;
+          } else if (response.status >= 200 && response.status < 300) {
+            const buffer = await response.arrayBuffer();
+            return tsproto.GenerateMeetTokenResponse.decode(new Uint8Array(buffer)) as ApiGenerateMeetTokenResponse;
+          } else {
+            throw response;
+          }
+        }),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+        ),
+      ]);
     }
-    const urlPath = "/mezon.api.Mezon/GenerateMeetToken";
-    const queryParams = new Map<string, any>();
-
-    const bodyWriter = tsproto.GenerateMeetTokenRequest.encode(tsproto.GenerateMeetTokenRequest.fromPartial(body));
-    const encodedBody = bodyWriter.finish();
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiGenerateMeetTokenResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.GenerateMeetTokenResponse.decode(new Uint8Array(buffer)) as ApiGenerateMeetTokenResponse;
-        } else {
-          throw response;
-        }
-      }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
-    ]);
-  }
 
   /** Create mezon OAuth client */
-  getMezonOauthClient(
-    bearerToken: string,
-    clientId?: string,
-    clientName?: string,
-    options: any = {},
+  getMezonOauthClient(bearerToken: string,
+    clientId?:string,
+    clientName?:string,
+    options: any = {}
   ): Promise<ApiMezonOauthClient> {
+
     const urlPath = "/mezon.api.Mezon/GetMezonOauthClient";
     const queryParams = new Map<string, any>();
 
     const body = {
       client_id: clientId,
-      client_name: clientName,
+      client_name: clientName
     };
 
-    const bodyWriter = tsproto.GetMezonOauthClientRequest.encode(tsproto.GetMezonOauthClientRequest.fromPartial(body));
-    const encodedBody = bodyWriter.finish();
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiMezonOauthClient;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.MezonOauthClient.decode(new Uint8Array(buffer)) as ApiMezonOauthClient;
-        } else {
-          throw response;
-        }
-      }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
-    ]);
-  }
-
-  /** update mezon OAuth */
-  updateMezonOauthClient(
-    bearerToken: string,
-    body: ApiMezonOauthClient,
-    options: any = {},
-  ): Promise<ApiMezonOauthClient> {
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/mezon.api.Mezon/UpdateMezonOauthClient";
-    const queryParams = new Map<string, any>();
-
-    const bodyWriter = tsproto.MezonOauthClient.encode(tsproto.MezonOauthClient.fromPartial(body));
-    const encodedBody = bodyWriter.finish();
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiMezonOauthClient;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.MezonOauthClient.decode(new Uint8Array(buffer)) as ApiMezonOauthClient;
-        } else {
-          throw response;
-        }
-      }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
-    ]);
-  }
-  /**  */
-  generateHashChannelApps(
-    bearerToken: string,
-    appId?: string,
-    options: any = {},
-  ): Promise<ApiCreateHashChannelAppsResponse> {
-    const urlPath = "/mezon.api.Mezon/GenerateHashChannelApps";
-    const queryParams = new Map<string, any>();
-
-    const body = {
-      app_id: appId,
-    };
-
-    const bodyWriter = tsproto.GenerateHashChannelAppsRequest.encode(
-      tsproto.GenerateHashChannelAppsRequest.fromPartial(body),
+    const bodyWriter = tsproto.GetMezonOauthClientRequest.encode(
+      tsproto.GetMezonOauthClientRequest.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as ApiMezonOauthClient;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();
+          return tsproto.MezonOauthClient.decode(new Uint8Array(buffer)) as ApiMezonOauthClient;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
+  /** update mezon OAuth */
+  updateMezonOauthClient(bearerToken: string,
+      body:ApiMezonOauthClient,
+      options: any = {}
+    ): Promise<ApiMezonOauthClient> {
+    
+      if (body === null || body === undefined) {
+        throw new Error("'body' is a required parameter but is null or undefined.");
+      }
+      const urlPath = "/mezon.api.Mezon/UpdateMezonOauthClient";
+      const queryParams = new Map<string, any>();
+
+      const bodyWriter = tsproto.MezonOauthClient.encode(
+        tsproto.MezonOauthClient.fromPartial(body)
+      );
+      const encodedBody = bodyWriter.finish();
+
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("POST", options, '');
+      fetchOptions.body = encodedBody;
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+
+      return Promise.race([
+        getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+          if (response.status == 204) {
+            return {} as ApiMezonOauthClient;
+          } else if (response.status >= 200 && response.status < 300) {
+            const buffer = await response.arrayBuffer();
+            return tsproto.MezonOauthClient.decode(new Uint8Array(buffer)) as ApiMezonOauthClient;
+          } else {
+            throw response;
+          }
+        }),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+        ),
+      ]);
+    }
+      /**  */
+  generateHashChannelApps(bearerToken: string,
+    appId?:string,
+    options: any = {}
+  ): Promise<ApiCreateHashChannelAppsResponse> {
+  
+    const urlPath = "/mezon.api.Mezon/GenerateHashChannelApps";
+    const queryParams = new Map<string, any>();
+
+    const body = {
+      app_id: appId
+    };
+
+    const bodyWriter = tsproto.GenerateHashChannelAppsRequest.encode(
+      tsproto.GenerateHashChannelAppsRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -10055,33 +11114,40 @@ export class MezonApi {
           return {} as ApiCreateHashChannelAppsResponse;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();
-          return tsproto.GenerateHashChannelAppsResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiCreateHashChannelAppsResponse;
+          return tsproto.GenerateHashChannelAppsResponse.decode(new Uint8Array(buffer)) as ApiCreateHashChannelAppsResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Add user event */
-  addUserEvent(bearerToken: string, body: ApiUserEventRequest, options: any = {}): Promise<any> {
+  addUserEvent(
+    bearerToken: string,
+    body:ApiUserEventRequest,
+    options: any = {}
+  ): Promise<any> {
+    
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
     const urlPath = "/mezon.api.Mezon/AddUserEvent";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.UserEventRequest.encode(tsproto.UserEventRequest.fromPartial(body));
+    const bodyWriter = tsproto.UserEventRequest.encode(
+      tsproto.UserEventRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -10094,28 +11160,38 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** Delete user event */
-  deleteUserEvent(bearerToken: string, clanId?: string, eventId?: string, options: any = {}): Promise<any> {
+  deleteUserEvent(
+    bearerToken: string,
+    clanId?:string,
+    eventId?:string,
+    options: any = {}
+  ): Promise<any> {
+    
     const urlPath = "/mezon.api.Mezon/DeleteUserEvent";
     const queryParams = new Map<string, any>();
 
     const body = {
       clan_id: clanId,
-      event_id: eventId,
+      event_id: eventId
     };
 
-    const bodyWriter = tsproto.UserEventRequest.encode(tsproto.UserEventRequest.fromPartial(body));
+    const bodyWriter = tsproto.UserEventRequest.encode(
+      tsproto.UserEventRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -10128,26 +11204,33 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /**  */
-  updateRoleOrder(bearerToken: string, body: ApiUpdateRoleOrderRequest, options: any = {}): Promise<any> {
+  updateRoleOrder(bearerToken: string,
+      body:ApiUpdateRoleOrderRequest,
+      options: any = {}): Promise<any> {
+    
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
     const urlPath = "/mezon.api.Mezon/UpdateRoleOrder";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.UpdateRoleOrderRequest.encode(tsproto.UpdateRoleOrderRequest.fromPartial(body));
+    const bodyWriter = tsproto.UpdateRoleOrderRequest.encode(
+      tsproto.UpdateRoleOrderRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -10160,19 +11243,23 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** Create external Mezon meet */
-  createExternalMezonMeet(bearerToken: string, options: any = {}): Promise<ApiGenerateMezonMeetResponse> {
+  createExternalMezonMeet(bearerToken: string,
+      options: any = {}): Promise<ApiGenerateMezonMeetResponse> {
+
     const urlPath = "/mezon.api.Mezon/CreateExternalMezonMeet";
     const queryParams = new Map<string, any>();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -10186,33 +11273,35 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** handler external mezon meet */
-  generateMeetTokenExternal(
-    bearerToken: string,
+  generateMeetTokenExternal(bearerToken: string,
     basePath: string,
-    token: string,
-    displayName?: string,
-    isGuest?: boolean,
-    options: any = {},
-  ): Promise<ApiGenerateMeetTokenExternalResponse> {
+    token:string,
+    displayName?:string,
+    isGuest?:boolean,
+    options: any = {}): Promise<ApiGenerateMeetTokenExternalResponse> {
+  
     if (token === null || token === undefined) {
       throw new Error("'token' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/meet/external/{token}".replace("{token}", encodeURIComponent(String(token)));
+    const urlPath = "/v2/meet/external/{token}"
+        .replace("{token}", encodeURIComponent(String(token)));
     const queryParams = new Map<string, any>();
     queryParams.set("display_name", displayName);
     queryParams.set("is_guest", isGuest);
 
-    let bodyJson: string = "";
+    let bodyJson : string = "";
 
     const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
     fetchOptions.headers["Accept"] = "application/x-protobuf";
     fetchOptions.headers["Content-Type"] = "application/json";
@@ -10222,33 +11311,38 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiGenerateMeetTokenExternalResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.GenerateMeetTokenExternalResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiGenerateMeetTokenExternalResponse;
+          const buffer = await response.arrayBuffer();      
+            return tsproto.GenerateMeetTokenExternalResponse.decode(new Uint8Array(buffer)) as ApiGenerateMeetTokenExternalResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
   /** mute participant in the room */
-  muteParticipantMezonMeet(bearerToken: string, body: ApiMeetParticipantRequest, options: any = {}): Promise<any> {
+  muteParticipantMezonMeet(bearerToken: string,
+      body:ApiMeetParticipantRequest,
+      options: any = {}): Promise<any> {
+    
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
     const urlPath = "/mezon.api.Mezon/MuteParticipantMezonMeet";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.MeetParticipantRequest.encode(tsproto.MeetParticipantRequest.fromPartial(body));
+    const bodyWriter = tsproto.MeetParticipantRequest.encode(
+      tsproto.MeetParticipantRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -10261,26 +11355,33 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
-
+  
   /** Remove participant out the room */
-  removeParticipantMezonMeet(bearerToken: string, body: ApiMeetParticipantRequest, options: any = {}): Promise<any> {
+  removeParticipantMezonMeet(bearerToken: string,
+      body:ApiMeetParticipantRequest,
+      options: any = {}): Promise<any> {
+    
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
     const urlPath = "/mezon.api.Mezon/RemoveParticipantMezonMeet";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.MeetParticipantRequest.encode(tsproto.MeetParticipantRequest.fromPartial(body));
+    const bodyWriter = tsproto.MeetParticipantRequest.encode(
+      tsproto.MeetParticipantRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -10293,12 +11394,17 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** List channels detail */
-  listChannelDetail(bearerToken: string, channelId: string, options: any = {}): Promise<ApiChannelDescription> {
+  listChannelDetail(bearerToken: string,
+      channelId:string,
+      options: any = {}): Promise<ApiChannelDescription> {
+    
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
@@ -10306,50 +11412,60 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const body = {
-      channel_id: channelId,
+      channel_id: channelId
     };
 
-    const bodyWriter = tsproto.ListChannelDetailRequest.encode(tsproto.ListChannelDetailRequest.fromPartial(body));
+    const bodyWriter = tsproto.ListChannelDetailRequest.encode(
+      tsproto.ListChannelDetailRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiChannelDescription;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ChannelDescription.decode(new Uint8Array(buffer)) as ApiChannelDescription;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /**  */
-  updateClanOrder(bearerToken: string, body: ApiUpdateClanOrderRequest, options: any = {}): Promise<any> {
+  updateClanOrder(bearerToken: string,
+      body:ApiUpdateClanOrderRequest,
+      options: any = {}): Promise<any> {
+    
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
     const urlPath = "/mezon.api.Mezon/UpdateClanOrder";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.UpdateClanOrderRequest.encode(tsproto.UpdateClanOrderRequest.fromPartial(body));
+    const bodyWriter = tsproto.UpdateClanOrderRequest.encode(
+      tsproto.UpdateClanOrderRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -10362,25 +11478,26 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /** Discover mezon clan. */
-  clanDiscover(
-    basicAuthUsername: string,
+  clanDiscover(basicAuthUsername: string,
     basicAuthPassword: string,
-    basePath: string,
-    body: ApiClanDiscoverRequest,
-    options: any = {},
-  ): Promise<ApiListClanDiscover> {
+      basePath: string,
+      body:ApiClanDiscoverRequest,
+      options: any = {}): Promise<ApiListClanDiscover> {
+    
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/clan/discover";
     const queryParams = new Map<string, any>();
 
-    let bodyJson: string = "";
+    let bodyJson : string = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
@@ -10396,26 +11513,27 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiListClanDiscover;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ListClanDiscover.decode(new Uint8Array(buffer)) as ApiListClanDiscover;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
   /**  */
-  deleteQuickMenuAccess(
-    bearerToken: string,
-    id?: string,
-    clanId?: string,
-    botId?: string,
-    menuName?: string,
-    background?: string,
-    actionMsg?: string,
-    options: any = {},
-  ): Promise<any> {
+  deleteQuickMenuAccess(bearerToken: string,
+      id?:string,
+      clanId?: string,
+      botId?:string,
+      menuName?:string,
+      background?:string,
+      actionMsg?:string,
+      options: any = {}): Promise<any> {
+    
     const urlPath = "/mezon.api.Mezon/DeleteQuickMenuAccess";
     const queryParams = new Map<string, any>();
 
@@ -10425,17 +11543,19 @@ export class MezonApi {
       bot_id: botId,
       menu_name: menuName,
       background: background,
-      action_msg: actionMsg,
+      action_msg: actionMsg
     };
 
-    const bodyWriter = tsproto.QuickMenuAccess.encode(tsproto.QuickMenuAccess.fromPartial(body));
+    const bodyWriter = tsproto.QuickMenuAccess.encode(
+      tsproto.QuickMenuAccess.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -10448,250 +11568,302 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
+  
+    /**  */
+  listQuickMenuAccess(bearerToken: string,
+        botId?:string,
+        channelId?:string,
+        menuType?:number,
+        options: any = {}): Promise<ApiQuickMenuAccessList> {
+      
+      const urlPath = "/mezon.api.Mezon/ListQuickMenuAccess";
+      const queryParams = new Map<string, any>();
+  
+      const body = {
+        bot_id: botId,
+        channel_id: channelId,
+        menu_type: menuType
+      };
 
-  /**  */
-  listQuickMenuAccess(
-    bearerToken: string,
-    botId?: string,
-    channelId?: string,
-    menuType?: number,
-    options: any = {},
-  ): Promise<ApiQuickMenuAccessList> {
-    const urlPath = "/mezon.api.Mezon/ListQuickMenuAccess";
-    const queryParams = new Map<string, any>();
-
-    const body = {
-      bot_id: botId,
-      channel_id: channelId,
-      menu_type: menuType,
-    };
-
-    const bodyWriter = tsproto.ListQuickMenuAccessRequest.encode(tsproto.ListQuickMenuAccessRequest.fromPartial(body));
-    const encodedBody = bodyWriter.finish();
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiQuickMenuAccessList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+      const bodyWriter = tsproto.ListQuickMenuAccessRequest.encode(
+        tsproto.ListQuickMenuAccessRequest.fromPartial(body)
+      );
+      const encodedBody = bodyWriter.finish();
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("POST", options, '');
+      fetchOptions.body = encodedBody;
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+     
+  
+      return Promise.race([
+        getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+          if (response.status == 204) {
+            return {} as ApiQuickMenuAccessList;
+          } else if (response.status >= 200 && response.status < 300) {
+            const buffer = await response.arrayBuffer();      
           return tsproto.QuickMenuAccessList.decode(new Uint8Array(buffer)) as ApiQuickMenuAccessList;
-        } else {
-          throw response;
-        }
-      }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
-    ]);
-  }
-
-  /**  */
-  addQuickMenuAccess(bearerToken: string, body: ApiQuickMenuAccessRequest, options: any = {}): Promise<any> {
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+          } else {
+            throw response;
+          }
+        }),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+        ),
+      ]);
     }
-    const urlPath = "/mezon.api.Mezon/AddQuickMenuAccess";
-    const queryParams = new Map<string, any>();
-
-    const bodyWriter = tsproto.QuickMenuAccess.encode(tsproto.QuickMenuAccess.fromPartial(body));
-    const encodedBody = bodyWriter.finish();
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+  
+    /**  */
+  addQuickMenuAccess(bearerToken: string,
+        body:ApiQuickMenuAccessRequest,
+        options: any = {}): Promise<any> {
+      
+      if (body === null || body === undefined) {
+        throw new Error("'body' is a required parameter but is null or undefined.");
+      }
+      const urlPath = "/mezon.api.Mezon/AddQuickMenuAccess";
+      const queryParams = new Map<string, any>();
+  
+      const bodyWriter = tsproto.QuickMenuAccess.encode(
+        tsproto.QuickMenuAccess.fromPartial(body)
+      );
+      const encodedBody = bodyWriter.finish();
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("POST", options, '');
+      fetchOptions.body = encodedBody;
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+  
+      return Promise.race([
+        getFetcher()(fullUrl, fetchOptions).then((response) => {
+          if (response.status == 204) {
+            return response;
+          } else if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
+          }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        ),
+      ]);
     }
-
-    return Promise.race([
-      getFetcher()(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
-    ]);
-  }
-
-  /**  */
-  updateQuickMenuAccess(bearerToken: string, body: ApiQuickMenuAccessRequest, options: any = {}): Promise<any> {
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+  
+    /**  */
+  updateQuickMenuAccess(bearerToken: string,
+        body:ApiQuickMenuAccessRequest,
+        options: any = {}): Promise<any> {
+      
+      if (body === null || body === undefined) {
+        throw new Error("'body' is a required parameter but is null or undefined.");
+      }
+      const urlPath = "/mezon.api.Mezon/UpdateQuickMenuAccess";
+      const queryParams = new Map<string, any>();
+  
+      const bodyWriter = tsproto.QuickMenuAccess.encode(
+        tsproto.QuickMenuAccess.fromPartial(body)
+      );
+      const encodedBody = bodyWriter.finish();
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("POST", options, '');
+      fetchOptions.body = encodedBody;
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+  
+      return Promise.race([
+        getFetcher()(fullUrl, fetchOptions).then((response) => {
+          if (response.status == 204) {
+            return response;
+          } else if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
+          }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        ),
+      ]);
     }
-    const urlPath = "/mezon.api.Mezon/UpdateQuickMenuAccess";
-    const queryParams = new Map<string, any>();
-
-    const bodyWriter = tsproto.QuickMenuAccess.encode(tsproto.QuickMenuAccess.fromPartial(body));
-    const encodedBody = bodyWriter.finish();
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      getFetcher()(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
-    ]);
-  }
 
   /** For sale items */
-  listForSaleItems(bearerToken: string, page?: number, options: any = {}): Promise<ApiForSaleItemList> {
-    const urlPath = "/mezon.api.Mezon/ListForSaleItems";
-    const queryParams = new Map<string, any>();
+    listForSaleItems(bearerToken: string,
+        page?:number,
+        options: any = {}): Promise<ApiForSaleItemList> {
+      
+      const urlPath = "/mezon.api.Mezon/ListForSaleItems";
+      const queryParams = new Map<string, any>();
+  
+      const body = {
+        page: page
+      };
 
-    const body = {
-      page: page,
-    };
-
-    const bodyWriter = tsproto.ListForSaleItemsRequest.encode(tsproto.ListForSaleItemsRequest.fromPartial(body));
-    const encodedBody = bodyWriter.finish();
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiForSaleItemList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ForSaleItemList.decode(new Uint8Array(buffer)) as ApiForSaleItemList;
-        } else {
-          throw response;
-        }
-      }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
-    ]);
+      const bodyWriter = tsproto.ListForSaleItemsRequest.encode(
+        tsproto.ListForSaleItemsRequest.fromPartial(body)
+      );
+      const encodedBody = bodyWriter.finish();
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("POST", options, '');
+      fetchOptions.body = encodedBody;
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+  
+      return Promise.race([
+        getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+          if (response.status == 204) {
+            return {} as ApiForSaleItemList;
+          } else if (response.status >= 200 && response.status < 300) {
+            const buffer = await response.arrayBuffer();
+            return tsproto.ForSaleItemList.decode(new Uint8Array(buffer)) as ApiForSaleItemList;
+          } else {
+            throw response;
+          }
+        }),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+        ),
+      ]);
   }
 
   /**  */
-  isFollower(bearerToken: string, body: ApiIsFollowerRequest, options: any = {}): Promise<ApiIsFollowerResponse> {
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+  isFollower(bearerToken: string,
+      body:ApiIsFollowerRequest,
+      options: any = {}): Promise<ApiIsFollowerResponse> {
+      
+      if (body === null || body === undefined) {
+        throw new Error("'body' is a required parameter but is null or undefined.");
+      }
+      const urlPath = "/mezon.api.Mezon/IsFollower";
+      const queryParams = new Map<string, any>();
+  
+      const bodyWriter = tsproto.IsFollowerRequest.encode(
+        tsproto.IsFollowerRequest.fromPartial(body)
+      );
+      const encodedBody = bodyWriter.finish();
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("POST", options, '');
+      fetchOptions.body = encodedBody;
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+  
+      return Promise.race([
+        getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+          if (response.status == 204) {
+            return {} as ApiIsFollowerResponse;
+          } else if (response.status >= 200 && response.status < 300) {
+            const buffer = await response.arrayBuffer();
+            return tsproto.IsFollowerResponse.decode(new Uint8Array(buffer)) as ApiIsFollowerResponse;
+          } else {
+            throw response;
+          }
+        }),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+        ),
+      ]);
     }
-    const urlPath = "/mezon.api.Mezon/IsFollower";
-    const queryParams = new Map<string, any>();
-
-    const bodyWriter = tsproto.IsFollowerRequest.encode(tsproto.IsFollowerRequest.fromPartial(body));
-    const encodedBody = bodyWriter.finish();
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiIsFollowerResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.IsFollowerResponse.decode(new Uint8Array(buffer)) as ApiIsFollowerResponse;
-        } else {
-          throw response;
-        }
-      }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
-    ]);
-  }
 
   /**  */
-  transferOwnership(bearerToken: string, body: ApiTransferOwnershipRequest, options: any = {}): Promise<any> {
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+  transferOwnership(bearerToken: string,
+      body:ApiTransferOwnershipRequest,
+        options: any = {}): Promise<any> {
+      
+      if (body === null || body === undefined) {
+        throw new Error("'body' is a required parameter but is null or undefined.");
+      }
+      const urlPath = "/mezon.api.Mezon/TransferOwnership";
+      const queryParams = new Map<string, any>();
+  
+      const bodyWriter = tsproto.TransferOwnershipRequest.encode(
+        tsproto.TransferOwnershipRequest.fromPartial(body)
+      );
+      const encodedBody = bodyWriter.finish();
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("POST", options, '');
+      fetchOptions.body = encodedBody;
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+  
+      return Promise.race([
+        getFetcher()(fullUrl, fetchOptions).then((response) => {
+          if (response.status == 204) {
+            return response;
+          } else if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
+          }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        ),
+      ]);
     }
-    const urlPath = "/mezon.api.Mezon/TransferOwnership";
-    const queryParams = new Map<string, any>();
-
-    const bodyWriter = tsproto.TransferOwnershipRequest.encode(tsproto.TransferOwnershipRequest.fromPartial(body));
-    const encodedBody = bodyWriter.finish();
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      getFetcher()(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
-    ]);
-  }
 
   /** Update username */
-  updateUsername(bearerToken: string, body: ApiUpdateUsernameRequest, options: any = {}): Promise<ApiSession> {
+  updateUsername(bearerToken: string,
+      body:ApiUpdateUsernameRequest,
+      options: any = {}): Promise<ApiSession> {
+    
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
     const urlPath = "/mezon.api.Mezon/UpdateUsername";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.UpdateUsernameRequest.encode(tsproto.UpdateUsernameRequest.fromPartial(body));
+    const bodyWriter = tsproto.UpdateUsernameRequest.encode(
+      tsproto.UpdateUsernameRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiSession;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /** Ban a set of users from a channel. */
-  isBanned(bearerToken: string, channelId: string, options: any = {}): Promise<ApiIsBannedResponse> {
+  isBanned(bearerToken: string,
+      channelId:string,
+      options: any = {}): Promise<ApiIsBannedResponse> {
+    
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
@@ -10699,52 +11871,63 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
 
     const body = {
-      channel_id: channelId,
+      channel_id: channelId
     };
 
-    const bodyWriter = tsproto.IsBannedRequest.encode(tsproto.IsBannedRequest.fromPartial(body));
+    const bodyWriter = tsproto.IsBannedRequest.encode(
+      tsproto.IsBannedRequest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiIsBannedResponse;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.IsBannedResponse.decode(new Uint8Array(buffer)) as ApiIsBannedResponse;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /**  */
-  reportMessageAbuse(bearerToken: string, messageId?: string, abuseType?: string, options: any = {}): Promise<any> {
+  reportMessageAbuse(bearerToken: string,
+      messageId?:string,
+      abuseType?:string,
+      options: any = {}): Promise<any> {
+    
     const urlPath = "/mezon.api.Mezon/ReportMessageAbuse";
     const queryParams = new Map<string, any>();
 
     const body = {
       message_id: messageId,
-      abuse_type: abuseType,
+      abuse_type: abuseType
     };
 
-    const bodyWriter = tsproto.ReportMessageAbuseReqest.encode(tsproto.ReportMessageAbuseReqest.fromPartial(body));
+    const bodyWriter = tsproto.ReportMessageAbuseReqest.encode(
+      tsproto.ReportMessageAbuseReqest.fromPartial(body)
+    );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -10757,39 +11940,45 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
 
   /**  */
-  listLogedDevice(bearerToken: string, options: any = {}): Promise<ApiLogedDeviceList> {
+  listLogedDevice(bearerToken: string,
+      options: any = {}): Promise<ApiLogedDeviceList> {
+    
     const urlPath = "/mezon.api.Mezon/ListLogedDevice";
     const queryParams = new Map<string, any>();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
+   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ApiLogedDeviceList;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.LogedDeviceList.decode(new Uint8Array(buffer)) as ApiLogedDeviceList;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /**  */
-  sendChannelMessage(
-    bearerToken: string,
+  sendChannelMessage(bearerToken: string,
     clan_id: string,
     channel_id: string,
     mode: number,
@@ -10802,8 +11991,8 @@ export class MezonApi {
     mention_everyone?: Boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string,
-  ): Promise<ChannelMessageAck> {
+    topic_id?: string): Promise<ChannelMessageAck> {
+    
     const urlPath = "/mezon.api.Mezon/SendChannelMessage";
     const queryParams = new Map<string, any>();
 
@@ -10821,36 +12010,37 @@ export class MezonApi {
         mention_everyone: mention_everyone as boolean,
         avatar: avatar,
         code: code,
-        topic_id: topic_id,
-      }),
+        topic_id: topic_id
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", {}, "");
+    const fetchOptions = buildFetchOptions("POST", {}, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+   
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as ChannelMessageAck;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ChannelMessageSend.decode(new Uint8Array(buffer)) as unknown as ChannelMessageAck;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /**  */
-  updateChannelMessage(
-    bearerToken: string,
+  updateChannelMessage(bearerToken: string,
     clan_id: string,
     channel_id: string,
     mode: number,
@@ -10861,8 +12051,8 @@ export class MezonApi {
     attachments?: Array<ApiMessageAttachment>,
     hideEditted?: boolean,
     topic_id?: string,
-    is_update_msg_topic?: boolean,
-  ): Promise<any> {
+    is_update_msg_topic?: boolean): Promise<any> {
+    
     const urlPath = "/mezon.api.Mezon/UpdateChannelMessage";
     const queryParams = new Map<string, any>();
 
@@ -10876,18 +12066,18 @@ export class MezonApi {
         content: content,
         mentions: mentions,
         attachments: attachments,
-        hide_editted: hideEditted,
+        hide_editted: hideEditted,        
         topic_id: topic_id,
-        is_update_msg_topic: is_update_msg_topic,
-      }),
+        is_update_msg_topic: is_update_msg_topic
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", {}, "");
+    const fetchOptions = buildFetchOptions("POST", {}, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -10895,19 +12085,20 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as any;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ChannelMessageUpdate.decode(new Uint8Array(buffer)) as any;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /**  */
-  deleteChannelMessage(
-    bearerToken: string,
+  deleteChannelMessage(bearerToken: string,
     clan_id: string,
     channel_id: string,
     mode: number,
@@ -10916,8 +12107,8 @@ export class MezonApi {
     has_attachment?: boolean,
     topic_id?: string,
     mentions?: Uint8Array,
-    references?: Uint8Array,
-  ): Promise<any> {
+    references?: Uint8Array): Promise<any> {
+    
     const urlPath = "/mezon.api.Mezon/DeleteChannelMessage";
     const queryParams = new Map<string, any>();
 
@@ -10931,43 +12122,44 @@ export class MezonApi {
         has_attachment: has_attachment,
         mentions: mentions,
         references: references,
-        topic_id: topic_id,
-      }),
+        topic_id: topic_id
+      })
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", {}, "");
+    const fetchOptions = buildFetchOptions("POST", {}, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-
+   
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
           return {} as any;
         } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
+          const buffer = await response.arrayBuffer();      
           return tsproto.ChannelMessageRemove.decode(new Uint8Array(buffer)) as any;
         } else {
           throw response;
         }
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
   /**  */
-  updateMezonVoiceState(
-    bearerToken: string,
-    clanId?: string,
-    channelId?: string,
-    displayName?: string,
-    roomName?: string,
-    state?: number,
-    options: any = {},
-  ): Promise<any> {
+  updateMezonVoiceState(bearerToken: string,
+      clanId?:string,
+      channelId?:string,
+      displayName?:string,
+      roomName?: string,
+      state?: number,
+      options: any = {}): Promise<any> {
+    
     const urlPath = "/mezon.api.Mezon/UpdateMezonVoiceState";
     const queryParams = new Map<string, any>();
 
@@ -10976,19 +12168,19 @@ export class MezonApi {
       channel_id: channelId,
       display_name: displayName,
       room_name: roomName,
-      state: state,
+      state: state
     };
 
     const bodyWriter = tsproto.HandleParticipantMeetStateEvent.encode(
-      tsproto.HandleParticipantMeetStateEvent.fromPartial(body),
+      tsproto.HandleParticipantMeetStateEvent.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
+    const fetchOptions = buildFetchOptions("POST", options, '');
     fetchOptions.body = encodedBody;
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -11001,7 +12193,111 @@ export class MezonApi {
           throw response;
         }
       }),
-      new Promise((_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
     ]);
   }
+
+  /**  */
+  messageButtonClick(bearerToken: string,
+      messageId?:string,
+      channelId?:string,
+      buttonId?:string,
+      senderId?: string,
+      userId?: string,
+      extraData?: string,
+      options: any = {}): Promise<any> {
+    
+    const urlPath = "/mezon.api.Mezon/MessageButtonClick";
+    const queryParams = new Map<string, any>();
+
+    const body = {
+      message_id: messageId,
+      channel_id: channelId,
+      button_id: buttonId,
+      sender_id: senderId,
+      user_id: userId,
+      extra_data: extraData
+    };
+
+    const bodyWriter = tsproto.MessageButtonClicked.encode(
+      tsproto.MessageButtonClicked.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /**  */
+  dropdownBoxSelected(bearerToken: string,
+      messageId?:string,
+      channelId?:string,
+      selectboxId?:string,
+      senderId?: string,
+      userId?: string,
+      values?: string[],
+      options: any = {}): Promise<any> {
+    
+    const urlPath = "/mezon.api.Mezon/DropdownBoxSelected";
+    const queryParams = new Map<string, any>();
+
+    const body = {
+      message_id: messageId,
+      channel_id: channelId,
+      selectbox_id: selectboxId,
+      sender_id: senderId,
+      user_id: userId,
+      values: values
+    };
+
+    const bodyWriter = tsproto.DropdownBoxSelected.encode(
+      tsproto.DropdownBoxSelected.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
 }
+
