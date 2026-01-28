@@ -8,7 +8,6 @@
 import Long from "long";
 import _m0 from "protobufjs/minimal";
 import {
-  ChannelDescription as ChannelDescription1,
   ChannelMessage,
   MessageAttachment,
   MessageMention,

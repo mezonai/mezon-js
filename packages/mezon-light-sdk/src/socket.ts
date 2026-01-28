@@ -42,27 +42,6 @@ export interface SocketConnectOptions {
 export type ChannelMessageHandler = (message: ChannelMessage) => void;
 
 /**
- * Maps raw socket message data to a ChannelMessage interface.
- */
-function mapToChannelMessage(message: ChannelMessage): ChannelMessage {
-  return {
-    ...message,
-    clan_id: String(message.clan_id ?? ""),
-    channel_id: String(message.channel_id ?? ""),
-    message_id: String(message.message_id ?? ""),
-    sender_id: String(message.sender_id ?? ""),
-    content: String(message.content ?? ""),
-    // reactions: [],
-    // mentions: [],
-    // attachments: Array.isArray(message.attachments) ? message.attachments : [],
-    // references: Array.isArray(message.references) ? message.references : [],
-    create_time_seconds: Number(message.create_time_seconds ?? 0),
-    update_time_seconds: Number(message.update_time_seconds ?? 0),
-    hide_editted: Boolean(message.hide_editted),
-  };
-}
-
-/**
  * Waits for a socket to be in a ready state with exponential backoff.
  *
  * @param socket - The socket to wait for
