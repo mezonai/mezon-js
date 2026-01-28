@@ -96,7 +96,7 @@ export interface NotificationInfo {
   /** Content of the notification in JSON. */
   content?: {};
   /** The UNIX time when the notification was created. */
-  create_time?: string;
+  create_time_seconds?: number;
   /** ID of the Notification. */
   id?: string;
   /** True if this notification was persisted to the database. */
@@ -885,7 +885,7 @@ export interface ClanSticker {
   //
   clan_id?: string;
   //
-  create_time?: string;
+  create_time_seconds?: number;
   //
   creator_id?: string;
   //
