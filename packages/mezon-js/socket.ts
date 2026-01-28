@@ -65,7 +65,14 @@ import {
 } from "./api.gen";
 import { Session } from "./session";
 import { WebSocketAdapter, WebSocketAdapterPb } from "mezon-js-protobuf";
-import { decodeAttachments, decodeMentions, decodeNotificationFcm, decodeReactions, decodeRefs, safeJSONParse } from "./utils";
+import {
+  decodeAttachments,
+  decodeMentions,
+  decodeNotificationFcm,
+  decodeReactions,
+  decodeRefs,
+  safeJSONParse,
+} from "./utils";
 
 /** Stores function references for resolve/reject with a DOM Promise. */
 interface PromiseExecutor {
@@ -183,7 +190,7 @@ export interface BannedUserEvent {
   banner_id: string;
   channel_id: string;
   clan_id: string;
-  ban_time: number
+  ban_time: number;
 }
 
 export interface UserProfileRedis {
@@ -402,7 +409,7 @@ interface TransferOwnershipEvent {
 
 interface QuickMenuEvent {
   quick_menu_event: {
-    menu_name: string,
+    menu_name: string;
     message: {
       /** Clan Id */
       clan_id: string;
@@ -430,13 +437,13 @@ interface QuickMenuEvent {
       code: number;
       //
       topic_id?: string;
-    }
-  }
+    };
+  };
 }
 
 interface EphemeralMessageSend {
   ephemeral_message_send: {
-    receiver_id: string,
+    receiver_id: string;
     message: {
       /** Clan Id */
       clan_id: string;
@@ -464,8 +471,8 @@ interface EphemeralMessageSend {
       code: number;
       //
       topic_id?: string;
-    }
-  }
+    };
+  };
 }
 
 /** Update a message previously sent to a realtime chat channel. */
@@ -784,7 +791,7 @@ export interface ClanProfileUpdatedEvent {
   clan_id: string;
 }
 
-export interface MeetParticipantEvent { 
+export interface MeetParticipantEvent {
   username: string;
   room_name: string;
   channel_id: string;
@@ -1020,7 +1027,7 @@ export interface UserEmojiUsage {
 
 export interface AddFriend {
   //
-  user_id: string;// user id
+  user_id: string; // user id
   // username
   username: string;
   // display name
@@ -1205,7 +1212,7 @@ export interface VoiceReactionSend {
 }
 
 export interface MarkAsRead {
-   // channel id
+  // channel id
   channel_id: string;
   // category_id
   category_id: string;
@@ -1241,8 +1248,8 @@ export interface UserStatusEvent {
 }
 
 export interface JoinChannelAppData {
-  user_id : string;
-  username : string;
+  user_id: string;
+  username: string;
   hash: string;
 }
 
@@ -1404,7 +1411,7 @@ export interface Socket {
     createStatus: boolean,
     platform: string,
     connectTimeoutMs?: number,
-    signal?: AbortSignal
+    signal?: AbortSignal,
   ): Promise<Session>;
 
   /** Disconnect from the server. */
@@ -1419,29 +1426,19 @@ export interface Socket {
   follower(): Promise<void>;
 
   /** Join a chat channel on the server. */
-  joinChat(
-    clan_id: string,
-    channel_id: string,
-    channel_type: number,
-    is_public: boolean
-  ): Promise<Channel>;
+  joinChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<Channel>;
 
   /** Leave a chat channel on the server. */
-  leaveChat(
-    clan_id: string,
-    channel_id: string,
-    channel_type: number,
-    is_public: boolean
-  ): Promise<void>;
+  leaveChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<void>;
 
   /** handle user join/leave channel voice on the server. */
-  handleParticipantMeetState (
+  handleParticipantMeetState(
     clan_id: string,
     channel_id: string,
     display_name: string,
     state: number,
-    room_name: string
-  ): Promise<void> 
+    room_name: string,
+  ): Promise<void>;
 
   /** Remove a chat message from a chat channel on the server. */
   removeChatMessage(
@@ -1452,8 +1449,8 @@ export interface Socket {
     message_id: string,
     has_attachment?: boolean,
     topic_id?: string,
-    mentions?:string,
-    references?: string
+    mentions?: string,
+    references?: string,
   ): Promise<ChannelMessageAck>;
 
   /** Execute an RPC function to the server. */
@@ -1474,7 +1471,7 @@ export interface Socket {
     attachments?: Array<ApiMessageAttachment>,
     hideEditted?: boolean,
     topic_id?: string,
-    is_update_msg_topic?: boolean
+    is_update_msg_topic?: boolean,
   ): Promise<ChannelMessageAck>;
 
   /** Update the status for the current user online. */
@@ -1495,7 +1492,7 @@ export interface Socket {
     avatar?: string,
     code?: number,
     topic_id?: string,
-    id?: string
+    id?: string,
   ): Promise<ChannelMessageAck>;
 
   /** Send a chat message to a chat channel on the server. */
@@ -1513,7 +1510,7 @@ export interface Socket {
     mention_everyone?: boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string
+    topic_id?: string,
   ): Promise<ChannelMessageAck>;
 
   /** Send a quick menu event to a chat channel on the server. */
@@ -1532,7 +1529,7 @@ export interface Socket {
     avatar?: string,
     code?: number,
     topic_id?: string,
-    id?: string
+    id?: string,
   ): Promise<QuickMenuEvent>;
 
   /** Send message typing */
@@ -1542,7 +1539,7 @@ export interface Socket {
     mode: number,
     is_public: boolean,
     sender_display_name: string,
-    topic_id?: string
+    topic_id?: string,
   ): Promise<MessageTypingEvent>;
 
   /** Send message reaction */
@@ -1560,7 +1557,7 @@ export interface Socket {
     action_delete: boolean,
     topic_id?: string,
     emoji_recent_id?: string,
-    sender_name?: string
+    sender_name?: string,
   ): Promise<ApiMessageReaction>;
 
   /** Send last seen message */
@@ -1570,7 +1567,7 @@ export interface Socket {
     mode: number,
     message_id: string,
     timestamp_seconds: number,
-    badge_count: number
+    badge_count: number,
   ): Promise<LastSeenMessageEvent>;
 
   /** Send last pin message */
@@ -1591,17 +1588,9 @@ export interface Socket {
   ): Promise<LastPinMessageEvent>;
 
   /** Send custom user status */
-  writeCustomStatus(
-    clan_id: string,
-    status: string,
-    time_reset: number,
-    no_clear: boolean
-  ): Promise<CustomStatusEvent>;
+  writeCustomStatus(clan_id: string, status: string, time_reset: number, no_clear: boolean): Promise<CustomStatusEvent>;
 
-  writeActiveArchivedThread(
-    clan_id: string,
-    channel_id: string
-  ): Promise<void>;
+  writeActiveArchivedThread(clan_id: string, channel_id: string): Promise<void>;
 
   /* Set the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   setHeartbeatTimeoutMs(ms: number): void;
@@ -1611,12 +1600,7 @@ export interface Socket {
 
   onreconnect: (evt: Event) => void;
 
-  checkDuplicateName(
-    name: string,
-    condition_id: string,
-    type: number,
-    clan_id: string,
-  ): Promise<CheckNameExistedEvent>;
+  checkDuplicateName(name: string, condition_id: string, type: number, clan_id: string): Promise<CheckNameExistedEvent>;
 
   handleMessageButtonClick: (
     message_id: string,
@@ -1624,7 +1608,7 @@ export interface Socket {
     button_id: string,
     sender_id: string,
     user_id: string,
-    extra_data: string
+    extra_data: string,
   ) => Promise<MessageButtonClicked>;
 
   handleDropdownBoxSelected: (
@@ -1633,38 +1617,29 @@ export interface Socket {
     selectbox_id: string,
     sender_id: string,
     user_id: string,
-    value: Array<string>
+    value: Array<string>,
   ) => Promise<DropdownBoxSelected>;
 
-  writeVoiceReaction: (
-    emojis: Array<string>,
-    channel_id: string
-  ) => Promise<VoiceReactionSend>
+  writeVoiceReaction: (emojis: Array<string>, channel_id: string) => Promise<VoiceReactionSend>;
 
   forwardWebrtcSignaling: (
     receiverId: string,
     dataType: number,
     jsonData: string,
     channelId: string,
-    caller_id: string
+    caller_id: string,
   ) => Promise<WebrtcSignalingFwd>;
 
   makeCallPush: (
     receiverId: string,
     jsonData: string,
     channelId: string,
-    caller_id: string
+    caller_id: string,
   ) => Promise<IncomingCallPush>;
 
-  writeChannelAppEvent: (
-    clan_id: string,
-    channel_id: string,
-    action: number
-  ) => Promise<ChannelAppEvent>;
+  writeChannelAppEvent: (clan_id: string, channel_id: string, action: number) => Promise<ChannelAppEvent>;
 
-  listDataSocket(
-    request: ListDataSocket
-  ): Promise<any>;
+  listDataSocket(request: ListDataSocket): Promise<any>;
 
   /** Handle disconnect events received from the socket. */
   ondisconnect: (evt: Event) => void;
@@ -1808,25 +1783,17 @@ export interface Socket {
 
   onallowanonymousevent: (event: AllowAnonymousEvent) => void;
 
-  onstreamingchannelstarted: (
-    streaming_started_event: StreamingStartedEvent
-  ) => void;
+  onstreamingchannelstarted: (streaming_started_event: StreamingStartedEvent) => void;
 
   onstreamingchannelended: (streaming_ended_event: StreamingEndedEvent) => void;
 
-  onstreamingchanneljoined: (
-    streaming_joined_event: StreamingJoinedEvent
-  ) => void;
+  onstreamingchanneljoined: (streaming_joined_event: StreamingJoinedEvent) => void;
 
-  onstreamingchannelleaved: (
-    streaming_leaved_event: StreamingLeavedEvent
-  ) => void;
+  onstreamingchannelleaved: (streaming_leaved_event: StreamingLeavedEvent) => void;
 
   onpermissionset: (permission_set_event: PermissionSet) => void;
 
-  onpermissionchanged: (
-    permission_changed_event: PermissionChangedEvent
-  ) => void;
+  onpermissionchanged: (permission_changed_event: PermissionChangedEvent) => void;
 
   onunmuteevent: (unmute_event: UnmuteEvent) => void;
 
@@ -1842,7 +1809,7 @@ export interface Socket {
 
   onjoinchannelappevent: (join_channel_app_data: JoinChannelAppData) => void;
 
-  onunpinmessageevent: (unpin_message_event: UnpinMessageEvent)=> void;
+  onunpinmessageevent: (unpin_message_event: UnpinMessageEvent) => void;
 
   onquickmenuevent: (event: QuickMenuEvent) => void;
 
@@ -1868,7 +1835,7 @@ export const ConnectionState = {
   CONNECTED: "connected",
 } as const;
 
-export type ConnectionStateType = typeof ConnectionState[keyof typeof ConnectionState];
+export type ConnectionStateType = (typeof ConnectionState)[keyof typeof ConnectionState];
 
 export class DefaultSocket implements Socket {
   public static readonly DefaultHeartbeatTimeoutMs = 10000;
@@ -3227,4 +3194,3 @@ export class DefaultSocket implements Socket {
     }
   }
 }
-

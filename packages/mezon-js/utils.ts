@@ -1,5 +1,5 @@
 import { encode, decode } from "js-base64";
-import * as tsproto from "mezon-js-protobuf/api";
+import * as tsproto from "mezon-js-protobuf";
 
 export function buildFetchOptions(method: string, options: any, bodyJson: string) {
   const fetchOptions = { ...{ method: method }, ...options };

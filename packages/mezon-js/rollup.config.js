@@ -31,7 +31,8 @@ export default {
   },
   plugins: [
     typescript({
-      include: ["**/*.ts"],
+      include: ["./*.ts"],
+      exclude: ["../mezon-js-protobuf/**"],
       target: "es5",
     }),
     nodeResolve({

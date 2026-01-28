@@ -1,6 +1,6 @@
 {
   "name": "mezon-js",
-  "version": "2.14.61",
+  "version": "2.15.0",
   "scripts": {
     "build": "npx tsc && npx rollup -c --bundleConfigAsCjs && node build.mjs"
   },
@@ -38,13 +38,14 @@
     "base64-arraybuffer": "^1.0.2",
     "esbuild": "^0.25.5",
     "js-base64": "^3.7.8",
-    "mezon-js-protobuf": "1.8.95",
+    "mezon-js-protobuf": "1.9.0",
     "whatwg-fetch": "^3.6.2"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-typescript": "^12.3.0",
+    "rollup": "^4.57.0",
     "tslib": "^2.4.1"
   }
 }

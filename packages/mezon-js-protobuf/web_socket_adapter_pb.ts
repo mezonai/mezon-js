@@ -48,7 +48,7 @@ export interface WebSocketAdapter {
     createStatus: boolean,
     token: string,
     platform: string,
-    signal?: AbortSignal
+    signal?: AbortSignal,
   ): void;
   send(message: any): void;
 }
@@ -88,8 +88,7 @@ export interface SocketOpenHandler {
 export class WebSocketAdapterPb implements WebSocketAdapter {
   private _socket?: WebSocket;
 
-  constructor() {
-  }
+  constructor() {}
 
   get onClose(): SocketCloseHandler | null {
     return this._socket!.onclose;
@@ -127,8 +126,7 @@ export class WebSocketAdapterPb implements WebSocketAdapter {
 
         value!(envelope);
       };
-    }
-    else {
+    } else {
       value = null;
     }
   }
@@ -157,7 +155,7 @@ export class WebSocketAdapterPb implements WebSocketAdapter {
     createStatus: boolean,
     token: string,
     platform: string,
-    signal?: AbortSignal
+    signal?: AbortSignal,
   ): void {
     if (signal) {
       signal.addEventListener("abort", () => {
@@ -165,18 +163,14 @@ export class WebSocketAdapterPb implements WebSocketAdapter {
       });
     }
     const url = `${scheme}${host}:${port}/ws?lang=en&status=${encodeURIComponent(
-      createStatus.toString()
-    )}&token=${encodeURIComponent(
-      token
-    )}&format=protobuf&platform=${encodeURIComponent(platform)}`;
+      createStatus.toString(),
+    )}&token=${encodeURIComponent(token)}&format=protobuf&platform=${encodeURIComponent(platform)}`;
     this._socket = new WebSocket(url);
     this._socket.binaryType = "arraybuffer";
   }
 
   send(msg: any): void {
-    const envelopeWriter = tsproto.Envelope.encode(
-      tsproto.Envelope.fromPartial(msg)
-    );
+    const envelopeWriter = tsproto.Envelope.encode(tsproto.Envelope.fromPartial(msg));
     const encodedMsg = envelopeWriter.finish();
     this._socket!.send(encodedMsg);
   }

@@ -9,5 +9,8 @@
   "exclude": [
     "node_modules" // Ensure this is here
   ],
-  "declarationDir": "dist"
+  "declarationDir": "dist",
+  "references": [
+    { "path": "../mezon-js-protobuf" }
+  ]
 }
