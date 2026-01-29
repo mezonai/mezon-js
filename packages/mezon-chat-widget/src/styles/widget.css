@@ -73,6 +73,7 @@
   justify-content: center;
   transition: var(--mlc-transition);
   font-size: 24px;
+  padding: 1px;
 }
 
 .mlc-launcher:hover,
@@ -370,20 +371,6 @@
   width: 100%;
   height: 100%;
   display: block; 
-}
-
-.mlc-launcher {
-  color: var(--primary-color);
-}
-
-.mlc-launcher-icon {
-  width: 24px;
-  height: 24px;
-  fill: currentColor;
-}
-
-.mlc-launcher {
-  color: #111;              
 }
 
 .mlc-launcher-icon {
