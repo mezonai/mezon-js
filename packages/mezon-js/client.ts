@@ -1277,11 +1277,7 @@ export class Client {
   async listChannelVoiceUsers(
     session: Session,
     clanId: string,
-    channelId: string,
-    channelType: number,
-    state?: number,
     limit?: number,
-    cursor?: string,
   ): Promise<ApiVoiceChannelUserList> {
     if (
       this.autoRefreshSession &&
@@ -1295,11 +1291,7 @@ export class Client {
       .listChannelVoiceUsers(
         session.token,
         clanId,
-        channelId,
-        channelType,
-        limit,
-        state,
-        cursor,
+        limit
       )
       .then((response: ApiVoiceChannelUserList) => {
         const result: ApiVoiceChannelUserList = {

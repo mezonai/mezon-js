@@ -1434,6 +1434,8 @@ export interface ClanCreatedEvent {
   logo: string;
   /** creator id */
   creator_id: string;
+  /** general channel id */
+  welcome_channel_id: string;
 }
 
 /** clan updated event */
@@ -12011,7 +12013,7 @@ export const UserClanRemoved = {
 };
 
 function createBaseClanCreatedEvent(): ClanCreatedEvent {
-  return { clan_id: "0", clan_name: "", logo: "", creator_id: "0" };
+  return { clan_id: "0", clan_name: "", logo: "", creator_id: "0", welcome_channel_id: "0" };
 }
 
 export const ClanCreatedEvent = {
@@ -12027,6 +12029,9 @@ export const ClanCreatedEvent = {
     }
     if (message.creator_id !== "0") {
       writer.uint32(32).int64(message.creator_id);
+    }
+    if (message.welcome_channel_id !== "0") {
+      writer.uint32(40).int64(message.welcome_channel_id);
     }
     return writer;
   },
@@ -12066,6 +12071,13 @@ export const ClanCreatedEvent = {
 
           message.creator_id = longToString(reader.int64() as Long);
           continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.welcome_channel_id = longToString(reader.int64() as Long);
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -12081,6 +12093,7 @@ export const ClanCreatedEvent = {
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "0",
+      welcome_channel_id: isSet(object.welcome_channel_id) ? globalThis.String(object.welcome_channel_id) : "0",
     };
   },
 
@@ -12098,6 +12111,9 @@ export const ClanCreatedEvent = {
     if (message.creator_id !== "0") {
       obj.creator_id = message.creator_id;
     }
+    if (message.welcome_channel_id !== "0") {
+      obj.welcome_channel_id = message.welcome_channel_id;
+    }
     return obj;
   },
 
@@ -12110,6 +12126,7 @@ export const ClanCreatedEvent = {
     message.clan_name = object.clan_name ?? "";
     message.logo = object.logo ?? "";
     message.creator_id = object.creator_id ?? "0";
+    message.welcome_channel_id = object.welcome_channel_id ?? "0";
     return message;
   },
 };
