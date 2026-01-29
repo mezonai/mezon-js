@@ -144,43 +144,6 @@ app.post('/api/auth/exchange', async (req, res) => {
    }
 });
 
-// Get User Info
-app.get('/api/auth/userinfo', async (req, res) => {
-   console.log('[API] GET /api/auth/userinfo - Fetching user info');
-   const authHeader = req.headers.authorization;
-   if (!authHeader) {
-      console.error('[API] No authorization header provided');
-      return res.status(401).json({ error: 'No authorization header' });
-   }
-   const accessToken = authHeader.split(' ')[1];
-
-   try {
-      const response = await fetch(`${oauthConfig.baseUri}/userinfo`, {
-         method: 'POST',
-         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-         },
-         body: new URLSearchParams({
-            access_token: accessToken,
-            client_id: oauthConfig.clientId,
-            client_secret: oauthConfig.clientSecret,
-            redirect_uri: oauthConfig.redirectUri,
-         }),
-      });
-
-      if (!response.ok) {
-         throw new Error('Failed to fetch user info');
-      }
-
-      const data = await response.json();
-      console.log('[API] User info fetched successfully');
-      res.json(data);
-   } catch (error) {
-      console.error('[API] User info error:', error.message);
-      res.status(400).json({ error: error.message });
-   }
-});
-
 const server = app.listen(PORT, () => {
    console.log(`Server running at http://localhost:${PORT}`);
 });
