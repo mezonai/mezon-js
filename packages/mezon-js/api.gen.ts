@@ -5574,11 +5574,7 @@ export class MezonApi {
   listChannelVoiceUsers(
     bearerToken: string,
     clanId?: string,
-    channelId?: string,
-    channelType?: number,
     limit?: number,
-    state?: number,
-    cursor?: string,
     options: any = {}
   ): Promise<ApiVoiceChannelUserList> {
     const urlPath = "/mezon.api.Mezon/ListChannelVoiceUsers";
@@ -5587,11 +5583,7 @@ export class MezonApi {
     const bodyWriter = tsproto.ListChannelUsersRequest.encode(
       tsproto.ListChannelUsersRequest.fromPartial({ 
         clan_id: clanId,
-        channel_id: channelId,
-        channel_type: channelType,
         limit: limit,
-        state: state,
-        cursor: cursor
       })
     );
     const encodedBody = bodyWriter.finish();
