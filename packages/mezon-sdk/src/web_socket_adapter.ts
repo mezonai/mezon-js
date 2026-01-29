@@ -26,34 +26,34 @@ export interface WebSocketAdapter {
     /**
      * Dispatched when the web socket closes.
      */
-    onClose : SocketCloseHandler | null;
+    onClose: SocketCloseHandler | null;
 
     /**
      * Dispatched when the web socket receives an error.
      */
-    onError : ((event: WebSocket.ErrorEvent) => void) | null;
+    onError: ((event: WebSocket.ErrorEvent) => void) | null;
 
     /**
      * Dispatched when the web socket receives a normal message.
      */
-    onMessage : SocketMessageHandler | null;
+    onMessage: SocketMessageHandler | null;
 
     /**
      * Dispatched when the web socket opens.
      */
-    onOpen : ((event: WebSocket.Event) => void) | null;
+    onOpen: ((event: WebSocket.Event) => void) | null;
 
     isOpen(): boolean;
-    close() : void;
-    connect(scheme: string, host: string, port : string, createStatus: boolean, token : string) : void;
-    send(message: any) : void;
+    close(): void;
+    connect(scheme: string, host: string, port: string, createStatus: boolean, token: string): void;
+    send(message: any): void;
 }
 
 /**
  * SocketCloseHandler defines a lambda that handles WebSocket close events.
  */
 export interface SocketCloseHandler {
-    (this : WebSocket, evt: CloseEvent): void;
+    (this: WebSocket, evt: CloseEvent): void;
 }
 
 /**
@@ -61,7 +61,7 @@ export interface SocketCloseHandler {
  * that indicate an error.
  */
 export interface SocketErrorHandler {
-    (this : WebSocket, evt: Event): void;
+    (this: WebSocket, evt: Event): void;
 }
 
 /**
@@ -75,7 +75,7 @@ export interface SocketMessageHandler {
  * SocketOpenHandler defines a lambda that handles WebSocket open events.
  */
 export interface SocketOpenHandler {
-    (this : WebSocket, evt : Event) : void
+    (this: WebSocket, evt: Event): void
 }
 
 /**
@@ -108,7 +108,7 @@ export class WebSocketAdapterText implements WebSocketAdapter {
         if (value) {
             this._socket!.onmessage = (evt: MessageEvent) => {
                 const message: any = JSON.parse(evt.data as string);
-                
+
                 if (message.party_data && message.party_data.data) {
                     message.party_data.data = new Uint8Array(decode(message.party_data.data));
                 }
@@ -134,7 +134,8 @@ export class WebSocketAdapterText implements WebSocketAdapter {
     }
 
     connect(scheme: string, host: string, port: string, createStatus: boolean, token: string): void {
-        const url = `${scheme}${host}:${port}/ws?lang=en&status=${encodeURIComponent(createStatus.toString())}&token=${encodeURIComponent(token)}`;
+        const portPart = port ? `:${port}` : '';
+        const url = `${scheme}${host}${portPart}/ws?lang=en&status=${encodeURIComponent(createStatus.toString())}&token=${encodeURIComponent(token)}`;
         this._socket = new WebSocket(url);
     }
 
