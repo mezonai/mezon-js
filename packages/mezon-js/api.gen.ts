@@ -3494,7 +3494,7 @@ export class MezonApi {
     const urlPath = "/mezon.api.Mezon/DeleteAccount";
     const queryParams = new Map<string, any>();
 
-    let bodyJson: string = "";
+    const bodyJson = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
@@ -3523,7 +3523,7 @@ export class MezonApi {
     const urlPath = "/mezon.api.Mezon/GetAccount";
     const queryParams = new Map<string, any>();
 
-    let bodyJson: string = "";
+    const bodyJson = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
@@ -3605,7 +3605,7 @@ export class MezonApi {
     const urlPath = "/v2/account/authenticate/checklogin";
     const queryParams = new Map<string, any>();
 
-    let bodyJson: string = "";
+    let bodyJson = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
@@ -3649,7 +3649,7 @@ export class MezonApi {
     const urlPath = "/v2/account/authenticate/confirmlogin";
     const queryParams = new Map<string, any>();
 
-    let bodyJson: string = "";
+    let bodyJson = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
@@ -3691,7 +3691,7 @@ export class MezonApi {
     const urlPath = "/v2/account/authenticate/createqrlogin";
     const queryParams = new Map<string, any>();
 
-    let bodyJson: string = "";
+    let bodyJson = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
@@ -3733,7 +3733,7 @@ export class MezonApi {
     const urlPath = "/v2/account/authenticate/smsotp";
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson  = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
@@ -3774,7 +3774,7 @@ export class MezonApi {
     const urlPath = "/v2/account/authenticate/emailotp";
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson  = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
@@ -3815,7 +3815,7 @@ export class MezonApi {
     const urlPath = "/v2/account/authenticate/email";
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson  = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
@@ -3863,7 +3863,7 @@ export class MezonApi {
     queryParams.set("username", username);
     queryParams.set("is_remember", isRemember);
 
-    let bodyJson : string = "";
+    let bodyJson  = "";
     bodyJson = JSON.stringify(account || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
@@ -4029,7 +4029,7 @@ export class MezonApi {
     const urlPath = "/v2/account/authenticate/confirmotp";
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson  = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
@@ -4071,7 +4071,7 @@ export class MezonApi {
     const urlPath = "/v2/account/registry";
     const queryParams = new Map<string, any>();
 
-    let bodyJson: string = "";
+    let bodyJson = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
@@ -5794,6 +5794,7 @@ export class MezonApi {
   updateClanDesc(
     bearerToken: string,
     clanId: string,
+    // eslint-disable-next-line @typescript-eslint/ban-types
     body: {},
     options: any = {}
   ): Promise<any> {
@@ -6438,7 +6439,7 @@ export class MezonApi {
     const urlPath = "/mezon.api.Mezon/EmojiRecentList";
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    const bodyJson  = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
@@ -6472,7 +6473,7 @@ export class MezonApi {
     const urlPath = "/mezon.api.Mezon/GetListEmojisByUserId";
     const queryParams = new Map<string, any>();
 
-    let bodyJson: string = "";
+    const bodyJson = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
@@ -7414,7 +7415,7 @@ export class MezonApi {
     );
     const queryParams = new Map<string, any>();
 
-    let bodyJson: string = "";
+    const bodyJson = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
@@ -10207,7 +10208,7 @@ export class MezonApi {
   ) {
     let fullPath = basePath + fragment + "?";
 
-    for (let [k, v] of queryParams) {
+    for (const [k, v] of queryParams) {
       if (v instanceof Array) {
         fullPath += v.reduce((prev: any, curr: any) => {
           return (
@@ -11296,7 +11297,7 @@ export class MezonApi {
     queryParams.set("display_name", displayName);
     queryParams.set("is_guest", isGuest);
 
-    let bodyJson : string = "";
+    const bodyJson  = "";
 
     const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
@@ -11497,7 +11498,7 @@ export class MezonApi {
     const urlPath = "/v2/clan/discover";
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson  = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
@@ -11988,7 +11989,7 @@ export class MezonApi {
     attachments?: Array<ApiMessageAttachment>,
     references?: Array<ApiMessageRef>,
     anonymous_message?: boolean,
-    mention_everyone?: Boolean,
+    mention_everyone?: boolean,
     avatar?: string,
     code?: number,
     topic_id?: string): Promise<ChannelMessageAck> {
@@ -11996,8 +11997,8 @@ export class MezonApi {
     const urlPath = "/mezon.api.Mezon/SendChannelMessage";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.ChannelMessageSend.encode(
-      tsproto.ChannelMessageSend.fromPartial({
+    const bodyWriter = tsproto.RtChannelMessageSend.encode(
+      tsproto.RtChannelMessageSend.fromPartial({
         clan_id: clan_id,
         channel_id: channel_id,
         mode: mode,
@@ -12028,7 +12029,7 @@ export class MezonApi {
           return {} as ChannelMessageAck;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.ChannelMessageSend.decode(new Uint8Array(buffer)) as unknown as ChannelMessageAck;
+          return tsproto.RtChannelMessageSend.decode(new Uint8Array(buffer)) as unknown as ChannelMessageAck;
         } else {
           throw response;
         }
@@ -12056,8 +12057,8 @@ export class MezonApi {
     const urlPath = "/mezon.api.Mezon/UpdateChannelMessage";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.ChannelMessageUpdate.encode(
-      tsproto.ChannelMessageUpdate.fromPartial({
+    const bodyWriter = tsproto.RtChannelMessageUpdate.encode(
+      tsproto.RtChannelMessageUpdate.fromPartial({
         clan_id: clan_id,
         channel_id: channel_id,
         message_id: message_id,
@@ -12086,7 +12087,7 @@ export class MezonApi {
           return {} as any;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.ChannelMessageUpdate.decode(new Uint8Array(buffer)) as any;
+          return tsproto.RtChannelMessageUpdate.decode(new Uint8Array(buffer)) as any;
         } else {
           throw response;
         }
@@ -12112,8 +12113,8 @@ export class MezonApi {
     const urlPath = "/mezon.api.Mezon/DeleteChannelMessage";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.ChannelMessageRemove.encode(
-      tsproto.ChannelMessageRemove.fromPartial({
+    const bodyWriter = tsproto.RtChannelMessageRemove.encode(
+      tsproto.RtChannelMessageRemove.fromPartial({
         clan_id: clan_id,
         channel_id: channel_id,
         message_id: message_id,
@@ -12140,7 +12141,7 @@ export class MezonApi {
           return {} as any;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.ChannelMessageRemove.decode(new Uint8Array(buffer)) as any;
+          return tsproto.RtChannelMessageRemove.decode(new Uint8Array(buffer)) as any;
         } else {
           throw response;
         }
@@ -12171,8 +12172,8 @@ export class MezonApi {
       state: state
     };
 
-    const bodyWriter = tsproto.HandleParticipantMeetStateEvent.encode(
-      tsproto.HandleParticipantMeetStateEvent.fromPartial(body)
+    const bodyWriter = tsproto.RtHandleParticipantMeetStateEvent.encode(
+      tsproto.RtHandleParticipantMeetStateEvent.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 
@@ -12221,8 +12222,8 @@ export class MezonApi {
       extra_data: extraData
     };
 
-    const bodyWriter = tsproto.MessageButtonClicked.encode(
-      tsproto.MessageButtonClicked.fromPartial(body)
+    const bodyWriter = tsproto.RtMessageButtonClicked.encode(
+      tsproto.RtMessageButtonClicked.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 
@@ -12271,8 +12272,8 @@ export class MezonApi {
       values: values
     };
 
-    const bodyWriter = tsproto.DropdownBoxSelected.encode(
-      tsproto.DropdownBoxSelected.fromPartial(body)
+    const bodyWriter = tsproto.RtDropdownBoxSelected.encode(
+      tsproto.RtDropdownBoxSelected.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 
@@ -12299,5 +12300,45 @@ export class MezonApi {
     ]);
   }
 
+  activeArchivedThread(bearerToken: string,
+    clanId?: string,
+    channelId?: string,
+    options: any = {}): Promise<any> {
+    
+    const urlPath = "/mezon.api.Mezon/ActiveArchivedThread";
+    const queryParams = new Map<string, any>();
+
+    const body = {
+      clan_id: clanId,
+      channel_id: channelId
+    };
+
+    const bodyWriter = tsproto.RtActiveArchivedThread.encode(
+      tsproto.RtActiveArchivedThread.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
 }
 
