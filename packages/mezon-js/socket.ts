@@ -94,6 +94,7 @@ export interface NotificationInfo {
   /** Category code for this notification. */
   code?: number;
   /** Content of the notification in JSON. */
+  // eslint-disable-next-line @typescript-eslint/ban-types
   content?: {};
   /** The UNIX time when the notification was created. */
   create_time_seconds?: number;
@@ -837,6 +838,7 @@ interface Rpc {
 }
 
 /** Application-level heartbeat ping. */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Ping {}
 
 /** A snapshot of statuses for some set of users. */
@@ -1329,7 +1331,7 @@ export interface ListDataSocket {
 }
 
 function CreateChannelMessageFromEvent(message: any) {
-  var content, reactions, mentions, attachments, references, referencedMessags;
+  let content, reactions, mentions, attachments, references, referencedMessags;
   try {
     content = safeJSONParse(message.channel_message.content);
   } catch (e) {
@@ -1360,7 +1362,7 @@ function CreateChannelMessageFromEvent(message: any) {
   } catch (e) {
     console.log("referenced messages is invalid", e);
   }
-  var e: ChannelMessage = {
+  const e: ChannelMessage = {
     id: message.id || message.channel_message.message_id,
     avatar: message.channel_message.avatar,
     channel_id: message.channel_message.channel_id,
@@ -1433,15 +1435,6 @@ export interface Socket {
     channel_type: number,
     is_public: boolean
   ): Promise<void>;
-
-  /** handle user join/leave channel voice on the server. */
-  handleParticipantMeetState (
-    clan_id: string,
-    channel_id: string,
-    display_name: string,
-    state: number,
-    room_name: string
-  ): Promise<void> 
 
   /** Remove a chat message from a chat channel on the server. */
   removeChatMessage(
@@ -1598,11 +1591,6 @@ export interface Socket {
     no_clear: boolean
   ): Promise<CustomStatusEvent>;
 
-  writeActiveArchivedThread(
-    clan_id: string,
-    channel_id: string
-  ): Promise<void>;
-
   /* Set the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   setHeartbeatTimeoutMs(ms: number): void;
 
@@ -1617,24 +1605,6 @@ export interface Socket {
     type: number,
     clan_id: string,
   ): Promise<CheckNameExistedEvent>;
-
-  handleMessageButtonClick: (
-    message_id: string,
-    channel_id: string,
-    button_id: string,
-    sender_id: string,
-    user_id: string,
-    extra_data: string
-  ) => Promise<MessageButtonClicked>;
-
-  handleDropdownBoxSelected: (
-    message_id: string,
-    channel_id: string,
-    selectbox_id: string,
-    sender_id: string,
-    user_id: string,
-    value: Array<string>
-  ) => Promise<DropdownBoxSelected>;
 
   writeVoiceReaction: (
     emojis: Array<string>,
@@ -1909,8 +1879,8 @@ export class DefaultSocket implements Socket {
 
   connect(
     session: Session,
-    createStatus: boolean = false,
-    platform: string = "",
+    createStatus = false,
+    platform = "",
     connectTimeoutMs: number = DefaultSocket.DefaultConnectTimeoutMs,
     signal?: AbortSignal
   ): Promise<Session> {
@@ -2195,7 +2165,7 @@ export class DefaultSocket implements Socket {
     return this._connectPromise;
   }
 
-  disconnect(fireDisconnectEvent: boolean = true) {
+  disconnect(fireDisconnectEvent = true) {
     this._connectionState = ConnectionState.DISCONNECTED;
     this.stopHeartbeatLoop();
     if (this.adapter.isOpen()) {
@@ -2747,26 +2717,6 @@ export class DefaultSocket implements Socket {
     return response.channel;
   }
 
-  async handleParticipantMeetState (
-    clan_id: string,
-    channel_id: string,
-    display_name: string,
-    state: number,
-    room_name: string,
-  ): Promise<void> {
-    const response = await this.send({
-      handle_participant_meet_state_event: {
-        clan_id: clan_id,
-        channel_id: channel_id,
-        display_name: display_name,
-        state: state,
-        room_name: room_name,
-      },
-    });
-
-    return response.handle_participant_meet_state_event;
-  }
-
   leaveChat(
     clan_id: string,
     channel_id: string,
@@ -2873,7 +2823,7 @@ export class DefaultSocket implements Socket {
     attachments?: Array<ApiMessageAttachment>,
     references?: Array<ApiMessageRef>,
     anonymous_message?: boolean,
-    mention_everyone?: Boolean,
+    mention_everyone?: boolean,
     avatar?: string,
     code?: number,
     topic_id?: string
@@ -2912,7 +2862,7 @@ export class DefaultSocket implements Socket {
     attachments?: Array<ApiMessageAttachment>,
     references?: Array<ApiMessageRef>,
     anonymous_message?: boolean,
-    mention_everyone?: Boolean,
+    mention_everyone?: boolean,
     avatar?: string,
     code?: number,
     topic_id?: string,
@@ -2952,7 +2902,7 @@ export class DefaultSocket implements Socket {
     attachments?: Array<ApiMessageAttachment>,
     references?: Array<ApiMessageRef>,
     anonymous_message?: boolean,
-    mention_everyone?: Boolean,
+    mention_everyone?: boolean,
     avatar?: string,
     code?: number,
     topic_id?: string
@@ -3108,19 +3058,6 @@ export class DefaultSocket implements Socket {
     return response.custom_status_event;
   }
 
-  async writeActiveArchivedThread(
-    clan_id: string,
-    channel_id: string
-  ): Promise<void> {
-    const response = await this.send({
-      active_archived_thread: {
-        clan_id: clan_id,
-        channel_id: channel_id
-      },
-    });
-    return response.active_archived_thread;
-  }
-
   async checkDuplicateName(
     name: string,
     condition_id: string,
@@ -3185,48 +3122,6 @@ export class DefaultSocket implements Socket {
       },
     });
     return response.incoming_call_push;
-  }
-
-  async handleDropdownBoxSelected(
-    message_id: string,
-    channel_id: string,
-    selectbox_id: string,
-    sender_id: string,
-    user_id: string,
-    value: Array<string>
-  ): Promise<DropdownBoxSelected> {
-    const response = await this.send({
-      dropdown_box_selected: {
-        message_id: message_id,
-        channel_id: channel_id,
-        selectbox_id: selectbox_id,
-        sender_id: sender_id,
-        user_id: user_id,
-        value: value,
-      },
-    });
-    return response.dropdown_box_selected;
-  }
-
-  async handleMessageButtonClick(
-    message_id: string,
-    channel_id: string,
-    button_id: string,
-    sender_id: string,
-    user_id: string,
-    extra_data: string
-  ): Promise<MessageButtonClicked> {
-    const response = await this.send({
-      message_button_clicked: {
-        message_id: message_id,
-        channel_id: channel_id,
-        button_id: button_id,
-        sender_id: sender_id,
-        user_id: user_id,
-        extra_data: extra_data,
-      },
-    });
-    return response.webrtc_signaling_fwd;
   }
 
   async writeChannelAppEvent(

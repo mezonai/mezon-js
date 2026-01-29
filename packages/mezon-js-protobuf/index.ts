@@ -9,4 +9,7 @@ export {
 	HandleParticipantMeetStateEvent as RtHandleParticipantMeetStateEvent,
 	NotificationChannelCategorySetting as RtNotificationChannelCategorySetting,
 	PermissionRoleChannel as RtPermissionRoleChannel,
+	MessageButtonClicked as RtMessageButtonClicked,
+	DropdownBoxSelected as RtDropdownBoxSelected,
+	ActiveArchivedThread as RtActiveArchivedThread
 } from "./rtapi/realtime";
