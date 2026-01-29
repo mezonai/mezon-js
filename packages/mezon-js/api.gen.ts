@@ -11997,8 +11997,8 @@ export class MezonApi {
     const urlPath = "/mezon.api.Mezon/SendChannelMessage";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.RtChannelMessageSend.encode(
-      tsproto.RtChannelMessageSend.fromPartial({
+    const bodyWriter = tsproto.ChannelMessageSend.encode(
+      tsproto.ChannelMessageSend.fromPartial({
         clan_id: clan_id,
         channel_id: channel_id,
         mode: mode,
@@ -12029,7 +12029,7 @@ export class MezonApi {
           return {} as ChannelMessageAck;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.RtChannelMessageSend.decode(new Uint8Array(buffer)) as unknown as ChannelMessageAck;
+          return tsproto.ChannelMessageSend.decode(new Uint8Array(buffer)) as unknown as ChannelMessageAck;
         } else {
           throw response;
         }
@@ -12057,8 +12057,8 @@ export class MezonApi {
     const urlPath = "/mezon.api.Mezon/UpdateChannelMessage";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.RtChannelMessageUpdate.encode(
-      tsproto.RtChannelMessageUpdate.fromPartial({
+    const bodyWriter = tsproto.ChannelMessageUpdate.encode(
+      tsproto.ChannelMessageUpdate.fromPartial({
         clan_id: clan_id,
         channel_id: channel_id,
         message_id: message_id,
@@ -12087,7 +12087,7 @@ export class MezonApi {
           return {} as any;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.RtChannelMessageUpdate.decode(new Uint8Array(buffer)) as any;
+          return tsproto.ChannelMessageUpdate.decode(new Uint8Array(buffer)) as any;
         } else {
           throw response;
         }
@@ -12113,8 +12113,8 @@ export class MezonApi {
     const urlPath = "/mezon.api.Mezon/DeleteChannelMessage";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.RtChannelMessageRemove.encode(
-      tsproto.RtChannelMessageRemove.fromPartial({
+    const bodyWriter = tsproto.ChannelMessageRemove.encode(
+      tsproto.ChannelMessageRemove.fromPartial({
         clan_id: clan_id,
         channel_id: channel_id,
         message_id: message_id,
@@ -12141,7 +12141,7 @@ export class MezonApi {
           return {} as any;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.RtChannelMessageRemove.decode(new Uint8Array(buffer)) as any;
+          return tsproto.ChannelMessageRemove.decode(new Uint8Array(buffer)) as any;
         } else {
           throw response;
         }
@@ -12172,8 +12172,8 @@ export class MezonApi {
       state: state
     };
 
-    const bodyWriter = tsproto.RtHandleParticipantMeetStateEvent.encode(
-      tsproto.RtHandleParticipantMeetStateEvent.fromPartial(body)
+    const bodyWriter = tsproto.HandleParticipantMeetStateEvent.encode(
+      tsproto.HandleParticipantMeetStateEvent.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 
@@ -12222,8 +12222,8 @@ export class MezonApi {
       extra_data: extraData
     };
 
-    const bodyWriter = tsproto.RtMessageButtonClicked.encode(
-      tsproto.RtMessageButtonClicked.fromPartial(body)
+    const bodyWriter = tsproto.MessageButtonClicked.encode(
+      tsproto.MessageButtonClicked.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 
@@ -12272,8 +12272,8 @@ export class MezonApi {
       values: values
     };
 
-    const bodyWriter = tsproto.RtDropdownBoxSelected.encode(
-      tsproto.RtDropdownBoxSelected.fromPartial(body)
+    const bodyWriter = tsproto.DropdownBoxSelected.encode(
+      tsproto.DropdownBoxSelected.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 
@@ -12313,8 +12313,8 @@ export class MezonApi {
       channel_id: channelId
     };
 
-    const bodyWriter = tsproto.RtActiveArchivedThread.encode(
-      tsproto.RtActiveArchivedThread.fromPartial(body)
+    const bodyWriter = tsproto.ActiveArchivedThread.encode(
+      tsproto.ActiveArchivedThread.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 
