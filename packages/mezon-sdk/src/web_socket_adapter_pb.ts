@@ -50,30 +50,30 @@ export class WebSocketAdapterPb implements WebSocketAdapter {
 
     set onMessage(value: SocketMessageHandler | null) {
         try {
-          if (value) {
-            this._socket!.onmessage = (evt: MessageEvent) => {
-              try {
-                const buffer: ArrayBuffer = evt.data as ArrayBuffer;
-                const uintBuffer: Uint8Array = new Uint8Array(buffer);
-                const envelope = tsproto.Envelope.decode(uintBuffer);
+            if (value) {
+                this._socket!.onmessage = (evt: MessageEvent) => {
+                    try {
+                        const buffer: ArrayBuffer = evt.data as ArrayBuffer;
+                        const uintBuffer: Uint8Array = new Uint8Array(buffer);
+                        const envelope = tsproto.Envelope.decode(uintBuffer);
 
-                if (envelope.channel_message) {
-                  if (envelope.channel_message.code == undefined) {
-                    //protobuf plugin does not default-initialize missing Int32Value fields
-                    envelope.channel_message.code = 0;
-                  }
-                }
+                        if (envelope.channel_message) {
+                            if (envelope.channel_message.code == undefined) {
+                                //protobuf plugin does not default-initialize missing Int32Value fields
+                                envelope.channel_message.code = 0;
+                            }
+                        }
 
-                value!(envelope);
-              } catch (e) {
-                console.log(e);
-              }
-            };
-          } else {
-            value = null;
-          }
+                        value!(envelope);
+                    } catch (e) {
+                        console.log(e);
+                    }
+                };
+            } else {
+                value = null;
+            }
         } catch (e) {
-          console.log(e);
+            console.log(e);
         }
     }
 
@@ -84,7 +84,7 @@ export class WebSocketAdapterPb implements WebSocketAdapter {
     set onOpen(value: ((event: WebSocket.Event) => void) | null) {
         this._socket!.onopen = value;
     }
-    
+
     isOpen(): boolean {
         return this._socket?.readyState == WebSocket.OPEN;
     }
@@ -100,7 +100,8 @@ export class WebSocketAdapterPb implements WebSocketAdapter {
                 this.close();
             });
         }
-        const url = `${scheme}${host}:${port}/ws?lang=en&status=${encodeURIComponent(createStatus.toString())}&token=${encodeURIComponent(token)}&format=protobuf`;
+        const portPart = port ? `:${port}` : '';
+        const url = `${scheme}${host}${portPart}/ws?lang=en&status=${encodeURIComponent(createStatus.toString())}&token=${encodeURIComponent(token)}&format=protobuf`;
         this._socket = new WebSocket(url);
         this._socket.binaryType = "arraybuffer";
     }

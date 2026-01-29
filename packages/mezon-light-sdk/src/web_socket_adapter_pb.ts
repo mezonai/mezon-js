@@ -88,7 +88,7 @@ export interface SocketOpenHandler {
 export class WebSocketAdapterPb implements WebSocketAdapter {
   private _socket?: WebSocket;
 
-  constructor() {}
+  constructor() { }
 
   get onClose(): SocketCloseHandler | null {
     return this._socket!.onclose;
@@ -162,7 +162,8 @@ export class WebSocketAdapterPb implements WebSocketAdapter {
         this.close();
       });
     }
-    const url = `${scheme}${host}:${port}/ws?lang=en&status=${encodeURIComponent(
+    const portPart = port ? `:${port}` : '';
+    const url = `${scheme}${host}${portPart}/ws?lang=en&status=${encodeURIComponent(
       createStatus.toString(),
     )}&token=${encodeURIComponent(token)}&format=protobuf&platform=${encodeURIComponent(platform)}`;
     this._socket = new WebSocket(url);
