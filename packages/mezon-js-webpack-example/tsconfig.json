@@ -1,6 +1,7 @@
 {
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
+        "emitDeclarationOnly": false
     },
     "files": ["index.ts"]
 }

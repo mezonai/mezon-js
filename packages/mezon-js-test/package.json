@@ -5,8 +5,8 @@
     "private": true,
     "license": "Apache-2.0",
     "dependencies": {
-        "mezon-js": "2.14.57",
-        "mezon-js-protobuf": "1.8.95",
+        "mezon-js": "2.14.65",
+        "mezon-js-protobuf": "1.8.97",
         "merge": "^2.1.1",
         "base64url": "3.0.1"
     },
