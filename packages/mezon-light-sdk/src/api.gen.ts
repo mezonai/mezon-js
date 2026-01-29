@@ -247,6 +247,28 @@ export interface AuthenticationIdTokenResponse {
   user_id: string;
 }
 
+/**  */
+export interface ApiUploadAttachment {
+  //
+  filename?: string;
+  //
+  url?: string;
+}
+
+/**  */
+export interface ApiUploadAttachmentRequest {
+  //
+  filename?: string;
+  //
+  filetype?: string;
+  //
+  height?: number;
+  //
+  size?: number;
+  //
+  width?: number;
+}
+
 export class MezonApi {
   basePath: string;
   constructor(readonly serverKey: string, readonly timeoutMs: number, basePath: string) {
@@ -365,6 +387,49 @@ export class MezonApi {
         }
       }),
       new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)),
+    ]);
+  }
+
+  /** Upload attachment */
+  uploadAttachmentFile(
+    bearerToken: string,
+    body: ApiUploadAttachmentRequest,
+    options: any = {}
+  ): Promise<ApiUploadAttachment> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/UploadAttachmentFile";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.UploadAttachmentRequest.encode(
+      tsproto.UploadAttachmentRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as ApiUploadAttachment;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();
+          return tsproto.UploadAttachment.decode(new Uint8Array(buffer)) as ApiUploadAttachment;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
     ]);
   }
 
