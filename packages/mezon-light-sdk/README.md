@@ -184,6 +184,8 @@ Mezon uses **Presigned URLs** for secure file uploads:
 2. Client uses the Presigned URL to **PUT file directly to CDN** (bypassing backend)
 3. After upload, Client **extracts the base URL** (removes query params) to use in message attachment
 
+> **Note:** The SDK supports uploading **any file type** (images, documents, archives, etc.). when uploading non-image files, you can omit the `width` and `height` parameters.
+
 **Example:**
 - Presigned URL: `https://cdn.mezon.ai/file.png?X-Amz-Signature=...` → Used for **upload**
 - CDN URL: `https://cdn.mezon.ai/file.png` → Used in **message**
