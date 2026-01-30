@@ -3904,10 +3904,8 @@ export class MezonApi {
     const urlPath = "/mezon.api.Mezon/LinkEmail";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.UpdateAccountRequest.encode(
-      tsproto.UpdateAccountRequest.fromPartial({
-        email: body.email
-      })
+    const bodyWriter = tsproto.AccountEmail.encode(
+      tsproto.AccountEmail.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 
