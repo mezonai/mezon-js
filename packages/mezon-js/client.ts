@@ -1306,7 +1306,7 @@ export class Client {
           result.voice_channel_users!.push({
             id: gu.id,
             channel_id: gu.channel_id,
-            user_id: gu.user_id,
+            user_ids: gu.user_ids,
             participant: gu.participant,
           });
         });
