@@ -4068,18 +4068,20 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/account/registry";
+    const urlPath = "/mezon.api.Mezon/RegistrationEmail";
     const queryParams = new Map<string, any>();
 
-    let bodyJson = "";
-    bodyJson = JSON.stringify(body || {});
+     const bodyWriter = tsproto.RegistrationEmailRequest.encode(
+      tsproto.RegistrationEmailRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
