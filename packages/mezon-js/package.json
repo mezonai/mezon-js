@@ -1,6 +1,6 @@
 {
   "name": "mezon-js",
-  "version": "2.14.66",
+  "version": "2.14.68",
   "scripts": {
     "build": "node build.mjs && rollup -c --bundleConfigAsCjs && tsc --emitDeclarationOnly",
     "build:types": "tsc --emitDeclarationOnly",
@@ -35,7 +35,7 @@
     "type": "git",
     "url": "git+https://github.com/nccasia/mezon-js.git"
   },
-  "homepage": "https://mezon.vn",
+  "homepage": "https://mezon.ai",
   "bugs": {
     "url": "https://github.com/nccasia/mezon-js/issues"
   },
@@ -43,7 +43,7 @@
   "dependencies": {
     "base64-arraybuffer": "^1.0.2",
     "js-base64": "^3.7.8",
-    "mezon-js-protobuf": "file:../mezon-js-protobuf",
+    "mezon-js-protobuf": "^1.8.99",
     "whatwg-fetch": "^3.6.2"
   },
   "peerDependencies": {
