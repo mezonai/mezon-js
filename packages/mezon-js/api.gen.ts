@@ -2913,7 +2913,7 @@ export interface ApiVoiceChannelUser {
   //
   participant?: string;
   //User for a channel.
-  user_id?: string;
+  user_ids?: Array<string>;
 }
 
 /** A list of users belonging to a channel, along with their role. */
@@ -3490,7 +3490,7 @@ export class MezonApi {
   }
 
   /** Delete the current user's account. */
-  deleteAccount(bearerToken: string, options: any = {}): Promise<any> {
+  deleteAccount(bearerToken: string, options = {}): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteAccount";
     const queryParams = new Map<string, any>();
 
@@ -3519,7 +3519,7 @@ export class MezonApi {
   }
 
   /** Fetch the current user's account. */
-  getAccount(bearerToken: string, options: any = {}): Promise<ApiAccount> {
+  getAccount(bearerToken: string, options = {}): Promise<ApiAccount> {
     const urlPath = "/mezon.api.Mezon/GetAccount";
     const queryParams = new Map<string, any>();
 
@@ -3553,7 +3553,7 @@ export class MezonApi {
   updateAccount(
     bearerToken: string,
     body: ApiUpdateAccountRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -3595,7 +3595,7 @@ export class MezonApi {
     basicAuthUsername: string,
     basicAuthPassword: string,
     body: ApiConfirmLoginRequest,
-    options: any = {}
+    options = {}
   ): Promise<ApiSession> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -3639,7 +3639,7 @@ export class MezonApi {
     bearerToken: string,
     basePath: string,
     body: ApiConfirmLoginRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -3681,7 +3681,7 @@ export class MezonApi {
     basicAuthUsername: string,
     basicAuthPassword: string,
     body: ApiLoginRequest,
-    options: any = {}
+    options = {}
   ): Promise<ApiLoginIDResponse> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -3725,7 +3725,7 @@ export class MezonApi {
     basicAuthUsername: string,
     basicAuthPassword: string,
       body:ApiAuthenticateSMSRequest,
-      options: any = {}): Promise<ApiLinkAccountConfirmRequest> {
+      options = {}): Promise<ApiLinkAccountConfirmRequest> {
     
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
@@ -3766,7 +3766,7 @@ export class MezonApi {
     basicAuthUsername: string,
     basicAuthPassword: string,
       body:ApiAuthenticateEmailRequest,
-      options: any = {}): Promise<ApiLinkAccountConfirmRequest> {
+      options = {}): Promise<ApiLinkAccountConfirmRequest> {
     
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
@@ -3807,7 +3807,7 @@ export class MezonApi {
     basicAuthUsername: string,
     basicAuthPassword: string,
       body:ApiAuthenticateEmailRequest,
-      options: any = {}): Promise<ApiSession> {
+      options = {}): Promise<ApiSession> {
     
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
@@ -3851,7 +3851,7 @@ export class MezonApi {
     create?:boolean,
     username?:string,
     isRemember?:boolean,
-    options: any = {}
+    options = {}
   ): Promise<ApiSession> {
     
     if (account === null || account === undefined) {
@@ -3894,7 +3894,7 @@ export class MezonApi {
   linkEmail(
     bearerToken: string,
     body: ApiAccountEmail,
-    options: any = {}
+    options = {}
   ): Promise<ApiLinkAccountConfirmRequest> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -3938,7 +3938,7 @@ export class MezonApi {
   /** Add a mezon ID to the social profiles on the current user's account. */
   linkSMS(bearerToken: string,
       body:ApiLinkAccountMezon,
-      options: any = {}): Promise<ApiLinkAccountConfirmRequest> {
+      options = {}): Promise<ApiLinkAccountConfirmRequest> {
     
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
@@ -3978,7 +3978,7 @@ export class MezonApi {
   /**  */
   confirmLinkMezonOTP(bearerToken: string,
       body:ApiLinkAccountConfirmRequest,
-    options: any = {}): Promise<ApiSession> {
+    options = {}): Promise<ApiSession> {
     
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
@@ -4021,7 +4021,7 @@ export class MezonApi {
     basicAuthUsername: string,
     basicAuthPassword: string,
       body:ApiLinkAccountConfirmRequest,
-      options: any = {}): Promise<ApiSession> {
+      options = {}): Promise<ApiSession> {
     
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
@@ -4061,7 +4061,7 @@ export class MezonApi {
   registrationEmail(
     bearerToken: string,
     body: ApiRegistrationEmailRequest,
-    options: any = {}
+    options = {}
   ): Promise<ApiSession> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -4103,7 +4103,7 @@ export class MezonApi {
     basicAuthUsername: string,
     basicAuthPassword: string,
     body: ApiSessionRefreshRequest,
-    options: any = {}
+    options = {}
   ): Promise<ApiSession> {
   if (body === null || body === undefined) {
       throw new Error(
@@ -4147,7 +4147,7 @@ export class MezonApi {
   unlinkEmail(
     bearerToken: string,
     body: ApiAccountEmail,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -4188,7 +4188,7 @@ export class MezonApi {
   /** List activity */
   listActivity(
     bearerToken: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiListUserActivity> {
     const urlPath = "/mezon.api.Mezon/ListActivity";
     const queryParams = new Map<string, any>();
@@ -4221,7 +4221,7 @@ export class MezonApi {
   createActiviy(
     bearerToken: string,
     body: ApiCreateActivityRequest,
-    options: any = {}
+    options = {}
   ): Promise<ApiUserActivity> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -4264,7 +4264,7 @@ export class MezonApi {
   addApp(
     bearerToken: string,
     body: ApiAddAppRequest,
-    options: any = {}
+    options = {}
   ): Promise<ApiApp> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -4309,7 +4309,7 @@ export class MezonApi {
     filter?: string,
     tombstones?: boolean,
     cursor?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiAppList> {
     const urlPath = "/mezon.api.Mezon/ListApps";
     const queryParams = new Map<string, any>();
@@ -4352,7 +4352,7 @@ export class MezonApi {
     bearerToken: string,
     appId: string,
     clanId: string,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (appId === null || appId === undefined) {
       throw new Error(
@@ -4402,7 +4402,7 @@ export class MezonApi {
   deleteApp(
     bearerToken: string,
     id: string,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
@@ -4441,7 +4441,7 @@ export class MezonApi {
   }
 
   /** Get detailed app information. */
-  getApp(bearerToken: string, id: string, options: any = {}): Promise<ApiApp> {
+  getApp(bearerToken: string, id: string, options = {}): Promise<ApiApp> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
@@ -4483,7 +4483,7 @@ export class MezonApi {
     updateApp(bearerToken: string,
       id:string,
       body:MezonUpdateAppBody,
-      options: any = {}): Promise<ApiApp> {
+      options = {}): Promise<ApiApp> {
     
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
@@ -4530,7 +4530,7 @@ export class MezonApi {
     userId?: string,
     clanId?: string,
     dateLog?: string,
-    options: any = {}
+    options = {}
   ): Promise<MezonapiListAuditLog> {
     const urlPath = "/mezon.api.Mezon/ListAuditLog";
     const queryParams = new Map<string, any>();
@@ -4573,7 +4573,7 @@ export class MezonApi {
   updateCategoryOrder(
     bearerToken: string,
     body: ApiUpdateCategoryOrderRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -4619,7 +4619,7 @@ export class MezonApi {
     categoryName?: string,
     categoryId?: string,
     categoryOrder?: number,
-    options: any = {}
+    options = {}
   ): Promise<ApiCategoryDescList> {
     if (clanId === null || clanId === undefined) {
       throw new Error(
@@ -4669,7 +4669,7 @@ export class MezonApi {
   listChannelApps(
     bearerToken: string,
     clanId?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiListChannelAppsResponse> {
     const urlPath = "/mezon.api.Mezon/ListChannelApps";
     const queryParams = new Map<string, any>();
@@ -4713,7 +4713,7 @@ export class MezonApi {
     clanId?: string,
     limit?: number,
     page?: number,
-    options: any = {}
+    options = {}
   ): Promise<ApiChannelCanvasListResponse> {
     if (channelId === null || channelId === undefined) {
       throw new Error(
@@ -4761,7 +4761,7 @@ export class MezonApi {
   addChannelFavorite(
     bearerToken: string,
     body: ApiAddFavoriteChannelRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -4804,7 +4804,7 @@ export class MezonApi {
   removeChannelFavorite(bearerToken: string,
       channelId:string,
       clanId?:string,
-      options: any = {}): Promise<any> {
+      options = {}): Promise<any> {
     
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
@@ -4847,7 +4847,7 @@ export class MezonApi {
   getListFavoriteChannel(
     bearerToken: string,
     clanId: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiListFavoriteChannelResponse> {
     if (clanId === null || clanId === undefined) {
       throw new Error(
@@ -4898,7 +4898,7 @@ export class MezonApi {
     direction?: number,
     limit?: number,
     topicId?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiChannelMessageList> {
     if (channelId === null || channelId === undefined) {
       throw new Error(
@@ -4950,7 +4950,7 @@ export class MezonApi {
     bearerToken: string,
     channelId: string,
     userIds?: Array<string>,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (channelId === null || channelId === undefined) {
       throw new Error(
@@ -5001,7 +5001,7 @@ export class MezonApi {
       before?:number,
       after?:number,
       around?:number,
-      options: any = {}): Promise<ApiChannelAttachmentList> {
+      options = {}): Promise<ApiChannelAttachmentList> {
     
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
@@ -5054,7 +5054,7 @@ export class MezonApi {
     bearerToken: string,
     channelId: string,
     method?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiChanEncryptionMethod> {
     if (channelId === null || channelId === undefined) {
       throw new Error(
@@ -5101,7 +5101,7 @@ export class MezonApi {
     bearerToken: string,
     channelId: string,
     body: MezonSetChanEncryptionMethodBody,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (channelId === null || channelId === undefined) {
       throw new Error(
@@ -5148,7 +5148,7 @@ export class MezonApi {
   leaveThread(bearerToken: string,
       clanId:string,  
       channelId:string,
-      options: any = {}): Promise<any> {
+      options = {}): Promise<any> {
     
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
@@ -5192,7 +5192,7 @@ export class MezonApi {
     bearerToken: string,
     channelId: string,
     userIds?: Array<string>,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (channelId === null || channelId === undefined) {
       throw new Error(
@@ -5242,7 +5242,7 @@ export class MezonApi {
     limit?: number,
     state?: number,
     cursor?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiChannelUserList> {
     if (channelId === null || channelId === undefined) {
       throw new Error(
@@ -5297,7 +5297,7 @@ export class MezonApi {
     clanId?: string,
     channelType?: number,
     isMobile?: boolean,
-    options: any = {}
+    options = {}
   ): Promise<ApiChannelDescList> {
     const urlPath = "/mezon.api.Mezon/ListChannelDescs";
     const queryParams = new Map<string, any>();
@@ -5343,7 +5343,7 @@ export class MezonApi {
   createChannelDesc(
     bearerToken: string,
     body: ApiCreateChannelDescRequest,
-    options: any = {}
+    options = {}
   ): Promise<ApiChannelDescription> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -5387,7 +5387,7 @@ export class MezonApi {
     bearerToken: string,
     channelId?: string,
     limit?: number,
-    options: any = {}
+    options = {}
   ): Promise<ApiAllUsersAddChannelResponse> {
     const urlPath = "/mezon.api.Mezon/ListChannelUsersUC";
     const queryParams = new Map<string, any>();
@@ -5428,7 +5428,7 @@ export class MezonApi {
   deleteChannelDesc(bearerToken: string,
       clanId:string,
       channelId:string,      
-      options: any = {}): Promise<any> {
+      options = {}): Promise<any> {
     
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
@@ -5468,7 +5468,7 @@ export class MezonApi {
   updateChannelDesc(bearerToken: string,
       channelId:string,
       body:ApiUpdateChannelDescRequest,
-      options: any = {}): Promise<any> {
+      options = {}): Promise<any> {
     
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
@@ -5520,7 +5520,7 @@ export class MezonApi {
     limit?: number,
     page?: number,
     channelLabel?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiChannelSettingListResponse> {
     if (clanId === null || clanId === undefined) {
       throw new Error(
@@ -5575,7 +5575,7 @@ export class MezonApi {
     bearerToken: string,
     clanId?: string,
     limit?: number,
-    options: any = {}
+    options = {}
   ): Promise<ApiVoiceChannelUserList> {
     const urlPath = "/mezon.api.Mezon/ListChannelVoiceUsers";
     const queryParams = new Map<string, any>();
@@ -5615,7 +5615,7 @@ export class MezonApi {
   /** List clans */
   listClanUnreadMsgIndicator(bearerToken: string,
       clanId:string,
-      options: any = {}): Promise<ApiListClanUnreadMsgIndicatorResponse> {
+      options = {}): Promise<ApiListClanUnreadMsgIndicatorResponse> {
     
     if (clanId === null || clanId === undefined) {
       throw new Error("'clanId' is a required parameter but is null or undefined.");
@@ -5658,7 +5658,7 @@ export class MezonApi {
     limit?: number,
     state?: number,
     cursor?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiClanDescList> {
     const urlPath = "/mezon.api.Mezon/ListClanDescs";
     const queryParams = new Map<string, any>();
@@ -5697,7 +5697,7 @@ export class MezonApi {
   createClanDesc(
     bearerToken: string,
     body: ApiCreateClanDescRequest,
-    options: any = {}
+    options = {}
   ): Promise<ApiClanDesc> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -5744,7 +5744,7 @@ export class MezonApi {
   deleteClanDesc(
     bearerToken: string,
     clanDescId: string,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (clanDescId === null || clanDescId === undefined) {
       throw new Error(
@@ -5788,7 +5788,7 @@ export class MezonApi {
     clanId: string,
     // eslint-disable-next-line @typescript-eslint/ban-types
     body: {},
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (clanId === null || clanId === undefined) {
       throw new Error(
@@ -5836,7 +5836,7 @@ export class MezonApi {
     bearerToken: string,
     clanId: string,
     userIds?: Array<string>,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (clanId === null || clanId === undefined) {
       throw new Error(
@@ -5882,7 +5882,7 @@ export class MezonApi {
   listBannedUsers(bearerToken: string,
       clanId?:string,
       channelId?:string,
-      options: any = {}): Promise<ApiBannedUserList> {
+      options = {}): Promise<ApiBannedUserList> {
     
     const urlPath = "/mezon.api.Mezon/ListBannedUsers";
     const queryParams = new Map<string, any>();
@@ -5925,7 +5925,7 @@ export class MezonApi {
       channelId?:string,
       userIds?:Array<string>,
       banTime?:number,
-      options: any = {}): Promise<any> {
+      options = {}): Promise<any> {
     
     if (clanId === null || clanId === undefined) {
       throw new Error("'clanId' is a required parameter but is null or undefined.");
@@ -5973,7 +5973,7 @@ export class MezonApi {
       channelId?:string,
       userIds?:Array<string>,
       banTime?:number,
-      options: any = {}): Promise<any> {
+      options = {}): Promise<any> {
     
     if (clanId === null || clanId === undefined) {
       throw new Error("'clanId' is a required parameter but is null or undefined.");
@@ -6019,7 +6019,7 @@ export class MezonApi {
   listClanUsers(
     bearerToken: string,
     clanId: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiClanUserList> {
     if (clanId === null || clanId === undefined) {
       throw new Error(
@@ -6062,7 +6062,7 @@ export class MezonApi {
   createCategoryDesc(
     bearerToken: string,
     body: ApiCreateCategoryDescRequest,
-    options: any = {}
+    options = {}
   ): Promise<ApiCategoryDesc> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -6107,7 +6107,7 @@ export class MezonApi {
     categoryId: string,
     clanId: string,
     categoryLabel?: string,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (categoryId === null || categoryId === undefined) {
       throw new Error(
@@ -6162,7 +6162,7 @@ export class MezonApi {
     deviceId?: string,
     platform?: string,
     voipToken?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiRegistFcmDeviceTokenResponse> {
     const urlPath = "/mezon.api.Mezon/RegistFCMDeviceToken";
     const queryParams = new Map<string, any>();
@@ -6205,7 +6205,7 @@ export class MezonApi {
   closeDirectMess(
     bearerToken: string,
     body: ApiDeleteChannelDescRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -6248,7 +6248,7 @@ export class MezonApi {
   openDirectMess(
     bearerToken: string,
     body: ApiDeleteChannelDescRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -6291,7 +6291,7 @@ export class MezonApi {
   createClanEmoji(
     bearerToken: string,
     body: ApiClanEmojiCreateRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -6336,7 +6336,7 @@ export class MezonApi {
     id: string,
     clanId?: string,
     emojiLabel?: string,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
@@ -6378,7 +6378,7 @@ export class MezonApi {
     bearerToken: string,
     id: string,
     body: MezonUpdateClanEmojiByIdBody,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
@@ -6426,7 +6426,7 @@ export class MezonApi {
 
   /** get list emoji recent by user id */
   emojiRecentList(bearerToken: string,
-      options: any = {}): Promise<ApiEmojiRecentList> {
+      options = {}): Promise<ApiEmojiRecentList> {
     
     const urlPath = "/mezon.api.Mezon/EmojiRecentList";
     const queryParams = new Map<string, any>();
@@ -6460,7 +6460,7 @@ export class MezonApi {
   /** get list emoji by user id */
   getListEmojisByUserId(
     bearerToken: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiEmojiListedResponse> {
     const urlPath = "/mezon.api.Mezon/GetListEmojisByUserId";
     const queryParams = new Map<string, any>();
@@ -6495,7 +6495,7 @@ export class MezonApi {
   searchMessage(
     bearerToken: string,
     body: ApiSearchMessageRequest,
-    options: any = {}
+    options = {}
   ): Promise<ApiSearchMessageResponse> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -6535,7 +6535,7 @@ export class MezonApi {
   }
 
   /** Submit an event for processing in the server's registered runtime custom events handler. */
-  event(bearerToken: string, body: ApiEvent, options: any = {}): Promise<any> {
+  event(bearerToken: string, body: ApiEvent, options = {}): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined."
@@ -6580,7 +6580,7 @@ export class MezonApi {
   listEvents(
     bearerToken: string,
     clanId?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiEventList> {
     const urlPath = "/mezon.api.Mezon/ListEvents";
     const queryParams = new Map<string, any>();
@@ -6618,7 +6618,7 @@ export class MezonApi {
   createEvent(
     bearerToken: string,
     body: ApiCreateEventRequest,
-    options: any = {}
+    options = {}
   ): Promise<ApiEventManagement> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -6661,7 +6661,7 @@ export class MezonApi {
   updateEventUser(
     bearerToken: string,
     body: ApiDeleteEventRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -6707,7 +6707,7 @@ export class MezonApi {
     creatorId?: string,
     eventLabel?: string,
     channelId?: string,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (eventId === null || eventId === undefined) {
       throw new Error(
@@ -6756,7 +6756,7 @@ export class MezonApi {
     bearerToken: string,
     eventId: string,
     body: MezonUpdateEventBody,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (eventId === null || eventId === undefined) {
       throw new Error(
@@ -6804,7 +6804,7 @@ export class MezonApi {
     bearerToken: string,
     ids?: Array<string>,
     usernames?: Array<string>,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteFriends";
     const queryParams = new Map<string, any>();
@@ -6843,7 +6843,7 @@ export class MezonApi {
     limit?: number,
     state?: number,
     cursor?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiFriendList> {
     const urlPath = "/mezon.api.Mezon/ListFriends";
     const queryParams = new Map<string, any>();
@@ -6883,7 +6883,7 @@ export class MezonApi {
     bearerToken: string,
     ids?: Array<string>,
     usernames?: Array<string>,
-    options: any = {}
+    options = {}
   ): Promise<ApiAddFriendsResponse> {
     const urlPath = "/mezon.api.Mezon/AddFriends";
     const queryParams = new Map<string, any>();
@@ -6922,7 +6922,7 @@ export class MezonApi {
     bearerToken: string,
     ids?: Array<string>,
     usernames?: Array<string>,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/BlockFriends";
     const queryParams = new Map<string, any>();
@@ -6959,7 +6959,7 @@ export class MezonApi {
   unblockFriends(bearerToken: string,
       ids?:Array<string>,
       usernames?:Array<string>,
-      options: any = {}): Promise<any> {
+      options = {}): Promise<any> {
     
     const urlPath = "/mezon.api.Mezon/UnblockFriends";
     const queryParams = new Map<string, any>();
@@ -6996,7 +6996,7 @@ export class MezonApi {
   getChannelCategoryNotiSettingsList(
     bearerToken: string,
     clanId?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiNotificationChannelCategorySettingList> {
     const urlPath = "/mezon.api.Mezon/GetChannelCategoryNotiSettingsList";
     const queryParams = new Map<string, any>();
@@ -7035,7 +7035,7 @@ export class MezonApi {
   getUserProfileOnClan(
     bearerToken: string,
     clanId: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiClanProfile> {
     if (clanId === null || clanId === undefined) {
       throw new Error(
@@ -7078,7 +7078,7 @@ export class MezonApi {
   getNotificationCategory(
     bearerToken: string,
     categoryId?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiNotificationUserChannel> {
     const urlPath = "/mezon.api.Mezon/GetNotificationCategory";
     const queryParams = new Map<string, any>();
@@ -7117,7 +7117,7 @@ export class MezonApi {
   getNotificationChannel(
     bearerToken: string,
     channelId?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiNotificationUserChannel> {
     const urlPath = "/mezon.api.Mezon/GetNotificationChannel";
     const queryParams = new Map<string, any>();
@@ -7156,7 +7156,7 @@ export class MezonApi {
   getNotificationClan(
     bearerToken: string,
     clanId?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiNotificationSetting> {
     const urlPath = "/mezon.api.Mezon/GetNotificationClan";
     const queryParams = new Map<string, any>();
@@ -7195,7 +7195,7 @@ export class MezonApi {
   getNotificationReactMessage(
     bearerToken: string,
     channelId?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiNotifiReactMessage> {
     const urlPath = "/mezon.api.Mezon/GetNotificationReactMessage";
     const queryParams = new Map<string, any>();
@@ -7234,7 +7234,7 @@ export class MezonApi {
   giveMeACoffee(
     bearerToken: string,
     body: ApiGiveCoffeeEvent,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -7275,7 +7275,7 @@ export class MezonApi {
   /** get key server */
   getKeyServer(
     bearerToken: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiGetKeyServerResp> {
     const urlPath = "/mezon.api.Mezon/GetKeyServer";
     const queryParams = new Map<string, any>();
@@ -7307,7 +7307,7 @@ export class MezonApi {
   createLinkInviteUser(
     bearerToken: string,
     body: ApiLinkInviteUserRequest,
-    options: any = {}
+    options = {}
   ): Promise<ApiLinkInviteUser> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -7350,7 +7350,7 @@ export class MezonApi {
   inviteUser(
     bearerToken: string,
     inviteId: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiInviteUserRes> {
     if (inviteId === null || inviteId === undefined) {
       throw new Error(
@@ -7394,7 +7394,7 @@ export class MezonApi {
     basicAuthUsername: string,
     basicAuthPassword: string,
     inviteId: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiInviteUserRes> {
     if (inviteId === null || inviteId === undefined) {
       throw new Error(
@@ -7437,7 +7437,7 @@ export class MezonApi {
   /** List HashtagDMList */
   listChannelByUserId(
     bearerToken: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiChannelDescList> {
     const urlPath = "/mezon.api.Mezon/ListChannelByUserId";
     const queryParams = new Map<string, any>();
@@ -7470,7 +7470,7 @@ export class MezonApi {
   markAsRead(
     bearerToken: string,
     body: ApiMarkAsReadRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -7510,7 +7510,7 @@ export class MezonApi {
   
   /** List mezon OAuth client */
   listMezonOauthClient(bearerToken: string,
-      options: any = {}): Promise<ApiMezonOauthClientList> {
+      options = {}): Promise<ApiMezonOauthClientList> {
     
     const urlPath = "/mezon.api.Mezon/ListMezonOauthClient";
     const queryParams = new Map<string, any>();
@@ -7543,7 +7543,7 @@ export class MezonApi {
   setMuteCategory(
     bearerToken: string,
     body: ApiSetMuteRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -7585,7 +7585,7 @@ export class MezonApi {
   setMuteChannel(
     bearerToken: string,
     body: ApiSetMuteRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -7628,7 +7628,7 @@ export class MezonApi {
     bearerToken: string,
     ids?: Array<string>,
     category?: number,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteNotifications";
     const queryParams = new Map<string, any>();
@@ -7672,7 +7672,7 @@ export class MezonApi {
     notificationId?: string,
     category?: number,
     direction?: number,
-    options: any = {}
+    options = {}
   ): Promise<ApiNotificationList> {
     const urlPath = "/mezon.api.Mezon/ListNotifications";
     const queryParams = new Map<string, any>();
@@ -7716,7 +7716,7 @@ export class MezonApi {
   setNotificationChannelSetting(
     bearerToken: string,
     body: ApiSetNotificationRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -7758,7 +7758,7 @@ export class MezonApi {
   setNotificationClanSetting(
     bearerToken: string,
     body: ApiSetDefaultNotificationRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -7800,7 +7800,7 @@ export class MezonApi {
   setNotificationCategorySetting(
     bearerToken: string,
     body: ApiSetNotificationRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -7842,7 +7842,7 @@ export class MezonApi {
   deleteNotificationCategorySetting(
     bearerToken: string,
     categoryId?: string,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteNotificationCategorySetting";
     const queryParams = new Map<string, any>();
@@ -7879,7 +7879,7 @@ export class MezonApi {
   deleteNotificationChannel(
     bearerToken: string,
     channelId?: string,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteNotificationChannel";
     const queryParams = new Map<string, any>();
@@ -7916,7 +7916,7 @@ export class MezonApi {
   deleteNotiReactMessage(
     bearerToken: string,
     channelId?: string,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteNotiReactMessage";
     const queryParams = new Map<string, any>();
@@ -7953,7 +7953,7 @@ export class MezonApi {
   setNotificationReactMessage(
     bearerToken: string,
     body: ApiNotificationChannel,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -7995,7 +7995,7 @@ export class MezonApi {
   setRoleChannelPermission(
     bearerToken: string,
     body: ApiUpdateRoleChannelRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -8036,7 +8036,7 @@ export class MezonApi {
   /** Get permission list */
   getListPermission(
     bearerToken: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiPermissionList> {
     const urlPath = "/mezon.api.Mezon/GetListPermission";
     const queryParams = new Map<string, any>();
@@ -8070,7 +8070,7 @@ export class MezonApi {
     roleId?: string,
     channelId?: string,
     userId?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiPermissionRoleChannelListEventResponse> {
     const urlPath = "/mezon.api.Mezon/GetPermissionByRoleIdChannelId";
     const queryParams = new Map<string, any>();
@@ -8115,7 +8115,7 @@ export class MezonApi {
     messageId?: string,
     channelId?: string,
     clanId?: string,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeletePinMessage";
     const queryParams = new Map<string, any>();
@@ -8159,7 +8159,7 @@ export class MezonApi {
     messageId?: string,
     channelId?: string,
     clanId?: string,
-    options: any = {}
+    options = {}
   ): Promise<tsproto.PinMessagesList> {
     const urlPath = "/mezon.api.Mezon/GetPinMessagesList";
     const queryParams = new Map<string, any>();
@@ -8200,7 +8200,7 @@ export class MezonApi {
   /** create message to inbox. */
   createMessage2Inbox(bearerToken: string,
       body:ApiMessage2InboxRequest,
-      options: any = {}): Promise<ApiChannelMessageHeader> {
+      options = {}): Promise<ApiChannelMessageHeader> {
     
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
@@ -8241,7 +8241,7 @@ export class MezonApi {
   createPinMessage(
     bearerToken: string,
     body: ApiPinMessageRequest,
-    options: any = {}
+    options = {}
   ): Promise<ApiChannelMessageHeader> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -8284,7 +8284,7 @@ export class MezonApi {
   getPubKeys(
     bearerToken: string,
     userIds?: Array<string>,
-    options: any = {}
+    options = {}
   ): Promise<ApiGetPubKeysResponse> {
     const urlPath = "/mezon.api.Mezon/GetPubKeys";
     const queryParams = new Map<string, any>();
@@ -8322,7 +8322,7 @@ export class MezonApi {
   pushPubKey(
     bearerToken: string,
     body: ApiPushPubKeyRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -8364,7 +8364,7 @@ export class MezonApi {
   addRolesChannelDesc(
     bearerToken: string,
     body: ApiAddRoleChannelDescRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -8407,7 +8407,7 @@ export class MezonApi {
     bearerToken: string,
     newCategoryId: string,
     body: MezonChangeChannelCategoryBody,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (newCategoryId === null || newCategoryId === undefined) {
       throw new Error(
@@ -8457,7 +8457,7 @@ export class MezonApi {
   deleteRoleChannelDesc(
     bearerToken: string,
     body: ApiDeleteRoleRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -8502,7 +8502,7 @@ export class MezonApi {
     limit?: number,
     state?: number,
     cursor?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiRoleListEventResponse> {
     const urlPath = "/mezon.api.Mezon/ListRoles";
     const queryParams = new Map<string, any>();
@@ -8545,7 +8545,7 @@ export class MezonApi {
   createRole(
     bearerToken: string,
     body: ApiCreateRoleRequest,
-    options: any = {}
+    options = {}
   ): Promise<ApiRole> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -8589,7 +8589,7 @@ export class MezonApi {
     bearerToken: string,
     roleId: string,
     body: MezonUpdateRoleDeleteBody,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (roleId === null || roleId === undefined) {
       throw new Error(
@@ -8639,7 +8639,7 @@ export class MezonApi {
     channelId?: string,
     clanId?: string,
     roleLabel?: string,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (roleId === null || roleId === undefined) {
       throw new Error(
@@ -8682,7 +8682,7 @@ export class MezonApi {
     bearerToken: string,
     roleId: string,
     body: MezonUpdateRoleBody,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (roleId === null || roleId === undefined) {
       throw new Error(
@@ -8729,7 +8729,7 @@ export class MezonApi {
   listRolePermissions(
     bearerToken: string,
     roleId: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiPermissionList> {
     if (roleId === null || roleId === undefined) {
       throw new Error(
@@ -8774,7 +8774,7 @@ export class MezonApi {
     roleId: string,
     limit?: number,
     cursor?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiRoleUserList> {
     if (roleId === null || roleId === undefined) {
       throw new Error(
@@ -8822,7 +8822,7 @@ export class MezonApi {
     bearerToken: string,
     clanId: string,
     channelId?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiRoleList> {
     if (clanId === null || clanId === undefined) {
       throw new Error(
@@ -8869,7 +8869,7 @@ export class MezonApi {
     clanId?:string,
     channelId?:string,
     label?:string,
-    options: any = {}): Promise<ApiChannelDescList> {
+    options = {}): Promise<ApiChannelDescList> {
   
   const urlPath = "/mezon.api.Mezon/SearchThread";
   const queryParams = new Map<string, any>();
@@ -8911,7 +8911,7 @@ export class MezonApi {
   sendToken(
     bearerToken: string,
     body: ApiTokenSentEvent,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -8953,7 +8953,7 @@ export class MezonApi {
   sessionLogout(
     bearerToken: string,
     body: ApiSessionLogoutRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -8995,7 +8995,7 @@ export class MezonApi {
   addClanSticker(
     bearerToken: string,
     body: ApiClanStickerAddRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -9039,7 +9039,7 @@ export class MezonApi {
     id: string,
     clanId?: string,
     stickerLabel?: string,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
@@ -9084,7 +9084,7 @@ export class MezonApi {
     bearerToken: string,
     id: string,
     body: MezonUpdateClanStickerByIdBody,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
@@ -9128,7 +9128,7 @@ export class MezonApi {
   /** get list sticker by user id */
   getListStickersByUserId(
     bearerToken: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiStickerListedResponse> {
     const urlPath = "/mezon.api.Mezon/GetListStickersByUserId";
     const queryParams = new Map<string, any>();
@@ -9160,7 +9160,7 @@ export class MezonApi {
   registerStreamingChannel(
     bearerToken: string,
     body: ApiRegisterStreamingChannelRequest,
-    options: any = {}
+    options = {}
   ): Promise<ApiRegisterStreamingChannelResponse> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -9208,7 +9208,7 @@ export class MezonApi {
     limit?: number,
     state?: number,
     cursor?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiStreamingChannelUserList> {
     const urlPath = "/mezon.api.Mezon/ListStreamingChannelUsers";
     const queryParams = new Map<string, any>();
@@ -9252,7 +9252,7 @@ export class MezonApi {
   /** Get the list of system messages. */
   getSystemMessagesList(
     bearerToken: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiSystemMessagesList> {
     const urlPath = "/mezon.api.Mezon/GetSystemMessagesList";
     const queryParams = new Map<string, any>();
@@ -9284,7 +9284,7 @@ export class MezonApi {
   createSystemMessage(
     bearerToken: string,
     body: ApiSystemMessageRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -9327,7 +9327,7 @@ export class MezonApi {
     bearerToken: string,
     clanId?: string,
     limit?: number,
-    options: any = {}
+    options = {}
   ): Promise<ApiSdTopicList> {
     const urlPath = "/mezon.api.Mezon/ListSdTopic";
     const queryParams = new Map<string, any>();
@@ -9368,7 +9368,7 @@ export class MezonApi {
   createSdTopic(
     bearerToken: string,
     body: ApiSdTopicRequest,
-    options: any = {}
+    options = {}
   ): Promise<ApiSdTopic> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -9411,7 +9411,7 @@ export class MezonApi {
   deleteSystemMessage(
     bearerToken: string,
     clanId: string,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (clanId === null || clanId === undefined) {
       throw new Error(
@@ -9453,7 +9453,7 @@ export class MezonApi {
   getSystemMessageByClanId(
     bearerToken: string,
     clanId: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiSystemMessage> {
     if (clanId === null || clanId === undefined) {
       throw new Error(
@@ -9497,7 +9497,7 @@ export class MezonApi {
     bearerToken: string,
     clanId: string,
     body: MezonUpdateSystemMessageBody,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (clanId === null || clanId === undefined) {
       throw new Error(
@@ -9549,7 +9549,7 @@ export class MezonApi {
     clanId?: string,
     threadId?: string,
     page?: number,
-    options: any = {}
+    options = {}
   ): Promise<ApiChannelDescList> {
     if (channelId === null || channelId === undefined) {
       throw new Error(
@@ -9599,7 +9599,7 @@ export class MezonApi {
     bearerToken: string,
     clanId: string,
     body: MezonUpdateCategoryBody,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (clanId === null || clanId === undefined) {
       throw new Error(
@@ -9646,7 +9646,7 @@ export class MezonApi {
   updateChannelPrivate(
     bearerToken: string,
     body: ApiChangeChannelPrivateRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -9689,7 +9689,7 @@ export class MezonApi {
     bearerToken: string,
     clanId: string,
     body: MezonUpdateUserProfileByClanBody,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (clanId === null || clanId === undefined) {
       throw new Error(
@@ -9735,7 +9735,7 @@ export class MezonApi {
   /** Upload attachment */
   uploadOauthFile(bearerToken: string,
       body:ApiUploadAttachmentRequest,
-      options: any = {}): Promise<ApiUploadAttachment> {
+      options = {}): Promise<ApiUploadAttachment> {
     
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
@@ -9776,7 +9776,7 @@ export class MezonApi {
   uploadAttachmentFile(
     bearerToken: string,
     body: ApiUploadAttachmentRequest,
-    options: any = {}
+    options = {}
   ): Promise<ApiUploadAttachment> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -9819,7 +9819,7 @@ export class MezonApi {
   updateUser(
     bearerToken: string,
     body: ApiUpdateUsersRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -9860,7 +9860,7 @@ export class MezonApi {
   /** ListUserClansByUserId */
   listUserClansByUserId(
     bearerToken: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiAllUserClans> {
     const urlPath = "/mezon.api.Mezon/ListUserClansByUserId";
     const queryParams = new Map<string, any>();
@@ -9894,7 +9894,7 @@ export class MezonApi {
     bearerToken: string,
     clanId?: string,
     channelId?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiUserPermissionInChannelListResponse> {
     const urlPath = "/mezon.api.Mezon/ListUserPermissionInChannel";
     const queryParams = new Map<string, any>();
@@ -9934,7 +9934,7 @@ export class MezonApi {
   /** Get user status */
   getUserStatus(
     bearerToken: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiUserStatus> {
     const urlPath = "/mezon.api.Mezon/GetUserStatus";
     const queryParams = new Map<string, any>();
@@ -9966,7 +9966,7 @@ export class MezonApi {
   updateUserStatus(
     bearerToken: string,
     body: ApiUserStatusUpdate,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -10008,7 +10008,7 @@ export class MezonApi {
   generateWebhook(
     bearerToken: string,
     body: ApiWebhookCreateRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -10052,7 +10052,7 @@ export class MezonApi {
     bearerToken: string,
     id: string,
     body: MezonUpdateWebhookByIdBody,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
@@ -10101,7 +10101,7 @@ export class MezonApi {
     bearerToken: string,
     channelId: string,
     clanId?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiWebhookListResponse> {
     if (channelId === null || channelId === undefined) {
       throw new Error(
@@ -10149,7 +10149,7 @@ export class MezonApi {
     bearerToken: string,
     id: string,
     body: MezonDeleteWebhookByIdBody,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
@@ -10221,7 +10221,7 @@ export class MezonApi {
   editChannelCanvases(
     bearerToken: string,
     body: ApiEditChannelCanvasRequest,
-    options: any = {}
+    options = {}
   ): Promise<ApiEditChannelCanvasResponse> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -10266,7 +10266,7 @@ export class MezonApi {
     id: string,
     clanId?: string,
     channelId?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiChannelCanvasDetailResponse> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
@@ -10313,7 +10313,7 @@ export class MezonApi {
     canvasId: string,
     clanId?: string,
     channelId?: string,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (canvasId === null || canvasId === undefined) {
       throw new Error(
@@ -10362,7 +10362,7 @@ export class MezonApi {
     guideType?: number,
     limit?: number,
     page?: number,
-    options: any = {}
+    options = {}
   ): Promise<ApiListOnboardingResponse> {
     const urlPath = "/mezon.api.Mezon/ListOnboarding";
     const queryParams = new Map<string, any>();
@@ -10406,7 +10406,7 @@ export class MezonApi {
   createOnboarding(
     bearerToken: string,
     body: ApiCreateOnboardingRequest,
-    options: any = {}
+    options = {}
   ): Promise<ApiListOnboardingResponse> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -10450,7 +10450,7 @@ export class MezonApi {
     bearerToken: string,
     id: string,
     clanId?: string,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
@@ -10494,7 +10494,7 @@ export class MezonApi {
     bearerToken: string,
     id: string,
     clanId?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiOnboardingItem> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
@@ -10539,7 +10539,7 @@ export class MezonApi {
     bearerToken: string,
     id: string,
     body: MezonUpdateOnboardingBody,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
@@ -10587,7 +10587,7 @@ export class MezonApi {
   generateClanWebhook(
     bearerToken: string,
     body: ApiGenerateClanWebhookRequest,
-    options: any = {}
+    options = {}
   ): Promise<ApiGenerateClanWebhookResponse> {
     if (body === null || body === undefined) {
       throw new Error(
@@ -10630,7 +10630,7 @@ export class MezonApi {
   listClanWebhook(
     bearerToken: string,
     clanId: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiListClanWebhookResponse> {
     if (clanId === null || clanId === undefined) {
       throw new Error(
@@ -10677,7 +10677,7 @@ export class MezonApi {
     bearerToken: string,
     id: string,
     clanId?: string,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
@@ -10723,7 +10723,7 @@ export class MezonApi {
     bearerToken: string,
     id: string,
     body: MezonUpdateClanWebhookByIdBody,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
@@ -10773,7 +10773,7 @@ export class MezonApi {
   getTopicDetail(
     bearerToken: string,
     topicId?: string,
-    options: any = {}
+    options = {}
   ): Promise<ApiSdTopic> {
     const urlPath = "/mezon.api.Mezon/GetTopicDetail";
     const queryParams = new Map<string, any>();
@@ -10817,7 +10817,7 @@ export class MezonApi {
     clanId?: string,
     limit?: number,
     page?: number,
-    options: any = {}
+    options = {}
   ): Promise<ApiListOnboardingStepResponse> {
     const urlPath = "/mezon.api.Mezon/ListOnboardingStep";
     const queryParams = new Map<string, any>();
@@ -10862,7 +10862,7 @@ export class MezonApi {
     bearerToken: string,
     clanId: string,
     body: MezonUpdateOnboardingStepByClanIdBody,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     if (clanId === null || clanId === undefined) {
       throw new Error(
@@ -10913,7 +10913,7 @@ export class MezonApi {
   /** create meeting room */
   createRoomChannelApps(bearerToken: string,
     body:MezonapiCreateRoomChannelApps,
-    options: any = {}): Promise<MezonapiCreateRoomChannelApps> {
+    options = {}): Promise<MezonapiCreateRoomChannelApps> {
   
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
@@ -10954,7 +10954,7 @@ export class MezonApi {
   generateMeetToken(
     bearerToken: string,
     body:ApiGenerateMeetTokenRequest,
-    options: any = {}
+    options = {}
   ): Promise<ApiGenerateMeetTokenResponse> {
     
       if (body === null || body === undefined) {
@@ -10996,7 +10996,7 @@ export class MezonApi {
   getMezonOauthClient(bearerToken: string,
     clientId?:string,
     clientName?:string,
-    options: any = {}
+    options = {}
   ): Promise<ApiMezonOauthClient> {
 
     const urlPath = "/mezon.api.Mezon/GetMezonOauthClient";
@@ -11039,7 +11039,7 @@ export class MezonApi {
   /** update mezon OAuth */
   updateMezonOauthClient(bearerToken: string,
       body:ApiMezonOauthClient,
-      options: any = {}
+      options = {}
     ): Promise<ApiMezonOauthClient> {
     
       if (body === null || body === undefined) {
@@ -11079,7 +11079,7 @@ export class MezonApi {
       /**  */
   generateHashChannelApps(bearerToken: string,
     appId?:string,
-    options: any = {}
+    options = {}
   ): Promise<ApiCreateHashChannelAppsResponse> {
   
     const urlPath = "/mezon.api.Mezon/GenerateHashChannelApps";
@@ -11122,7 +11122,7 @@ export class MezonApi {
   addUserEvent(
     bearerToken: string,
     body:ApiUserEventRequest,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     
     if (body === null || body === undefined) {
@@ -11164,7 +11164,7 @@ export class MezonApi {
     bearerToken: string,
     clanId?:string,
     eventId?:string,
-    options: any = {}
+    options = {}
   ): Promise<any> {
     
     const urlPath = "/mezon.api.Mezon/DeleteUserEvent";
@@ -11206,7 +11206,7 @@ export class MezonApi {
   /**  */
   updateRoleOrder(bearerToken: string,
       body:ApiUpdateRoleOrderRequest,
-      options: any = {}): Promise<any> {
+      options = {}): Promise<any> {
     
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
@@ -11244,7 +11244,7 @@ export class MezonApi {
 
   /** Create external Mezon meet */
   createExternalMezonMeet(bearerToken: string,
-      options: any = {}): Promise<ApiGenerateMezonMeetResponse> {
+      options = {}): Promise<ApiGenerateMezonMeetResponse> {
 
     const urlPath = "/mezon.api.Mezon/CreateExternalMezonMeet";
     const queryParams = new Map<string, any>();
@@ -11278,7 +11278,7 @@ export class MezonApi {
     token:string,
     displayName?:string,
     isGuest?:boolean,
-    options: any = {}): Promise<ApiGenerateMeetTokenExternalResponse> {
+    options = {}): Promise<ApiGenerateMeetTokenExternalResponse> {
   
     if (token === null || token === undefined) {
       throw new Error("'token' is a required parameter but is null or undefined.");
@@ -11318,7 +11318,7 @@ export class MezonApi {
   /** mute participant in the room */
   muteParticipantMezonMeet(bearerToken: string,
       body:ApiMeetParticipantRequest,
-      options: any = {}): Promise<any> {
+      options = {}): Promise<any> {
     
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
@@ -11357,7 +11357,7 @@ export class MezonApi {
   /** Remove participant out the room */
   removeParticipantMezonMeet(bearerToken: string,
       body:ApiMeetParticipantRequest,
-      options: any = {}): Promise<any> {
+      options = {}): Promise<any> {
     
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
@@ -11396,7 +11396,7 @@ export class MezonApi {
   /** List channels detail */
   listChannelDetail(bearerToken: string,
       channelId:string,
-      options: any = {}): Promise<ApiChannelDescription> {
+      options = {}): Promise<ApiChannelDescription> {
     
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
@@ -11441,7 +11441,7 @@ export class MezonApi {
   /**  */
   updateClanOrder(bearerToken: string,
       body:ApiUpdateClanOrderRequest,
-      options: any = {}): Promise<any> {
+      options = {}): Promise<any> {
     
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
@@ -11482,7 +11482,7 @@ export class MezonApi {
     basicAuthPassword: string,
       basePath: string,
       body:ApiClanDiscoverRequest,
-      options: any = {}): Promise<ApiListClanDiscover> {
+      options = {}): Promise<ApiListClanDiscover> {
     
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
@@ -11525,7 +11525,7 @@ export class MezonApi {
       menuName?:string,
       background?:string,
       actionMsg?:string,
-      options: any = {}): Promise<any> {
+      options = {}): Promise<any> {
     
     const urlPath = "/mezon.api.Mezon/DeleteQuickMenuAccess";
     const queryParams = new Map<string, any>();
@@ -11572,7 +11572,7 @@ export class MezonApi {
         botId?:string,
         channelId?:string,
         menuType?:number,
-        options: any = {}): Promise<ApiQuickMenuAccessList> {
+        options = {}): Promise<ApiQuickMenuAccessList> {
       
       const urlPath = "/mezon.api.Mezon/ListQuickMenuAccess";
       const queryParams = new Map<string, any>();
@@ -11616,7 +11616,7 @@ export class MezonApi {
     /**  */
   addQuickMenuAccess(bearerToken: string,
         body:ApiQuickMenuAccessRequest,
-        options: any = {}): Promise<any> {
+        options = {}): Promise<any> {
       
       if (body === null || body === undefined) {
         throw new Error("'body' is a required parameter but is null or undefined.");
@@ -11655,7 +11655,7 @@ export class MezonApi {
     /**  */
   updateQuickMenuAccess(bearerToken: string,
         body:ApiQuickMenuAccessRequest,
-        options: any = {}): Promise<any> {
+        options = {}): Promise<any> {
       
       if (body === null || body === undefined) {
         throw new Error("'body' is a required parameter but is null or undefined.");
@@ -11694,7 +11694,7 @@ export class MezonApi {
   /** For sale items */
     listForSaleItems(bearerToken: string,
         page?:number,
-        options: any = {}): Promise<ApiForSaleItemList> {
+        options = {}): Promise<ApiForSaleItemList> {
       
       const urlPath = "/mezon.api.Mezon/ListForSaleItems";
       const queryParams = new Map<string, any>();
@@ -11735,7 +11735,7 @@ export class MezonApi {
   /**  */
   isFollower(bearerToken: string,
       body:ApiIsFollowerRequest,
-      options: any = {}): Promise<ApiIsFollowerResponse> {
+      options = {}): Promise<ApiIsFollowerResponse> {
       
       if (body === null || body === undefined) {
         throw new Error("'body' is a required parameter but is null or undefined.");
@@ -11775,7 +11775,7 @@ export class MezonApi {
   /**  */
   transferOwnership(bearerToken: string,
       body:ApiTransferOwnershipRequest,
-        options: any = {}): Promise<any> {
+        options = {}): Promise<any> {
       
       if (body === null || body === undefined) {
         throw new Error("'body' is a required parameter but is null or undefined.");
@@ -11814,7 +11814,7 @@ export class MezonApi {
   /** Update username */
   updateUsername(bearerToken: string,
       body:ApiUpdateUsernameRequest,
-      options: any = {}): Promise<ApiSession> {
+      options = {}): Promise<ApiSession> {
     
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
@@ -11855,7 +11855,7 @@ export class MezonApi {
   /** Ban a set of users from a channel. */
   isBanned(bearerToken: string,
       channelId:string,
-      options: any = {}): Promise<ApiIsBannedResponse> {
+      options = {}): Promise<ApiIsBannedResponse> {
     
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
@@ -11901,7 +11901,7 @@ export class MezonApi {
   reportMessageAbuse(bearerToken: string,
       messageId?:string,
       abuseType?:string,
-      options: any = {}): Promise<any> {
+      options = {}): Promise<any> {
     
     const urlPath = "/mezon.api.Mezon/ReportMessageAbuse";
     const queryParams = new Map<string, any>();
@@ -11941,7 +11941,7 @@ export class MezonApi {
 
   /**  */
   listLogedDevice(bearerToken: string,
-      options: any = {}): Promise<ApiLogedDeviceList> {
+      options = {}): Promise<ApiLogedDeviceList> {
     
     const urlPath = "/mezon.api.Mezon/ListLogedDevice";
     const queryParams = new Map<string, any>();
@@ -12151,7 +12151,7 @@ export class MezonApi {
       displayName?:string,
       roomName?: string,
       state?: number,
-      options: any = {}): Promise<any> {
+      options = {}): Promise<any> {
     
     const urlPath = "/mezon.api.Mezon/UpdateMezonVoiceState";
     const queryParams = new Map<string, any>();
@@ -12200,7 +12200,7 @@ export class MezonApi {
       senderId?: string,
       userId?: string,
       extraData?: string,
-      options: any = {}): Promise<any> {
+      options = {}): Promise<any> {
     
     const urlPath = "/mezon.api.Mezon/MessageButtonClick";
     const queryParams = new Map<string, any>();
@@ -12250,7 +12250,7 @@ export class MezonApi {
       senderId?: string,
       userId?: string,
       values?: string[],
-      options: any = {}): Promise<any> {
+      options = {}): Promise<any> {
     
     const urlPath = "/mezon.api.Mezon/DropdownBoxSelected";
     const queryParams = new Map<string, any>();
@@ -12295,7 +12295,7 @@ export class MezonApi {
   activeArchivedThread(bearerToken: string,
     clanId?: string,
     channelId?: string,
-    options: any = {}): Promise<any> {
+    options = {}): Promise<any> {
     
     const urlPath = "/mezon.api.Mezon/ActiveArchivedThread";
     const queryParams = new Map<string, any>();
