@@ -101,13 +101,7 @@ export class Clan {
     return this._loadingPromise;
   }
 
-  async listChannelVoiceUsers(
-    channel_type: number = ChannelType.CHANNEL_TYPE_GMEET_VOICE,
-    channel_id: string = "0",
-    limit: number = 500,
-    state?: number,
-    cursor?: string,
-  ) {
+  async listChannelVoiceUsers(limit: number = 500) {
     const clanId = this.id;
 
     if (limit <= 0 || limit > 500) {
@@ -115,15 +109,7 @@ export class Clan {
       throw new Error("0 < limit <= 500");
     }
     return this.apiClient
-      .listChannelVoiceUsers(
-        this.sessionToken,
-        clanId,
-        channel_id,
-        channel_type,
-        limit,
-        state,
-        cursor,
-      )
+      .listChannelVoiceUsers(this.sessionToken, clanId, limit)
       .then((response: ApiVoiceChannelUserList) => {
         var result: ApiVoiceChannelUserList = {
           voice_channel_users: [],
@@ -137,7 +123,7 @@ export class Clan {
           result.voice_channel_users!.push({
             id: gu.id,
             channel_id: gu.channel_id,
-            user_id: gu.user_id,
+            user_ids: gu.user_ids,
             participant: gu.participant,
           });
         });

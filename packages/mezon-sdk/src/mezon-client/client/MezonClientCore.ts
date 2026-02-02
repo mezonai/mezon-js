@@ -134,6 +134,7 @@ export class MezonClientCore extends EventEmitter {
       this.messageQueue,
       this,
       this.messageDB,
+      sessionApi?.ws_url,
     );
     this.channelManager = new ChannelManager(
       this.apiClient,

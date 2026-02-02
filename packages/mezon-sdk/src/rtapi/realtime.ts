@@ -456,7 +456,11 @@ export interface Envelope {
     | AllowAnonymousEvent
     | undefined;
   /** Message sending to another server for update localcache */
-  update_localcache_event?: UpdateLocalCacheEvent | undefined;
+  update_localcache_event?:
+    | UpdateLocalCacheEvent
+    | undefined;
+  /** Clan Created Event */
+  clan_created_event?: ClanCreatedEvent | undefined;
 }
 
 export interface UpdateLocalCacheEvent {
@@ -1421,6 +1425,19 @@ export interface UserClanRemoved {
   user_ids: string[];
 }
 
+export interface ClanCreatedEvent {
+  /** clan id */
+  clan_id: string;
+  /** clan name */
+  clan_name: string;
+  /** logo */
+  logo: string;
+  /** creator id */
+  creator_id: string;
+  /** general channel id */
+  welcome_channel_id: string;
+}
+
 /** clan updated event */
 export interface ClanUpdatedEvent {
   /** clan id */
@@ -1878,6 +1895,7 @@ function createBaseEnvelope(): Envelope {
     active_archived_thread: undefined,
     allow_anonymous_event: undefined,
     update_localcache_event: undefined,
+    clan_created_event: undefined,
   };
 }
 
@@ -2159,6 +2177,9 @@ export const Envelope = {
     }
     if (message.update_localcache_event !== undefined) {
       UpdateLocalCacheEvent.encode(message.update_localcache_event, writer.uint32(738).fork()).ldelim();
+    }
+    if (message.clan_created_event !== undefined) {
+      ClanCreatedEvent.encode(message.clan_created_event, writer.uint32(746).fork()).ldelim();
     }
     return writer;
   },
@@ -2814,6 +2835,13 @@ export const Envelope = {
 
           message.update_localcache_event = UpdateLocalCacheEvent.decode(reader, reader.uint32());
           continue;
+        case 93:
+          if (tag !== 746) {
+            break;
+          }
+
+          message.clan_created_event = ClanCreatedEvent.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3034,6 +3062,9 @@ export const Envelope = {
         : undefined,
       update_localcache_event: isSet(object.update_localcache_event)
         ? UpdateLocalCacheEvent.fromJSON(object.update_localcache_event)
+        : undefined,
+      clan_created_event: isSet(object.clan_created_event)
+        ? ClanCreatedEvent.fromJSON(object.clan_created_event)
         : undefined,
     };
   },
@@ -3317,6 +3348,9 @@ export const Envelope = {
     }
     if (message.update_localcache_event !== undefined) {
       obj.update_localcache_event = UpdateLocalCacheEvent.toJSON(message.update_localcache_event);
+    }
+    if (message.clan_created_event !== undefined) {
+      obj.clan_created_event = ClanCreatedEvent.toJSON(message.clan_created_event);
     }
     return obj;
   },
@@ -3624,6 +3658,9 @@ export const Envelope = {
       (object.update_localcache_event !== undefined && object.update_localcache_event !== null)
         ? UpdateLocalCacheEvent.fromPartial(object.update_localcache_event)
         : undefined;
+    message.clan_created_event = (object.clan_created_event !== undefined && object.clan_created_event !== null)
+      ? ClanCreatedEvent.fromPartial(object.clan_created_event)
+      : undefined;
     return message;
   },
 };
@@ -11971,6 +12008,125 @@ export const UserClanRemoved = {
     const message = createBaseUserClanRemoved();
     message.clan_id = object.clan_id ?? "0";
     message.user_ids = object.user_ids?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseClanCreatedEvent(): ClanCreatedEvent {
+  return { clan_id: "0", clan_name: "", logo: "", creator_id: "0", welcome_channel_id: "0" };
+}
+
+export const ClanCreatedEvent = {
+  encode(message: ClanCreatedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
+    }
+    if (message.clan_name !== "") {
+      writer.uint32(18).string(message.clan_name);
+    }
+    if (message.logo !== "") {
+      writer.uint32(26).string(message.logo);
+    }
+    if (message.creator_id !== "0") {
+      writer.uint32(32).int64(message.creator_id);
+    }
+    if (message.welcome_channel_id !== "0") {
+      writer.uint32(40).int64(message.welcome_channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanCreatedEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanCreatedEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.clan_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.clan_name = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.logo = reader.string();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.creator_id = longToString(reader.int64() as Long);
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.welcome_channel_id = longToString(reader.int64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanCreatedEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
+      logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "0",
+      welcome_channel_id: isSet(object.welcome_channel_id) ? globalThis.String(object.welcome_channel_id) : "0",
+    };
+  },
+
+  toJSON(message: ClanCreatedEvent): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "0") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.clan_name !== "") {
+      obj.clan_name = message.clan_name;
+    }
+    if (message.logo !== "") {
+      obj.logo = message.logo;
+    }
+    if (message.creator_id !== "0") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.welcome_channel_id !== "0") {
+      obj.welcome_channel_id = message.welcome_channel_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanCreatedEvent>, I>>(base?: I): ClanCreatedEvent {
+    return ClanCreatedEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ClanCreatedEvent>, I>>(object: I): ClanCreatedEvent {
+    const message = createBaseClanCreatedEvent();
+    message.clan_id = object.clan_id ?? "0";
+    message.clan_name = object.clan_name ?? "";
+    message.logo = object.logo ?? "";
+    message.creator_id = object.creator_id ?? "0";
+    message.welcome_channel_id = object.welcome_channel_id ?? "0";
     return message;
   },
 };

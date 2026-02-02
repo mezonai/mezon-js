@@ -38,7 +38,11 @@ export interface ApiClanDescList {
     token?: string;
     // UserId
     user_id: string;
-    //
+    // endpoint url that belong to user
+    api_url?: string;
+    // socket url
+    ws_url?: string;
+    // id token for zklogin
     id_token?: string;
   }
   
