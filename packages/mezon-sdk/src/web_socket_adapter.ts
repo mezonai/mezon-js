@@ -44,9 +44,9 @@ export interface WebSocketAdapter {
     onOpen: ((event: WebSocket.Event) => void) | null;
 
     isOpen(): boolean;
-    close(): void;
-    connect(scheme: string, host: string, port: string, createStatus: boolean, token: string): void;
-    send(message: any): void;
+    close() : void;
+    connect(scheme: string, ws_url: string, createStatus: boolean, token : string) : void;
+    send(message: any) : void;
 }
 
 /**
@@ -133,9 +133,8 @@ export class WebSocketAdapterText implements WebSocketAdapter {
         return this._socket?.readyState == WebSocket.OPEN;
     }
 
-    connect(scheme: string, host: string, port: string, createStatus: boolean, token: string): void {
-        const portPart = port ? `:${port}` : '';
-        const url = `${scheme}${host}${portPart}/ws?lang=en&status=${encodeURIComponent(createStatus.toString())}&token=${encodeURIComponent(token)}`;
+    connect(scheme: string, ws_url: string, createStatus: boolean, token: string): void {
+        const url = `${scheme}${ws_url}/ws?lang=en&status=${encodeURIComponent(createStatus.toString())}&token=${encodeURIComponent(token)}`;
         this._socket = new WebSocket(url);
     }
 

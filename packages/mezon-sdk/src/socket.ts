@@ -182,13 +182,14 @@ export class DefaultSocket implements Socket {
   public session: Session | undefined;
 
   constructor(
-      readonly host: string,
-      readonly port: string,
-      readonly useSSL: boolean = false,
-      public verbose: boolean = false,
-      readonly adapter : WebSocketAdapter = new WebSocketAdapterText(),
-      readonly sendTimeoutMs : number = DefaultSocket.DefaultSendTimeoutMs
-      ) {
+    readonly ws_url: string,
+    readonly host: string,
+    readonly port: string,
+    readonly useSSL: boolean = false,
+    public verbose: boolean = false,
+    readonly adapter: WebSocketAdapter = new WebSocketAdapterText(),
+    readonly sendTimeoutMs: number = DefaultSocket.DefaultSendTimeoutMs,
+  ) {
     this.cIds = {};
     this.nextCid = 1;
     this._heartbeatTimeoutMs = DefaultSocket.DefaultHeartbeatTimeoutMs;
@@ -231,8 +232,13 @@ export class DefaultSocket implements Socket {
     this.clearConnectTimeout();
     this._connectionState = ConnectionState.CONNECTING;
 
-    const scheme = (this.useSSL) ? "wss://" : "ws://";
-    this.adapter.connect(scheme, this.host, this.port, createStatus, session.token);
+    const scheme = this.useSSL ? "wss://" : "ws://";
+    this.adapter.connect(
+      scheme,
+      this.ws_url,
+      createStatus,
+      session.token,
+    );
 
     this.adapter.onClose = (evt: CloseEvent) => {
       this._connectionState = ConnectionState.DISCONNECTED;

@@ -391,11 +391,13 @@ export interface ApiMessageRef {
   channel_label?: string;
 }
 
+/** A list of users belonging to a channel, along with their role. */
 export interface ApiVoiceChannelUserList {
   //
   voice_channel_users?: Array<ApiVoiceChannelUser>;
 }
 
+/** A list of users belonging to a channel, along with their role. */
 export interface ApiVoiceChannelUser {
   //Cursor for the next page of results, if any.
   id?: string;
@@ -404,7 +406,7 @@ export interface ApiVoiceChannelUser {
   //
   participant?: string;
   //User for a channel.
-  user_id?: string;
+  user_ids?: Array<string>;
 }
 
 export interface IInteractiveMessageProps {

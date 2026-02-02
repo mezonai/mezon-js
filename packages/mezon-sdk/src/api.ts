@@ -42,7 +42,6 @@ export class MezonApi {
           signal: controller.signal,
         });
       } catch (e: any) {
-        console.log('eeeeeeeeeeee', e)
         if (e?.name === "AbortError") throw new Error("Request timed out.");
         throw e;
       } finally {
@@ -60,10 +59,6 @@ export class MezonApi {
   ): Promise<T> {
     if (response.status === 204) {
       return (opts?.emptyAs ?? ({} as any)) as T;
-    }
-
-    if (response.status < 200 || response.status >= 300) {
-      throw response;
     }
 
     const ct = (response.headers.get("content-type") || "").toLowerCase();
@@ -113,9 +108,14 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] =
         "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     const res = await this.rateLimitFetch(fullUrl, fetchOptions);
-    return this.handleResponse<ApiSession>(res, { emptyAs: {} as ApiSession });
+    return this.handleResponse<ApiSession>(res, {
+      emptyAs: {} as ApiSession,
+      decode: (bytes) =>
+        tsproto.Session.decode(bytes) as ApiSession,
+    });
   }
 
   /** Create a new channel with the current user as the owner. */
@@ -287,12 +287,8 @@ export class MezonApi {
   async listChannelVoiceUsers(
     bearerToken: string,
     clanId?: string,
-    channelId?: string,
-    channelType?: number,
     limit?: number,
-    state?: number,
-    cursor?: string,
-    options: any = {},
+    options = {}
   ): Promise<ApiVoiceChannelUserList> {
     const urlPath = "/mezon.api.Mezon/ListChannelVoiceUsers";
     const queryParams = new Map<string, any>();
@@ -300,11 +296,7 @@ export class MezonApi {
     const encodedBody = tsproto.ListChannelUsersRequest.encode(
       tsproto.ListChannelUsersRequest.fromPartial({
         clan_id: clanId,
-        channel_id: channelId,
-        channel_type: channelType,
-        limit,
-        state,
-        cursor,
+        limit: limit,
       }),
     ).finish();
 
