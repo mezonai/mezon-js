@@ -17,6 +17,23 @@ if (!fs.existsSync('dist')) {
 
 const isWatch = process.argv.includes('--watch');
 
+const minifyCssPlugin = {
+   name: 'minify-css',
+   setup(build) {
+      build.onLoad({ filter: /\.css$/ }, async (args) => {
+         const css = await fs.promises.readFile(args.path, 'utf8');
+         const result = await esbuild.transform(css, {
+            loader: 'css',
+            minify: true,
+         });
+         return {
+            contents: result.code,
+            loader: 'text',
+         };
+      });
+   },
+};
+
 const buildConfig = {
    entryPoints: ['src/index.ts'],
    bundle: true,
@@ -24,10 +41,10 @@ const buildConfig = {
    target: ['es2015'],
    globalName: 'MezonLightChat',
    loader: {
-      '.css': 'text',
       '.ts': 'ts',
       '.svg': 'text',
    },
+   plugins: [minifyCssPlugin],
    banner: {
       js: banner
    }
@@ -47,26 +64,14 @@ async function build() {
    } else {
       console.log('🚀 Building library...');
 
-      // 1. Unminified build (for debugging/development)
+      // Minified build only (Production/CDN ready)
       await esbuild.build({
-         ...buildConfig,
-         outfile: 'dist/mezon-chat-widget.js',
-         format: 'iife', // Browser script tag ready
-         sourcemap: true,
-         legalComments: 'none',
-         minifyIdentifiers: true,
-         minifySyntax: true,
-         minifyWhitespace: true,
-         drop: ['console', 'debugger'],
-      });
-
-      // 2. Minified build (Production/CDN ready)
-      const result = await esbuild.build({
          ...buildConfig,
          outfile: 'dist/mezon-chat-widget.min.js',
          format: 'iife',
          sourcemap: false,
          minify: true,
+         legalComments: 'none',
          // Drop console.logs in production minified build for smaller size
          drop: ['console', 'debugger'],
       });
@@ -76,7 +81,6 @@ async function build() {
       const stats = fs.statSync('dist/mezon-chat-widget.min.js');
       const sizeKB = (stats.size / 1024).toFixed(2);
 
-      console.log(`📦 Development: dist/mezon-chat-widget.js`);
       console.log(`📦 Production:  dist/mezon-chat-widget.min.js (${sizeKB} KB) -> Ready for CDN`);
    }
 }

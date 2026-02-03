@@ -1,8 +1,10 @@
 import type { LightClient } from 'mezon-light-sdk';
-import { ChatMessage, MezonLightChatConfig, UserInfo } from '../types';
-import { LoginView } from './LoginView';
 import { t } from '../i18n';
 import headerIconSvg from '../icons/logo.svg';
+import { ChatService } from '../services/ChatService';
+import { LogService } from '../services/LogService';
+import { ChatMessage, MezonLightChatConfig, UserInfo } from '../types';
+import { LoginView } from './LoginView';
 export class ChatWidget {
   private container: HTMLElement;
   private messagesContainer: HTMLElement;
@@ -64,11 +66,13 @@ export class ChatWidget {
         await client.refreshSession();
 
         if (this.config.saveSession) {
-          const { SessionManager } = await import('../utils/SessionManager');
-          SessionManager.saveSession(client.getSession(), {
-            user_id: session.user_id,
-            username: session.username,
-            name: session.name
+          const { StorageService } = await import('../services/StorageService');
+          const storage = new StorageService();
+          storage.save({
+             ...client.session,
+             user_id: session.user_id,
+             username: session.username,
+             name: session.name
           });
         }
       }
@@ -80,8 +84,8 @@ export class ChatWidget {
       });
     } catch (error) {
       console.error('Failed to restore session:', error);
-      const { SessionManager } = await import('../utils/SessionManager');
-      SessionManager.clearSession();
+      const { StorageService } = await import('../services/StorageService');
+      new StorageService().clear();
       this.showLoginView();
     }
   }
@@ -174,8 +178,14 @@ export class ChatWidget {
     this.isAuthenticated = true;
 
     if (this.config.saveSession) {
-      const { SessionManager } = await import('../utils/SessionManager');
-      SessionManager.saveSession(client.getSession(), user);
+      const { StorageService } = await import('../services/StorageService');
+      const storage = new StorageService();
+      storage.save({
+        ...client.session,
+        user_id: user.user_id,
+        username: user.username,
+        name: user.name
+      });
     }
 
     if (this.loginView) {
@@ -235,23 +245,23 @@ export class ChatWidget {
 
   private async initializeChatService(client: LightClient): Promise<void> {
     try {
-      const { ChatService } = await import('./ChatService');
       const chatService = new ChatService(client);
 
       await chatService.connect();
 
-      chatService.setMessageHandler((msg) => {
+      chatService.onMessage((msg) => {
+        // Services/ChatService already filters own messages, but we check just in case or for UI logic
         if (msg.sender_id !== client.userId) {
           this.addMessage({
-            id: msg.message_id!,
-            content: (msg.content as any)?.t ?? JSON.stringify(msg.content),
+            id: msg.id,
+            content: msg.content,
             sender: 'ai',
-            timestamp: msg.create_time_seconds! * 1000
+            timestamp: msg.timestamp
           });
         }
       });
 
-      chatService.setErrorHandler((error) => {
+      chatService.onError((error) => {
         console.error('Chat service error:', error);
         if (this.config.onError) {
           this.config.onError(error);
@@ -260,9 +270,9 @@ export class ChatWidget {
 
       (this as any).chatService = chatService;
 
-      console.log('✅ Chat service initialized');
+      LogService.log('✅ Chat service initialized');
     } catch (error) {
-      console.error('Failed to initialize chat service:', error);
+      LogService.error('Failed to initialize chat service:', error);
       if (this.config.onError) {
         this.config.onError(error as Error);
       }

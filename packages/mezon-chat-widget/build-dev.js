@@ -1,64 +1,70 @@
+
 import { spawn } from 'child_process';
 import * as esbuild from 'esbuild';
 import * as fs from 'fs';
 
 // Ensure directories exist
-if (!fs.existsSync('dist')) {
-   fs.mkdirSync('dist', { recursive: true });
+const devPublicDir = 'development/public';
+if (!fs.existsSync(devPublicDir)) {
+   fs.mkdirSync(devPublicDir, { recursive: true });
 }
 
-let serverProcess = null;
+let apiProcess = null;
+let webProcess = null;
 
-// Function to start the demo server
-function startServer() {
-   if (serverProcess) {
-      serverProcess.kill();
-   }
+function startServers() {
+   // Start API Server
+   console.log('🔌 Starting API Server (3001)...');
+   apiProcess = spawn('node', ['development/api-server.js'], {
+      stdio: 'inherit',
+      shell: true
+   });
 
-   console.log('\n🚀 Starting demo server...\n');
-   serverProcess = spawn('node', ['demo/server.js'], {
+   console.log('🌍 Starting Web Server (3000)...');
+   webProcess = spawn('node', ['development/web-server.js'], {
       stdio: 'inherit',
       shell: true
    });
 }
 
-// Build configuration
-const buildConfig = {
+// Kill processes on exit
+const cleanup = async (ctx) => {
+   console.log('\n\n👋 Shutting down...');
+   if (apiProcess) apiProcess.kill();
+   if (webProcess) webProcess.kill();
+   if (ctx) await ctx.dispose();
+   process.exit(0);
+};
+
+// Build Config for Development
+const devBuildConfig = {
    entryPoints: ['src/index.ts'],
    bundle: true,
    platform: 'browser',
    target: ['es2020'],
-   outfile: 'dist/mezon-light-chat.js',
+   outfile: 'development/public/mezon-chat.js', // Output directly to development/public
    format: 'iife',
    globalName: 'MezonLightChat',
    sourcemap: true,
    minify: false,
-   external: [],
    loader: {
-      '.css': 'text'
-   }
+      '.css': 'text',
+      '.svg': 'text'
+   },
+   plugins: []
 };
 
-// Initial build
-console.log('🔨 Building library...\n');
-const ctx = await esbuild.context(buildConfig);
+async function run() {
+   console.log('🔨 Building for Development...');
+   const ctx = await esbuild.context(devBuildConfig);
 
-await ctx.watch();
-console.log('👀 Watching for changes...\n');
+   await ctx.watch();
+   console.log('👀 Watching src for changes...');
 
-// Start server after initial build
-setTimeout(startServer, 1000);
+   // Start servers
+   startServers();
 
-// Handle cleanup
-process.on('SIGINT', async () => {
-   console.log('\n\n👋 Shutting down...\n');
-   if (serverProcess) {
-      serverProcess.kill();
-   }
-   await ctx.dispose();
-   process.exit(0);
-});
+   process.on('SIGINT', () => cleanup(ctx));
+}
 
-console.log('✅ Development server ready!');
-console.log('📝 Edit files in src/ to see changes');
-console.log('🌐 Open http://localhost:3000 in your browser\n');
+run();

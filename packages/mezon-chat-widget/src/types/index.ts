@@ -1,39 +1,17 @@
-// Type definitions for Mezon Light Chat Widget
-
 export interface MezonLightChatConfig {
-  // OAuth configuration - only base URL needed
   apiBaseUrl: string;
-
   apiOauthPath?: string;
-
   apiExchangePath?: string;
-  
-  // Chat configuration
-  peerId?: string; // Peer user ID to chat with
-  
-  // Session management
-  saveSession?: boolean; // Save session to sessionStorage
-  
-  // Auto features
-  autoOpen?: boolean; // Auto-open chat after DM start
-  
-  // UI customization
+  peerId: string; 
+  saveSession?: boolean; 
+  autoOpen?: boolean; 
   theme?: MezonTheme;
-  
-  // Widget position
   position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
-  
-  // Custom CSS classes
   customClass?: string;
-  
-  // Welcome message
   welcomeMessage?: string;
-
   iconChat?: string
-
   iconHeader?: string;
   
-  // Callbacks
   onReady?: () => void;
   onLogin?: (user: any) => void;
   onLogout?: () => void;
@@ -59,6 +37,11 @@ export interface OAuthTokens {
   access_token: string;
   refresh_token?: string;
   id_token?: string;
+}
+
+export interface ExchangeResponse {
+  tokens: OAuthTokens;
+  user: UserInfo;
 }
 
 export interface MezonTheme {

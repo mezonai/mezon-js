@@ -1,612 +1,305 @@
-
 # Mezon Light Chat Widget
 
-  
+**Mezon Light Chat Widget** is a lightweight, embeddable chat widget built on top of the **Mezon SDK**.
 
-**Mezon Light Chat Widget** is a lightweight, embeddable chat widget built on top of **Mezon SDK**.
-
-It is delivered as a **single JavaScript file** and exposed as a **Web Component (`<mezon-chat>`)**, allowing seamless integration into any website without frameworks.
-
-  
-
-----------
-
-  
+It is delivered as a **single JavaScript file** containing a standard **Web Component (`<mezon-chat>`)**, allowing seamless integration into any website regardless of the framework (React, Vue, Angular, or Vanilla JS).
 
 ## ✨ Features
 
-  
+- 🧩 **Web Component** (`<mezon-chat>`) - Standard, framework-agnostic integration.
+- 📦 **Single JS File** – Easy to load via CDN or script tag.
+- 🎨 **Flexible Theming** - Built-in themes (`warm-amber`, `astra`, etc.) or custom Hex colors.
+- 🔐 **Secure OAuth Flow** - Handles authentication securely via your backend.
+- 🔌 **Auto-Reconnect** - Smart connection handling with session persistence.
 
-- 🧩 Web Component (`<mezon-chat>`)
-
-- 📦 Single JS file – CDN & script-tag friendly
-
-- 🎨 Theme support (hex color or registered themes)
-
-  
-
-----------
-
-  
+---
 
 ## 📦 Installation
 
-  
+### Option 1: Script Tag (Recommended for Static Sites)
 
-### Script tag usage
-
-  
-
-Load the widget **once**, preferably **before the closing `</body>` tag**:
-
-  
+Load the widget script once, preferably before the closing `</body>` tag:
 
 ```html
-
-<script  src="path/mezon-light-chat.min.js"></script>
-
-  
-
+<script src="path/to/mezon-light-chat.min.js"></script>
 ```
 
-  
+### Option 2: NPM (For Bundlers)
 
-This automatically:
+```bash
+npm install mezon-chat-widget
+```
 
-  
+Then import it in your application entry point:
 
-- Registers the `<mezon-chat>` custom element
+```javascript
+import 'mezon-chat-widget';
+```
 
-- Makes the widget ready to use without any additional setup
+---
 
-  
+## 🚀 Basic Usage
 
-----------
-
-  
-
-## 🚀 Basic Usage (HTML Example)
-
-  
-
-This is the **recommended and correct usage pattern**, based on the actual implementation.
-
-  
+Add the custom element to your HTML.Attributes handle the configuration:
 
 ```html
-
-<!DOCTYPE  html>
-
-<html  lang="en">
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-
-<meta  charset="UTF-8"  />
-
-<meta  name="viewport"  content="width=device-width, initial-scale=1.0"  />
-
-<title>Mezon Light Chat Demo</title>
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mezon Chat Integration</title>
 </head>
-
 <body>
 
-  
+    <!-- Your Content -->
+    <h1>Welcome to our Platform</h1>
 
-<!-- Page content -->
+    <script src="dist/mezon-light-chat.min.js"></script>
 
-<h1>Welcome to our website</h1>
-
-  
-
-<!-- Load Mezon Light Chat -->
-
-<script  src="dist/mezon-light-chat.min.js"></script>
-
-  
-
-<!-- Use the Web Component -->
-
-<mezon-chat
-
-api-base-url="http://localhost:3000"
-
-peer-id="1959485009781854208"
-
-save-session="true"
-
-theme="warm-amber"
-
-></mezon-chat>
-
-  
+    <!-- Initialize Component -->
+    <mezon-chat
+        api-base-url="https://api.yourdomain.com"
+        peer-id="1959485009781854208"
+        save-session="false"
+        theme="warm-amber"
+    ></mezon-chat>
 
 </body>
-
 </html>
-
-  
-
 ```
 
-  
+---
 
-✅ No framework required
-
-✅ No manual initialization needed
-
-✅ Chat initializes automatically when required config is present
-
-  
-
-----------
-
-  
-
-## 🔧 Attributes
-
-  
-  
+## 🔧 Configuration Attributes
 
 | Attribute | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `api-base-url` | `string` | ✅ | Base URL of your backend API (e.g., `https://api.myapp.com`). |
+| `api-oauth-path` | `string` | ❌ | Path to get OAuth URL (default: `api/auth/url`). |
+| `api-exchange-path` | `string` | ❌ | Path to exchange code (default: `api/auth/exchange`). |
+| `peer-id` | `string` | ❌ | Automatically open a DM with this User ID. |
+| `save-session` | `boolean` | ❌ | Persist login session (tokens) across reloads (default: `false`). |
+| `auto-open` | `boolean` | ❌ | Open the chat window automatically on load. |
+| `welcome-message` | `string` | ❌ | Custom message shown before conversation starts. |
+| `position` | `string` | ❌ | `bottom-right` (default) or `bottom-left`. |
+| `theme` | `string` | ❌ | Theme name (e.g., `astra`) or Hex color. |
 
-|----------|------|----------|-------------|
+---
 
-| `api-base-url` | `string` | ✅ | Base URL of your backend API |
+## 🎨 Themes
 
-| `api-oauth-path` | `string` | ❌ | API path to get OAuth login URL |
+You can style the widget using pre-built themes or custom colors.
 
-| `api-exchange-path` | `string` | ❌ | API path to exchange OAuth code |
+### Built-in Themes
 
-| `peer-id` | `string` | ❌ | Auto start DM with this peer |
+| Theme Name | Primary Color | Description |
+|------------|---------------|-------------|
+| `warm-amber` | `#E08926` | Warm, friendly, good for support. |
+| `pulse-red` | `#ED1B23` | Bold, energetic, good for alerts. |
+| `astra` | `#464FB9` | Clean, professional, deep blue. |
+| `calm-violet` | `#8758A3` | Elegant, tech-focused. |
+| `clear-sky` | `#25AAE1` | Fresh, modern, SaaS style. |
 
-| `save-session` | `boolean` | ❌ | Restore previous session on reload |
+### Custom Styling
 
-| `auto-open` | `boolean` | ❌ | Automatically open chat on load |
-
-| `welcome-message` | `string` | ❌ | Initial welcome message |
-
-| `position` | `string` | ❌ | Widget position (`bottom-right`, `bottom-left`) |
-
-| `theme` | `string` | ❌ | Hex color or registered theme name |
-
-| `custom-class` | `string` | ❌ | Custom CSS class |
-
-| `icon-chat` | `string` | ❌ | Custom chat icon URL |
-
-| `icon-header` | `string` | ❌ | Custom header icon URL |
-
-  
-  
-
-----------
-
-  
-
-## 🎨 Built-in Themes
-
-  
-
-Mezon Light Chat Widget provides a number of **pre-built themes**, helping you integrate quickly without needing to manually customize CSS.
-
-  
-
-Just pass the **`theme` attribute** with the corresponding theme name.
-
-  
-
-### 📌 Usage
-
-  
+Pass a hex code directly to the `theme` attribute:
 
 ```html
-
-<mezon-chat
-
-api-base-url="https://api.yourdomain.com"
-
-theme="warm-amber"
-
-></mezon-chat>
-
-  
-
+<mezon-chat theme="#ff5722"></mezon-chat>
 ```
 
-  
+---
 
-----------
+## 🔐 OAuth Flow & Server Requirements
 
-  
+The widget relies on **Authorization Code Flow** for security. It does **not** handle sensitive secrets on the client side. Your backend must mediate the authentication.
 
-### 🌈 Available Themes
+### Flow Overview
+1. **Widget** calls `GET /api/auth/url` (on your backend). Can be configured by `api-oauth-path` attribute.
+2. **Backend** constructs the Mezon OAuth URL and returns it.
+3. **Widget** opens a popup to Mezon for user login.
+4. **Mezon** redirects back to your site with a `code`.
+5. **Widget** intercepts the `code` and calls `POST /api/auth/exchange` (on your backend). Can be be configured by `api-exchange-path` attribute. 
+6. **Backend** exchanges the code for tokens (server-to-server) and returns user info.
+7. **Widget** initializes the chat session.
 
-  
-  
+### Required Backend Endpoints
 
-| Theme Name | Description | Primary Color | Border Radius | Font |
+#### 1. Get Auth URL
+**GET** `{api-base-url}/api/auth/url`
 
-|-----------|------------|---------------|---------------|------|
-
-| `warm-amber` | Warm & friendly, suitable for landing pages and support | `#E08926` | `10px` | Inter |
-
-| `pulse-red` | Bold & energetic, suitable for alerts and sales | `#ED1B23` | `6px` | Inter |
-
-| `astra` | Clean & professional, inspired by Astra theme | `#464FB9` | `4px` | SVN-Avo |
-
-| `calm-violet` | Calm & elegant, suitable for tech products | `#8758A3` | `8px` | Inter |
-
-| `clear-sky` | Fresh & modern, suitable for SaaS dashboards | `#25AAE1` | `8px` | Inter |
-
-  
-
-----------
-
-  
-
-### 🎯 Custom Theme (Optional)
-
-  
-  
-
-In addition to pre-built themes, you can also:
-
-  
-
-- Transmit **hex color** directly:
-
-  
-
-```html
-
-<mezon-chat  theme="#25AAE1"></mezon-chat>
-
-  
-
-```
-
-  
-
-- Or **register private theme** in code (advanced usage).
-
-  
-
-----------
-
-  
-
-If you want, I can:
-
-  
-
-- Write more **preview screenshot section**
-
-- Add **Dark theme**
-
-- Or write README in format **npm package / GitHub release**
-
-  
-
-Are you publicizing this widget for **external users** or **internal products**?
-
-  
-
-----------
-
-  
-
-## 🧠 JavaScript API
-
-  
-
-### Public Methods
-
-  
-
-```js
-
-const  chat = document.querySelector('mezon-chat');
-
-  
-
-chat.open();
-
-chat.close();
-
-  
-
-await  chat.startDM('peer-user-id');
-
-  
-
-chat.sendMessage('Hello');
-
-  
-
-chat.logout();
-
-  
-
-```
-
-  
-  
-
-----------
-
-  
-
-## 🔐 OAuth Flow
-
-  
-
-1. User opens the chat
-
-2. OAuth popup is triggered
-
-3. Backend exchanges `code` via `api-exchange-path`
-
-4. Tokens & user data are returned
-
-5. Session is optionally saved
-
-6. Chat initializes automatically
-
-  
-
-No manual OAuth wiring is required.
-
-  
-----------
-
-## 🔐 Server Requirements – OAuth Endpoints
-
-To integrate **Mezon Light Chat Widget**, your backend **must expose exactly two OAuth-related endpoints**.
-
-> The widget **does not implement OAuth logic on the client**.  
-> All sensitive operations (client secret, token exchange) **must be handled by the server**.
-
-----------
-
-### 1️⃣ Get OAuth Login URL
-
-#### `GET /api/auth/url`
-
-This endpoint generates the OAuth authorization URL and returns it to the widget.
-
-##### Responsibilities
-
--   Generate a secure `state`
-    
--   Construct OAuth authorization URL
-    
--   Return the full redirect URL
-    
-
-##### Request
-
-```http
-GET /api/auth/url
-
-```
-
-##### Response
-
+**Response:**
 ```json
 {
-  "url": "https://oauth.provider.com/oauth2/auth?client_id=xxx&redirect_uri=xxx&response_type=code&scope=openid offline&state=abc123"
+  "url": "https://mezon.ai/oauth2/auth?client_id=...&state=...&redirect_uri=..."
 }
-
 ```
 
-##### Notes
+#### 2. Exchange Code
+**POST** `{api-base-url}/api/auth/exchange`
 
--   The widget opens this URL in a popup
-    
--   OAuth provider redirects back with `code`
-    
--   No client secret is exposed to the browser
-    
-
-----------
-
-### 2️⃣ Exchange Authorization Code
-
-#### `POST /api/auth/exchange`
-
-This endpoint exchanges the OAuth `code` for tokens and user information.
-
-##### Responsibilities
-
--   Receive `code` (and optional `state`)
-    
--   Exchange code for access token
-    
--   Fetch user profile
-    
--   Return combined authentication data
-    
-
-##### Request
-
-```http
-POST /api/auth/exchange
-Content-Type: application/json
-
+**Request:**
+```json
 {
-  "code": "authorization_code",
-  "state": "abc123"
+  "code": "exchange_code",
+  "state": "security_token"
 }
-
 ```
 
-##### Response (example)
-
+**Response (Standard):**
 ```json
 {
   "tokens": {
-    "access_token": "eyJhbGciOi...",
-    "refresh_token": "xxx",
+    "access_token": "...",
+    "refresh_token": "...",
     "expires_in": 3600
   },
   "user": {
-    "user_id": "u_123",
-    "username": "phu.nguyen",
-    "name": "Phu Nguyen",
-    "avatar": "https://cdn.example.com/avatar.svg"
+    "user_id": "123",
+    "name": "John Doe",
+    "avatar": "..."
   }
 }
-
 ```
 
-##### Security Notes
+---
 
--   This endpoint **must run server-side**
-    
--   `client_secret` must never be exposed
-    
--   Always validate OAuth `state`
-    
--   HTTPS is required in production
-    
+## 🧠 JavaScript API
 
-----------
+You can control the widget programmatically:
 
-### 🔄 OAuth Flow Overview
+```javascript
+const chat = document.querySelector('mezon-chat');
 
-```text
-User opens chat
-   ↓
-Widget calls GET /api/auth/url
-   ↓
-OAuth popup opens
-   ↓
-Provider redirects with code
-   ↓
-Widget calls POST /api/auth/exchange
-   ↓
-Backend exchanges token + fetches user
-   ↓
-Chat session initializes
+// Open/Close
+chat.open();
+chat.close();
 
+// Start a DM programmatically
+await chat.startDM('123456789');
+
+// Send a message
+chat.sendMessage('Hello from JS!');
+
+// Logout
+chat.logout();
 ```
 
-----------
+### Response Mapping (Optional)
+If your backend data structure differs from the standard, you can map it using a callback:
 
-## 🔄 Custom OAuth Data Mapping
+```javascript
+customElements.whenDefined('mezon-chat').then(() => {
+  const MezonChatElement = customElements.get('mezon-chat');
+  
+  /**
+   * Optional: Map your backend response to the widget's expected format.
+   * Expected Return Type: ExchangeResponse
+   */
+  MezonChatElement.exchangeCallBack = (response) => {
+      // Example: If your backend returns { data: { token: "...", profile: { ... } } }
+      const data = response.data; 
 
-The SDK allows **customizing only the returned data**, without altering the OAuth flow.
-
-### Custom exchange data mapping
-
-```html
-<script src="dist/mezon-light-chat.min.js"></script>
-
-<script>
-  MezonChatWidget.exchangeCallBack = (response) => {
-    const data = response.tokens;
-    const user = response.user;
-
-    return {
-      accessToken: data.access_token,
-      refreshToken: data.refresh_token,
-      user: {
-        user_id: user.user_id || user.id,
-        username: user.username,
-        name: user.name,
-        avatar: user.avatar
-      }
-    };
+      return {
+          tokens: {
+            access_token: data.token,
+            refresh_token: data.refresh, 
+            id_token: data.id_token      
+          },
+          user: {
+            user_id: data.profile.uid,
+            username: data.profile.username,
+            name: data.profile.name,         
+            avatar: data.profile.avatar      
+          }
+      };
   };
-</script>
-
+});
 ```
 
-----------
+---
 
-### Custom OAuth final data mapping
+## � TypeScript Interfaces
 
-Use this when your backend returns a **final wrapped login response**.
+If you are using TypeScript, you can leverage these interfaces for type safety.
 
-```html
-<script>
-  MezonChatWidget.oauthCallBack = (response) => {
-    const payload = response.payload || response.data;
+```typescript
+export interface ExchangeResponse {
+  tokens: OAuthTokens;
+  user: UserInfo;
+}
 
-    return {
-      accessToken: payload.token,
-      user: {
-        user_id: payload.profile.uid,
-        username: payload.profile.username,
-        name: payload.profile.name,
-        avatar: payload.profile.avatar
-      }
-    };
-  };
-</script>
+export interface OAuthTokens {
+  access_token: string;
+  refresh_token?: string;
+  id_token?: string;
+}
 
+export interface UserInfo {
+  user_id: string;
+  username: string;
+  name?: string;
+  avatar?: string;
+}
 ```
 
-✅ No custom fetch  
-✅ No custom popup logic  
-✅ No OAuth flow override  
-✅ Safe & SDK-friendly
+---
 
-----------
+## �🛠️ Development
 
-## 🧠 Important Notes
+We use a robust local development environment that simulates the production architecture.
 
--   Callbacks are **data adapters**, not OAuth logic
-    
--   They **do not**:
-    
-    -   Open popup
-        
-    -   Redirect browser
-        
-    -   Call backend APIs
-        
--   Use them **only if backend response shape differs**
-    
-
-----------
-
-## 🛠️ Development
+### Quick Start
 
 ```bash
+# 1. Install dependencies
+npm install
 
-npm  install
-
-npm  run  dev
-
-npm  run  build
-
+# 2. Run development environment
+npm run dev
 ```
 
-Build output:
+This command starts **two servers**:
+1.  **Web Server (Port 3000):** Serves `development/index.html` (Simulating the Client App).
+2.  **API Server (Port 3001):** Simulates the Backend API (OAuth endpoints).
 
-  
+Visit **http://localhost:3000** to see the widget in action.
+
+### Project Structure
 
 ```text
-
-dist/
-
-├─ mezon-light-chat.js # Development (readable + sourcemap)
-
-└─ mezon-light-chat.min.js # Production (minified)
-
+packages/mezon-chat-widget/
+├── src/
+│   ├── components/         # UI Logic (ChatWidget, LoginView)
+│   ├── services/           # Business Logic (Chat, Auth, Storage, Log)
+│   ├── adapters/           # Network Adapters (OAuth)
+│   ├── types/              # TypeScript Definitions
+│   └── MezonChatElement.ts # Web Component Entry Point
+├── development/            # Isolated Dev Environment
+│   ├── public/             # Static Assets (Output dir)
+│   ├── index.html          # Test Host Page
+│   ├── web-server.js       # Express App (Client Host)
+│   └── api-server.js       # Express App (Mock Backend)
+├── dist/                   # Production Builds
+├── build-dev.js            # esbuild script for Dev
+└── build-library.js        # esbuild script for Production
 ```
 
-----------
+### Building for Production
 
-  
+To generate the optimized distribution files:
+
+```bash
+npm run build
+```
+
+**Output (`dist/`):**
+- `mezon-light-chat.min.js`: Production-ready, minified.
+- `mezon-light-chat.js`: Unminified with comments (for debugging).
+
+---
 
 ## 📄 License
 
-  
-
-MIT
-
-  
-
-(c) 2026 Mezon AI
+MIT © 2026 Mezon AI
