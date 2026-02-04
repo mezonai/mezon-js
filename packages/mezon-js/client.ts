@@ -167,7 +167,6 @@ import {
   ApiUpdateUsernameRequest,
   ApiBannedUserList,
   ApiIsBannedResponse,
-  ApiLogedDeviceList,
   ChannelMessage,
   ApiMessageMention,
   ApiMessageAttachment,
@@ -4789,22 +4788,6 @@ export class Client {
       .reportMessageAbuse(session.token, messageId, abuseType)
       .then((response: any) => {
         return response !== undefined;
-      });
-  }
-
-  async listLogedDevice(session: Session): Promise<ApiLogedDeviceList> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .listLogedDevice(session.token)
-      .then((response: ApiLogedDeviceList) => {
-        return Promise.resolve(response);
       });
   }
 

@@ -464,8 +464,8 @@ export interface Envelope {
 }
 
 export interface UpdateLocalCacheEvent {
-  user_ids: string[];
-  channel_ids: string[];
+  params1: string[];
+  params2: string[];
 }
 
 export interface FollowEvent {
@@ -3666,18 +3666,18 @@ export const Envelope = {
 };
 
 function createBaseUpdateLocalCacheEvent(): UpdateLocalCacheEvent {
-  return { user_ids: [], channel_ids: [] };
+  return { params1: [], params2: [] };
 }
 
 export const UpdateLocalCacheEvent = {
   encode(message: UpdateLocalCacheEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     writer.uint32(10).fork();
-    for (const v of message.user_ids) {
+    for (const v of message.params1) {
       writer.int64(v);
     }
     writer.ldelim();
     writer.uint32(18).fork();
-    for (const v of message.channel_ids) {
+    for (const v of message.params2) {
       writer.int64(v);
     }
     writer.ldelim();
@@ -3693,7 +3693,7 @@ export const UpdateLocalCacheEvent = {
       switch (tag >>> 3) {
         case 1:
           if (tag === 8) {
-            message.user_ids.push(longToString(reader.int64() as Long));
+            message.params1.push(longToString(reader.int64() as Long));
 
             continue;
           }
@@ -3701,7 +3701,7 @@ export const UpdateLocalCacheEvent = {
           if (tag === 10) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.user_ids.push(longToString(reader.int64() as Long));
+              message.params1.push(longToString(reader.int64() as Long));
             }
 
             continue;
@@ -3710,7 +3710,7 @@ export const UpdateLocalCacheEvent = {
           break;
         case 2:
           if (tag === 16) {
-            message.channel_ids.push(longToString(reader.int64() as Long));
+            message.params2.push(longToString(reader.int64() as Long));
 
             continue;
           }
@@ -3718,7 +3718,7 @@ export const UpdateLocalCacheEvent = {
           if (tag === 18) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.channel_ids.push(longToString(reader.int64() as Long));
+              message.params2.push(longToString(reader.int64() as Long));
             }
 
             continue;
@@ -3736,20 +3736,18 @@ export const UpdateLocalCacheEvent = {
 
   fromJSON(object: any): UpdateLocalCacheEvent {
     return {
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
-      channel_ids: globalThis.Array.isArray(object?.channel_ids)
-        ? object.channel_ids.map((e: any) => globalThis.String(e))
-        : [],
+      params1: globalThis.Array.isArray(object?.params1) ? object.params1.map((e: any) => globalThis.String(e)) : [],
+      params2: globalThis.Array.isArray(object?.params2) ? object.params2.map((e: any) => globalThis.String(e)) : [],
     };
   },
 
   toJSON(message: UpdateLocalCacheEvent): unknown {
     const obj: any = {};
-    if (message.user_ids?.length) {
-      obj.user_ids = message.user_ids;
+    if (message.params1?.length) {
+      obj.params1 = message.params1;
     }
-    if (message.channel_ids?.length) {
-      obj.channel_ids = message.channel_ids;
+    if (message.params2?.length) {
+      obj.params2 = message.params2;
     }
     return obj;
   },
@@ -3759,8 +3757,8 @@ export const UpdateLocalCacheEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<UpdateLocalCacheEvent>, I>>(object: I): UpdateLocalCacheEvent {
     const message = createBaseUpdateLocalCacheEvent();
-    message.user_ids = object.user_ids?.map((e) => e) || [];
-    message.channel_ids = object.channel_ids?.map((e) => e) || [];
+    message.params1 = object.params1?.map((e) => e) || [];
+    message.params2 = object.params2?.map((e) => e) || [];
     return message;
   },
 };
