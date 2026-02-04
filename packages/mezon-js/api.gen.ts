@@ -11940,37 +11940,6 @@ export class MezonApi {
   }
 
   /**  */
-  listLogedDevice(bearerToken: string,
-      options = {}): Promise<ApiLogedDeviceList> {
-    
-    const urlPath = "/mezon.api.Mezon/ListLogedDevice";
-    const queryParams = new Map<string, any>();
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, '');
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-   
-
-    return Promise.race([
-      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiLogedDeviceList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();      
-          return tsproto.LogedDeviceList.decode(new Uint8Array(buffer)) as ApiLogedDeviceList;
-        } else {
-          throw response;
-        }
-      }),
-      new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
-      ),
-    ]);
-  }
-
-  /**  */
   sendChannelMessage(bearerToken: string,
     clan_id: string,
     channel_id: string,
