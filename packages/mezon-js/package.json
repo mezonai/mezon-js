@@ -43,7 +43,11 @@
   "dependencies": {
     "base64-arraybuffer": "^1.0.2",
     "js-base64": "^3.7.8",
+<<<<<<< Updated upstream
     "mezon-js-protobuf": "^1.10.4",
+=======
+    "mezon-js-protobuf": "^1.10.2",
+>>>>>>> Stashed changes
     "whatwg-fetch": "^3.6.2"
   },
   "peerDependencies": {
