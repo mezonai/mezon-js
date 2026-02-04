@@ -17,7 +17,6 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Configuration
 const oauthConfig = {
    baseUri: process.env.OAUTH_BASE_URI,
    clientId: process.env.OAUTH_CLIENT_ID,
@@ -25,9 +24,6 @@ const oauthConfig = {
    redirectUri: process.env.OAUTH_REDIRECT_URI,
 };
 
-// Routes
-
-// Get Login URL
 app.get('/api/auth/url', (req, res) => {
    console.log('[API] GET /api/auth/url - Generating OAuth URL');
    const state = Math.random().toString(32);
@@ -44,7 +40,6 @@ app.get('/api/auth/url', (req, res) => {
    res.json({ url });
 });
 
-// Exchange Code
 app.post('/api/auth/exchange', async (req, res) => {
    console.log('[API] POST /api/auth/exchange - Exchanging code for token');
    console.log('📦 [API] Request Body:', req.body);
@@ -54,7 +49,6 @@ app.post('/api/auth/exchange', async (req, res) => {
    console.log('🔧 [API] OAuth Config:', {
       baseUri: oauthConfig.baseUri,
       clientId: oauthConfig.clientId,
-      // clientSecret: oauthConfig.clientSecret ? '***' : 'MISSING', // Mask secret for safety
       redirectUri: oauthConfig.redirectUri,
    });
 

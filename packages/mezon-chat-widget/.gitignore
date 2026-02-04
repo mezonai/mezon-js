@@ -2,3 +2,9 @@
 .env
 yarn.lock
 dist
+package-lock.json
+
+development/public
+development/node_modules
+development/package-lock.json
+development/yarn.lock

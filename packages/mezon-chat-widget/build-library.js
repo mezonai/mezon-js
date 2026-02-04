@@ -2,7 +2,6 @@ import * as esbuild from 'esbuild';
 import * as fs from 'fs';
 import { readFileSync } from 'fs';
 
-// Read package.json for version info
 const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
 const version = pkg.version;
 const banner = `/**
@@ -11,27 +10,22 @@ const banner = `/**
  * License: MIT
  */`;
 
-if (!fs.existsSync('dist')) {
-   fs.mkdirSync('dist', { recursive: true });
+fs.mkdirSync('dist', { recursive: true });
 }
-
-const isWatch = process.argv.includes('--watch');
-
-const minifyCssPlugin = {
-   name: 'minify-css',
-   setup(build) {
-      build.onLoad({ filter: /\.css$/ }, async (args) => {
-         const css = await fs.promises.readFile(args.path, 'utf8');
-         const result = await esbuild.transform(css, {
-            loader: 'css',
-            minify: true,
-         });
-         return {
-            contents: result.code,
-            loader: 'text',
-         };
+const banner = `Mezon Light Chat Widget v${version} (c) 2026 Mezon AI License: MIT`;
+setup(build) {
+   build.onLoad({ filter: /\.css$/ }, async (args) => {
+      const css = await fs.promises.readFile(args.path, 'utf8');
+      const result = await esbuild.transform(css, {
+         loader: 'css',
+         minify: true,
       });
-   },
+      return {
+         contents: result.code,
+         loader: 'text',
+      };
+   });
+},
 };
 
 const buildConfig = {
@@ -64,7 +58,6 @@ async function build() {
    } else {
       console.log('🚀 Building library...');
 
-      // Minified build only (Production/CDN ready)
       await esbuild.build({
          ...buildConfig,
          outfile: 'dist/mezon-chat-widget.min.js',
@@ -72,7 +65,6 @@ async function build() {
          sourcemap: false,
          minify: true,
          legalComments: 'none',
-         // Drop console.logs in production minified build for smaller size
          drop: ['console', 'debugger'],
       });
 
