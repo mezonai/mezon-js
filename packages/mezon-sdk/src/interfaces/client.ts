@@ -123,7 +123,7 @@ export interface MessagePayLoad {
 }
 
 export interface EphemeralMessageData {
-  receiver_id: string;
+  receiver_id: string | string[];
   clan_id: string;
   channel_id: string;
   mode: number;

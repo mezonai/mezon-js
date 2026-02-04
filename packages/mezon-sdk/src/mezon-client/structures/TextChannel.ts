@@ -119,7 +119,7 @@ export class TextChannel {
     return { references, topic_id_from_ref: messageRef.topic_id };
   }
 
-  private _buildEphemeralBase(receiver_id: string) {
+  private _buildEphemeralBase(receiver_id: string | string[]) {
     return {
       receiver_id,
       clan_id: this.clan.id,
@@ -130,7 +130,7 @@ export class TextChannel {
   }
 
   async sendEphemeral(
-    receiver_id: string,
+    receiver_id: string | string[],
     content: any,
     reference_message_id?: string,
     mentions?: Array<ApiMessageMention>,

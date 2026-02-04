@@ -959,7 +959,7 @@ export interface Socket {
 
   /** Send a chat message to a chat channel on the server. */
   writeEphemeralMessage(
-    receiver_id: string,
+    receiver_id: string | string[],
     clan_id: string,
     channel_id: string,
     mode: number,
