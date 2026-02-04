@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-
-import * as base64 from "js-base64"
+import * as base64 from "js-base64";
 
 /** A session authenticated for a user with Mezon server. */
 export interface ISession {
@@ -43,8 +42,7 @@ export interface ISession {
 }
 
 export class Session implements ISession {
-
-  token : string;
+  token: string;
   readonly created_at: number;
   expires_at?: number;
   refresh_expires_at?: number;
@@ -53,59 +51,60 @@ export class Session implements ISession {
   vars?: object;
   api_url?: string;
   id_token?: string;
+  ws_url?: string;
 
   constructor(apiSession : any) {
-    const { token, refresh_token, user_id } = apiSession;
-    this.token = token;
-    this.refresh_token = refresh_token;
-    this.user_id = user_id;
+    this.token = apiSession.token;
+    this.refresh_token = apiSession.refresh_token || apiSession.refreshToken;
+    this.user_id = apiSession.user_id || apiSession.userId;
     this.created_at = Math.floor(new Date().getTime() / 1000);
-    this.update(token, refresh_token);
-    this.api_url = apiSession.api_url
-    this.id_token = apiSession?.id_token
+    this.update(apiSession.token, apiSession.refreshToken || apiSession.refresh_token);
+    this.api_url = apiSession.api_url || apiSession.apiUrl
+    this.id_token = apiSession?.id_token || apiSession?.idToken
+    this.ws_url = apiSession?.ws_url || apiSession?.wsUrl
   }
 
   isexpired(currenttime: number): boolean {
-    return (this.expires_at! - currenttime) < 0;
+    return this.expires_at! - currenttime < 0;
   }
 
   isrefreshexpired(currenttime: number): boolean {
-      return (this.refresh_expires_at! - currenttime) < 0;
+    return this.refresh_expires_at! - currenttime < 0;
   }
 
   update(token: string, refreshToken: string) {
-
-    const tokenParts = token.split('.');
+    const tokenParts = token.split(".");
     if (tokenParts.length != 3) {
-      throw 'jwt is not valid.';
+      throw "jwt is not valid.";
     }
 
     const tokenDecoded = JSON.parse(base64.atob(tokenParts[1]));
-    const tokenExpiresAt = Math.floor(parseInt(tokenDecoded['exp']));
+    const tokenExpiresAt = Math.floor(parseInt(tokenDecoded["exp"]));
 
     /** clients that have just updated to the refresh tokens */
     /** client release will not have a cached refresh token */
     if (refreshToken) {
+      const refreshTokenParts = refreshToken.split(".");
 
-        const refreshTokenParts = refreshToken.split('.');
+      if (refreshTokenParts.length != 3) {
+        throw "refresh jwt is not valid.";
+      }
 
-        if (refreshTokenParts.length != 3) {
-            throw 'refresh jwt is not valid.';
-        }
-
-        const refreshTokenDecoded = JSON.parse(base64.atob(refreshTokenParts[1]))
-        const refreshTokenExpiresAt = Math.floor(parseInt(refreshTokenDecoded['exp']));
-        this.refresh_expires_at = refreshTokenExpiresAt;
-        this.refresh_token = refreshToken;
+      const refreshTokenDecoded = JSON.parse(base64.atob(refreshTokenParts[1]));
+      const refreshTokenExpiresAt = Math.floor(
+        parseInt(refreshTokenDecoded["exp"]),
+      );
+      this.refresh_expires_at = refreshTokenExpiresAt;
+      this.refresh_token = refreshToken;
     }
 
     this.token = token;
     this.expires_at = tokenExpiresAt;
     // this.user_id = tokenDecoded['uid'];
-    this.vars = tokenDecoded['vrs'];
+    this.vars = tokenDecoded["vrs"];
   }
 
-  static restore(session : any): Session {
+  static restore(session: any): Session {
     return new Session(session);
   }
 }

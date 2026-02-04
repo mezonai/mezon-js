@@ -34,8 +34,10 @@ export class SocketManager {
     private messageQueue: AsyncThrottleQueue,
     private client: MezonClientCore,
     private messageDB: MessageDatabase,
+    private ws_url: string = "",
   ) {
     this.socket = new DefaultSocket(
+      this.ws_url,
       this.host,
       this.port,
       this.useSSL,
@@ -47,6 +49,7 @@ export class SocketManager {
   createSocket() {
     this.adapter = new WebSocketAdapterPb();
     this.socket = new DefaultSocket(
+      this.ws_url,
       this.host,
       this.port,
       this.useSSL,
@@ -99,6 +102,7 @@ export class SocketManager {
       clanList.push({ clan_id: "0", clan_name: "" });
       for (const clan of clanList) {
         await this.socket.joinClanChat(clan.clan_id || "");
+        console.log('JOIN CLAN DONE!' , clan.clan_id)
         await sleep(50);
         if (!this.client.clans.get(clan.clan_id!)) {
           const clanObj = new Clan(
@@ -115,6 +119,7 @@ export class SocketManager {
             this.messageQueue,
             this.messageDB,
           );
+          console.log('set new clan')
           this.client.clans.set(clan.clan_id!, clanObj);
         }
       }
