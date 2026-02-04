@@ -1,6 +1,6 @@
 {
   "name": "mezon-js",
-  "version": "2.14.75",
+  "version": "2.14.76",
   "scripts": {
     "build": "node build.mjs && rollup -c --bundleConfigAsCjs && tsc --emitDeclarationOnly",
     "build:types": "tsc --emitDeclarationOnly",
@@ -43,7 +43,7 @@
   "dependencies": {
     "base64-arraybuffer": "^1.0.2",
     "js-base64": "^3.7.8",
-    "mezon-js-protobuf": "^1.10.7",
+    "mezon-js-protobuf": "^1.10.8",
     "whatwg-fetch": "^3.6.2"
   },
   "peerDependencies": {
