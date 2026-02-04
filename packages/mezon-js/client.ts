@@ -5030,4 +5030,44 @@ export class Client {
         return Promise.resolve(response);
       });
   }
+
+  async addAgentToChannel(
+    session: Session,
+    roomName?: string,
+    channelId?: string,
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .addAgentToChannel(session.token, roomName, channelId)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async disconnectAgent(
+    session: Session,
+    roomName?: string,
+    channelId?: string,
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .disconnectAgent(session.token, roomName, channelId)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
 }
