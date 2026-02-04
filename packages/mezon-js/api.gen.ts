@@ -12301,5 +12301,87 @@ export class MezonApi {
       ),
     ]);
   }
+
+  addAgentToChannel(bearerToken: string,
+    roomName?: string,
+    channelId?: string,
+    options = {}): Promise<any> {
+    
+    const urlPath = "/mezon.api.Mezon/AddAgentToChannel";
+    const queryParams = new Map<string, any>();
+
+    const body = {
+      room_name: roomName,
+      channel_id: channelId
+    };
+
+    const bodyWriter = tsproto.UpdateAIAgentRequest.encode(
+      tsproto.UpdateAIAgentRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  disconnectAgent(bearerToken: string,
+    roomName?: string,
+    channelId?: string,
+    options = {}): Promise<any> {
+    
+    const urlPath = "/mezon.api.Mezon/DisconnectAgent";
+    const queryParams = new Map<string, any>();
+
+    const body = {
+      room_name: roomName,
+      channel_id: channelId
+    };
+
+    const bodyWriter = tsproto.UpdateAIAgentRequest.encode(
+      tsproto.UpdateAIAgentRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
 }
 
