@@ -8,86 +8,28 @@
 import Long from "long";
 import _m0 from "protobufjs/minimal";
 import {
-  AllUsersAddChannelRequest,
-  AllUsersAddChannelResponse,
-  CategoryDesc,
-  CategoryDescList,
-  ChannelAttachmentList,
-  ChannelDescList,
   ChannelDescription as ChannelDescription1,
   ChannelMessage,
   ChannelMessageHeader,
-  ChannelMessageList,
-  ChannelSettingListRequest,
-  ChannelSettingListResponse,
-  ChannelUserList,
-  ClanDescList,
-  ClanUserList,
   CreateEventRequest,
-  DefaultNotificationCategory,
-  EmojiListedResponse,
-  EmojiRecentList,
-  EventList,
-  FriendList,
   GiveCoffeeEvent,
-  ListChannelAppsRequest,
-  ListChannelAppsResponse,
-  ListChannelAttachmentRequest,
-  ListChannelDescsRequest,
-  ListChannelDetailRequest,
-  ListChannelMessagesRequest,
-  ListChannelUsersRequest,
   ListClanBadgeCountRequest,
   ListClanBadgeCountResponse,
-  ListClanDescRequest,
   ListClanUnreadMsgIndicatorRequest,
   ListClanUnreadMsgIndicatorResponse,
-  ListClanUsersRequest,
-  ListClanWebhookRequest,
-  ListClanWebhookResponse,
-  ListEventsRequest,
-  ListFavoriteChannelRequest,
-  ListFavoriteChannelResponse,
-  ListFriendsRequest,
-  ListNotificationsRequest,
-  ListPermissionOfUsersRequest,
-  ListPermissionsRequest,
-  ListRoleUsersRequest,
-  ListThreadRequest,
-  ListUserActivity,
+  LogedDeviceList,
   MessageAttachment,
   MessageMention,
   MessageReaction,
   MessageRef,
   Notification,
-  NotificationChannel,
-  NotificationChannelCategorySettingList,
-  NotificationClan,
-  NotificationList,
-  NotificationSetting,
   NotificationUserChannel,
-  NotifiReactMessage,
-  PermissionList,
-  PermissionRoleChannelListEventRequest,
-  PermissionRoleChannelListEventResponse,
   PermissionUpdate,
   Role,
-  RoleList,
-  RoleListEventRequest,
-  RoleListEventResponse,
-  RoleUserList,
   Rpc,
-  SearchThreadRequest,
-  StickerListedResponse,
-  StreamingChannelUserList,
   TokenSentEvent,
   UserActivity,
-  UserPermissionInChannelListRequest,
-  UserPermissionInChannelListResponse,
-  VoiceChannelUserList,
   Webhook,
-  WebhookListRequest,
-  WebhookListResponse,
 } from "../api/api";
 import { BoolValue, Int32Value, StringValue } from "../google/protobuf/wrappers";
 
@@ -689,7 +631,7 @@ export interface ChannelMessageAck {
 
 export interface EphemeralMessageSend {
   message: ChannelMessageSend | undefined;
-  receiver_id: string;
+  receiver_ids: string[];
 }
 
 export interface QuickMenuDataEvent {
@@ -1687,77 +1629,11 @@ export interface DeleteAccountEvent {
 
 export interface ListDataSocket {
   api_name: string;
-  list_clan_req: ListClanDescRequest | undefined;
-  clan_desc_list: ClanDescList | undefined;
-  list_thread_req: ListThreadRequest | undefined;
-  channel_desc_list: ChannelDescList | undefined;
-  list_channel_users_uc_req: AllUsersAddChannelRequest | undefined;
-  channel_users_uc_list: AllUsersAddChannelResponse | undefined;
-  list_channel_detail_req: ListChannelDetailRequest | undefined;
-  channel_desc: ChannelDescription1 | undefined;
-  list_channel_req: ListChannelDescsRequest | undefined;
-  list_channel_message_req: ListChannelMessagesRequest | undefined;
-  channel_message_list: ChannelMessageList | undefined;
-  list_channel_users_req: ListChannelUsersRequest | undefined;
-  voice_user_list: VoiceChannelUserList | undefined;
-  channel_user_list: ChannelUserList | undefined;
-  list_channel_attachment_req: ListChannelAttachmentRequest | undefined;
-  channel_attachment_list:
-    | ChannelAttachmentList
-    | undefined;
-  /**
-   * api.HashtagDmListRequest hashtag_dm_req = 18;
-   * api.HashtagDmList hashtag_dm_list = 19;
-   */
-  channel_setting_req: ChannelSettingListRequest | undefined;
-  channel_setting_list: ChannelSettingListResponse | undefined;
-  favorite_channel_req: ListFavoriteChannelRequest | undefined;
-  favorite_channel_list: ListFavoriteChannelResponse | undefined;
-  search_thread_req: SearchThreadRequest | undefined;
-  notification_channel: NotificationChannel | undefined;
-  notificaion_user_channel: NotificationUserChannel | undefined;
-  notification_category: DefaultNotificationCategory | undefined;
-  notification_clan: NotificationClan | undefined;
-  notification_setting: NotificationSetting | undefined;
-  notification_message: NotifiReactMessage | undefined;
-  noti_channel_cat_setting_list: NotificationChannelCategorySettingList | undefined;
-  list_notification_req: ListNotificationsRequest | undefined;
-  notification_list: NotificationList | undefined;
-  sticker_list: StickerListedResponse | undefined;
-  emoji_recent_list: EmojiRecentList | undefined;
-  clan_webhook_req: ListClanWebhookRequest | undefined;
-  clan_webhook_list: ListClanWebhookResponse | undefined;
-  webhook_list_req: WebhookListRequest | undefined;
-  webhook_list: WebhookListResponse | undefined;
-  permission_list_req: ListPermissionsRequest | undefined;
-  permission_list: PermissionList | undefined;
-  role_user_req: ListRoleUsersRequest | undefined;
-  role_user_list: RoleUserList | undefined;
-  permission_user_req: ListPermissionOfUsersRequest | undefined;
-  role_list: RoleList | undefined;
-  role_list_event_req: RoleListEventRequest | undefined;
-  role_event_list: RoleListEventResponse | undefined;
-  user_permission_req: UserPermissionInChannelListRequest | undefined;
-  user_permission_list: UserPermissionInChannelListResponse | undefined;
-  permission_role_req: PermissionRoleChannelListEventRequest | undefined;
-  permission_role_list: PermissionRoleChannelListEventResponse | undefined;
-  emoji_list: EmojiListedResponse | undefined;
-  list_friend_req: ListFriendsRequest | undefined;
-  friend_list: FriendList | undefined;
-  list_apps_req: ListChannelAppsRequest | undefined;
-  channel_apps_list: ListChannelAppsResponse | undefined;
-  user_activity_list: ListUserActivity | undefined;
-  list_clan_user_req: ListClanUsersRequest | undefined;
-  clan_user_list: ClanUserList | undefined;
-  list_event_req: ListEventsRequest | undefined;
-  event_list: EventList | undefined;
-  list_category_req: CategoryDesc | undefined;
-  category_list: CategoryDescList | undefined;
-  stream_user_list: StreamingChannelUserList | undefined;
   list_unread_msg_indicator_req: ListClanUnreadMsgIndicatorRequest | undefined;
   unread_msg_indicator: ListClanUnreadMsgIndicatorResponse | undefined;
   list_clan_badge_count_req: ListClanBadgeCountRequest | undefined;
   clan_badge_count: ListClanBadgeCountResponse | undefined;
+  list_loged_device: LogedDeviceList | undefined;
 }
 
 export interface MeetParticipantEvent {
@@ -5887,7 +5763,7 @@ export const ChannelMessageAck = {
 };
 
 function createBaseEphemeralMessageSend(): EphemeralMessageSend {
-  return { message: undefined, receiver_id: "0" };
+  return { message: undefined, receiver_ids: [] };
 }
 
 export const EphemeralMessageSend = {
@@ -5895,9 +5771,11 @@ export const EphemeralMessageSend = {
     if (message.message !== undefined) {
       ChannelMessageSend.encode(message.message, writer.uint32(10).fork()).ldelim();
     }
-    if (message.receiver_id !== "0") {
-      writer.uint32(16).int64(message.receiver_id);
+    writer.uint32(18).fork();
+    for (const v of message.receiver_ids) {
+      writer.int64(v);
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -5916,12 +5794,22 @@ export const EphemeralMessageSend = {
           message.message = ChannelMessageSend.decode(reader, reader.uint32());
           continue;
         case 2:
-          if (tag !== 16) {
-            break;
+          if (tag === 16) {
+            message.receiver_ids.push(longToString(reader.int64() as Long));
+
+            continue;
           }
 
-          message.receiver_id = longToString(reader.int64() as Long);
-          continue;
+          if (tag === 18) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.receiver_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -5934,7 +5822,9 @@ export const EphemeralMessageSend = {
   fromJSON(object: any): EphemeralMessageSend {
     return {
       message: isSet(object.message) ? ChannelMessageSend.fromJSON(object.message) : undefined,
-      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "0",
+      receiver_ids: globalThis.Array.isArray(object?.receiver_ids)
+        ? object.receiver_ids.map((e: any) => globalThis.String(e))
+        : [],
     };
   },
 
@@ -5943,8 +5833,8 @@ export const EphemeralMessageSend = {
     if (message.message !== undefined) {
       obj.message = ChannelMessageSend.toJSON(message.message);
     }
-    if (message.receiver_id !== "0") {
-      obj.receiver_id = message.receiver_id;
+    if (message.receiver_ids?.length) {
+      obj.receiver_ids = message.receiver_ids;
     }
     return obj;
   },
@@ -5957,7 +5847,7 @@ export const EphemeralMessageSend = {
     message.message = (object.message !== undefined && object.message !== null)
       ? ChannelMessageSend.fromPartial(object.message)
       : undefined;
-    message.receiver_id = object.receiver_id ?? "0";
+    message.receiver_ids = object.receiver_ids?.map((e) => e) || [];
     return message;
   },
 };
@@ -14936,71 +14826,11 @@ export const DeleteAccountEvent = {
 function createBaseListDataSocket(): ListDataSocket {
   return {
     api_name: "",
-    list_clan_req: undefined,
-    clan_desc_list: undefined,
-    list_thread_req: undefined,
-    channel_desc_list: undefined,
-    list_channel_users_uc_req: undefined,
-    channel_users_uc_list: undefined,
-    list_channel_detail_req: undefined,
-    channel_desc: undefined,
-    list_channel_req: undefined,
-    list_channel_message_req: undefined,
-    channel_message_list: undefined,
-    list_channel_users_req: undefined,
-    voice_user_list: undefined,
-    channel_user_list: undefined,
-    list_channel_attachment_req: undefined,
-    channel_attachment_list: undefined,
-    channel_setting_req: undefined,
-    channel_setting_list: undefined,
-    favorite_channel_req: undefined,
-    favorite_channel_list: undefined,
-    search_thread_req: undefined,
-    notification_channel: undefined,
-    notificaion_user_channel: undefined,
-    notification_category: undefined,
-    notification_clan: undefined,
-    notification_setting: undefined,
-    notification_message: undefined,
-    noti_channel_cat_setting_list: undefined,
-    list_notification_req: undefined,
-    notification_list: undefined,
-    sticker_list: undefined,
-    emoji_recent_list: undefined,
-    clan_webhook_req: undefined,
-    clan_webhook_list: undefined,
-    webhook_list_req: undefined,
-    webhook_list: undefined,
-    permission_list_req: undefined,
-    permission_list: undefined,
-    role_user_req: undefined,
-    role_user_list: undefined,
-    permission_user_req: undefined,
-    role_list: undefined,
-    role_list_event_req: undefined,
-    role_event_list: undefined,
-    user_permission_req: undefined,
-    user_permission_list: undefined,
-    permission_role_req: undefined,
-    permission_role_list: undefined,
-    emoji_list: undefined,
-    list_friend_req: undefined,
-    friend_list: undefined,
-    list_apps_req: undefined,
-    channel_apps_list: undefined,
-    user_activity_list: undefined,
-    list_clan_user_req: undefined,
-    clan_user_list: undefined,
-    list_event_req: undefined,
-    event_list: undefined,
-    list_category_req: undefined,
-    category_list: undefined,
-    stream_user_list: undefined,
     list_unread_msg_indicator_req: undefined,
     unread_msg_indicator: undefined,
     list_clan_badge_count_req: undefined,
     clan_badge_count: undefined,
+    list_loged_device: undefined,
   };
 }
 
@@ -15009,202 +14839,21 @@ export const ListDataSocket = {
     if (message.api_name !== "") {
       writer.uint32(10).string(message.api_name);
     }
-    if (message.list_clan_req !== undefined) {
-      ListClanDescRequest.encode(message.list_clan_req, writer.uint32(18).fork()).ldelim();
-    }
-    if (message.clan_desc_list !== undefined) {
-      ClanDescList.encode(message.clan_desc_list, writer.uint32(26).fork()).ldelim();
-    }
-    if (message.list_thread_req !== undefined) {
-      ListThreadRequest.encode(message.list_thread_req, writer.uint32(34).fork()).ldelim();
-    }
-    if (message.channel_desc_list !== undefined) {
-      ChannelDescList.encode(message.channel_desc_list, writer.uint32(42).fork()).ldelim();
-    }
-    if (message.list_channel_users_uc_req !== undefined) {
-      AllUsersAddChannelRequest.encode(message.list_channel_users_uc_req, writer.uint32(50).fork()).ldelim();
-    }
-    if (message.channel_users_uc_list !== undefined) {
-      AllUsersAddChannelResponse.encode(message.channel_users_uc_list, writer.uint32(58).fork()).ldelim();
-    }
-    if (message.list_channel_detail_req !== undefined) {
-      ListChannelDetailRequest.encode(message.list_channel_detail_req, writer.uint32(66).fork()).ldelim();
-    }
-    if (message.channel_desc !== undefined) {
-      ChannelDescription1.encode(message.channel_desc, writer.uint32(74).fork()).ldelim();
-    }
-    if (message.list_channel_req !== undefined) {
-      ListChannelDescsRequest.encode(message.list_channel_req, writer.uint32(82).fork()).ldelim();
-    }
-    if (message.list_channel_message_req !== undefined) {
-      ListChannelMessagesRequest.encode(message.list_channel_message_req, writer.uint32(90).fork()).ldelim();
-    }
-    if (message.channel_message_list !== undefined) {
-      ChannelMessageList.encode(message.channel_message_list, writer.uint32(98).fork()).ldelim();
-    }
-    if (message.list_channel_users_req !== undefined) {
-      ListChannelUsersRequest.encode(message.list_channel_users_req, writer.uint32(106).fork()).ldelim();
-    }
-    if (message.voice_user_list !== undefined) {
-      VoiceChannelUserList.encode(message.voice_user_list, writer.uint32(114).fork()).ldelim();
-    }
-    if (message.channel_user_list !== undefined) {
-      ChannelUserList.encode(message.channel_user_list, writer.uint32(122).fork()).ldelim();
-    }
-    if (message.list_channel_attachment_req !== undefined) {
-      ListChannelAttachmentRequest.encode(message.list_channel_attachment_req, writer.uint32(130).fork()).ldelim();
-    }
-    if (message.channel_attachment_list !== undefined) {
-      ChannelAttachmentList.encode(message.channel_attachment_list, writer.uint32(138).fork()).ldelim();
-    }
-    if (message.channel_setting_req !== undefined) {
-      ChannelSettingListRequest.encode(message.channel_setting_req, writer.uint32(162).fork()).ldelim();
-    }
-    if (message.channel_setting_list !== undefined) {
-      ChannelSettingListResponse.encode(message.channel_setting_list, writer.uint32(170).fork()).ldelim();
-    }
-    if (message.favorite_channel_req !== undefined) {
-      ListFavoriteChannelRequest.encode(message.favorite_channel_req, writer.uint32(178).fork()).ldelim();
-    }
-    if (message.favorite_channel_list !== undefined) {
-      ListFavoriteChannelResponse.encode(message.favorite_channel_list, writer.uint32(186).fork()).ldelim();
-    }
-    if (message.search_thread_req !== undefined) {
-      SearchThreadRequest.encode(message.search_thread_req, writer.uint32(194).fork()).ldelim();
-    }
-    if (message.notification_channel !== undefined) {
-      NotificationChannel.encode(message.notification_channel, writer.uint32(202).fork()).ldelim();
-    }
-    if (message.notificaion_user_channel !== undefined) {
-      NotificationUserChannel.encode(message.notificaion_user_channel, writer.uint32(210).fork()).ldelim();
-    }
-    if (message.notification_category !== undefined) {
-      DefaultNotificationCategory.encode(message.notification_category, writer.uint32(218).fork()).ldelim();
-    }
-    if (message.notification_clan !== undefined) {
-      NotificationClan.encode(message.notification_clan, writer.uint32(226).fork()).ldelim();
-    }
-    if (message.notification_setting !== undefined) {
-      NotificationSetting.encode(message.notification_setting, writer.uint32(234).fork()).ldelim();
-    }
-    if (message.notification_message !== undefined) {
-      NotifiReactMessage.encode(message.notification_message, writer.uint32(242).fork()).ldelim();
-    }
-    if (message.noti_channel_cat_setting_list !== undefined) {
-      NotificationChannelCategorySettingList.encode(message.noti_channel_cat_setting_list, writer.uint32(250).fork())
-        .ldelim();
-    }
-    if (message.list_notification_req !== undefined) {
-      ListNotificationsRequest.encode(message.list_notification_req, writer.uint32(258).fork()).ldelim();
-    }
-    if (message.notification_list !== undefined) {
-      NotificationList.encode(message.notification_list, writer.uint32(266).fork()).ldelim();
-    }
-    if (message.sticker_list !== undefined) {
-      StickerListedResponse.encode(message.sticker_list, writer.uint32(274).fork()).ldelim();
-    }
-    if (message.emoji_recent_list !== undefined) {
-      EmojiRecentList.encode(message.emoji_recent_list, writer.uint32(282).fork()).ldelim();
-    }
-    if (message.clan_webhook_req !== undefined) {
-      ListClanWebhookRequest.encode(message.clan_webhook_req, writer.uint32(290).fork()).ldelim();
-    }
-    if (message.clan_webhook_list !== undefined) {
-      ListClanWebhookResponse.encode(message.clan_webhook_list, writer.uint32(298).fork()).ldelim();
-    }
-    if (message.webhook_list_req !== undefined) {
-      WebhookListRequest.encode(message.webhook_list_req, writer.uint32(306).fork()).ldelim();
-    }
-    if (message.webhook_list !== undefined) {
-      WebhookListResponse.encode(message.webhook_list, writer.uint32(314).fork()).ldelim();
-    }
-    if (message.permission_list_req !== undefined) {
-      ListPermissionsRequest.encode(message.permission_list_req, writer.uint32(322).fork()).ldelim();
-    }
-    if (message.permission_list !== undefined) {
-      PermissionList.encode(message.permission_list, writer.uint32(330).fork()).ldelim();
-    }
-    if (message.role_user_req !== undefined) {
-      ListRoleUsersRequest.encode(message.role_user_req, writer.uint32(338).fork()).ldelim();
-    }
-    if (message.role_user_list !== undefined) {
-      RoleUserList.encode(message.role_user_list, writer.uint32(346).fork()).ldelim();
-    }
-    if (message.permission_user_req !== undefined) {
-      ListPermissionOfUsersRequest.encode(message.permission_user_req, writer.uint32(354).fork()).ldelim();
-    }
-    if (message.role_list !== undefined) {
-      RoleList.encode(message.role_list, writer.uint32(362).fork()).ldelim();
-    }
-    if (message.role_list_event_req !== undefined) {
-      RoleListEventRequest.encode(message.role_list_event_req, writer.uint32(370).fork()).ldelim();
-    }
-    if (message.role_event_list !== undefined) {
-      RoleListEventResponse.encode(message.role_event_list, writer.uint32(378).fork()).ldelim();
-    }
-    if (message.user_permission_req !== undefined) {
-      UserPermissionInChannelListRequest.encode(message.user_permission_req, writer.uint32(386).fork()).ldelim();
-    }
-    if (message.user_permission_list !== undefined) {
-      UserPermissionInChannelListResponse.encode(message.user_permission_list, writer.uint32(394).fork()).ldelim();
-    }
-    if (message.permission_role_req !== undefined) {
-      PermissionRoleChannelListEventRequest.encode(message.permission_role_req, writer.uint32(402).fork()).ldelim();
-    }
-    if (message.permission_role_list !== undefined) {
-      PermissionRoleChannelListEventResponse.encode(message.permission_role_list, writer.uint32(410).fork()).ldelim();
-    }
-    if (message.emoji_list !== undefined) {
-      EmojiListedResponse.encode(message.emoji_list, writer.uint32(418).fork()).ldelim();
-    }
-    if (message.list_friend_req !== undefined) {
-      ListFriendsRequest.encode(message.list_friend_req, writer.uint32(426).fork()).ldelim();
-    }
-    if (message.friend_list !== undefined) {
-      FriendList.encode(message.friend_list, writer.uint32(434).fork()).ldelim();
-    }
-    if (message.list_apps_req !== undefined) {
-      ListChannelAppsRequest.encode(message.list_apps_req, writer.uint32(442).fork()).ldelim();
-    }
-    if (message.channel_apps_list !== undefined) {
-      ListChannelAppsResponse.encode(message.channel_apps_list, writer.uint32(450).fork()).ldelim();
-    }
-    if (message.user_activity_list !== undefined) {
-      ListUserActivity.encode(message.user_activity_list, writer.uint32(458).fork()).ldelim();
-    }
-    if (message.list_clan_user_req !== undefined) {
-      ListClanUsersRequest.encode(message.list_clan_user_req, writer.uint32(466).fork()).ldelim();
-    }
-    if (message.clan_user_list !== undefined) {
-      ClanUserList.encode(message.clan_user_list, writer.uint32(474).fork()).ldelim();
-    }
-    if (message.list_event_req !== undefined) {
-      ListEventsRequest.encode(message.list_event_req, writer.uint32(482).fork()).ldelim();
-    }
-    if (message.event_list !== undefined) {
-      EventList.encode(message.event_list, writer.uint32(490).fork()).ldelim();
-    }
-    if (message.list_category_req !== undefined) {
-      CategoryDesc.encode(message.list_category_req, writer.uint32(498).fork()).ldelim();
-    }
-    if (message.category_list !== undefined) {
-      CategoryDescList.encode(message.category_list, writer.uint32(506).fork()).ldelim();
-    }
-    if (message.stream_user_list !== undefined) {
-      StreamingChannelUserList.encode(message.stream_user_list, writer.uint32(514).fork()).ldelim();
-    }
     if (message.list_unread_msg_indicator_req !== undefined) {
-      ListClanUnreadMsgIndicatorRequest.encode(message.list_unread_msg_indicator_req, writer.uint32(522).fork())
+      ListClanUnreadMsgIndicatorRequest.encode(message.list_unread_msg_indicator_req, writer.uint32(18).fork())
         .ldelim();
     }
     if (message.unread_msg_indicator !== undefined) {
-      ListClanUnreadMsgIndicatorResponse.encode(message.unread_msg_indicator, writer.uint32(530).fork()).ldelim();
+      ListClanUnreadMsgIndicatorResponse.encode(message.unread_msg_indicator, writer.uint32(26).fork()).ldelim();
     }
     if (message.list_clan_badge_count_req !== undefined) {
-      ListClanBadgeCountRequest.encode(message.list_clan_badge_count_req, writer.uint32(538).fork()).ldelim();
+      ListClanBadgeCountRequest.encode(message.list_clan_badge_count_req, writer.uint32(34).fork()).ldelim();
     }
     if (message.clan_badge_count !== undefined) {
-      ListClanBadgeCountResponse.encode(message.clan_badge_count, writer.uint32(546).fork()).ldelim();
+      ListClanBadgeCountResponse.encode(message.clan_badge_count, writer.uint32(42).fork()).ldelim();
+    }
+    if (message.list_loged_device !== undefined) {
+      LogedDeviceList.encode(message.list_loged_device, writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -15228,458 +14877,35 @@ export const ListDataSocket = {
             break;
           }
 
-          message.list_clan_req = ListClanDescRequest.decode(reader, reader.uint32());
+          message.list_unread_msg_indicator_req = ListClanUnreadMsgIndicatorRequest.decode(reader, reader.uint32());
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.clan_desc_list = ClanDescList.decode(reader, reader.uint32());
+          message.unread_msg_indicator = ListClanUnreadMsgIndicatorResponse.decode(reader, reader.uint32());
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.list_thread_req = ListThreadRequest.decode(reader, reader.uint32());
+          message.list_clan_badge_count_req = ListClanBadgeCountRequest.decode(reader, reader.uint32());
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.channel_desc_list = ChannelDescList.decode(reader, reader.uint32());
+          message.clan_badge_count = ListClanBadgeCountResponse.decode(reader, reader.uint32());
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.list_channel_users_uc_req = AllUsersAddChannelRequest.decode(reader, reader.uint32());
-          continue;
-        case 7:
-          if (tag !== 58) {
-            break;
-          }
-
-          message.channel_users_uc_list = AllUsersAddChannelResponse.decode(reader, reader.uint32());
-          continue;
-        case 8:
-          if (tag !== 66) {
-            break;
-          }
-
-          message.list_channel_detail_req = ListChannelDetailRequest.decode(reader, reader.uint32());
-          continue;
-        case 9:
-          if (tag !== 74) {
-            break;
-          }
-
-          message.channel_desc = ChannelDescription1.decode(reader, reader.uint32());
-          continue;
-        case 10:
-          if (tag !== 82) {
-            break;
-          }
-
-          message.list_channel_req = ListChannelDescsRequest.decode(reader, reader.uint32());
-          continue;
-        case 11:
-          if (tag !== 90) {
-            break;
-          }
-
-          message.list_channel_message_req = ListChannelMessagesRequest.decode(reader, reader.uint32());
-          continue;
-        case 12:
-          if (tag !== 98) {
-            break;
-          }
-
-          message.channel_message_list = ChannelMessageList.decode(reader, reader.uint32());
-          continue;
-        case 13:
-          if (tag !== 106) {
-            break;
-          }
-
-          message.list_channel_users_req = ListChannelUsersRequest.decode(reader, reader.uint32());
-          continue;
-        case 14:
-          if (tag !== 114) {
-            break;
-          }
-
-          message.voice_user_list = VoiceChannelUserList.decode(reader, reader.uint32());
-          continue;
-        case 15:
-          if (tag !== 122) {
-            break;
-          }
-
-          message.channel_user_list = ChannelUserList.decode(reader, reader.uint32());
-          continue;
-        case 16:
-          if (tag !== 130) {
-            break;
-          }
-
-          message.list_channel_attachment_req = ListChannelAttachmentRequest.decode(reader, reader.uint32());
-          continue;
-        case 17:
-          if (tag !== 138) {
-            break;
-          }
-
-          message.channel_attachment_list = ChannelAttachmentList.decode(reader, reader.uint32());
-          continue;
-        case 20:
-          if (tag !== 162) {
-            break;
-          }
-
-          message.channel_setting_req = ChannelSettingListRequest.decode(reader, reader.uint32());
-          continue;
-        case 21:
-          if (tag !== 170) {
-            break;
-          }
-
-          message.channel_setting_list = ChannelSettingListResponse.decode(reader, reader.uint32());
-          continue;
-        case 22:
-          if (tag !== 178) {
-            break;
-          }
-
-          message.favorite_channel_req = ListFavoriteChannelRequest.decode(reader, reader.uint32());
-          continue;
-        case 23:
-          if (tag !== 186) {
-            break;
-          }
-
-          message.favorite_channel_list = ListFavoriteChannelResponse.decode(reader, reader.uint32());
-          continue;
-        case 24:
-          if (tag !== 194) {
-            break;
-          }
-
-          message.search_thread_req = SearchThreadRequest.decode(reader, reader.uint32());
-          continue;
-        case 25:
-          if (tag !== 202) {
-            break;
-          }
-
-          message.notification_channel = NotificationChannel.decode(reader, reader.uint32());
-          continue;
-        case 26:
-          if (tag !== 210) {
-            break;
-          }
-
-          message.notificaion_user_channel = NotificationUserChannel.decode(reader, reader.uint32());
-          continue;
-        case 27:
-          if (tag !== 218) {
-            break;
-          }
-
-          message.notification_category = DefaultNotificationCategory.decode(reader, reader.uint32());
-          continue;
-        case 28:
-          if (tag !== 226) {
-            break;
-          }
-
-          message.notification_clan = NotificationClan.decode(reader, reader.uint32());
-          continue;
-        case 29:
-          if (tag !== 234) {
-            break;
-          }
-
-          message.notification_setting = NotificationSetting.decode(reader, reader.uint32());
-          continue;
-        case 30:
-          if (tag !== 242) {
-            break;
-          }
-
-          message.notification_message = NotifiReactMessage.decode(reader, reader.uint32());
-          continue;
-        case 31:
-          if (tag !== 250) {
-            break;
-          }
-
-          message.noti_channel_cat_setting_list = NotificationChannelCategorySettingList.decode(
-            reader,
-            reader.uint32(),
-          );
-          continue;
-        case 32:
-          if (tag !== 258) {
-            break;
-          }
-
-          message.list_notification_req = ListNotificationsRequest.decode(reader, reader.uint32());
-          continue;
-        case 33:
-          if (tag !== 266) {
-            break;
-          }
-
-          message.notification_list = NotificationList.decode(reader, reader.uint32());
-          continue;
-        case 34:
-          if (tag !== 274) {
-            break;
-          }
-
-          message.sticker_list = StickerListedResponse.decode(reader, reader.uint32());
-          continue;
-        case 35:
-          if (tag !== 282) {
-            break;
-          }
-
-          message.emoji_recent_list = EmojiRecentList.decode(reader, reader.uint32());
-          continue;
-        case 36:
-          if (tag !== 290) {
-            break;
-          }
-
-          message.clan_webhook_req = ListClanWebhookRequest.decode(reader, reader.uint32());
-          continue;
-        case 37:
-          if (tag !== 298) {
-            break;
-          }
-
-          message.clan_webhook_list = ListClanWebhookResponse.decode(reader, reader.uint32());
-          continue;
-        case 38:
-          if (tag !== 306) {
-            break;
-          }
-
-          message.webhook_list_req = WebhookListRequest.decode(reader, reader.uint32());
-          continue;
-        case 39:
-          if (tag !== 314) {
-            break;
-          }
-
-          message.webhook_list = WebhookListResponse.decode(reader, reader.uint32());
-          continue;
-        case 40:
-          if (tag !== 322) {
-            break;
-          }
-
-          message.permission_list_req = ListPermissionsRequest.decode(reader, reader.uint32());
-          continue;
-        case 41:
-          if (tag !== 330) {
-            break;
-          }
-
-          message.permission_list = PermissionList.decode(reader, reader.uint32());
-          continue;
-        case 42:
-          if (tag !== 338) {
-            break;
-          }
-
-          message.role_user_req = ListRoleUsersRequest.decode(reader, reader.uint32());
-          continue;
-        case 43:
-          if (tag !== 346) {
-            break;
-          }
-
-          message.role_user_list = RoleUserList.decode(reader, reader.uint32());
-          continue;
-        case 44:
-          if (tag !== 354) {
-            break;
-          }
-
-          message.permission_user_req = ListPermissionOfUsersRequest.decode(reader, reader.uint32());
-          continue;
-        case 45:
-          if (tag !== 362) {
-            break;
-          }
-
-          message.role_list = RoleList.decode(reader, reader.uint32());
-          continue;
-        case 46:
-          if (tag !== 370) {
-            break;
-          }
-
-          message.role_list_event_req = RoleListEventRequest.decode(reader, reader.uint32());
-          continue;
-        case 47:
-          if (tag !== 378) {
-            break;
-          }
-
-          message.role_event_list = RoleListEventResponse.decode(reader, reader.uint32());
-          continue;
-        case 48:
-          if (tag !== 386) {
-            break;
-          }
-
-          message.user_permission_req = UserPermissionInChannelListRequest.decode(reader, reader.uint32());
-          continue;
-        case 49:
-          if (tag !== 394) {
-            break;
-          }
-
-          message.user_permission_list = UserPermissionInChannelListResponse.decode(reader, reader.uint32());
-          continue;
-        case 50:
-          if (tag !== 402) {
-            break;
-          }
-
-          message.permission_role_req = PermissionRoleChannelListEventRequest.decode(reader, reader.uint32());
-          continue;
-        case 51:
-          if (tag !== 410) {
-            break;
-          }
-
-          message.permission_role_list = PermissionRoleChannelListEventResponse.decode(reader, reader.uint32());
-          continue;
-        case 52:
-          if (tag !== 418) {
-            break;
-          }
-
-          message.emoji_list = EmojiListedResponse.decode(reader, reader.uint32());
-          continue;
-        case 53:
-          if (tag !== 426) {
-            break;
-          }
-
-          message.list_friend_req = ListFriendsRequest.decode(reader, reader.uint32());
-          continue;
-        case 54:
-          if (tag !== 434) {
-            break;
-          }
-
-          message.friend_list = FriendList.decode(reader, reader.uint32());
-          continue;
-        case 55:
-          if (tag !== 442) {
-            break;
-          }
-
-          message.list_apps_req = ListChannelAppsRequest.decode(reader, reader.uint32());
-          continue;
-        case 56:
-          if (tag !== 450) {
-            break;
-          }
-
-          message.channel_apps_list = ListChannelAppsResponse.decode(reader, reader.uint32());
-          continue;
-        case 57:
-          if (tag !== 458) {
-            break;
-          }
-
-          message.user_activity_list = ListUserActivity.decode(reader, reader.uint32());
-          continue;
-        case 58:
-          if (tag !== 466) {
-            break;
-          }
-
-          message.list_clan_user_req = ListClanUsersRequest.decode(reader, reader.uint32());
-          continue;
-        case 59:
-          if (tag !== 474) {
-            break;
-          }
-
-          message.clan_user_list = ClanUserList.decode(reader, reader.uint32());
-          continue;
-        case 60:
-          if (tag !== 482) {
-            break;
-          }
-
-          message.list_event_req = ListEventsRequest.decode(reader, reader.uint32());
-          continue;
-        case 61:
-          if (tag !== 490) {
-            break;
-          }
-
-          message.event_list = EventList.decode(reader, reader.uint32());
-          continue;
-        case 62:
-          if (tag !== 498) {
-            break;
-          }
-
-          message.list_category_req = CategoryDesc.decode(reader, reader.uint32());
-          continue;
-        case 63:
-          if (tag !== 506) {
-            break;
-          }
-
-          message.category_list = CategoryDescList.decode(reader, reader.uint32());
-          continue;
-        case 64:
-          if (tag !== 514) {
-            break;
-          }
-
-          message.stream_user_list = StreamingChannelUserList.decode(reader, reader.uint32());
-          continue;
-        case 65:
-          if (tag !== 522) {
-            break;
-          }
-
-          message.list_unread_msg_indicator_req = ListClanUnreadMsgIndicatorRequest.decode(reader, reader.uint32());
-          continue;
-        case 66:
-          if (tag !== 530) {
-            break;
-          }
-
-          message.unread_msg_indicator = ListClanUnreadMsgIndicatorResponse.decode(reader, reader.uint32());
-          continue;
-        case 67:
-          if (tag !== 538) {
-            break;
-          }
-
-          message.list_clan_badge_count_req = ListClanBadgeCountRequest.decode(reader, reader.uint32());
-          continue;
-        case 68:
-          if (tag !== 546) {
-            break;
-          }
-
-          message.clan_badge_count = ListClanBadgeCountResponse.decode(reader, reader.uint32());
+          message.list_loged_device = LogedDeviceList.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -15693,151 +14919,6 @@ export const ListDataSocket = {
   fromJSON(object: any): ListDataSocket {
     return {
       api_name: isSet(object.api_name) ? globalThis.String(object.api_name) : "",
-      list_clan_req: isSet(object.list_clan_req) ? ListClanDescRequest.fromJSON(object.list_clan_req) : undefined,
-      clan_desc_list: isSet(object.clan_desc_list) ? ClanDescList.fromJSON(object.clan_desc_list) : undefined,
-      list_thread_req: isSet(object.list_thread_req) ? ListThreadRequest.fromJSON(object.list_thread_req) : undefined,
-      channel_desc_list: isSet(object.channel_desc_list)
-        ? ChannelDescList.fromJSON(object.channel_desc_list)
-        : undefined,
-      list_channel_users_uc_req: isSet(object.list_channel_users_uc_req)
-        ? AllUsersAddChannelRequest.fromJSON(object.list_channel_users_uc_req)
-        : undefined,
-      channel_users_uc_list: isSet(object.channel_users_uc_list)
-        ? AllUsersAddChannelResponse.fromJSON(object.channel_users_uc_list)
-        : undefined,
-      list_channel_detail_req: isSet(object.list_channel_detail_req)
-        ? ListChannelDetailRequest.fromJSON(object.list_channel_detail_req)
-        : undefined,
-      channel_desc: isSet(object.channel_desc) ? ChannelDescription1.fromJSON(object.channel_desc) : undefined,
-      list_channel_req: isSet(object.list_channel_req)
-        ? ListChannelDescsRequest.fromJSON(object.list_channel_req)
-        : undefined,
-      list_channel_message_req: isSet(object.list_channel_message_req)
-        ? ListChannelMessagesRequest.fromJSON(object.list_channel_message_req)
-        : undefined,
-      channel_message_list: isSet(object.channel_message_list)
-        ? ChannelMessageList.fromJSON(object.channel_message_list)
-        : undefined,
-      list_channel_users_req: isSet(object.list_channel_users_req)
-        ? ListChannelUsersRequest.fromJSON(object.list_channel_users_req)
-        : undefined,
-      voice_user_list: isSet(object.voice_user_list)
-        ? VoiceChannelUserList.fromJSON(object.voice_user_list)
-        : undefined,
-      channel_user_list: isSet(object.channel_user_list)
-        ? ChannelUserList.fromJSON(object.channel_user_list)
-        : undefined,
-      list_channel_attachment_req: isSet(object.list_channel_attachment_req)
-        ? ListChannelAttachmentRequest.fromJSON(object.list_channel_attachment_req)
-        : undefined,
-      channel_attachment_list: isSet(object.channel_attachment_list)
-        ? ChannelAttachmentList.fromJSON(object.channel_attachment_list)
-        : undefined,
-      channel_setting_req: isSet(object.channel_setting_req)
-        ? ChannelSettingListRequest.fromJSON(object.channel_setting_req)
-        : undefined,
-      channel_setting_list: isSet(object.channel_setting_list)
-        ? ChannelSettingListResponse.fromJSON(object.channel_setting_list)
-        : undefined,
-      favorite_channel_req: isSet(object.favorite_channel_req)
-        ? ListFavoriteChannelRequest.fromJSON(object.favorite_channel_req)
-        : undefined,
-      favorite_channel_list: isSet(object.favorite_channel_list)
-        ? ListFavoriteChannelResponse.fromJSON(object.favorite_channel_list)
-        : undefined,
-      search_thread_req: isSet(object.search_thread_req)
-        ? SearchThreadRequest.fromJSON(object.search_thread_req)
-        : undefined,
-      notification_channel: isSet(object.notification_channel)
-        ? NotificationChannel.fromJSON(object.notification_channel)
-        : undefined,
-      notificaion_user_channel: isSet(object.notificaion_user_channel)
-        ? NotificationUserChannel.fromJSON(object.notificaion_user_channel)
-        : undefined,
-      notification_category: isSet(object.notification_category)
-        ? DefaultNotificationCategory.fromJSON(object.notification_category)
-        : undefined,
-      notification_clan: isSet(object.notification_clan)
-        ? NotificationClan.fromJSON(object.notification_clan)
-        : undefined,
-      notification_setting: isSet(object.notification_setting)
-        ? NotificationSetting.fromJSON(object.notification_setting)
-        : undefined,
-      notification_message: isSet(object.notification_message)
-        ? NotifiReactMessage.fromJSON(object.notification_message)
-        : undefined,
-      noti_channel_cat_setting_list: isSet(object.noti_channel_cat_setting_list)
-        ? NotificationChannelCategorySettingList.fromJSON(object.noti_channel_cat_setting_list)
-        : undefined,
-      list_notification_req: isSet(object.list_notification_req)
-        ? ListNotificationsRequest.fromJSON(object.list_notification_req)
-        : undefined,
-      notification_list: isSet(object.notification_list)
-        ? NotificationList.fromJSON(object.notification_list)
-        : undefined,
-      sticker_list: isSet(object.sticker_list) ? StickerListedResponse.fromJSON(object.sticker_list) : undefined,
-      emoji_recent_list: isSet(object.emoji_recent_list)
-        ? EmojiRecentList.fromJSON(object.emoji_recent_list)
-        : undefined,
-      clan_webhook_req: isSet(object.clan_webhook_req)
-        ? ListClanWebhookRequest.fromJSON(object.clan_webhook_req)
-        : undefined,
-      clan_webhook_list: isSet(object.clan_webhook_list)
-        ? ListClanWebhookResponse.fromJSON(object.clan_webhook_list)
-        : undefined,
-      webhook_list_req: isSet(object.webhook_list_req)
-        ? WebhookListRequest.fromJSON(object.webhook_list_req)
-        : undefined,
-      webhook_list: isSet(object.webhook_list) ? WebhookListResponse.fromJSON(object.webhook_list) : undefined,
-      permission_list_req: isSet(object.permission_list_req)
-        ? ListPermissionsRequest.fromJSON(object.permission_list_req)
-        : undefined,
-      permission_list: isSet(object.permission_list) ? PermissionList.fromJSON(object.permission_list) : undefined,
-      role_user_req: isSet(object.role_user_req) ? ListRoleUsersRequest.fromJSON(object.role_user_req) : undefined,
-      role_user_list: isSet(object.role_user_list) ? RoleUserList.fromJSON(object.role_user_list) : undefined,
-      permission_user_req: isSet(object.permission_user_req)
-        ? ListPermissionOfUsersRequest.fromJSON(object.permission_user_req)
-        : undefined,
-      role_list: isSet(object.role_list) ? RoleList.fromJSON(object.role_list) : undefined,
-      role_list_event_req: isSet(object.role_list_event_req)
-        ? RoleListEventRequest.fromJSON(object.role_list_event_req)
-        : undefined,
-      role_event_list: isSet(object.role_event_list)
-        ? RoleListEventResponse.fromJSON(object.role_event_list)
-        : undefined,
-      user_permission_req: isSet(object.user_permission_req)
-        ? UserPermissionInChannelListRequest.fromJSON(object.user_permission_req)
-        : undefined,
-      user_permission_list: isSet(object.user_permission_list)
-        ? UserPermissionInChannelListResponse.fromJSON(object.user_permission_list)
-        : undefined,
-      permission_role_req: isSet(object.permission_role_req)
-        ? PermissionRoleChannelListEventRequest.fromJSON(object.permission_role_req)
-        : undefined,
-      permission_role_list: isSet(object.permission_role_list)
-        ? PermissionRoleChannelListEventResponse.fromJSON(object.permission_role_list)
-        : undefined,
-      emoji_list: isSet(object.emoji_list) ? EmojiListedResponse.fromJSON(object.emoji_list) : undefined,
-      list_friend_req: isSet(object.list_friend_req) ? ListFriendsRequest.fromJSON(object.list_friend_req) : undefined,
-      friend_list: isSet(object.friend_list) ? FriendList.fromJSON(object.friend_list) : undefined,
-      list_apps_req: isSet(object.list_apps_req) ? ListChannelAppsRequest.fromJSON(object.list_apps_req) : undefined,
-      channel_apps_list: isSet(object.channel_apps_list)
-        ? ListChannelAppsResponse.fromJSON(object.channel_apps_list)
-        : undefined,
-      user_activity_list: isSet(object.user_activity_list)
-        ? ListUserActivity.fromJSON(object.user_activity_list)
-        : undefined,
-      list_clan_user_req: isSet(object.list_clan_user_req)
-        ? ListClanUsersRequest.fromJSON(object.list_clan_user_req)
-        : undefined,
-      clan_user_list: isSet(object.clan_user_list) ? ClanUserList.fromJSON(object.clan_user_list) : undefined,
-      list_event_req: isSet(object.list_event_req) ? ListEventsRequest.fromJSON(object.list_event_req) : undefined,
-      event_list: isSet(object.event_list) ? EventList.fromJSON(object.event_list) : undefined,
-      list_category_req: isSet(object.list_category_req) ? CategoryDesc.fromJSON(object.list_category_req) : undefined,
-      category_list: isSet(object.category_list) ? CategoryDescList.fromJSON(object.category_list) : undefined,
-      stream_user_list: isSet(object.stream_user_list)
-        ? StreamingChannelUserList.fromJSON(object.stream_user_list)
-        : undefined,
       list_unread_msg_indicator_req: isSet(object.list_unread_msg_indicator_req)
         ? ListClanUnreadMsgIndicatorRequest.fromJSON(object.list_unread_msg_indicator_req)
         : undefined,
@@ -15850,6 +14931,9 @@ export const ListDataSocket = {
       clan_badge_count: isSet(object.clan_badge_count)
         ? ListClanBadgeCountResponse.fromJSON(object.clan_badge_count)
         : undefined,
+      list_loged_device: isSet(object.list_loged_device)
+        ? LogedDeviceList.fromJSON(object.list_loged_device)
+        : undefined,
     };
   },
 
@@ -15857,191 +14941,6 @@ export const ListDataSocket = {
     const obj: any = {};
     if (message.api_name !== "") {
       obj.api_name = message.api_name;
-    }
-    if (message.list_clan_req !== undefined) {
-      obj.list_clan_req = ListClanDescRequest.toJSON(message.list_clan_req);
-    }
-    if (message.clan_desc_list !== undefined) {
-      obj.clan_desc_list = ClanDescList.toJSON(message.clan_desc_list);
-    }
-    if (message.list_thread_req !== undefined) {
-      obj.list_thread_req = ListThreadRequest.toJSON(message.list_thread_req);
-    }
-    if (message.channel_desc_list !== undefined) {
-      obj.channel_desc_list = ChannelDescList.toJSON(message.channel_desc_list);
-    }
-    if (message.list_channel_users_uc_req !== undefined) {
-      obj.list_channel_users_uc_req = AllUsersAddChannelRequest.toJSON(message.list_channel_users_uc_req);
-    }
-    if (message.channel_users_uc_list !== undefined) {
-      obj.channel_users_uc_list = AllUsersAddChannelResponse.toJSON(message.channel_users_uc_list);
-    }
-    if (message.list_channel_detail_req !== undefined) {
-      obj.list_channel_detail_req = ListChannelDetailRequest.toJSON(message.list_channel_detail_req);
-    }
-    if (message.channel_desc !== undefined) {
-      obj.channel_desc = ChannelDescription1.toJSON(message.channel_desc);
-    }
-    if (message.list_channel_req !== undefined) {
-      obj.list_channel_req = ListChannelDescsRequest.toJSON(message.list_channel_req);
-    }
-    if (message.list_channel_message_req !== undefined) {
-      obj.list_channel_message_req = ListChannelMessagesRequest.toJSON(message.list_channel_message_req);
-    }
-    if (message.channel_message_list !== undefined) {
-      obj.channel_message_list = ChannelMessageList.toJSON(message.channel_message_list);
-    }
-    if (message.list_channel_users_req !== undefined) {
-      obj.list_channel_users_req = ListChannelUsersRequest.toJSON(message.list_channel_users_req);
-    }
-    if (message.voice_user_list !== undefined) {
-      obj.voice_user_list = VoiceChannelUserList.toJSON(message.voice_user_list);
-    }
-    if (message.channel_user_list !== undefined) {
-      obj.channel_user_list = ChannelUserList.toJSON(message.channel_user_list);
-    }
-    if (message.list_channel_attachment_req !== undefined) {
-      obj.list_channel_attachment_req = ListChannelAttachmentRequest.toJSON(message.list_channel_attachment_req);
-    }
-    if (message.channel_attachment_list !== undefined) {
-      obj.channel_attachment_list = ChannelAttachmentList.toJSON(message.channel_attachment_list);
-    }
-    if (message.channel_setting_req !== undefined) {
-      obj.channel_setting_req = ChannelSettingListRequest.toJSON(message.channel_setting_req);
-    }
-    if (message.channel_setting_list !== undefined) {
-      obj.channel_setting_list = ChannelSettingListResponse.toJSON(message.channel_setting_list);
-    }
-    if (message.favorite_channel_req !== undefined) {
-      obj.favorite_channel_req = ListFavoriteChannelRequest.toJSON(message.favorite_channel_req);
-    }
-    if (message.favorite_channel_list !== undefined) {
-      obj.favorite_channel_list = ListFavoriteChannelResponse.toJSON(message.favorite_channel_list);
-    }
-    if (message.search_thread_req !== undefined) {
-      obj.search_thread_req = SearchThreadRequest.toJSON(message.search_thread_req);
-    }
-    if (message.notification_channel !== undefined) {
-      obj.notification_channel = NotificationChannel.toJSON(message.notification_channel);
-    }
-    if (message.notificaion_user_channel !== undefined) {
-      obj.notificaion_user_channel = NotificationUserChannel.toJSON(message.notificaion_user_channel);
-    }
-    if (message.notification_category !== undefined) {
-      obj.notification_category = DefaultNotificationCategory.toJSON(message.notification_category);
-    }
-    if (message.notification_clan !== undefined) {
-      obj.notification_clan = NotificationClan.toJSON(message.notification_clan);
-    }
-    if (message.notification_setting !== undefined) {
-      obj.notification_setting = NotificationSetting.toJSON(message.notification_setting);
-    }
-    if (message.notification_message !== undefined) {
-      obj.notification_message = NotifiReactMessage.toJSON(message.notification_message);
-    }
-    if (message.noti_channel_cat_setting_list !== undefined) {
-      obj.noti_channel_cat_setting_list = NotificationChannelCategorySettingList.toJSON(
-        message.noti_channel_cat_setting_list,
-      );
-    }
-    if (message.list_notification_req !== undefined) {
-      obj.list_notification_req = ListNotificationsRequest.toJSON(message.list_notification_req);
-    }
-    if (message.notification_list !== undefined) {
-      obj.notification_list = NotificationList.toJSON(message.notification_list);
-    }
-    if (message.sticker_list !== undefined) {
-      obj.sticker_list = StickerListedResponse.toJSON(message.sticker_list);
-    }
-    if (message.emoji_recent_list !== undefined) {
-      obj.emoji_recent_list = EmojiRecentList.toJSON(message.emoji_recent_list);
-    }
-    if (message.clan_webhook_req !== undefined) {
-      obj.clan_webhook_req = ListClanWebhookRequest.toJSON(message.clan_webhook_req);
-    }
-    if (message.clan_webhook_list !== undefined) {
-      obj.clan_webhook_list = ListClanWebhookResponse.toJSON(message.clan_webhook_list);
-    }
-    if (message.webhook_list_req !== undefined) {
-      obj.webhook_list_req = WebhookListRequest.toJSON(message.webhook_list_req);
-    }
-    if (message.webhook_list !== undefined) {
-      obj.webhook_list = WebhookListResponse.toJSON(message.webhook_list);
-    }
-    if (message.permission_list_req !== undefined) {
-      obj.permission_list_req = ListPermissionsRequest.toJSON(message.permission_list_req);
-    }
-    if (message.permission_list !== undefined) {
-      obj.permission_list = PermissionList.toJSON(message.permission_list);
-    }
-    if (message.role_user_req !== undefined) {
-      obj.role_user_req = ListRoleUsersRequest.toJSON(message.role_user_req);
-    }
-    if (message.role_user_list !== undefined) {
-      obj.role_user_list = RoleUserList.toJSON(message.role_user_list);
-    }
-    if (message.permission_user_req !== undefined) {
-      obj.permission_user_req = ListPermissionOfUsersRequest.toJSON(message.permission_user_req);
-    }
-    if (message.role_list !== undefined) {
-      obj.role_list = RoleList.toJSON(message.role_list);
-    }
-    if (message.role_list_event_req !== undefined) {
-      obj.role_list_event_req = RoleListEventRequest.toJSON(message.role_list_event_req);
-    }
-    if (message.role_event_list !== undefined) {
-      obj.role_event_list = RoleListEventResponse.toJSON(message.role_event_list);
-    }
-    if (message.user_permission_req !== undefined) {
-      obj.user_permission_req = UserPermissionInChannelListRequest.toJSON(message.user_permission_req);
-    }
-    if (message.user_permission_list !== undefined) {
-      obj.user_permission_list = UserPermissionInChannelListResponse.toJSON(message.user_permission_list);
-    }
-    if (message.permission_role_req !== undefined) {
-      obj.permission_role_req = PermissionRoleChannelListEventRequest.toJSON(message.permission_role_req);
-    }
-    if (message.permission_role_list !== undefined) {
-      obj.permission_role_list = PermissionRoleChannelListEventResponse.toJSON(message.permission_role_list);
-    }
-    if (message.emoji_list !== undefined) {
-      obj.emoji_list = EmojiListedResponse.toJSON(message.emoji_list);
-    }
-    if (message.list_friend_req !== undefined) {
-      obj.list_friend_req = ListFriendsRequest.toJSON(message.list_friend_req);
-    }
-    if (message.friend_list !== undefined) {
-      obj.friend_list = FriendList.toJSON(message.friend_list);
-    }
-    if (message.list_apps_req !== undefined) {
-      obj.list_apps_req = ListChannelAppsRequest.toJSON(message.list_apps_req);
-    }
-    if (message.channel_apps_list !== undefined) {
-      obj.channel_apps_list = ListChannelAppsResponse.toJSON(message.channel_apps_list);
-    }
-    if (message.user_activity_list !== undefined) {
-      obj.user_activity_list = ListUserActivity.toJSON(message.user_activity_list);
-    }
-    if (message.list_clan_user_req !== undefined) {
-      obj.list_clan_user_req = ListClanUsersRequest.toJSON(message.list_clan_user_req);
-    }
-    if (message.clan_user_list !== undefined) {
-      obj.clan_user_list = ClanUserList.toJSON(message.clan_user_list);
-    }
-    if (message.list_event_req !== undefined) {
-      obj.list_event_req = ListEventsRequest.toJSON(message.list_event_req);
-    }
-    if (message.event_list !== undefined) {
-      obj.event_list = EventList.toJSON(message.event_list);
-    }
-    if (message.list_category_req !== undefined) {
-      obj.list_category_req = CategoryDesc.toJSON(message.list_category_req);
-    }
-    if (message.category_list !== undefined) {
-      obj.category_list = CategoryDescList.toJSON(message.category_list);
-    }
-    if (message.stream_user_list !== undefined) {
-      obj.stream_user_list = StreamingChannelUserList.toJSON(message.stream_user_list);
     }
     if (message.list_unread_msg_indicator_req !== undefined) {
       obj.list_unread_msg_indicator_req = ListClanUnreadMsgIndicatorRequest.toJSON(
@@ -16057,6 +14956,9 @@ export const ListDataSocket = {
     if (message.clan_badge_count !== undefined) {
       obj.clan_badge_count = ListClanBadgeCountResponse.toJSON(message.clan_badge_count);
     }
+    if (message.list_loged_device !== undefined) {
+      obj.list_loged_device = LogedDeviceList.toJSON(message.list_loged_device);
+    }
     return obj;
   },
 
@@ -16066,201 +14968,6 @@ export const ListDataSocket = {
   fromPartial<I extends Exact<DeepPartial<ListDataSocket>, I>>(object: I): ListDataSocket {
     const message = createBaseListDataSocket();
     message.api_name = object.api_name ?? "";
-    message.list_clan_req = (object.list_clan_req !== undefined && object.list_clan_req !== null)
-      ? ListClanDescRequest.fromPartial(object.list_clan_req)
-      : undefined;
-    message.clan_desc_list = (object.clan_desc_list !== undefined && object.clan_desc_list !== null)
-      ? ClanDescList.fromPartial(object.clan_desc_list)
-      : undefined;
-    message.list_thread_req = (object.list_thread_req !== undefined && object.list_thread_req !== null)
-      ? ListThreadRequest.fromPartial(object.list_thread_req)
-      : undefined;
-    message.channel_desc_list = (object.channel_desc_list !== undefined && object.channel_desc_list !== null)
-      ? ChannelDescList.fromPartial(object.channel_desc_list)
-      : undefined;
-    message.list_channel_users_uc_req =
-      (object.list_channel_users_uc_req !== undefined && object.list_channel_users_uc_req !== null)
-        ? AllUsersAddChannelRequest.fromPartial(object.list_channel_users_uc_req)
-        : undefined;
-    message.channel_users_uc_list =
-      (object.channel_users_uc_list !== undefined && object.channel_users_uc_list !== null)
-        ? AllUsersAddChannelResponse.fromPartial(object.channel_users_uc_list)
-        : undefined;
-    message.list_channel_detail_req =
-      (object.list_channel_detail_req !== undefined && object.list_channel_detail_req !== null)
-        ? ListChannelDetailRequest.fromPartial(object.list_channel_detail_req)
-        : undefined;
-    message.channel_desc = (object.channel_desc !== undefined && object.channel_desc !== null)
-      ? ChannelDescription1.fromPartial(object.channel_desc)
-      : undefined;
-    message.list_channel_req = (object.list_channel_req !== undefined && object.list_channel_req !== null)
-      ? ListChannelDescsRequest.fromPartial(object.list_channel_req)
-      : undefined;
-    message.list_channel_message_req =
-      (object.list_channel_message_req !== undefined && object.list_channel_message_req !== null)
-        ? ListChannelMessagesRequest.fromPartial(object.list_channel_message_req)
-        : undefined;
-    message.channel_message_list = (object.channel_message_list !== undefined && object.channel_message_list !== null)
-      ? ChannelMessageList.fromPartial(object.channel_message_list)
-      : undefined;
-    message.list_channel_users_req =
-      (object.list_channel_users_req !== undefined && object.list_channel_users_req !== null)
-        ? ListChannelUsersRequest.fromPartial(object.list_channel_users_req)
-        : undefined;
-    message.voice_user_list = (object.voice_user_list !== undefined && object.voice_user_list !== null)
-      ? VoiceChannelUserList.fromPartial(object.voice_user_list)
-      : undefined;
-    message.channel_user_list = (object.channel_user_list !== undefined && object.channel_user_list !== null)
-      ? ChannelUserList.fromPartial(object.channel_user_list)
-      : undefined;
-    message.list_channel_attachment_req =
-      (object.list_channel_attachment_req !== undefined && object.list_channel_attachment_req !== null)
-        ? ListChannelAttachmentRequest.fromPartial(object.list_channel_attachment_req)
-        : undefined;
-    message.channel_attachment_list =
-      (object.channel_attachment_list !== undefined && object.channel_attachment_list !== null)
-        ? ChannelAttachmentList.fromPartial(object.channel_attachment_list)
-        : undefined;
-    message.channel_setting_req = (object.channel_setting_req !== undefined && object.channel_setting_req !== null)
-      ? ChannelSettingListRequest.fromPartial(object.channel_setting_req)
-      : undefined;
-    message.channel_setting_list = (object.channel_setting_list !== undefined && object.channel_setting_list !== null)
-      ? ChannelSettingListResponse.fromPartial(object.channel_setting_list)
-      : undefined;
-    message.favorite_channel_req = (object.favorite_channel_req !== undefined && object.favorite_channel_req !== null)
-      ? ListFavoriteChannelRequest.fromPartial(object.favorite_channel_req)
-      : undefined;
-    message.favorite_channel_list =
-      (object.favorite_channel_list !== undefined && object.favorite_channel_list !== null)
-        ? ListFavoriteChannelResponse.fromPartial(object.favorite_channel_list)
-        : undefined;
-    message.search_thread_req = (object.search_thread_req !== undefined && object.search_thread_req !== null)
-      ? SearchThreadRequest.fromPartial(object.search_thread_req)
-      : undefined;
-    message.notification_channel = (object.notification_channel !== undefined && object.notification_channel !== null)
-      ? NotificationChannel.fromPartial(object.notification_channel)
-      : undefined;
-    message.notificaion_user_channel =
-      (object.notificaion_user_channel !== undefined && object.notificaion_user_channel !== null)
-        ? NotificationUserChannel.fromPartial(object.notificaion_user_channel)
-        : undefined;
-    message.notification_category =
-      (object.notification_category !== undefined && object.notification_category !== null)
-        ? DefaultNotificationCategory.fromPartial(object.notification_category)
-        : undefined;
-    message.notification_clan = (object.notification_clan !== undefined && object.notification_clan !== null)
-      ? NotificationClan.fromPartial(object.notification_clan)
-      : undefined;
-    message.notification_setting = (object.notification_setting !== undefined && object.notification_setting !== null)
-      ? NotificationSetting.fromPartial(object.notification_setting)
-      : undefined;
-    message.notification_message = (object.notification_message !== undefined && object.notification_message !== null)
-      ? NotifiReactMessage.fromPartial(object.notification_message)
-      : undefined;
-    message.noti_channel_cat_setting_list =
-      (object.noti_channel_cat_setting_list !== undefined && object.noti_channel_cat_setting_list !== null)
-        ? NotificationChannelCategorySettingList.fromPartial(object.noti_channel_cat_setting_list)
-        : undefined;
-    message.list_notification_req =
-      (object.list_notification_req !== undefined && object.list_notification_req !== null)
-        ? ListNotificationsRequest.fromPartial(object.list_notification_req)
-        : undefined;
-    message.notification_list = (object.notification_list !== undefined && object.notification_list !== null)
-      ? NotificationList.fromPartial(object.notification_list)
-      : undefined;
-    message.sticker_list = (object.sticker_list !== undefined && object.sticker_list !== null)
-      ? StickerListedResponse.fromPartial(object.sticker_list)
-      : undefined;
-    message.emoji_recent_list = (object.emoji_recent_list !== undefined && object.emoji_recent_list !== null)
-      ? EmojiRecentList.fromPartial(object.emoji_recent_list)
-      : undefined;
-    message.clan_webhook_req = (object.clan_webhook_req !== undefined && object.clan_webhook_req !== null)
-      ? ListClanWebhookRequest.fromPartial(object.clan_webhook_req)
-      : undefined;
-    message.clan_webhook_list = (object.clan_webhook_list !== undefined && object.clan_webhook_list !== null)
-      ? ListClanWebhookResponse.fromPartial(object.clan_webhook_list)
-      : undefined;
-    message.webhook_list_req = (object.webhook_list_req !== undefined && object.webhook_list_req !== null)
-      ? WebhookListRequest.fromPartial(object.webhook_list_req)
-      : undefined;
-    message.webhook_list = (object.webhook_list !== undefined && object.webhook_list !== null)
-      ? WebhookListResponse.fromPartial(object.webhook_list)
-      : undefined;
-    message.permission_list_req = (object.permission_list_req !== undefined && object.permission_list_req !== null)
-      ? ListPermissionsRequest.fromPartial(object.permission_list_req)
-      : undefined;
-    message.permission_list = (object.permission_list !== undefined && object.permission_list !== null)
-      ? PermissionList.fromPartial(object.permission_list)
-      : undefined;
-    message.role_user_req = (object.role_user_req !== undefined && object.role_user_req !== null)
-      ? ListRoleUsersRequest.fromPartial(object.role_user_req)
-      : undefined;
-    message.role_user_list = (object.role_user_list !== undefined && object.role_user_list !== null)
-      ? RoleUserList.fromPartial(object.role_user_list)
-      : undefined;
-    message.permission_user_req = (object.permission_user_req !== undefined && object.permission_user_req !== null)
-      ? ListPermissionOfUsersRequest.fromPartial(object.permission_user_req)
-      : undefined;
-    message.role_list = (object.role_list !== undefined && object.role_list !== null)
-      ? RoleList.fromPartial(object.role_list)
-      : undefined;
-    message.role_list_event_req = (object.role_list_event_req !== undefined && object.role_list_event_req !== null)
-      ? RoleListEventRequest.fromPartial(object.role_list_event_req)
-      : undefined;
-    message.role_event_list = (object.role_event_list !== undefined && object.role_event_list !== null)
-      ? RoleListEventResponse.fromPartial(object.role_event_list)
-      : undefined;
-    message.user_permission_req = (object.user_permission_req !== undefined && object.user_permission_req !== null)
-      ? UserPermissionInChannelListRequest.fromPartial(object.user_permission_req)
-      : undefined;
-    message.user_permission_list = (object.user_permission_list !== undefined && object.user_permission_list !== null)
-      ? UserPermissionInChannelListResponse.fromPartial(object.user_permission_list)
-      : undefined;
-    message.permission_role_req = (object.permission_role_req !== undefined && object.permission_role_req !== null)
-      ? PermissionRoleChannelListEventRequest.fromPartial(object.permission_role_req)
-      : undefined;
-    message.permission_role_list = (object.permission_role_list !== undefined && object.permission_role_list !== null)
-      ? PermissionRoleChannelListEventResponse.fromPartial(object.permission_role_list)
-      : undefined;
-    message.emoji_list = (object.emoji_list !== undefined && object.emoji_list !== null)
-      ? EmojiListedResponse.fromPartial(object.emoji_list)
-      : undefined;
-    message.list_friend_req = (object.list_friend_req !== undefined && object.list_friend_req !== null)
-      ? ListFriendsRequest.fromPartial(object.list_friend_req)
-      : undefined;
-    message.friend_list = (object.friend_list !== undefined && object.friend_list !== null)
-      ? FriendList.fromPartial(object.friend_list)
-      : undefined;
-    message.list_apps_req = (object.list_apps_req !== undefined && object.list_apps_req !== null)
-      ? ListChannelAppsRequest.fromPartial(object.list_apps_req)
-      : undefined;
-    message.channel_apps_list = (object.channel_apps_list !== undefined && object.channel_apps_list !== null)
-      ? ListChannelAppsResponse.fromPartial(object.channel_apps_list)
-      : undefined;
-    message.user_activity_list = (object.user_activity_list !== undefined && object.user_activity_list !== null)
-      ? ListUserActivity.fromPartial(object.user_activity_list)
-      : undefined;
-    message.list_clan_user_req = (object.list_clan_user_req !== undefined && object.list_clan_user_req !== null)
-      ? ListClanUsersRequest.fromPartial(object.list_clan_user_req)
-      : undefined;
-    message.clan_user_list = (object.clan_user_list !== undefined && object.clan_user_list !== null)
-      ? ClanUserList.fromPartial(object.clan_user_list)
-      : undefined;
-    message.list_event_req = (object.list_event_req !== undefined && object.list_event_req !== null)
-      ? ListEventsRequest.fromPartial(object.list_event_req)
-      : undefined;
-    message.event_list = (object.event_list !== undefined && object.event_list !== null)
-      ? EventList.fromPartial(object.event_list)
-      : undefined;
-    message.list_category_req = (object.list_category_req !== undefined && object.list_category_req !== null)
-      ? CategoryDesc.fromPartial(object.list_category_req)
-      : undefined;
-    message.category_list = (object.category_list !== undefined && object.category_list !== null)
-      ? CategoryDescList.fromPartial(object.category_list)
-      : undefined;
-    message.stream_user_list = (object.stream_user_list !== undefined && object.stream_user_list !== null)
-      ? StreamingChannelUserList.fromPartial(object.stream_user_list)
-      : undefined;
     message.list_unread_msg_indicator_req =
       (object.list_unread_msg_indicator_req !== undefined && object.list_unread_msg_indicator_req !== null)
         ? ListClanUnreadMsgIndicatorRequest.fromPartial(object.list_unread_msg_indicator_req)
@@ -16274,6 +14981,9 @@ export const ListDataSocket = {
         : undefined;
     message.clan_badge_count = (object.clan_badge_count !== undefined && object.clan_badge_count !== null)
       ? ListClanBadgeCountResponse.fromPartial(object.clan_badge_count)
+      : undefined;
+    message.list_loged_device = (object.list_loged_device !== undefined && object.list_loged_device !== null)
+      ? LogedDeviceList.fromPartial(object.list_loged_device)
       : undefined;
     return message;
   },
