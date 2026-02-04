@@ -408,7 +408,7 @@ interface QuickMenuEvent {
 
 interface EphemeralMessageSend {
   ephemeral_message_send: {
-    receiver_id: string,
+    receiver_ids: string[],
     message: {
       /** Clan Id */
       clan_id: string;
