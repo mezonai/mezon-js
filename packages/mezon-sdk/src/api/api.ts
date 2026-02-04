@@ -3692,6 +3692,11 @@ export interface KafkaActionMsg {
   stream: Uint8Array;
 }
 
+export interface UpdateAIAgentRequest {
+  channel_id: string;
+  room_name: string;
+}
+
 export interface ParticipantInfo {
   sid: string;
   identity: string;
@@ -40489,6 +40494,80 @@ export const KafkaActionMsg = {
     message.user_ids = object.user_ids?.map((e) => e) || [];
     message.mode = object.mode ?? 0;
     message.stream = object.stream ?? new Uint8Array(0);
+    return message;
+  },
+};
+
+function createBaseUpdateAIAgentRequest(): UpdateAIAgentRequest {
+  return { channel_id: "0", room_name: "" };
+}
+
+export const UpdateAIAgentRequest = {
+  encode(message: UpdateAIAgentRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "0") {
+      writer.uint32(8).int64(message.channel_id);
+    }
+    if (message.room_name !== "") {
+      writer.uint32(18).string(message.room_name);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateAIAgentRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdateAIAgentRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.room_name = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpdateAIAgentRequest {
+    return {
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
+    };
+  },
+
+  toJSON(message: UpdateAIAgentRequest): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.room_name !== "") {
+      obj.room_name = message.room_name;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdateAIAgentRequest>, I>>(base?: I): UpdateAIAgentRequest {
+    return UpdateAIAgentRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UpdateAIAgentRequest>, I>>(object: I): UpdateAIAgentRequest {
+    const message = createBaseUpdateAIAgentRequest();
+    message.channel_id = object.channel_id ?? "0";
+    message.room_name = object.room_name ?? "";
     return message;
   },
 };

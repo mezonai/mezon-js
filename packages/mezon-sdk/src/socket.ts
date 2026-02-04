@@ -484,7 +484,7 @@ export class DefaultSocket implements Socket {
   }
 
   async writeEphemeralMessage(
-    receiver_id: string,
+    receiver_id: string | string[],
     clan_id: string,
     channel_id: string,
     mode: number,
@@ -501,9 +501,10 @@ export class DefaultSocket implements Socket {
     message_id?: string
   ): Promise<ChannelMessageAck> {
     try {
+      const receiverIds = Array.isArray(receiver_id) ? receiver_id : [receiver_id];
       const response = await this.send({
       ephemeral_message_send: {
-        receiver_id: receiver_id,
+        receiver_ids: receiverIds,
         message: {
           clan_id: clan_id,
           channel_id: channel_id,
