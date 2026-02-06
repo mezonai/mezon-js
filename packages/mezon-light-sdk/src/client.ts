@@ -1,5 +1,5 @@
 import { Session } from "./session";
-import { ApiAuthenticationIdToken, ApiSession, MezonApi, ApiChannelDescription } from "./api.gen";
+import { ApiAuthenticationIdToken, ApiSession, MezonApi, ApiChannelDescription, ApiUploadAttachment, ApiUploadAttachmentRequest } from "./api.gen";
 import { MEZON_GW_URL, DEFAULT_SERVER_KEY, CHANNEL_TYPE_DM, CHANNEL_TYPE_GROUP } from "./constants";
 import { ClientInitConfig, AuthenticateConfig } from "./types";
 import { WebSocketAdapter, WebSocketAdapterPb } from "./web_socket_adapter_pb";
@@ -174,6 +174,29 @@ export class LightClient {
       user_ids: userIds,
     };
     return this._client.createChannelDesc(this._session.token, request);
+  }
+
+  /**
+   * Uploads an attachment file to Mezon server.
+   * Returns the URL of the uploaded file which can be used in messages.
+   *
+   * @param request - Upload request containing file metadata (filename, filetype, size, width, height)
+   * @returns A promise that resolves to the upload result with file URL
+   *
+   * @example
+   * ```typescript
+   * const result = await client.uploadAttachment({
+   *   filename: 'image.png',
+   *   filetype: 'image/png',
+   *   size: 1024,
+   *   width: 800,
+   *   height: 600
+   * });
+   * console.log('Uploaded file URL:', result.url);
+   * ```
+   */
+  async uploadAttachment(request: ApiUploadAttachmentRequest): Promise<ApiUploadAttachment> {
+    return this._client.uploadAttachmentFile(this._session.token, request);
   }
 
   /**

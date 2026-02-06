@@ -14,7 +14,7 @@ npm install mezon-light-sdk
 - 💬 Real-time messaging via WebSocket (protobuf-based)
 - 📨 Direct message (DM) and group DM support
 - 🔄 Automatic session management with token refresh
-- 📎 Attachment support for messages
+- 📎 File upload and attachment support (presigned URLs)
 - 🎯 TypeScript-first with full type definitions
 - ⚡ Exponential backoff for socket connection reliability
 
@@ -175,7 +175,74 @@ await socket.sendGroup({
 });
 ```
 
-### 8. Disconnect
+### 8. Upload Attachments
+
+**Upload Flow (Presigned URL):**
+
+Mezon uses **Presigned URLs** for secure file uploads:
+1. Client calls `uploadAttachment()` with file metadata → Server returns a **Presigned URL** (with temporary credentials in query params)
+2. Client uses the Presigned URL to **PUT file directly to CDN** (bypassing backend)
+3. After upload, Client **extracts the base URL** (removes query params) to use in message attachment
+
+> **Note:** The SDK supports uploading **any file type** (images, documents, archives, etc.). when uploading non-image files, you can omit the `width` and `height` parameters.
+
+**Example:**
+- Presigned URL: `https://cdn.mezon.ai/file.png?X-Amz-Signature=...` → Used for **upload**
+- CDN URL: `https://cdn.mezon.ai/file.png` → Used in **message**
+
+```typescript
+import * as fs from 'fs';
+import * as path from 'path';
+
+// Step 1: Get file information
+const imagePath = path.join(__dirname, 'image.png');
+const stats = fs.statSync(imagePath);
+
+// Step 2: Request presigned URL from server
+const uploadResponse = await client.uploadAttachment({
+  filename: 'image.png',
+  filetype: 'image/png',
+  size: stats.size,
+  width: 800,
+  height: 600
+});
+
+// uploadResponse.url = "https://cdn.mezon.ai/file.png?X-Amz-Algorithm=..."
+
+// Step 3: Upload file to CDN via presigned URL
+const fileBuffer = fs.readFileSync(imagePath);
+await fetch(uploadResponse.url!, {
+  method: 'PUT',
+  headers: { 'Content-Type': 'image/png' },
+  body: fileBuffer
+});
+
+// Step 4: Extract clean CDN URL (remove query params)
+const urlObj = new URL(uploadResponse.url!);
+const cdnUrl = `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
+// cdnUrl = "https://cdn.mezon.ai/file.png"
+
+// Step 5: Send message with attachment
+await socket.sendDM({
+  channelId: 'channel-123',
+  content: { t: 'Check out this image!' },
+  attachments: [{
+    filename: 'image.png',
+    url: cdnUrl,        // Use clean CDN URL
+    filetype: 'image/png',
+    size: stats.size,
+    width: 800,
+    height: 600
+  }]
+});
+```
+
+**⚠️ Important:**
+- Presigned URLs have **short expiration** (typically 10-60s), upload immediately after receiving
+- Only use **clean CDN URL** (without query params) in message attachment
+
+
+### 9. Disconnect
 
 ```typescript
 // Disconnect when done
@@ -195,6 +262,7 @@ socket.disconnect();
 | `client.client` | Get underlying MezonApi client |
 | `client.createDM(peerId)` | Create a DM channel with one user |
 | `client.createGroupDM(userIds)` | Create a group DM with multiple users |
+| `client.uploadAttachment(request)` | Upload file and get presigned URL + CDN URL |
 | `client.refreshSession()` | Refresh the session using refresh token |
 | `client.isSessionExpired()` | Check if session token is expired |
 | `client.isRefreshSessionExpired()` | Check if refresh token is expired |
@@ -203,6 +271,7 @@ socket.disconnect();
 | `client.getSession()` | Get the current session object |
 | `client.exportSession()` | Export session data for persistence |
 | `client.createSocket(verbose?, adapter?, timeout?)` | Create a raw socket instance |
+
 
 ### LightSocket
 
@@ -253,6 +322,30 @@ interface SocketConnectOptions {
   onError?: (error: unknown) => void;  // Error callback
   onDisconnect?: () => void;           // Disconnect callback
   verbose?: boolean;                    // Enable debug logging
+}
+
+interface ApiUploadAttachmentRequest {
+  filename?: string;     // File name
+  filetype?: string;     // MIME type (e.g., 'image/png')
+  size?: number;         // File size in bytes
+  width?: number;        // Image width (for images)
+  height?: number;       // Image height (for images)
+}
+
+interface ApiUploadAttachment {
+  filename?: string;     // Uploaded file name
+  url?: string;          // Presigned URL (with query params)
+}
+
+interface ApiMessageAttachment {
+  filename?: string;     // File name
+  url?: string;          // Clean CDN URL (without query params)
+  filetype?: string;     // MIME type
+  size?: number;         // File size in bytes
+  width?: number;        // Image width
+  height?: number;       // Image height
+  thumbnail?: string;    // Thumbnail URL (optional)
+  duration?: number;     // Video duration in seconds (optional)
 }
 ```
 
