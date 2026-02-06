@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mezon Chat - Astra Theme Demo</title>
+    <!-- Astra Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Astra Theme Colors */
+            --ast-global-color-0: #0274be; /* Primary */
+            --ast-global-color-1: #3a3a3a; /* Heading */
+            --ast-global-color-2: #3a3a3a; /* Body Text */
+            --ast-global-color-3: #757575; /* Meta Text */
+            --ast-global-color-4: #ffffff;
+            --ast-global-color-5: #f9f9f9;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--ast-global-color-5);
+            color: var(--ast-global-color-2);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Simple Header mimicking Astra */
+        header {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 10px -2px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--ast-global-color-1);
+        }
+
+        .nav-link {
+            color: var(--ast-global-color-1);
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+        }
+
+        /* Hero Section */
+        .hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        h1 {
+            color: var(--ast-global-color-1);
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .sub-text {
+            color: var(--ast-global-color-3);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        .cta-btn {
+            background-color: var(--ast-global-color-0);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .cta-btn:hover {
+            background-color: #025a94;
+        }
+    </style>
+</head>
+<body>
+    <script src="/mezon-chat.js"></script>
+    
+    <mezon-chat
+        api-base-url="http://localhost:3001"
+        peer-id="1833328046103334912"
+        save-session="true"
+    ></mezon-chat>
+</body>
+</html>

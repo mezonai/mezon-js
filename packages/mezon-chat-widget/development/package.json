@@ -1,0 +1,20 @@
+{
+   "name": "demo-mezon-light-chat-widget",
+   "version": "1.0.0",
+   "description": "A customizable chat widget powered by Mezon SDK",
+   "main": "../dist/mezon-light-chat.js",
+   "types": "../dist/index.d.ts",
+   "type": "module",
+   "scripts": {
+      "start": "node server.js"
+   },
+   "devDependencies": {
+      "concurrently": "^8.2.2",
+      "cors": "^2.8.5",
+      "dotenv": "^17.2.3",
+      "express": "^5.2.1",
+      "typescript": "^5.3.3"
+   },
+   "author": "",
+   "license": "MIT"
+}
