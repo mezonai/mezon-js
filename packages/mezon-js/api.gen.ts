@@ -2785,7 +2785,7 @@ export interface ApiUser {
   //
   is_mobile?: boolean;
   //
-  join_time?: string;
+  join_time_seconds?: number;
   //The language expected to be a tag which follows the BCP-47 spec.
   lang_tag?: string;
   //The location set by the user.

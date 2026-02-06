@@ -158,6 +158,12 @@ export interface BannedUserEvent {
   ban_time: number
 }
 
+export interface AiAgentEnabledEvent {
+  clan_id: string;
+  channel_id: string;
+  enabled: boolean;
+}
+
 export interface UserProfileRedis {
   /** User IDs to follow. */
   user_id: string;
@@ -1735,6 +1741,8 @@ export interface Socket {
   ontransferownership: (event: TransferOwnershipEvent) => void;
 
   onbanneduser: (event: BannedUserEvent) => void;
+
+  onaiagentenabled: (event: AiAgentEnabledEvent) => void;
 }
 
 /** Reports an error received from a socket message. */
@@ -2013,6 +2021,8 @@ export class DefaultSocket implements Socket {
           this.onbanneduser(<BannedUserEvent>message.ban_user_event);
         } else if (message.allow_anonymous_event) {
           this.onallowanonymousevent(<AllowAnonymousEvent>message.allow_anonymous_event);
+        } else if (message.aiagent_enabled_event) {
+          this.onaiagentenabled(<AiAgentEnabledEvent>message.aiagent_enabled_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -2523,6 +2533,12 @@ export class DefaultSocket implements Socket {
   }
 
   onallowanonymousevent(event: AllowAnonymousEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onaiagentenabled(event: AiAgentEnabledEvent) {
     if (this.verbose && window && window.console) {
       console.log(event);
     }
