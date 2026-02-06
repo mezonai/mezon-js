@@ -1619,11 +1619,17 @@ export interface ApiInviteUserRes {
   //
   user_joined?: boolean;
   //
-  expiry_time?: string;
+  expiry_time_seconds?: number;
   //
   clan_logo: string;
   //
   member_count: number;
+  //
+  banner: string;
+  //
+  community_banner: string;
+  //
+  is_community: boolean;
 }
 
 /** Add link invite users to. */
@@ -2779,7 +2785,7 @@ export interface ApiUser {
   //
   is_mobile?: boolean;
   //
-  join_time?: string;
+  join_time_seconds?: number;
   //The language expected to be a tag which follows the BCP-47 spec.
   lang_tag?: string;
   //The location set by the user.
@@ -7415,7 +7421,7 @@ export class MezonApi {
       fetchOptions.headers["Authorization"] =
         "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
-    fetchOptions.headers["Accept"] = "application/json";
+    fetchOptions.headers["Accept"] = "application/x-protobuf";
     fetchOptions.headers["Content-Type"] = "application/json";
 
     return Promise.race([
@@ -7423,7 +7429,8 @@ export class MezonApi {
         if (response.status == 204) {
           return {} as ApiInviteUserRes;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json()
+          const buffer = await response.arrayBuffer();
+          return tsproto.InviteUserRes.decode(new Uint8Array(buffer)) as ApiInviteUserRes;
         } else {
           throw response;
         }

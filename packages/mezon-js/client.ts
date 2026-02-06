@@ -1473,6 +1473,7 @@ export class Client {
               mezon_id: gu.user!.mezon_id,
               list_nick_names: gu.user!.list_nick_names,
               phone_number: gu.user!.phone_number,
+              join_time_seconds: gu.user!.join_time_seconds,
             },
             role_id: gu!.role_id,
             clan_nick: gu!.clan_nick,
