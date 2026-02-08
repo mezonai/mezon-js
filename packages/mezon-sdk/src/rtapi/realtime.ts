@@ -403,6 +403,7 @@ export interface Envelope {
     | undefined;
   /** Clan Created Event */
   clan_created_event?: ClanCreatedEvent | undefined;
+  aiagent_enabled_event?: AIAgentEnabledEvent | undefined;
 }
 
 export interface UpdateLocalCacheEvent {
@@ -1677,6 +1678,13 @@ export interface FcmDataPayload {
   attachments: MessageAttachment[];
 }
 
+export interface AIAgentEnabledEvent {
+  clan_id: string;
+  channel_id: string;
+  room_name: string;
+  enabled: boolean;
+}
+
 function createBaseEnvelope(): Envelope {
   return {
     cid: "",
@@ -1772,6 +1780,7 @@ function createBaseEnvelope(): Envelope {
     allow_anonymous_event: undefined,
     update_localcache_event: undefined,
     clan_created_event: undefined,
+    aiagent_enabled_event: undefined,
   };
 }
 
@@ -2056,6 +2065,9 @@ export const Envelope = {
     }
     if (message.clan_created_event !== undefined) {
       ClanCreatedEvent.encode(message.clan_created_event, writer.uint32(746).fork()).ldelim();
+    }
+    if (message.aiagent_enabled_event !== undefined) {
+      AIAgentEnabledEvent.encode(message.aiagent_enabled_event, writer.uint32(754).fork()).ldelim();
     }
     return writer;
   },
@@ -2718,6 +2730,13 @@ export const Envelope = {
 
           message.clan_created_event = ClanCreatedEvent.decode(reader, reader.uint32());
           continue;
+        case 94:
+          if (tag !== 754) {
+            break;
+          }
+
+          message.aiagent_enabled_event = AIAgentEnabledEvent.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2941,6 +2960,9 @@ export const Envelope = {
         : undefined,
       clan_created_event: isSet(object.clan_created_event)
         ? ClanCreatedEvent.fromJSON(object.clan_created_event)
+        : undefined,
+      aiagent_enabled_event: isSet(object.aiagent_enabled_event)
+        ? AIAgentEnabledEvent.fromJSON(object.aiagent_enabled_event)
         : undefined,
     };
   },
@@ -3227,6 +3249,9 @@ export const Envelope = {
     }
     if (message.clan_created_event !== undefined) {
       obj.clan_created_event = ClanCreatedEvent.toJSON(message.clan_created_event);
+    }
+    if (message.aiagent_enabled_event !== undefined) {
+      obj.aiagent_enabled_event = AIAgentEnabledEvent.toJSON(message.aiagent_enabled_event);
     }
     return obj;
   },
@@ -3537,6 +3562,10 @@ export const Envelope = {
     message.clan_created_event = (object.clan_created_event !== undefined && object.clan_created_event !== null)
       ? ClanCreatedEvent.fromPartial(object.clan_created_event)
       : undefined;
+    message.aiagent_enabled_event =
+      (object.aiagent_enabled_event !== undefined && object.aiagent_enabled_event !== null)
+        ? AIAgentEnabledEvent.fromPartial(object.aiagent_enabled_event)
+        : undefined;
     return message;
   },
 };
@@ -15646,6 +15675,110 @@ export const FcmDataPayload = {
     message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
     message.references = object.references?.map((e) => MessageRef.fromPartial(e)) || [];
     message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseAIAgentEnabledEvent(): AIAgentEnabledEvent {
+  return { clan_id: "0", channel_id: "0", room_name: "", enabled: false };
+}
+
+export const AIAgentEnabledEvent = {
+  encode(message: AIAgentEnabledEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
+    }
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
+    }
+    if (message.room_name !== "") {
+      writer.uint32(26).string(message.room_name);
+    }
+    if (message.enabled !== false) {
+      writer.uint32(32).bool(message.enabled);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AIAgentEnabledEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAIAgentEnabledEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.clan_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.room_name = reader.string();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.enabled = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AIAgentEnabledEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
+      enabled: isSet(object.enabled) ? globalThis.Boolean(object.enabled) : false,
+    };
+  },
+
+  toJSON(message: AIAgentEnabledEvent): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "0") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.room_name !== "") {
+      obj.room_name = message.room_name;
+    }
+    if (message.enabled !== false) {
+      obj.enabled = message.enabled;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AIAgentEnabledEvent>, I>>(base?: I): AIAgentEnabledEvent {
+    return AIAgentEnabledEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AIAgentEnabledEvent>, I>>(object: I): AIAgentEnabledEvent {
+    const message = createBaseAIAgentEnabledEvent();
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.room_name = object.room_name ?? "";
+    message.enabled = object.enabled ?? false;
     return message;
   },
 };

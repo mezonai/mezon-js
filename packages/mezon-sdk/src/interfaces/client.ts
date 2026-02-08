@@ -407,6 +407,8 @@ export interface ApiVoiceChannelUser {
   participant?: string;
   //User for a channel.
   user_ids?: Array<string>;
+  /** room name */
+  room_name?: string;
 }
 
 export interface IInteractiveMessageProps {

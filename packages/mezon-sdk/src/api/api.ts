@@ -653,6 +653,8 @@ export interface VoiceChannelUser {
   user_ids: string[];
   /** channel id */
   channel_id: string;
+  /** room name */
+  room_name: string;
 }
 
 /** A list of users belonging to a channel, along with their role. */
@@ -1287,10 +1289,11 @@ export interface InviteUserRes {
   user_joined: boolean;
   /** expiry_time */
   expiry_time_seconds: number;
-  /**  */
-  channel_desc: ChannelDescription | undefined;
   clan_logo: string;
   member_count: number;
+  banner: string;
+  community_banner: string;
+  is_community: boolean;
 }
 
 /** Add link invite users to. */
@@ -7909,7 +7912,7 @@ export const ChannelUserList_ChannelUser = {
 };
 
 function createBaseVoiceChannelUser(): VoiceChannelUser {
-  return { user_ids: [], channel_id: "0" };
+  return { user_ids: [], channel_id: "0", room_name: "" };
 }
 
 export const VoiceChannelUser = {
@@ -7919,6 +7922,9 @@ export const VoiceChannelUser = {
     }
     if (message.channel_id !== "0") {
       writer.uint32(16).int64(message.channel_id);
+    }
+    if (message.room_name !== "") {
+      writer.uint32(26).string(message.room_name);
     }
     return writer;
   },
@@ -7944,6 +7950,13 @@ export const VoiceChannelUser = {
 
           message.channel_id = longToString(reader.int64() as Long);
           continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.room_name = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -7957,6 +7970,7 @@ export const VoiceChannelUser = {
     return {
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
     };
   },
 
@@ -7968,6 +7982,9 @@ export const VoiceChannelUser = {
     if (message.channel_id !== "0") {
       obj.channel_id = message.channel_id;
     }
+    if (message.room_name !== "") {
+      obj.room_name = message.room_name;
+    }
     return obj;
   },
 
@@ -7978,6 +7995,7 @@ export const VoiceChannelUser = {
     const message = createBaseVoiceChannelUser();
     message.user_ids = object.user_ids?.map((e) => e) || [];
     message.channel_id = object.channel_id ?? "0";
+    message.room_name = object.room_name ?? "";
     return message;
   },
 };
@@ -13127,9 +13145,11 @@ function createBaseInviteUserRes(): InviteUserRes {
     channel_label: "",
     user_joined: false,
     expiry_time_seconds: 0,
-    channel_desc: undefined,
     clan_logo: "",
     member_count: 0,
+    banner: "",
+    community_banner: "",
+    is_community: false,
   };
 }
 
@@ -13153,14 +13173,20 @@ export const InviteUserRes = {
     if (message.expiry_time_seconds !== 0) {
       writer.uint32(48).uint32(message.expiry_time_seconds);
     }
-    if (message.channel_desc !== undefined) {
-      ChannelDescription.encode(message.channel_desc, writer.uint32(58).fork()).ldelim();
-    }
     if (message.clan_logo !== "") {
-      writer.uint32(66).string(message.clan_logo);
+      writer.uint32(58).string(message.clan_logo);
     }
     if (message.member_count !== 0) {
-      writer.uint32(72).int32(message.member_count);
+      writer.uint32(64).int32(message.member_count);
+    }
+    if (message.banner !== "") {
+      writer.uint32(74).string(message.banner);
+    }
+    if (message.community_banner !== "") {
+      writer.uint32(82).string(message.community_banner);
+    }
+    if (message.is_community !== false) {
+      writer.uint32(88).bool(message.is_community);
     }
     return writer;
   },
@@ -13219,21 +13245,35 @@ export const InviteUserRes = {
             break;
           }
 
-          message.channel_desc = ChannelDescription.decode(reader, reader.uint32());
-          continue;
-        case 8:
-          if (tag !== 66) {
-            break;
-          }
-
           message.clan_logo = reader.string();
           continue;
-        case 9:
-          if (tag !== 72) {
+        case 8:
+          if (tag !== 64) {
             break;
           }
 
           message.member_count = reader.int32();
+          continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.banner = reader.string();
+          continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.community_banner = reader.string();
+          continue;
+        case 11:
+          if (tag !== 88) {
+            break;
+          }
+
+          message.is_community = reader.bool();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -13252,9 +13292,11 @@ export const InviteUserRes = {
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
       user_joined: isSet(object.user_joined) ? globalThis.Boolean(object.user_joined) : false,
       expiry_time_seconds: isSet(object.expiry_time_seconds) ? globalThis.Number(object.expiry_time_seconds) : 0,
-      channel_desc: isSet(object.channel_desc) ? ChannelDescription.fromJSON(object.channel_desc) : undefined,
       clan_logo: isSet(object.clan_logo) ? globalThis.String(object.clan_logo) : "",
       member_count: isSet(object.member_count) ? globalThis.Number(object.member_count) : 0,
+      banner: isSet(object.banner) ? globalThis.String(object.banner) : "",
+      community_banner: isSet(object.community_banner) ? globalThis.String(object.community_banner) : "",
+      is_community: isSet(object.is_community) ? globalThis.Boolean(object.is_community) : false,
     };
   },
 
@@ -13278,14 +13320,20 @@ export const InviteUserRes = {
     if (message.expiry_time_seconds !== 0) {
       obj.expiry_time_seconds = Math.round(message.expiry_time_seconds);
     }
-    if (message.channel_desc !== undefined) {
-      obj.channel_desc = ChannelDescription.toJSON(message.channel_desc);
-    }
     if (message.clan_logo !== "") {
       obj.clan_logo = message.clan_logo;
     }
     if (message.member_count !== 0) {
       obj.member_count = Math.round(message.member_count);
+    }
+    if (message.banner !== "") {
+      obj.banner = message.banner;
+    }
+    if (message.community_banner !== "") {
+      obj.community_banner = message.community_banner;
+    }
+    if (message.is_community !== false) {
+      obj.is_community = message.is_community;
     }
     return obj;
   },
@@ -13301,11 +13349,11 @@ export const InviteUserRes = {
     message.channel_label = object.channel_label ?? "";
     message.user_joined = object.user_joined ?? false;
     message.expiry_time_seconds = object.expiry_time_seconds ?? 0;
-    message.channel_desc = (object.channel_desc !== undefined && object.channel_desc !== null)
-      ? ChannelDescription.fromPartial(object.channel_desc)
-      : undefined;
     message.clan_logo = object.clan_logo ?? "";
     message.member_count = object.member_count ?? 0;
+    message.banner = object.banner ?? "";
+    message.community_banner = object.community_banner ?? "";
+    message.is_community = object.is_community ?? false;
     return message;
   },
 };

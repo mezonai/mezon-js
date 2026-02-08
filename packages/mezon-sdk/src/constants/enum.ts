@@ -38,6 +38,7 @@ export enum InternalEventsSocket {
   WebrtcSignalingFwd = "webrtc_signaling_fwd",
   Notifications = "notifications",
   QuickMenu = "quick_menu_event",
+  AIAgentEnableEvent ="aiagent_enabled_event",
 }
 
 export enum Events {
@@ -115,6 +116,9 @@ export enum Events {
 
   /** Listen to add quick menu */
   QuickMenu = InternalEventsSocket.QuickMenu,
+
+  /** Listen to enable AI Agent  */
+  AIAgentEnable = InternalEventsSocket.AIAgentEnableEvent,
 }
 
 export enum ChannelType {

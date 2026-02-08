@@ -125,6 +125,7 @@ export class Clan {
             channel_id: gu.channel_id,
             user_ids: gu.user_ids,
             participant: gu.participant,
+            room_name: gu.room_name
           });
         });
         return Promise.resolve(result);
