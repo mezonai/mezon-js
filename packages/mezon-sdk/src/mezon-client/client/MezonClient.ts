@@ -20,6 +20,7 @@ import {
 } from "../../interfaces";
 import { ChannelType, Events, TypeMessage } from "../../constants";
 import {
+  AIAgentEnabledEvent,
   MessageButtonClicked,
   Notifications,
   RoleAssignedEvent,
@@ -204,6 +205,11 @@ export class MezonClient extends MezonClientCore {
 
   public onVoiceLeavedEvent(listener: (e: VoiceLeavedEvent) => void): this {
     this.on(Events.VoiceLeavedEvent.toString(), listener);
+    return this;
+  }
+
+  public onAIAgentEnableEvent(listener: (e: AIAgentEnabledEvent) => void): this {
+    this.on(Events.AIAgentEnable.toString(), listener);
     return this;
   }
 

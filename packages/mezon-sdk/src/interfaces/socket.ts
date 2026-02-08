@@ -359,6 +359,12 @@ export interface VoiceLeavedEvent {
   voice_user_id: string;
 }
 
+export interface AiAgentEnabledEvent {
+  clan_id: string;
+  channel_id: string;
+  enabled: boolean;
+}
+
 export interface VoiceJoinedEvent {
   /** The unique identifier of the chat channel. */
   clan_id: string;
