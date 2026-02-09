@@ -20,11 +20,15 @@ var useSSL = true; // Enable if server is run with an SSL certificate.
 var clientgw = new Client("defaultkey", "dev-mezon.nccsoft.vn", "8088", useSSL);
 var client = new Client("defaultkey", "172.16.11.90", "7350", false);
 
-clientgw.authenticateEmail("pocolomos@gmail.com", "C0nandoiner123$").then(async session => {
+clientgw.authenticateEmail("pocolomos@gmail.com", "xxxxxxxxxxx").then(async session => {
 
-  console.log(await client.listChannelVoiceUsers(session, "1775732550744936448"));
+  console.log(await client.sessionRefresh(session))
+  //const socket = client.createSocket(false, "localhost", "7349", true, new WebSocketAdapterPb());
+  //const session2 = await socket.connect(session, true, "desktop");
+  //console.log("session", session2);
+  //const resp = await socket.writeEphemeralMessage("1780188277182042112","1775732550744936448", "1775820446206267392", 2, false, {'t': 'Hello from Mezon JS Webpack Example with Protobuf!'});
+  //console.log('resp', resp);
   
-
 }).catch(e => {
   console.log("error authenticating.", e);
 });
