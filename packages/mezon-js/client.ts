@@ -171,6 +171,8 @@ import {
   ApiMessageMention,
   ApiMessageAttachment,
   ApiMessageRef,
+  ApiListChannelEventsResponse,
+  ListChannelEventsRequest
 } from "./api.gen";
 import { Session } from "./session";
 import { DefaultSocket, Socket, ChannelMessageAck } from "./socket";
@@ -3539,6 +3541,25 @@ export class Client {
 
         result.channeldesc = response.channeldesc;
         return Promise.resolve(result);
+      });
+  }
+
+  async listChannelEvents(
+    session: Session,
+    request: ListChannelEventsRequest,
+  ): Promise<ApiListChannelEventsResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listChannelEvents(session.token, request)
+      .then((response: ApiListChannelEventsResponse) => {
+        return Promise.resolve(response);
       });
   }
 

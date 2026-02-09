@@ -3877,6 +3877,52 @@ export function participantInfo_KindDetailToJSON(object: ParticipantInfo_KindDet
   }
 }
 
+/** Channel Event Attachment */
+export interface ChannelEventAttachment {
+  id: string;
+  file_name: string;
+  file_url: string;
+  file_type: string;
+  file_size: string;
+  width: number;
+  height: number;
+  thumbnail: string;
+  duration: number;
+  message_id: string;
+}
+
+/** Channel Event */
+export interface ChannelEvent {
+  id: string;
+  clan_id: string;
+  channel_id: string;
+  start_time_seconds: number;
+  title: string;
+  description: string;
+  end_time_seconds: number;
+  location: string;
+  status: number;
+  creator_id: string;
+  create_time_seconds: number;
+  update_time_seconds: number;
+  attachments: ChannelEventAttachment[];
+}
+
+/** List Channel Events Request */
+export interface ListChannelEventsRequest {
+  clan_id: string;
+  channel_id: string;
+  year: number;
+  start_time: number;
+  end_time: number;
+  limit: number;
+}
+
+/** List Channel Events Response */
+export interface ListChannelEventsResponse {
+  events: ChannelEvent[];
+}
+
 function createBaseAccount(): Account {
   return {
     user: undefined,
@@ -40705,6 +40751,659 @@ export const ParticipantInfo = {
     message.sid = object.sid ?? "";
     message.identity = object.identity ?? "";
     message.state = object.state ?? 0;
+    return message;
+  },
+};
+
+function createBaseChannelEventAttachment(): ChannelEventAttachment {
+  return {
+    id: "0",
+    file_name: "",
+    file_url: "",
+    file_type: "",
+    file_size: "0",
+    width: 0,
+    height: 0,
+    thumbnail: "",
+    duration: 0,
+    message_id: "0",
+  };
+}
+
+export const ChannelEventAttachment = {
+  encode(message: ChannelEventAttachment, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "0") {
+      writer.uint32(8).int64(message.id);
+    }
+    if (message.file_name !== "") {
+      writer.uint32(18).string(message.file_name);
+    }
+    if (message.file_url !== "") {
+      writer.uint32(26).string(message.file_url);
+    }
+    if (message.file_type !== "") {
+      writer.uint32(34).string(message.file_type);
+    }
+    if (message.file_size !== "0") {
+      writer.uint32(40).int64(message.file_size);
+    }
+    if (message.width !== 0) {
+      writer.uint32(48).int32(message.width);
+    }
+    if (message.height !== 0) {
+      writer.uint32(56).int32(message.height);
+    }
+    if (message.thumbnail !== "") {
+      writer.uint32(66).string(message.thumbnail);
+    }
+    if (message.duration !== 0) {
+      writer.uint32(72).int32(message.duration);
+    }
+    if (message.message_id !== "0") {
+      writer.uint32(80).int64(message.message_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelEventAttachment {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelEventAttachment();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.file_name = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.file_url = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.file_type = reader.string();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.file_size = longToString(reader.int64() as Long);
+          continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.width = reader.int32();
+          continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.height = reader.int32();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.thumbnail = reader.string();
+          continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.duration = reader.int32();
+          continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.message_id = longToString(reader.int64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelEventAttachment {
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "0",
+      file_name: isSet(object.file_name) ? globalThis.String(object.file_name) : "",
+      file_url: isSet(object.file_url) ? globalThis.String(object.file_url) : "",
+      file_type: isSet(object.file_type) ? globalThis.String(object.file_type) : "",
+      file_size: isSet(object.file_size) ? globalThis.String(object.file_size) : "0",
+      width: isSet(object.width) ? globalThis.Number(object.width) : 0,
+      height: isSet(object.height) ? globalThis.Number(object.height) : 0,
+      thumbnail: isSet(object.thumbnail) ? globalThis.String(object.thumbnail) : "",
+      duration: isSet(object.duration) ? globalThis.Number(object.duration) : 0,
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
+    };
+  },
+
+  toJSON(message: ChannelEventAttachment): unknown {
+    const obj: any = {};
+    if (message.id !== "0") {
+      obj.id = message.id;
+    }
+    if (message.file_name !== "") {
+      obj.file_name = message.file_name;
+    }
+    if (message.file_url !== "") {
+      obj.file_url = message.file_url;
+    }
+    if (message.file_type !== "") {
+      obj.file_type = message.file_type;
+    }
+    if (message.file_size !== "0") {
+      obj.file_size = message.file_size;
+    }
+    if (message.width !== 0) {
+      obj.width = Math.round(message.width);
+    }
+    if (message.height !== 0) {
+      obj.height = Math.round(message.height);
+    }
+    if (message.thumbnail !== "") {
+      obj.thumbnail = message.thumbnail;
+    }
+    if (message.duration !== 0) {
+      obj.duration = Math.round(message.duration);
+    }
+    if (message.message_id !== "0") {
+      obj.message_id = message.message_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelEventAttachment>, I>>(base?: I): ChannelEventAttachment {
+    return ChannelEventAttachment.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ChannelEventAttachment>, I>>(object: I): ChannelEventAttachment {
+    const message = createBaseChannelEventAttachment();
+    message.id = object.id ?? "0";
+    message.file_name = object.file_name ?? "";
+    message.file_url = object.file_url ?? "";
+    message.file_type = object.file_type ?? "";
+    message.file_size = object.file_size ?? "0";
+    message.width = object.width ?? 0;
+    message.height = object.height ?? 0;
+    message.thumbnail = object.thumbnail ?? "";
+    message.duration = object.duration ?? 0;
+    message.message_id = object.message_id ?? "0";
+    return message;
+  },
+};
+
+function createBaseChannelEvent(): ChannelEvent {
+  return {
+    id: "0",
+    clan_id: "0",
+    channel_id: "0",
+    start_time_seconds: 0,
+    title: "",
+    description: "",
+    end_time_seconds: 0,
+    location: "",
+    status: 0,
+    creator_id: "0",
+    create_time_seconds: 0,
+    update_time_seconds: 0,
+    attachments: [],
+  };
+}
+
+export const ChannelEvent = {
+  encode(message: ChannelEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "0") {
+      writer.uint32(8).int64(message.id);
+    }
+    if (message.clan_id !== "0") {
+      writer.uint32(16).int64(message.clan_id);
+    }
+    if (message.channel_id !== "0") {
+      writer.uint32(24).int64(message.channel_id);
+    }
+    if (message.start_time_seconds !== 0) {
+      writer.uint32(32).uint32(message.start_time_seconds);
+    }
+    if (message.title !== "") {
+      writer.uint32(42).string(message.title);
+    }
+    if (message.description !== "") {
+      writer.uint32(50).string(message.description);
+    }
+    if (message.end_time_seconds !== 0) {
+      writer.uint32(56).uint32(message.end_time_seconds);
+    }
+    if (message.location !== "") {
+      writer.uint32(66).string(message.location);
+    }
+    if (message.status !== 0) {
+      writer.uint32(72).int32(message.status);
+    }
+    if (message.creator_id !== "0") {
+      writer.uint32(80).int64(message.creator_id);
+    }
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(88).uint32(message.create_time_seconds);
+    }
+    if (message.update_time_seconds !== 0) {
+      writer.uint32(96).uint32(message.update_time_seconds);
+    }
+    for (const v of message.attachments) {
+      ChannelEventAttachment.encode(v!, writer.uint32(106).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.clan_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.start_time_seconds = reader.uint32();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.title = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.description = reader.string();
+          continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.end_time_seconds = reader.uint32();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.location = reader.string();
+          continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.status = reader.int32();
+          continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.creator_id = longToString(reader.int64() as Long);
+          continue;
+        case 11:
+          if (tag !== 88) {
+            break;
+          }
+
+          message.create_time_seconds = reader.uint32();
+          continue;
+        case 12:
+          if (tag !== 96) {
+            break;
+          }
+
+          message.update_time_seconds = reader.uint32();
+          continue;
+        case 13:
+          if (tag !== 106) {
+            break;
+          }
+
+          message.attachments.push(ChannelEventAttachment.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelEvent {
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "0",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      start_time_seconds: isSet(object.start_time_seconds) ? globalThis.Number(object.start_time_seconds) : 0,
+      title: isSet(object.title) ? globalThis.String(object.title) : "",
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      end_time_seconds: isSet(object.end_time_seconds) ? globalThis.Number(object.end_time_seconds) : 0,
+      location: isSet(object.location) ? globalThis.String(object.location) : "",
+      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "0",
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
+      update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
+      attachments: globalThis.Array.isArray(object?.attachments)
+        ? object.attachments.map((e: any) => ChannelEventAttachment.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ChannelEvent): unknown {
+    const obj: any = {};
+    if (message.id !== "0") {
+      obj.id = message.id;
+    }
+    if (message.clan_id !== "0") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.start_time_seconds !== 0) {
+      obj.start_time_seconds = Math.round(message.start_time_seconds);
+    }
+    if (message.title !== "") {
+      obj.title = message.title;
+    }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.end_time_seconds !== 0) {
+      obj.end_time_seconds = Math.round(message.end_time_seconds);
+    }
+    if (message.location !== "") {
+      obj.location = message.location;
+    }
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
+    }
+    if (message.creator_id !== "0") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
+    }
+    if (message.update_time_seconds !== 0) {
+      obj.update_time_seconds = Math.round(message.update_time_seconds);
+    }
+    if (message.attachments?.length) {
+      obj.attachments = message.attachments.map((e) => ChannelEventAttachment.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelEvent>, I>>(base?: I): ChannelEvent {
+    return ChannelEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ChannelEvent>, I>>(object: I): ChannelEvent {
+    const message = createBaseChannelEvent();
+    message.id = object.id ?? "0";
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.start_time_seconds = object.start_time_seconds ?? 0;
+    message.title = object.title ?? "";
+    message.description = object.description ?? "";
+    message.end_time_seconds = object.end_time_seconds ?? 0;
+    message.location = object.location ?? "";
+    message.status = object.status ?? 0;
+    message.creator_id = object.creator_id ?? "0";
+    message.create_time_seconds = object.create_time_seconds ?? 0;
+    message.update_time_seconds = object.update_time_seconds ?? 0;
+    message.attachments = object.attachments?.map((e) => ChannelEventAttachment.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseListChannelEventsRequest(): ListChannelEventsRequest {
+  return { clan_id: "0", channel_id: "0", year: 0, start_time: 0, end_time: 0, limit: 0 };
+}
+
+export const ListChannelEventsRequest = {
+  encode(message: ListChannelEventsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
+    }
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
+    }
+    if (message.year !== 0) {
+      writer.uint32(24).int32(message.year);
+    }
+    if (message.start_time !== 0) {
+      writer.uint32(32).uint32(message.start_time);
+    }
+    if (message.end_time !== 0) {
+      writer.uint32(40).uint32(message.end_time);
+    }
+    if (message.limit !== 0) {
+      writer.uint32(48).int32(message.limit);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelEventsRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListChannelEventsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.clan_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.year = reader.int32();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.start_time = reader.uint32();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.end_time = reader.uint32();
+          continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.limit = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListChannelEventsRequest {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      year: isSet(object.year) ? globalThis.Number(object.year) : 0,
+      start_time: isSet(object.start_time) ? globalThis.Number(object.start_time) : 0,
+      end_time: isSet(object.end_time) ? globalThis.Number(object.end_time) : 0,
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+    };
+  },
+
+  toJSON(message: ListChannelEventsRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "0") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.year !== 0) {
+      obj.year = Math.round(message.year);
+    }
+    if (message.start_time !== 0) {
+      obj.start_time = Math.round(message.start_time);
+    }
+    if (message.end_time !== 0) {
+      obj.end_time = Math.round(message.end_time);
+    }
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListChannelEventsRequest>, I>>(base?: I): ListChannelEventsRequest {
+    return ListChannelEventsRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListChannelEventsRequest>, I>>(object: I): ListChannelEventsRequest {
+    const message = createBaseListChannelEventsRequest();
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.year = object.year ?? 0;
+    message.start_time = object.start_time ?? 0;
+    message.end_time = object.end_time ?? 0;
+    message.limit = object.limit ?? 0;
+    return message;
+  },
+};
+
+function createBaseListChannelEventsResponse(): ListChannelEventsResponse {
+  return { events: [] };
+}
+
+export const ListChannelEventsResponse = {
+  encode(message: ListChannelEventsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.events) {
+      ChannelEvent.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelEventsResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListChannelEventsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.events.push(ChannelEvent.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListChannelEventsResponse {
+    return {
+      events: globalThis.Array.isArray(object?.events) ? object.events.map((e: any) => ChannelEvent.fromJSON(e)) : [],
+    };
+  },
+
+  toJSON(message: ListChannelEventsResponse): unknown {
+    const obj: any = {};
+    if (message.events?.length) {
+      obj.events = message.events.map((e) => ChannelEvent.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListChannelEventsResponse>, I>>(base?: I): ListChannelEventsResponse {
+    return ListChannelEventsResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListChannelEventsResponse>, I>>(object: I): ListChannelEventsResponse {
+    const message = createBaseListChannelEventsResponse();
+    message.events = object.events?.map((e) => ChannelEvent.fromPartial(e)) || [];
     return message;
   },
 };
