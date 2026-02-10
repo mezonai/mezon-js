@@ -8,6 +8,49 @@ import { ApiUpdateChannelDescRequest } from "./client";
 import { ChannelMessageAck } from "./socket";
 import { getFetcher } from "./config";
 
+
+export interface ApiListChannelEventsRequest {
+  clan_id: string;
+  channel_id: string;
+  year: number;
+  start_time?: number;
+  end_time?: number;
+  limit?: number;
+}
+
+export interface ChannelEventAttachment {
+  id: string;
+  file_name: string;
+  file_url: string;
+  file_type: string;
+  file_size: string;
+  width: number;
+  height: number;
+  thumbnail: string;
+  duration: number;
+  message_id: string;
+}
+
+export interface ApiChannelEvent {
+  id: string;
+  clan_id: string;
+  channel_id: string;
+  start_time_seconds: number;
+  title: string;
+  description: string;
+  end_time_seconds: number;
+  location: string;
+  status: number;
+  creator_id: string;
+  create_time_seconds: number;
+  update_time_seconds: number;
+  attachments: Array<ChannelEventAttachment>;
+}
+
+export interface ApiListChannelEventsResponse {
+  events?: Array<ApiChannelEvent>;
+}
+
 /** A single user-role pair. */
 export interface ChannelUserListChannelUser {
   //
@@ -1435,6 +1478,8 @@ export interface ApiEventList {
   //A list of event.
   events?: Array<ApiEventManagement>;
 }
+
+
 
 /**  */
 export interface ApiEventManagement {
@@ -11445,6 +11490,46 @@ export class MezonApi {
     ]);
   }
 
+  /** List channel events */
+  listChannelEvents(bearerToken: string,
+      request: ApiListChannelEventsRequest,
+      options = {}): Promise<ApiListChannelEventsResponse> {
+    
+    if (!request) {
+      throw new Error("'request' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/mezon.api.Mezon/ListChannelEvents";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.ListChannelEventsRequest.encode(
+      tsproto.ListChannelEventsRequest.fromPartial(request)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as ApiListChannelEventsResponse;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();      
+          return tsproto.ListChannelEventsResponse.decode(new Uint8Array(buffer)) as unknown as ApiListChannelEventsResponse;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
   /**  */
   updateClanOrder(bearerToken: string,
       body:ApiUpdateClanOrderRequest,
@@ -12391,4 +12476,3 @@ export class MezonApi {
     ]);
   }
 }
-
