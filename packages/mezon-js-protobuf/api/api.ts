@@ -1539,13 +1539,15 @@ export interface ListChannelDescsRequest {
   /** The channel state to list. */
   state: number;
   /** Cursor to start from */
-  page: number;
+  cursor: string;
   /** The clan of this channel */
   clan_id: string;
   /** channel type */
   channel_type: number;
   /** is mobile */
   is_mobile: boolean;
+  /** page */
+  page: number;
 }
 
 /** List channel description detail */
@@ -15727,7 +15729,7 @@ export const ListThreadRequest = {
 };
 
 function createBaseListChannelDescsRequest(): ListChannelDescsRequest {
-  return { limit: 0, state: 0, page: 0, clan_id: "0", channel_type: 0, is_mobile: false };
+  return { limit: 0, state: 0, cursor: "", clan_id: "0", channel_type: 0, is_mobile: false, page: 0 };
 }
 
 export const ListChannelDescsRequest = {
@@ -15738,8 +15740,8 @@ export const ListChannelDescsRequest = {
     if (message.state !== 0) {
       writer.uint32(16).int32(message.state);
     }
-    if (message.page !== 0) {
-      writer.uint32(24).int32(message.page);
+    if (message.cursor !== "") {
+      writer.uint32(26).string(message.cursor);
     }
     if (message.clan_id !== "0") {
       writer.uint32(32).int64(message.clan_id);
@@ -15749,6 +15751,9 @@ export const ListChannelDescsRequest = {
     }
     if (message.is_mobile !== false) {
       writer.uint32(48).bool(message.is_mobile);
+    }
+    if (message.page !== 0) {
+      writer.uint32(56).int32(message.page);
     }
     return writer;
   },
@@ -15775,11 +15780,11 @@ export const ListChannelDescsRequest = {
           message.state = reader.int32();
           continue;
         case 3:
-          if (tag !== 24) {
+          if (tag !== 26) {
             break;
           }
 
-          message.page = reader.int32();
+          message.cursor = reader.string();
           continue;
         case 4:
           if (tag !== 32) {
@@ -15802,6 +15807,13 @@ export const ListChannelDescsRequest = {
 
           message.is_mobile = reader.bool();
           continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.page = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -15815,10 +15827,11 @@ export const ListChannelDescsRequest = {
     return {
       limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
       state: isSet(object.state) ? globalThis.Number(object.state) : 0,
-      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
       is_mobile: isSet(object.is_mobile) ? globalThis.Boolean(object.is_mobile) : false,
+      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
     };
   },
 
@@ -15830,8 +15843,8 @@ export const ListChannelDescsRequest = {
     if (message.state !== 0) {
       obj.state = Math.round(message.state);
     }
-    if (message.page !== 0) {
-      obj.page = Math.round(message.page);
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
     }
     if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
@@ -15841,6 +15854,9 @@ export const ListChannelDescsRequest = {
     }
     if (message.is_mobile !== false) {
       obj.is_mobile = message.is_mobile;
+    }
+    if (message.page !== 0) {
+      obj.page = Math.round(message.page);
     }
     return obj;
   },
@@ -15852,10 +15868,11 @@ export const ListChannelDescsRequest = {
     const message = createBaseListChannelDescsRequest();
     message.limit = object.limit ?? 0;
     message.state = object.state ?? 0;
-    message.page = object.page ?? 0;
+    message.cursor = object.cursor ?? "";
     message.clan_id = object.clan_id ?? "0";
     message.channel_type = object.channel_type ?? 0;
     message.is_mobile = object.is_mobile ?? false;
+    message.page = object.page ?? 0;
     return message;
   },
 };
