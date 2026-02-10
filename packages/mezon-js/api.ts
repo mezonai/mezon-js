@@ -5344,7 +5344,7 @@ export class MezonApi {
     bearerToken: string,
     limit?: number,
     state?: number,
-    cursor?: string,
+    page?: number,
     clanId?: string,
     channelType?: number,
     isMobile?: boolean,
@@ -5357,7 +5357,7 @@ export class MezonApi {
       tsproto.ListChannelDescsRequest.fromPartial({ 
         limit, 
         state, 
-        cursor, 
+        page, 
         clan_id: clanId, 
         channel_type: channelType, 
         is_mobile: isMobile 

@@ -173,7 +173,7 @@ import {
   ApiMessageRef,
   ApiListChannelEventsResponse,
   ApiListChannelEventsRequest
-} from "./api.gen";
+} from "./api";
 import { Session } from "./session";
 import { DefaultSocket, Socket, ChannelMessageAck } from "./socket";
 import {
@@ -1511,7 +1511,7 @@ export class Client {
     session: Session,
     limit?: number,
     state?: number,
-    cursor?: string,
+    page?: number,
     clanId?: string,
     channelType?: number,
     isMobile?: boolean,
@@ -1529,7 +1529,7 @@ export class Client {
         session.token,
         limit,
         state,
-        cursor,
+        page,
         clanId,
         channelType,
         isMobile,
