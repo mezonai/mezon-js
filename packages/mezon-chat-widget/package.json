@@ -14,9 +14,6 @@
       "lint": "eslint src --ext .ts",
       "typecheck": "tsc --noEmit"
    },
-   "dependencies": {
-      "mezon-light-sdk": "^1.0.5"
-   },
    "files": [
       "dist/mezon-chat-widget.min.js"
    ],
@@ -30,5 +27,8 @@
    "license": "MIT",
    "devDependencies": {
       "esbuild": "^0.27.2"
+   },
+   "dependencies": {
+      "mezon-light-sdk": "^1.0.6"
    }
 }
