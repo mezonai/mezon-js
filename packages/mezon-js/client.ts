@@ -172,7 +172,7 @@ import {
   ApiMessageAttachment,
   ApiMessageRef,
   ApiListChannelEventsResponse,
-  ListChannelEventsRequest
+  ApiListChannelEventsRequest
 } from "./api.gen";
 import { Session } from "./session";
 import { DefaultSocket, Socket, ChannelMessageAck } from "./socket";
@@ -183,6 +183,7 @@ import {
   decodeReactions,
   decodeRefs,
   safeJSONParse,
+  decodeChannelEventAttachments
 } from "./utils";
 import { WebSocketAdapter, WebSocketAdapterPb } from "mezon-js-protobuf";
 
@@ -3546,7 +3547,7 @@ export class Client {
 
   async listChannelEvents(
     session: Session,
-    request: ListChannelEventsRequest,
+    request: ApiListChannelEventsRequest,
   ): Promise<ApiListChannelEventsResponse> {
     if (
       this.autoRefreshSession &&
@@ -3559,6 +3560,23 @@ export class Client {
     return this.apiClient
       .listChannelEvents(session.token, request)
       .then((response: ApiListChannelEventsResponse) => {
+        response.events?.forEach((event) => {
+          let attachments;
+          try {
+            const decodedAttachments = decodeChannelEventAttachments(event.attachments);
+            attachments =
+              decodedAttachments?.attachments ||
+              decodedAttachments ||
+              safeJSONParse(event.attachments || "[]");
+          } catch (e) {
+            attachments = safeJSONParse(event.attachments || "[]");
+          }
+          if (Array.isArray(attachments)) {
+            event.attachments = attachments;
+          } else {
+            event.attachments = [];
+          }
+        });
         return Promise.resolve(response);
       });
   }

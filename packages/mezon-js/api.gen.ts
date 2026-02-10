@@ -9,7 +9,7 @@ import { ChannelMessageAck } from "./socket";
 import { getFetcher } from "./config";
 
 
-export interface ListChannelEventsRequest {
+export interface ApiListChannelEventsRequest {
   clan_id: string;
   channel_id: string;
   year: number;
@@ -18,8 +18,37 @@ export interface ListChannelEventsRequest {
   limit?: number;
 }
 
+export interface ChannelEventAttachment {
+  id: string;
+  file_name: string;
+  file_url: string;
+  file_type: string;
+  file_size: string;
+  width: number;
+  height: number;
+  thumbnail: string;
+  duration: number;
+  message_id: string;
+}
+
+export interface ApiChannelEvent {
+  id: string;
+  clan_id: string;
+  channel_id: string;
+  start_time_seconds: number;
+  title: string;
+  description: string;
+  end_time_seconds: number;
+  location: string;
+  status: number;
+  creator_id: string;
+  create_time_seconds: number;
+  update_time_seconds: number;
+  attachments: Array<ChannelEventAttachment>;
+}
+
 export interface ApiListChannelEventsResponse {
-  events?: Array<tsproto.ChannelEvent>;
+  events?: Array<ApiChannelEvent>;
 }
 
 /** A single user-role pair. */
@@ -11463,7 +11492,7 @@ export class MezonApi {
 
   /** List channel events */
   listChannelEvents(bearerToken: string,
-      request: ListChannelEventsRequest,
+      request: ApiListChannelEventsRequest,
       options = {}): Promise<ApiListChannelEventsResponse> {
     
     if (!request) {
@@ -11490,7 +11519,7 @@ export class MezonApi {
           return {} as ApiListChannelEventsResponse;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.ListChannelEventsResponse.decode(new Uint8Array(buffer)) as ApiListChannelEventsResponse;
+          return tsproto.ListChannelEventsResponse.decode(new Uint8Array(buffer)) as unknown as ApiListChannelEventsResponse;
         } else {
           throw response;
         }

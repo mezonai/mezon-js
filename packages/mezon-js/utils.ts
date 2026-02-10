@@ -119,6 +119,26 @@ export function decodeAttachments(data: any) {
   }
 }
 
+export function decodeChannelEventAttachments(data: any) {
+  if (isEmpty(data)) return;
+  // 91 is '[' (JSON Array) | 123 is '{' (JSON Object)
+  const firstByte = data[0];
+  const isJson = firstByte === 91 || firstByte === 123;
+
+  if (isJson) {
+    return safeJSONParse(data);
+  }
+
+  try {
+    const buffer: ArrayBuffer = data;
+    const uintBuffer: Uint8Array = new Uint8Array(buffer);
+    const attachments = tsproto.ListChannelEventAttachment.decode(uintBuffer);
+    return attachments;
+  } catch (error) {
+    return safeJSONParse(data);
+  }
+}
+
 export function decodeRefs(data: any) {
   if (isEmpty(data)) return;
   // 91 is '[' (JSON Array) | 123 is '{' (JSON Object)

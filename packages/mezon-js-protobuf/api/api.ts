@@ -3891,6 +3891,11 @@ export interface ChannelEventAttachment {
   message_id: string;
 }
 
+/** Channel Event Attachment List */
+export interface ListChannelEventAttachment {
+  attachments: ChannelEventAttachment[];
+}
+
 /** Channel Event */
 export interface ChannelEvent {
   id: string;
@@ -3905,7 +3910,7 @@ export interface ChannelEvent {
   creator_id: string;
   create_time_seconds: number;
   update_time_seconds: number;
-  attachments: ChannelEventAttachment[];
+  attachments: Uint8Array;
 }
 
 /** List Channel Events Request */
@@ -40960,6 +40965,67 @@ export const ChannelEventAttachment = {
   },
 };
 
+function createBaseListChannelEventAttachment(): ListChannelEventAttachment {
+  return { attachments: [] };
+}
+
+export const ListChannelEventAttachment = {
+  encode(message: ListChannelEventAttachment, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.attachments) {
+      ChannelEventAttachment.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelEventAttachment {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListChannelEventAttachment();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.attachments.push(ChannelEventAttachment.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListChannelEventAttachment {
+    return {
+      attachments: globalThis.Array.isArray(object?.attachments)
+        ? object.attachments.map((e: any) => ChannelEventAttachment.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ListChannelEventAttachment): unknown {
+    const obj: any = {};
+    if (message.attachments?.length) {
+      obj.attachments = message.attachments.map((e) => ChannelEventAttachment.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListChannelEventAttachment>, I>>(base?: I): ListChannelEventAttachment {
+    return ListChannelEventAttachment.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListChannelEventAttachment>, I>>(object: I): ListChannelEventAttachment {
+    const message = createBaseListChannelEventAttachment();
+    message.attachments = object.attachments?.map((e) => ChannelEventAttachment.fromPartial(e)) || [];
+    return message;
+  },
+};
+
 function createBaseChannelEvent(): ChannelEvent {
   return {
     id: "0",
@@ -40974,7 +41040,7 @@ function createBaseChannelEvent(): ChannelEvent {
     creator_id: "0",
     create_time_seconds: 0,
     update_time_seconds: 0,
-    attachments: [],
+    attachments: new Uint8Array(0),
   };
 }
 
@@ -41016,8 +41082,8 @@ export const ChannelEvent = {
     if (message.update_time_seconds !== 0) {
       writer.uint32(96).uint32(message.update_time_seconds);
     }
-    for (const v of message.attachments) {
-      ChannelEventAttachment.encode(v!, writer.uint32(106).fork()).ldelim();
+    if (message.attachments.length !== 0) {
+      writer.uint32(106).bytes(message.attachments);
     }
     return writer;
   },
@@ -41118,7 +41184,7 @@ export const ChannelEvent = {
             break;
           }
 
-          message.attachments.push(ChannelEventAttachment.decode(reader, reader.uint32()));
+          message.attachments = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -41143,9 +41209,7 @@ export const ChannelEvent = {
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "0",
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
-      attachments: globalThis.Array.isArray(object?.attachments)
-        ? object.attachments.map((e: any) => ChannelEventAttachment.fromJSON(e))
-        : [],
+      attachments: isSet(object.attachments) ? bytesFromBase64(object.attachments) : new Uint8Array(0),
     };
   },
 
@@ -41187,8 +41251,8 @@ export const ChannelEvent = {
     if (message.update_time_seconds !== 0) {
       obj.update_time_seconds = Math.round(message.update_time_seconds);
     }
-    if (message.attachments?.length) {
-      obj.attachments = message.attachments.map((e) => ChannelEventAttachment.toJSON(e));
+    if (message.attachments.length !== 0) {
+      obj.attachments = base64FromBytes(message.attachments);
     }
     return obj;
   },
@@ -41210,7 +41274,7 @@ export const ChannelEvent = {
     message.creator_id = object.creator_id ?? "0";
     message.create_time_seconds = object.create_time_seconds ?? 0;
     message.update_time_seconds = object.update_time_seconds ?? 0;
-    message.attachments = object.attachments?.map((e) => ChannelEventAttachment.fromPartial(e)) || [];
+    message.attachments = object.attachments ?? new Uint8Array(0);
     return message;
   },
 };
