@@ -9,7 +9,7 @@ import { ChannelMessageAck } from "./socket";
 import { getFetcher } from "./config";
 
 
-export interface ApiListChannelEventsRequest {
+export interface ApiListChannelTimelineRequest {
   clan_id: string;
   channel_id: string;
   year: number;
@@ -18,7 +18,7 @@ export interface ApiListChannelEventsRequest {
   limit?: number;
 }
 
-export interface ChannelEventAttachment {
+export interface ChannelTimelineAttachment {
   id: string;
   file_name: string;
   file_url: string;
@@ -31,7 +31,7 @@ export interface ChannelEventAttachment {
   message_id: string;
 }
 
-export interface ApiChannelEvent {
+export interface ApiChannelTimeline {
   id: string;
   clan_id: string;
   channel_id: string;
@@ -44,11 +44,11 @@ export interface ApiChannelEvent {
   creator_id: string;
   create_time_seconds: number;
   update_time_seconds: number;
-  attachments: Array<ChannelEventAttachment>;
+  attachments: Array<ChannelTimelineAttachment>;
 }
 
-export interface ApiListChannelEventsResponse {
-  events?: Array<ApiChannelEvent>;
+export interface ApiListChannelTimelineResponse {
+  events?: Array<ApiChannelTimeline>;
 }
 
 /** A single user-role pair. */
@@ -11491,18 +11491,18 @@ export class MezonApi {
   }
 
   /** List channel events */
-  listChannelEvents(bearerToken: string,
-      request: ApiListChannelEventsRequest,
-      options = {}): Promise<ApiListChannelEventsResponse> {
+  listChannelTimeline(bearerToken: string,
+      request: ApiListChannelTimelineRequest,
+      options = {}): Promise<ApiListChannelTimelineResponse> {
     
     if (!request) {
       throw new Error("'request' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/mezon.api.Mezon/ListChannelEvents";
+    const urlPath = "/mezon.api.Mezon/ListChannelTimeline";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.ListChannelEventsRequest.encode(
-      tsproto.ListChannelEventsRequest.fromPartial(request)
+    const bodyWriter = tsproto.ListChannelTimelineRequest.encode(
+      tsproto.ListChannelTimelineRequest.fromPartial(request)
     );
     const encodedBody = bodyWriter.finish();
 
@@ -11516,10 +11516,10 @@ export class MezonApi {
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
         if (response.status == 204) {
-          return {} as ApiListChannelEventsResponse;
+          return {} as ApiListChannelTimelineResponse;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.ListChannelEventsResponse.decode(new Uint8Array(buffer)) as unknown as ApiListChannelEventsResponse;
+          return tsproto.ListChannelTimelineResponse.decode(new Uint8Array(buffer)) as unknown as ApiListChannelTimelineResponse;
         } else {
           throw response;
         }

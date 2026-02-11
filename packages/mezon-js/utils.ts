@@ -132,7 +132,7 @@ export function decodeChannelEventAttachments(data: any) {
   try {
     const buffer: ArrayBuffer = data;
     const uintBuffer: Uint8Array = new Uint8Array(buffer);
-    const attachments = tsproto.ListChannelEventAttachment.decode(uintBuffer);
+    const attachments = tsproto.ListChannelTimelineAttachment.decode(uintBuffer);
     return attachments;
   } catch (error) {
     return safeJSONParse(data);
