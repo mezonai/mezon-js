@@ -1415,7 +1415,7 @@ export interface Socket {
 
   /** Send a chat message to a chat channel on the server. */
   writeEphemeralMessage(
-    receiver_id: string | string[],
+    receiver_ids: string[],
     clan_id: string,
     channel_id: string,
     mode: number,
@@ -2784,7 +2784,7 @@ export class DefaultSocket implements Socket {
   }
 
   async writeEphemeralMessage(
-    receiver_id: string | string[],
+    receiver_ids: string[],
     clan_id: string,
     channel_id: string,
     mode: number,
@@ -2800,10 +2800,9 @@ export class DefaultSocket implements Socket {
     topic_id?: string,
     id?: string
   ): Promise<ChannelMessageAck> {
-    const receiverIds = Array.isArray(receiver_id) ? receiver_id : [receiver_id];
     const response = await this.send({
       ephemeral_message_send: {
-        receiver_id: receiverIds,
+        receiver_ids: receiver_ids,
         message: {
           clan_id: clan_id,
           channel_id: channel_id,
