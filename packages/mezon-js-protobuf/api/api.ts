@@ -3880,7 +3880,7 @@ export function participantInfo_KindDetailToJSON(object: ParticipantInfo_KindDet
 }
 
 /** Channel Event Attachment */
-export interface ChannelEventAttachment {
+export interface ChannelTimelineAttachment {
   id: string;
   file_name: string;
   file_url: string;
@@ -3894,12 +3894,12 @@ export interface ChannelEventAttachment {
 }
 
 /** Channel Event Attachment List */
-export interface ListChannelEventAttachment {
-  attachments: ChannelEventAttachment[];
+export interface ListChannelTimelineAttachment {
+  attachments: ChannelTimelineAttachment[];
 }
 
 /** Channel Event */
-export interface ChannelEvent {
+export interface ChannelTimeline {
   id: string;
   clan_id: string;
   channel_id: string;
@@ -3916,7 +3916,7 @@ export interface ChannelEvent {
 }
 
 /** List Channel Events Request */
-export interface ListChannelEventsRequest {
+export interface ListChannelTimelineRequest {
   clan_id: string;
   channel_id: string;
   year: number;
@@ -3926,8 +3926,8 @@ export interface ListChannelEventsRequest {
 }
 
 /** List Channel Events Response */
-export interface ListChannelEventsResponse {
-  events: ChannelEvent[];
+export interface ListChannelTimelineResponse {
+  events: ChannelTimeline[];
 }
 
 function createBaseAccount(): Account {
@@ -40777,7 +40777,7 @@ export const ParticipantInfo = {
   },
 };
 
-function createBaseChannelEventAttachment(): ChannelEventAttachment {
+function createBaseChannelTimelineAttachment(): ChannelTimelineAttachment {
   return {
     id: "0",
     file_name: "",
@@ -40792,8 +40792,8 @@ function createBaseChannelEventAttachment(): ChannelEventAttachment {
   };
 }
 
-export const ChannelEventAttachment = {
-  encode(message: ChannelEventAttachment, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const ChannelTimelineAttachment = {
+  encode(message: ChannelTimelineAttachment, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== "0") {
       writer.uint32(8).int64(message.id);
     }
@@ -40827,10 +40827,10 @@ export const ChannelEventAttachment = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelEventAttachment {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelTimelineAttachment {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseChannelEventAttachment();
+    const message = createBaseChannelTimelineAttachment();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -40913,7 +40913,7 @@ export const ChannelEventAttachment = {
     return message;
   },
 
-  fromJSON(object: any): ChannelEventAttachment {
+  fromJSON(object: any): ChannelTimelineAttachment {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "0",
       file_name: isSet(object.file_name) ? globalThis.String(object.file_name) : "",
@@ -40928,7 +40928,7 @@ export const ChannelEventAttachment = {
     };
   },
 
-  toJSON(message: ChannelEventAttachment): unknown {
+  toJSON(message: ChannelTimelineAttachment): unknown {
     const obj: any = {};
     if (message.id !== "0") {
       obj.id = message.id;
@@ -40963,11 +40963,11 @@ export const ChannelEventAttachment = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ChannelEventAttachment>, I>>(base?: I): ChannelEventAttachment {
-    return ChannelEventAttachment.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<ChannelTimelineAttachment>, I>>(base?: I): ChannelTimelineAttachment {
+    return ChannelTimelineAttachment.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ChannelEventAttachment>, I>>(object: I): ChannelEventAttachment {
-    const message = createBaseChannelEventAttachment();
+  fromPartial<I extends Exact<DeepPartial<ChannelTimelineAttachment>, I>>(object: I): ChannelTimelineAttachment {
+    const message = createBaseChannelTimelineAttachment();
     message.id = object.id ?? "0";
     message.file_name = object.file_name ?? "";
     message.file_url = object.file_url ?? "";
@@ -40982,22 +40982,22 @@ export const ChannelEventAttachment = {
   },
 };
 
-function createBaseListChannelEventAttachment(): ListChannelEventAttachment {
+function createBaseListChannelTimelineAttachment(): ListChannelTimelineAttachment {
   return { attachments: [] };
 }
 
-export const ListChannelEventAttachment = {
-  encode(message: ListChannelEventAttachment, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const ListChannelTimelineAttachment = {
+  encode(message: ListChannelTimelineAttachment, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.attachments) {
-      ChannelEventAttachment.encode(v!, writer.uint32(10).fork()).ldelim();
+      ChannelTimelineAttachment.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelEventAttachment {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelTimelineAttachment {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseListChannelEventAttachment();
+    const message = createBaseListChannelTimelineAttachment();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -41006,7 +41006,7 @@ export const ListChannelEventAttachment = {
             break;
           }
 
-          message.attachments.push(ChannelEventAttachment.decode(reader, reader.uint32()));
+          message.attachments.push(ChannelTimelineAttachment.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -41017,33 +41017,35 @@ export const ListChannelEventAttachment = {
     return message;
   },
 
-  fromJSON(object: any): ListChannelEventAttachment {
+  fromJSON(object: any): ListChannelTimelineAttachment {
     return {
       attachments: globalThis.Array.isArray(object?.attachments)
-        ? object.attachments.map((e: any) => ChannelEventAttachment.fromJSON(e))
+        ? object.attachments.map((e: any) => ChannelTimelineAttachment.fromJSON(e))
         : [],
     };
   },
 
-  toJSON(message: ListChannelEventAttachment): unknown {
+  toJSON(message: ListChannelTimelineAttachment): unknown {
     const obj: any = {};
     if (message.attachments?.length) {
-      obj.attachments = message.attachments.map((e) => ChannelEventAttachment.toJSON(e));
+      obj.attachments = message.attachments.map((e) => ChannelTimelineAttachment.toJSON(e));
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ListChannelEventAttachment>, I>>(base?: I): ListChannelEventAttachment {
-    return ListChannelEventAttachment.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<ListChannelTimelineAttachment>, I>>(base?: I): ListChannelTimelineAttachment {
+    return ListChannelTimelineAttachment.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ListChannelEventAttachment>, I>>(object: I): ListChannelEventAttachment {
-    const message = createBaseListChannelEventAttachment();
-    message.attachments = object.attachments?.map((e) => ChannelEventAttachment.fromPartial(e)) || [];
+  fromPartial<I extends Exact<DeepPartial<ListChannelTimelineAttachment>, I>>(
+    object: I,
+  ): ListChannelTimelineAttachment {
+    const message = createBaseListChannelTimelineAttachment();
+    message.attachments = object.attachments?.map((e) => ChannelTimelineAttachment.fromPartial(e)) || [];
     return message;
   },
 };
 
-function createBaseChannelEvent(): ChannelEvent {
+function createBaseChannelTimeline(): ChannelTimeline {
   return {
     id: "0",
     clan_id: "0",
@@ -41061,8 +41063,8 @@ function createBaseChannelEvent(): ChannelEvent {
   };
 }
 
-export const ChannelEvent = {
-  encode(message: ChannelEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const ChannelTimeline = {
+  encode(message: ChannelTimeline, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== "0") {
       writer.uint32(8).int64(message.id);
     }
@@ -41105,10 +41107,10 @@ export const ChannelEvent = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelEvent {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelTimeline {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseChannelEvent();
+    const message = createBaseChannelTimeline();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -41212,7 +41214,7 @@ export const ChannelEvent = {
     return message;
   },
 
-  fromJSON(object: any): ChannelEvent {
+  fromJSON(object: any): ChannelTimeline {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "0",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
@@ -41230,7 +41232,7 @@ export const ChannelEvent = {
     };
   },
 
-  toJSON(message: ChannelEvent): unknown {
+  toJSON(message: ChannelTimeline): unknown {
     const obj: any = {};
     if (message.id !== "0") {
       obj.id = message.id;
@@ -41274,11 +41276,11 @@ export const ChannelEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ChannelEvent>, I>>(base?: I): ChannelEvent {
-    return ChannelEvent.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<ChannelTimeline>, I>>(base?: I): ChannelTimeline {
+    return ChannelTimeline.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ChannelEvent>, I>>(object: I): ChannelEvent {
-    const message = createBaseChannelEvent();
+  fromPartial<I extends Exact<DeepPartial<ChannelTimeline>, I>>(object: I): ChannelTimeline {
+    const message = createBaseChannelTimeline();
     message.id = object.id ?? "0";
     message.clan_id = object.clan_id ?? "0";
     message.channel_id = object.channel_id ?? "0";
@@ -41296,12 +41298,12 @@ export const ChannelEvent = {
   },
 };
 
-function createBaseListChannelEventsRequest(): ListChannelEventsRequest {
+function createBaseListChannelTimelineRequest(): ListChannelTimelineRequest {
   return { clan_id: "0", channel_id: "0", year: 0, start_time: 0, end_time: 0, limit: 0 };
 }
 
-export const ListChannelEventsRequest = {
-  encode(message: ListChannelEventsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const ListChannelTimelineRequest = {
+  encode(message: ListChannelTimelineRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.clan_id !== "0") {
       writer.uint32(8).int64(message.clan_id);
     }
@@ -41323,10 +41325,10 @@ export const ListChannelEventsRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelEventsRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelTimelineRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseListChannelEventsRequest();
+    const message = createBaseListChannelTimelineRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -41381,7 +41383,7 @@ export const ListChannelEventsRequest = {
     return message;
   },
 
-  fromJSON(object: any): ListChannelEventsRequest {
+  fromJSON(object: any): ListChannelTimelineRequest {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
@@ -41392,7 +41394,7 @@ export const ListChannelEventsRequest = {
     };
   },
 
-  toJSON(message: ListChannelEventsRequest): unknown {
+  toJSON(message: ListChannelTimelineRequest): unknown {
     const obj: any = {};
     if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
@@ -41415,11 +41417,11 @@ export const ListChannelEventsRequest = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ListChannelEventsRequest>, I>>(base?: I): ListChannelEventsRequest {
-    return ListChannelEventsRequest.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<ListChannelTimelineRequest>, I>>(base?: I): ListChannelTimelineRequest {
+    return ListChannelTimelineRequest.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ListChannelEventsRequest>, I>>(object: I): ListChannelEventsRequest {
-    const message = createBaseListChannelEventsRequest();
+  fromPartial<I extends Exact<DeepPartial<ListChannelTimelineRequest>, I>>(object: I): ListChannelTimelineRequest {
+    const message = createBaseListChannelTimelineRequest();
     message.clan_id = object.clan_id ?? "0";
     message.channel_id = object.channel_id ?? "0";
     message.year = object.year ?? 0;
@@ -41430,22 +41432,22 @@ export const ListChannelEventsRequest = {
   },
 };
 
-function createBaseListChannelEventsResponse(): ListChannelEventsResponse {
+function createBaseListChannelTimelineResponse(): ListChannelTimelineResponse {
   return { events: [] };
 }
 
-export const ListChannelEventsResponse = {
-  encode(message: ListChannelEventsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const ListChannelTimelineResponse = {
+  encode(message: ListChannelTimelineResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.events) {
-      ChannelEvent.encode(v!, writer.uint32(10).fork()).ldelim();
+      ChannelTimeline.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelEventsResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelTimelineResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseListChannelEventsResponse();
+    const message = createBaseListChannelTimelineResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -41454,7 +41456,7 @@ export const ListChannelEventsResponse = {
             break;
           }
 
-          message.events.push(ChannelEvent.decode(reader, reader.uint32()));
+          message.events.push(ChannelTimeline.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -41465,26 +41467,28 @@ export const ListChannelEventsResponse = {
     return message;
   },
 
-  fromJSON(object: any): ListChannelEventsResponse {
+  fromJSON(object: any): ListChannelTimelineResponse {
     return {
-      events: globalThis.Array.isArray(object?.events) ? object.events.map((e: any) => ChannelEvent.fromJSON(e)) : [],
+      events: globalThis.Array.isArray(object?.events)
+        ? object.events.map((e: any) => ChannelTimeline.fromJSON(e))
+        : [],
     };
   },
 
-  toJSON(message: ListChannelEventsResponse): unknown {
+  toJSON(message: ListChannelTimelineResponse): unknown {
     const obj: any = {};
     if (message.events?.length) {
-      obj.events = message.events.map((e) => ChannelEvent.toJSON(e));
+      obj.events = message.events.map((e) => ChannelTimeline.toJSON(e));
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ListChannelEventsResponse>, I>>(base?: I): ListChannelEventsResponse {
-    return ListChannelEventsResponse.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<ListChannelTimelineResponse>, I>>(base?: I): ListChannelTimelineResponse {
+    return ListChannelTimelineResponse.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ListChannelEventsResponse>, I>>(object: I): ListChannelEventsResponse {
-    const message = createBaseListChannelEventsResponse();
-    message.events = object.events?.map((e) => ChannelEvent.fromPartial(e)) || [];
+  fromPartial<I extends Exact<DeepPartial<ListChannelTimelineResponse>, I>>(object: I): ListChannelTimelineResponse {
+    const message = createBaseListChannelTimelineResponse();
+    message.events = object.events?.map((e) => ChannelTimeline.fromPartial(e)) || [];
     return message;
   },
 };

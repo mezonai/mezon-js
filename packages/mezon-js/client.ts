@@ -171,8 +171,8 @@ import {
   ApiMessageMention,
   ApiMessageAttachment,
   ApiMessageRef,
-  ApiListChannelEventsResponse,
-  ApiListChannelEventsRequest
+  ApiListChannelTimelineRequest,
+  ApiListChannelTimelineResponse,
 } from "./api";
 import { Session } from "./session";
 import { DefaultSocket, Socket, ChannelMessageAck } from "./socket";
@@ -3545,10 +3545,10 @@ export class Client {
       });
   }
 
-  async listChannelEvents(
+  async listChannelTimeline(
     session: Session,
-    request: ApiListChannelEventsRequest,
-  ): Promise<ApiListChannelEventsResponse> {
+    request: ApiListChannelTimelineRequest,
+  ): Promise<ApiListChannelTimelineResponse> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -3558,8 +3558,8 @@ export class Client {
     }
 
     return this.apiClient
-      .listChannelEvents(session.token, request)
-      .then((response: ApiListChannelEventsResponse) => {
+      .listChannelTimeline(session.token, request)
+      .then((response: ApiListChannelTimelineResponse) => {
         response.events?.forEach((event) => {
           let attachments;
           try {
