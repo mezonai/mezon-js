@@ -24,6 +24,15 @@ export interface ChatMessage {
   content: string;
   sender: 'user' | 'ai';
   timestamp: number;
+  type?: string;
+  attachments?: {
+    filename: string;
+    url: string;
+    filetype: string;
+    size: number;
+    width?: number;
+    height?: number;
+  }[];
 }
 
 export interface UserInfo {
