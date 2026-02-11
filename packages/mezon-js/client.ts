@@ -173,6 +173,10 @@ import {
   ApiMessageRef,
   ApiListChannelTimelineRequest,
   ApiListChannelTimelineResponse,
+  ApiCreateChannelTimelineRequest,
+  ApiCreateChannelTimelineResponse,
+  ApiUpdateChannelTimelineRequest,
+  ApiUpdateChannelTimelineResponse,
 } from "./api";
 import { Session } from "./session";
 import { DefaultSocket, Socket, ChannelMessageAck } from "./socket";
@@ -183,7 +187,7 @@ import {
   decodeReactions,
   decodeRefs,
   safeJSONParse,
-  decodeChannelEventAttachments
+  decodeChannelTimelineAttachments
 } from "./utils";
 import { WebSocketAdapter, WebSocketAdapterPb } from "mezon-js-protobuf";
 
@@ -3563,7 +3567,7 @@ export class Client {
         response.events?.forEach((event) => {
           let attachments;
           try {
-            const decodedAttachments = decodeChannelEventAttachments(event.attachments);
+            const decodedAttachments = decodeChannelTimelineAttachments(event.attachments);
             attachments =
               decodedAttachments?.attachments ||
               decodedAttachments ||
@@ -3577,6 +3581,80 @@ export class Client {
             event.attachments = [];
           }
         });
+        return Promise.resolve(response);
+      });
+  }
+
+  async createChannelTimeline(
+    session: Session,
+    request: ApiCreateChannelTimelineRequest,
+  ): Promise<ApiCreateChannelTimelineResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .createChannelTimeline(session.token, request)
+      .then((response: ApiCreateChannelTimelineResponse) => {
+        const event = response.event;
+        if (event) {
+          let attachments;
+          try {
+            const decodedAttachments = decodeChannelTimelineAttachments(event.attachments);
+            attachments =
+              decodedAttachments?.attachments ||
+              decodedAttachments ||
+              safeJSONParse(event.attachments || "[]");
+          } catch (e) {
+            attachments = safeJSONParse(event.attachments || "[]");
+          }
+          if (Array.isArray(attachments)) {
+            event.attachments = attachments;
+          } else {
+            event.attachments = [];
+          }
+        }
+        return Promise.resolve(response);
+      });
+  }
+
+  async updateChannelTimeline(
+    session: Session,
+    request: ApiUpdateChannelTimelineRequest,
+  ): Promise<ApiUpdateChannelTimelineResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .updateChannelTimeline(session.token, request)
+      .then((response: ApiUpdateChannelTimelineResponse) => {
+        const event = response.event;
+        if (event) {
+          let attachments;
+          try {
+            const decodedAttachments = decodeChannelTimelineAttachments(event.attachments);
+            attachments =
+              decodedAttachments?.attachments ||
+              decodedAttachments ||
+              safeJSONParse(event.attachments || "[]");
+          } catch (e) {
+            attachments = safeJSONParse(event.attachments || "[]");
+          }
+          if (Array.isArray(attachments)) {
+            event.attachments = attachments;
+          } else {
+            event.attachments = [];
+          }
+        }
         return Promise.resolve(response);
       });
   }
