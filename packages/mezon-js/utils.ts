@@ -119,7 +119,7 @@ export function decodeAttachments(data: any) {
   }
 }
 
-export function decodeChannelEventAttachments(data: any) {
+export function decodeChannelTimelineAttachments(data: any) {
   if (isEmpty(data)) return;
   // 91 is '[' (JSON Array) | 123 is '{' (JSON Object)
   const firstByte = data[0];

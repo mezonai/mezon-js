@@ -18,6 +18,36 @@ export interface ApiListChannelTimelineRequest {
   limit?: number;
 }
 
+export interface ApiCreateChannelTimelineRequest {
+  clan_id: string;
+  channel_id: string;
+  title: string;
+  description?: string;
+  start_time_seconds: number;
+  end_time_seconds: number;
+  location?: string;
+  attachments?: Array<ChannelTimelineAttachment>;
+}
+
+export interface ApiCreateChannelTimelineResponse {
+  event: ApiChannelTimeline;
+}
+
+export interface ApiUpdateChannelTimelineRequest {
+  id: string;
+  clan_id: string;
+  channel_id: string;
+  title?: string;
+  description?: string;
+  start_time_seconds?: number;
+  location?: string;
+  attachments?: Array<ChannelTimelineAttachment>;
+}
+
+export interface ApiUpdateChannelTimelineResponse {
+  event: ApiChannelTimeline;
+}
+
 export interface ChannelTimelineAttachment {
   id: string;
   file_name: string;
@@ -11520,6 +11550,86 @@ export class MezonApi {
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
           return tsproto.ListChannelTimelineResponse.decode(new Uint8Array(buffer)) as unknown as ApiListChannelTimelineResponse;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
+  /** Create channel event */
+  createChannelTimeline(bearerToken: string,
+      request: ApiCreateChannelTimelineRequest,
+      options = {}): Promise<ApiCreateChannelTimelineResponse> {
+    
+    if (!request) {
+      throw new Error("'request' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/mezon.api.Mezon/CreateChannelTimeline";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.CreateChannelTimelineRequest.encode(
+      tsproto.CreateChannelTimelineRequest.fromPartial(request)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as ApiCreateChannelTimelineResponse;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();      
+          return tsproto.CreateChannelTimelineResponse.decode(new Uint8Array(buffer)) as unknown as ApiCreateChannelTimelineResponse;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
+  /** Update channel event */
+  updateChannelTimeline(bearerToken: string,
+      request: ApiUpdateChannelTimelineRequest,
+      options = {}): Promise<ApiUpdateChannelTimelineResponse> {
+    
+    if (!request) {
+      throw new Error("'request' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/mezon.api.Mezon/UpdateChannelTimeline";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.UpdateChannelTimelineRequest.encode(
+      tsproto.UpdateChannelTimelineRequest.fromPartial(request)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as ApiUpdateChannelTimelineResponse;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();      
+          return tsproto.UpdateChannelTimelineResponse.decode(new Uint8Array(buffer)) as unknown as ApiUpdateChannelTimelineResponse;
         } else {
           throw response;
         }
