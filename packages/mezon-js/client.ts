@@ -177,6 +177,7 @@ import {
   ApiCreateChannelTimelineResponse,
   ApiUpdateChannelTimelineRequest,
   ApiUpdateChannelTimelineResponse,
+  ApiMutedChannelList,
 } from "./api";
 import { Session } from "./session";
 import { DefaultSocket, Socket, ChannelMessageAck } from "./socket";
@@ -5185,6 +5186,25 @@ export class Client {
     return this.apiClient
       .disconnectAgent(session.token, roomName, channelId)
       .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async listMutedChannel(
+    session: Session,
+    clanId: string,
+  ): Promise<ApiMutedChannelList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listMutedChannel(session.token, clanId)
+      .then((response: ApiMutedChannelList) => {
         return Promise.resolve(response);
       });
   }

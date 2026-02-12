@@ -3967,6 +3967,10 @@ export interface UpdateChannelTimelineResponse {
   event: ChannelTimeline | undefined;
 }
 
+export interface ListMutedChannelRequest {
+  clan_id: string;
+}
+
 export interface MutedChannelList {
   muted_list: string[];
 }
@@ -42080,6 +42084,63 @@ export const UpdateChannelTimelineResponse = {
     message.event = (object.event !== undefined && object.event !== null)
       ? ChannelTimeline.fromPartial(object.event)
       : undefined;
+    return message;
+  },
+};
+
+function createBaseListMutedChannelRequest(): ListMutedChannelRequest {
+  return { clan_id: "0" };
+}
+
+export const ListMutedChannelRequest = {
+  encode(message: ListMutedChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListMutedChannelRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListMutedChannelRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.clan_id = longToString(reader.int64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListMutedChannelRequest {
+    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0" };
+  },
+
+  toJSON(message: ListMutedChannelRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "0") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListMutedChannelRequest>, I>>(base?: I): ListMutedChannelRequest {
+    return ListMutedChannelRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListMutedChannelRequest>, I>>(object: I): ListMutedChannelRequest {
+    const message = createBaseListMutedChannelRequest();
+    message.clan_id = object.clan_id ?? "0";
     return message;
   },
 };
