@@ -14,5 +14,9 @@
     "forceConsistentCasingInFileNames": true,
     "lib": ["ES6", "DOM"]
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
