@@ -3968,7 +3968,6 @@ export interface UpdateChannelTimelineResponse {
   event: ChannelTimeline | undefined;
 }
 
-<<<<<<< HEAD
 export interface ChannelTimelineDetailRequest {
   clan_id: string;
   channel_id: string;
@@ -3980,8 +3979,6 @@ export interface ChannelTimelineDetailResponse {
   event: ChannelTimeline | undefined;
 }
 
-=======
->>>>>>> 6645d401d5779bd4492ec9bd5c44b074c29f8044
 export interface ListMutedChannelRequest {
   clan_id: string;
 }
@@ -42119,7 +42116,6 @@ export const UpdateChannelTimelineResponse = {
   },
 };
 
-<<<<<<< HEAD
 function createBaseChannelTimelineDetailRequest(): ChannelTimelineDetailRequest {
   return { clan_id: "0", channel_id: "0", id: "0", start_time_seconds: 0 };
 }
@@ -42285,8 +42281,6 @@ export const ChannelTimelineDetailResponse = {
   },
 };
 
-=======
->>>>>>> 6645d401d5779bd4492ec9bd5c44b074c29f8044
 function createBaseListMutedChannelRequest(): ListMutedChannelRequest {
   return { clan_id: "0" };
 }
