@@ -1,14 +1,14 @@
 {
   "name": "mezon-light-sdk",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "description": "lightweight SDK for mezon chat.",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.mjs",
-  "types": "dist/index.d.ts",
+  "types": "dist/src/index.d.ts",
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/src/index.d.ts",
       "import": "./dist/index.esm.mjs",
       "require": "./dist/index.cjs.js"
     }
