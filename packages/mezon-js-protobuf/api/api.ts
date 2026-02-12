@@ -3916,6 +3916,7 @@ export interface ChannelTimeline {
   update_time_seconds: number;
   type: number;
   attachments: Uint8Array;
+  preview_imgs: Uint8Array;
 }
 
 /** List Channel Timeline Request */
@@ -3965,6 +3966,21 @@ export interface UpdateChannelTimelineRequest {
 
 export interface UpdateChannelTimelineResponse {
   event: ChannelTimeline | undefined;
+}
+
+export interface ChannelTimelineDetailRequest {
+  clan_id: string;
+  channel_id: string;
+  id: string;
+  start_time_seconds: number;
+}
+
+export interface ChannelTimelineDetailResponse {
+  event: ChannelTimeline | undefined;
+}
+
+export interface ListMutedChannelRequest {
+  clan_id: string;
 }
 
 export interface MutedChannelList {
@@ -41132,6 +41148,7 @@ function createBaseChannelTimeline(): ChannelTimeline {
     update_time_seconds: 0,
     type: 0,
     attachments: new Uint8Array(0),
+    preview_imgs: new Uint8Array(0),
   };
 }
 
@@ -41178,6 +41195,9 @@ export const ChannelTimeline = {
     }
     if (message.attachments.length !== 0) {
       writer.uint32(114).bytes(message.attachments);
+    }
+    if (message.preview_imgs.length !== 0) {
+      writer.uint32(122).bytes(message.preview_imgs);
     }
     return writer;
   },
@@ -41287,6 +41307,13 @@ export const ChannelTimeline = {
 
           message.attachments = reader.bytes();
           continue;
+        case 15:
+          if (tag !== 122) {
+            break;
+          }
+
+          message.preview_imgs = reader.bytes();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -41312,6 +41339,7 @@ export const ChannelTimeline = {
       update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
       type: isSet(object.type) ? globalThis.Number(object.type) : 0,
       attachments: isSet(object.attachments) ? bytesFromBase64(object.attachments) : new Uint8Array(0),
+      preview_imgs: isSet(object.preview_imgs) ? bytesFromBase64(object.preview_imgs) : new Uint8Array(0),
     };
   },
 
@@ -41359,6 +41387,9 @@ export const ChannelTimeline = {
     if (message.attachments.length !== 0) {
       obj.attachments = base64FromBytes(message.attachments);
     }
+    if (message.preview_imgs.length !== 0) {
+      obj.preview_imgs = base64FromBytes(message.preview_imgs);
+    }
     return obj;
   },
 
@@ -41381,6 +41412,7 @@ export const ChannelTimeline = {
     message.update_time_seconds = object.update_time_seconds ?? 0;
     message.type = object.type ?? 0;
     message.attachments = object.attachments ?? new Uint8Array(0);
+    message.preview_imgs = object.preview_imgs ?? new Uint8Array(0);
     return message;
   },
 };
@@ -42080,6 +42112,228 @@ export const UpdateChannelTimelineResponse = {
     message.event = (object.event !== undefined && object.event !== null)
       ? ChannelTimeline.fromPartial(object.event)
       : undefined;
+    return message;
+  },
+};
+
+function createBaseChannelTimelineDetailRequest(): ChannelTimelineDetailRequest {
+  return { clan_id: "0", channel_id: "0", id: "0", start_time_seconds: 0 };
+}
+
+export const ChannelTimelineDetailRequest = {
+  encode(message: ChannelTimelineDetailRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
+    }
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
+    }
+    if (message.id !== "0") {
+      writer.uint32(24).int64(message.id);
+    }
+    if (message.start_time_seconds !== 0) {
+      writer.uint32(32).uint32(message.start_time_seconds);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelTimelineDetailRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelTimelineDetailRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.clan_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.id = longToString(reader.int64() as Long);
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.start_time_seconds = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelTimelineDetailRequest {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      id: isSet(object.id) ? globalThis.String(object.id) : "0",
+      start_time_seconds: isSet(object.start_time_seconds) ? globalThis.Number(object.start_time_seconds) : 0,
+    };
+  },
+
+  toJSON(message: ChannelTimelineDetailRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "0") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.id !== "0") {
+      obj.id = message.id;
+    }
+    if (message.start_time_seconds !== 0) {
+      obj.start_time_seconds = Math.round(message.start_time_seconds);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelTimelineDetailRequest>, I>>(base?: I): ChannelTimelineDetailRequest {
+    return ChannelTimelineDetailRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ChannelTimelineDetailRequest>, I>>(object: I): ChannelTimelineDetailRequest {
+    const message = createBaseChannelTimelineDetailRequest();
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.id = object.id ?? "0";
+    message.start_time_seconds = object.start_time_seconds ?? 0;
+    return message;
+  },
+};
+
+function createBaseChannelTimelineDetailResponse(): ChannelTimelineDetailResponse {
+  return { event: undefined };
+}
+
+export const ChannelTimelineDetailResponse = {
+  encode(message: ChannelTimelineDetailResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.event !== undefined) {
+      ChannelTimeline.encode(message.event, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelTimelineDetailResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelTimelineDetailResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.event = ChannelTimeline.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelTimelineDetailResponse {
+    return { event: isSet(object.event) ? ChannelTimeline.fromJSON(object.event) : undefined };
+  },
+
+  toJSON(message: ChannelTimelineDetailResponse): unknown {
+    const obj: any = {};
+    if (message.event !== undefined) {
+      obj.event = ChannelTimeline.toJSON(message.event);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelTimelineDetailResponse>, I>>(base?: I): ChannelTimelineDetailResponse {
+    return ChannelTimelineDetailResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ChannelTimelineDetailResponse>, I>>(
+    object: I,
+  ): ChannelTimelineDetailResponse {
+    const message = createBaseChannelTimelineDetailResponse();
+    message.event = (object.event !== undefined && object.event !== null)
+      ? ChannelTimeline.fromPartial(object.event)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseListMutedChannelRequest(): ListMutedChannelRequest {
+  return { clan_id: "0" };
+}
+
+export const ListMutedChannelRequest = {
+  encode(message: ListMutedChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListMutedChannelRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListMutedChannelRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.clan_id = longToString(reader.int64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListMutedChannelRequest {
+    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0" };
+  },
+
+  toJSON(message: ListMutedChannelRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "0") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListMutedChannelRequest>, I>>(base?: I): ListMutedChannelRequest {
+    return ListMutedChannelRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListMutedChannelRequest>, I>>(object: I): ListMutedChannelRequest {
+    const message = createBaseListMutedChannelRequest();
+    message.clan_id = object.clan_id ?? "0";
     return message;
   },
 };
