@@ -1041,6 +1041,11 @@ export interface ApiChannelMessageList {
   messages?: Array<ChannelMessage>;
 }
 
+export interface ApiMutedChannelList {
+  //A list of channel id.
+  muted_list?: Array<String>;
+}
+
 /**  */
 export interface ApiChannelSettingItem {
   //
@@ -12582,6 +12587,36 @@ export class MezonApi {
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  listMutedChannel(
+    bearerToken: string,
+    options = {}
+  ): Promise<ApiMutedChannelList> {   
+    const urlPath = "/mezon.api.Mezon/ListMutedChannel";
+    const queryParams = new Map<string, any>();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as ApiMutedChannelList;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();      
+          return tsproto.MutedChannelList.decode(new Uint8Array(buffer)) as unknown as ApiMutedChannelList;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }
