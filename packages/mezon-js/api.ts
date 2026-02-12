@@ -12648,13 +12648,26 @@ export class MezonApi {
 
   listMutedChannel(
     bearerToken: string,
+    clanId: string,
     options = {}
-  ): Promise<ApiMutedChannelList> {   
+  ): Promise<ApiMutedChannelList> {
+    if (clanId === null || clanId === undefined) {
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
+    }
+
     const urlPath = "/mezon.api.Mezon/ListMutedChannel";
     const queryParams = new Map<string, any>();
 
+    const bodyWriter = tsproto.ListMutedChannelRequest.encode(
+      tsproto.ListMutedChannelRequest.fromPartial({clan_id: clanId})
+    );
+    const encodedBody = bodyWriter.finish();
+
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
