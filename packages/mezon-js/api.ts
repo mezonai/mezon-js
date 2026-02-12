@@ -26,6 +26,7 @@ export interface ApiCreateChannelTimelineRequest {
   start_time_seconds: number;
   end_time_seconds: number;
   location?: string;
+  type?: number;
   attachments?: Array<ChannelTimelineAttachment>;
 }
 
@@ -39,12 +40,24 @@ export interface ApiUpdateChannelTimelineRequest {
   channel_id: string;
   title?: string;
   description?: string;
-  start_time_seconds?: number;
+  start_time_seconds: number;
   location?: string;
+  type?: number;
   attachments?: Array<ChannelTimelineAttachment>;
 }
 
 export interface ApiUpdateChannelTimelineResponse {
+  event: ApiChannelTimeline;
+}
+
+export interface ApiDetailChannelTimelineRequest {
+  id: string;
+  clan_id: string;
+  channel_id: string;
+  start_time_seconds: number;
+}
+
+export interface ApiDetailChannelTimelineResponse {
   event: ApiChannelTimeline;
 }
 
@@ -74,7 +87,9 @@ export interface ApiChannelTimeline {
   creator_id: string;
   create_time_seconds: number;
   update_time_seconds: number;
+  type: number;
   attachments: Array<ChannelTimelineAttachment>;
+  preview_imgs: Array<ChannelTimelineAttachment>;
 }
 
 export interface ApiListChannelTimelineResponse {
@@ -11635,6 +11650,46 @@ export class MezonApi {
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
           return tsproto.UpdateChannelTimelineResponse.decode(new Uint8Array(buffer)) as unknown as ApiUpdateChannelTimelineResponse;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
+  /** List channel events */
+  detailChannelTimeline(bearerToken: string,
+      request: ApiDetailChannelTimelineRequest,
+      options = {}): Promise<ApiDetailChannelTimelineResponse> {
+    
+    if (!request) {
+      throw new Error("'request' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/mezon.api.Mezon/DetailChannelTimeline";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.ChannelTimelineDetailRequest.encode(
+      tsproto.ChannelTimelineDetailRequest.fromPartial(request)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as ApiDetailChannelTimelineResponse;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();      
+          return tsproto.ChannelTimelineDetailResponse.decode(new Uint8Array(buffer)) as unknown as ApiDetailChannelTimelineResponse;
         } else {
           throw response;
         }

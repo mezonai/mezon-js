@@ -177,6 +177,8 @@ import {
   ApiCreateChannelTimelineResponse,
   ApiUpdateChannelTimelineRequest,
   ApiUpdateChannelTimelineResponse,
+  ApiDetailChannelTimelineRequest,
+  ApiDetailChannelTimelineResponse,
 } from "./api";
 import { Session } from "./session";
 import { DefaultSocket, Socket, ChannelMessageAck } from "./socket";
@@ -3565,20 +3567,21 @@ export class Client {
       .listChannelTimeline(session.token, request)
       .then((response: ApiListChannelTimelineResponse) => {
         response.events?.forEach((event) => {
-          let attachments;
+          event.attachments = [];
+          let previewImgs;
           try {
-            const decodedAttachments = decodeChannelTimelineAttachments(event.attachments);
-            attachments =
+            const decodedAttachments = decodeChannelTimelineAttachments(event.preview_imgs);
+            previewImgs =
               decodedAttachments?.attachments ||
               decodedAttachments ||
-              safeJSONParse(event.attachments || "[]");
+              safeJSONParse(event.preview_imgs || "[]");
           } catch (e) {
-            attachments = safeJSONParse(event.attachments || "[]");
+            previewImgs = safeJSONParse(event.preview_imgs || "[]");
           }
-          if (Array.isArray(attachments)) {
-            event.attachments = attachments;
+          if (Array.isArray(previewImgs)) {
+            event.preview_imgs = previewImgs;
           } else {
-            event.attachments = [];
+            event.preview_imgs = [];
           }
         });
         return Promise.resolve(response);
@@ -3603,19 +3606,31 @@ export class Client {
         const event = response.event;
         if (event) {
           let attachments;
+          let previewImgs;
           try {
             const decodedAttachments = decodeChannelTimelineAttachments(event.attachments);
+            const decodedPreviewImgs = decodeChannelTimelineAttachments(event.preview_imgs);
             attachments =
               decodedAttachments?.attachments ||
               decodedAttachments ||
               safeJSONParse(event.attachments || "[]");
+            previewImgs =
+              decodedPreviewImgs?.attachments ||
+              decodedPreviewImgs ||
+              safeJSONParse(event.preview_imgs || "[]");
           } catch (e) {
             attachments = safeJSONParse(event.attachments || "[]");
+            previewImgs = safeJSONParse(event.preview_imgs || "[]");
           }
           if (Array.isArray(attachments)) {
             event.attachments = attachments;
           } else {
             event.attachments = [];
+          }
+          if (Array.isArray(previewImgs)) {
+            event.preview_imgs = previewImgs;
+          } else {
+            event.preview_imgs = [];
           }
         }
         return Promise.resolve(response);
@@ -3640,19 +3655,80 @@ export class Client {
         const event = response.event;
         if (event) {
           let attachments;
+          let previewImgs;
           try {
             const decodedAttachments = decodeChannelTimelineAttachments(event.attachments);
+            const decodedPreviewImgs = decodeChannelTimelineAttachments(event.preview_imgs);
             attachments =
               decodedAttachments?.attachments ||
               decodedAttachments ||
               safeJSONParse(event.attachments || "[]");
+            previewImgs =
+              decodedPreviewImgs?.attachments ||
+              decodedPreviewImgs ||
+              safeJSONParse(event.preview_imgs || "[]");
           } catch (e) {
             attachments = safeJSONParse(event.attachments || "[]");
+            previewImgs = safeJSONParse(event.preview_imgs || "[]");
           }
           if (Array.isArray(attachments)) {
             event.attachments = attachments;
           } else {
             event.attachments = [];
+          }
+          if (Array.isArray(previewImgs)) {
+            event.preview_imgs = previewImgs;
+          } else {
+            event.preview_imgs = [];
+          }
+        }
+        return Promise.resolve(response);
+      });
+  }
+
+  async detailChannelTimeline(
+    session: Session,
+    request: ApiDetailChannelTimelineRequest,
+  ): Promise<ApiDetailChannelTimelineResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .detailChannelTimeline(session.token, request)
+      .then((response: ApiDetailChannelTimelineResponse) => {
+        const event = response.event;
+        if (event) {
+          let attachments;
+          let previewImgs;
+          try {
+            const decodedAttachments = decodeChannelTimelineAttachments(event.attachments);
+            const decodedPreviewImgs = decodeChannelTimelineAttachments(event.preview_imgs);
+            attachments =
+              decodedAttachments?.attachments ||
+              decodedAttachments ||
+              safeJSONParse(event.attachments || "[]");
+            previewImgs =
+              decodedPreviewImgs?.attachments ||
+              decodedPreviewImgs ||
+              safeJSONParse(event.preview_imgs || "[]");
+          } catch (e) {
+            attachments = safeJSONParse(event.attachments || "[]");
+            previewImgs = safeJSONParse(event.preview_imgs || "[]");
+          }
+          if (Array.isArray(attachments)) {
+            event.attachments = attachments;
+          } else {
+            event.attachments = [];
+          }
+          if (Array.isArray(previewImgs)) {
+            event.preview_imgs = previewImgs;
+          } else {
+            event.preview_imgs = [];
           }
         }
         return Promise.resolve(response);
