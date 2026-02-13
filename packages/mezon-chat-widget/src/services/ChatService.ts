@@ -26,9 +26,10 @@ export class ChatService implements IChatService {
    private client: LightClient;
    private socket: LightSocket | null = null;
    private currentChannelId: string | null = null;
-
+   private processedMessageIds: Set<string> = new Set();
    private messageHandlers: Set<MessageHandler> = new Set();
    private errorHandlers: Set<ErrorHandler> = new Set();
+   private readonly MAX_HISTORY = 100;
 
    constructor(client: LightClient) {
       this.client = client;
@@ -166,6 +167,19 @@ export class ChatService implements IChatService {
    private handleIncomingMessage(raw: SDKChannelMessage): void {
       if (raw.sender_id === this.client.userId) {
          return;
+      }
+
+      const msgId = raw.message_id || raw.id;
+
+      if (this.processedMessageIds.has(msgId)) {
+         return; 
+      }
+
+      this.processedMessageIds.add(msgId);
+
+      if (this.processedMessageIds.size > this.MAX_HISTORY) {
+         const firstItem = this.processedMessageIds.values().next().value;
+         this.processedMessageIds.delete(firstItem!);
       }
 
       const message: ChatMessage = {
