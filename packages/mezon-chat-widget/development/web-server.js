@@ -19,6 +19,7 @@ app.get('/styles.css', (req, res) => {
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use("/dist", express.static(path.join(__dirname, "../dist")));
 
 app.use('/js', express.static(path.join(__dirname, 'js')));
 
