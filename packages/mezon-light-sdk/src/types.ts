@@ -10,6 +10,8 @@ export interface ClientInitConfig {
   refresh_token: string;
   /** API URL for the Mezon server */
   api_url: string;
+  /** WebSocket host for session connectivity */
+  ws_url: string;
   /** User ID associated with the session */
   user_id: string;
   /** Server key for authentication (optional, uses default if not provided) */
