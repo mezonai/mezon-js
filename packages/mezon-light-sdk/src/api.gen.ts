@@ -245,6 +245,8 @@ export interface AuthenticationIdTokenResponse {
   api_url: string;
   /** User ID of the authenticated user */
   user_id: string;
+  /** WebSocket URL for the authenticated user */
+  ws_url: string;
 }
 
 /**  */

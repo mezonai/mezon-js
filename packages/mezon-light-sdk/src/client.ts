@@ -1,6 +1,18 @@
 import { Session } from "./session";
-import { ApiAuthenticationIdToken, ApiSession, MezonApi, ApiChannelDescription, ApiUploadAttachment, ApiUploadAttachmentRequest } from "./api.gen";
-import { MEZON_GW_URL, DEFAULT_SERVER_KEY, CHANNEL_TYPE_DM, CHANNEL_TYPE_GROUP } from "./constants";
+import {
+  ApiAuthenticationIdToken,
+  ApiSession,
+  MezonApi,
+  ApiChannelDescription,
+  ApiUploadAttachment,
+  ApiUploadAttachmentRequest,
+} from "./api.gen";
+import {
+  MEZON_GW_URL,
+  DEFAULT_SERVER_KEY,
+  CHANNEL_TYPE_DM,
+  CHANNEL_TYPE_GROUP,
+} from "./constants";
 import { ClientInitConfig, AuthenticateConfig } from "./types";
 import { WebSocketAdapter, WebSocketAdapterPb } from "./web_socket_adapter_pb";
 import { DefaultSocket, Socket } from "./socket.gen";
@@ -9,7 +21,10 @@ import { DefaultSocket, Socket } from "./socket.gen";
  * Error thrown when authentication fails.
  */
 export class AuthenticationError extends Error {
-  constructor(message?: string, public readonly statusCode?: number) {
+  constructor(
+    message?: string,
+    public readonly statusCode?: number,
+  ) {
     super(message ?? "Authentication failed.");
     this.name = "AuthenticationError";
   }
@@ -102,11 +117,17 @@ export class LightClient {
     const { token, refresh_token, api_url, user_id, serverkey } = config;
 
     if (!token || !refresh_token || !api_url || !user_id) {
-      throw new SessionError("Missing required fields: token, refresh_token, api_url, and user_id are all required");
+      throw new SessionError(
+        "Missing required fields: token, refresh_token, api_url, and user_id are all required",
+      );
     }
 
     const session = Session.restore(token, refresh_token, api_url, true);
-    const client = new MezonApi(serverkey || DEFAULT_SERVER_KEY, 7000, parseBaseUrl(api_url));
+    const client = new MezonApi(
+      serverkey || DEFAULT_SERVER_KEY,
+      7000,
+      parseBaseUrl(api_url),
+    );
 
     return new LightClient(session, client, user_id);
   }
@@ -119,8 +140,18 @@ export class LightClient {
    * @throws {AuthenticationError} If authentication fails or response is invalid
    */
   static async authenticate(config: AuthenticateConfig): Promise<LightClient> {
-    const { id_token, user_id, username, serverkey = DEFAULT_SERVER_KEY, gateway_url = MEZON_GW_URL } = config;
-    const client = new MezonApi(serverkey || DEFAULT_SERVER_KEY, 7000, parseBaseUrl(gateway_url));
+    const {
+      id_token,
+      user_id,
+      username,
+      serverkey = DEFAULT_SERVER_KEY,
+      gateway_url = MEZON_GW_URL,
+    } = config;
+    const client = new MezonApi(
+      serverkey || DEFAULT_SERVER_KEY,
+      7000,
+      parseBaseUrl(gateway_url),
+    );
 
     const body: ApiAuthenticationIdToken = {
       id_token,
@@ -129,15 +160,29 @@ export class LightClient {
     };
     const response = await client.authenticateIdToken(serverkey, "", body);
     if (!response) {
-      throw new AuthenticationError("Authentication failed: No response from server.");
+      throw new AuthenticationError(
+        "Authentication failed: No response from server.",
+      );
     }
 
-    if (!response.token || !response.refresh_token || !response.api_url || !response.user_id) {
-      throw new AuthenticationError("Invalid authentication response: missing required fields");
+    if (
+      !response.token ||
+      !response.refresh_token ||
+      !response.api_url ||
+      !response.user_id
+    ) {
+      throw new AuthenticationError(
+        "Invalid authentication response: missing required fields",
+      );
     }
 
-    const session = Session.restore(response.token, response.refresh_token, response.api_url, true);
-    client.setBasePath(parseBaseUrl(response.api_url));
+    const session = Session.restore(
+      response.token,
+      response.refresh_token,
+      response.ws_url,
+      true,
+    );
+    client.setBasePath(parseBaseUrl(response.ws_url));
 
     return new LightClient(session, client, response.user_id);
   }
@@ -195,7 +240,9 @@ export class LightClient {
    * console.log('Uploaded file URL:', result.url);
    * ```
    */
-  async uploadAttachment(request: ApiUploadAttachmentRequest): Promise<ApiUploadAttachment> {
+  async uploadAttachment(
+    request: ApiUploadAttachmentRequest,
+  ): Promise<ApiUploadAttachment> {
     return this._client.uploadAttachmentFile(this._session.token, request);
   }
 
@@ -211,13 +258,19 @@ export class LightClient {
       return this._session;
     }
 
-    if (this._session.created && this._session.expires_at! - this._session.created_at < 70) {
+    if (
+      this._session.created &&
+      this._session.expires_at! - this._session.created_at < 70
+    ) {
       console.warn(
         "Session lifetime too short, please set '--session.token_expiry_sec' option. See the documentation for more info: https://mezon.vn/docs/mezon/getting-started/configuration/#session",
       );
     }
 
-    if (this._session.created && this._session.refresh_expires_at! - this._session.created_at < 3700) {
+    if (
+      this._session.created &&
+      this._session.refresh_expires_at! - this._session.created_at < 3700
+    ) {
       console.warn(
         "Session refresh lifetime too short, please set '--session.refresh_token_expiry_sec' option. See the documentation for more info: https://mezon.vn/docs/mezon/getting-started/configuration/#session",
       );
@@ -229,12 +282,20 @@ export class LightClient {
 
     this.refreshTokenPromise = new Promise<Session>(async (resolve, reject) => {
       try {
-        const apiSession = await this.client.sessionRefresh(this._client.serverKey || DEFAULT_SERVER_KEY, "", {
-          token: this._session.refresh_token,
-          vars: this._session.vars,
-          is_remember: this._session.is_remember,
-        });
-        this._session.update(apiSession.token!, apiSession.refresh_token!, apiSession.is_remember || false);
+        const apiSession = await this.client.sessionRefresh(
+          this._client.serverKey || DEFAULT_SERVER_KEY,
+          "",
+          {
+            token: this._session.refresh_token,
+            vars: this._session.vars,
+            is_remember: this._session.is_remember,
+          },
+        );
+        this._session.update(
+          apiSession.token!,
+          apiSession.refresh_token!,
+          apiSession.is_remember || false,
+        );
         this.onRefreshSession(apiSession);
         resolve(this._session);
       } catch (error) {
@@ -260,7 +321,14 @@ export class LightClient {
       port: url.port || (url.protocol === "https:" ? "443" : "80"),
       useSSL: url.protocol === "https:",
     };
-    return new DefaultSocket(host, port, useSSL, verbose, adapter, sendTimeoutMs);
+    return new DefaultSocket(
+      host,
+      port,
+      useSSL,
+      verbose,
+      adapter,
+      sendTimeoutMs,
+    );
   }
 
   /**
