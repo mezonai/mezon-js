@@ -256,8 +256,8 @@ export class LightClient {
   ): Socket {
     const { host, port, useSSL } = {
       host: this._session.ws_url,
-      port: "443", // Default to SSL port for mezon.ai
-      useSSL: true, // Always use SSL for production socket
+      port: "443", 
+      useSSL: true,
     };
     return new DefaultSocket(host, port, useSSL, verbose, adapter, sendTimeoutMs);
   }
