@@ -113,6 +113,8 @@ export interface ApiSession {
   is_remember?: boolean;
   // endpoint url that belong to user
   api_url?: string;
+  // ws host that belong to user
+  ws_url?: string;
   // id token for zklogin
   id_token?: string;
 }
@@ -243,6 +245,8 @@ export interface AuthenticationIdTokenResponse {
   refresh_token: string;
   /** API URL for the authenticated user */
   api_url: string;
+  /** WS host for the authenticated user */
+  ws_url: string;
   /** User ID of the authenticated user */
   user_id: string;
 }
