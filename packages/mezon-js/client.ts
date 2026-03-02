@@ -182,6 +182,7 @@ import {
   ApiMutedChannelList,
 } from "./api";
 import { Session } from "./session";
+import { RefreshTokenManager } from "./refresh_token_manager";
 import { DefaultSocket, Socket, ChannelMessageAck } from "./socket";
 import {
   decodeAttachments,
@@ -395,8 +396,7 @@ export class Client {
   /** The low level API client for Mezon server. */
   private readonly apiClient: MezonApi;
 
-  /** thre refreshTokenPromise */
-  private refreshTokenPromise: Promise<Session> | null = null;
+  private readonly refreshTokenManager = RefreshTokenManager.getInstance();
   host: string;
   port: string;
   useSSL: boolean;
@@ -2019,39 +2019,35 @@ export class Client {
       );
     }
 
-    if (this.refreshTokenPromise) {
-      return this.refreshTokenPromise; // Reuse existing promise
-    }
+    const result = await this.refreshTokenManager.refresh(
+      session.refresh_token,
+      async () => {
+        try {
+          const apiSession = await this.apiClient.sessionRefresh(
+            this.serverkey,
+            "",
+            {
+              token: session.refresh_token,
+              vars: vars,
+              is_remember: session.is_remember,
+            },
+          );
 
-    this.refreshTokenPromise = (async () => {
-      try {
-        const apiSession = await this.apiClient.sessionRefresh(
-          this.serverkey,
-          "",
-          {
-            token: session.refresh_token,
-            vars: vars,
-            is_remember: session.is_remember,
-          },
-        );
+          return {
+            token: apiSession.token!,
+            refresh_token: apiSession.refresh_token!,
+            is_remember: apiSession.is_remember || false,
+          };
+        } catch (error) {
+          console.error("Session refresh failed:", error);
+          throw error;
+        }
+      },
+    );
 
-        session.update(
-          apiSession.token!,
-          apiSession.refresh_token!,
-          apiSession.is_remember || false,
-        );
-
-        this.onRefreshSession(apiSession);
-        return session;
-      } catch (error) {
-        console.error("Session refresh failed:", error);
-        throw error;
-      } finally {
-        this.refreshTokenPromise = null;
-      }
-    })();
-
-    return this.refreshTokenPromise;
+    session.update(result.token, result.refresh_token, result.is_remember);
+    this.onRefreshSession(result);
+    return session;
   }
 
   /** Remove an email+password from the social profiles on the current user's account. */

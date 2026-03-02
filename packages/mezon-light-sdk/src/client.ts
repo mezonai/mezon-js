@@ -99,13 +99,13 @@ export class LightClient {
    * @throws {SessionError} If required fields are missing
    */
   static initClient(config: ClientInitConfig): LightClient {
-    const { token, refresh_token, api_url, user_id, serverkey } = config;
+    const { token, refresh_token, api_url, ws_url, user_id, serverkey } = config;
 
-    if (!token || !refresh_token || !api_url || !user_id) {
-      throw new SessionError("Missing required fields: token, refresh_token, api_url, and user_id are all required");
+    if (!token || !refresh_token || !api_url || !ws_url || !user_id) {
+      throw new SessionError("Missing required fields: token, refresh_token, api_url, ws_url, and user_id are all required");
     }
 
-    const session = Session.restore(token, refresh_token, api_url, true);
+    const session = Session.restore(token, refresh_token, api_url, ws_url, true);
     const client = new MezonApi(serverkey || DEFAULT_SERVER_KEY, 7000, parseBaseUrl(api_url));
 
     return new LightClient(session, client, user_id);
@@ -132,11 +132,11 @@ export class LightClient {
       throw new AuthenticationError("Authentication failed: No response from server.");
     }
 
-    if (!response.token || !response.refresh_token || !response.api_url || !response.user_id) {
+    if (!response.token || !response.refresh_token || !response.api_url || !response.ws_url || !response.user_id) {
       throw new AuthenticationError("Invalid authentication response: missing required fields");
     }
 
-    const session = Session.restore(response.token, response.refresh_token, response.api_url, true);
+    const session = Session.restore(response.token, response.refresh_token, response.api_url, response.ws_url, true);
     client.setBasePath(parseBaseUrl(response.api_url));
 
     return new LightClient(session, client, response.user_id);
@@ -254,11 +254,10 @@ export class LightClient {
     adapter: WebSocketAdapter = new WebSocketAdapterPb(),
     sendTimeoutMs: number = DefaultSocket.DefaultSendTimeoutMs,
   ): Socket {
-    const url = new URL(this._client.basePath);
     const { host, port, useSSL } = {
-      host: url.hostname,
-      port: url.port || (url.protocol === "https:" ? "443" : "80"),
-      useSSL: url.protocol === "https:",
+      host: this._session.ws_url,
+      port: "443", 
+      useSSL: true,
     };
     return new DefaultSocket(host, port, useSSL, verbose, adapter, sendTimeoutMs);
   }
@@ -321,7 +320,8 @@ export class LightClient {
     return {
       token: this._session.token,
       refresh_token: this._session.refresh_token,
-      api_url: (this._session as any).api_url || "",
+      api_url: this._session.api_url || "",
+      ws_url: this._session.ws_url || "",
       user_id: this._userId,
     };
   }
