@@ -46,4 +46,6 @@ export interface SendMessagePayload {
   attachments?: ApiMessageAttachment[];
   /** Whether to hide link previews (optional) */
   hideLink?: boolean;
+   /** Message code (optional) */
+  code?: number;
 }
