@@ -145,7 +145,7 @@ export interface AddClanUserEvent {
   //the clan id
   clan_id: string;
   // the user
-  user: UserProfileRedis;
+  user: UserProfile;
   invitor: string;
 }
 
@@ -164,7 +164,7 @@ export interface AiAgentEnabledEvent {
   enabled: boolean;
 }
 
-export interface UserProfileRedis {
+export interface UserProfile {
   /** User IDs to follow. */
   user_id: string;
   /** Username to follow. */
@@ -192,13 +192,13 @@ export interface UserChannelAddedEvent {
   // the channel id
   channel_desc: ChannelDescription;
   // the user
-  users: UserProfileRedis[];
+  users: UserProfile[];
   // the custom status
   status: string;
   // the clan id
   clan_id: string;
   //
-  caller: UserProfileRedis;
+  caller: UserProfile;
   //
   create_time_second: number;
   //

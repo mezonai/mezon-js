@@ -5280,4 +5280,51 @@ export class Client {
         return Promise.resolve(response);
       });
   }
+
+  async channelMessageReact(
+      session: Session,
+      clanId: string,
+      channelId: string,
+      mode: number,
+      isPublic: boolean,
+      messageId: string,
+      emojiId: string,
+      emoji: string,
+      count: number,
+      messageSenderId: string,
+      actionDelete: boolean,
+      topicId?: string,
+      emojiRecentId?: string,
+      senderName?: string
+    ): Promise<ChannelMessageAck> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .channelMessageReact(
+        session.token,
+        clanId,
+        channelId,
+        mode,
+        isPublic,
+        messageId,
+        emojiId,
+        emoji,
+        count,
+        messageSenderId,
+        actionDelete,
+        topicId,
+        emojiRecentId,
+        senderName,
+      )
+      .then((response: ChannelMessageAck) => {
+        return Promise.resolve(response);
+      });
+  }
+    
 }

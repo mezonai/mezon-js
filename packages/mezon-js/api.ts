@@ -12688,4 +12688,67 @@ export class MezonApi {
       ),
     ]);
   }
+
+  channelMessageReact(
+      bearerToken: string,
+      clan_id: string,
+      channel_id: string,
+      mode: number,
+      is_public: boolean,
+      message_id: string,
+      emoji_id: string,
+      emoji: string,
+      count: number,
+      message_sender_id: string,
+      action_delete: boolean,
+      topic_id?: string,
+      emoji_recent_id?: string,
+      sender_name?: string
+    ) : Promise<ChannelMessageAck> {
+    
+    const urlPath = "/mezon.api.Mezon/ReactChannelMessage";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.MessageReaction.encode(
+      tsproto.MessageReaction.fromPartial({
+        clan_id: clan_id,
+        channel_id: channel_id,
+        mode: mode,
+        is_public: is_public,
+        message_id: message_id,
+        emoji_id: emoji_id,
+        emoji: emoji,
+        count: count,
+        message_sender_id: message_sender_id,
+        action: action_delete,
+        emoji_recent_id: emoji_recent_id,
+        sender_name: sender_name,
+        topic_id: topic_id
+      })
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", {}, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+   
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as ChannelMessageAck;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();      
+          return tsproto.ChannelMessageSend.decode(new Uint8Array(buffer)) as unknown as ChannelMessageAck;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
 }
