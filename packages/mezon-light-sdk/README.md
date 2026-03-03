@@ -51,7 +51,7 @@ import { LightClient, SessionError } from 'mezon-light-sdk';
 
 // Export session for storage
 const sessionData = client.exportSession();
-// Returns: { token, refresh_token, api_url, user_id }
+// Returns: { token, refresh_token, api_url, ws_url, user_id }
 localStorage.setItem('mezon_session', JSON.stringify(sessionData));
 
 // Later: restore from storage
@@ -299,6 +299,7 @@ interface ClientInitConfig {
   token: string;           // Auth token
   refresh_token: string;   // Refresh token
   api_url: string;         // API URL
+  ws_url: string;          // WebSocket host
   user_id: string;         // User ID
   serverkey?: string;      // Optional server key
 }
