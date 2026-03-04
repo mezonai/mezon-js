@@ -1007,8 +1007,6 @@ export interface ApiChannelDescription {
   //
   last_sent_message?: ApiChannelMessageHeader;
   //
-  meeting_code?: string;
-  //
   channel_avatar?: string;
   //The parent channel this message belongs to.
   parent_id?: string;
