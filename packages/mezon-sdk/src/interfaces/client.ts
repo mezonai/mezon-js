@@ -897,6 +897,74 @@ export interface ClientConfigDto {
   timeout?: number;
   mmnApiUrl?: string;
   zkApiUrl?: string;
+  agentEventUrl?: string;
+}
+
+/** SSE (Server-Sent Events) configuration */
+export interface SSEConfig {
+  /** The SSE endpoint URL */
+  url: string;
+  /** Application ID */
+  appId: string;
+  /** Authentication token */
+  token: string;
+  /** Whether to auto-reconnect on disconnect */
+  autoReconnect?: boolean;
+  /** Reconnection delay in milliseconds */
+  reconnectDelay?: number;
+  /** Maximum reconnection attempts (0 = unlimited) */
+  maxReconnectAttempts?: number;
+  /** Custom headers for the SSE connection */
+  headers?: Record<string, string>;
+}
+
+/** SSE event message */
+export interface SSEMessage {
+  /** Event ID */
+  id?: string;
+  /** Event type */
+  event?: string;
+  /** Raw event data string */
+  data: string;
+  /** Timestamp when the event was received */
+  timestamp: number;
+}
+
+/** Room info in metadata events */
+export interface RoomInfo {
+  /** Room ID */
+  room_id: string;
+  /** Room name */
+  room_name: string;
+}
+
+/** Base room metadata event from SSE */
+export interface RoomMetadataEvent {
+  /** Unique event ID */
+  event_id: string;
+  /** Event type (room_started, room_ended, room_summary_done) */
+  event_type: string;
+  /** ISO timestamp */
+  timestamp: string;
+  /** Room information */
+  room: RoomInfo;
+  /** Additional metadata */
+  metadata: Record<string, any>;
+}
+
+/** Session started event - Room starts */
+export interface AIAgentSessionStartedEvent extends RoomMetadataEvent {
+  event_type: 'room_started';
+}
+
+/** Session ended event - Room ends */
+export interface AIAgentSessionEndedEvent extends RoomMetadataEvent {
+  event_type: 'room_ended';
+}
+
+/** Session summary done event - Room summary completed */
+export interface AIAgentSessionSummaryDoneEvent extends RoomMetadataEvent {
+  event_type: 'room_summary_done';
 }
 
 export interface Client {

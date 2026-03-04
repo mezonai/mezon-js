@@ -7,6 +7,7 @@ import { MezonApi } from "../../api";
 import { SocketManager } from "../manager/socket_manager";
 import { SessionManager } from "../manager/session_manager";
 import { EventManager } from "../manager/event_manager";
+import { EventSourceManager } from "../manager/sse_manager";
 import { WebSocketAdapterPb } from "../../web_socket_adapter_pb";
 import {
   ApiGetZkProofRequest,
@@ -16,24 +17,17 @@ import {
   ChannelMessage,
   ClientConfigDto,
   MMNExtraInfo,
+  RoomMetadataEvent,
+  SSEMessage,
 } from "../../interfaces";
-import {
-  generateSnowflakeId,
-  parseUrlToHostAndSSL,
-  waitFor2nTimeout,
-} from "../../utils/helper";
+import { generateSnowflakeId, parseUrlToHostAndSSL, waitFor2nTimeout } from "../../utils/helper";
 import { ChannelManager } from "../manager/channel_manager";
 import { User, UserInitData } from "../structures/User";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 import { Session } from "../../session";
 import { MessageDatabase } from "../../sqlite/MessageDatabase";
-import {
-  ETransferType,
-  IEphemeralKeyPair,
-  IZkProof,
-  MmnClient,
-  ZkClient,
-} from "mmn-client-js";
+import { ETransferType, IEphemeralKeyPair, IZkProof, MmnClient, ZkClient } from "mmn-client-js";
+import { InternalAgentEvents, SSEEvents } from "../../constants";
 
 const MAX_TIME_RETRY = 10;
 const DEFAULT_HOST = "gw.mezon.ai";
@@ -43,6 +37,7 @@ const DEFAULT_SSL = true;
 const DEFAULT_TIMEOUT_MS = 7000;
 const DEFAULT_MMN_API = "https://dong.mezon.ai/mmn-api/";
 const DEFAULT_ZK_API = "https://dong.mezon.ai/zk-api/";
+const DEFAULT_AGENT_URL = "http://172.16.110.19:8002/";
 
 export class MezonClientCore extends EventEmitter {
   public token: string;
@@ -54,6 +49,7 @@ export class MezonClientCore extends EventEmitter {
   public loginBasePath: string | undefined;
   public mmnApiUrl: string | undefined;
   public zkApiUrl: string | undefined;
+  public agentEventUrl: string | undefined;
   public keyGen!: IEphemeralKeyPair;
   public addressMMN!: string;
   public zkProofs!: IZkProof;
@@ -63,6 +59,7 @@ export class MezonClientCore extends EventEmitter {
   protected apiClient!: MezonApi;
   protected _mmnClient!: MmnClient;
   protected _zkClient!: ZkClient;
+  protected _agentManager!: EventSourceManager;
   protected socketManager!: SocketManager;
   protected channelManager!: ChannelManager;
   protected sessionManager!: SessionManager;
@@ -85,6 +82,7 @@ export class MezonClientCore extends EventEmitter {
       timeout = DEFAULT_TIMEOUT_MS,
       mmnApiUrl = DEFAULT_MMN_API,
       zkApiUrl = DEFAULT_ZK_API,
+      agentEventUrl = DEFAULT_AGENT_URL,
     } = config;
 
     if (!botId) throw new Error("botId is required");
@@ -100,6 +98,7 @@ export class MezonClientCore extends EventEmitter {
     this.loginBasePath = `${scheme}${host}:${port}`;
     this.mmnApiUrl = mmnApiUrl;
     this.zkApiUrl = zkApiUrl;
+    this.agentEventUrl = agentEventUrl;
     this.messageDB = new MessageDatabase();
   }
 
@@ -115,6 +114,13 @@ export class MezonClientCore extends EventEmitter {
       throw new Error("ZkClient not initialized");
     }
     return this._zkClient;
+  }
+
+  public get agentManager(): EventSourceManager {
+    if (!this._agentManager) {
+      throw new Error("MezonAgentManager not initialized. Ensure agentEventUrl is configured.");
+    }
+    return this._agentManager;
   }
 
   public initManager(basePath: string, sessionApi?: Session) {
@@ -136,11 +142,7 @@ export class MezonClientCore extends EventEmitter {
       this.messageDB,
       sessionApi?.ws_url,
     );
-    this.channelManager = new ChannelManager(
-      this.apiClient,
-      this.socketManager,
-      this.sessionManager,
-    );
+    this.channelManager = new ChannelManager(this.apiClient, this.socketManager, this.sessionManager);
     if (this.mmnApiUrl) {
       this._mmnClient = new MmnClient({
         baseUrl: this.mmnApiUrl,
@@ -153,6 +155,45 @@ export class MezonClientCore extends EventEmitter {
         timeout: this.timeout,
       });
     }
+    if (this.agentEventUrl) {
+      this._agentManager = new EventSourceManager({
+        url: this.agentEventUrl,
+        appId: this.clientId,
+        token: this.token,
+        autoReconnect: true,
+        reconnectDelay: 3000,
+      });
+      this._setupSSEListeners();
+    }
+  }
+
+  private _setupSSEListeners() {
+    this.agentManager.subscribe(SSEEvents.Message, this._emitAIAgentEvent.bind(this));
+  }
+
+  private _emitAIAgentEvent(message: SSEMessage): void {
+    let data: RoomMetadataEvent | null = null;
+    if (typeof message.data === "string") {
+      try {
+        data = JSON.parse(message.data);
+      } catch (error) {
+        console.error("Failed to parse SSE message data as JSON:", error, "Raw data:", message.data);
+      }
+    }
+
+    if (!data || !data.event_type) return;
+    const eventType = data.event_type;
+    switch (eventType) {
+      case "room_started":
+        this.emit(InternalAgentEvents.SessionStarted, message);
+        break;
+      case "room_ended":
+        this.emit(InternalAgentEvents.SessionEnded, message);
+        break;
+      case "room_summary_done":
+        this.emit(InternalAgentEvents.RoomSummaryDone, message);
+        break;
+    }
   }
 
   async handleClientLogin() {
@@ -160,18 +201,11 @@ export class MezonClientCore extends EventEmitter {
 
     this.loginInFlight = (async () => {
       try {
-        const tempApiClient = new MezonApi(
-          this.token,
-          this.loginBasePath!,
-          this.timeout,
-        );
+        const tempApiClient = new MezonApi(this.token, this.loginBasePath!, this.timeout);
         const tempSessionManager = new SessionManager(tempApiClient);
         let sessionApi = null;
         try {
-          sessionApi = await tempSessionManager.authenticate(
-            this.clientId,
-            this.token,
-          );
+          sessionApi = await tempSessionManager.authenticate(this.clientId, this.token);
         } catch (error) {
           this.socketManager?.closeSocket();
           throw error;
@@ -180,9 +214,7 @@ export class MezonClientCore extends EventEmitter {
           throw new Error("Authenticate returned empty session.");
         }
         if (sessionApi?.api_url) {
-          const { host, port, useSSL } = parseUrlToHostAndSSL(
-            sessionApi.api_url,
-          );
+          const { host, port, useSSL } = parseUrlToHostAndSSL(sessionApi.api_url);
           this.host = host;
           this.port = port || (useSSL ? "443" : "80");
           this.useSSL = useSSL;
@@ -191,11 +223,7 @@ export class MezonClientCore extends EventEmitter {
           const basePath = `${scheme}${this.host}:${this.port}`;
           this.initManager(basePath, sessionApi);
         }
-        if (
-          !this.socketManager ||
-          !this.channelManager ||
-          !this.sessionManager
-        ) {
+        if (!this.socketManager || !this.channelManager || !this.sessionManager) {
           this.initManager(this.loginBasePath!, sessionApi);
         }
 
@@ -211,6 +239,7 @@ export class MezonClientCore extends EventEmitter {
           await this.socketManager.connectSocket(sessionConnected.token);
           await this.channelManager.initAllDmChannels(sessionConnected.token);
         }
+        this._connectMezonAgent();
         this.emit("ready");
         return JSON.stringify(sessionApi ?? {});
       } finally {
@@ -223,12 +252,10 @@ export class MezonClientCore extends EventEmitter {
 
   async login(): Promise<string> {
     try {
-      return await waitFor2nTimeout(
-        () => this.handleClientLogin(),
-        MAX_TIME_RETRY,
-      );
+      return await waitFor2nTimeout(() => this.handleClientLogin(), MAX_TIME_RETRY);
     } catch (error) {
       this.socketManager?.closeSocket();
+      this._disconnectMezonAgent();
       throw new Error(JSON.stringify(error ?? {}));
     }
   }
@@ -383,10 +410,7 @@ export class MezonClientCore extends EventEmitter {
       bot_id,
     };
     try {
-      return await this.apiClient.addQuickMenuAccess(
-        sessionToken.token,
-        payload,
-      );
+      return await this.apiClient.addQuickMenuAccess(sessionToken.token, payload);
     } catch (error) {
       throw error;
     }
@@ -397,10 +421,7 @@ export class MezonClientCore extends EventEmitter {
     if (!sessionToken) return;
     const botIdPayload = botId ?? this.clientId;
     try {
-      return await this.apiClient.deleteQuickMenuAccess(
-        sessionToken.token,
-        botIdPayload,
-      );
+      return await this.apiClient.deleteQuickMenuAccess(sessionToken.token, botIdPayload);
     } catch (error) {
       throw error;
     }
@@ -422,20 +443,11 @@ export class MezonClientCore extends EventEmitter {
   protected async _fetchChannelFromAPI(id: string): Promise<TextChannel> {
     try {
       const session = this.sessionManager.getSession()!;
-      const channelDetail = await this.apiClient.listChannelDetail(
-        session.token,
-        id,
-      );
+      const channelDetail = await this.apiClient.listChannelDetail(session.token, id);
       const clanId = channelDetail?.clan_id ?? "0";
 
       const clan = this.clans.get(clanId)!;
-      const channel = new TextChannel(
-        channelDetail,
-        clan,
-        this.socketManager,
-        this.messageQueue,
-        this.messageDB,
-      );
+      const channel = new TextChannel(channelDetail, clan, this.socketManager, this.messageQueue, this.messageDB);
       this.channels.set(channel.id!, channel);
       clan?.channels.set(channel.id!, channel);
       return channel;
@@ -520,12 +532,7 @@ export class MezonClientCore extends EventEmitter {
         create_time_seconds,
         topic_id,
       };
-      const message = new Message(
-        messageRaw,
-        channel,
-        this.socketManager,
-        this.messageQueue,
-      );
+      const message = new Message(messageRaw, channel, this.socketManager, this.messageQueue);
       channel.messages.set(message_id, message);
     } catch (error) {
       console.log("Error initChannelMessageCache");
@@ -533,14 +540,7 @@ export class MezonClientCore extends EventEmitter {
   }
 
   protected async _initUserClanCache(e: ChannelMessage) {
-    const {
-      sender_id,
-      username,
-      clan_nick,
-      clan_avatar,
-      avatar,
-      display_name,
-    } = e;
+    const { sender_id, username, clan_nick, clan_avatar, avatar, display_name } = e;
     const allDmChannels = this.channelManager.getAllDmChannels();
     const userCache = this.users.get(sender_id!);
     if (!userCache && allDmChannels) {
@@ -610,5 +610,16 @@ export class MezonClientCore extends EventEmitter {
     );
     this.channels.set(e.channel_id!, channelObj);
     clan.channels.set(e.channel_id!, channelObj);
+  }
+
+  protected _connectMezonAgent(): void {
+    if (!this._agentManager) {
+      throw new Error("MezonAgentManager not initialized. Ensure agentEventUrl is configured.");
+    }
+    this._agentManager.connect("api/sse/metadata");
+  }
+
+  protected _disconnectMezonAgent(): void {
+    this._agentManager?.close();
   }
 }
