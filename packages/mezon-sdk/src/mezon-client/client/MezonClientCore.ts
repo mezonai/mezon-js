@@ -10,6 +10,9 @@ import { EventManager } from "../manager/event_manager";
 import { EventSourceManager } from "../manager/sse_manager";
 import { WebSocketAdapterPb } from "../../web_socket_adapter_pb";
 import {
+  AIAgentSessionStartedEvent,
+  AIAgentSessionEndedEvent,
+  AIAgentSessionSummaryDoneEvent,
   ApiGetZkProofRequest,
   ApiQuickMenuAccessPayload,
   ApiQuickMenuAccessRequest,
@@ -168,11 +171,16 @@ export class MezonClientCore extends EventEmitter {
   }
 
   private _setupSSEListeners() {
-    this.agentManager.subscribe(SSEEvents.Message, this._emitAIAgentEvent.bind(this));
+    this.agentManager.on(SSEEvents.Message, this._emitAIAgentEvent.bind(this));
   }
 
   private _emitAIAgentEvent(message: SSEMessage): void {
-    let data: RoomMetadataEvent | null = null;
+    let data:
+      | RoomMetadataEvent
+      | AIAgentSessionStartedEvent
+      | AIAgentSessionEndedEvent
+      | AIAgentSessionSummaryDoneEvent
+      | null = null;
     if (typeof message.data === "string") {
       try {
         data = JSON.parse(message.data);
@@ -185,13 +193,13 @@ export class MezonClientCore extends EventEmitter {
     const eventType = data.event_type;
     switch (eventType) {
       case "room_started":
-        this.emit(InternalAgentEvents.SessionStarted, message);
+        this.emit(InternalAgentEvents.SessionStarted, data);
         break;
       case "room_ended":
-        this.emit(InternalAgentEvents.SessionEnded, message);
+        this.emit(InternalAgentEvents.SessionEnded, data);
         break;
       case "room_summary_done":
-        this.emit(InternalAgentEvents.RoomSummaryDone, message);
+        this.emit(InternalAgentEvents.RoomSummaryDone, data);
         break;
     }
   }
@@ -208,6 +216,7 @@ export class MezonClientCore extends EventEmitter {
           sessionApi = await tempSessionManager.authenticate(this.clientId, this.token);
         } catch (error) {
           this.socketManager?.closeSocket();
+          this._disconnectMezonAgentSSE();
           throw error;
         }
         if (!sessionApi) {
@@ -239,7 +248,7 @@ export class MezonClientCore extends EventEmitter {
           await this.socketManager.connectSocket(sessionConnected.token);
           await this.channelManager.initAllDmChannels(sessionConnected.token);
         }
-        this._connectMezonAgent();
+        this._connectMezonAgentSSE();
         this.emit("ready");
         return JSON.stringify(sessionApi ?? {});
       } finally {
@@ -255,7 +264,7 @@ export class MezonClientCore extends EventEmitter {
       return await waitFor2nTimeout(() => this.handleClientLogin(), MAX_TIME_RETRY);
     } catch (error) {
       this.socketManager?.closeSocket();
-      this._disconnectMezonAgent();
+      this._disconnectMezonAgentSSE();
       throw new Error(JSON.stringify(error ?? {}));
     }
   }
@@ -612,14 +621,18 @@ export class MezonClientCore extends EventEmitter {
     clan.channels.set(e.channel_id!, channelObj);
   }
 
-  protected _connectMezonAgent(): void {
+  protected _connectMezonAgentSSE(): void {
     if (!this._agentManager) {
-      throw new Error("MezonAgentManager not initialized. Ensure agentEventUrl is configured.");
+      return;
     }
-    this._agentManager.connect("api/sse/metadata");
+    try {
+      this._agentManager.connect("api/sse/metadata");
+    } catch (error) {
+      console.error("Failed to connect MezonAgent:", error);
+    }
   }
 
-  protected _disconnectMezonAgent(): void {
+  protected _disconnectMezonAgentSSE(): void {
     this._agentManager?.close();
   }
 }

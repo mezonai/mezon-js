@@ -32,7 +32,7 @@ export class EventSourceManager extends EventEmitter {
       token: config.token ?? "",
       autoReconnect: config.autoReconnect ?? true,
       reconnectDelay: config.reconnectDelay ?? 3000,
-      maxReconnectAttempts: config.maxReconnectAttempts ?? 0, // 0 = unlimited
+      maxReconnectAttempts: config.maxReconnectAttempts ?? 5, // 0 = unlimited
       headers: config.headers ?? {},
     };
 
@@ -88,22 +88,6 @@ export class EventSourceManager extends EventEmitter {
       this.eventSource = null;
       this.emit(SSEEvents.Close);
     }
-  }
-
-  /**
-   * Subscribe to a specific SSE event type
-   * @param eventType The event type to listen for
-   * @param callback Callback function for the event
-   */
-  subscribe(eventType: string, callback: (message: SSEMessage) => void): void {
-    if (!this.eventSource) {
-      throw new Error("EventSource not connected. Call connect() first.");
-    }
-
-    this.eventSource.addEventListener(eventType, (event: MessageEvent) => {
-      const message = this.parseEvent(event, eventType);
-      callback(message);
-    });
   }
 
   private buildUrl(path?: string, queryParams?: Record<string, string | number>): string {

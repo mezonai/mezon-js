@@ -191,17 +191,17 @@ export class MezonClient extends MezonClientCore {
   }
 
   public onAIAgentSessionStarted(listener: (e: AIAgentSessionStartedEvent) => void): this {
-    this.agentManager?.on(Events.AIAgentSessionStarted, listener);
+    this.on(Events.AIAgentSessionStarted.toString(), listener);
     return this;
   }
 
   public onAIAgentSessionEnded(listener: (e: AIAgentSessionEndedEvent) => void): this {
-    this.agentManager?.on(Events.AIAgentSessionEnded, listener);
+    this.on(Events.AIAgentSessionEnded.toString(), listener);
     return this;
   }
 
   public onAIAgentSessionSummaryDone(listener: (e: AIAgentSessionSummaryDoneEvent) => void): this {
-    this.agentManager?.on(Events.AIAgentSessionSummaryDone, listener);
+    this.on(Events.AIAgentSessionSummaryDone.toString(), listener);
     return this;
   }
 
