@@ -98,6 +98,12 @@ import {
   ApiAllUsersAddChannelResponse,
   ApiRoleListEventResponse,
   ApiAllUserClans,
+  ApiCreatePollRequest,
+  ApiCreatePollResponse,
+  ApiGetPollRequest,
+  ApiGetPollResponse,
+  ApiVotePollRequest,
+  ApiClosePollRequest,
   ApiUserPermissionInChannelListResponse,
   ApiPermissionRoleChannelListEventResponse,
   ApiMarkAsReadRequest,
@@ -5326,5 +5332,58 @@ export class Client {
         return Promise.resolve(response);
       });
   }
-    
+
+  /** Create a poll in a channel. */
+  async createPoll(
+    session: Session,
+    request: ApiCreatePollRequest
+  ): Promise<ApiCreatePollResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.createPoll(session.token, request);
+  }
+
+  /** Vote on a poll. */
+  async votePoll(session: Session, request: ApiVotePollRequest): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.votePoll(session.token, request);
+  }
+
+  /** Close a poll (creator only). */
+  async closePoll(session: Session, request: ApiClosePollRequest): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.closePoll(session.token, request);
+  }
+
+  /** Get poll details. */
+  async getPoll(
+    session: Session,
+    request: ApiGetPollRequest
+  ): Promise<ApiGetPollResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.getPoll(session.token, request);
+  }
 }

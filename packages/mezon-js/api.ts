@@ -96,6 +96,61 @@ export interface ApiListChannelTimelineResponse {
   events?: Array<ApiChannelTimeline>;
 }
 
+export interface ApiCreatePollRequest {
+  channel_id?: string;
+  clan_id?: string;
+  question?: string;
+  answers?: string[];
+  expire_hours?: number;
+  type?: number;
+}
+
+export interface ApiPollAnswer {
+  index?: number;
+  label?: string;
+}
+
+export interface ApiPollVoterDetail {
+  answer_index?: number;
+  user_ids?: string[];
+}
+
+export interface ApiCreatePollResponse {
+  poll_id?: string;
+  message_id?: string;
+  question?: string;
+  answers?: ApiPollAnswer[];
+  answer_counts?: number[];
+  exp?: string;
+  is_closed?: boolean;
+  creator_id?: string;
+  type?: number;
+  total_votes?: number;
+}
+
+export interface ApiGetPollRequest {
+  poll_id?: string;
+  message_id?: string;
+  channel_id?: string;
+}
+
+export interface ApiVotePollRequest {
+  poll_id?: string;
+  message_id?: string;
+  channel_id?: string;
+  answer_indices?: number[];
+}
+
+export interface ApiClosePollRequest {
+  poll_id?: string;
+  message_id?: string;
+  channel_id?: string;
+}
+
+export interface ApiGetPollResponse extends ApiCreatePollResponse {
+  voter_details?: ApiPollVoterDetail[];
+}
+
 /** A single user-role pair. */
 export interface ChannelUserListChannelUser {
   //
@@ -12742,6 +12797,200 @@ export class MezonApi {
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
           return tsproto.ChannelMessageSend.decode(new Uint8Array(buffer)) as unknown as ChannelMessageAck;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
+  /** Create a poll in a channel. */
+  createPoll(
+    bearerToken: string,
+    body: ApiCreatePollRequest,
+    options = {}
+  ): Promise<ApiCreatePollResponse> {
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/mezon.api.Mezon/CreatePoll";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.CreatePollRequest.encode(
+      tsproto.CreatePollRequest.fromPartial({
+        channel_id: body.channel_id ?? "0",
+        clan_id: body.clan_id ?? "0",
+        question: body.question ?? "",
+        answers: body.answers ?? [],
+        expire_hours: body.expire_hours ?? 0,
+        type: (body.type ?? 0) as tsproto.PollType,
+      })
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as ApiCreatePollResponse;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();
+          const decoded = tsproto.CreatePollResponse.decode(new Uint8Array(buffer));
+          return {
+            poll_id: decoded.poll_id,
+            message_id: decoded.message_id,
+            question: decoded.question,
+            answers: decoded.answers.map((a) => ({ index: a.index, label: a.label })),
+            answer_counts: decoded.answer_counts,
+            exp: decoded.exp,
+            is_closed: decoded.is_closed,
+            creator_id: decoded.creator_id,
+            type: decoded.type,
+            total_votes: decoded.total_votes,
+          } as ApiCreatePollResponse;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
+  /** Vote on a poll. */
+  votePoll(bearerToken: string, body: ApiVotePollRequest, options = {}): Promise<any> {
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/mezon.api.Mezon/VotePoll";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.VotePollRequest.encode(
+      tsproto.VotePollRequest.fromPartial({
+        poll_id: body.poll_id ?? "0",
+        message_id: body.message_id ?? "0",
+        channel_id: body.channel_id ?? "0",
+        answer_indices: body.answer_indices ?? [],
+      })
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204 || (response.status >= 200 && response.status < 300)) {
+          return {};
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
+  /** Close a poll (creator only). */
+  closePoll(bearerToken: string, body: ApiClosePollRequest, options = {}): Promise<any> {
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/mezon.api.Mezon/ClosePoll";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.ClosePollRequest.encode(
+      tsproto.ClosePollRequest.fromPartial({
+        poll_id: body.poll_id ?? "0",
+        message_id: body.message_id ?? "0",
+        channel_id: body.channel_id ?? "0",
+      })
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204 || (response.status >= 200 && response.status < 300)) {
+          return {};
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
+  /** Get poll details. */
+  getPoll(bearerToken: string, body: ApiGetPollRequest, options = {}): Promise<ApiGetPollResponse> {
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/mezon.api.Mezon/GetPoll";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.GetPollRequest.encode(
+      tsproto.GetPollRequest.fromPartial({
+        poll_id: body.poll_id ?? "0",
+        message_id: body.message_id ?? "0",
+        channel_id: body.channel_id ?? "0",
+      })
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as ApiGetPollResponse;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();
+          const decoded = tsproto.GetPollResponse.decode(new Uint8Array(buffer));
+          return {
+            poll_id: decoded.poll_id,
+            message_id: decoded.message_id,
+            question: decoded.question,
+            answers: decoded.answers.map((a) => ({ index: a.index, label: a.label })),
+            answer_counts: decoded.answer_counts,
+            exp: decoded.exp,
+            is_closed: decoded.is_closed,
+            creator_id: decoded.creator_id,
+            type: decoded.type,
+            total_votes: decoded.total_votes,
+            voter_details: decoded.voter_details.map((v) => ({
+              answer_index: v.answer_index,
+              user_ids: v.user_ids,
+            })),
+          } as ApiGetPollResponse;
         } else {
           throw response;
         }
