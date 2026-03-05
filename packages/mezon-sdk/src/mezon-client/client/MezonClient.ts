@@ -1,6 +1,9 @@
 import { MezonClientCore } from "./MezonClientCore";
 import {
   AddClanUserEvent,
+  AIAgentSessionSummaryDoneEvent,
+  AIAgentSessionEndedEvent,
+  AIAgentSessionStartedEvent,
   ChannelCreatedEvent,
   ChannelDeletedEvent,
   ChannelMessage,
@@ -47,34 +50,13 @@ export class MezonClient extends MezonClientCore {
     if (this._internalListenersBound) return;
     this._internalListenersBound = true;
 
-    this.on(
-      Events.ChannelMessage.toString(),
-      this._onChannelMessageInternal.bind(this),
-    );
-    this.on(
-      Events.ChannelCreated.toString(),
-      this._onChannelCreatedInternal.bind(this),
-    );
-    this.on(
-      Events.ChannelUpdated.toString(),
-      this._onChannelUpdatedInternal.bind(this),
-    );
-    this.on(
-      Events.ChannelDeleted.toString(),
-      this._onChannelDeletedInternal.bind(this),
-    );
-    this.on(
-      Events.UserClanRemoved.toString(),
-      this._onUserClanRemovedInternal.bind(this),
-    );
-    this.on(
-      Events.AddClanUser.toString(),
-      this._onAddClanUserInternal.bind(this),
-    );
-    this.on(
-      Events.UserChannelAdded.toString(),
-      this._onUserChannelAddedInternal.bind(this),
-    );
+    this.on(Events.ChannelMessage.toString(), this._onChannelMessageInternal.bind(this));
+    this.on(Events.ChannelCreated.toString(), this._onChannelCreatedInternal.bind(this));
+    this.on(Events.ChannelUpdated.toString(), this._onChannelUpdatedInternal.bind(this));
+    this.on(Events.ChannelDeleted.toString(), this._onChannelDeletedInternal.bind(this));
+    this.on(Events.UserClanRemoved.toString(), this._onUserClanRemovedInternal.bind(this));
+    this.on(Events.AddClanUser.toString(), this._onAddClanUserInternal.bind(this));
+    this.on(Events.UserChannelAdded.toString(), this._onUserChannelAddedInternal.bind(this));
     this.on(Events.TokenSend.toString(), this._onTokenSendInternal.bind(this));
   }
 
@@ -118,9 +100,7 @@ export class MezonClient extends MezonClientCore {
     return this;
   }
 
-  public onUserChannelAdded(
-    listener: (e: UserChannelAddedEvent) => void,
-  ): this {
+  public onUserChannelAdded(listener: (e: UserChannelAddedEvent) => void): this {
     this.on(Events.UserChannelAdded.toString(), listener);
     return this;
   }
@@ -155,30 +135,22 @@ export class MezonClient extends MezonClientCore {
     return this;
   }
 
-  public onMessageButtonClicked(
-    listener: (e: MessageButtonClicked) => void,
-  ): this {
+  public onMessageButtonClicked(listener: (e: MessageButtonClicked) => void): this {
     this.on(Events.MessageButtonClicked.toString(), listener);
     return this;
   }
 
-  public onStreamingJoinedEvent(
-    listener: (e: StreamingJoinedEvent) => void,
-  ): this {
+  public onStreamingJoinedEvent(listener: (e: StreamingJoinedEvent) => void): this {
     this.on(Events.StreamingJoinedEvent.toString(), listener);
     return this;
   }
 
-  public onStreamingLeavedEvent(
-    listener: (e: StreamingLeavedEvent) => void,
-  ): this {
+  public onStreamingLeavedEvent(listener: (e: StreamingLeavedEvent) => void): this {
     this.on(Events.StreamingLeavedEvent.toString(), listener);
     return this;
   }
 
-  public onDropdownBoxSelected(
-    listener: (e: DropdownBoxSelected) => void,
-  ): this {
+  public onDropdownBoxSelected(listener: (e: DropdownBoxSelected) => void): this {
     this.on(Events.DropdownBoxSelected.toString(), listener);
     return this;
   }
@@ -215,6 +187,21 @@ export class MezonClient extends MezonClientCore {
 
   public onQuickMenuEvent(listener: (e: any) => void): this {
     this.on(Events.QuickMenu.toString(), listener);
+    return this;
+  }
+
+  public onAIAgentSessionStarted(listener: (e: AIAgentSessionStartedEvent) => void): this {
+    this.on(Events.AIAgentSessionStarted.toString(), listener);
+    return this;
+  }
+
+  public onAIAgentSessionEnded(listener: (e: AIAgentSessionEndedEvent) => void): this {
+    this.on(Events.AIAgentSessionEnded.toString(), listener);
+    return this;
+  }
+
+  public onAIAgentSessionSummaryDone(listener: (e: AIAgentSessionSummaryDoneEvent) => void): this {
+    this.on(Events.AIAgentSessionSummaryDone.toString(), listener);
     return this;
   }
 
@@ -321,9 +308,7 @@ export class MezonClient extends MezonClientCore {
       const receiver = await this.users.fetch(e.receiver_id);
       await receiver?.sendDM(
         {
-          t: `Funds Transferred: ${(+e.amount).toLocaleString()}₫ | ${
-            e.note || "Transfer funds"
-          }`,
+          t: `Funds Transferred: ${(+e.amount).toLocaleString()}₫ | ${e.note || "Transfer funds"}`,
         },
         TypeMessage.SendToken,
       );

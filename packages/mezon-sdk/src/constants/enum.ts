@@ -41,6 +41,12 @@ export enum InternalEventsSocket {
   AIAgentEnableEvent ="aiagent_enabled_event",
 }
 
+export enum InternalAgentEvents {
+  SessionStarted = 'session_started',
+  SessionEnded = 'session_ended',
+  RoomSummaryDone = 'room_summary_done',
+}
+
 export enum Events {
   /** Listen to messages user sends on the  channel, thread */
   ChannelMessage = InternalEventsSocket.ChannelMessage,
@@ -119,6 +125,38 @@ export enum Events {
 
   /** Listen to enable AI Agent  */
   AIAgentEnable = InternalEventsSocket.AIAgentEnableEvent,
+
+  /** Listen to agent session started */
+  AIAgentSessionStarted = InternalAgentEvents.SessionStarted,
+
+  /** Listen to agent session ended */
+  AIAgentSessionEnded = InternalAgentEvents.SessionEnded,
+
+  /** Listen to agent session summary done */
+  AIAgentSessionSummaryDone = InternalAgentEvents.RoomSummaryDone,
+}
+
+/** Events for SSE (Server-Sent Events) */
+export enum SSEEvents {
+  /** SSE connection opened */
+  Open = 'sse_open',
+  /** SSE message received */
+  Message = 'sse_message',
+  /** SSE error occurred */
+  Error = 'sse_error',
+  /** SSE connection closed */
+  Close = 'sse_close',
+  /** SSE reconnecting */
+  Reconnecting = 'sse_reconnecting',
+  /** SSE reconnected successfully */
+  Reconnected = 'sse_reconnected',
+}
+
+/** SSE connection state */
+export enum SSEConnectionState {
+  CONNECTING = 0,
+  OPEN = 1,
+  CLOSED = 2,
 }
 
 export enum ChannelType {
