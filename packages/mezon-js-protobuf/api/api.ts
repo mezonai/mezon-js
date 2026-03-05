@@ -42411,6 +42411,1097 @@ export const MutedChannelList = {
   },
 };
 
+/** Poll type: SINGLE = one choice, MULTIPLE = multiple choices. */
+export enum PollType {
+  SINGLE = 0,
+  MULTIPLE = 1,
+  UNRECOGNIZED = -1,
+}
+
+export function pollTypeFromJSON(object: any): PollType {
+  switch (object) {
+    case 0:
+    case "SINGLE":
+      return PollType.SINGLE;
+    case 1:
+    case "MULTIPLE":
+      return PollType.MULTIPLE;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return PollType.UNRECOGNIZED;
+  }
+}
+
+export function pollTypeToJSON(object: PollType): string {
+  switch (object) {
+    case PollType.SINGLE:
+      return "SINGLE";
+    case PollType.MULTIPLE:
+      return "MULTIPLE";
+    case PollType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export interface PollAnswer {
+  index: number;
+  label: string;
+}
+
+function createBasePollAnswer(): PollAnswer {
+  return { index: 0, label: "" };
+}
+
+export const PollAnswer = {
+  encode(message: PollAnswer, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.index !== 0) {
+      writer.uint32(8).int32(message.index);
+    }
+    if (message.label !== "") {
+      writer.uint32(18).string(message.label);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): PollAnswer {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePollAnswer();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+          message.index = reader.int32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+          message.label = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): PollAnswer {
+    return {
+      index: isSet(object.index) ? globalThis.Number(object.index) : 0,
+      label: isSet(object.label) ? globalThis.String(object.label) : "",
+    };
+  },
+
+  toJSON(message: PollAnswer): unknown {
+    const obj: any = {};
+    if (message.index !== 0) {
+      obj.index = Math.round(message.index);
+    }
+    if (message.label !== "") {
+      obj.label = message.label;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<PollAnswer>, I>>(base?: I): PollAnswer {
+    return PollAnswer.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<PollAnswer>, I>>(object: I): PollAnswer {
+    const message = createBasePollAnswer();
+    message.index = object.index ?? 0;
+    message.label = object.label ?? "";
+    return message;
+  },
+};
+
+export interface PollVoterDetail {
+  answer_index: number;
+  user_ids: string[];
+}
+
+function createBasePollVoterDetail(): PollVoterDetail {
+  return { answer_index: 0, user_ids: [] };
+}
+
+export const PollVoterDetail = {
+  encode(message: PollVoterDetail, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.answer_index !== 0) {
+      writer.uint32(8).int32(message.answer_index);
+    }
+    writer.uint32(18).fork();
+    for (const v of message.user_ids) {
+      writer.int64(v);
+    }
+    writer.ldelim();
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): PollVoterDetail {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePollVoterDetail();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+          message.answer_index = reader.int32();
+          continue;
+        case 2:
+          if (tag === 16) {
+            message.user_ids.push(longToString(reader.int64() as Long));
+            continue;
+          }
+          if (tag === 18) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToString(reader.int64() as Long));
+            }
+            continue;
+          }
+          break;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): PollVoterDetail {
+    return {
+      answer_index: isSet(object.answer_index) ? globalThis.Number(object.answer_index) : 0,
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+    };
+  },
+
+  toJSON(message: PollVoterDetail): unknown {
+    const obj: any = {};
+    if (message.answer_index !== 0) {
+      obj.answer_index = Math.round(message.answer_index);
+    }
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<PollVoterDetail>, I>>(base?: I): PollVoterDetail {
+    return PollVoterDetail.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<PollVoterDetail>, I>>(object: I): PollVoterDetail {
+    const message = createBasePollVoterDetail();
+    message.answer_index = object.answer_index ?? 0;
+    message.user_ids = object.user_ids?.map((e) => e) || [];
+    return message;
+  },
+};
+
+export interface CreatePollRequest {
+  channel_id: string;
+  clan_id: string;
+  question: string;
+  answers: string[];
+  expire_hours: number;
+  type: PollType;
+}
+
+function createBaseCreatePollRequest(): CreatePollRequest {
+  return {
+    channel_id: "0",
+    clan_id: "0",
+    question: "",
+    answers: [],
+    expire_hours: 0,
+    type: PollType.SINGLE,
+  };
+}
+
+export const CreatePollRequest = {
+  encode(message: CreatePollRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "0") {
+      writer.uint32(8).int64(message.channel_id);
+    }
+    if (message.clan_id !== "0") {
+      writer.uint32(16).int64(message.clan_id);
+    }
+    if (message.question !== "") {
+      writer.uint32(26).string(message.question);
+    }
+    for (const v of message.answers) {
+      writer.uint32(34).string(v!);
+    }
+    if (message.expire_hours !== 0) {
+      writer.uint32(40).int32(message.expire_hours);
+    }
+    if (message.type !== PollType.SINGLE) {
+      writer.uint32(48).int32(message.type);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreatePollRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCreatePollRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+          message.clan_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+          message.question = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+          message.answers.push(reader.string());
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+          message.expire_hours = reader.int32();
+          continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+          message.type = reader.int32() as PollType;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CreatePollRequest {
+    return {
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      question: isSet(object.question) ? globalThis.String(object.question) : "",
+      answers: globalThis.Array.isArray(object?.answers) ? object.answers.map((e: any) => globalThis.String(e)) : [],
+      expire_hours: isSet(object.expire_hours) ? globalThis.Number(object.expire_hours) : 0,
+      type: isSet(object.type) ? pollTypeFromJSON(object.type) : PollType.SINGLE,
+    };
+  },
+
+  toJSON(message: CreatePollRequest): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.clan_id !== "0") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.question !== "") {
+      obj.question = message.question;
+    }
+    if (message.answers?.length) {
+      obj.answers = message.answers;
+    }
+    if (message.expire_hours !== 0) {
+      obj.expire_hours = Math.round(message.expire_hours);
+    }
+    if (message.type !== PollType.SINGLE) {
+      obj.type = pollTypeToJSON(message.type);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<CreatePollRequest>, I>>(base?: I): CreatePollRequest {
+    return CreatePollRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<CreatePollRequest>, I>>(object: I): CreatePollRequest {
+    const message = createBaseCreatePollRequest();
+    message.channel_id = object.channel_id ?? "0";
+    message.clan_id = object.clan_id ?? "0";
+    message.question = object.question ?? "";
+    message.answers = object.answers?.map((e) => e) || [];
+    message.expire_hours = object.expire_hours ?? 0;
+    message.type = object.type ?? PollType.SINGLE;
+    return message;
+  },
+};
+
+export interface CreatePollResponse {
+  poll_id: string;
+  message_id: string;
+  question: string;
+  answers: PollAnswer[];
+  answer_counts: number[];
+  exp: string;
+  is_closed: boolean;
+  creator_id: string;
+  type: PollType;
+  total_votes: number;
+}
+
+function createBaseCreatePollResponse(): CreatePollResponse {
+  return {
+    poll_id: "0",
+    message_id: "0",
+    question: "",
+    answers: [],
+    answer_counts: [],
+    exp: "0",
+    is_closed: false,
+    creator_id: "0",
+    type: PollType.SINGLE,
+    total_votes: 0,
+  };
+}
+
+export const CreatePollResponse = {
+  encode(message: CreatePollResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.poll_id !== "0") {
+      writer.uint32(8).int64(message.poll_id);
+    }
+    if (message.message_id !== "0") {
+      writer.uint32(16).int64(message.message_id);
+    }
+    if (message.question !== "") {
+      writer.uint32(26).string(message.question);
+    }
+    for (const v of message.answers) {
+      PollAnswer.encode(v!, writer.uint32(34).fork()).ldelim();
+    }
+    writer.uint32(42).fork();
+    for (const v of message.answer_counts) {
+      writer.int32(v);
+    }
+    writer.ldelim();
+    if (message.exp !== "0") {
+      writer.uint32(48).int64(message.exp);
+    }
+    if (message.is_closed !== false) {
+      writer.uint32(56).bool(message.is_closed);
+    }
+    if (message.creator_id !== "0") {
+      writer.uint32(64).int64(message.creator_id);
+    }
+    if (message.type !== PollType.SINGLE) {
+      writer.uint32(72).int32(message.type);
+    }
+    if (message.total_votes !== 0) {
+      writer.uint32(80).int32(message.total_votes);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreatePollResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCreatePollResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+          message.poll_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+          message.message_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+          message.question = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+          message.answers.push(PollAnswer.decode(reader, reader.uint32()));
+          continue;
+        case 5:
+          if (tag === 40) {
+            message.answer_counts.push(reader.int32());
+            continue;
+          }
+          if (tag === 42) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.answer_counts.push(reader.int32());
+            }
+            continue;
+          }
+          break;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+          message.exp = longToString(reader.int64() as Long);
+          continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+          message.is_closed = reader.bool();
+          continue;
+        case 8:
+          if (tag !== 64) {
+            break;
+          }
+          message.creator_id = longToString(reader.int64() as Long);
+          continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+          message.type = reader.int32() as PollType;
+          continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+          message.total_votes = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CreatePollResponse {
+    return {
+      poll_id: isSet(object.poll_id) ? globalThis.String(object.poll_id) : "0",
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
+      question: isSet(object.question) ? globalThis.String(object.question) : "",
+      answers: globalThis.Array.isArray(object?.answers) ? object.answers.map((e: any) => PollAnswer.fromJSON(e)) : [],
+      answer_counts: globalThis.Array.isArray(object?.answer_counts) ? object.answer_counts.map((e: any) => globalThis.Number(e)) : [],
+      exp: isSet(object.exp) ? globalThis.String(object.exp) : "0",
+      is_closed: isSet(object.is_closed) ? globalThis.Boolean(object.is_closed) : false,
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "0",
+      type: isSet(object.type) ? pollTypeFromJSON(object.type) : PollType.SINGLE,
+      total_votes: isSet(object.total_votes) ? globalThis.Number(object.total_votes) : 0,
+    };
+  },
+
+  toJSON(message: CreatePollResponse): unknown {
+    const obj: any = {};
+    if (message.poll_id !== "0") {
+      obj.poll_id = message.poll_id;
+    }
+    if (message.message_id !== "0") {
+      obj.message_id = message.message_id;
+    }
+    if (message.question !== "") {
+      obj.question = message.question;
+    }
+    if (message.answers?.length) {
+      obj.answers = message.answers.map((e) => PollAnswer.toJSON(e));
+    }
+    if (message.answer_counts?.length) {
+      obj.answer_counts = message.answer_counts.map((e) => Math.round(e));
+    }
+    if (message.exp !== "0") {
+      obj.exp = message.exp;
+    }
+    if (message.is_closed !== false) {
+      obj.is_closed = message.is_closed;
+    }
+    if (message.creator_id !== "0") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.type !== PollType.SINGLE) {
+      obj.type = pollTypeToJSON(message.type);
+    }
+    if (message.total_votes !== 0) {
+      obj.total_votes = Math.round(message.total_votes);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<CreatePollResponse>, I>>(base?: I): CreatePollResponse {
+    return CreatePollResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<CreatePollResponse>, I>>(object: I): CreatePollResponse {
+    const message = createBaseCreatePollResponse();
+    message.poll_id = object.poll_id ?? "0";
+    message.message_id = object.message_id ?? "0";
+    message.question = object.question ?? "";
+    message.answers = object.answers?.map((e) => PollAnswer.fromPartial(e)) || [];
+    message.answer_counts = object.answer_counts?.map((e) => e) || [];
+    message.exp = object.exp ?? "0";
+    message.is_closed = object.is_closed ?? false;
+    message.creator_id = object.creator_id ?? "0";
+    message.type = object.type ?? PollType.SINGLE;
+    message.total_votes = object.total_votes ?? 0;
+    return message;
+  },
+};
+
+export interface VotePollRequest {
+  poll_id: string;
+  message_id: string;
+  channel_id: string;
+  answer_indices: number[];
+}
+
+function createBaseVotePollRequest(): VotePollRequest {
+  return { poll_id: "0", message_id: "0", channel_id: "0", answer_indices: [] };
+}
+
+export const VotePollRequest = {
+  encode(message: VotePollRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.poll_id !== "0") {
+      writer.uint32(8).int64(message.poll_id);
+    }
+    if (message.message_id !== "0") {
+      writer.uint32(16).int64(message.message_id);
+    }
+    if (message.channel_id !== "0") {
+      writer.uint32(24).int64(message.channel_id);
+    }
+    writer.uint32(34).fork();
+    for (const v of message.answer_indices) {
+      writer.int32(v);
+    }
+    writer.ldelim();
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): VotePollRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVotePollRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+          message.poll_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+          message.message_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 4:
+          if (tag === 32) {
+            message.answer_indices.push(reader.int32());
+            continue;
+          }
+          if (tag === 34) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.answer_indices.push(reader.int32());
+            }
+            continue;
+          }
+          break;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): VotePollRequest {
+    return {
+      poll_id: isSet(object.poll_id) ? globalThis.String(object.poll_id) : "0",
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      answer_indices: globalThis.Array.isArray(object?.answer_indices) ? object.answer_indices.map((e: any) => globalThis.Number(e)) : [],
+    };
+  },
+
+  toJSON(message: VotePollRequest): unknown {
+    const obj: any = {};
+    if (message.poll_id !== "0") {
+      obj.poll_id = message.poll_id;
+    }
+    if (message.message_id !== "0") {
+      obj.message_id = message.message_id;
+    }
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.answer_indices?.length) {
+      obj.answer_indices = message.answer_indices.map((e) => Math.round(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<VotePollRequest>, I>>(base?: I): VotePollRequest {
+    return VotePollRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<VotePollRequest>, I>>(object: I): VotePollRequest {
+    const message = createBaseVotePollRequest();
+    message.poll_id = object.poll_id ?? "0";
+    message.message_id = object.message_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.answer_indices = object.answer_indices?.map((e) => e) || [];
+    return message;
+  },
+};
+
+export interface ClosePollRequest {
+  poll_id: string;
+  message_id: string;
+  channel_id: string;
+}
+
+function createBaseClosePollRequest(): ClosePollRequest {
+  return { poll_id: "0", message_id: "0", channel_id: "0" };
+}
+
+export const ClosePollRequest = {
+  encode(message: ClosePollRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.poll_id !== "0") {
+      writer.uint32(8).int64(message.poll_id);
+    }
+    if (message.message_id !== "0") {
+      writer.uint32(16).int64(message.message_id);
+    }
+    if (message.channel_id !== "0") {
+      writer.uint32(24).int64(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClosePollRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClosePollRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+          message.poll_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+          message.message_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClosePollRequest {
+    return {
+      poll_id: isSet(object.poll_id) ? globalThis.String(object.poll_id) : "0",
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+    };
+  },
+
+  toJSON(message: ClosePollRequest): unknown {
+    const obj: any = {};
+    if (message.poll_id !== "0") {
+      obj.poll_id = message.poll_id;
+    }
+    if (message.message_id !== "0") {
+      obj.message_id = message.message_id;
+    }
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClosePollRequest>, I>>(base?: I): ClosePollRequest {
+    return ClosePollRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ClosePollRequest>, I>>(object: I): ClosePollRequest {
+    const message = createBaseClosePollRequest();
+    message.poll_id = object.poll_id ?? "0";
+    message.message_id = object.message_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    return message;
+  },
+};
+
+export interface GetPollRequest {
+  poll_id: string;
+  message_id: string;
+  channel_id: string;
+}
+
+function createBaseGetPollRequest(): GetPollRequest {
+  return { poll_id: "0", message_id: "0", channel_id: "0" };
+}
+
+export const GetPollRequest = {
+  encode(message: GetPollRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.poll_id !== "0") {
+      writer.uint32(8).int64(message.poll_id);
+    }
+    if (message.message_id !== "0") {
+      writer.uint32(16).int64(message.message_id);
+    }
+    if (message.channel_id !== "0") {
+      writer.uint32(24).int64(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetPollRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPollRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+          message.poll_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+          message.message_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetPollRequest {
+    return {
+      poll_id: isSet(object.poll_id) ? globalThis.String(object.poll_id) : "0",
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+    };
+  },
+
+  toJSON(message: GetPollRequest): unknown {
+    const obj: any = {};
+    if (message.poll_id !== "0") {
+      obj.poll_id = message.poll_id;
+    }
+    if (message.message_id !== "0") {
+      obj.message_id = message.message_id;
+    }
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GetPollRequest>, I>>(base?: I): GetPollRequest {
+    return GetPollRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<GetPollRequest>, I>>(object: I): GetPollRequest {
+    const message = createBaseGetPollRequest();
+    message.poll_id = object.poll_id ?? "0";
+    message.message_id = object.message_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    return message;
+  },
+};
+
+export interface GetPollResponse {
+  poll_id: string;
+  message_id: string;
+  question: string;
+  answers: PollAnswer[];
+  answer_counts: number[];
+  exp: string;
+  is_closed: boolean;
+  creator_id: string;
+  type: PollType;
+  total_votes: number;
+  voter_details: PollVoterDetail[];
+}
+
+function createBaseGetPollResponse(): GetPollResponse {
+  return {
+    poll_id: "0",
+    message_id: "0",
+    question: "",
+    answers: [],
+    answer_counts: [],
+    exp: "0",
+    is_closed: false,
+    creator_id: "0",
+    type: PollType.SINGLE,
+    total_votes: 0,
+    voter_details: [],
+  };
+}
+
+export const GetPollResponse = {
+  encode(message: GetPollResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.poll_id !== "0") {
+      writer.uint32(8).int64(message.poll_id);
+    }
+    if (message.message_id !== "0") {
+      writer.uint32(16).int64(message.message_id);
+    }
+    if (message.question !== "") {
+      writer.uint32(26).string(message.question);
+    }
+    for (const v of message.answers) {
+      PollAnswer.encode(v!, writer.uint32(34).fork()).ldelim();
+    }
+    writer.uint32(42).fork();
+    for (const v of message.answer_counts) {
+      writer.int32(v);
+    }
+    writer.ldelim();
+    if (message.exp !== "0") {
+      writer.uint32(48).int64(message.exp);
+    }
+    if (message.is_closed !== false) {
+      writer.uint32(56).bool(message.is_closed);
+    }
+    if (message.creator_id !== "0") {
+      writer.uint32(64).int64(message.creator_id);
+    }
+    if (message.type !== PollType.SINGLE) {
+      writer.uint32(72).int32(message.type);
+    }
+    if (message.total_votes !== 0) {
+      writer.uint32(80).int32(message.total_votes);
+    }
+    for (const v of message.voter_details) {
+      PollVoterDetail.encode(v!, writer.uint32(90).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetPollResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPollResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+          message.poll_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+          message.message_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+          message.question = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+          message.answers.push(PollAnswer.decode(reader, reader.uint32()));
+          continue;
+        case 5:
+          if (tag === 40) {
+            message.answer_counts.push(reader.int32());
+            continue;
+          }
+          if (tag === 42) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.answer_counts.push(reader.int32());
+            }
+            continue;
+          }
+          break;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+          message.exp = longToString(reader.int64() as Long);
+          continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+          message.is_closed = reader.bool();
+          continue;
+        case 8:
+          if (tag !== 64) {
+            break;
+          }
+          message.creator_id = longToString(reader.int64() as Long);
+          continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+          message.type = reader.int32() as PollType;
+          continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+          message.total_votes = reader.int32();
+          continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+          message.voter_details.push(PollVoterDetail.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetPollResponse {
+    return {
+      poll_id: isSet(object.poll_id) ? globalThis.String(object.poll_id) : "0",
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
+      question: isSet(object.question) ? globalThis.String(object.question) : "",
+      answers: globalThis.Array.isArray(object?.answers) ? object.answers.map((e: any) => PollAnswer.fromJSON(e)) : [],
+      answer_counts: globalThis.Array.isArray(object?.answer_counts) ? object.answer_counts.map((e: any) => globalThis.Number(e)) : [],
+      exp: isSet(object.exp) ? globalThis.String(object.exp) : "0",
+      is_closed: isSet(object.is_closed) ? globalThis.Boolean(object.is_closed) : false,
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "0",
+      type: isSet(object.type) ? pollTypeFromJSON(object.type) : PollType.SINGLE,
+      total_votes: isSet(object.total_votes) ? globalThis.Number(object.total_votes) : 0,
+      voter_details: globalThis.Array.isArray(object?.voter_details) ? object.voter_details.map((e: any) => PollVoterDetail.fromJSON(e)) : [],
+    };
+  },
+
+  toJSON(message: GetPollResponse): unknown {
+    const obj: any = {};
+    if (message.poll_id !== "0") {
+      obj.poll_id = message.poll_id;
+    }
+    if (message.message_id !== "0") {
+      obj.message_id = message.message_id;
+    }
+    if (message.question !== "") {
+      obj.question = message.question;
+    }
+    if (message.answers?.length) {
+      obj.answers = message.answers.map((e) => PollAnswer.toJSON(e));
+    }
+    if (message.answer_counts?.length) {
+      obj.answer_counts = message.answer_counts.map((e) => Math.round(e));
+    }
+    if (message.exp !== "0") {
+      obj.exp = message.exp;
+    }
+    if (message.is_closed !== false) {
+      obj.is_closed = message.is_closed;
+    }
+    if (message.creator_id !== "0") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.type !== PollType.SINGLE) {
+      obj.type = pollTypeToJSON(message.type);
+    }
+    if (message.total_votes !== 0) {
+      obj.total_votes = Math.round(message.total_votes);
+    }
+    if (message.voter_details?.length) {
+      obj.voter_details = message.voter_details.map((e) => PollVoterDetail.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GetPollResponse>, I>>(base?: I): GetPollResponse {
+    return GetPollResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<GetPollResponse>, I>>(object: I): GetPollResponse {
+    const message = createBaseGetPollResponse();
+    message.poll_id = object.poll_id ?? "0";
+    message.message_id = object.message_id ?? "0";
+    message.question = object.question ?? "";
+    message.answers = object.answers?.map((e) => PollAnswer.fromPartial(e)) || [];
+    message.answer_counts = object.answer_counts?.map((e) => e) || [];
+    message.exp = object.exp ?? "0";
+    message.is_closed = object.is_closed ?? false;
+    message.creator_id = object.creator_id ?? "0";
+    message.type = object.type ?? PollType.SINGLE;
+    message.total_votes = object.total_votes ?? 0;
+    message.voter_details = object.voter_details?.map((e) => PollVoterDetail.fromPartial(e)) || [];
+    return message;
+  },
+};
+
 function bytesFromBase64(b64: string): Uint8Array {
   if ((globalThis as any).Buffer) {
     return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
