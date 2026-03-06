@@ -260,7 +260,7 @@ export class LightSocket {
    * @param options - Message options including channelId, content, and attachments
    */
   async sendDM(payload: SendMessagePayload): Promise<void> {
-    const { channelId, content, attachments, hideLink = false } = payload;
+    const { channelId, content, attachments, hideLink = false, code = 0 } = payload;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await this.socket.writeChatMessage(
@@ -273,7 +273,7 @@ export class LightSocket {
       false,
       hideLink,
       "",
-      0,
+      code,
     );
   }
 
