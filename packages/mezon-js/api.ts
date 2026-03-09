@@ -1062,8 +1062,6 @@ export interface ApiChannelDescription {
   //
   last_sent_message?: ApiChannelMessageHeader;
   //
-  meeting_code?: string;
-  //
   channel_avatar?: string;
   //The parent channel this message belongs to.
   parent_id?: string;
@@ -2214,7 +2212,7 @@ export interface ApiNotificationUserChannel {
   //
   notification_setting_type?: number;
   //
-  time_mute?: string;
+  time_mute?: number;
   //
   channel_id?: string;
 }
