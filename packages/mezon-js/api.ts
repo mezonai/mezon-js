@@ -2212,7 +2212,7 @@ export interface ApiNotificationUserChannel {
   //
   notification_setting_type?: number;
   //
-  time_mute?: string;
+  time_mute?: number;
   //
   channel_id?: string;
 }
