@@ -67,7 +67,6 @@ export class MezonLightChat {
             this.widget?.handleLoginSuccess(client, user);
          }
       } catch (error) {
-         console.error('Login failed:', error);
          if (this.config.onError) {
             this.config.onError(error as Error);
          }
@@ -155,9 +154,7 @@ export class MezonLightChat {
 
       try {
          await chatService.startDM(peerId);
-         console.log('DM started with peer:', peerId);
       } catch (error) {
-         console.error('Failed to start DM:', error);
          if (this.config.onError) {
             this.config.onError(error as Error);
          }

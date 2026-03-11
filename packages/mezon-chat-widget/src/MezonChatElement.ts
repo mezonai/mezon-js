@@ -1,5 +1,4 @@
 import { MezonLightChat } from './index';
-import { LogService } from './services/LogService';
 import { StorageService } from './services/StorageService';
 import { ThemeRegistry } from './themes/theme-registry';
 import { ExchangeResponse, MezonLightChatConfig, MezonTheme } from './types';
@@ -259,30 +258,15 @@ export class MezonChatElement extends HTMLElement {
    static exchangeCallBack?: (response: any) => ExchangeResponse;
 
    static handleOAuthCallback() {
-      LogService.log('🔍 [Mezon Chat] handleOAuthCallback called');
       if (typeof window === 'undefined') {
-         LogService.log('❌ [Mezon Chat] Window is undefined');
          return;
       }
-
-      LogService.log('📍 [Mezon Chat] Current URL:', window.location.href);
 
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get('code');
       const state = urlParams.get('state');
 
-      LogService.log('🧩 [Mezon Chat] Params detected:', {
-         code: code ? 'YES (***)' : 'NO',
-         state,
-         opener: !!window.opener,
-         openerClosed: window.opener ? window.opener.closed : 'N/A',
-      });
-
       if (code && window.opener) {
-         LogService.log(
-            '✅ [Mezon Chat] OAuth Callback detected with Valid Opener!',
-         );
-
          let exchangeUrl = '';
          let baseUrl = window.location.origin;
          let exchangePath = 'api/auth/exchange';
@@ -290,17 +274,8 @@ export class MezonChatElement extends HTMLElement {
          const element = document.querySelector(
             'mezon-chat',
          ) as MezonChatElement;
-         LogService.log(
-            '🔎 [Mezon Chat] Looking for <mezon-chat> element:',
-            element,
-         );
 
          if (element) {
-            LogService.log('⚙️ [Mezon Chat] Element config:', {
-               apiBaseUrl: element.apiBaseUrl,
-               apiExchangePath: element.apiExchangePath,
-            });
-
             if (element.apiBaseUrl) {
                baseUrl = element.apiBaseUrl;
             }
@@ -308,10 +283,6 @@ export class MezonChatElement extends HTMLElement {
             if (element.apiExchangePath) {
                exchangePath = element.apiExchangePath;
             }
-         } else {
-            LogService.warn(
-               '⚠️ [Mezon Chat] <mezon-chat> element NOT found. Using default origin and path.',
-            );
          }
 
          exchangeUrl =
@@ -319,20 +290,12 @@ export class MezonChatElement extends HTMLElement {
             '/' +
             exchangePath.replace(/^\/+/, '');
 
-         LogService.log('🔄 [Mezon Chat] Final Exchange URL:', exchangeUrl);
-
-         LogService.log('🚀 [Mezon Chat] sending fetch request...');
          fetch(exchangeUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ code, state }),
          })
             .then((res) => {
-               LogService.log(
-                  '📥 [Mezon Chat] Exchange response status:',
-                  res.status,
-                  res.statusText,
-               );
                if (!res.ok) {
                   return res.text().then((text) => {
                      throw new Error(
@@ -343,24 +306,11 @@ export class MezonChatElement extends HTMLElement {
                return res.json();
             })
             .then((rawResponse) => {
-               LogService.log(
-                  '📦 [Mezon Chat] Exchange data successfully parsed:',
-                  rawResponse,
-               );
-
-               if (MezonChatElement.exchangeCallBack) {
-                  LogService.log(
-                     '⚡ [Mezon Chat] Executing custom exchangeCallBack...',
-                  );
-               }
 
                const data = MezonChatElement.exchangeCallBack
                   ? MezonChatElement.exchangeCallBack(rawResponse)
                   : rawResponse;
                if (!data) {
-                  LogService.error(
-                     '❌ [Mezon Chat] Data is null/undefined after processing',
-                  );
                   throw new Error('Invalid exchange response');
                }
 
@@ -372,18 +322,6 @@ export class MezonChatElement extends HTMLElement {
                if (data.user && !data.user.username)
                   missingFields.push('user.username');
 
-               if (missingFields.length > 0) {
-                  LogService.warn(
-                     `⚠️ [Mezon Chat] Missing fields in exchange response (or exchangeCallBack): ${missingFields.join(
-                        ', ',
-                     )}`,
-                  );
-                  LogService.warn(
-                     '   Expected format: { tokens: { access_token: "..." }, user: { ... } }',
-                  );
-               }
-
-               LogService.log('📤 [Mezon Chat] Posting Message to Opener...');
                try {
                   window.opener.postMessage(
                      {
@@ -392,22 +330,15 @@ export class MezonChatElement extends HTMLElement {
                      },
                      '*',
                   );
-                  LogService.log('✅ [Mezon Chat] Message posted successfully');
                } catch (e) {
-                  LogService.error(
+                  throw new Error(
                      '❌ [Mezon Chat] Failed to post message:',
-                     e,
                   );
                }
 
-               LogService.log('🚪 [Mezon Chat] Closing popup window...');
                window.close();
             })
             .catch((err) => {
-               LogService.error(
-                  '❌ [Mezon Chat] Exchange Critical Error:',
-                  err,
-               );
                document.body.innerHTML = `
             <div style="padding: 20px; font-family: sans-serif; color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 5px;">
                 <h3>OAuth Error</h3>
@@ -416,36 +347,18 @@ export class MezonChatElement extends HTMLElement {
             </div>
           `;
             });
-      } else if (code) {
-         LogService.warn(
-            '⚠️ [Mezon Chat] Code present but window.opener is missing/closed.',
-         );
-      } else {
-         LogService.log(
-            'ℹ️ [Mezon Chat] No OAuth code found in URL. Skipping callback logic.',
-         );
       }
    }
 }
 
 if (typeof window !== 'undefined' && !customElements.get('mezon-chat')) {
-   LogService.log('🛠️ [Mezon Chat] Registering custom element <mezon-chat>');
    customElements.define('mezon-chat', MezonChatElement);
 
    if (document.readyState === 'loading') {
-      LogService.log(
-         '⏳ [Mezon Chat] Document loading. Waiting for DOMContentLoaded...',
-      );
       document.addEventListener('DOMContentLoaded', () => {
-         LogService.log(
-            '🔔 [Mezon Chat] DOMContentLoaded fired. Running handleOAuthCallback.',
-         );
          MezonChatElement.handleOAuthCallback();
       });
    } else {
-      LogService.log(
-         '⚡ [Mezon Chat] Document already ready. Running handleOAuthCallback immediately.',
-      );
       MezonChatElement.handleOAuthCallback();
    }
 }

@@ -51,16 +51,12 @@ export class ChatService implements IChatService {
                   err instanceof Error ? err : new Error(String(err)),
                );
             },
-            onDisconnect: () => {
-               console.log('[ChatService] Socket disconnected');
-            },
          });
 
          this.socket.setChannelMessageHandler((msg: SDKChannelMessage) => {
             this.handleIncomingMessage(msg);
          });
 
-         console.log('[ChatService] Connected successfully');
       } catch (error) {
          console.error('[ChatService] Connection failed:', error);
          this.notifyError(
@@ -76,7 +72,6 @@ export class ChatService implements IChatService {
          this.socket = null;
       }
       this.currentChannelId = null;
-      console.log('[ChatService] Disconnected');
    }
 
    isConnected(): boolean {
@@ -90,7 +85,6 @@ export class ChatService implements IChatService {
       }
 
       try {
-         console.log(`[ChatService] Creating DM with peer: "${cleanPeerId}"`);
          const channel = await this.client.createDM(cleanPeerId);
          const channelId = channel.channel_id ? String(channel.channel_id) : '';
 
@@ -101,7 +95,6 @@ export class ChatService implements IChatService {
          if (this.socket) {
             await this.socket.joinDMChannel(channelId);
             this.currentChannelId = channelId;
-            console.log('[ChatService] Joined DM channel:', channelId);
          }
 
          return channelId;
@@ -136,7 +129,6 @@ export class ChatService implements IChatService {
             attachments: attachments as any,
          });
 
-         console.log('[ChatService] Message sent');
       } catch (error) {
          console.error('[ChatService] Failed to send message:', error);
          this.notifyError(
