@@ -250,7 +250,12 @@ export class MezonClient extends MezonClientCore {
 
   private async _onAddClanUserInternal(e: AddClanUserEvent) {
     if (e.user.user_id === this.clientId) {
-      this.socketManager.getSocket().joinClanChat(e.clan_id);
+      const sessionToken = this.sessionManager.getSession()?.token!;
+      await this.socketManager.getSocket().joinClanChat(e.clan_id);
+      await this.socketManager.joinClanNonPublicChannels(
+        sessionToken,
+        e.clan_id,
+      );
       const clan = this.clans.get(e.clan_id);
 
       if (!clan) {
@@ -264,7 +269,7 @@ export class MezonClient extends MezonClientCore {
           this,
           this.apiClient,
           this.socketManager,
-          this.sessionManager.getSession()?.token!,
+          sessionToken,
           this.messageQueue,
           this.messageDB,
         );
