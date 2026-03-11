@@ -13,7 +13,6 @@ export class StorageService implements ISessionService {
   save(session: any): void {
     try {
       this.storage.setItem(SESSION_KEY, JSON.stringify(session));
-      console.log('✅ Session saved to localStorage', session);
     } catch (error) {
       console.error('[StorageService] Failed to save session:', error);
     }
@@ -25,7 +24,6 @@ export class StorageService implements ISessionService {
       if (!data) return null;
 
       const session = JSON.parse(data);
-      console.log('✅ Session restored from localStorage', session);
       return session;
     } catch (error) {
       console.error('[StorageService] Failed to restore session:', error);
@@ -37,7 +35,6 @@ export class StorageService implements ISessionService {
   clear(): void {
     try {
       this.storage.removeItem(SESSION_KEY);
-      console.log('Session cleared from localStorage');
     } catch (error) {
       console.error('[StorageService] Failed to clear session:', error);
     }

@@ -2,7 +2,6 @@ import type { LightClient } from 'mezon-light-sdk';
 import { t } from '../i18n';
 import headerIconSvg from '../icons/logo.svg';
 import { ChatService } from '../services/ChatService';
-import { LogService } from '../services/LogService';
 import { ChatMessage, MezonLightChatConfig, UserInfo } from '../types';
 import { LoginView } from './LoginView';
 export class ChatWidget {
@@ -51,8 +50,6 @@ export class ChatWidget {
          const { LightClient } = await import('mezon-light-sdk');
          const defaultServerKey = 'HTTP3m3zonPr0dkey:';
 
-         console.log('🔄 Restoring session with initClient...');
-
          const client = LightClient.initClient({
             token: session.token,
             refresh_token: session.refresh_token,
@@ -63,7 +60,6 @@ export class ChatWidget {
 
          const isExpired = await client.isSessionExpired();
          if (isExpired) {
-            console.log('⚠️ Session expired, attempting refresh...');
             const refreshExpired = await client.isRefreshSessionExpired();
             if (refreshExpired) {
                throw new Error('Refresh token also expired');
@@ -234,7 +230,6 @@ export class ChatWidget {
             return;
          }
 
-         console.log('🚀 Auto-starting DM with peer:', peerId);
          await chatService.startDM(peerId);
 
          this.addMessage({
@@ -284,9 +279,7 @@ export class ChatWidget {
 
          (this as any).chatService = chatService;
 
-         LogService.log('✅ Chat service initialized');
       } catch (error) {
-         LogService.error('Failed to initialize chat service:', error);
          if (this.config.onError) {
             this.config.onError(error as Error);
          }
