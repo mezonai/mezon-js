@@ -11444,7 +11444,7 @@ export class MezonApi {
 
   /**  */
   updateRoleOrder(bearerToken: string,
-      body:ApiUpdateRoleOrderRequest,
+      body: ApiUpdateRoleOrderRequest,
       options = {}): Promise<any> {
     
     if (body === null || body === undefined) {
@@ -11514,8 +11514,9 @@ export class MezonApi {
   /** handler external mezon meet */
   generateMeetTokenExternal(bearerToken: string,
     basePath: string,
-    token:string,
-    displayName?:string,
+    token: string,
+    username?: string,
+    metadata?: string,
     isGuest?:boolean,
     options = {}): Promise<ApiGenerateMeetTokenExternalResponse> {
   
@@ -11525,7 +11526,8 @@ export class MezonApi {
     const urlPath = "/v2/meet/external/{token}"
         .replace("{token}", encodeURIComponent(String(token)));
     const queryParams = new Map<string, any>();
-    queryParams.set("display_name", displayName);
+    queryParams.set("username", username);
+    queryParams.set("metadata", metadata);
     queryParams.set("is_guest", isGuest);
 
     const bodyJson  = "";
@@ -11554,6 +11556,7 @@ export class MezonApi {
       ),
     ]);
   }
+  
   /** mute participant in the room */
   muteParticipantMezonMeet(bearerToken: string,
       body:ApiMeetParticipantRequest,
