@@ -1685,6 +1685,24 @@ export interface AIAgentEnabledEvent {
   enabled: boolean;
 }
 
+export interface GotifyMessage {
+  id: number;
+  channel_id: string;
+  message: string;
+  title: string;
+  image: string;
+  priority: number;
+  users: string[];
+  extras: { [key: string]: string };
+  app_id: number;
+  sender_id: string;
+}
+
+export interface GotifyMessage_ExtrasEntry {
+  key: string;
+  value: string;
+}
+
 function createBaseEnvelope(): Envelope {
   return {
     cid: "",
@@ -15779,6 +15797,304 @@ export const AIAgentEnabledEvent = {
     message.channel_id = object.channel_id ?? "0";
     message.room_name = object.room_name ?? "";
     message.enabled = object.enabled ?? false;
+    return message;
+  },
+};
+
+function createBaseGotifyMessage(): GotifyMessage {
+  return {
+    id: 0,
+    channel_id: "0",
+    message: "",
+    title: "",
+    image: "",
+    priority: 0,
+    users: [],
+    extras: {},
+    app_id: 0,
+    sender_id: "0",
+  };
+}
+
+export const GotifyMessage = {
+  encode(message: GotifyMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== 0) {
+      writer.uint32(8).uint32(message.id);
+    }
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
+    }
+    if (message.message !== "") {
+      writer.uint32(26).string(message.message);
+    }
+    if (message.title !== "") {
+      writer.uint32(34).string(message.title);
+    }
+    if (message.image !== "") {
+      writer.uint32(42).string(message.image);
+    }
+    if (message.priority !== 0) {
+      writer.uint32(48).int32(message.priority);
+    }
+    for (const v of message.users) {
+      writer.uint32(58).string(v!);
+    }
+    Object.entries(message.extras).forEach(([key, value]) => {
+      GotifyMessage_ExtrasEntry.encode({ key: key as any, value }, writer.uint32(66).fork()).ldelim();
+    });
+    if (message.app_id !== 0) {
+      writer.uint32(72).uint32(message.app_id);
+    }
+    if (message.sender_id !== "0") {
+      writer.uint32(80).int64(message.sender_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): GotifyMessage {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGotifyMessage();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.id = reader.uint32();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.message = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.title = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.image = reader.string();
+          continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.priority = reader.int32();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.users.push(reader.string());
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          const entry8 = GotifyMessage_ExtrasEntry.decode(reader, reader.uint32());
+          if (entry8.value !== undefined) {
+            message.extras[entry8.key] = entry8.value;
+          }
+          continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.app_id = reader.uint32();
+          continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.sender_id = longToString(reader.int64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GotifyMessage {
+    return {
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      message: isSet(object.message) ? globalThis.String(object.message) : "",
+      title: isSet(object.title) ? globalThis.String(object.title) : "",
+      image: isSet(object.image) ? globalThis.String(object.image) : "",
+      priority: isSet(object.priority) ? globalThis.Number(object.priority) : 0,
+      users: globalThis.Array.isArray(object?.users) ? object.users.map((e: any) => globalThis.String(e)) : [],
+      extras: isObject(object.extras)
+        ? Object.entries(object.extras).reduce<{ [key: string]: string }>((acc, [key, value]) => {
+          acc[key] = String(value);
+          return acc;
+        }, {})
+        : {},
+      app_id: isSet(object.app_id) ? globalThis.Number(object.app_id) : 0,
+      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "0",
+    };
+  },
+
+  toJSON(message: GotifyMessage): unknown {
+    const obj: any = {};
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.message !== "") {
+      obj.message = message.message;
+    }
+    if (message.title !== "") {
+      obj.title = message.title;
+    }
+    if (message.image !== "") {
+      obj.image = message.image;
+    }
+    if (message.priority !== 0) {
+      obj.priority = Math.round(message.priority);
+    }
+    if (message.users?.length) {
+      obj.users = message.users;
+    }
+    if (message.extras) {
+      const entries = Object.entries(message.extras);
+      if (entries.length > 0) {
+        obj.extras = {};
+        entries.forEach(([k, v]) => {
+          obj.extras[k] = v;
+        });
+      }
+    }
+    if (message.app_id !== 0) {
+      obj.app_id = Math.round(message.app_id);
+    }
+    if (message.sender_id !== "0") {
+      obj.sender_id = message.sender_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GotifyMessage>, I>>(base?: I): GotifyMessage {
+    return GotifyMessage.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<GotifyMessage>, I>>(object: I): GotifyMessage {
+    const message = createBaseGotifyMessage();
+    message.id = object.id ?? 0;
+    message.channel_id = object.channel_id ?? "0";
+    message.message = object.message ?? "";
+    message.title = object.title ?? "";
+    message.image = object.image ?? "";
+    message.priority = object.priority ?? 0;
+    message.users = object.users?.map((e) => e) || [];
+    message.extras = Object.entries(object.extras ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[key] = globalThis.String(value);
+      }
+      return acc;
+    }, {});
+    message.app_id = object.app_id ?? 0;
+    message.sender_id = object.sender_id ?? "0";
+    return message;
+  },
+};
+
+function createBaseGotifyMessage_ExtrasEntry(): GotifyMessage_ExtrasEntry {
+  return { key: "", value: "" };
+}
+
+export const GotifyMessage_ExtrasEntry = {
+  encode(message: GotifyMessage_ExtrasEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.key !== "") {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== "") {
+      writer.uint32(18).string(message.value);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): GotifyMessage_ExtrasEntry {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGotifyMessage_ExtrasEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.key = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.value = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GotifyMessage_ExtrasEntry {
+    return {
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+    };
+  },
+
+  toJSON(message: GotifyMessage_ExtrasEntry): unknown {
+    const obj: any = {};
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GotifyMessage_ExtrasEntry>, I>>(base?: I): GotifyMessage_ExtrasEntry {
+    return GotifyMessage_ExtrasEntry.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<GotifyMessage_ExtrasEntry>, I>>(object: I): GotifyMessage_ExtrasEntry {
+    const message = createBaseGotifyMessage_ExtrasEntry();
+    message.key = object.key ?? "";
+    message.value = object.value ?? "";
     return message;
   },
 };

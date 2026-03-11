@@ -7,6 +7,7 @@ import * as tsproto from "mezon-js-protobuf";
 import { ApiUpdateChannelDescRequest } from "./client";
 import { ChannelMessageAck } from "./socket";
 import { getFetcher } from "./config";
+import { MultipartUploadAttachment, MultipartUploadAttachmentFinishRequest } from "mezon-js-protobuf";
 
 
 export interface ApiListChannelTimelineRequest {
@@ -9960,6 +9961,89 @@ export class MezonApi {
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
           return tsproto.UploadAttachment.decode(new Uint8Array(buffer)) as ApiUploadAttachment;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
+  multipartUploadAttachmentFile(
+    bearerToken: string,
+    body: ApiUploadAttachmentRequest,
+    options = {}
+  ): Promise<MultipartUploadAttachment> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/MultipartUploadAttachmentFileStart";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.UploadAttachmentRequest.encode(
+      tsproto.UploadAttachmentRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as MultipartUploadAttachment;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();      
+          return tsproto.MultipartUploadAttachment.decode(new Uint8Array(buffer)) as MultipartUploadAttachment;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
+  multipartUploadAttachmentFileFinsih(
+    bearerToken: string,
+    body: MultipartUploadAttachmentFinishRequest,
+    options = {}
+  ): Promise<any> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/MultipartUploadAttachmentFileStart";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.MultipartUploadAttachmentFinishRequest.encode(
+      tsproto.MultipartUploadAttachmentFinishRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response;
         } else {
           throw response;
         }

@@ -199,7 +199,7 @@ import {
   safeJSONParse,
   decodeChannelTimelineAttachments
 } from "./utils";
-import { WebSocketAdapter, WebSocketAdapterPb } from "mezon-js-protobuf";
+import { MultipartUploadAttachment, MultipartUploadAttachmentFinishRequest, WebSocketAdapter, WebSocketAdapterPb } from "mezon-js-protobuf";
 
 const DEFAULT_HOST = "127.0.0.1";
 const DEFAULT_PORT = "7350";
@@ -686,6 +686,36 @@ export class Client {
     }
 
     return this.apiClient.uploadAttachmentFile(session.token, request);
+  }
+
+  async multipartUploadAttachmentFile(
+    session: Session,
+    request: ApiUploadAttachmentRequest,
+  ): Promise<MultipartUploadAttachment> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.multipartUploadAttachmentFile(session.token, request);
+  }
+
+  async multipartUploadAttachmentFileFinish(
+    session: Session,
+    request: MultipartUploadAttachmentFinishRequest,
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.multipartUploadAttachmentFileFinsih(session.token, request);
   }
 
   /** Create a channel within clan */
