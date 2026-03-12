@@ -251,10 +251,12 @@ export class MezonClient extends MezonClientCore {
   private async _onAddClanUserInternal(e: AddClanUserEvent) {
     if (e.user.user_id === this.clientId) {
       const sessionToken = this.sessionManager.getSession()?.token!;
-      await this.socketManager.getSocket().joinClanChat(e.clan_id);
-      await this.socketManager.joinClanNonPublicChannels(
-        sessionToken,
-        e.clan_id,
+
+      const joinPromise = Promise.all([
+        this.socketManager.getSocket().joinClanChat(e.clan_id),
+        this.socketManager.joinClanNonPublicChannels(sessionToken, e.clan_id),
+      ]).catch((err) =>
+        console.log(`Failed to join clan ${e.clan_id} channels:`, err),
       );
       const clan = this.clans.get(e.clan_id);
 
@@ -276,6 +278,8 @@ export class MezonClient extends MezonClientCore {
         await clanObj.loadChannels();
         this.clans.set(e.clan_id, clanObj);
       }
+
+      await joinPromise;
     } else {
       const userRaw: UserInitData = {
         id: e.user.user_id!,
