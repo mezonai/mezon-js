@@ -252,7 +252,7 @@ export class MezonClient extends MezonClientCore {
     if (e.user.user_id === this.clientId) {
       const sessionToken = this.sessionManager.getSession()?.token!;
 
-      const joinPromise = Promise.all([
+      Promise.all([
         this.socketManager.getSocket().joinClanChat(e.clan_id),
         this.socketManager.joinClanNonPublicChannels(sessionToken, e.clan_id),
       ]).catch((err) =>
@@ -279,7 +279,6 @@ export class MezonClient extends MezonClientCore {
         this.clans.set(e.clan_id, clanObj);
       }
 
-      await joinPromise;
     } else {
       const userRaw: UserInitData = {
         id: e.user.user_id!,
