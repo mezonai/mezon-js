@@ -46,7 +46,7 @@ export class MezonChatElement extends HTMLElement {
 
       if (this.hasAttribute('api-exchange-path')) {
          this.config.apiExchangePath = this.getAttribute(
-            'oauth-exchange-path',
+            'api-exchange-path',
          )!;
       }
 
