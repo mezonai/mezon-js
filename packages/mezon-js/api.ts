@@ -2113,7 +2113,7 @@ export interface ApiMessageRef {
   // original message sendre username
   message_sender_username?: string;
   // original message sender avatar
-  mesages_sender_avatar?: string;
+  message_sender_avatar?: string;
   // original sender clan nick name
   message_sender_clan_nick?: string;
   // original sender display name

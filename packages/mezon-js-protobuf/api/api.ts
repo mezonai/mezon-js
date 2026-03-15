@@ -485,7 +485,7 @@ export interface MessageRef {
   /** original message sendre username */
   message_sender_username: string;
   /** original message sender avatar */
-  messages_sender_avatar: string;
+  message_sender_avatar: string;
   /** original sender clan nick name */
   message_sender_clan_nick: string;
   /** original sender display name */
@@ -6648,7 +6648,7 @@ function createBaseMessageRef(): MessageRef {
     ref_type: 0,
     message_sender_id: "0",
     message_sender_username: "",
-    messages_sender_avatar: "",
+    message_sender_avatar: "",
     message_sender_clan_nick: "",
     message_sender_display_name: "",
   };
@@ -6677,8 +6677,8 @@ export const MessageRef = {
     if (message.message_sender_username !== "") {
       writer.uint32(58).string(message.message_sender_username);
     }
-    if (message.messages_sender_avatar !== "") {
-      writer.uint32(66).string(message.messages_sender_avatar);
+    if (message.message_sender_avatar !== "") {
+      writer.uint32(66).string(message.message_sender_avatar);
     }
     if (message.message_sender_clan_nick !== "") {
       writer.uint32(74).string(message.message_sender_clan_nick);
@@ -6750,7 +6750,7 @@ export const MessageRef = {
             break;
           }
 
-          message.messages_sender_avatar = reader.string();
+          message.message_sender_avatar = reader.string();
           continue;
         case 9:
           if (tag !== 74) {
@@ -6786,9 +6786,7 @@ export const MessageRef = {
       message_sender_username: isSet(object.message_sender_username)
         ? globalThis.String(object.message_sender_username)
         : "",
-      messages_sender_avatar: isSet(object.messages_sender_avatar)
-        ? globalThis.String(object.messages_sender_avatar)
-        : "",
+      message_sender_avatar: isSet(object.message_sender_avatar) ? globalThis.String(object.message_sender_avatar) : "",
       message_sender_clan_nick: isSet(object.message_sender_clan_nick)
         ? globalThis.String(object.message_sender_clan_nick)
         : "",
@@ -6821,8 +6819,8 @@ export const MessageRef = {
     if (message.message_sender_username !== "") {
       obj.message_sender_username = message.message_sender_username;
     }
-    if (message.messages_sender_avatar !== "") {
-      obj.messages_sender_avatar = message.messages_sender_avatar;
+    if (message.message_sender_avatar !== "") {
+      obj.message_sender_avatar = message.message_sender_avatar;
     }
     if (message.message_sender_clan_nick !== "") {
       obj.message_sender_clan_nick = message.message_sender_clan_nick;
@@ -6845,7 +6843,7 @@ export const MessageRef = {
     message.ref_type = object.ref_type ?? 0;
     message.message_sender_id = object.message_sender_id ?? "0";
     message.message_sender_username = object.message_sender_username ?? "";
-    message.messages_sender_avatar = object.messages_sender_avatar ?? "";
+    message.message_sender_avatar = object.message_sender_avatar ?? "";
     message.message_sender_clan_nick = object.message_sender_clan_nick ?? "";
     message.message_sender_display_name = object.message_sender_display_name ?? "";
     return message;
