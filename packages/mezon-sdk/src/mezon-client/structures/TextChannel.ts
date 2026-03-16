@@ -112,7 +112,7 @@ export class TextChannel {
         message_sender_id: messageRef.sender_id,
         message_sender_username:
           user.clan_nick || user.display_name || user.username,
-        mesages_sender_avatar: user.clan_avatar || user.avartar,
+        message_sender_avatar: user.clan_avatar || user.avartar,
         content: JSON.stringify(messageRef.content),
       },
     ];

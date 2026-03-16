@@ -84,7 +84,7 @@ export class Message {
           message_sender_id: this.sender_id,
           message_sender_username:
             user.clan_nick || user.display_name || user.username,
-          mesages_sender_avatar: user.clan_avatar || user.avartar,
+          message_sender_avatar: user.clan_avatar || user.avartar,
           content: JSON.stringify(this.content),
         },
       ];
