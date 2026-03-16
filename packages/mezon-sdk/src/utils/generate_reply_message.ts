@@ -77,7 +77,7 @@ export function refGenerate(msg: ChannelMessage | {[x: string] : any}): Array<Ap
       ref_type: 0,
       message_sender_id: msg.sender_id,
       message_sender_username: msg.username,
-      mesages_sender_avatar: msg.avatar,
+      message_sender_avatar: msg.avatar,
       message_sender_clan_nick: msg.clan_nick,
       message_sender_display_name: msg.display_name,
       content: JSON.stringify(msg.content),
