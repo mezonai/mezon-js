@@ -33,7 +33,6 @@ import {
   ApiWebhook,
   ApiListClanUnreadMsgIndicatorResponse,
   ChannelMessage,
-  ApiChannelDescList,
 } from "./api";
 import { Session } from "./session";
 import { WebSocketAdapter, WebSocketAdapterPb } from "mezon-js-protobuf";
@@ -1744,8 +1743,6 @@ export interface Socket {
   onbanneduser: (event: BannedUserEvent) => void;
 
   onaiagentenabled: (event: AiAgentEnabledEvent) => void;
-  
-  onchannellisted: (event: ApiChannelDescList) => void;
 }
 
 /** Reports an error received from a socket message. */
@@ -2026,8 +2023,6 @@ export class DefaultSocket implements Socket {
           this.onallowanonymousevent(<AllowAnonymousEvent>message.allow_anonymous_event);
         } else if (message.aiagent_enabled_event) {
           this.onaiagentenabled(<AiAgentEnabledEvent>message.aiagent_enabled_event);
-        } else if (message.channel_listed_event) {
-          this.onchannellisted(<ApiChannelDescList>message.channel_listed_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -2544,12 +2539,6 @@ export class DefaultSocket implements Socket {
   }
 
   onaiagentenabled(event: AiAgentEnabledEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(event);
-    }
-  }
-
-  onchannellisted(event: ApiChannelDescList) {
     if (this.verbose && window && window.console) {
       console.log(event);
     }

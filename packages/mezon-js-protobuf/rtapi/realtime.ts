@@ -8,7 +8,6 @@
 import Long from "long";
 import _m0 from "protobufjs/minimal";
 import {
-  ChannelDescList,
   ChannelDescription as ChannelDescription1,
   ChannelMessage,
   ChannelMessageHeader,
@@ -407,11 +406,7 @@ export interface Envelope {
     | ClanCreatedEvent
     | undefined;
   /** Voice Agent Event */
-  aiagent_enabled_event?:
-    | AIAgentEnabledEvent
-    | undefined;
-  /** Channel Listed Event */
-  channel_listed_event?: ChannelDescList | undefined;
+  aiagent_enabled_event?: AIAgentEnabledEvent | undefined;
 }
 
 export interface UpdateLocalCacheEvent {
@@ -1807,7 +1802,6 @@ function createBaseEnvelope(): Envelope {
     update_localcache_event: undefined,
     clan_created_event: undefined,
     aiagent_enabled_event: undefined,
-    channel_listed_event: undefined,
   };
 }
 
@@ -2095,9 +2089,6 @@ export const Envelope = {
     }
     if (message.aiagent_enabled_event !== undefined) {
       AIAgentEnabledEvent.encode(message.aiagent_enabled_event, writer.uint32(754).fork()).ldelim();
-    }
-    if (message.channel_listed_event !== undefined) {
-      ChannelDescList.encode(message.channel_listed_event, writer.uint32(762).fork()).ldelim();
     }
     return writer;
   },
@@ -2767,13 +2758,6 @@ export const Envelope = {
 
           message.aiagent_enabled_event = AIAgentEnabledEvent.decode(reader, reader.uint32());
           continue;
-        case 95:
-          if (tag !== 762) {
-            break;
-          }
-
-          message.channel_listed_event = ChannelDescList.decode(reader, reader.uint32());
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3000,9 +2984,6 @@ export const Envelope = {
         : undefined,
       aiagent_enabled_event: isSet(object.aiagent_enabled_event)
         ? AIAgentEnabledEvent.fromJSON(object.aiagent_enabled_event)
-        : undefined,
-      channel_listed_event: isSet(object.channel_listed_event)
-        ? ChannelDescList.fromJSON(object.channel_listed_event)
         : undefined,
     };
   },
@@ -3292,9 +3273,6 @@ export const Envelope = {
     }
     if (message.aiagent_enabled_event !== undefined) {
       obj.aiagent_enabled_event = AIAgentEnabledEvent.toJSON(message.aiagent_enabled_event);
-    }
-    if (message.channel_listed_event !== undefined) {
-      obj.channel_listed_event = ChannelDescList.toJSON(message.channel_listed_event);
     }
     return obj;
   },
@@ -3609,9 +3587,6 @@ export const Envelope = {
       (object.aiagent_enabled_event !== undefined && object.aiagent_enabled_event !== null)
         ? AIAgentEnabledEvent.fromPartial(object.aiagent_enabled_event)
         : undefined;
-    message.channel_listed_event = (object.channel_listed_event !== undefined && object.channel_listed_event !== null)
-      ? ChannelDescList.fromPartial(object.channel_listed_event)
-      : undefined;
     return message;
   },
 };

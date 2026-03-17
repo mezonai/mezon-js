@@ -3712,6 +3712,7 @@ export interface ListClanBadgeCountRequest {
 
 export interface ListClanBadgeCountResponse {
   badge_count: number;
+  channeldesc: ChannelDescription[];
 }
 
 export interface ClanDiscover {
@@ -40406,13 +40407,16 @@ export const ListClanBadgeCountRequest = {
 };
 
 function createBaseListClanBadgeCountResponse(): ListClanBadgeCountResponse {
-  return { badge_count: 0 };
+  return { badge_count: 0, channeldesc: [] };
 }
 
 export const ListClanBadgeCountResponse = {
   encode(message: ListClanBadgeCountResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.badge_count !== 0) {
       writer.uint32(8).int32(message.badge_count);
+    }
+    for (const v of message.channeldesc) {
+      ChannelDescription.encode(v!, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -40431,6 +40435,13 @@ export const ListClanBadgeCountResponse = {
 
           message.badge_count = reader.int32();
           continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channeldesc.push(ChannelDescription.decode(reader, reader.uint32()));
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -40441,13 +40452,21 @@ export const ListClanBadgeCountResponse = {
   },
 
   fromJSON(object: any): ListClanBadgeCountResponse {
-    return { badge_count: isSet(object.badge_count) ? globalThis.Number(object.badge_count) : 0 };
+    return {
+      badge_count: isSet(object.badge_count) ? globalThis.Number(object.badge_count) : 0,
+      channeldesc: globalThis.Array.isArray(object?.channeldesc)
+        ? object.channeldesc.map((e: any) => ChannelDescription.fromJSON(e))
+        : [],
+    };
   },
 
   toJSON(message: ListClanBadgeCountResponse): unknown {
     const obj: any = {};
     if (message.badge_count !== 0) {
       obj.badge_count = Math.round(message.badge_count);
+    }
+    if (message.channeldesc?.length) {
+      obj.channeldesc = message.channeldesc.map((e) => ChannelDescription.toJSON(e));
     }
     return obj;
   },
@@ -40458,6 +40477,7 @@ export const ListClanBadgeCountResponse = {
   fromPartial<I extends Exact<DeepPartial<ListClanBadgeCountResponse>, I>>(object: I): ListClanBadgeCountResponse {
     const message = createBaseListClanBadgeCountResponse();
     message.badge_count = object.badge_count ?? 0;
+    message.channeldesc = object.channeldesc?.map((e) => ChannelDescription.fromPartial(e)) || [];
     return message;
   },
 };
