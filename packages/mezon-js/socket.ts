@@ -33,7 +33,6 @@ import {
   ApiWebhook,
   ApiListClanUnreadMsgIndicatorResponse,
   ChannelMessage,
-  ApiChannelDescList,
 } from "./api";
 import { Session } from "./session";
 import { WebSocketAdapter, WebSocketAdapterPb } from "mezon-js-protobuf";
