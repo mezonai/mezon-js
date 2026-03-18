@@ -4119,6 +4119,14 @@ export interface GetPollResponse {
   voter_details: PollVoterDetail[];
 }
 
+export interface ListUserOnlineRequest {
+  clan_id: string;
+}
+
+export interface ListUserOnlineResponse {
+  users: User[];
+}
+
 function createBaseAccount(): Account {
   return {
     user: undefined,
@@ -44083,6 +44091,120 @@ export const GetPollResponse = {
     message.type = object.type ?? 0;
     message.total_votes = object.total_votes ?? 0;
     message.voter_details = object.voter_details?.map((e) => PollVoterDetail.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseListUserOnlineRequest(): ListUserOnlineRequest {
+  return { clan_id: "0" };
+}
+
+export const ListUserOnlineRequest = {
+  encode(message: ListUserOnlineRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListUserOnlineRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListUserOnlineRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.clan_id = longToString(reader.int64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListUserOnlineRequest {
+    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0" };
+  },
+
+  toJSON(message: ListUserOnlineRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "0") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListUserOnlineRequest>, I>>(base?: I): ListUserOnlineRequest {
+    return ListUserOnlineRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListUserOnlineRequest>, I>>(object: I): ListUserOnlineRequest {
+    const message = createBaseListUserOnlineRequest();
+    message.clan_id = object.clan_id ?? "0";
+    return message;
+  },
+};
+
+function createBaseListUserOnlineResponse(): ListUserOnlineResponse {
+  return { users: [] };
+}
+
+export const ListUserOnlineResponse = {
+  encode(message: ListUserOnlineResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.users) {
+      User.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListUserOnlineResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListUserOnlineResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.users.push(User.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListUserOnlineResponse {
+    return { users: globalThis.Array.isArray(object?.users) ? object.users.map((e: any) => User.fromJSON(e)) : [] };
+  },
+
+  toJSON(message: ListUserOnlineResponse): unknown {
+    const obj: any = {};
+    if (message.users?.length) {
+      obj.users = message.users.map((e) => User.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListUserOnlineResponse>, I>>(base?: I): ListUserOnlineResponse {
+    return ListUserOnlineResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListUserOnlineResponse>, I>>(object: I): ListUserOnlineResponse {
+    const message = createBaseListUserOnlineResponse();
+    message.users = object.users?.map((e) => User.fromPartial(e)) || [];
     return message;
   },
 };

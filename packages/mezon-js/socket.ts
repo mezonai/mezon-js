@@ -33,6 +33,7 @@ import {
   ApiWebhook,
   ApiListClanUnreadMsgIndicatorResponse,
   ChannelMessage,
+  ApiUser,
 } from "./api";
 import { Session } from "./session";
 import { WebSocketAdapter, WebSocketAdapterPb } from "mezon-js-protobuf";
@@ -1245,11 +1246,29 @@ export interface ChannelCanvas {
   status?: number;
 }
 
+export interface ApiListClanBadgeCountRequest {
+  clan_id?: string;
+}
+
+export interface ApiListClanUnreadMsgIndicatorRequest {
+  clan_id?: string;
+}
+
+export interface ApiListUserOnlineRequest {
+  clan_id?: string;
+}
+
+export interface ApiListUserOnlineResponse {
+  users: Array<ApiUser>;
+}
+
 export interface ListDataSocket {
   api_name?: string;
-  list_unread_msg_indicator_req?: any;
+  list_unread_msg_indicator_req?: ApiListClanUnreadMsgIndicatorRequest;
   unread_msg_indicator?: ApiListClanUnreadMsgIndicatorResponse;
-  list_clan_badge_count_req?: any;
+  list_clan_badge_count_req?: ApiListClanBadgeCountRequest;
+  list_user_online_req?: ApiListUserOnlineRequest;
+  user_online_list?: ApiListUserOnlineResponse;
 }
 
 function CreateChannelMessageFromEvent(message: any) {
