@@ -1,6 +1,6 @@
 {
   "name": "mezon-js",
-  "version": "2.15.8",
+  "version": "2.15.9",
   "scripts": {
     "build": "node build.mjs && rollup -c --bundleConfigAsCjs && tsc --emitDeclarationOnly",
     "build:types": "tsc --emitDeclarationOnly",
