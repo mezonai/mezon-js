@@ -17,6 +17,8 @@ import {
   ListClanBadgeCountResponse,
   ListClanUnreadMsgIndicatorRequest,
   ListClanUnreadMsgIndicatorResponse,
+  ListUserOnlineRequest,
+  ListUserOnlineResponse,
   LogedDeviceList,
   MessageAttachment,
   MessageMention,
@@ -1638,6 +1640,8 @@ export interface ListDataSocket {
   list_clan_badge_count_req: ListClanBadgeCountRequest | undefined;
   clan_badge_count: ListClanBadgeCountResponse | undefined;
   list_loged_device: LogedDeviceList | undefined;
+  list_user_online_req: ListUserOnlineRequest | undefined;
+  user_online_list: ListUserOnlineResponse | undefined;
 }
 
 export interface MeetParticipantEvent {
@@ -14881,6 +14885,8 @@ function createBaseListDataSocket(): ListDataSocket {
     list_clan_badge_count_req: undefined,
     clan_badge_count: undefined,
     list_loged_device: undefined,
+    list_user_online_req: undefined,
+    user_online_list: undefined,
   };
 }
 
@@ -14904,6 +14910,12 @@ export const ListDataSocket = {
     }
     if (message.list_loged_device !== undefined) {
       LogedDeviceList.encode(message.list_loged_device, writer.uint32(50).fork()).ldelim();
+    }
+    if (message.list_user_online_req !== undefined) {
+      ListUserOnlineRequest.encode(message.list_user_online_req, writer.uint32(58).fork()).ldelim();
+    }
+    if (message.user_online_list !== undefined) {
+      ListUserOnlineResponse.encode(message.user_online_list, writer.uint32(66).fork()).ldelim();
     }
     return writer;
   },
@@ -14957,6 +14969,20 @@ export const ListDataSocket = {
 
           message.list_loged_device = LogedDeviceList.decode(reader, reader.uint32());
           continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.list_user_online_req = ListUserOnlineRequest.decode(reader, reader.uint32());
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.user_online_list = ListUserOnlineResponse.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -14984,6 +15010,12 @@ export const ListDataSocket = {
       list_loged_device: isSet(object.list_loged_device)
         ? LogedDeviceList.fromJSON(object.list_loged_device)
         : undefined,
+      list_user_online_req: isSet(object.list_user_online_req)
+        ? ListUserOnlineRequest.fromJSON(object.list_user_online_req)
+        : undefined,
+      user_online_list: isSet(object.user_online_list)
+        ? ListUserOnlineResponse.fromJSON(object.user_online_list)
+        : undefined,
     };
   },
 
@@ -15008,6 +15040,12 @@ export const ListDataSocket = {
     }
     if (message.list_loged_device !== undefined) {
       obj.list_loged_device = LogedDeviceList.toJSON(message.list_loged_device);
+    }
+    if (message.list_user_online_req !== undefined) {
+      obj.list_user_online_req = ListUserOnlineRequest.toJSON(message.list_user_online_req);
+    }
+    if (message.user_online_list !== undefined) {
+      obj.user_online_list = ListUserOnlineResponse.toJSON(message.user_online_list);
     }
     return obj;
   },
@@ -15034,6 +15072,12 @@ export const ListDataSocket = {
       : undefined;
     message.list_loged_device = (object.list_loged_device !== undefined && object.list_loged_device !== null)
       ? LogedDeviceList.fromPartial(object.list_loged_device)
+      : undefined;
+    message.list_user_online_req = (object.list_user_online_req !== undefined && object.list_user_online_req !== null)
+      ? ListUserOnlineRequest.fromPartial(object.list_user_online_req)
+      : undefined;
+    message.user_online_list = (object.user_online_list !== undefined && object.user_online_list !== null)
+      ? ListUserOnlineResponse.fromPartial(object.user_online_list)
       : undefined;
     return message;
   },
