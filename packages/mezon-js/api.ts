@@ -142,6 +142,10 @@ export interface ApiVotePollRequest {
   answer_indices?: number[];
 }
 
+export interface ApiVotePollResponse {
+  my_answer_indices?: number[];
+}
+
 export interface ApiClosePollRequest {
   poll_id?: string;
   message_id?: string;
@@ -12953,7 +12957,7 @@ export class MezonApi {
   }
 
   /** Vote on a poll. */
-  votePoll(bearerToken: string, body: ApiVotePollRequest, options = {}): Promise<any> {
+  votePoll(bearerToken: string, body: ApiVotePollRequest, options = {}): Promise<ApiVotePollResponse> {
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
@@ -12978,9 +12982,19 @@ export class MezonApi {
     }
 
     return Promise.race([
-      getFetcher()(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204 || (response.status >= 200 && response.status < 300)) {
-          return {};
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return { my_answer_indices: [] } as ApiVotePollResponse;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();
+          const bytes = new Uint8Array(buffer);
+          const decoded =
+            bytes.length > 0
+              ? tsproto.VotePollResponse.decode(bytes)
+              : { my_answer_indices: [] };
+          return {
+            my_answer_indices: Array.from(decoded.my_answer_indices ?? []),
+          } as ApiVotePollResponse;
         } else {
           throw response;
         }

@@ -103,6 +103,7 @@ import {
   ApiGetPollRequest,
   ApiGetPollResponse,
   ApiVotePollRequest,
+  ApiVotePollResponse,
   ApiClosePollRequest,
   ApiUserPermissionInChannelListResponse,
   ApiPermissionRoleChannelListEventResponse,
@@ -5380,7 +5381,7 @@ export class Client {
   }
 
   /** Vote on a poll. */
-  async votePoll(session: Session, request: ApiVotePollRequest): Promise<any> {
+  async votePoll(session: Session, request: ApiVotePollRequest): Promise<ApiVotePollResponse> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&

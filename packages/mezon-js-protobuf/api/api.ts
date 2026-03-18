@@ -4079,6 +4079,10 @@ export interface VotePollRequest {
   answer_indices: number[];
 }
 
+export interface VotePollResponse {
+  my_answer_indices: number[];
+}
+
 export interface ClosePollRequest {
   poll_id: string;
   message_id: string;
@@ -43431,6 +43435,77 @@ export const VotePollRequest = {
     message.message_id = object.message_id ?? "0";
     message.channel_id = object.channel_id ?? "0";
     message.answer_indices = object.answer_indices?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseVotePollResponse(): VotePollResponse {
+  return { my_answer_indices: [] };
+}
+
+export const VotePollResponse = {
+  encode(message: VotePollResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.my_answer_indices?.length) {
+      writer.uint32(10).fork();
+      for (const v of message.my_answer_indices) {
+        writer.int32(v);
+      }
+      writer.ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): VotePollResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVotePollResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag === 8) {
+            message.my_answer_indices.push(reader.int32());
+            continue;
+          }
+          if (tag === 10) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.my_answer_indices.push(reader.int32());
+            }
+            continue;
+          }
+          break;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): VotePollResponse {
+    return {
+      my_answer_indices: globalThis.Array.isArray(object?.my_answer_indices)
+        ? object.my_answer_indices.map((e: any) => globalThis.Number(e))
+        : [],
+    };
+  },
+
+  toJSON(message: VotePollResponse): unknown {
+    const obj: any = {};
+    if (message.my_answer_indices?.length) {
+      obj.my_answer_indices = message.my_answer_indices.map((e) => Math.round(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<VotePollResponse>, I>>(base?: I): VotePollResponse {
+    return VotePollResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<VotePollResponse>, I>>(object: I): VotePollResponse {
+    const message = createBaseVotePollResponse();
+    message.my_answer_indices = object.my_answer_indices?.map((e) => e) || [];
     return message;
   },
 };
