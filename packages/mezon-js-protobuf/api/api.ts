@@ -8896,7 +8896,7 @@ export const RegistFcmDeviceTokenRequest = {
 };
 
 function createBaseRegistFcmDeviceTokenResponse(): RegistFcmDeviceTokenResponse {
-  return { token: "", device_id: "0", platform: "" };
+  return { token: "", device_id: "", platform: "" };
 }
 
 export const RegistFcmDeviceTokenResponse = {
@@ -8904,8 +8904,8 @@ export const RegistFcmDeviceTokenResponse = {
     if (message.token !== "") {
       writer.uint32(10).string(message.token);
     }
-    if (message.device_id !== "0") {
-      writer.uint32(16).int64(message.device_id);
+    if (message.device_id !== "") {
+      writer.uint32(18).string(message.device_id);
     }
     if (message.platform !== "") {
       writer.uint32(26).string(message.platform);
@@ -8928,11 +8928,11 @@ export const RegistFcmDeviceTokenResponse = {
           message.token = reader.string();
           continue;
         case 2:
-          if (tag !== 16) {
+          if (tag !== 18) {
             break;
           }
 
-          message.device_id = longToString(reader.int64() as Long);
+          message.device_id = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
@@ -8953,7 +8953,7 @@ export const RegistFcmDeviceTokenResponse = {
   fromJSON(object: any): RegistFcmDeviceTokenResponse {
     return {
       token: isSet(object.token) ? globalThis.String(object.token) : "",
-      device_id: isSet(object.device_id) ? globalThis.String(object.device_id) : "0",
+      device_id: isSet(object.device_id) ? globalThis.String(object.device_id) : "",
       platform: isSet(object.platform) ? globalThis.String(object.platform) : "",
     };
   },
@@ -8963,7 +8963,7 @@ export const RegistFcmDeviceTokenResponse = {
     if (message.token !== "") {
       obj.token = message.token;
     }
-    if (message.device_id !== "0") {
+    if (message.device_id !== "") {
       obj.device_id = message.device_id;
     }
     if (message.platform !== "") {
@@ -8978,7 +8978,7 @@ export const RegistFcmDeviceTokenResponse = {
   fromPartial<I extends Exact<DeepPartial<RegistFcmDeviceTokenResponse>, I>>(object: I): RegistFcmDeviceTokenResponse {
     const message = createBaseRegistFcmDeviceTokenResponse();
     message.token = object.token ?? "";
-    message.device_id = object.device_id ?? "0";
+    message.device_id = object.device_id ?? "";
     message.platform = object.platform ?? "";
     return message;
   },
@@ -43445,13 +43445,11 @@ function createBaseVotePollResponse(): VotePollResponse {
 
 export const VotePollResponse = {
   encode(message: VotePollResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.my_answer_indices?.length) {
-      writer.uint32(10).fork();
-      for (const v of message.my_answer_indices) {
-        writer.int32(v);
-      }
-      writer.ldelim();
+    writer.uint32(10).fork();
+    for (const v of message.my_answer_indices) {
+      writer.int32(v);
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -43465,15 +43463,19 @@ export const VotePollResponse = {
         case 1:
           if (tag === 8) {
             message.my_answer_indices.push(reader.int32());
+
             continue;
           }
+
           if (tag === 10) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.my_answer_indices.push(reader.int32());
             }
+
             continue;
           }
+
           break;
       }
       if ((tag & 7) === 4 || tag === 0) {
