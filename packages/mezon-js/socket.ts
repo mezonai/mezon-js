@@ -35,7 +35,7 @@ import {
   ApiUser,
 } from "./api";
 import { Session } from "./session";
-import { WebSocketAdapter, WebSocketAdapterPb } from "mezon-js-protobuf";
+import { ClanBadgeCount, WebSocketAdapter, WebSocketAdapterPb } from "mezon-js-protobuf";
 import { decodeAttachments, decodeMentions, decodeNotificationFcm, decodeReactions, decodeRefs, safeJSONParse } from "./utils";
 
 /** Stores function references for resolve/reject with a DOM Promise. */
@@ -1245,11 +1245,7 @@ export interface ChannelCanvas {
   status?: number;
 }
 
-export interface ApiListClanBadgeCountRequest {
-  clan_id?: string;
-}
-
-export interface ApiListClanUnreadMsgIndicatorRequest {
+export interface ApiListChannelBadgeCountRequest {
   clan_id?: string;
 }
 
@@ -1257,14 +1253,44 @@ export interface ApiListUserOnlineRequest {
   clan_id?: string;
 }
 
+export interface ApiLogedDevice {
+  device_id?: string;
+  device_name?: string;
+  login_at_seconds?: number;
+  status?: number;
+  platform?: string;
+  ip?: string;
+  last_active_seconds?: string;
+  location?: string;
+  is_current?: boolean;
+}
+
+export interface ApiLogedDeviceList {
+  devices?: Array<ApiLogedDevice>;
+}
+
+export interface ApiLogedDeviceList {
+
+}
+
 export interface ApiListUserOnlineResponse {
   users: Array<ApiUser>;
 }
 
+export interface ApiListChannelBadgeCountResponse {
+  channeldesc?: Array<ApiChannelDescription>;
+}
+
+export interface ApiListClanBadgeCountResponse {
+  list_badge?: Array<ClanBadgeCount>
+}
+
 export interface ListDataSocket {
   api_name?: string;
-  list_unread_msg_indicator_req?: ApiListClanUnreadMsgIndicatorRequest;
-  list_clan_badge_count_req?: ApiListClanBadgeCountRequest;
+  list_channel_badge_count_req?: ApiListChannelBadgeCountRequest;
+  channel_badge_count?: ApiListChannelBadgeCountResponse;
+  clan_badge_count?: ApiListClanBadgeCountResponse;
+  list_loged_device?: ApiLogedDeviceList;
   list_user_online_req?: ApiListUserOnlineRequest;
   user_online_list?: ApiListUserOnlineResponse;
 }
