@@ -13,10 +13,9 @@ import {
   ChannelMessageHeader,
   CreateEventRequest,
   GiveCoffeeEvent,
-  ListClanBadgeCountRequest,
+  ListChannelBadgeCountRequest,
+  ListChannelBadgeCountResponse,
   ListClanBadgeCountResponse,
-  ListClanUnreadMsgIndicatorRequest,
-  ListClanUnreadMsgIndicatorResponse,
   ListUserOnlineRequest,
   ListUserOnlineResponse,
   LogedDeviceList,
@@ -1635,9 +1634,8 @@ export interface DeleteAccountEvent {
 
 export interface ListDataSocket {
   api_name: string;
-  list_unread_msg_indicator_req: ListClanUnreadMsgIndicatorRequest | undefined;
-  unread_msg_indicator: ListClanUnreadMsgIndicatorResponse | undefined;
-  list_clan_badge_count_req: ListClanBadgeCountRequest | undefined;
+  list_channel_badge_count_req: ListChannelBadgeCountRequest | undefined;
+  channel_badge_count: ListChannelBadgeCountResponse | undefined;
   clan_badge_count: ListClanBadgeCountResponse | undefined;
   list_loged_device: LogedDeviceList | undefined;
   list_user_online_req: ListUserOnlineRequest | undefined;
@@ -14880,9 +14878,8 @@ export const DeleteAccountEvent = {
 function createBaseListDataSocket(): ListDataSocket {
   return {
     api_name: "",
-    list_unread_msg_indicator_req: undefined,
-    unread_msg_indicator: undefined,
-    list_clan_badge_count_req: undefined,
+    list_channel_badge_count_req: undefined,
+    channel_badge_count: undefined,
     clan_badge_count: undefined,
     list_loged_device: undefined,
     list_user_online_req: undefined,
@@ -14895,27 +14892,23 @@ export const ListDataSocket = {
     if (message.api_name !== "") {
       writer.uint32(10).string(message.api_name);
     }
-    if (message.list_unread_msg_indicator_req !== undefined) {
-      ListClanUnreadMsgIndicatorRequest.encode(message.list_unread_msg_indicator_req, writer.uint32(18).fork())
-        .ldelim();
+    if (message.list_channel_badge_count_req !== undefined) {
+      ListChannelBadgeCountRequest.encode(message.list_channel_badge_count_req, writer.uint32(18).fork()).ldelim();
     }
-    if (message.unread_msg_indicator !== undefined) {
-      ListClanUnreadMsgIndicatorResponse.encode(message.unread_msg_indicator, writer.uint32(26).fork()).ldelim();
-    }
-    if (message.list_clan_badge_count_req !== undefined) {
-      ListClanBadgeCountRequest.encode(message.list_clan_badge_count_req, writer.uint32(34).fork()).ldelim();
+    if (message.channel_badge_count !== undefined) {
+      ListChannelBadgeCountResponse.encode(message.channel_badge_count, writer.uint32(26).fork()).ldelim();
     }
     if (message.clan_badge_count !== undefined) {
-      ListClanBadgeCountResponse.encode(message.clan_badge_count, writer.uint32(42).fork()).ldelim();
+      ListClanBadgeCountResponse.encode(message.clan_badge_count, writer.uint32(34).fork()).ldelim();
     }
     if (message.list_loged_device !== undefined) {
-      LogedDeviceList.encode(message.list_loged_device, writer.uint32(50).fork()).ldelim();
+      LogedDeviceList.encode(message.list_loged_device, writer.uint32(42).fork()).ldelim();
     }
     if (message.list_user_online_req !== undefined) {
-      ListUserOnlineRequest.encode(message.list_user_online_req, writer.uint32(58).fork()).ldelim();
+      ListUserOnlineRequest.encode(message.list_user_online_req, writer.uint32(50).fork()).ldelim();
     }
     if (message.user_online_list !== undefined) {
-      ListUserOnlineResponse.encode(message.user_online_list, writer.uint32(66).fork()).ldelim();
+      ListUserOnlineResponse.encode(message.user_online_list, writer.uint32(58).fork()).ldelim();
     }
     return writer;
   },
@@ -14939,45 +14932,38 @@ export const ListDataSocket = {
             break;
           }
 
-          message.list_unread_msg_indicator_req = ListClanUnreadMsgIndicatorRequest.decode(reader, reader.uint32());
+          message.list_channel_badge_count_req = ListChannelBadgeCountRequest.decode(reader, reader.uint32());
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.unread_msg_indicator = ListClanUnreadMsgIndicatorResponse.decode(reader, reader.uint32());
+          message.channel_badge_count = ListChannelBadgeCountResponse.decode(reader, reader.uint32());
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.list_clan_badge_count_req = ListClanBadgeCountRequest.decode(reader, reader.uint32());
+          message.clan_badge_count = ListClanBadgeCountResponse.decode(reader, reader.uint32());
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.clan_badge_count = ListClanBadgeCountResponse.decode(reader, reader.uint32());
+          message.list_loged_device = LogedDeviceList.decode(reader, reader.uint32());
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.list_loged_device = LogedDeviceList.decode(reader, reader.uint32());
+          message.list_user_online_req = ListUserOnlineRequest.decode(reader, reader.uint32());
           continue;
         case 7:
           if (tag !== 58) {
-            break;
-          }
-
-          message.list_user_online_req = ListUserOnlineRequest.decode(reader, reader.uint32());
-          continue;
-        case 8:
-          if (tag !== 66) {
             break;
           }
 
@@ -14995,14 +14981,11 @@ export const ListDataSocket = {
   fromJSON(object: any): ListDataSocket {
     return {
       api_name: isSet(object.api_name) ? globalThis.String(object.api_name) : "",
-      list_unread_msg_indicator_req: isSet(object.list_unread_msg_indicator_req)
-        ? ListClanUnreadMsgIndicatorRequest.fromJSON(object.list_unread_msg_indicator_req)
+      list_channel_badge_count_req: isSet(object.list_channel_badge_count_req)
+        ? ListChannelBadgeCountRequest.fromJSON(object.list_channel_badge_count_req)
         : undefined,
-      unread_msg_indicator: isSet(object.unread_msg_indicator)
-        ? ListClanUnreadMsgIndicatorResponse.fromJSON(object.unread_msg_indicator)
-        : undefined,
-      list_clan_badge_count_req: isSet(object.list_clan_badge_count_req)
-        ? ListClanBadgeCountRequest.fromJSON(object.list_clan_badge_count_req)
+      channel_badge_count: isSet(object.channel_badge_count)
+        ? ListChannelBadgeCountResponse.fromJSON(object.channel_badge_count)
         : undefined,
       clan_badge_count: isSet(object.clan_badge_count)
         ? ListClanBadgeCountResponse.fromJSON(object.clan_badge_count)
@@ -15024,16 +15007,11 @@ export const ListDataSocket = {
     if (message.api_name !== "") {
       obj.api_name = message.api_name;
     }
-    if (message.list_unread_msg_indicator_req !== undefined) {
-      obj.list_unread_msg_indicator_req = ListClanUnreadMsgIndicatorRequest.toJSON(
-        message.list_unread_msg_indicator_req,
-      );
+    if (message.list_channel_badge_count_req !== undefined) {
+      obj.list_channel_badge_count_req = ListChannelBadgeCountRequest.toJSON(message.list_channel_badge_count_req);
     }
-    if (message.unread_msg_indicator !== undefined) {
-      obj.unread_msg_indicator = ListClanUnreadMsgIndicatorResponse.toJSON(message.unread_msg_indicator);
-    }
-    if (message.list_clan_badge_count_req !== undefined) {
-      obj.list_clan_badge_count_req = ListClanBadgeCountRequest.toJSON(message.list_clan_badge_count_req);
+    if (message.channel_badge_count !== undefined) {
+      obj.channel_badge_count = ListChannelBadgeCountResponse.toJSON(message.channel_badge_count);
     }
     if (message.clan_badge_count !== undefined) {
       obj.clan_badge_count = ListClanBadgeCountResponse.toJSON(message.clan_badge_count);
@@ -15056,17 +15034,13 @@ export const ListDataSocket = {
   fromPartial<I extends Exact<DeepPartial<ListDataSocket>, I>>(object: I): ListDataSocket {
     const message = createBaseListDataSocket();
     message.api_name = object.api_name ?? "";
-    message.list_unread_msg_indicator_req =
-      (object.list_unread_msg_indicator_req !== undefined && object.list_unread_msg_indicator_req !== null)
-        ? ListClanUnreadMsgIndicatorRequest.fromPartial(object.list_unread_msg_indicator_req)
+    message.list_channel_badge_count_req =
+      (object.list_channel_badge_count_req !== undefined && object.list_channel_badge_count_req !== null)
+        ? ListChannelBadgeCountRequest.fromPartial(object.list_channel_badge_count_req)
         : undefined;
-    message.unread_msg_indicator = (object.unread_msg_indicator !== undefined && object.unread_msg_indicator !== null)
-      ? ListClanUnreadMsgIndicatorResponse.fromPartial(object.unread_msg_indicator)
+    message.channel_badge_count = (object.channel_badge_count !== undefined && object.channel_badge_count !== null)
+      ? ListChannelBadgeCountResponse.fromPartial(object.channel_badge_count)
       : undefined;
-    message.list_clan_badge_count_req =
-      (object.list_clan_badge_count_req !== undefined && object.list_clan_badge_count_req !== null)
-        ? ListClanBadgeCountRequest.fromPartial(object.list_clan_badge_count_req)
-        : undefined;
     message.clan_badge_count = (object.clan_badge_count !== undefined && object.clan_badge_count !== null)
       ? ListClanBadgeCountResponse.fromPartial(object.clan_badge_count)
       : undefined;
