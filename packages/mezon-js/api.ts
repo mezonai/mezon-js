@@ -3565,12 +3565,6 @@ export interface ApiListClanDiscover {
 }
 
 /**  */
-export interface ApiListClanUnreadMsgIndicatorResponse {
-  //
-  has_unread_message?: boolean;
-}
-
-/**  */
 export interface ApiClanDiscoverRequest {
   //
   clan_id?: string;
@@ -5761,46 +5755,6 @@ export class MezonApi {
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
           return tsproto.VoiceChannelUserList.decode(new Uint8Array(buffer)) as ApiVoiceChannelUserList;
-        } else {
-          throw response;
-        }
-      }),
-      new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
-      ),
-    ]);
-  }
-
-  /** List clans */
-  listClanUnreadMsgIndicator(bearerToken: string,
-      clanId:string,
-      options = {}): Promise<ApiListClanUnreadMsgIndicatorResponse> {
-    
-    if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/mezon.api.Mezon/ListClanUnreadMsgIndicator";
-    const queryParams = new Map<string, any>();
-
-    const bodyWriter = tsproto.ListClanUnreadMsgIndicatorRequest.encode(
-      tsproto.ListClanUnreadMsgIndicatorRequest.fromPartial({ clan_id: clanId })
-    );
-    const encodedBody = bodyWriter.finish();
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, '');
-    fetchOptions.body = encodedBody;
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiListClanUnreadMsgIndicatorResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();      
-          return tsproto.ListClanUnreadMsgIndicatorResponse.decode(new Uint8Array(buffer)) as ApiListClanUnreadMsgIndicatorResponse;
         } else {
           throw response;
         }

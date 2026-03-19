@@ -31,7 +31,6 @@ import {
   ApiTokenSentEvent,
   ApiUserActivity,
   ApiWebhook,
-  ApiListClanUnreadMsgIndicatorResponse,
   ChannelMessage,
   ApiUser,
 } from "./api";
@@ -1265,7 +1264,6 @@ export interface ApiListUserOnlineResponse {
 export interface ListDataSocket {
   api_name?: string;
   list_unread_msg_indicator_req?: ApiListClanUnreadMsgIndicatorRequest;
-  unread_msg_indicator?: ApiListClanUnreadMsgIndicatorResponse;
   list_clan_badge_count_req?: ApiListClanBadgeCountRequest;
   list_user_online_req?: ApiListUserOnlineRequest;
   user_online_list?: ApiListUserOnlineResponse;
