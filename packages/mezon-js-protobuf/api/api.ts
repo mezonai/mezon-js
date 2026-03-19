@@ -18847,7 +18847,7 @@ export const NotificationUserChannel = {
       writer.uint32(16).int32(message.notification_setting_type);
     }
     if (message.time_mute_seconds !== 0) {
-      writer.uint32(24).uint32(message.time_mute_seconds);
+      writer.uint32(24).int32(message.time_mute_seconds);
     }
     if (message.active !== 0) {
       writer.uint32(32).int32(message.active);
@@ -18884,7 +18884,7 @@ export const NotificationUserChannel = {
             break;
           }
 
-          message.time_mute_seconds = reader.uint32();
+          message.time_mute_seconds = reader.int32();
           continue;
         case 4:
           if (tag !== 32) {
