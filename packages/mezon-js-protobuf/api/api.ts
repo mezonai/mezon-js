@@ -3708,10 +3708,13 @@ export interface MessageReactionList {
 
 export interface ListChannelBadgeCountRequest {
   clan_id: string;
+  limit: number;
+  page: number;
 }
 
 export interface ListChannelBadgeCountResponse {
   channeldesc: ChannelDescription[];
+  total_count: number;
 }
 
 export interface ClanBadgeCount {
@@ -4130,10 +4133,13 @@ export interface GetPollResponse {
 
 export interface ListUserOnlineRequest {
   clan_id: string;
+  limit: number;
+  page: number;
 }
 
 export interface ListUserOnlineResponse {
   users: User[];
+  total_count: number;
 }
 
 function createBaseAccount(): Account {
@@ -40371,13 +40377,19 @@ export const MessageReactionList = {
 };
 
 function createBaseListChannelBadgeCountRequest(): ListChannelBadgeCountRequest {
-  return { clan_id: "0" };
+  return { clan_id: "0", limit: 0, page: 0 };
 }
 
 export const ListChannelBadgeCountRequest = {
   encode(message: ListChannelBadgeCountRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.clan_id !== "0") {
       writer.uint32(8).int64(message.clan_id);
+    }
+    if (message.limit !== 0) {
+      writer.uint32(16).int32(message.limit);
+    }
+    if (message.page !== 0) {
+      writer.uint32(24).int32(message.page);
     }
     return writer;
   },
@@ -40396,6 +40408,20 @@ export const ListChannelBadgeCountRequest = {
 
           message.clan_id = longToString(reader.int64() as Long);
           continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.limit = reader.int32();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.page = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -40406,13 +40432,23 @@ export const ListChannelBadgeCountRequest = {
   },
 
   fromJSON(object: any): ListChannelBadgeCountRequest {
-    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0" };
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
+    };
   },
 
   toJSON(message: ListChannelBadgeCountRequest): unknown {
     const obj: any = {};
     if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
+    }
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
+    }
+    if (message.page !== 0) {
+      obj.page = Math.round(message.page);
     }
     return obj;
   },
@@ -40423,18 +40459,23 @@ export const ListChannelBadgeCountRequest = {
   fromPartial<I extends Exact<DeepPartial<ListChannelBadgeCountRequest>, I>>(object: I): ListChannelBadgeCountRequest {
     const message = createBaseListChannelBadgeCountRequest();
     message.clan_id = object.clan_id ?? "0";
+    message.limit = object.limit ?? 0;
+    message.page = object.page ?? 0;
     return message;
   },
 };
 
 function createBaseListChannelBadgeCountResponse(): ListChannelBadgeCountResponse {
-  return { channeldesc: [] };
+  return { channeldesc: [], total_count: 0 };
 }
 
 export const ListChannelBadgeCountResponse = {
   encode(message: ListChannelBadgeCountResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.channeldesc) {
       ChannelDescription.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.total_count !== 0) {
+      writer.uint32(16).int32(message.total_count);
     }
     return writer;
   },
@@ -40453,6 +40494,13 @@ export const ListChannelBadgeCountResponse = {
 
           message.channeldesc.push(ChannelDescription.decode(reader, reader.uint32()));
           continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.total_count = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -40467,6 +40515,7 @@ export const ListChannelBadgeCountResponse = {
       channeldesc: globalThis.Array.isArray(object?.channeldesc)
         ? object.channeldesc.map((e: any) => ChannelDescription.fromJSON(e))
         : [],
+      total_count: isSet(object.total_count) ? globalThis.Number(object.total_count) : 0,
     };
   },
 
@@ -40474,6 +40523,9 @@ export const ListChannelBadgeCountResponse = {
     const obj: any = {};
     if (message.channeldesc?.length) {
       obj.channeldesc = message.channeldesc.map((e) => ChannelDescription.toJSON(e));
+    }
+    if (message.total_count !== 0) {
+      obj.total_count = Math.round(message.total_count);
     }
     return obj;
   },
@@ -40486,6 +40538,7 @@ export const ListChannelBadgeCountResponse = {
   ): ListChannelBadgeCountResponse {
     const message = createBaseListChannelBadgeCountResponse();
     message.channeldesc = object.channeldesc?.map((e) => ChannelDescription.fromPartial(e)) || [];
+    message.total_count = object.total_count ?? 0;
     return message;
   },
 };
@@ -44242,13 +44295,19 @@ export const GetPollResponse = {
 };
 
 function createBaseListUserOnlineRequest(): ListUserOnlineRequest {
-  return { clan_id: "0" };
+  return { clan_id: "0", limit: 0, page: 0 };
 }
 
 export const ListUserOnlineRequest = {
   encode(message: ListUserOnlineRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.clan_id !== "0") {
       writer.uint32(8).int64(message.clan_id);
+    }
+    if (message.limit !== 0) {
+      writer.uint32(16).int32(message.limit);
+    }
+    if (message.page !== 0) {
+      writer.uint32(24).int32(message.page);
     }
     return writer;
   },
@@ -44267,6 +44326,20 @@ export const ListUserOnlineRequest = {
 
           message.clan_id = longToString(reader.int64() as Long);
           continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.limit = reader.int32();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.page = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -44277,13 +44350,23 @@ export const ListUserOnlineRequest = {
   },
 
   fromJSON(object: any): ListUserOnlineRequest {
-    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0" };
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
+    };
   },
 
   toJSON(message: ListUserOnlineRequest): unknown {
     const obj: any = {};
     if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
+    }
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
+    }
+    if (message.page !== 0) {
+      obj.page = Math.round(message.page);
     }
     return obj;
   },
@@ -44294,18 +44377,23 @@ export const ListUserOnlineRequest = {
   fromPartial<I extends Exact<DeepPartial<ListUserOnlineRequest>, I>>(object: I): ListUserOnlineRequest {
     const message = createBaseListUserOnlineRequest();
     message.clan_id = object.clan_id ?? "0";
+    message.limit = object.limit ?? 0;
+    message.page = object.page ?? 0;
     return message;
   },
 };
 
 function createBaseListUserOnlineResponse(): ListUserOnlineResponse {
-  return { users: [] };
+  return { users: [], total_count: 0 };
 }
 
 export const ListUserOnlineResponse = {
   encode(message: ListUserOnlineResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.users) {
       User.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.total_count !== 0) {
+      writer.uint32(16).int32(message.total_count);
     }
     return writer;
   },
@@ -44324,6 +44412,13 @@ export const ListUserOnlineResponse = {
 
           message.users.push(User.decode(reader, reader.uint32()));
           continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.total_count = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -44334,13 +44429,19 @@ export const ListUserOnlineResponse = {
   },
 
   fromJSON(object: any): ListUserOnlineResponse {
-    return { users: globalThis.Array.isArray(object?.users) ? object.users.map((e: any) => User.fromJSON(e)) : [] };
+    return {
+      users: globalThis.Array.isArray(object?.users) ? object.users.map((e: any) => User.fromJSON(e)) : [],
+      total_count: isSet(object.total_count) ? globalThis.Number(object.total_count) : 0,
+    };
   },
 
   toJSON(message: ListUserOnlineResponse): unknown {
     const obj: any = {};
     if (message.users?.length) {
       obj.users = message.users.map((e) => User.toJSON(e));
+    }
+    if (message.total_count !== 0) {
+      obj.total_count = Math.round(message.total_count);
     }
     return obj;
   },
@@ -44351,6 +44452,7 @@ export const ListUserOnlineResponse = {
   fromPartial<I extends Exact<DeepPartial<ListUserOnlineResponse>, I>>(object: I): ListUserOnlineResponse {
     const message = createBaseListUserOnlineResponse();
     message.users = object.users?.map((e) => User.fromPartial(e)) || [];
+    message.total_count = object.total_count ?? 0;
     return message;
   },
 };

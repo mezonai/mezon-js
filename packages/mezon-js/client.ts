@@ -23,6 +23,8 @@ import {
   ApiCreateChannelDescRequest,
   ApiDeleteRoleRequest,
   ApiClanDescList,
+  ApiListChannelBadgeCountResponse,
+  ApiListUserOnlineResponse,
   ApiCreateClanDescRequest,
   ApiClanDesc,
   ApiCategoryDesc,
@@ -1623,6 +1625,52 @@ export class Client {
         result.clandesc = response.clandesc;
         return Promise.resolve(result);
       });
+  }
+
+  /** Paged channel badge/unread list (HTTP). */
+  async listChannelBadgeCount(
+    session: Session,
+    clanId: string,
+    limit?: number,
+    page?: number,
+  ): Promise<ApiListChannelBadgeCountResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listChannelBadgeCount(session.token, clanId, limit, page)
+      .then((response: ApiListChannelBadgeCountResponse) => ({
+        channeldesc: response.channeldesc ?? [],
+        total_count: response.total_count,
+      }));
+  }
+
+  /** Paged online users in a clan (HTTP). */
+  async listUserOnline(
+    session: Session,
+    clanId: string,
+    limit?: number,
+    page?: number,
+  ): Promise<ApiListUserOnlineResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listUserOnline(session.token, clanId, limit, page)
+      .then((response: ApiListUserOnlineResponse) => ({
+        users: response.users ?? [],
+        total_count: response.total_count,
+      }));
   }
 
   /** List categories. */
