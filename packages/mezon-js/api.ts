@@ -1219,6 +1219,16 @@ export interface ApiClanDescList {
   clandesc?: Array<ApiClanDesc>;
 }
 
+export interface ApiListChannelBadgeCountResponse {
+  channeldesc?: Array<ApiChannelDescription>;
+  total_count?: number;
+}
+
+export interface ApiListUserOnlineResponse {
+  users?: Array<ApiUser>;
+  total_count?: number;
+}
+
 /**  */
 export interface ApiClanEmoji {
   //
@@ -5802,6 +5812,88 @@ export class MezonApi {
       }),
       new Promise<never>((_, reject) =>
         setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
+  /** Paged list of channel unread/badge metadata (HTTP counterpart to socket ListChannelBadgeCount). */
+  listChannelBadgeCount(
+    bearerToken: string,
+    clanId: string,
+    limit?: number,
+    page?: number,
+    options = {},
+  ): Promise<ApiListChannelBadgeCountResponse> {
+    const urlPath = "/mezon.api.Mezon/ListChannelBadgeCount";
+    const queryParams = new Map<string, any>();
+    const bodyWriter = tsproto.ListChannelBadgeCountRequest.encode(
+      tsproto.ListChannelBadgeCountRequest.fromPartial({
+        clan_id: clanId,
+        limit: limit ?? 0,
+        page: page ?? 0,
+      }),
+    );
+    const encodedBody = bodyWriter.finish();
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as ApiListChannelBadgeCountResponse;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();
+          return tsproto.ListChannelBadgeCountResponse.decode(new Uint8Array(buffer)) as ApiListChannelBadgeCountResponse;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs),
+      ),
+    ]);
+  }
+
+  /** Paged list of online users in a clan (HTTP counterpart to socket ListUserOnline). */
+  listUserOnline(
+    bearerToken: string,
+    clanId: string,
+    limit?: number,
+    page?: number,
+    options = {},
+  ): Promise<ApiListUserOnlineResponse> {
+    const urlPath = "/mezon.api.Mezon/ListUserOnline";
+    const queryParams = new Map<string, any>();
+    const bodyWriter = tsproto.ListUserOnlineRequest.encode(
+      tsproto.ListUserOnlineRequest.fromPartial({
+        clan_id: clanId,
+        limit: limit ?? 0,
+        page: page ?? 0,
+      }),
+    );
+    const encodedBody = bodyWriter.finish();
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as ApiListUserOnlineResponse;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();
+          return tsproto.ListUserOnlineResponse.decode(new Uint8Array(buffer)) as ApiListUserOnlineResponse;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs),
       ),
     ]);
   }
