@@ -1335,6 +1335,17 @@ export interface ApiClanUserList {
   cursor?: string;
 }
 
+/** One clan member's custom status (user_status) keyed by user id. */
+export interface ApiClanUserStatusEntry {
+  user_id?: string;
+  user_status?: string;
+}
+
+/** List of clan members' custom statuses for a clan. */
+export interface ApiClanUserStatusList {
+  clan_user_statuses?: Array<ApiClanUserStatusEntry>;
+}
+
 /**  */
 export interface ApiConfirmLoginRequest {
   //Whether to enable "Remember Me" for extended session duration.
@@ -6263,6 +6274,50 @@ export class MezonApi {
     ]);
   }
 
+  /** List clan members' custom status strings (user_status). */
+  listClanUsersStatus(
+    bearerToken: string,
+    clanId: string,
+    options = {}
+  ): Promise<ApiClanUserStatusList> {
+    if (clanId === null || clanId === undefined) {
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/ListClanUsersStatus";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.ListClanUsersStatusRequest.encode(
+      tsproto.ListClanUsersStatusRequest.fromPartial({ clan_id: clanId })
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as ApiClanUserStatusList;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();
+          const u8 = new Uint8Array(buffer);
+          return tsproto.ClanUserStatusList.decode(u8, u8.length) as ApiClanUserStatusList;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
   /**  */
   createCategoryDesc(
     bearerToken: string,
@@ -10263,6 +10318,48 @@ export class MezonApi {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateUserStatus";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.UserStatusUpdate.encode(
+      tsproto.UserStatusUpdate.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** Update user custom status (user_status). */
+  updateUserCustomStatus(
+    bearerToken: string,
+    body: ApiUserStatusUpdate,
+    options = {}
+  ): Promise<any> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/UpdateUserCustomStatus";
     const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.UserStatusUpdate.encode(

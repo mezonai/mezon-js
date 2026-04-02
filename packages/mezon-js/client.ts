@@ -45,6 +45,7 @@ import {
   ApiClanProfile,
   ApiChannelUserList,
   ApiClanUserList,
+  ApiClanUserStatusList,
   ApiLinkInviteUserRequest,
   ApiLinkInviteUser,
   ApiInviteUserRes,
@@ -1526,6 +1527,38 @@ export class Client {
             role_id: gu!.role_id,
             clan_nick: gu!.clan_nick,
             clan_avatar: gu!.clan_avatar,
+          });
+        });
+        return Promise.resolve(result);
+      });
+  }
+
+  /** List clan members' custom status strings (user_status). */
+  async listClanUsersStatus(
+    session: Session,
+    clanId: string,
+  ): Promise<ApiClanUserStatusList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listClanUsersStatus(session.token, clanId)
+      .then((response: ApiClanUserStatusList) => {
+        const result: ApiClanUserStatusList = {
+          clan_user_statuses: [],
+        };
+        if (response.clan_user_statuses == null) {
+          return Promise.resolve(result);
+        }
+        response.clan_user_statuses.forEach((e) => {
+          result.clan_user_statuses!.push({
+            user_id: e.user_id,
+            user_status: e.user_status,
           });
         });
         return Promise.resolve(result);
@@ -4448,6 +4481,23 @@ export class Client {
 
     return this.apiClient
       .updateUserStatus(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
+
+  /** Update user custom status (user_status). */
+  async updateUserCustomStatus(session: Session, request: ApiUserStatusUpdate) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .updateUserCustomStatus(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
