@@ -869,6 +869,22 @@ export interface ListClanUsersRequest {
   clan_id: string;
 }
 
+/** List clan members' custom status strings (user_status) by clan. */
+export interface ListClanUsersStatusRequest {
+  /** The clan ID to list from. */
+  clan_id: string;
+}
+
+export interface ClanUserStatusEntry {
+  user_id: string;
+  user_status: string;
+}
+
+/** User id and custom status text for members of a clan. */
+export interface ClanUserStatusList {
+  clan_user_statuses: ClanUserStatusEntry[];
+}
+
 /** Get a list of unexpired notifications. */
 export interface ListNotificationsRequest {
   /** The number of notifications to get. Between 1 and 100. */
@@ -9819,6 +9835,198 @@ export const ListClanUsersRequest = {
   fromPartial<I extends Exact<DeepPartial<ListClanUsersRequest>, I>>(object: I): ListClanUsersRequest {
     const message = createBaseListClanUsersRequest();
     message.clan_id = object.clan_id ?? "0";
+    return message;
+  },
+};
+
+function createBaseListClanUsersStatusRequest(): ListClanUsersStatusRequest {
+  return { clan_id: "0" };
+}
+
+export const ListClanUsersStatusRequest = {
+  encode(message: ListClanUsersStatusRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListClanUsersStatusRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListClanUsersStatusRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.clan_id = longToString(reader.int64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListClanUsersStatusRequest {
+    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0" };
+  },
+
+  toJSON(message: ListClanUsersStatusRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "0") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListClanUsersStatusRequest>, I>>(base?: I): ListClanUsersStatusRequest {
+    return ListClanUsersStatusRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListClanUsersStatusRequest>, I>>(object: I): ListClanUsersStatusRequest {
+    const message = createBaseListClanUsersStatusRequest();
+    message.clan_id = object.clan_id ?? "0";
+    return message;
+  },
+};
+
+function createBaseClanUserStatusEntry(): ClanUserStatusEntry {
+  return { user_id: "0", user_status: "" };
+}
+
+export const ClanUserStatusEntry = {
+  encode(message: ClanUserStatusEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "0") {
+      writer.uint32(8).int64(message.user_id);
+    }
+    if (message.user_status !== "") {
+      writer.uint32(18).string(message.user_status);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanUserStatusEntry {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanUserStatusEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.user_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.user_status = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanUserStatusEntry {
+    return {
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
+      user_status: isSet(object.user_status) ? globalThis.String(object.user_status) : "",
+    };
+  },
+
+  toJSON(message: ClanUserStatusEntry): unknown {
+    const obj: any = {};
+    if (message.user_id !== "0") {
+      obj.user_id = message.user_id;
+    }
+    if (message.user_status !== "") {
+      obj.user_status = message.user_status;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanUserStatusEntry>, I>>(base?: I): ClanUserStatusEntry {
+    return ClanUserStatusEntry.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ClanUserStatusEntry>, I>>(object: I): ClanUserStatusEntry {
+    const message = createBaseClanUserStatusEntry();
+    message.user_id = object.user_id ?? "0";
+    message.user_status = object.user_status ?? "";
+    return message;
+  },
+};
+
+function createBaseClanUserStatusList(): ClanUserStatusList {
+  return { clan_user_statuses: [] };
+}
+
+export const ClanUserStatusList = {
+  encode(message: ClanUserStatusList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.clan_user_statuses) {
+      ClanUserStatusEntry.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanUserStatusList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanUserStatusList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_user_statuses.push(ClanUserStatusEntry.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanUserStatusList {
+    return {
+      clan_user_statuses: globalThis.Array.isArray(object?.clan_user_statuses)
+        ? object.clan_user_statuses.map((e: any) => ClanUserStatusEntry.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ClanUserStatusList): unknown {
+    const obj: any = {};
+    if (message.clan_user_statuses?.length) {
+      obj.clan_user_statuses = message.clan_user_statuses.map((e) => ClanUserStatusEntry.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanUserStatusList>, I>>(base?: I): ClanUserStatusList {
+    return ClanUserStatusList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ClanUserStatusList>, I>>(object: I): ClanUserStatusList {
+    const message = createBaseClanUserStatusList();
+    message.clan_user_statuses = object.clan_user_statuses?.map((e) => ClanUserStatusEntry.fromPartial(e)) || [];
     return message;
   },
 };
