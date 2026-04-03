@@ -158,6 +158,10 @@ export interface BannedUserEvent {
   ban_time: number
 }
 
+export interface ListChannelUsersBannedEvent {
+  banned_user_ids: Array<string>;
+}
+
 export interface AiAgentEnabledEvent {
   clan_id: string;
   channel_id: string;
@@ -1785,6 +1789,8 @@ export interface Socket {
 
   onbanneduser: (event: BannedUserEvent) => void;
 
+  onlistchannelusersbanned: (event: ListChannelUsersBannedEvent) => void;
+
   onaiagentenabled: (event: AiAgentEnabledEvent) => void;
 }
 
@@ -2062,6 +2068,8 @@ export class DefaultSocket implements Socket {
           this.ontransferownership(<TransferOwnershipEvent>message.transfer_ownership_event);
         } else if (message.ban_user_event) {
           this.onbanneduser(<BannedUserEvent>message.ban_user_event);
+        } else if (message.list_channel_users_banned_event) {
+          this.onlistchannelusersbanned(<ListChannelUsersBannedEvent>message.list_channel_users_banned_event);
         } else if (message.allow_anonymous_event) {
           this.onallowanonymousevent(<AllowAnonymousEvent>message.allow_anonymous_event);
         } else if (message.aiagent_enabled_event) {
@@ -2564,6 +2572,12 @@ export class DefaultSocket implements Socket {
   }
 
   onbanneduser(event: BannedUserEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event)
+    }
+  }
+
+  onlistchannelusersbanned(event: ListChannelUsersBannedEvent) {
     if (this.verbose && window && window.console) {
       console.log(event)
     }
