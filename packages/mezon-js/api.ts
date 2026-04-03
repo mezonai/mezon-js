@@ -1175,6 +1175,18 @@ export interface ApiCheckDuplicateClanNameResponse {
   is_duplicate?: boolean;
 }
 
+/** Request for CheckDuplicateName; type 0–5 matches server TypeCheck iota. */
+export interface ApiCheckDuplicateNameRequest {
+  name?: string;
+  type?: number;
+  condition_id?: string;
+}
+
+/** Response for CheckDuplicateName. */
+export interface ApiCheckDuplicateNameResponse {
+  is_duplicate?: boolean;
+}
+
 /**  */
 export interface ApiClanDesc {
   //
@@ -6351,6 +6363,49 @@ export class MezonApi {
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();
           return tsproto.CategoryDesc.decode(new Uint8Array(buffer)) as ApiCategoryDesc;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+      ),
+    ]);
+  }
+
+  /** Check whether a clan/category/channel/thread/nickname/username already exists. */
+  checkDuplicateName(
+    bearerToken: string,
+    body: ApiCheckDuplicateNameRequest,
+    options = {}
+  ): Promise<ApiCheckDuplicateNameResponse> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/CheckDuplicateName";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.CheckDuplicateNameRequest.encode(
+      tsproto.CheckDuplicateNameRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();
+          return tsproto.CheckDuplicateNameResponse.decode(
+            new Uint8Array(buffer)
+          ) as ApiCheckDuplicateNameResponse;
         } else {
           throw response;
         }

@@ -67,6 +67,8 @@ import {
   ApiPinMessagesList,
   ApiDeleteChannelDescRequest,
   ApiChangeChannelPrivateRequest,
+  ApiCheckDuplicateNameRequest,
+  ApiCheckDuplicateNameResponse,
   ApiClanEmojiCreateRequest,
   MezonUpdateClanEmojiByIdBody,
   ApiWebhookCreateRequest,
@@ -759,6 +761,22 @@ export class Client {
       .then((response: ApiClanDesc) => {
         return Promise.resolve(response);
       });
+  }
+
+  /** Check duplicate name/label  */
+  async checkDuplicateName(
+    session: Session,
+    request: ApiCheckDuplicateNameRequest,
+  ): Promise<ApiCheckDuplicateNameResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.checkDuplicateName(session.token, request);
   }
 
   /**  */
