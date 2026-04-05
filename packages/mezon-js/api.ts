@@ -5373,6 +5373,64 @@ export class MezonApi {
     ]);
   }
 
+  /** Mark forum threads inactive (archived; active = 0) for threads the user belongs to under parent_id. */
+  archiveInactiveChannelThreads(
+    bearerToken: string,
+    clanId: string,
+    parentId: string,
+    threadIds: string[],
+    options = {}
+  ): Promise<any> {
+    if (clanId === null || clanId === undefined) {
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
+    }
+    if (parentId === null || parentId === undefined) {
+      throw new Error(
+        "'parentId' is a required parameter but is null or undefined."
+      );
+    }
+    if (!threadIds || threadIds.length === 0) {
+      throw new Error(
+        "'threadIds' is a required parameter but is null, undefined, or empty."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/ArchiveInactiveChannelThreads";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.ArchiveInactiveChannelThreadsRequest.encode(
+      tsproto.ArchiveInactiveChannelThreadsRequest.fromPartial({
+        clan_id: clanId,
+        parent_id: parentId,
+        thread_ids: threadIds
+      })
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {};
+        } else if (response.status >= 200 && response.status < 300) {
+          return response;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
   /** Kick a set of users from a channel. */
   removeChannelUsers(
     bearerToken: string,

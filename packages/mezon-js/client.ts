@@ -3867,6 +3867,33 @@ export class Client {
       });
   }
 
+  /** Mark forum threads inactive (archived) under parent_id for threads the session user belongs to. */
+  async archiveInactiveChannelThreads(
+    session: Session,
+    clanId: string,
+    parentId: string,
+    threadIds: string[]
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .archiveInactiveChannelThreads(
+        session.token,
+        clanId,
+        parentId,
+        threadIds
+      )
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
   async getChannelSettingInClan(
     session: Session,
     clanId: string,
