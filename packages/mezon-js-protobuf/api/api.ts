@@ -2,12 +2,12 @@
 // versions:
 //   protoc-gen-ts_proto  v1.181.2
 //   protoc               v6.31.1
-// source: api.proto
+// source: api/api.proto
 
 /* eslint-disable */
 import Long from "long";
 import _m0 from "protobufjs/minimal";
-import { BoolValue, StringValue } from "./google/protobuf/wrappers";
+import { BoolValue, StringValue } from "../google/protobuf/wrappers";
 
 export const protobufPackage = "mezon.api";
 
@@ -1750,6 +1750,15 @@ export interface LeaveThreadRequest {
   channel_id: string;
 }
 
+/** Set forum threads inactive (archived). */
+export interface ArchiveInactiveChannelThreadsRequest {
+  clan_id: string;
+  /** Parent channel that owns the threads. */
+  parent_id: string;
+  /** Thread channel IDs to mark inactive. */
+  thread_ids: string[];
+}
+
 /** Role record */
 export interface Role {
   /** Role id */
@@ -2462,11 +2471,6 @@ export interface CheckDuplicateClanNameResponse {
   is_duplicate: boolean;
 }
 
-/**
- * CheckDuplicateNameRequest checks whether a name/label already exists.
- * type matches mezon constant.TypeCheck iota: 0=CLAN, 1=CATEGORY, 2=CHANNEL, 3=THREAD, 4=NICKNAME, 5=USERNAME.
- * condition_id: clan_id for CATEGORY and NICKNAME; category_id for CHANNEL; parent channel id for THREAD; ignored for CLAN and USERNAME.
- */
 export interface CheckDuplicateNameRequest {
   name: string;
   type: number;
@@ -17775,6 +17779,113 @@ export const LeaveThreadRequest = {
     const message = createBaseLeaveThreadRequest();
     message.clan_id = object.clan_id ?? "0";
     message.channel_id = object.channel_id ?? "0";
+    return message;
+  },
+};
+
+function createBaseArchiveInactiveChannelThreadsRequest(): ArchiveInactiveChannelThreadsRequest {
+  return { clan_id: "0", parent_id: "0", thread_ids: [] };
+}
+
+export const ArchiveInactiveChannelThreadsRequest = {
+  encode(message: ArchiveInactiveChannelThreadsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
+    }
+    if (message.parent_id !== "0") {
+      writer.uint32(16).int64(message.parent_id);
+    }
+    writer.uint32(26).fork();
+    for (const v of message.thread_ids) {
+      writer.int64(v);
+    }
+    writer.ldelim();
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ArchiveInactiveChannelThreadsRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseArchiveInactiveChannelThreadsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.clan_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.parent_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag === 24) {
+            message.thread_ids.push(longToString(reader.int64() as Long));
+
+            continue;
+          }
+
+          if (tag === 26) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.thread_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ArchiveInactiveChannelThreadsRequest {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "0",
+      thread_ids: globalThis.Array.isArray(object?.thread_ids)
+        ? object.thread_ids.map((e: any) => globalThis.String(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ArchiveInactiveChannelThreadsRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "0") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.parent_id !== "0") {
+      obj.parent_id = message.parent_id;
+    }
+    if (message.thread_ids?.length) {
+      obj.thread_ids = message.thread_ids;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ArchiveInactiveChannelThreadsRequest>, I>>(
+    base?: I,
+  ): ArchiveInactiveChannelThreadsRequest {
+    return ArchiveInactiveChannelThreadsRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ArchiveInactiveChannelThreadsRequest>, I>>(
+    object: I,
+  ): ArchiveInactiveChannelThreadsRequest {
+    const message = createBaseArchiveInactiveChannelThreadsRequest();
+    message.clan_id = object.clan_id ?? "0";
+    message.parent_id = object.parent_id ?? "0";
+    message.thread_ids = object.thread_ids?.map((e) => e) || [];
     return message;
   },
 };
