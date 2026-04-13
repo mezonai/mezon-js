@@ -1,112 +1,76 @@
-/**
- * Copyright 2020 The Mezon Authors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 import * as tsproto from "./rtapi/realtime";
-import { SocketCloseHandler, SocketErrorHandler, SocketMessageHandler, SocketOpenHandler, TransportAdapter } from "./transport_adapter";
+import { TransportBaseAdapter } from "./transport_base_adapter";
 
-/**
- * A protocol buffer socket adapter that accepts and transmits payloads using the protobuf binary wire format.
- */
-export class WebSocketAdapterPb implements TransportAdapter {
+export class WebSocketAdapterPb extends TransportBaseAdapter {
   private _socket?: WebSocket;
 
-  constructor() { }
-
-  get onClose(): SocketCloseHandler | null {
-    return this._socket!.onclose;
-  }
-
-  set onClose(value: SocketCloseHandler | null) {
-    this._socket!.onclose = value;
-  }
-
-  get onError(): SocketErrorHandler | null {
-    return this._socket!.onerror;
-  }
-
-  set onError(value: SocketErrorHandler | null) {
-    this._socket!.onerror = value;
-  }
-
-  get onMessage(): SocketMessageHandler | null {
-    return this._socket!.onmessage;
-  }
-
-  set onMessage(value: SocketMessageHandler | null) {
-    if (value) {
-      this._socket!.onmessage = (evt: MessageEvent) => {
-        const buffer: ArrayBuffer = evt.data;
-        const uintBuffer: Uint8Array = new Uint8Array(buffer);
-        const envelope = tsproto.Envelope.decode(uintBuffer);
-
-        if (envelope.channel_message) {
-          if (envelope.channel_message.code == undefined) {
-            //protobuf plugin does not default-initialize missing Int32Value fields
-            envelope.channel_message.code = 0;
-          }
-        }
-
-        value!(envelope);
-      };
-    } else {
-      value = null;
-    }
-  }
-
-  get onOpen(): SocketOpenHandler | null {
-    return this._socket!.onopen;
-  }
-
-  set onOpen(value: SocketOpenHandler | null) {
-    this._socket!.onopen = value;
-  }
-
-  isOpen(): boolean {
-    return this._socket?.readyState == WebSocket.OPEN;
-  }
-
-  close() {
-    this._socket?.close();
-    this._socket = undefined;
+  constructor() {
+    super();
   }
 
   connect(
     scheme: string,
     host: string,
     port: string,
-    createStatus: boolean,
+    _createStatus: boolean, // Note: Ensure your Base handles these if needed
     token: string,
     platform: string,
-    signal?: AbortSignal,
+    signal?: AbortSignal
   ): void {
+    const url = `${scheme}://${host}:${port}/ws?token=${token}&platform=${platform}`;
+    const socket = new WebSocket(url);
+    socket.binaryType = "arraybuffer";
+    this._socket =  socket;
+
+    // Handle AbortSignal
     if (signal) {
-      signal.addEventListener("abort", () => {
-        this.close();
-      });
+      signal.addEventListener("abort", () => this.close());
     }
-    const portPart = port ? `:${port}` : '';
-    const url = `${scheme}${host}${portPart}/ws?lang=en&status=${encodeURIComponent(
-      createStatus.toString(),
-    )}&token=${encodeURIComponent(token)}&format=protobuf&platform=${encodeURIComponent(platform)}`;
-    this._socket = new WebSocket(url);
-    this._socket.binaryType = "arraybuffer";
+
+    socket.onopen = (ev: Event) => {
+      this._isOpen = true;
+      (this.onOpen as any)?.(ev);
+    };
+
+    socket.onmessage = (ev: MessageEvent) => {
+      try {
+        // Decode the incoming binary into a Protobuf Envelope
+        const uintBuffer = new Uint8Array(ev.data);
+        const envelope = tsproto.Envelope.decode(uintBuffer);
+        
+        // Pass to Base class to resolve pending Promises or trigger onMessage
+        this.handleIncomingEnvelope(envelope);
+      } catch (e) {
+        console.error("WebSocketAdapterPb: Failed to decode envelope", e);
+      }
+    };
+
+    socket.onerror = (ev: Event) => {
+      (this.onError as any)?.(ev);
+    };
+
+    socket.onclose = (ev: CloseEvent) => {
+      this._isOpen = false;
+      this.clearPendingRequests("WebSocket closed");
+      (this.onClose as any)?.(ev);
+      this._socket = undefined;
+    };
   }
 
-  send(msg: any): void {
-    const envelopeWriter = tsproto.Envelope.encode(tsproto.Envelope.fromPartial(msg));
-    const encodedMsg = envelopeWriter.finish();
-    this._socket!.send(encodedMsg);
+  /**
+   * Implementation required by TransportBaseAdapter
+   */
+  protected transmit(data: Uint8Array): void {
+    if (this._socket && this._socket.readyState === WebSocket.OPEN) {
+      this._socket.send(data);
+    } else {
+      console.warn("WebSocketAdapterPb: Attempted to send while socket was closed.");
+    }
+  }
+
+  close(): void {
+    if (this._socket) {
+      this._socket.close(1000, "Normal Closure");
+    }
   }
 }

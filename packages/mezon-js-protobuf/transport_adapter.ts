@@ -33,7 +33,7 @@ export interface TransportAdapter {
     platform: string,
     signal?: AbortSignal,
   ): void;
-  send(message: any): void;
+  send(message: any): Promise<any>;
 }
 
 /**
