@@ -50,20 +50,16 @@ export class AbridgedTcpAdapter implements TransportAdapter {
     }
 
     try {
-      // 1. Initialize native TCP connection
       this._socket = native.connect(host, parseInt(port));
       
-      // 2. Perform Abridged Handshake immediately
       this._socket.send(Buffer.from([0xef]));
       
       this._isOpen = true;
 
-      // 3. Mimic onOpen
       if (this.onOpen) {
         this.onOpen.call(null as any, new Event("open"));
       }
 
-      // 4. Start Polling Loop
       this._pollInterval = setInterval(() => {
         const data = this._socket.poll();
         if (data) {
