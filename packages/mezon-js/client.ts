@@ -191,10 +191,10 @@ import {
   ApiDetailChannelTimelineRequest,
   ApiDetailChannelTimelineResponse,
   ApiMutedChannelList,
-} from "./deleted-api";
+} from "./api";
 import { Session } from "./session";
 import { RefreshTokenManager } from "./refresh_token_manager";
-import { DefaultSocket, Socket, ChannelMessageAck } from "./deleted-socket";
+import { DefaultSocket, Socket, ChannelMessageAck } from "./socket";
 import {
   decodeAttachments,
   decodeMentions,
@@ -205,7 +205,6 @@ import {
   decodeChannelTimelineAttachments
 } from "./utils";
 import { MultipartUploadAttachment, MultipartUploadAttachmentFinishRequest, WebSocketAdapter, WebSocketAdapterPb } from "mezon-js-protobuf";
-import { abridgedTcpFetcher } from './abridged-tcp-fetcher';
 
 const DEFAULT_HOST = "127.0.0.1";
 const DEFAULT_PORT = "7350";
@@ -405,8 +404,8 @@ export interface ApiUpdateRoleRequest {
 
 /** A client for Mezon server. */
 export class Client {
-  private transport: any;
-  private pendingRequests = new Map<string, { resolve: Function; reject: Function }>();
+  /** The low level API client for Mezon server. */
+  private readonly apiClient: MezonApi;
 
   private readonly refreshTokenManager = RefreshTokenManager.getInstance();
   host: string;
@@ -427,24 +426,7 @@ export class Client {
     const scheme = useSSL ? "https://" : "http://";
     const basePath = `${scheme}${host}:${port}`;
 
-    if (this.isElectron()) {
-      this.transport = new AbridgedTcpTransport(host, port);
-    } else {
-      this.transport = new WebSocketTransport(host, port, useSSL);
-    }
-
-    setFetcher(this.fetcher.bind(this));
-    this.transport.onData((data) => this.handleIncomingData(data));
-  }
-
-  async fetcher(url: string, token: string, options: any): Promise<Response> {
-      const nonce = Math.random().toString(36).substring(7);
-      const payload = { route: url, body: JSON.parse(options.body), nonce };
-      
-      return new Promise((resolve, reject) => {
-          this.pendingRequests.set(nonce, { resolve, reject });
-          this.transport.send(JSON.stringify(payload));
-      });
+    this.apiClient = new MezonApi(serverkey, timeout, basePath);
   }
 
   /**
@@ -613,7 +595,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("addChannelUsers", session.token, {channelId, ids})
+    return this.apiClient
+      .addChannelUsers(session.token, channelId, ids)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -633,7 +616,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("addFriends", session.token, {ids, usernames});
+    return this.apiClient.addFriends(session.token, ids, usernames);
   }
 
   /** Block one or more users by ID or username. */
@@ -650,7 +633,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("blockFriends", session.token, {ids, usernames})
+    return this.apiClient
+      .blockFriends(session.token, ids, usernames)
       .then((response: any) => {
         return Promise.resolve(response != undefined);
       });
@@ -670,7 +654,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("unblockFriends", session.token, {ids, usernames})
+    return this.apiClient
+      .unblockFriends(session.token, ids, usernames)
       .then((response: any) => {
         return Promise.resolve(response != undefined);
       });
@@ -689,7 +674,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("uploadOauthFile", session.token, request);
+    return this.apiClient.uploadOauthFile(session.token, request);
   }
 
   /** Create a new group with the current user as the creator and superadmin. */
@@ -705,7 +690,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("uploadAttachmentFile", session.token, request);
+    return this.apiClient.uploadAttachmentFile(session.token, request);
   }
 
   async multipartUploadAttachmentFile(
@@ -720,7 +705,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("multipartUploadAttachmentFile", session.token, request);
+    return this.apiClient.multipartUploadAttachmentFile(session.token, request);
   }
 
   async multipartUploadAttachmentFileFinish(
@@ -735,7 +720,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("multipartUploadAttachmentFileFinsih", session.token, request);
+    return this.apiClient.multipartUploadAttachmentFileFinsih(session.token, request);
   }
 
   /** Create a channel within clan */
@@ -751,7 +736,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("createChannelDesc", session.token, request)
+    return this.apiClient
+      .createChannelDesc(session.token, request)
       .then((response: ApiChannelDescription) => {
         return Promise.resolve(response);
       });
@@ -770,7 +756,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("createClanDesc", session.token, request)
+    return this.apiClient
+      .createClanDesc(session.token, request)
       .then((response: ApiClanDesc) => {
         return Promise.resolve(response);
       });
@@ -789,7 +776,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("checkDuplicateName", session.token, request);
+    return this.apiClient.checkDuplicateName(session.token, request);
   }
 
   /**  */
@@ -805,7 +792,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("createCategoryDesc", session.token, request)
+    return this.apiClient
+      .createCategoryDesc(session.token, request)
       .then((response: ApiCategoryDesc) => {
         return Promise.resolve(response);
       });
@@ -824,7 +812,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("createRole", session.token, request)
+    return this.apiClient
+      .createRole(session.token, request)
       .then((response: ApiRole) => {
         return Promise.resolve(response);
       });
@@ -843,7 +832,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("createEvent", session.token, request)
+    return this.apiClient
+      .createEvent(session.token, request)
       .then((response: ApiEventManagement) => {
         return Promise.resolve(response);
       });
@@ -862,7 +852,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("addRolesChannelDesc", session.token, request)
+    return this.apiClient
+      .addRolesChannelDesc(session.token, request)
       .then((response: ApiRole) => {
         return response !== undefined;
       });
@@ -881,7 +872,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteRoleChannelDesc", session.token, request)
+    return this.apiClient
+      .deleteRoleChannelDesc(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -896,7 +888,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteApp", session.token, {appId})
+    return this.apiClient
+      .deleteApp(session.token, appId)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -935,7 +928,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteFriends", session.token, {ids, usernames})
+    return this.apiClient
+      .deleteFriends(session.token, ids, usernames)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -955,7 +949,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteChannelDesc", session.token, {clanId, channelId})
+    return this.apiClient
+      .deleteChannelDesc(session.token, clanId, channelId)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -971,7 +966,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteClanDesc", session.token, {clanDescId})
+    return this.apiClient
+      .deleteClanDesc(session.token, clanDescId)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -992,7 +988,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteCategoryDesc", session.token, {categoryId, clanId, categoryLabel})
+    return this.apiClient
+      .deleteCategoryDesc(session.token, categoryId, clanId, categoryLabel)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -1012,7 +1009,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteNotifications", session.token, {ids, category})
+    return this.apiClient
+      .deleteNotifications(session.token, ids, category)
       .then((response: any) => {
         return Promise.resolve(response != undefined);
       });
@@ -1033,7 +1031,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteRole", session.token, {roleId, "0", clanId, roleLabel})
+    return this.apiClient
+      .deleteRole(session.token, roleId, "0", clanId, roleLabel)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -1056,7 +1055,9 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteEvent", session.token,
+    return this.apiClient
+      .deleteEvent(
+        session.token,
         eventId,
         clanId,
         creatorId,
@@ -1081,7 +1082,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateEventUser", session.token, request)
+    return this.apiClient
+      .updateEventUser(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -1097,7 +1099,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("event", session.token, request)
+    return this.apiClient
+      .event(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response != undefined);
       });
@@ -1113,7 +1116,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getAccount", session.token);
+    return this.apiClient.getAccount(session.token);
   }
 
   /** Kick a set of users from a clan. */
@@ -1130,7 +1133,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("removeClanUsers", session.token, {clanId, ids})
+    return this.apiClient
+      .removeClanUsers(session.token, clanId, ids)
       .then((response: any) => {
         return Promise.resolve(response != undefined);
       });
@@ -1149,7 +1153,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listBannedUsers", session.token, {clanId, channelId})
+    return this.apiClient
+      .listBannedUsers(session.token, clanId, channelId)
       .then((response: ApiBannedUserList) => {
         return Promise.resolve(response);
       });
@@ -1170,7 +1175,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("unbanClanUsers", session.token, {clanId, channelId, userIds})
+    return this.apiClient
+      .unbanClanUsers(session.token, clanId, channelId, userIds)
       .then((response: any) => {
         return Promise.resolve(response != undefined);
       });
@@ -1192,7 +1198,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("banClanUsers", session.token, {clanId, channelId, userIds, banTime})
+    return this.apiClient
+      .banClanUsers(session.token, clanId, channelId, userIds, banTime)
       .then((response: any) => {
         return Promise.resolve(response != undefined);
       });
@@ -1212,7 +1219,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("removeChannelUsers", session.token, {channelId, ids})
+    return this.apiClient
+      .removeChannelUsers(session.token, channelId, ids)
       .then((response: any) => {
         return Promise.resolve(response != undefined);
       });
@@ -1236,7 +1244,9 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listChannelMessages", session.token,
+    return this.apiClient
+      .listChannelMessages(
+        session.token,
         clanId,
         channelId,
         messageId,
@@ -1343,7 +1353,9 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listChannelVoiceUsers", session.token,
+    return this.apiClient
+      .listChannelVoiceUsers(
+        session.token,
         clanId,
         limit
       )
@@ -1386,7 +1398,9 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listChannelUsers", session.token,
+    return this.apiClient
+      .listChannelUsers(
+        session.token,
         clanId,
         channelId,
         channelType,
@@ -1441,7 +1455,9 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listChannelAttachment", session.token,
+    return this.apiClient
+      .listChannelAttachment(
+        session.token,
         channelId,
         clanId,
         fileType,
@@ -1490,7 +1506,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listClanUsers", session.token, {clanId})
+    return this.apiClient
+      .listClanUsers(session.token, clanId)
       .then((response: ApiClanUserList) => {
         const result: ApiClanUserList = {
           clan_users: [],
@@ -1547,7 +1564,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listClanUsersStatus", session.token, {clanId})
+    return this.apiClient
+      .listClanUsersStatus(session.token, clanId)
       .then((response: ApiClanUserStatusList) => {
         const result: ApiClanUserStatusList = {
           clan_user_statuses: [],
@@ -1577,7 +1595,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listChannelDetail", session.token, {channelId})
+    return this.apiClient
+      .listChannelDetail(session.token, channelId)
       .then((response: ApiChannelDescription) => {
         return Promise.resolve(response);
       });
@@ -1601,7 +1620,9 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listChannelDescs", session.token,
+    return this.apiClient
+      .listChannelDescs(
+        session.token,
         limit,
         state,
         page,
@@ -1641,7 +1662,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listClanDescs", session.token, {limit, state, cursor})
+    return this.apiClient
+      .listClanDescs(session.token, limit, state, cursor)
       .then((response: ApiClanDescList) => {
         const result: ApiClanDescList = {
           clandesc: [],
@@ -1671,7 +1693,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listChannelBadgeCount", session.token, {clanId, limit, page})
+    return this.apiClient
+      .listChannelBadgeCount(session.token, clanId, limit, page)
       .then((response: ApiListChannelBadgeCountResponse) => ({
         channeldesc: response.channeldesc ?? [],
         total_count: response.total_count,
@@ -1693,7 +1716,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listUserOnline", session.token, {clanId, limit, page})
+    return this.apiClient
+      .listUserOnline(session.token, clanId, limit, page)
       .then((response: ApiListUserOnlineResponse) => ({
         users: response.users ?? [],
         total_count: response.total_count,
@@ -1715,7 +1739,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listCategoryDescs", session.token, {clanId, creatorId, categoryName})
+    return this.apiClient
+      .listCategoryDescs(session.token, clanId, creatorId, categoryName)
       .then((response: ApiCategoryDescList) => {
         const result: ApiCategoryDescList = {
           categorydesc: [],
@@ -1740,7 +1765,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listEvents", session.token, {clanId})
+    return this.apiClient
+      .listEvents(session.token, clanId)
       .then((response: ApiEventList) => {
         return Promise.resolve(response);
       });
@@ -1756,7 +1782,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getListPermission", session.token)
+    return this.apiClient
+      .getListPermission(session.token)
       .then((response: ApiPermissionList) => {
         return Promise.resolve(response);
       });
@@ -1775,7 +1802,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listRolePermissions", session.token, {roleId})
+    return this.apiClient
+      .listRolePermissions(session.token, roleId)
       .then((response: ApiPermissionList) => {
         return Promise.resolve(response);
       });
@@ -1796,7 +1824,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listRoleUsers", session.token, {roleId, limit, cursor})
+    return this.apiClient
+      .listRoleUsers(session.token, roleId, limit, cursor)
       .then((response: ApiRoleUserList) => {
         return Promise.resolve(response);
       });
@@ -1817,7 +1846,9 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("registFCMDeviceToken", session.token,
+    return this.apiClient
+      .registFCMDeviceToken(
+        session.token,
         tokenId,
         deviceId,
         platform,
@@ -1840,7 +1871,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getUserProfileOnClan", session.token, {clanId})
+    return this.apiClient
+      .getUserProfileOnClan(session.token, clanId)
       .then((response: ApiClanProfile) => {
         return Promise.resolve(response);
       });
@@ -1859,7 +1891,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("closeDirectMess", session.token, request)
+    return this.apiClient
+      .closeDirectMess(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -1877,7 +1910,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("openDirectMess", session.token, request)
+    return this.apiClient
+      .openDirectMess(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -1895,7 +1929,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("confirmLinkMezonOTP", session.token, request);
+    return this.apiClient.confirmLinkMezonOTP(session.token, request);
   }
 
   /** Add a custom ID to the social profiles on the current user's account. */
@@ -1911,7 +1945,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("linkSMS", session.token, request)
+    return this.apiClient
+      .linkSMS(session.token, request)
       .then((response: ApiLinkAccountConfirmRequest) => {
         return Promise.resolve(response);
       });
@@ -1930,7 +1965,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("linkEmail", session.token, request)
+    return this.apiClient
+      .linkEmail(session.token, request)
       .then((response: ApiLinkAccountConfirmRequest) => {
         return Promise.resolve(response);
       });
@@ -1951,7 +1987,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listFriends", session.token, {limit, state, cursor})
+    return this.apiClient
+      .listFriends(session.token, limit, state, cursor)
       .then((response: ApiFriendList) => {
         const result: Friends = {
           friends: [],
@@ -2009,7 +2046,9 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listNotifications", session.token,
+    return this.apiClient
+      .listNotifications(
+        session.token,
         limit,
         clanId,
         notificationId,
@@ -2058,7 +2097,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("sessionLogout", session.token, {
+    return this.apiClient
+      .sessionLogout(session.token, {
         refresh_token: refreshToken,
         token: token,
         device_id: deviceId,
@@ -2138,7 +2178,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("unlinkEmail", session.token, request)
+    return this.apiClient
+      .unlinkEmail(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2157,7 +2198,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateUsername", session.token, request)
+    return this.apiClient
+      .updateUsername(session.token, request)
       .then((response: ApiSession) => {
         return Promise.resolve(response);
       });
@@ -2176,7 +2218,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateAccount", session.token, request)
+    return this.apiClient
+      .updateAccount(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2196,7 +2239,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateChannelDesc", session.token, {channelId, request})
+    return this.apiClient
+      .updateChannelDesc(session.token, channelId, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2216,7 +2260,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateClanDesc", session.token, {clanId, request})
+    return this.apiClient
+      .updateClanDesc(session.token, clanId, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2236,7 +2281,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateCategory", session.token, {clanId, request})
+    return this.apiClient
+      .updateCategory(session.token, clanId, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2255,7 +2301,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateUserProfileByClan", session.token, {clanId, request})
+    return this.apiClient
+      .updateUserProfileByClan(session.token, clanId, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2275,7 +2322,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateRole", session.token, {roleId, request})
+    return this.apiClient
+      .updateRole(session.token, roleId, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2295,7 +2343,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateEvent", session.token, {roleId, request})
+    return this.apiClient
+      .updateEvent(session.token, roleId, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2315,7 +2364,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateApp", session.token, {roleId, request})
+    return this.apiClient
+      .updateApp(session.token, roleId, request)
       .then((response: ApiApp) => {
         return Promise.resolve(response);
       });
@@ -2334,7 +2384,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("createLinkInviteUser", session.token, request)
+    return this.apiClient
+      .createLinkInviteUser(session.token, request)
       .then((response: ApiLinkInviteUser) => {
         return Promise.resolve(response);
       });
@@ -2362,7 +2413,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getRoleOfUserInTheClan", session.token, {clanId})
+    return this.apiClient
+      .getRoleOfUserInTheClan(session.token, clanId)
       .then((response: ApiRoleList) => {
         return Promise.resolve(response);
       });
@@ -2381,7 +2433,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("inviteUser", session.token, {inviteId})
+    return this.apiClient
+      .inviteUser(session.token, inviteId)
       .then((response: ApiInviteUserRes) => {
         return Promise.resolve(response);
       });
@@ -2400,7 +2453,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("setNotificationClanSetting", session.token, request)
+    return this.apiClient
+      .setNotificationClanSetting(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2419,7 +2473,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("setNotificationChannelSetting", session.token, request)
+    return this.apiClient
+      .setNotificationChannelSetting(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2438,7 +2493,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("setMuteCategory", session.token, request)
+    return this.apiClient
+      .setMuteCategory(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2457,7 +2513,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("setMuteChannel", session.token, request)
+    return this.apiClient
+      .setMuteChannel(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2476,7 +2533,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateChannelPrivate", session.token, request)
+    return this.apiClient
+      .updateChannelPrivate(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2495,7 +2553,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("setNotificationCategorySetting", session.token, request)
+    return this.apiClient
+      .setNotificationCategorySetting(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2513,7 +2572,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteNotificationCategorySetting", session.token, {category_id})
+    return this.apiClient
+      .deleteNotificationCategorySetting(session.token, category_id)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2531,7 +2591,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteNotificationChannel", session.token, {channel_id})
+    return this.apiClient
+      .deleteNotificationChannel(session.token, channel_id)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2550,7 +2611,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("setNotificationReactMessage", session.token, {{ channel_id }})
+    return this.apiClient
+      .setNotificationReactMessage(session.token, { channel_id })
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2569,7 +2631,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteNotiReactMessage", session.token, {channel_id})
+    return this.apiClient
+      .deleteNotiReactMessage(session.token, channel_id)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2588,7 +2651,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("searchMessage", session.token, request)
+    return this.apiClient
+      .searchMessage(session.token, request)
       .then((response: ApiSearchMessageResponse) => {
         return Promise.resolve(response);
       });
@@ -2607,7 +2671,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("createMessage2Inbox", session.token, request)
+    return this.apiClient
+      .createMessage2Inbox(session.token, request)
       .then((response: ApiChannelMessageHeader) => {
         return Promise.resolve(response);
       });
@@ -2626,7 +2691,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("createPinMessage", session.token, request)
+    return this.apiClient
+      .createPinMessage(session.token, request)
       .then((response: ApiChannelMessageHeader) => {
         return Promise.resolve(response);
       });
@@ -2646,7 +2712,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getPinMessagesList", session.token, {messageId, channelId, clanId})
+    return this.apiClient
+      .getPinMessagesList(session.token, messageId, channelId, clanId)
       .then((response) => {
         const result: ApiPinMessagesList = {
           pin_messages_list: [],
@@ -2689,7 +2756,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deletePinMessage", session.token, {id, messageId, channelId, clanId})
+    return this.apiClient
+      .deletePinMessage(session.token, id, messageId, channelId, clanId)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2705,7 +2773,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("createClanEmoji", session.token, request)
+    return this.apiClient
+      .createClanEmoji(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2725,7 +2794,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateClanEmojiById", session.token, {id, request})
+    return this.apiClient
+      .updateClanEmojiById(session.token, id, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2746,7 +2816,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteClanEmojiById", session.token, {id, clan_id, emojiLabel})
+    return this.apiClient
+      .deleteClanEmojiById(session.token, id, clan_id, emojiLabel)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2765,7 +2836,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("generateWebhook", session.token, request)
+    return this.apiClient
+      .generateWebhook(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -2785,7 +2857,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listWebhookByChannelId", session.token, {channel_id, clan_id})
+    return this.apiClient
+      .listWebhookByChannelId(session.token, channel_id, clan_id)
       .then((response: ApiWebhookListResponse) => {
         return Promise.resolve(response);
       });
@@ -2805,7 +2878,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateWebhookById", session.token, {id, request})
+    return this.apiClient
+      .updateWebhookById(session.token, id, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2825,7 +2899,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteWebhookById", session.token, {id, request})
+    return this.apiClient
+      .deleteWebhookById(session.token, id, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2841,7 +2916,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("addClanSticker", session.token, request)
+    return this.apiClient
+      .addClanSticker(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2862,7 +2938,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteClanStickerById", session.token, {id, clan_id, stickerLabel})
+    return this.apiClient
+      .deleteClanStickerById(session.token, id, clan_id, stickerLabel)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2882,7 +2959,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateClanStickerById", session.token, {id, request})
+    return this.apiClient
+      .updateClanStickerById(session.token, id, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2902,7 +2980,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("changeChannelCategory", session.token, {id, request})
+    return this.apiClient
+      .changeChannelCategory(session.token, id, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2921,7 +3000,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("setRoleChannelPermission", session.token, request)
+    return this.apiClient
+      .setRoleChannelPermission(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2936,7 +3016,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("addApp", session.token, request)
+    return this.apiClient
+      .addApp(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -2951,7 +3032,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getApp", session.token, {id}).then((response: ApiApp) => {
+    return this.apiClient.getApp(session.token, id).then((response: ApiApp) => {
       return Promise.resolve(response);
     });
   }
@@ -2965,7 +3046,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listApps", session.token)
+    return this.apiClient
+      .listApps(session.token)
       .then((response: ApiAppList) => {
         return Promise.resolve(response);
       });
@@ -2980,7 +3062,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("addAppToClan", session.token, {appId, clanId})
+    return this.apiClient
+      .addAppToClan(session.token, appId, clanId)
       .then((response: ApiAppList) => {
         return response !== undefined;
       });
@@ -2997,7 +3080,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getSystemMessagesList", session.token)
+    return this.apiClient
+      .getSystemMessagesList(session.token)
       .then((response: ApiSystemMessagesList) => {
         return Promise.resolve(response);
       });
@@ -3015,7 +3099,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getSystemMessageByClanId", session.token, {clanId})
+    return this.apiClient
+      .getSystemMessageByClanId(session.token, clanId)
       .then((response: ApiSystemMessage) => {
         return Promise.resolve(response);
       });
@@ -3033,7 +3118,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("createSystemMessage", session.token, request)
+    return this.apiClient
+      .createSystemMessage(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -3052,7 +3138,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateSystemMessage", session.token, {clanId, request})
+    return this.apiClient
+      .updateSystemMessage(session.token, clanId, request)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -3067,7 +3154,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteSystemMessage", session.token, {clanId})
+    return this.apiClient
+      .deleteSystemMessage(session.token, clanId)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -3085,7 +3173,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateCategoryOrder", session.token, request)
+    return this.apiClient
+      .updateCategoryOrder(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -3103,7 +3192,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("giveMeACoffee", session.token, request)
+    return this.apiClient
+      .giveMeACoffee(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -3118,7 +3208,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("sendToken", session.token, request)
+    return this.apiClient
+      .sendToken(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -3142,7 +3233,9 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listStreamingChannelUsers", session.token,
+    return this.apiClient
+      .listStreamingChannelUsers(
+        session.token,
         clanId,
         channelId,
         channelType,
@@ -3183,7 +3276,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("registerStreamingChannel", session.token, request)
+    return this.apiClient
+      .registerStreamingChannel(session.token, request)
       .then((response: ApiRegisterStreamingChannelResponse) => {
         return response !== undefined;
       });
@@ -3202,7 +3296,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listChannelApps", session.token, {clanId})
+    return this.apiClient
+      .listChannelApps(session.token, clanId)
       .then((response: ApiListChannelAppsResponse) => {
         const result: ApiListChannelAppsResponse = {
           channel_apps: [],
@@ -3239,7 +3334,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getChannelCategoryNotiSettingsList", session.token, {clanId})
+    return this.apiClient
+      .getChannelCategoryNotiSettingsList(session.token, clanId)
       .then((response: ApiNotificationChannelCategorySettingList) => {
         return Promise.resolve(response);
       });
@@ -3257,7 +3353,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getNotificationCategory", session.token, {categoryId})
+    return this.apiClient
+      .getNotificationCategory(session.token, categoryId)
       .then((response: ApiNotificationUserChannel) => {
         return Promise.resolve(response);
       });
@@ -3275,7 +3372,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getNotificationChannel", session.token, {channelId})
+    return this.apiClient
+      .getNotificationChannel(session.token, channelId)
       .then((response: ApiNotificationUserChannel) => {
         return Promise.resolve(response);
       });
@@ -3293,7 +3391,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getNotificationClan", session.token, {clanId})
+    return this.apiClient
+      .getNotificationClan(session.token, clanId)
       .then((response: ApiNotificationSetting) => {
         return Promise.resolve(response);
       });
@@ -3311,7 +3410,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getNotificationReactMessage", session.token, {channelId})
+    return this.apiClient
+      .getNotificationReactMessage(session.token, channelId)
       .then((response: ApiNotifiReactMessage) => {
         return Promise.resolve(response);
       });
@@ -3326,7 +3426,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listChannelByUserId", session.token)
+    return this.apiClient
+      .listChannelByUserId(session.token)
       .then((response: ApiChannelDescList) => {
         return Promise.resolve(response);
       });
@@ -3345,7 +3446,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listChannelUsersUC", session.token, {channel_id, limit})
+    return this.apiClient
+      .listChannelUsersUC(session.token, channel_id, limit)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -3362,7 +3464,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getListEmojisByUserId", session.token)
+    return this.apiClient
+      .getListEmojisByUserId(session.token)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -3377,7 +3480,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("emojiRecentList", session.token)
+    return this.apiClient
+      .emojiRecentList(session.token)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -3394,7 +3498,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getListStickersByUserId", session.token)
+    return this.apiClient
+      .getListStickersByUserId(session.token)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -3409,7 +3514,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listUserClansByUserId", session.token)
+    return this.apiClient
+      .listUserClansByUserId(session.token)
       .then((response: ApiAllUserClans) => {
         return Promise.resolve(response);
       });
@@ -3430,7 +3536,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listRoles", session.token, {clanId, limit, state, cursor})
+    return this.apiClient
+      .listRoles(session.token, clanId, limit, state, cursor)
       .then((response: ApiRoleListEventResponse) => {
         const result: ApiRoleListEventResponse = {
           clan_id: clanId,
@@ -3454,7 +3561,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listUserPermissionInChannel", session.token, {clanId, channelId})
+    return this.apiClient
+      .listUserPermissionInChannel(session.token, clanId, channelId)
       .then((response: ApiUserPermissionInChannelListResponse) => {
         const result: ApiUserPermissionInChannelListResponse = {
           clan_id: clanId,
@@ -3480,7 +3588,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getPermissionByRoleIdChannelId", session.token, {roleId, channelId, userId})
+    return this.apiClient
+      .getPermissionByRoleIdChannelId(session.token, roleId, channelId, userId)
       .then((response: ApiPermissionRoleChannelListEventResponse) => {
         const result: ApiPermissionRoleChannelListEventResponse = {
           role_id: roleId,
@@ -3505,7 +3614,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("markAsRead", session.token, request)
+    return this.apiClient
+      .markAsRead(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -3529,7 +3639,9 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listThreadDescs", session.token,
+    return this.apiClient
+      .listThreadDescs(
+        session.token,
         channelId,
         limit,
         state,
@@ -3563,7 +3675,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listChannelTimeline", session.token, request)
+    return this.apiClient
+      .listChannelTimeline(session.token, request)
       .then((response: ApiListChannelTimelineResponse) => {
         response.events?.forEach((event) => {
           event.attachments = [];
@@ -3599,7 +3712,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("createChannelTimeline", session.token, request)
+    return this.apiClient
+      .createChannelTimeline(session.token, request)
       .then((response: ApiCreateChannelTimelineResponse) => {
         const event = response.event;
         if (event) {
@@ -3647,7 +3761,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateChannelTimeline", session.token, request)
+    return this.apiClient
+      .updateChannelTimeline(session.token, request)
       .then((response: ApiUpdateChannelTimelineResponse) => {
         const event = response.event;
         if (event) {
@@ -3695,7 +3810,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("detailChannelTimeline", session.token, request)
+    return this.apiClient
+      .detailChannelTimeline(session.token, request)
       .then((response: ApiDetailChannelTimelineResponse) => {
         const event = response.event;
         if (event) {
@@ -3744,7 +3860,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("leaveThread", session.token, {clanId, channelId})
+    return this.apiClient
+      .leaveThread(session.token, clanId, channelId)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -3765,7 +3882,9 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("archiveInactiveChannelThreads", session.token,
+    return this.apiClient
+      .archiveInactiveChannelThreads(
+        session.token,
         clanId,
         parentId,
         threadIds
@@ -3796,7 +3915,9 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listChannelSetting", session.token,
+    return this.apiClient
+      .listChannelSetting(
+        session.token,
         clanId,
         parentId,
         categoryId,
@@ -3828,7 +3949,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getChannelCanvasList", session.token, {channelId, clanId, limit, page})
+    return this.apiClient
+      .getChannelCanvasList(session.token, channelId, clanId, limit, page)
       .then((response: ApiChannelCanvasListResponse) => {
         const result: ApiChannelCanvasListResponse = {
           channel_canvases: [],
@@ -3860,7 +3982,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getChannelCanvasDetail", session.token, {id, clanId, channelId})
+    return this.apiClient
+      .getChannelCanvasDetail(session.token, id, clanId, channelId)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -3878,7 +4001,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("editChannelCanvases", session.token, request)
+    return this.apiClient
+      .editChannelCanvases(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -3899,7 +4023,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteChannelCanvas", session.token, {canvasId, clanId, channelId})
+    return this.apiClient
+      .deleteChannelCanvas(session.token, canvasId, clanId, channelId)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -3918,7 +4043,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("addChannelFavorite", session.token, {
+    return this.apiClient
+      .addChannelFavorite(session.token, {
         channel_id: channelId,
         clan_id: clanId,
       })
@@ -3940,7 +4066,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("removeChannelFavorite", session.token, {clanId, channelId})
+    return this.apiClient
+      .removeChannelFavorite(session.token, clanId, channelId)
       .then((response: any) => {
         return response;
       });
@@ -3955,7 +4082,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getListFavoriteChannel", session.token, {clanId})
+    return this.apiClient
+      .getListFavoriteChannel(session.token, clanId)
       .then((response: any) => {
         return response;
       });
@@ -3970,7 +4098,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listActivity", session.token).then((response: any) => {
+    return this.apiClient.listActivity(session.token).then((response: any) => {
       return response;
     });
   }
@@ -3987,7 +4115,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("createActiviy", session.token, request)
+    return this.apiClient
+      .createActiviy(session.token, request)
       .then((response: any) => {
         return response;
       });
@@ -4041,7 +4170,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("confirmLogin", session.token, {basePath, body})
+    return this.apiClient
+      .confirmLogin(session.token, basePath, body)
       .then((response: any) => {
         return response;
       });
@@ -4059,7 +4189,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getChanEncryptionMethod", session.token, {channelId})
+    return this.apiClient
+      .getChanEncryptionMethod(session.token, channelId)
       .then((response: ApiChanEncryptionMethod) => {
         return response;
       });
@@ -4078,7 +4209,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("setChanEncryptionMethod", session.token, {channelId, { method: method }})
+    return this.apiClient
+      .setChanEncryptionMethod(session.token, channelId, { method: method })
       .then((response: any) => {
         return response;
       });
@@ -4096,7 +4228,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getPubKeys", session.token, {userIds})
+    return this.apiClient
+      .getPubKeys(session.token, userIds)
       .then((response: ApiGetPubKeysResponse) => {
         return response;
       });
@@ -4114,7 +4247,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("pushPubKey", session.token, {{ PK: PK }})
+    return this.apiClient
+      .pushPubKey(session.token, { PK: PK })
       .then((response: ApiGetPubKeysResponse) => {
         return response;
       });
@@ -4129,7 +4263,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getKeyServer", session.token)
+    return this.apiClient
+      .getKeyServer(session.token)
       .then((response: ApiGetKeyServerResp) => {
         return response;
       });
@@ -4150,7 +4285,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listAuditLog", session.token, {actionLog, userId, clanId, date_log})
+    return this.apiClient
+      .listAuditLog(session.token, actionLog, userId, clanId, date_log)
       .then((response: MezonapiListAuditLog) => {
         return response;
       });
@@ -4171,7 +4307,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listOnboarding", session.token, {clanId, guideType, limit, page})
+    return this.apiClient
+      .listOnboarding(session.token, clanId, guideType, limit, page)
       .then((response: ApiListOnboardingResponse) => {
         return response;
       });
@@ -4190,7 +4327,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getOnboardingDetail", session.token, {id, clanId})
+    return this.apiClient
+      .getOnboardingDetail(session.token, id, clanId)
       .then((response: ApiOnboardingItem) => {
         return Promise.resolve(response);
       });
@@ -4208,7 +4346,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("createOnboarding", session.token, request)
+    return this.apiClient
+      .createOnboarding(session.token, request)
       .then((response: ApiListOnboardingResponse) => {
         return response;
       });
@@ -4227,7 +4366,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateOnboarding", session.token, {id, request})
+    return this.apiClient
+      .updateOnboarding(session.token, id, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -4246,7 +4386,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteOnboarding", session.token, {id, clanId})
+    return this.apiClient
+      .deleteOnboarding(session.token, id, clanId)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -4265,7 +4406,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("generateClanWebhook", session.token, request)
+    return this.apiClient
+      .generateClanWebhook(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -4284,7 +4426,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listClanWebhook", session.token, {clan_id})
+    return this.apiClient
+      .listClanWebhook(session.token, clan_id)
       .then((response: ApiListClanWebhookResponse) => {
         return Promise.resolve(response);
       });
@@ -4300,7 +4443,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteClanWebhookById", session.token, {id, clan_id})
+    return this.apiClient
+      .deleteClanWebhookById(session.token, id, clan_id)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -4320,7 +4464,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateClanWebhookById", session.token, {id, request})
+    return this.apiClient
+      .updateClanWebhookById(session.token, id, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -4341,7 +4486,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listOnboardingStep", session.token, {clan_id, limit, page})
+    return this.apiClient
+      .listOnboardingStep(session.token, clan_id, limit, page)
       .then((response: ApiListOnboardingStepResponse) => {
         return Promise.resolve(response);
       });
@@ -4361,7 +4507,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateOnboardingStepByClanId", session.token, {clan_id, request})
+    return this.apiClient
+      .updateOnboardingStepByClanId(session.token, clan_id, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -4377,7 +4524,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateUserStatus", session.token, request)
+    return this.apiClient
+      .updateUserStatus(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -4393,7 +4541,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateUserCustomStatus", session.token, request)
+    return this.apiClient
+      .updateUserCustomStatus(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -4409,7 +4558,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getUserStatus", session.token)
+    return this.apiClient
+      .getUserStatus(session.token)
       .then((response: ApiUserStatus) => {
         return Promise.resolve(response);
       });
@@ -4429,7 +4579,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listSdTopic", session.token, {clanId, limit})
+    return this.apiClient
+      .listSdTopic(session.token, clanId, limit)
       .then((response: ApiSdTopicList) => {
         return Promise.resolve(response);
       });
@@ -4448,7 +4599,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("createSdTopic", session.token, request)
+    return this.apiClient
+      .createSdTopic(session.token, request)
       .then((response: ApiSdTopic) => {
         return response;
       });
@@ -4467,7 +4619,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getTopicDetail", session.token, {topicId})
+    return this.apiClient
+      .getTopicDetail(session.token, topicId)
       .then((response: ApiSdTopic) => {
         return Promise.resolve(response);
       });
@@ -4486,7 +4639,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("createRoomChannelApps", session.token, {body})
+    return this.apiClient
+      .createRoomChannelApps(session.token, body)
       .then((response: MezonapiCreateRoomChannelApps) => {
         return Promise.resolve(response);
       });
@@ -4505,7 +4659,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("generateMeetToken", session.token, {body})
+    return this.apiClient
+      .generateMeetToken(session.token, body)
       .then((response: ApiGenerateMeetTokenResponse) => {
         return Promise.resolve(response);
       });
@@ -4523,7 +4678,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listMezonOauthClient", session.token)
+    return this.apiClient
+      .listMezonOauthClient(session.token)
       .then((response: ApiMezonOauthClientList) => {
         return Promise.resolve(response);
       });
@@ -4542,7 +4698,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("getMezonOauthClient", session.token, {clientId, clientName})
+    return this.apiClient
+      .getMezonOauthClient(session.token, clientId, clientName)
       .then((response: ApiMezonOauthClient) => {
         return Promise.resolve(response);
       });
@@ -4560,7 +4717,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateMezonOauthClient", session.token, {body})
+    return this.apiClient
+      .updateMezonOauthClient(session.token, body)
       .then((response: ApiMezonOauthClient) => {
         return Promise.resolve(response);
       });
@@ -4581,7 +4739,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("searchThread", session.token, {clanId, channelId, label})
+    return this.apiClient
+      .searchThread(session.token, clanId, channelId, label)
       .then((response: ApiChannelDescList) => {
         return Promise.resolve(response);
       });
@@ -4600,7 +4759,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("generateHashChannelApps", session.token, {appId})
+    return this.apiClient
+      .generateHashChannelApps(session.token, appId)
       .then((response: ApiCreateHashChannelAppsResponse) => {
         return Promise.resolve(response);
       });
@@ -4620,7 +4780,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("registrationEmail", session.token, {
+    return this.apiClient
+      .registrationEmail(session.token, {
         email: email,
         password: password,
         old_password: oldPassword,
@@ -4643,7 +4804,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("addUserEvent", session.token, request)
+    return this.apiClient
+      .addUserEvent(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -4663,7 +4825,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteUserEvent", session.token, {clanId, eventId})
+    return this.apiClient
+      .deleteUserEvent(session.token, clanId, eventId)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -4681,7 +4844,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateRoleOrder", session.token, request)
+    return this.apiClient
+      .updateRoleOrder(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -4696,7 +4860,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteAccount", session.token).then((response: any) => {
+    return this.apiClient.deleteAccount(session.token).then((response: any) => {
       return Promise.resolve(response);
     });
   }
@@ -4712,7 +4876,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("createExternalMezonMeet", session.token)
+    return this.apiClient
+      .createExternalMezonMeet(session.token)
       .then((response: ApiGenerateMezonMeetResponse) => {
         return Promise.resolve(response);
       });
@@ -4744,7 +4909,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("removeParticipantMezonMeet", session.token, request)
+    return this.apiClient
+      .removeParticipantMezonMeet(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -4762,7 +4928,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("muteParticipantMezonMeet", session.token, request)
+    return this.apiClient
+      .muteParticipantMezonMeet(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -4781,7 +4948,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateClanOrder", session.token, request)
+    return this.apiClient
+      .updateClanOrder(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -4813,7 +4981,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listQuickMenuAccess", session.token, {botId, channelId, menuType})
+    return this.apiClient
+      .listQuickMenuAccess(session.token, botId, channelId, menuType)
       .then((response: ApiQuickMenuAccessList) => {
         return Promise.resolve(response);
       });
@@ -4832,7 +5001,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteQuickMenuAccess", session.token, {id, clanId})
+    return this.apiClient
+      .deleteQuickMenuAccess(session.token, id, clanId)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -4850,7 +5020,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("addQuickMenuAccess", session.token, request)
+    return this.apiClient
+      .addQuickMenuAccess(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -4868,7 +5039,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateQuickMenuAccess", session.token, request)
+    return this.apiClient
+      .updateQuickMenuAccess(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -4886,7 +5058,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listForSaleItems", session.token, {page})
+    return this.apiClient
+      .listForSaleItems(session.token, page)
       .then((response: ApiForSaleItemList) => {
         return Promise.resolve(response);
       });
@@ -4904,7 +5077,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("isFollower", session.token, {req})
+    return this.apiClient
+      .isFollower(session.token, req)
       .then((response: ApiIsFollowerResponse) => {
         return Promise.resolve(response);
       });
@@ -4922,7 +5096,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("transferOwnership", session.token, {req})
+    return this.apiClient
+      .transferOwnership(session.token, req)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -4940,7 +5115,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("isBanned", session.token, {channelId})
+    return this.apiClient
+      .isBanned(session.token, channelId)
       .then((response: ApiIsBannedResponse) => {
         return Promise.resolve(response);
       });
@@ -4959,7 +5135,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("reportMessageAbuse", session.token, {messageId, abuseType})
+    return this.apiClient
+      .reportMessageAbuse(session.token, messageId, abuseType)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -4981,7 +5158,9 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateMezonVoiceState", session.token,
+    return this.apiClient
+      .updateMezonVoiceState(
+        session.token,
         clanId,
         channelId,
         displayName,
@@ -5017,7 +5196,9 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("sendChannelMessage", session.token,
+    return this.apiClient
+      .sendChannelMessage(
+        session.token,
         clanId,
         channelId,
         mode,
@@ -5059,7 +5240,9 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("updateChannelMessage", session.token,
+    return this.apiClient
+      .updateChannelMessage(
+        session.token,
         clanId,
         channelId,
         mode,
@@ -5097,7 +5280,9 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("deleteChannelMessage", session.token,
+    return this.apiClient
+      .deleteChannelMessage(
+        session.token,
         clanId,
         channelId,
         mode,
@@ -5130,7 +5315,9 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("messageButtonClick", session.token,
+    return this.apiClient
+      .messageButtonClick(
+        session.token,
         messageId,
         channelId,
         buttonId,
@@ -5160,7 +5347,9 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("dropdownBoxSelected", session.token,
+    return this.apiClient
+      .dropdownBoxSelected(
+        session.token,
         messageId,
         channelId,
         selectboxId,
@@ -5186,7 +5375,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("activeArchivedThread", session.token, {clanId, channelId})
+    return this.apiClient
+      .activeArchivedThread(session.token, clanId, channelId)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -5205,7 +5395,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("addAgentToChannel", session.token, {roomName, channelId})
+    return this.apiClient
+      .addAgentToChannel(session.token, roomName, channelId)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -5224,7 +5415,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("disconnectAgent", session.token, {roomName, channelId})
+    return this.apiClient
+      .disconnectAgent(session.token, roomName, channelId)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -5242,7 +5434,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("listMutedChannel", session.token, {clanId})
+    return this.apiClient
+      .listMutedChannel(session.token, clanId)
       .then((response: ApiMutedChannelList) => {
         return Promise.resolve(response);
       });
@@ -5272,7 +5465,9 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.fetcher("channelMessageReact", session.token,
+    return this.apiClient
+      .channelMessageReact(
+        session.token,
         clanId,
         channelId,
         mode,
@@ -5304,7 +5499,7 @@ export class Client {
     ) {
       await this.sessionRefresh(session);
     }
-    return this.fetcher("createPoll", session.token, request);
+    return this.apiClient.createPoll(session.token, request);
   }
 
   /** Vote on a poll. */
@@ -5316,7 +5511,7 @@ export class Client {
     ) {
       await this.sessionRefresh(session);
     }
-    return this.fetcher("votePoll", session.token, request);
+    return this.apiClient.votePoll(session.token, request);
   }
 
   /** Close a poll (creator only). */
@@ -5328,7 +5523,7 @@ export class Client {
     ) {
       await this.sessionRefresh(session);
     }
-    return this.fetcher("closePoll", session.token, request);
+    return this.apiClient.closePoll(session.token, request);
   }
 
   /** Get poll details. */
@@ -5343,6 +5538,6 @@ export class Client {
     ) {
       await this.sessionRefresh(session);
     }
-    return this.fetcher("getPoll", session.token, request);
+    return this.apiClient.getPoll(session.token, request);
   }
 }
