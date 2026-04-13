@@ -23,6 +23,10 @@
       "dom",
       "ES6"
     ],
+    "paths": {
+      "js-native": ["../js-native"]
+    },
+    "allowJs": true,
     "removeComments": true
   },
   "exclude": [
