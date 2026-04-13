@@ -35,10 +35,7 @@
   "packageManager": "npm@10.2.3",
   "workspaces": [
     "packages/mezon-light-sdk",
-    "packages/mezon-js-create-react-app-example",
-    "packages/mezon-js-example",
     "packages/mezon-js-protobuf",
-    "packages/mezon-js-test",
     "packages/mezon-js-webpack-example",
     "packages/mezon-js",
     "packages/mezon-sdk-example",
