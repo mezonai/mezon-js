@@ -42,7 +42,8 @@
     "packages/mezon-js-webpack-example",
     "packages/mezon-js",
     "packages/mezon-sdk-example",
-    "packages/mezon-sdk"
+    "packages/mezon-sdk",
+    "packages/js-native"
   ],
   "dependencies": {
     "@protobuf-ts/protoc": "^2.9.3"

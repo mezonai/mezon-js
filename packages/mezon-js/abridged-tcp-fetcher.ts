@@ -1,4 +1,4 @@
-import native from '@mezon/js-native';
+import native from 'js-native';
 
 const pendingRequests = new Map<string, { resolve: Function; reject: Function }>();
 

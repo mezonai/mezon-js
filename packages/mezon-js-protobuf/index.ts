@@ -8,4 +8,5 @@ export {
   ChannelMessageRemove,
   ChannelMessageUpdate,
   ChannelMessageSend,
+  ChannelMessageAck
 } from "./rtapi/realtime";
