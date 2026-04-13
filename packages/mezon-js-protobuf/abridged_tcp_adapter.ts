@@ -1,4 +1,4 @@
-import native from 'js-native';
+import native from "js-native";
 import * as tsproto from "./rtapi/realtime";
 import { TransportBaseAdapter } from "./transport_base_adapter";
 

@@ -1,31 +1,42 @@
 import * as tsproto from "./rtapi/realtime";
-import { 
-  TransportAdapter, 
-  SocketCloseHandler, 
-  SocketErrorHandler, 
-  SocketMessageHandler, 
-  SocketOpenHandler 
+import {
+  TransportAdapter,
+  SocketCloseHandler,
+  SocketErrorHandler,
+  SocketMessageHandler,
+  SocketOpenHandler,
 } from "./transport_adapter";
 
 export abstract class TransportBaseAdapter implements TransportAdapter {
   protected _isOpen: boolean = false;
   protected _counter: number = 0;
-  
+
   // Storage for pending requests
-  protected _pendingRequests: Map<string, { 
-    resolve: (value: any) => void, 
-    reject: (reason?: any) => void, 
-    timer: any 
-  }> = new Map();
+  protected _pendingRequests: Map<
+    string,
+    {
+      resolve: (value: any) => void;
+      reject: (reason?: any) => void;
+      timer: any;
+    }
+  > = new Map();
 
   public onClose: SocketCloseHandler | null = null;
   public onError: SocketErrorHandler | null = null;
   public onMessage: SocketMessageHandler | null = null;
   public onOpen: SocketOpenHandler | null = null;
 
-  abstract connect(scheme: string, host: string, port: string, createStatus: boolean, token: string, platform: string, signal?: AbortSignal): void;
+  abstract connect(
+    scheme: string,
+    host: string,
+    port: string,
+    createStatus: boolean,
+    token: string,
+    platform: string,
+    signal?: AbortSignal,
+  ): void;
   abstract close(): void;
-  
+
   // This is the raw send implementation specific to TCP or WebSocket
   protected abstract transmit(data: Uint8Array): void;
 
@@ -59,7 +70,9 @@ export abstract class TransportBaseAdapter implements TransportAdapter {
 
       // 4. Encode and transmit via the specific implementation
       try {
-        const envelopeWriter = tsproto.Envelope.encode(tsproto.Envelope.fromPartial(payload));
+        const envelopeWriter = tsproto.Envelope.encode(
+          tsproto.Envelope.fromPartial(payload),
+        );
         this.transmit(envelopeWriter.finish());
       } catch (err) {
         clearTimeout(timer);
