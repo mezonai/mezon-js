@@ -1,7 +1,7 @@
 import * as tsproto from "./rtapi/realtime";
 import { TransportBaseAdapter } from "./transport_base_adapter";
 
-export class WebSocketAdapterPb extends TransportBaseAdapter {
+export class WebSocketAdapter extends TransportBaseAdapter {
   private _socket?: WebSocket;
 
   constructor() {
@@ -41,7 +41,7 @@ export class WebSocketAdapterPb extends TransportBaseAdapter {
         // Pass to Base class to resolve pending Promises or trigger onMessage
         this.handleIncomingEnvelope(envelope);
       } catch (e) {
-        console.error("WebSocketAdapterPb: Failed to decode envelope", e);
+        console.error("WebSocketAdapter: Failed to decode envelope", e);
       }
     };
 
@@ -64,7 +64,7 @@ export class WebSocketAdapterPb extends TransportBaseAdapter {
     if (this._socket && this._socket.readyState === WebSocket.OPEN) {
       this._socket.send(data);
     } else {
-      console.warn("WebSocketAdapterPb: Attempted to send while socket was closed.");
+      console.warn("WebSocketAdapter: Attempted to send while socket was closed.");
     }
   }
 

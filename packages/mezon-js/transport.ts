@@ -13,7 +13,7 @@ import { ApiUpdateChannelDescRequest } from "./client";
 import {
   MultipartUploadAttachment,
   MultipartUploadAttachmentFinishRequest,
-  WebSocketAdapterPb,
+  WebSocketAdapter,
   TransportAdapter,
 } from "mezon-js-protobuf";
 import {
@@ -344,7 +344,7 @@ export type ConnectionStateType =
   (typeof ConnectionState)[keyof typeof ConnectionState];
 
 export class MezonTransport {
-  adapter: TransportAdapter = new WebSocketAdapterPb();
+  adapter: TransportAdapter = new WebSocketAdapter();
   private basePath: string;
   public verbose: boolean = false;
 

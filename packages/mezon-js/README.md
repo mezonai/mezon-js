@@ -124,11 +124,11 @@ const session = await socket.connect(session);
 If you are using the optional protocol buffer adapter, pass the adapter to the Socket object during construction:
 
 ```js
-import {WebSocketAdapterPb} from "mezon-js-protobuf"
+import {WebSocketAdapter} from "mezon-js-protobuf"
 
 const secure = false; // Enable if server is run with an SSL certificate
 const trace = false;
-const socket = client.createSocket(secure, trace, new WebSocketAdapterPb());
+const socket = client.createSocket(secure, trace, new WebSocketAdapter());
 ```
 
 There's many messages for chat, realtime, status events, notifications, etc. which can be sent or received from the socket.
