@@ -40,7 +40,7 @@ import {
   ApiFriendList,
   ApiNotificationList,
   ApiUpdateAccountRequest,
-  MezonApi,
+  MezonTransport,
   ApiSession,
   ApiClanProfile,
   ApiChannelUserList,
@@ -191,7 +191,7 @@ import {
   ApiDetailChannelTimelineRequest,
   ApiDetailChannelTimelineResponse,
   ApiMutedChannelList,
-} from "./api";
+} from "./transport";
 import { Session } from "./session";
 import { RefreshTokenManager } from "./refresh_token_manager";
 import { DefaultSocket, Socket, ChannelMessageAck } from "./socket";
@@ -405,7 +405,7 @@ export interface ApiUpdateRoleRequest {
 /** A client for Mezon server. */
 export class Client {
   /** The low level API client for Mezon server. */
-  private readonly apiClient: MezonApi;
+  private readonly apiClient: MezonTransport;
 
   private readonly refreshTokenManager = RefreshTokenManager.getInstance();
   host: string;
@@ -426,7 +426,7 @@ export class Client {
     const scheme = useSSL ? "https://" : "http://";
     const basePath = `${scheme}${host}:${port}`;
 
-    this.apiClient = new MezonApi(serverkey, timeout, basePath);
+    this.apiClient = new MezonTransport(serverkey, timeout, basePath);
   }
 
   /**

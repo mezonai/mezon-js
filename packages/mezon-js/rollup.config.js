@@ -28,15 +28,11 @@ export default {
     name: "mezonjs",
     dir: "dist",
     entryFileNames: "mezon-js.umd.js",
-    sourcemap: true,
-    globals: {
-      "js-native": "jsNative"
-    }
+    sourcemap: true
   },
-  external: ["js-native"],
   plugins: [    
     typescript({
-      include: ["./*.ts", "../js-native/**/*.d.ts"],
+      include: ["./*.ts"],
       exclude: ["../mezon-js-protobuf/**"],
       target: "es5",
     }),
