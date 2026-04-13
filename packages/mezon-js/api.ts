@@ -5373,37 +5373,26 @@ export class MezonApi {
     ]);
   }
 
-  /** Mark forum threads inactive (archived; active = 0) for threads the user belongs to under parent_id. */
-  archiveInactiveChannelThreads(
+  /** Archive a single channel/thread (active = 0). */
+  archiveChannel(
     bearerToken: string,
     clanId: string,
-    parentId: string,
-    threadIds: string[],
+    channelId: string,
     options = {}
   ): Promise<any> {
     if (clanId === null || clanId === undefined) {
-      throw new Error(
-        "'clanId' is a required parameter but is null or undefined."
-      );
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
     }
-    if (parentId === null || parentId === undefined) {
-      throw new Error(
-        "'parentId' is a required parameter but is null or undefined."
-      );
+    if (channelId === null || channelId === undefined) {
+      throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    if (!threadIds || threadIds.length === 0) {
-      throw new Error(
-        "'threadIds' is a required parameter but is null, undefined, or empty."
-      );
-    }
-    const urlPath = "/mezon.api.Mezon/ArchiveInactiveChannelThreads";
+    const urlPath = "/mezon.api.Mezon/ArchiveChannel";
     const queryParams = new Map<string, any>();
 
-    const bodyWriter = tsproto.ArchiveInactiveChannelThreadsRequest.encode(
-      tsproto.ArchiveInactiveChannelThreadsRequest.fromPartial({
+    const bodyWriter = tsproto.ArchiveChannelRequest.encode(
+      tsproto.ArchiveChannelRequest.fromPartial({
         clan_id: clanId,
-        parent_id: parentId,
-        thread_ids: threadIds
+        channel_id: channelId,
       })
     );
     const encodedBody = bodyWriter.finish();
@@ -5427,6 +5416,49 @@ export class MezonApi {
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** List archived top-level channels in a clan. */
+  listArchivedChannelDescs(
+    bearerToken: string,
+    clanId: string,
+    options = {}
+  ): Promise<ApiChannelDescList> {
+    if (clanId === null || clanId === undefined) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/mezon.api.Mezon/ListArchivedChannelDescs";
+    const queryParams = new Map<string, any>();
+
+    const bodyWriter = tsproto.ListArchivedChannelDescsRequest.encode(
+      tsproto.ListArchivedChannelDescsRequest.fromPartial({
+        clan_id: clanId,
+      })
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, '');
+    fetchOptions.body = encodedBody;
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      getFetcher()(fullUrl, fetchOptions).then(async (response) => {
+        if (response.status == 204) {
+          return {} as ApiChannelDescList;
+        } else if (response.status >= 200 && response.status < 300) {
+          const buffer = await response.arrayBuffer();
+          return tsproto.ListArchivedChannelDescsResponse.decode(new Uint8Array(buffer)) as ApiChannelDescList;
+        } else {
+          throw response;
+        }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
       ),
     ]);
   }

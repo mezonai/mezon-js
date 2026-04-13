@@ -1750,13 +1750,21 @@ export interface LeaveThreadRequest {
   channel_id: string;
 }
 
-/** Set forum threads inactive (archived). */
-export interface ArchiveInactiveChannelThreadsRequest {
+/** Archive channel/thread inactive (archived). */
+export interface ArchiveChannelRequest {
   clan_id: string;
-  /** Parent channel that owns the threads. */
-  parent_id: string;
-  /** Thread channel IDs to mark inactive. */
-  thread_ids: string[];
+  /** Channel (thread) ID to inactive. */
+  channel_id: string;
+}
+
+export interface ListArchivedChannelDescsRequest {
+  /** The clan of this list archived channels */
+  clan_id: string;
+}
+
+export interface ListArchivedChannelDescsResponse {
+  /** A list of channel. */
+  channeldesc: ChannelDescription[];
 }
 
 /** Role record */
@@ -17783,30 +17791,25 @@ export const LeaveThreadRequest = {
   },
 };
 
-function createBaseArchiveInactiveChannelThreadsRequest(): ArchiveInactiveChannelThreadsRequest {
-  return { clan_id: "0", parent_id: "0", thread_ids: [] };
+function createBaseArchiveChannelRequest(): ArchiveChannelRequest {
+  return { clan_id: "0", channel_id: "0" };
 }
 
-export const ArchiveInactiveChannelThreadsRequest = {
-  encode(message: ArchiveInactiveChannelThreadsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const ArchiveChannelRequest = {
+  encode(message: ArchiveChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.clan_id !== "0") {
       writer.uint32(8).int64(message.clan_id);
     }
-    if (message.parent_id !== "0") {
-      writer.uint32(16).int64(message.parent_id);
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
     }
-    writer.uint32(26).fork();
-    for (const v of message.thread_ids) {
-      writer.int64(v);
-    }
-    writer.ldelim();
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ArchiveInactiveChannelThreadsRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ArchiveChannelRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseArchiveInactiveChannelThreadsRequest();
+    const message = createBaseArchiveChannelRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -17822,25 +17825,8 @@ export const ArchiveInactiveChannelThreadsRequest = {
             break;
           }
 
-          message.parent_id = longToString(reader.int64() as Long);
+          message.channel_id = longToString(reader.int64() as Long);
           continue;
-        case 3:
-          if (tag === 24) {
-            message.thread_ids.push(longToString(reader.int64() as Long));
-
-            continue;
-          }
-
-          if (tag === 26) {
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
-              message.thread_ids.push(longToString(reader.int64() as Long));
-            }
-
-            continue;
-          }
-
-          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -17850,42 +17836,157 @@ export const ArchiveInactiveChannelThreadsRequest = {
     return message;
   },
 
-  fromJSON(object: any): ArchiveInactiveChannelThreadsRequest {
+  fromJSON(object: any): ArchiveChannelRequest {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
-      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "0",
-      thread_ids: globalThis.Array.isArray(object?.thread_ids)
-        ? object.thread_ids.map((e: any) => globalThis.String(e))
-        : [],
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
     };
   },
 
-  toJSON(message: ArchiveInactiveChannelThreadsRequest): unknown {
+  toJSON(message: ArchiveChannelRequest): unknown {
     const obj: any = {};
     if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.parent_id !== "0") {
-      obj.parent_id = message.parent_id;
-    }
-    if (message.thread_ids?.length) {
-      obj.thread_ids = message.thread_ids;
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ArchiveInactiveChannelThreadsRequest>, I>>(
-    base?: I,
-  ): ArchiveInactiveChannelThreadsRequest {
-    return ArchiveInactiveChannelThreadsRequest.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<ArchiveChannelRequest>, I>>(base?: I): ArchiveChannelRequest {
+    return ArchiveChannelRequest.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ArchiveInactiveChannelThreadsRequest>, I>>(
-    object: I,
-  ): ArchiveInactiveChannelThreadsRequest {
-    const message = createBaseArchiveInactiveChannelThreadsRequest();
+  fromPartial<I extends Exact<DeepPartial<ArchiveChannelRequest>, I>>(object: I): ArchiveChannelRequest {
+    const message = createBaseArchiveChannelRequest();
     message.clan_id = object.clan_id ?? "0";
-    message.parent_id = object.parent_id ?? "0";
-    message.thread_ids = object.thread_ids?.map((e) => e) || [];
+    message.channel_id = object.channel_id ?? "0";
+    return message;
+  },
+};
+
+function createBaseListArchivedChannelDescsRequest(): ListArchivedChannelDescsRequest {
+  return { clan_id: "0" };
+}
+
+export const ListArchivedChannelDescsRequest = {
+  encode(message: ListArchivedChannelDescsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListArchivedChannelDescsRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListArchivedChannelDescsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.clan_id = longToString(reader.int64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListArchivedChannelDescsRequest {
+    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0" };
+  },
+
+  toJSON(message: ListArchivedChannelDescsRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "0") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListArchivedChannelDescsRequest>, I>>(
+    base?: I,
+  ): ListArchivedChannelDescsRequest {
+    return ListArchivedChannelDescsRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListArchivedChannelDescsRequest>, I>>(
+    object: I,
+  ): ListArchivedChannelDescsRequest {
+    const message = createBaseListArchivedChannelDescsRequest();
+    message.clan_id = object.clan_id ?? "0";
+    return message;
+  },
+};
+
+function createBaseListArchivedChannelDescsResponse(): ListArchivedChannelDescsResponse {
+  return { channeldesc: [] };
+}
+
+export const ListArchivedChannelDescsResponse = {
+  encode(message: ListArchivedChannelDescsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.channeldesc) {
+      ChannelDescription.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListArchivedChannelDescsResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListArchivedChannelDescsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channeldesc.push(ChannelDescription.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListArchivedChannelDescsResponse {
+    return {
+      channeldesc: globalThis.Array.isArray(object?.channeldesc)
+        ? object.channeldesc.map((e: any) => ChannelDescription.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ListArchivedChannelDescsResponse): unknown {
+    const obj: any = {};
+    if (message.channeldesc?.length) {
+      obj.channeldesc = message.channeldesc.map((e) => ChannelDescription.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListArchivedChannelDescsResponse>, I>>(
+    base?: I,
+  ): ListArchivedChannelDescsResponse {
+    return ListArchivedChannelDescsResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListArchivedChannelDescsResponse>, I>>(
+    object: I,
+  ): ListArchivedChannelDescsResponse {
+    const message = createBaseListArchivedChannelDescsResponse();
+    message.channeldesc = object.channeldesc?.map((e) => ChannelDescription.fromPartial(e)) || [];
     return message;
   },
 };
