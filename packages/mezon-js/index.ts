@@ -19,11 +19,6 @@ import "whatwg-fetch";
 export * from "./client";
 export * from "./refresh_token_manager";
 export * from "./session";
-export * from "./socket";
 export * from "./utils"
-export * from "./config"
+export * from "./types"
 
-/**
- * Reexported due to duplicate definition of ChannelMessage in [Client]{@link ./client.ts} and [Session]{@link ./session.ts}
- */
-export type { ChannelMessage } from "./transport";

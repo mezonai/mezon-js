@@ -40,7 +40,6 @@ import {
   ApiFriendList,
   ApiNotificationList,
   ApiUpdateAccountRequest,
-  MezonTransport,
   ApiSession,
   ApiClanProfile,
   ApiChannelUserList,
@@ -191,10 +190,10 @@ import {
   ApiDetailChannelTimelineRequest,
   ApiDetailChannelTimelineResponse,
   ApiMutedChannelList,
-} from "./transport";
+} from "./types";
 import { Session } from "./session";
 import { RefreshTokenManager } from "./refresh_token_manager";
-import { DefaultSocket, Socket, ChannelMessageAck } from "./socket";
+
 import {
   decodeAttachments,
   decodeMentions,
@@ -204,7 +203,8 @@ import {
   safeJSONParse,
   decodeChannelTimelineAttachments
 } from "./utils";
-import { MultipartUploadAttachment, MultipartUploadAttachmentFinishRequest, WebSocketAdapter, WebSocketAdapterPb } from "mezon-js-protobuf";
+import { ChannelMessageAck, MultipartUploadAttachment, MultipartUploadAttachmentFinishRequest } from "mezon-js-protobuf";
+import { MezonTransport } from "./transport";
 
 const DEFAULT_HOST = "127.0.0.1";
 const DEFAULT_PORT = "7350";
@@ -893,25 +893,6 @@ export class Client {
       .then((response: any) => {
         return response !== undefined;
       });
-  }
-
-  /** A socket created with the client's configuration. */
-  createSocket(
-    useSSL = false,
-    host: string,
-    port: string,
-    verbose = false,
-    adapter: WebSocketAdapter = new WebSocketAdapterPb(),
-    sendTimeoutMs: number = DefaultSocket.DefaultSendTimeoutMs,
-  ): Socket {
-    return new DefaultSocket(
-      host,
-      port,
-      useSSL,
-      verbose,
-      adapter,
-      sendTimeoutMs,
-    );
   }
 
   /** Delete one or more users by ID or username. */
