@@ -5564,7 +5564,6 @@ export class MezonApi {
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
-   
 
     return Promise.race([
       getFetcher()(fullUrl, fetchOptions).then(async (response) => {
@@ -12652,7 +12651,7 @@ export class MezonApi {
           return {} as ChannelMessageAck;
         } else if (response.status >= 200 && response.status < 300) {
           const buffer = await response.arrayBuffer();      
-          return tsproto.ChannelMessageSend.decode(new Uint8Array(buffer)) as unknown as ChannelMessageAck;
+          return tsproto.ChannelMessageAck.decode(new Uint8Array(buffer)) as unknown as ChannelMessageAck;
         } else {
           throw response;
         }

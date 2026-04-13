@@ -1,0 +1,7 @@
+{
+  "name": "js-native",
+  "version": "1.0.0",
+  "dependencies": {
+    "nan": "^2.26.2"
+  }
+}
