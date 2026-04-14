@@ -230,6 +230,8 @@ packages/**/*.d.ts
 packages/**/*.d.ts*
 **/package-lock.json
 
+**/dist
+
 .turbo
 
 **/.rollup.cache/
