@@ -302,7 +302,7 @@ function CreateChannelMessageFromEvent(message: any) {
   }
 
   const e: tsproto.ChannelMessage = {
-    id: message.id || message.channel_message.message_id,
+    //id: message.id || message.channel_message.message_id,
     avatar: message.channel_message.avatar,
     channel_id: message.channel_message.channel_id,
     mode: message.channel_message.mode,
@@ -311,7 +311,7 @@ function CreateChannelMessageFromEvent(message: any) {
     code: message.channel_message.code,
     message_id: message.channel_message.message_id,
     sender_id: message.channel_message.sender_id,
-    update_time: message.channel_message.update_time,
+    //update_time: message.channel_message.update_time,
     clan_logo: message.channel_message.clan_logo,
     category_name: message.channel_message.category_name,
     username: message.channel_message.username,
@@ -563,20 +563,7 @@ export class MezonTransport {
           }
         }
       } else {
-        const executor = this.cIds[message.cid];
-        if (!executor) {
-          if (this.verbose && window && window.console) {
-            console.error("No promise executor for message: %o", message);
-          }
-          return;
-        }
-        delete this.cIds[message.cid];
-
-        if (message.error) {
-          executor.reject(<SocketError>message.error);
-        } else {
-          executor.resolve(message);
-        }
+        // TODO: check
       }
     };
   }
@@ -11516,7 +11503,7 @@ export class MezonTransport {
     const fullUrl = "sock";
     const fetchOptions = { status_follow: { user_ids: userIds } } as any;
     return Promise.race([
-      this.adapter.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.adapter.send({ fullUrl, fetchOptions }).then(async (_response) => {
         return {} as Status;
       }),
       new Promise<never>((_, reject) =>
@@ -11536,7 +11523,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.adapter.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.adapter.send({ fullUrl, fetchOptions }).then(async (_response) => {
         return {} as ClanJoin;
       }),
       new Promise<never>((_, reject) =>
@@ -11554,7 +11541,7 @@ export class MezonTransport {
       follow_event: {},
     } as any;
     return Promise.race([
-      this.adapter.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.adapter.send({ fullUrl, fetchOptions }).then(async (_response) => {
         return {} as unknown as void;
       }),
       new Promise<never>((_, reject) =>
@@ -11582,7 +11569,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.adapter.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.adapter.send({ fullUrl, fetchOptions }).then(async (_response) => {
         return {} as Channel;
       }),
       new Promise<never>((_, reject) =>
@@ -11610,7 +11597,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.adapter.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.adapter.send({ fullUrl, fetchOptions }).then(async (_response) => {
         return {} as unknown as void;
       }),
       new Promise<never>((_, reject) =>
@@ -11648,7 +11635,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.adapter.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.adapter.send({ fullUrl, fetchOptions }).then(async (_response) => {
         return {} as tsproto.ChannelMessageAck;
       }),
       new Promise<never>((_, reject) =>
@@ -11664,7 +11651,7 @@ export class MezonTransport {
     const fullUrl = "sock";
     const fetchOptions = { status_unfollow: { user_ids: user_ids } } as any;
     return Promise.race([
-      this.adapter.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.adapter.send({ fullUrl, fetchOptions }).then(async (_response) => {
         return {} as unknown as void;
       }),
       new Promise<never>((_, reject) =>
@@ -11706,7 +11693,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.adapter.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.adapter.send({ fullUrl, fetchOptions }).then(async (_response) => {
         return {} as tsproto.ChannelMessageAck;
       }),
       new Promise<never>((_, reject) =>
@@ -11722,7 +11709,7 @@ export class MezonTransport {
     const fullUrl = "sock";
     const fetchOptions = { status_update: { status: status } } as any;
     return Promise.race([
-      this.adapter.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.adapter.send({ fullUrl, fetchOptions }).then(async (_response) => {
         return {} as unknown as void;
       }),
       new Promise<never>((_, reject) =>
@@ -11772,7 +11759,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.adapter.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.adapter.send({ fullUrl, fetchOptions }).then(async (_response) => {
         return {} as QuickMenuEvent;
       }),
       new Promise<never>((_, reject) =>
@@ -11824,7 +11811,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.adapter.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.adapter.send({ fullUrl, fetchOptions }).then(async (_response) => {
         return {} as tsproto.ChannelMessageAck;
       }),
       new Promise<never>((_, reject) =>
@@ -11870,7 +11857,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.adapter.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.adapter.send({ fullUrl, fetchOptions }).then(async (_response) => {
         return {} as tsproto.ChannelMessageAck;
       }),
       new Promise<never>((_, reject) =>
@@ -11918,7 +11905,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.adapter.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.adapter.send({ fullUrl, fetchOptions }).then(async (_response) => {
         return {} as ApiMessageReaction;
       }),
       new Promise<never>((_, reject) =>
@@ -11950,7 +11937,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.adapter.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.adapter.send({ fullUrl, fetchOptions }).then(async (_response) => {
         return {} as MessageTypingEvent;
       }),
       new Promise<never>((_, reject) =>
@@ -11982,7 +11969,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.adapter.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.adapter.send({ fullUrl, fetchOptions }).then(async (_response) => {
         return {} as LastSeenMessageEvent;
       }),
       new Promise<never>((_, reject) =>
@@ -12028,7 +12015,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.adapter.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.adapter.send({ fullUrl, fetchOptions }).then(async (_response) => {
         return {} as LastPinMessageEvent;
       }),
       new Promise<never>((_, reject) =>
@@ -12056,7 +12043,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.adapter.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.adapter.send({ fullUrl, fetchOptions }).then(async (_response) => {
         return {} as CustomStatusEvent;
       }),
       new Promise<never>((_, reject) =>
@@ -12080,7 +12067,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.adapter.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.adapter.send({ fullUrl, fetchOptions }).then(async (_response) => {
         return {} as VoiceReactionSend;
       }),
       new Promise<never>((_, reject) =>
@@ -12110,7 +12097,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.adapter.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.adapter.send({ fullUrl, fetchOptions }).then(async (_response) => {
         return {} as WebrtcSignalingFwd;
       }),
       new Promise<never>((_, reject) =>
@@ -12138,7 +12125,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.adapter.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.adapter.send({ fullUrl, fetchOptions }).then(async (_response) => {
         return {} as IncomingCallPush;
       }),
       new Promise<never>((_, reject) =>
@@ -12164,7 +12151,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.adapter.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.adapter.send({ fullUrl, fetchOptions }).then(async (_response) => {
         return {} as ChannelAppEvent;
       }),
       new Promise<never>((_, reject) =>
@@ -12182,7 +12169,7 @@ export class MezonTransport {
       list_data_socket: request,
     } as any;
     return Promise.race([
-      this.adapter.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.adapter.send({ fullUrl, fetchOptions }).then(async (_response) => {
         return {} as any;
       }),
       new Promise<never>((_, reject) =>
