@@ -4520,12 +4520,11 @@ export class Client {
       });
   }
 
-  /** Mark forum threads inactive (archived) under parent_id for threads the session user belongs to. */
-  async archiveInactiveChannelThreads(
+  /** Archive a single channel/thread (active = 0). */
+  async archiveChannel(
     session: Session,
     clanId: string,
-    parentId: string,
-    threadIds: string[],
+    channelId: string,
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
@@ -4536,7 +4535,27 @@ export class Client {
     }
 
     return this.apiClient
-      .archiveInactiveChannelThreads(session.token, clanId, parentId, threadIds)
+      .archiveChannel(session.token, clanId, channelId)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  /** List archived top-level channels in a clan. */
+  async listArchivedChannelDescs(
+    session: Session,
+    clanId: string
+  ): Promise<ApiChannelDescList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listArchivedChannelDescs(session.token, clanId)
       .then((response: any) => {
         return Promise.resolve(response);
       });
