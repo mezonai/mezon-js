@@ -356,6 +356,7 @@ export class Client {
       session,
       createStatus,
       async (message: any) => {
+        console.log("onMessage client");
         if (!message.cid) {
           if (message.notifications) {
             message.notifications.notifications.forEach(
@@ -556,8 +557,6 @@ export class Client {
               console.log("Unrecognized message received: %o", message);
             }
           }
-        } else {
-          // TODO: check
         }
       },
       async (evt: Event) => {

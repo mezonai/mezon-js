@@ -31,7 +31,7 @@ export interface TransportAdapter {
     token: string,
     signal?: AbortSignal,
   ): void;
-  send(message: any): Promise<any>;
+  send(message: any): void;
 }
 
 /**

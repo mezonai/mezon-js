@@ -1,91 +1,92 @@
 import * as tsproto from "./rtapi/realtime";
-import { TransportBaseAdapter } from "./transport_base_adapter";
+import { SocketCloseHandler, SocketErrorHandler, SocketMessageHandler, SocketOpenHandler, TransportAdapter } from "./transport_adapter";
 
-export class WebSocketAdapter extends TransportBaseAdapter {
+export class WebSocketAdapter implements TransportAdapter {
   private _socket?: WebSocket;
-  protected _pingInterval?: NodeJS.Timeout;
 
-  constructor() {
-    super();
+  constructor() { }
+
+  get onClose(): SocketCloseHandler | null {
+    return this._socket!.onclose;
+  }
+
+  set onClose(value: SocketCloseHandler | null) {
+    this._socket!.onclose = value;
+  }
+
+  get onError(): SocketErrorHandler | null {
+    return this._socket!.onerror;
+  }
+
+  set onError(value: SocketErrorHandler | null) {
+    this._socket!.onerror = value;
+  }
+
+  get onMessage(): SocketMessageHandler | null {
+    return this._socket!.onmessage;
+  }
+
+  set onMessage(value: SocketMessageHandler | null) {
+    if (value) {
+      this._socket!.onmessage = (evt: MessageEvent) => {
+        const buffer: ArrayBuffer = evt.data;
+        const uintBuffer: Uint8Array = new Uint8Array(buffer);
+        const envelope = tsproto.Envelope.decode(uintBuffer);
+
+        if (envelope.channel_message) {
+          if (envelope.channel_message.code == undefined) {
+            //protobuf plugin does not default-initialize missing Int32Value fields
+            envelope.channel_message.code = 0;
+          }
+        }
+
+        value!(envelope);
+      };
+    } else {
+      value = null;
+    }
+  }
+
+  get onOpen(): SocketOpenHandler | null {
+    return this._socket!.onopen;
+  }
+
+  set onOpen(value: SocketOpenHandler | null) {
+    this._socket!.onopen = value;
+  }
+
+  isOpen(): boolean {
+    return this._socket?.readyState == WebSocket.OPEN;
+  }
+
+  close() {
+    this._socket?.close();
+    this._socket = undefined;
   }
 
   connect(
     host: string,
     port: string,
-    _createStatus: boolean,
+    createStatus: boolean,
     token: string,
-    signal?: AbortSignal
+    signal?: AbortSignal,
   ): void {
-    const url = `wss://${host}:${port}/ws?token=${token}`;
-    const socket = new WebSocket(url);
-    socket.binaryType = "arraybuffer";
-    this._socket = socket;
-
     if (signal) {
-      signal.addEventListener("abort", () => this.close());
+      signal.addEventListener("abort", () => {
+        this.close();
+      });
     }
-
-    socket.onopen = (ev: Event) => {
-      console.log("Socket successfully opened!");
-      this._isOpen = true;
-      this.startPingInterval();
-      (this.onOpen as any)?.(ev);
-    };
-
-    socket.onmessage = (ev: MessageEvent) => {
-      try {
-        const uintBuffer = new Uint8Array(ev.data);
-        const envelope = tsproto.Envelope.decode(uintBuffer);
-        this.handleIncomingEnvelope(envelope);
-      } catch (e) {
-        console.error("WebSocketAdapter: Failed to decode envelope", e);
-      }
-    };
-
-    socket.onerror = (ev: Event) => {
-      (this.onError as any)?.(ev);
-    };
-
-    socket.onclose = (ev: CloseEvent) => {
-      this._isOpen = false;
-      this.stopPingInterval();
-      this.clearPendingRequests("WebSocket closed");
-      (this.onClose as any)?.(ev);
-      this._socket = undefined;
-    };
+    const portPart = port ? `:${port}` : '';
+    const url = `wss://${host}${portPart}/ws?lang=en&status=${encodeURIComponent(
+      createStatus.toString(),
+    )}&token=${encodeURIComponent(token)}`;
+    this._socket = new WebSocket(url);
+    this._socket.binaryType = "arraybuffer";
   }
 
-  protected transmit(msg: any): void {
-    if (this._socket && this._socket.readyState === WebSocket.OPEN) {
-      const envelopeWriter = tsproto.Envelope.encode(tsproto.Envelope.fromPartial(msg));
-      const encodedMsg = envelopeWriter.finish();
-      this._socket.send(encodedMsg);
-    } else {
-      console.warn("WebSocketAdapter: Attempted to send while socket was closed.");
-    }
-  }
-
-  protected transmitPing(): void {
-    this.transmit({ping: {}});
-  }
-
-  private startPingInterval(): void {
-    this._pingInterval = setInterval(() => {
-      this.transmitPing();
-    }, 30000);
-  }
-
-  private stopPingInterval(): void {
-    if (this._pingInterval) {
-      clearInterval(this._pingInterval);
-      this._pingInterval = undefined;
-    }
-  }
-
-  close(): void {
-    this.stopPingInterval();
-    if (this._socket) {
-      this._socket.close(1000, "Normal Closure");
-    }
+  send(msg: any): void {
+    const envelopeWriter = tsproto.Envelope.encode(tsproto.Envelope.fromPartial(msg));
+    const encodedMsg = envelopeWriter.finish();
+    this._socket!.send(encodedMsg);
   }
 }

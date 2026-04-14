@@ -266,8 +266,8 @@ export class MezonTransport {
   connect(
     session: Session,
     createStatus = false,
-    onDisconnected: tsproto.SocketCloseHandler,
     onMessage: tsproto.SocketMessageHandler,
+    onDisconnected: tsproto.SocketCloseHandler,
     signal?: AbortSignal,
   ): void {
     const [host, port] = session.ws_url.split(':');
@@ -280,7 +280,24 @@ export class MezonTransport {
     );
 
     this.adapter.onClose = onDisconnected;
-    this.adapter.onMessage = onMessage;
+    this.adapter.onMessage = async (message: any) => {
+      if (message.cid) {
+        console.log("cid", message);
+        const executor = this.cIds[message.cid];
+        if (!executor) {
+          console.error("No promise executor for message: %o", message);
+          return;
+        }
+        delete this.cIds[message.cid];
+        if (message.error) {
+          executor.reject(message.error);
+        } else {
+          executor.resolve(message);
+        }
+      } else {
+        await onMessage(message);
+      }      
+    };
   }
 
   send(
