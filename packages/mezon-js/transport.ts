@@ -8,6 +8,7 @@ import {
   MultipartUploadAttachmentFinishRequest,
   WebSocketAdapter,
   TransportAdapter,
+  AbridgedTcpAdapter,
 } from "mezon-js-protobuf";
 import {
   ApiAccount,
@@ -246,7 +247,12 @@ export class MezonTransport {
     onMessage: tsproto.SocketMessageHandler,
     signal?: AbortSignal,
   ): void {
-    
+    if (platform == "desktop") {
+      this.setTransportAdapter(new AbridgedTcpAdapter);
+    } else {
+      this.setTransportAdapter(new WebSocketAdapter);
+    }
+
     const scheme = "wss://";
     this.adapter.connect(
       scheme,
