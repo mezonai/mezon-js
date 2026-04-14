@@ -1,15 +1,8 @@
 import {
   buildFetchOptions,
-  decodeAttachments,
-  decodeMentions,
-  decodeNotificationFcm,
-  decodeReactions,
-  decodeRefs,
-  safeJSONParse,
 } from "./utils";
 import { encode } from "js-base64";
 import * as tsproto from "mezon-js-protobuf";
-import { ApiUpdateChannelDescRequest } from "./client";
 import {
   MultipartUploadAttachment,
   MultipartUploadAttachmentFinishRequest,
@@ -17,10 +10,6 @@ import {
   TransportAdapter,
 } from "mezon-js-protobuf";
 import {
-  AddClanUserEvent,
-  AddFriend,
-  AiAgentEnabledEvent,
-  AllowAnonymousEvent,
   ApiAccount,
   ApiAccountEmail,
   ApiAccountMezon,
@@ -128,7 +117,6 @@ import {
   ApiMezonOauthClient,
   ApiMezonOauthClientList,
   ApiMutedChannelList,
-  ApiNotification,
   ApiNotificationChannel,
   ApiNotificationChannelCategorySettingList,
   ApiNotificationList,
@@ -170,6 +158,7 @@ import {
   ApiTransferOwnershipRequest,
   ApiUpdateAccountRequest,
   ApiUpdateCategoryOrderRequest,
+  ApiUpdateChannelDescRequest,
   ApiUpdateChannelTimelineRequest,
   ApiUpdateChannelTimelineResponse,
   ApiUpdateClanOrderRequest,
@@ -187,35 +176,16 @@ import {
   ApiVoiceChannelUserList,
   ApiVotePollRequest,
   ApiVotePollResponse,
-  ApiWebhook,
   ApiWebhookCreateRequest,
   ApiWebhookListResponse,
-  BannedUserEvent,
-  BlockFriend,
-  CategoryEvent,
   Channel,
   ChannelAppEvent,
-  ChannelCanvas,
-  ChannelCreatedEvent,
-  ChannelDeletedEvent,
-  ChannelPresenceEvent,
-  ChannelUpdatedEvent,
-  ClanDeletedEvent,
   ClanJoin,
-  ClanProfileUpdatedEvent,
-  ClanUpdatedEvent,
   CustomStatusEvent,
-  DeleteAccountEvent,
-  EventEmoji,
   IncomingCallPush,
-  JoinChannelAppData,
   LastPinMessageEvent,
   LastSeenMessageEvent,
-  ListActivity,
-  ListChannelUsersBannedEvent,
   ListDataSocket,
-  MarkAsRead,
-  MeetParticipantEvent,
   MessageTypingEvent,
   MezonapiCreateRoomChannelApps,
   MezonapiListAuditLog,
@@ -235,104 +205,13 @@ import {
   MezonUpdateSystemMessageBody,
   MezonUpdateUserProfileByClanBody,
   MezonUpdateWebhookByIdBody,
-  PermissionChangedEvent,
-  PermissionSet,
   QuickMenuEvent,
-  RemoveFriend,
-  RoleAssignedEvent,
-  RoleEvent,
-  SdTopicEvent,
   Status,
-  StatusPresenceEvent,
-  StickerCreateEvent,
-  StickerDeleteEvent,
-  StickerUpdateEvent,
-  StreamingEndedEvent,
-  StreamingJoinedEvent,
-  StreamingLeavedEvent,
-  StreamingStartedEvent,
-  UnblockFriend,
-  UnmuteEvent,
-  UnpinMessageEvent,
-  UserChannelAddedEvent,
-  UserChannelRemovedEvent,
-  UserClanRemovedEvent,
-  UserProfileUpdatedEvent,
-  UserStatusEvent,
-  VoiceEndedEvent,
-  VoiceJoinedEvent,
-  VoiceLeavedEvent,
   VoiceReactionSend,
-  VoiceStartedEvent,
   WebrtcSignalingFwd,
 } from "./types";
-import { TransferOwnershipEvent } from "packages/mezon-js-protobuf/rtapi/realtime";
 
-function CreateChannelMessageFromEvent(message: any) {
-  let content, reactions, mentions, attachments, references, referencedMessags;
-  try {
-    content = safeJSONParse(message.channel_message.content);
-  } catch (e) {
-    console.log("content is invalid", e);
-  }
-  try {
-    reactions = decodeReactions(message.channel_message.reactions);
-  } catch (e) {
-    console.log("reactions is invalid", e);
-  }
-  try {
-    mentions = decodeMentions(message.channel_message.mentions);
-  } catch (e) {
-    console.log("mentions is invalid", e);
-  }
-  try {
-    attachments = decodeAttachments(message.channel_message.attachments);
-  } catch (e) {
-    console.log("attachments is invalid", e);
-  }
-  try {
-    references = decodeRefs(message.channel_message.references);
-  } catch (e) {
-    console.log("references is invalid", e);
-  }
-  try {
-    referencedMessags = message.channel_message.referenced_message;
-  } catch (e) {
-    console.log("referenced messages is invalid", e);
-  }
-
-  const e: tsproto.ChannelMessage = {
-    //id: message.id || message.channel_message.message_id,
-    avatar: message.channel_message.avatar,
-    channel_id: message.channel_message.channel_id,
-    mode: message.channel_message.mode,
-    channel_label: message.channel_message.channel_label,
-    clan_id: message.channel_message.clan_id,
-    code: message.channel_message.code,
-    message_id: message.channel_message.message_id,
-    sender_id: message.channel_message.sender_id,
-    //update_time: message.channel_message.update_time,
-    clan_logo: message.channel_message.clan_logo,
-    category_name: message.channel_message.category_name,
-    username: message.channel_message.username,
-    clan_nick: message.channel_message.clan_nick,
-    clan_avatar: message.channel_message.clan_avatar,
-    display_name: message.channel_message.display_name,
-    content: content,
-    reactions: reactions?.reactions,
-    mentions: mentions?.mentions,
-    attachments: attachments?.attachments,
-    referenced_message: referencedMessags,
-    references: references?.refs,
-    hide_editted: message.channel_message.hide_editted,
-    is_public: message.channel_message.is_public,
-    create_time_seconds: message.channel_message.create_time_seconds,
-    update_time_seconds: message.channel_message.update_time_seconds,
-    topic_id: message.channel_message.topic_id,
-  };
-
-  return e;
-}
+import { Session } from "./session";
 
 export const ConnectionState = {
   DISCONNECTED: "disconnected",
@@ -346,8 +225,7 @@ export type ConnectionStateType =
 export class MezonTransport {
   adapter: TransportAdapter = new WebSocketAdapter();
   private basePath: string;
-  public verbose: boolean = false;
-
+  
   constructor(
     readonly serverKey: string,
     readonly timeoutMs: number,
@@ -358,214 +236,30 @@ export class MezonTransport {
 
   setTransportAdapter(transportAdapter: TransportAdapter) {
     this.adapter = transportAdapter;
+  }
 
-    this.adapter.onMessage = async (message: any) => {
-      if (this.verbose && window && window.console) {
-        console.log("Response: %o", JSON.stringify(message));
-      }
-      /** Inbound message from server. */
-      if (!message.cid) {
-        if (message.notifications) {
-          message.notifications.notifications.forEach((n: ApiNotification) => {
-            n.content = n.content
-              ? decodeNotificationFcm(n.content)
-              : undefined;
-            this.onnotification(n);
-          });
-        } else if (message.voice_started_event) {
-          this.onvoicestarted(message.voice_started_event);
-        } else if (message.voice_ended_event) {
-          this.onvoiceended(message.voice_ended_event);
-        } else if (message.voice_joined_event) {
-          this.onvoicejoined(message.voice_joined_event);
-        } else if (message.voice_leaved_event) {
-          this.onvoiceleaved(message.voice_leaved_event);
-        } else if (message.channel_created_event) {
-          this.onchannelcreated(message.channel_created_event);
-        } else if (message.category_event) {
-          this.oncategoryevent(message.category_event);
-        } else if (message.role_event) {
-          this.onroleevent(message.role_event);
-        } else if (message.event_emoji) {
-          this.oneventemoji(message.event_emoji);
-        } else if (message.noti_user_channel) {
-          this.oneventnotiuserchannel(message.noti_user_channel);
-        } else if (message.webhook_event) {
-          this.oneventwebhook(message.webhook_event);
-        } else if (message.channel_deleted_event) {
-          this.onchanneldeleted(message.channel_deleted_event);
-        } else if (message.clan_deleted_event) {
-          this.onclandeleted(message.clan_deleted_event);
-        } else if (message.sticker_create_event) {
-          this.onstickercreated(message.sticker_create_event);
-        } else if (message.sticker_update_event) {
-          this.onstickerupdated(message.sticker_update_event);
-        } else if (message.sticker_delete_event) {
-          this.onstickerdeleted(message.sticker_delete_event);
-        } else if (message.channel_updated_event) {
-          this.onchannelupdated(message.channel_updated_event);
-        } else if (message.delete_account_event) {
-          this.ondeleteaccount(message.delete_account_event);
-        } else if (message.clan_profile_updated_event) {
-          this.onclanprofileupdated(message.clan_profile_updated_event);
-        } else if (message.clan_updated_event) {
-          this.onclanupdated(message.clan_updated_event);
-        } else if (message.last_seen_message_event) {
-          this.onlastseenupdated(message.last_seen_message_event);
-        } else if (message.status_presence_event) {
-          this.onstatuspresence(
-            <StatusPresenceEvent>message.status_presence_event,
-          );
-        } else if (message.channel_message) {
-          const channelMessage = CreateChannelMessageFromEvent(message);
-          this.onchannelmessage(channelMessage);
-        } else if (message.message_typing_event) {
-          this.onmessagetyping(
-            <MessageTypingEvent>message.message_typing_event,
-          );
-        } else if (message.message_reaction_event) {
-          this.onmessagereaction(
-            <ApiMessageReaction>message.message_reaction_event,
-          );
-        } else if (message.channel_presence_event) {
-          this.onchannelpresence(
-            <ChannelPresenceEvent>message.channel_presence_event,
-          );
-        } else if (message.last_pin_message_event) {
-          this.onpinmessage(
-            <LastPinMessageEvent>message.last_pin_message_event,
-          );
-        } else if (message.custom_status_event) {
-          this.oncustomstatus(<CustomStatusEvent>message.custom_status_event);
-        } else if (message.canvas_event) {
-          this.oncanvasevent(<ChannelCanvas>message.canvas_event);
-        } else if (message.user_channel_added_event) {
-          this.onuserchanneladded(
-            <UserChannelAddedEvent>message.user_channel_added_event,
-          );
-        } else if (message.add_clan_user_event) {
-          this.onuserclanadded(<AddClanUserEvent>message.add_clan_user_event);
-        } else if (message.user_profile_updated_event) {
-          this.onuserprofileupdate(
-            <UserProfileUpdatedEvent>message.user_profile_updated_event,
-          );
-        } else if (message.user_channel_removed_event) {
-          this.onuserchannelremoved(
-            <UserChannelRemovedEvent>message.user_channel_removed_event,
-          );
-        } else if (message.block_friend) {
-          this.onblockfriend(<BlockFriend>message.block_friend);
-        } else if (message.un_block_friend) {
-          this.onunblockfriend(<UnblockFriend>message.un_block_friend);
-        } else if (message.add_friend) {
-          this.onaddfriend(<AddFriend>message.add_friend);
-        } else if (message.remove_friend) {
-          this.onremovefriend(<RemoveFriend>message.remove_friend);
-        } else if (message.user_clan_removed_event) {
-          this.onuserclanremoved(
-            <UserClanRemovedEvent>message.user_clan_removed_event,
-          );
-        } else if (message.clan_event_created) {
-          this.oneventcreated(message.clan_event_created);
-        } else if (message.give_coffee_event) {
-          this.oncoffeegiven(<ApiGiveCoffeeEvent>message.give_coffee_event);
-        } else if (message.role_assign_event) {
-          this.onroleassign(<RoleAssignedEvent>message.role_assign_event);
-        } else if (message.streaming_started_event) {
-          this.onstreamingchannelstarted(
-            <StreamingStartedEvent>message.streaming_started_event,
-          );
-        } else if (message.streaming_ended_event) {
-          this.onstreamingchannelended(
-            <StreamingEndedEvent>message.streaming_ended_event,
-          );
-        } else if (message.streaming_joined_event) {
-          this.onstreamingchanneljoined(
-            <StreamingJoinedEvent>message.streaming_joined_event,
-          );
-        } else if (message.streaming_leaved_event) {
-          this.onstreamingchannelleaved(
-            <StreamingLeavedEvent>message.streaming_leaved_event,
-          );
-        } else if (message.permission_set_event) {
-          this.onpermissionset(<PermissionSet>message.permission_set_event);
-        } else if (message.permission_changed_event) {
-          this.onpermissionchanged(
-            <PermissionChangedEvent>message.permission_changed_event,
-          );
-        } else if (message.unmute_event) {
-          this.onunmuteevent(<UnmuteEvent>message.unmute_event);
-        } else if (message.token_sent_event) {
-          this.ontokensent(<ApiTokenSentEvent>message.token_sent_event);
-        } else if (message.message_button_clicked) {
-          this.onmessagebuttonclicked(
-            <tsproto.MessageButtonClicked>message.message_button_clicked,
-          );
-        } else if (message.dropdown_box_selected) {
-          this.onmessagedropdownboxselected(
-            <tsproto.DropdownBoxSelected>message.dropdown_box_selected,
-          );
-        } else if (message.mark_as_read) {
-          this.onmarkasread(<MarkAsRead>message.mark_as_read);
-        } else if (message.voice_reaction_send) {
-          this.onvoicereactionmessage(
-            <VoiceReactionSend>message.voice_reaction_send,
-          );
-        } else if (message.webrtc_signaling_fwd) {
-          this.onwebrtcsignalingfwd(
-            <WebrtcSignalingFwd>message.webrtc_signaling_fwd,
-          );
-        } else if (message.list_activity) {
-          this.onactivityupdated(<ListActivity>message.list_activity);
-        } else if (message.sd_topic_event) {
-          this.onsdtopicevent(<SdTopicEvent>message.sd_topic_event);
-        } else if (message.channel_app_event) {
-          this.onchannelappevent(<ChannelAppEvent>message.channel_app_event);
-        } else if (message.user_status_event) {
-          this.onuserstatusevent(<UserStatusEvent>message.user_status_event);
-        } else if (message.join_channel_app_data) {
-          this.onjoinchannelappevent(
-            <JoinChannelAppData>message.join_channel_app_data,
-          );
-        } else if (message.unpin_message_event) {
-          this.onunpinmessageevent(
-            <UnpinMessageEvent>message.unpin_message_event,
-          );
-        } else if (message.quick_menu_event) {
-          this.onquickmenuevent(<QuickMenuEvent>message.quick_menu_event);
-        } else if (message.meet_participant_event) {
-          this.onmeetparticipantevent(
-            <MeetParticipantEvent>message.meet_participant_event,
-          );
-        } else if (message.transfer_ownership_event) {
-          this.ontransferownership(
-            <TransferOwnershipEvent>message.transfer_ownership_event,
-          );
-        } else if (message.ban_user_event) {
-          this.onbanneduser(<BannedUserEvent>message.ban_user_event);
-        } else if (message.list_channel_users_banned_event) {
-          this.onlistchannelusersbanned(
-            <ListChannelUsersBannedEvent>(
-              message.list_channel_users_banned_event
-            ),
-          );
-        } else if (message.allow_anonymous_event) {
-          this.onallowanonymousevent(
-            <AllowAnonymousEvent>message.allow_anonymous_event,
-          );
-        } else if (message.aiagent_enabled_event) {
-          this.onaiagentenabled(
-            <AiAgentEnabledEvent>message.aiagent_enabled_event,
-          );
-        } else {
-          if (this.verbose && window && window.console) {
-            console.log("Unrecognized message received: %o", message);
-          }
-        }
-      } else {
-        // TODO: check
-      }
-    };
+  connect(
+    session: Session,
+    createStatus = false,
+    platform = "",
+    onDisconnected: tsproto.SocketCloseHandler,
+    onMessage: tsproto.SocketMessageHandler,
+    signal?: AbortSignal,
+  ): void {
+    
+    const scheme = "wss://";
+    this.adapter.connect(
+      scheme,
+      "this.host",
+      "this.port",
+      createStatus,
+      session.token,
+      platform,
+      signal
+    );
+
+    this.adapter.onClose = onDisconnected;
+    this.adapter.onMessage = onMessage;
   }
 
   setBasePath(basePath: string) {
@@ -11077,426 +10771,6 @@ export class MezonTransport {
         ),
       ),
     ]);
-  }
-
-  onreconnect(evt: Event) {
-    if (this.verbose && window && window.console) {
-      console.log(evt);
-    }
-  }
-
-  ondisconnect(evt: Event) {
-    if (this.verbose && window && window.console) {
-      console.log(evt);
-    }
-  }
-
-  onmessagetyping(messagetyping: MessageTypingEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(messagetyping);
-    }
-  }
-
-  onmessagereaction(messagereaction: ApiMessageReaction) {
-    if (this.verbose && window && window.console) {
-      console.log(messagereaction);
-    }
-  }
-
-  onchannelmessage(channelMessage: tsproto.ChannelMessage) {
-    if (this.verbose && window && window.console) {
-      console.log(channelMessage);
-    }
-  }
-
-  onchannelpresence(channelPresence: ChannelPresenceEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(channelPresence);
-    }
-  }
-
-  onuserchanneladded(user: UserChannelAddedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(user);
-    }
-  }
-
-  onuserclanadded(user: AddClanUserEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(user);
-    }
-  }
-
-  onuserprofileupdate(user: UserProfileUpdatedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(user);
-    }
-  }
-
-  onuserchannelremoved(user: UserChannelRemovedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(user);
-    }
-  }
-
-  onaddfriend(user: AddFriend) {
-    if (this.verbose && window && window.console) {
-      console.log(user);
-    }
-  }
-
-  onremovefriend(user: RemoveFriend) {
-    if (this.verbose && window && window.console) {
-      console.log(user);
-    }
-  }
-
-  onblockfriend(user: BlockFriend) {
-    if (this.verbose && window && window.console) {
-      console.log(user);
-    }
-  }
-
-  onunblockfriend(user: UnblockFriend) {
-    if (this.verbose && window && window.console) {
-      console.log(user);
-    }
-  }
-
-  onuserclanremoved(user: UserClanRemovedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(user);
-    }
-  }
-
-  onnotification(notification: ApiNotification) {
-    if (this.verbose && window && window.console) {
-      console.log(notification);
-    }
-  }
-
-  onstatuspresence(statusPresence: StatusPresenceEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(statusPresence);
-    }
-  }
-
-  onpinmessage(pin: LastPinMessageEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(pin);
-    }
-  }
-
-  onvoiceended(voice: VoiceEndedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(voice);
-    }
-  }
-
-  onvoicestarted(voice: VoiceStartedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(voice);
-    }
-  }
-
-  onvoicejoined(voiceParticipant: VoiceJoinedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(voiceParticipant);
-    }
-  }
-
-  onvoiceleaved(voiceParticipant: VoiceLeavedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(voiceParticipant);
-    }
-  }
-
-  onchannelcreated(channelCreated: ChannelCreatedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(channelCreated);
-    }
-  }
-
-  oncategoryevent(categoryEvent: CategoryEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(categoryEvent);
-    }
-  }
-
-  onroleevent(roleEvent: RoleEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(roleEvent);
-    }
-  }
-
-  oneventemoji(eventEmoji: EventEmoji) {
-    if (this.verbose && window && window.console) {
-      console.log(eventEmoji);
-    }
-  }
-
-  oneventnotiuserchannel(notiUserChannel: ApiNotificationUserChannel) {
-    if (this.verbose && window && window.console) {
-      console.log(notiUserChannel);
-    }
-  }
-
-  oneventwebhook(webhook_event: ApiWebhook) {
-    if (this.verbose && window && window.console) {
-      console.log(webhook_event);
-    }
-  }
-
-  onchanneldeleted(channelDeleted: ChannelDeletedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(channelDeleted);
-    }
-  }
-
-  onclandeleted(clanDeleted: ClanDeletedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(clanDeleted);
-    }
-  }
-
-  onstickercreated(stickerCreated: StickerCreateEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(stickerCreated);
-    }
-  }
-
-  onstickerdeleted(stickerDeleted: StickerDeleteEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(stickerDeleted);
-    }
-  }
-
-  onstickerupdated(stickerUpdated: StickerUpdateEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(stickerUpdated);
-    }
-  }
-
-  onchannelupdated(channelUpdated: ChannelUpdatedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(channelUpdated);
-    }
-  }
-
-  ondeleteaccount(deleteAccountEvent: DeleteAccountEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(deleteAccountEvent);
-    }
-  }
-
-  onclanprofileupdated(clanprofile: ClanProfileUpdatedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(clanprofile);
-    }
-  }
-
-  onclanupdated(clan: ClanUpdatedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(clan);
-    }
-  }
-
-  onlastseenupdated(event: LastSeenMessageEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(event);
-    }
-  }
-
-  onheartbeattimeout() {
-    if (this.verbose && window && window.console) {
-      console.log("Heartbeat timeout.");
-    }
-  }
-
-  oncustomstatus(statusEvent: CustomStatusEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(statusEvent);
-    }
-  }
-
-  oncanvasevent(canvasEvent: ChannelCanvas) {
-    if (this.verbose && window && window.console) {
-      console.log(canvasEvent);
-    }
-  }
-
-  oneventcreated(clan_event_created: ApiCreateEventRequest) {
-    if (this.verbose && window && window.console) {
-      console.log(clan_event_created);
-    }
-  }
-
-  oncoffeegiven(give_coffee_event: ApiGiveCoffeeEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(give_coffee_event);
-    }
-  }
-
-  onroleassign(role_assign_event: RoleAssignedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(role_assign_event);
-    }
-  }
-
-  onstreamingchannelstarted(streaming_started_event: StreamingStartedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(streaming_started_event);
-    }
-  }
-
-  onstreamingchannelended(streaming_ended_event: StreamingEndedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(streaming_ended_event);
-    }
-  }
-
-  onstreamingchanneljoined(streaming_joined_event: StreamingJoinedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(streaming_joined_event);
-    }
-  }
-
-  onstreamingchannelleaved(streaming_leaved_event: StreamingLeavedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(streaming_leaved_event);
-    }
-  }
-
-  onpermissionset(permission_set_event: PermissionSet) {
-    if (this.verbose && window && window.console) {
-      console.log(permission_set_event);
-    }
-  }
-
-  onpermissionchanged(permission_changed_event: PermissionChangedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(permission_changed_event);
-    }
-  }
-
-  onunmuteevent(unmute_event: UnmuteEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(unmute_event);
-    }
-  }
-
-  ontokensent(tokenSentEvent: ApiTokenSentEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(tokenSentEvent);
-    }
-  }
-
-  onmessagebuttonclicked(messageButtonClicked: tsproto.MessageButtonClicked) {
-    if (this.verbose && window && window.console) {
-      console.log(messageButtonClicked);
-    }
-  }
-
-  onmessagedropdownboxselected(msg: tsproto.DropdownBoxSelected) {
-    if (this.verbose && window && window.console) {
-      console.log(msg);
-    }
-  }
-
-  onmarkasread(event: MarkAsRead) {
-    if (this.verbose && window && window.console) {
-      console.log(event);
-    }
-  }
-
-  onvoicereactionmessage(event: VoiceReactionSend) {
-    if (this.verbose && window && window.console) {
-      console.log(event);
-    }
-  }
-
-  onwebrtcsignalingfwd(event: WebrtcSignalingFwd) {
-    if (this.verbose && window && window.console) {
-      console.log(event);
-    }
-  }
-
-  onactivityupdated(list_activity: ListActivity) {
-    if (this.verbose && window && window.console) {
-      console.log(list_activity);
-    }
-  }
-
-  onsdtopicevent(sd_topic_event: SdTopicEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(sd_topic_event);
-    }
-  }
-
-  onchannelappevent(event: ChannelAppEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(event);
-    }
-  }
-
-  onuserstatusevent(user_status_event: UserStatusEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(user_status_event);
-    }
-  }
-
-  onjoinchannelappevent(join_channel_app_data: JoinChannelAppData) {
-    if (this.verbose && window && window.console) {
-      console.log(join_channel_app_data);
-    }
-  }
-
-  onunpinmessageevent(unpin_message_event: UnpinMessageEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(unpin_message_event);
-    }
-  }
-
-  onquickmenuevent(event: QuickMenuEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(event);
-    }
-  }
-
-  ontransferownership(event: TransferOwnershipEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(event);
-    }
-  }
-
-  onbanneduser(event: BannedUserEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(event);
-    }
-  }
-
-  onlistchannelusersbanned(event: ListChannelUsersBannedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(event);
-    }
-  }
-
-  onmeetparticipantevent(event: MeetParticipantEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(event);
-    }
-  }
-
-  onallowanonymousevent(event: AllowAnonymousEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(event);
-    }
-  }
-
-  onaiagentenabled(event: AiAgentEnabledEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(event);
-    }
   }
 
   async followUsers(userIds: string[]): Promise<Status> {

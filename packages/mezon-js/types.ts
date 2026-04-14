@@ -1,4 +1,5 @@
 import { ClanBadgeCount, DirectFcmProto } from "mezon-js-protobuf";
+import { safeJSONParse, decodeReactions, decodeMentions, decodeAttachments, decodeRefs } from "./utils";
 
 export interface PromiseExecutor {
   resolve: (value?: any) => void;
@@ -4858,4 +4859,262 @@ export interface ApiDirectFcmProto {
   has_more_attachment: boolean;
   is_mention_role: boolean[];
   message_id: string;
+}
+
+
+export enum ChannelType {
+  CHANNEL_TYPE_CHANNEL = 1,
+  CHANNEL_TYPE_GROUP = 2,
+  CHANNEL_TYPE_DM = 3,
+  CHANNEL_TYPE_FORUM = 5,
+  CHANNEL_TYPE_STREAMING = 6,
+  CHANNEL_TYPE_THREAD = 7,
+  CHANNEL_TYPE_APP = 8,
+  CHANNEL_TYPE_ANNOUNCEMENT = 9,
+  CHANNEL_TYPE_MEZON_VOICE = 10,
+}
+export enum ChannelStreamMode {
+  STREAM_MODE_CHANNEL = 2,
+  STREAM_MODE_GROUP = 3,
+  STREAM_MODE_DM = 4,
+  STREAM_MODE_CLAN = 5,
+  STREAM_MODE_THREAD = 6,
+}
+
+export enum NotificationType {
+  ALL_MESSAGE = 1,
+  MENTION_MESSAGE = 2,
+  NOTHING_MESSAGE = 3,
+}
+
+export enum WebrtcSignalingType {
+  WEBRTC_SDP_INIT = 0,
+  WEBRTC_SDP_OFFER = 1,
+  WEBRTC_SDP_ANSWER = 2,
+  WEBRTC_ICE_CANDIDATE = 3,
+  WEBRTC_SDP_QUIT = 4,
+  WEBRTC_SDP_TIMEOUT = 5,
+  WEBRTC_SDP_NOT_AVAILABLE = 6,
+  WEBRTC_SDP_JOINED_OTHER_CALL = 7,
+  WEBRTC_SDP_STATUS_REMOTE_MEDIA = 8,
+}
+
+/** Response for an RPC function executed on the server. */
+export interface RpcResponse {
+  /** The identifier of the function. */
+  id?: string;
+  /** The payload of the function which must be a JSON object. */
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  payload?: object;
+}
+
+/** A list of channel messages, usually a result of a list operation. */
+export interface ChannelMessageList {
+  /** Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors. */
+  cacheable_cursor?: string;
+  /**last seen message from user on channel */
+  last_seen_message?: ApiChannelMessageHeader;
+  /**last sent message from channel */
+  last_sent_message?: ApiChannelMessageHeader;
+  /** A list of messages. */
+  messages?: Array<ChannelMessage>;
+  /** The cursor to send when retireving the next page, if any. */
+  next_cursor?: string;
+  /** The cursor to send when retrieving the previous page, if any. */
+  prev_cursor?: string;
+}
+
+/** A collection of zero or more users. */
+export interface Users {
+  /** The User objects. */
+  users?: Array<ApiUser>;
+}
+
+/** A collection of zero or more friends of the user. */
+export interface Friends {
+  /** The Friend objects. */
+  friends?: Array<ApiFriend>;
+  /** Cursor for the next page of results, if any. */
+  cursor?: string;
+}
+
+/** A notification in the server. */
+export interface Notification {
+  /** Category code for this notification. */
+  code?: number;
+  /** Content of the notification in JSON. */
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  content?: {};
+  /** The UNIX time when the notification was created. */
+  create_time_seconds?: number;
+  /** ID of the Notification. */
+  id?: string;
+  /** True if this notification was persisted to the database. */
+  persistent?: boolean;
+  /** ID of the sender, if a user. Otherwise 'null'. */
+  sender_id?: string;
+  /** Subject of the notification. */
+  subject?: string;
+}
+
+/** A collection of zero or more notifications. */
+export interface NotificationList {
+  /** Use this cursor to paginate notifications. Cache this to catch up to new notifications. */
+  cacheable_cursor?: string;
+  /** Collection of notifications. */
+  notifications?: Array<Notification>;
+}
+
+/** Update fields in a given channel. */
+export interface ApiUpdateChannelDescRequest {
+  /** The ID of the channel to update. */
+  channel_id: string;
+  /** The channel lable */
+  channel_label: string | undefined;
+  /** The category of channel */
+  category_id: string | undefined;
+  /** The app url of channel */
+  app_id: string | undefined;
+  //
+  e2ee?: number;
+  //
+  topic?: string;
+  //
+  age_restricted?: number;
+  //
+  channel_avatar?: string;
+}
+
+/** Add users to a channel. */
+export interface ApiAddChannelUsersRequest {
+  /** The channel to add users to. */
+  channel_id: string;
+  /** The users to add. */
+  user_ids: string[];
+}
+
+/** Kick a set of users from a channel. */
+export interface ApiKickChannelUsersRequest {
+  /** The channel ID to kick from. */
+  channel_id: string;
+  /** The users to kick. */
+  user_ids: string[];
+}
+
+/** Leave a channel. */
+export interface ApiLeaveChannelRequest {
+  /** The channel ID to leave. */
+  channel_id: string;
+}
+
+/** Update Clan profile information */
+export interface ApiUpdateClanDescProfileRequest {
+  /** Clan id */
+  clan_id: string;
+  /** Clan nick name */
+  nick_name: string;
+  /** Clan profile banner */
+  profile_banner: string;
+  /** Clan profile theme */
+  profile_theme: string;
+  /** Clan profile avatar */
+  avatar_url: string;
+}
+
+export interface ApiUpdateClanProfileRequest {
+  /** Clan id*/
+  clan_id: string;
+  /** Clan nick name */
+  nick_name: string;
+  /** Clan profile avatar */
+  avatar: string;
+}
+
+/** Update fields in a given role. */
+export interface ApiUpdateRoleRequest {
+  /** The ID of the role to update. */
+  role_id: string;
+  /** The users to add. */
+  add_user_ids: string[];
+  /** The permissions to add. */
+  active_permission_ids: string[];
+  /** The users to remove. */
+  remove_user_ids: string[];
+  /** The permissions to remove. */
+  remove_permission_ids: string[];
+  //
+  clan_id: string;
+  max_permission_id: string;
+  title?: string | undefined;
+  color?: string | undefined;
+  role_icon?: string | undefined;
+  description?: string | undefined;
+  display_online?: number | undefined;
+  allow_mention?: number | undefined;
+}
+
+export function CreateChannelMessageFromEvent(message: any) {
+  let content, reactions, mentions, attachments, references, referencedMessags;
+  try {
+    content = safeJSONParse(message.channel_message.content);
+  } catch (e) {
+    console.log("content is invalid", e);
+  }
+  try {
+    reactions = decodeReactions(message.channel_message.reactions);
+  } catch (e) {
+    console.log("reactions is invalid", e);
+  }
+  try {
+    mentions = decodeMentions(message.channel_message.mentions);
+  } catch (e) {
+    console.log("mentions is invalid", e);
+  }
+  try {
+    attachments = decodeAttachments(message.channel_message.attachments);
+  } catch (e) {
+    console.log("attachments is invalid", e);
+  }
+  try {
+    references = decodeRefs(message.channel_message.references);
+  } catch (e) {
+    console.log("references is invalid", e);
+  }
+  try {
+    referencedMessags = message.channel_message.referenced_message;
+  } catch (e) {
+    console.log("referenced messages is invalid", e);
+  }
+
+  const e: ChannelMessage = {
+    id: message.id || message.channel_message.message_id,
+    avatar: message.channel_message.avatar,
+    channel_id: message.channel_message.channel_id,
+    mode: message.channel_message.mode,
+    channel_label: message.channel_message.channel_label,
+    clan_id: message.channel_message.clan_id,
+    code: message.channel_message.code,
+    message_id: message.channel_message.message_id,
+    sender_id: message.channel_message.sender_id,
+    update_time: message.channel_message.update_time,
+    clan_logo: message.channel_message.clan_logo,
+    category_name: message.channel_message.category_name,
+    username: message.channel_message.username,
+    clan_nick: message.channel_message.clan_nick,
+    clan_avatar: message.channel_message.clan_avatar,
+    display_name: message.channel_message.display_name,
+    content: content,
+    reactions: reactions?.reactions,
+    mentions: mentions?.mentions,
+    attachments: attachments?.attachments,
+    referenced_message: referencedMessags,
+    references: references?.refs,
+    hide_editted: message.channel_message.hide_editted,
+    is_public: message.channel_message.is_public,
+    create_time_seconds: message.channel_message.create_time_seconds,
+    update_time_seconds: message.channel_message.update_time_seconds,
+    topic_id: message.channel_message.topic_id,
+  };
+
+  return e;
 }

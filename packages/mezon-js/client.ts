@@ -171,8 +171,6 @@ import {
   ApiMeetParticipantRequest,
   ApiLinkAccountConfirmRequest,
   ApiLinkAccountMezon,
-  ApiUser,
-  ApiFriend,
   ApiAddFriendsResponse,
   ApiUpdateUsernameRequest,
   ApiBannedUserList,
@@ -190,6 +188,77 @@ import {
   ApiDetailChannelTimelineRequest,
   ApiDetailChannelTimelineResponse,
   ApiMutedChannelList,
+  AddClanUserEvent,
+  AddFriend,
+  AiAgentEnabledEvent,
+  AllowAnonymousEvent,
+  ApiMessageReaction,
+  ApiNotification,
+  ApiWebhook,
+  BannedUserEvent,
+  BlockFriend,
+  CategoryEvent,
+  ChannelAppEvent,
+  ChannelCanvas,
+  ChannelCreatedEvent,
+  ChannelDeletedEvent,
+  ChannelPresenceEvent,
+  ChannelUpdatedEvent,
+  ClanDeletedEvent,
+  ClanProfileUpdatedEvent,
+  ClanUpdatedEvent,
+  CustomStatusEvent,
+  DeleteAccountEvent,
+  EventEmoji,
+  JoinChannelAppData,
+  LastPinMessageEvent,
+  LastSeenMessageEvent,
+  ListActivity,
+  ListChannelUsersBannedEvent,
+  MarkAsRead,
+  MeetParticipantEvent,
+  MessageTypingEvent,
+  PermissionChangedEvent,
+  PermissionSet,
+  QuickMenuEvent,
+  RemoveFriend,
+  RoleAssignedEvent,
+  RoleEvent,
+  SdTopicEvent,
+  StatusPresenceEvent,
+  StickerCreateEvent,
+  StickerDeleteEvent,
+  StickerUpdateEvent,
+  StreamingEndedEvent,
+  StreamingJoinedEvent,
+  StreamingLeavedEvent,
+  StreamingStartedEvent,
+  TransferOwnershipEvent,
+  UnblockFriend,
+  UnmuteEvent,
+  UnpinMessageEvent,
+  UserChannelAddedEvent,
+  UserChannelRemovedEvent,
+  UserClanRemovedEvent,
+  UserProfileUpdatedEvent,
+  UserStatusEvent,
+  VoiceEndedEvent,
+  VoiceJoinedEvent,
+  VoiceLeavedEvent,
+  VoiceReactionSend,
+  VoiceStartedEvent,
+  WebrtcSignalingFwd,
+  CreateChannelMessageFromEvent,
+  ChannelMessageList,
+  Friends,
+  ApiUpdateChannelDescRequest,
+  ApiUpdateClanProfileRequest,
+  ApiUpdateRoleRequest,
+  ListDataSocket,
+  IncomingCallPush,
+  Channel,
+  ClanJoin,
+  Status,
 } from "./types";
 import { Session } from "./session";
 import { RefreshTokenManager } from "./refresh_token_manager";
@@ -201,9 +270,15 @@ import {
   decodeReactions,
   decodeRefs,
   safeJSONParse,
-  decodeChannelTimelineAttachments
+  decodeChannelTimelineAttachments,
 } from "./utils";
-import { ChannelMessageAck, MultipartUploadAttachment, MultipartUploadAttachmentFinishRequest } from "mezon-js-protobuf";
+import {
+  ChannelMessageAck,
+  DropdownBoxSelected,
+  MessageButtonClicked,
+  MultipartUploadAttachment,
+  MultipartUploadAttachmentFinishRequest,
+} from "mezon-js-protobuf";
 import { MezonTransport } from "./transport";
 
 const DEFAULT_HOST = "127.0.0.1";
@@ -211,200 +286,9 @@ const DEFAULT_PORT = "7350";
 const DEFAULT_SERVER_KEY = "defaultkey";
 const DEFAULT_TIMEOUT_MS = 30000;
 
-export enum ChannelType {
-  CHANNEL_TYPE_CHANNEL = 1,
-  CHANNEL_TYPE_GROUP = 2,
-  CHANNEL_TYPE_DM = 3,
-  CHANNEL_TYPE_FORUM = 5,
-  CHANNEL_TYPE_STREAMING = 6,
-  CHANNEL_TYPE_THREAD = 7,
-  CHANNEL_TYPE_APP = 8,
-  CHANNEL_TYPE_ANNOUNCEMENT = 9,
-  CHANNEL_TYPE_MEZON_VOICE = 10,
-}
-export enum ChannelStreamMode {
-  STREAM_MODE_CHANNEL = 2,
-  STREAM_MODE_GROUP = 3,
-  STREAM_MODE_DM = 4,
-  STREAM_MODE_CLAN = 5,
-  STREAM_MODE_THREAD = 6,
-}
-
-export enum NotificationType {
-  ALL_MESSAGE = 1,
-  MENTION_MESSAGE = 2,
-  NOTHING_MESSAGE = 3,
-}
-
-export enum WebrtcSignalingType {
-  WEBRTC_SDP_INIT = 0,
-  WEBRTC_SDP_OFFER = 1,
-  WEBRTC_SDP_ANSWER = 2,
-  WEBRTC_ICE_CANDIDATE = 3,
-  WEBRTC_SDP_QUIT = 4,
-  WEBRTC_SDP_TIMEOUT = 5,
-  WEBRTC_SDP_NOT_AVAILABLE = 6,
-  WEBRTC_SDP_JOINED_OTHER_CALL = 7,
-  WEBRTC_SDP_STATUS_REMOTE_MEDIA = 8,
-}
-
-/** Response for an RPC function executed on the server. */
-export interface RpcResponse {
-  /** The identifier of the function. */
-  id?: string;
-  /** The payload of the function which must be a JSON object. */
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  payload?: object;
-}
-
-/** A list of channel messages, usually a result of a list operation. */
-export interface ChannelMessageList {
-  /** Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors. */
-  cacheable_cursor?: string;
-  /**last seen message from user on channel */
-  last_seen_message?: ApiChannelMessageHeader;
-  /**last sent message from channel */
-  last_sent_message?: ApiChannelMessageHeader;
-  /** A list of messages. */
-  messages?: Array<ChannelMessage>;
-  /** The cursor to send when retireving the next page, if any. */
-  next_cursor?: string;
-  /** The cursor to send when retrieving the previous page, if any. */
-  prev_cursor?: string;
-}
-
-/** A collection of zero or more users. */
-export interface Users {
-  /** The User objects. */
-  users?: Array<ApiUser>;
-}
-
-/** A collection of zero or more friends of the user. */
-export interface Friends {
-  /** The Friend objects. */
-  friends?: Array<ApiFriend>;
-  /** Cursor for the next page of results, if any. */
-  cursor?: string;
-}
-
-/** A notification in the server. */
-export interface Notification {
-  /** Category code for this notification. */
-  code?: number;
-  /** Content of the notification in JSON. */
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  content?: {};
-  /** The UNIX time when the notification was created. */
-  create_time_seconds?: number;
-  /** ID of the Notification. */
-  id?: string;
-  /** True if this notification was persisted to the database. */
-  persistent?: boolean;
-  /** ID of the sender, if a user. Otherwise 'null'. */
-  sender_id?: string;
-  /** Subject of the notification. */
-  subject?: string;
-}
-
-/** A collection of zero or more notifications. */
-export interface NotificationList {
-  /** Use this cursor to paginate notifications. Cache this to catch up to new notifications. */
-  cacheable_cursor?: string;
-  /** Collection of notifications. */
-  notifications?: Array<Notification>;
-}
-
-/** Update fields in a given channel. */
-export interface ApiUpdateChannelDescRequest {
-  /** The ID of the channel to update. */
-  channel_id: string;
-  /** The channel lable */
-  channel_label: string | undefined;
-  /** The category of channel */
-  category_id: string | undefined;
-  /** The app url of channel */
-  app_id: string | undefined;
-  //
-  e2ee?: number;
-  //
-  topic?: string;
-  //
-  age_restricted?: number;
-  //
-  channel_avatar?: string;
-}
-
-/** Add users to a channel. */
-export interface ApiAddChannelUsersRequest {
-  /** The channel to add users to. */
-  channel_id: string;
-  /** The users to add. */
-  user_ids: string[];
-}
-
-/** Kick a set of users from a channel. */
-export interface ApiKickChannelUsersRequest {
-  /** The channel ID to kick from. */
-  channel_id: string;
-  /** The users to kick. */
-  user_ids: string[];
-}
-
-/** Leave a channel. */
-export interface ApiLeaveChannelRequest {
-  /** The channel ID to leave. */
-  channel_id: string;
-}
-
-/** Update Clan profile information */
-export interface ApiUpdateClanDescProfileRequest {
-  /** Clan id */
-  clan_id: string;
-  /** Clan nick name */
-  nick_name: string;
-  /** Clan profile banner */
-  profile_banner: string;
-  /** Clan profile theme */
-  profile_theme: string;
-  /** Clan profile avatar */
-  avatar_url: string;
-}
-
-export interface ApiUpdateClanProfileRequest {
-  /** Clan id*/
-  clan_id: string;
-  /** Clan nick name */
-  nick_name: string;
-  /** Clan profile avatar */
-  avatar: string;
-}
-
-/** Update fields in a given role. */
-export interface ApiUpdateRoleRequest {
-  /** The ID of the role to update. */
-  role_id: string;
-  /** The users to add. */
-  add_user_ids: string[];
-  /** The permissions to add. */
-  active_permission_ids: string[];
-  /** The users to remove. */
-  remove_user_ids: string[];
-  /** The permissions to remove. */
-  remove_permission_ids: string[];
-  //
-  clan_id: string;
-  max_permission_id: string;
-  title?: string | undefined;
-  color?: string | undefined;
-  role_icon?: string | undefined;
-  description?: string | undefined;
-  display_online?: number | undefined;
-  allow_mention?: number | undefined;
-}
-
 /** A client for Mezon server. */
 export class Client {
-  /** The low level API client for Mezon server. */
+  public verbose: boolean = false;
   private readonly apiClient: MezonTransport;
 
   private readonly refreshTokenManager = RefreshTokenManager.getInstance();
@@ -427,6 +311,642 @@ export class Client {
     const basePath = `${scheme}${host}:${port}`;
 
     this.apiClient = new MezonTransport(serverkey, timeout, basePath);
+  }
+
+  connect(session: Session, createStatus = false, platform = ""): void {
+    this.apiClient.connect(
+      session,
+      createStatus,
+      platform,
+      async (message: any) => {
+        if (!message.cid) {
+          if (message.notifications) {
+            message.notifications.notifications.forEach(
+              (n: ApiNotification) => {
+                n.content = n.content
+                  ? decodeNotificationFcm(n.content)
+                  : undefined;
+                this.onnotification(n);
+              },
+            );
+          } else if (message.voice_started_event) {
+            this.onvoicestarted(message.voice_started_event);
+          } else if (message.voice_ended_event) {
+            this.onvoiceended(message.voice_ended_event);
+          } else if (message.voice_joined_event) {
+            this.onvoicejoined(message.voice_joined_event);
+          } else if (message.voice_leaved_event) {
+            this.onvoiceleaved(message.voice_leaved_event);
+          } else if (message.channel_created_event) {
+            this.onchannelcreated(message.channel_created_event);
+          } else if (message.category_event) {
+            this.oncategoryevent(message.category_event);
+          } else if (message.role_event) {
+            this.onroleevent(message.role_event);
+          } else if (message.event_emoji) {
+            this.oneventemoji(message.event_emoji);
+          } else if (message.noti_user_channel) {
+            this.oneventnotiuserchannel(message.noti_user_channel);
+          } else if (message.webhook_event) {
+            this.oneventwebhook(message.webhook_event);
+          } else if (message.channel_deleted_event) {
+            this.onchanneldeleted(message.channel_deleted_event);
+          } else if (message.clan_deleted_event) {
+            this.onclandeleted(message.clan_deleted_event);
+          } else if (message.sticker_create_event) {
+            this.onstickercreated(message.sticker_create_event);
+          } else if (message.sticker_update_event) {
+            this.onstickerupdated(message.sticker_update_event);
+          } else if (message.sticker_delete_event) {
+            this.onstickerdeleted(message.sticker_delete_event);
+          } else if (message.channel_updated_event) {
+            this.onchannelupdated(message.channel_updated_event);
+          } else if (message.delete_account_event) {
+            this.ondeleteaccount(message.delete_account_event);
+          } else if (message.clan_profile_updated_event) {
+            this.onclanprofileupdated(message.clan_profile_updated_event);
+          } else if (message.clan_updated_event) {
+            this.onclanupdated(message.clan_updated_event);
+          } else if (message.last_seen_message_event) {
+            this.onlastseenupdated(message.last_seen_message_event);
+          } else if (message.status_presence_event) {
+            this.onstatuspresence(
+              <StatusPresenceEvent>message.status_presence_event,
+            );
+          } else if (message.channel_message) {
+            const channelMessage = CreateChannelMessageFromEvent(message);
+            this.onchannelmessage(channelMessage);
+          } else if (message.message_typing_event) {
+            this.onmessagetyping(
+              <MessageTypingEvent>message.message_typing_event,
+            );
+          } else if (message.message_reaction_event) {
+            this.onmessagereaction(
+              <ApiMessageReaction>message.message_reaction_event,
+            );
+          } else if (message.channel_presence_event) {
+            this.onchannelpresence(
+              <ChannelPresenceEvent>message.channel_presence_event,
+            );
+          } else if (message.last_pin_message_event) {
+            this.onpinmessage(
+              <LastPinMessageEvent>message.last_pin_message_event,
+            );
+          } else if (message.custom_status_event) {
+            this.oncustomstatus(<CustomStatusEvent>message.custom_status_event);
+          } else if (message.canvas_event) {
+            this.oncanvasevent(<ChannelCanvas>message.canvas_event);
+          } else if (message.user_channel_added_event) {
+            this.onuserchanneladded(
+              <UserChannelAddedEvent>message.user_channel_added_event,
+            );
+          } else if (message.add_clan_user_event) {
+            this.onuserclanadded(<AddClanUserEvent>message.add_clan_user_event);
+          } else if (message.user_profile_updated_event) {
+            this.onuserprofileupdate(
+              <UserProfileUpdatedEvent>message.user_profile_updated_event,
+            );
+          } else if (message.user_channel_removed_event) {
+            this.onuserchannelremoved(
+              <UserChannelRemovedEvent>message.user_channel_removed_event,
+            );
+          } else if (message.block_friend) {
+            this.onblockfriend(<BlockFriend>message.block_friend);
+          } else if (message.un_block_friend) {
+            this.onunblockfriend(<UnblockFriend>message.un_block_friend);
+          } else if (message.add_friend) {
+            this.onaddfriend(<AddFriend>message.add_friend);
+          } else if (message.remove_friend) {
+            this.onremovefriend(<RemoveFriend>message.remove_friend);
+          } else if (message.user_clan_removed_event) {
+            this.onuserclanremoved(
+              <UserClanRemovedEvent>message.user_clan_removed_event,
+            );
+          } else if (message.clan_event_created) {
+            this.oneventcreated(message.clan_event_created);
+          } else if (message.give_coffee_event) {
+            this.oncoffeegiven(<ApiGiveCoffeeEvent>message.give_coffee_event);
+          } else if (message.role_assign_event) {
+            this.onroleassign(<RoleAssignedEvent>message.role_assign_event);
+          } else if (message.streaming_started_event) {
+            this.onstreamingchannelstarted(
+              <StreamingStartedEvent>message.streaming_started_event,
+            );
+          } else if (message.streaming_ended_event) {
+            this.onstreamingchannelended(
+              <StreamingEndedEvent>message.streaming_ended_event,
+            );
+          } else if (message.streaming_joined_event) {
+            this.onstreamingchanneljoined(
+              <StreamingJoinedEvent>message.streaming_joined_event,
+            );
+          } else if (message.streaming_leaved_event) {
+            this.onstreamingchannelleaved(
+              <StreamingLeavedEvent>message.streaming_leaved_event,
+            );
+          } else if (message.permission_set_event) {
+            this.onpermissionset(<PermissionSet>message.permission_set_event);
+          } else if (message.permission_changed_event) {
+            this.onpermissionchanged(
+              <PermissionChangedEvent>message.permission_changed_event,
+            );
+          } else if (message.unmute_event) {
+            this.onunmuteevent(<UnmuteEvent>message.unmute_event);
+          } else if (message.token_sent_event) {
+            this.ontokensent(<ApiTokenSentEvent>message.token_sent_event);
+          } else if (message.message_button_clicked) {
+            this.onmessagebuttonclicked(
+              <MessageButtonClicked>message.message_button_clicked,
+            );
+          } else if (message.dropdown_box_selected) {
+            this.onmessagedropdownboxselected(
+              <DropdownBoxSelected>message.dropdown_box_selected,
+            );
+          } else if (message.mark_as_read) {
+            this.onmarkasread(<MarkAsRead>message.mark_as_read);
+          } else if (message.voice_reaction_send) {
+            this.onvoicereactionmessage(
+              <VoiceReactionSend>message.voice_reaction_send,
+            );
+          } else if (message.webrtc_signaling_fwd) {
+            this.onwebrtcsignalingfwd(
+              <WebrtcSignalingFwd>message.webrtc_signaling_fwd,
+            );
+          } else if (message.list_activity) {
+            this.onactivityupdated(<ListActivity>message.list_activity);
+          } else if (message.sd_topic_event) {
+            this.onsdtopicevent(<SdTopicEvent>message.sd_topic_event);
+          } else if (message.channel_app_event) {
+            this.onchannelappevent(<ChannelAppEvent>message.channel_app_event);
+          } else if (message.user_status_event) {
+            this.onuserstatusevent(<UserStatusEvent>message.user_status_event);
+          } else if (message.join_channel_app_data) {
+            this.onjoinchannelappevent(
+              <JoinChannelAppData>message.join_channel_app_data,
+            );
+          } else if (message.unpin_message_event) {
+            this.onunpinmessageevent(
+              <UnpinMessageEvent>message.unpin_message_event,
+            );
+          } else if (message.quick_menu_event) {
+            this.onquickmenuevent(<QuickMenuEvent>message.quick_menu_event);
+          } else if (message.meet_participant_event) {
+            this.onmeetparticipantevent(
+              <MeetParticipantEvent>message.meet_participant_event,
+            );
+          } else if (message.transfer_ownership_event) {
+            this.ontransferownership(
+              <TransferOwnershipEvent>message.transfer_ownership_event,
+            );
+          } else if (message.ban_user_event) {
+            this.onbanneduser(<BannedUserEvent>message.ban_user_event);
+          } else if (message.list_channel_users_banned_event) {
+            this.onlistchannelusersbanned(
+              <ListChannelUsersBannedEvent>(
+                message.list_channel_users_banned_event
+              ),
+            );
+          } else if (message.allow_anonymous_event) {
+            this.onallowanonymousevent(
+              <AllowAnonymousEvent>message.allow_anonymous_event,
+            );
+          } else if (message.aiagent_enabled_event) {
+            this.onaiagentenabled(
+              <AiAgentEnabledEvent>message.aiagent_enabled_event,
+            );
+          } else {
+            if (this.verbose && window && window.console) {
+              console.log("Unrecognized message received: %o", message);
+            }
+          }
+        } else {
+          // TODO: check
+        }
+      },
+      async (evt: Event) => {
+        this.ondisconnect(evt);
+      },
+    );
+  }
+
+  onreconnect(evt: Event) {
+    if (this.verbose && window && window.console) {
+      console.log(evt);
+    }
+  }
+
+  ondisconnect(evt: Event) {
+    if (this.verbose && window && window.console) {
+      console.log(evt);
+    }
+  }
+
+  onmessagetyping(messagetyping: MessageTypingEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(messagetyping);
+    }
+  }
+
+  onmessagereaction(messagereaction: ApiMessageReaction) {
+    if (this.verbose && window && window.console) {
+      console.log(messagereaction);
+    }
+  }
+
+  onchannelmessage(channelMessage: ChannelMessage) {
+    if (this.verbose && window && window.console) {
+      console.log(channelMessage);
+    }
+  }
+
+  onchannelpresence(channelPresence: ChannelPresenceEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(channelPresence);
+    }
+  }
+
+  onuserchanneladded(user: UserChannelAddedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onuserclanadded(user: AddClanUserEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onuserprofileupdate(user: UserProfileUpdatedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onuserchannelremoved(user: UserChannelRemovedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onaddfriend(user: AddFriend) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onremovefriend(user: RemoveFriend) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onblockfriend(user: BlockFriend) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onunblockfriend(user: UnblockFriend) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onuserclanremoved(user: UserClanRemovedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onnotification(notification: ApiNotification) {
+    if (this.verbose && window && window.console) {
+      console.log(notification);
+    }
+  }
+
+  onstatuspresence(statusPresence: StatusPresenceEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(statusPresence);
+    }
+  }
+
+  onpinmessage(pin: LastPinMessageEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(pin);
+    }
+  }
+
+  onvoiceended(voice: VoiceEndedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(voice);
+    }
+  }
+
+  onvoicestarted(voice: VoiceStartedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(voice);
+    }
+  }
+
+  onvoicejoined(voiceParticipant: VoiceJoinedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(voiceParticipant);
+    }
+  }
+
+  onvoiceleaved(voiceParticipant: VoiceLeavedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(voiceParticipant);
+    }
+  }
+
+  onchannelcreated(channelCreated: ChannelCreatedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(channelCreated);
+    }
+  }
+
+  oncategoryevent(categoryEvent: CategoryEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(categoryEvent);
+    }
+  }
+
+  onroleevent(roleEvent: RoleEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(roleEvent);
+    }
+  }
+
+  oneventemoji(eventEmoji: EventEmoji) {
+    if (this.verbose && window && window.console) {
+      console.log(eventEmoji);
+    }
+  }
+
+  oneventnotiuserchannel(notiUserChannel: ApiNotificationUserChannel) {
+    if (this.verbose && window && window.console) {
+      console.log(notiUserChannel);
+    }
+  }
+
+  oneventwebhook(webhook_event: ApiWebhook) {
+    if (this.verbose && window && window.console) {
+      console.log(webhook_event);
+    }
+  }
+
+  onchanneldeleted(channelDeleted: ChannelDeletedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(channelDeleted);
+    }
+  }
+
+  onclandeleted(clanDeleted: ClanDeletedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(clanDeleted);
+    }
+  }
+
+  onstickercreated(stickerCreated: StickerCreateEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(stickerCreated);
+    }
+  }
+
+  onstickerdeleted(stickerDeleted: StickerDeleteEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(stickerDeleted);
+    }
+  }
+
+  onstickerupdated(stickerUpdated: StickerUpdateEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(stickerUpdated);
+    }
+  }
+
+  onchannelupdated(channelUpdated: ChannelUpdatedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(channelUpdated);
+    }
+  }
+
+  ondeleteaccount(deleteAccountEvent: DeleteAccountEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(deleteAccountEvent);
+    }
+  }
+
+  onclanprofileupdated(clanprofile: ClanProfileUpdatedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(clanprofile);
+    }
+  }
+
+  onclanupdated(clan: ClanUpdatedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(clan);
+    }
+  }
+
+  onlastseenupdated(event: LastSeenMessageEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onheartbeattimeout() {
+    if (this.verbose && window && window.console) {
+      console.log("Heartbeat timeout.");
+    }
+  }
+
+  oncustomstatus(statusEvent: CustomStatusEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(statusEvent);
+    }
+  }
+
+  oncanvasevent(canvasEvent: ChannelCanvas) {
+    if (this.verbose && window && window.console) {
+      console.log(canvasEvent);
+    }
+  }
+
+  oneventcreated(clan_event_created: ApiCreateEventRequest) {
+    if (this.verbose && window && window.console) {
+      console.log(clan_event_created);
+    }
+  }
+
+  oncoffeegiven(give_coffee_event: ApiGiveCoffeeEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(give_coffee_event);
+    }
+  }
+
+  onroleassign(role_assign_event: RoleAssignedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(role_assign_event);
+    }
+  }
+
+  onstreamingchannelstarted(streaming_started_event: StreamingStartedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(streaming_started_event);
+    }
+  }
+
+  onstreamingchannelended(streaming_ended_event: StreamingEndedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(streaming_ended_event);
+    }
+  }
+
+  onstreamingchanneljoined(streaming_joined_event: StreamingJoinedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(streaming_joined_event);
+    }
+  }
+
+  onstreamingchannelleaved(streaming_leaved_event: StreamingLeavedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(streaming_leaved_event);
+    }
+  }
+
+  onpermissionset(permission_set_event: PermissionSet) {
+    if (this.verbose && window && window.console) {
+      console.log(permission_set_event);
+    }
+  }
+
+  onpermissionchanged(permission_changed_event: PermissionChangedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(permission_changed_event);
+    }
+  }
+
+  onunmuteevent(unmute_event: UnmuteEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(unmute_event);
+    }
+  }
+
+  ontokensent(tokenSentEvent: ApiTokenSentEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(tokenSentEvent);
+    }
+  }
+
+  onmessagebuttonclicked(messageButtonClicked: MessageButtonClicked) {
+    if (this.verbose && window && window.console) {
+      console.log(messageButtonClicked);
+    }
+  }
+
+  onmessagedropdownboxselected(msg: DropdownBoxSelected) {
+    if (this.verbose && window && window.console) {
+      console.log(msg);
+    }
+  }
+
+  onmarkasread(event: MarkAsRead) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onvoicereactionmessage(event: VoiceReactionSend) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onwebrtcsignalingfwd(event: WebrtcSignalingFwd) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onactivityupdated(list_activity: ListActivity) {
+    if (this.verbose && window && window.console) {
+      console.log(list_activity);
+    }
+  }
+
+  onsdtopicevent(sd_topic_event: SdTopicEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(sd_topic_event);
+    }
+  }
+
+  onchannelappevent(event: ChannelAppEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onuserstatusevent(user_status_event: UserStatusEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(user_status_event);
+    }
+  }
+
+  onjoinchannelappevent(join_channel_app_data: JoinChannelAppData) {
+    if (this.verbose && window && window.console) {
+      console.log(join_channel_app_data);
+    }
+  }
+
+  onunpinmessageevent(unpin_message_event: UnpinMessageEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(unpin_message_event);
+    }
+  }
+
+  onquickmenuevent(event: QuickMenuEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  ontransferownership(event: TransferOwnershipEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onbanneduser(event: BannedUserEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onlistchannelusersbanned(event: ListChannelUsersBannedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onmeetparticipantevent(event: MeetParticipantEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onallowanonymousevent(event: AllowAnonymousEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onaiagentenabled(event: AiAgentEnabledEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
   }
 
   /**
@@ -720,7 +1240,10 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.multipartUploadAttachmentFileFinsih(session.token, request);
+    return this.apiClient.multipartUploadAttachmentFileFinsih(
+      session.token,
+      request,
+    );
   }
 
   /** Create a channel within clan */
@@ -1335,11 +1858,7 @@ export class Client {
     }
 
     return this.apiClient
-      .listChannelVoiceUsers(
-        session.token,
-        clanId,
-        limit
-      )
+      .listChannelVoiceUsers(session.token, clanId, limit)
       .then((response: ApiVoiceChannelUserList) => {
         const result: ApiVoiceChannelUserList = {
           voice_channel_users: [],
@@ -3663,7 +4182,9 @@ export class Client {
           event.attachments = [];
           let previewImgs;
           try {
-            const decodedAttachments = decodeChannelTimelineAttachments(event.preview_imgs);
+            const decodedAttachments = decodeChannelTimelineAttachments(
+              event.preview_imgs,
+            );
             previewImgs =
               decodedAttachments?.attachments ||
               decodedAttachments ||
@@ -3701,8 +4222,12 @@ export class Client {
           let attachments;
           let previewImgs;
           try {
-            const decodedAttachments = decodeChannelTimelineAttachments(event.attachments);
-            const decodedPreviewImgs = decodeChannelTimelineAttachments(event.preview_imgs);
+            const decodedAttachments = decodeChannelTimelineAttachments(
+              event.attachments,
+            );
+            const decodedPreviewImgs = decodeChannelTimelineAttachments(
+              event.preview_imgs,
+            );
             attachments =
               decodedAttachments?.attachments ||
               decodedAttachments ||
@@ -3750,8 +4275,12 @@ export class Client {
           let attachments;
           let previewImgs;
           try {
-            const decodedAttachments = decodeChannelTimelineAttachments(event.attachments);
-            const decodedPreviewImgs = decodeChannelTimelineAttachments(event.preview_imgs);
+            const decodedAttachments = decodeChannelTimelineAttachments(
+              event.attachments,
+            );
+            const decodedPreviewImgs = decodeChannelTimelineAttachments(
+              event.preview_imgs,
+            );
             attachments =
               decodedAttachments?.attachments ||
               decodedAttachments ||
@@ -3799,8 +4328,12 @@ export class Client {
           let attachments;
           let previewImgs;
           try {
-            const decodedAttachments = decodeChannelTimelineAttachments(event.attachments);
-            const decodedPreviewImgs = decodeChannelTimelineAttachments(event.preview_imgs);
+            const decodedAttachments = decodeChannelTimelineAttachments(
+              event.attachments,
+            );
+            const decodedPreviewImgs = decodeChannelTimelineAttachments(
+              event.preview_imgs,
+            );
             attachments =
               decodedAttachments?.attachments ||
               decodedAttachments ||
@@ -3853,7 +4386,7 @@ export class Client {
     session: Session,
     clanId: string,
     parentId: string,
-    threadIds: string[]
+    threadIds: string[],
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
@@ -3864,12 +4397,7 @@ export class Client {
     }
 
     return this.apiClient
-      .archiveInactiveChannelThreads(
-        session.token,
-        clanId,
-        parentId,
-        threadIds
-      )
+      .archiveInactiveChannelThreads(session.token, clanId, parentId, threadIds)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -4872,7 +5400,14 @@ export class Client {
     isGuest?: boolean,
   ): Promise<ApiGenerateMeetTokenExternalResponse> {
     return this.apiClient
-      .generateMeetTokenExternal("", basePath, token, username, metadata, isGuest)
+      .generateMeetTokenExternal(
+        "",
+        basePath,
+        token,
+        username,
+        metadata,
+        isGuest,
+      )
       .then((response: ApiGenerateMeetTokenExternalResponse) => {
         return Promise.resolve(response);
       });
@@ -5423,21 +5958,21 @@ export class Client {
   }
 
   async channelMessageReact(
-      session: Session,
-      clanId: string,
-      channelId: string,
-      mode: number,
-      isPublic: boolean,
-      messageId: string,
-      emojiId: string,
-      emoji: string,
-      count: number,
-      messageSenderId: string,
-      actionDelete: boolean,
-      topicId?: string,
-      emojiRecentId?: string,
-      senderName?: string
-    ): Promise<ChannelMessageAck> {
+    session: Session,
+    clanId: string,
+    channelId: string,
+    mode: number,
+    isPublic: boolean,
+    messageId: string,
+    emojiId: string,
+    emoji: string,
+    count: number,
+    messageSenderId: string,
+    actionDelete: boolean,
+    topicId?: string,
+    emojiRecentId?: string,
+    senderName?: string,
+  ): Promise<ChannelMessageAck> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -5471,7 +6006,7 @@ export class Client {
   /** Create a poll in a channel. */
   async createPoll(
     session: Session,
-    request: ApiCreatePollRequest
+    request: ApiCreatePollRequest,
   ): Promise<ApiCreatePollResponse> {
     if (
       this.autoRefreshSession &&
@@ -5484,7 +6019,10 @@ export class Client {
   }
 
   /** Vote on a poll. */
-  async votePoll(session: Session, request: ApiVotePollRequest): Promise<ApiVotePollResponse> {
+  async votePoll(
+    session: Session,
+    request: ApiVotePollRequest,
+  ): Promise<ApiVotePollResponse> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -5496,7 +6034,10 @@ export class Client {
   }
 
   /** Close a poll (creator only). */
-  async closePoll(session: Session, request: ApiClosePollRequest): Promise<any> {
+  async closePoll(
+    session: Session,
+    request: ApiClosePollRequest,
+  ): Promise<any> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -5510,7 +6051,7 @@ export class Client {
   /** Get poll details. */
   async getPoll(
     session: Session,
-    request: ApiGetPollRequest
+    request: ApiGetPollRequest,
   ): Promise<ApiGetPollResponse> {
     if (
       this.autoRefreshSession &&
@@ -5520,5 +6061,558 @@ export class Client {
       await this.sessionRefresh(session);
     }
     return this.apiClient.getPoll(session.token, request);
+  }
+
+  async followUsers(
+    session: Session,
+    userIds: string[],
+  ): Promise<Status> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.followUsers(userIds);
+  }
+
+  async joinClanChat(
+    session: Session,
+    clan_id: string,
+  ): Promise<ClanJoin> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.joinClanChat(clan_id);
+  }
+
+  async follower(
+    session: Session
+  ): Promise<void> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.follower();
+  }
+
+  async joinChat(
+    session: Session,
+    clan_id: string,
+    channel_id: string,
+    channel_type: number,
+    is_public: boolean,
+  ): Promise<Channel> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.joinChat(
+      clan_id,
+      channel_id,
+      channel_type,
+      is_public,
+    );
+  }
+
+  async leaveChat(
+    session: Session,
+    clan_id: string,
+    channel_id: string,
+    channel_type: number,
+    is_public: boolean,
+  ): Promise<void> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.leaveChat(
+      clan_id,
+      channel_id,
+      channel_type,
+      is_public,
+    );
+  }
+
+  async removeChatMessage(
+    session: Session,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    message_id: string,
+    has_attachment?: boolean,
+    topic_id?: string,
+    mentions?: string,
+    references?: string,
+  ): Promise<ChannelMessageAck> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.removeChatMessage(
+      clan_id,
+      channel_id,
+      mode,
+      is_public,
+      message_id,
+      has_attachment,
+      topic_id,
+      mentions,
+      references,
+    );
+  }
+
+  async unfollowUsers(
+    session: Session,
+    user_ids: string[],
+  ): Promise<void> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.unfollowUsers(user_ids);
+  }
+
+  async updateChatMessage(
+    session: Session,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    message_id: string,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    hideEditted?: boolean,
+    topic_id?: string,
+    is_update_msg_topic?: boolean,
+  ): Promise<ChannelMessageAck> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.updateChatMessage(
+      clan_id,
+      channel_id,
+      mode,
+      is_public,
+      message_id,
+      content,
+      mentions,
+      attachments,
+      hideEditted,
+      topic_id,
+      is_update_msg_topic,
+    );
+  }
+
+  async updateStatus(
+    session: Session,
+    status?: string,
+  ): Promise<void> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.updateStatus(status);
+  }
+
+  async writeQuickMenuEvent(
+    session: Session,
+    menu_name: string,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymous_message?: boolean,
+    mention_everyone?: boolean,
+    avatar?: string,
+    code?: number,
+    topic_id?: string,
+  ): Promise<QuickMenuEvent> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.writeQuickMenuEvent(
+      menu_name,
+      clan_id,
+      channel_id,
+      mode,
+      is_public,
+      content,
+      mentions,
+      attachments,
+      references,
+      anonymous_message,
+      mention_everyone,
+      avatar,
+      code,
+      topic_id,
+    );
+  }
+
+  async writeEphemeralMessage(
+    session: Session,
+    receiver_ids: string[],
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymous_message?: boolean,
+    mention_everyone?: boolean,
+    avatar?: string,
+    code?: number,
+    topic_id?: string,
+    id?: string,
+  ): Promise<ChannelMessageAck> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.writeEphemeralMessage(
+      receiver_ids,
+      clan_id,
+      channel_id,
+      mode,
+      is_public,
+      content,
+      mentions,
+      attachments,
+      references,
+      anonymous_message,
+      mention_everyone,
+      avatar,
+      code,
+      topic_id,
+      id,
+    );
+  }
+
+  async writeChatMessage(
+    session: Session,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymous_message?: boolean,
+    mention_everyone?: boolean,
+    avatar?: string,
+    code?: number,
+    topic_id?: string,
+  ): Promise<ChannelMessageAck> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.writeChatMessage(
+      clan_id,
+      channel_id,
+      mode,
+      is_public,
+      content,
+      mentions,
+      attachments,
+      references,
+      anonymous_message,
+      mention_everyone,
+      avatar,
+      code,
+      topic_id);
+  }
+
+  async writeMessageReaction(
+    session: Session,
+    id: string,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    message_id: string,
+    emoji_id: string,
+    emoji: string,
+    count: number,
+    message_sender_id: string,
+    action_delete: boolean,
+    topic_id?: string,
+    emoji_recent_id?: string,
+    sender_name?: string,
+  ): Promise<ApiMessageReaction> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.writeMessageReaction(
+      id,
+      clan_id,
+      channel_id,
+      mode,
+      is_public,
+      message_id,
+      emoji_id,
+      emoji,
+      count,
+      message_sender_id,
+      action_delete,
+      topic_id,
+      emoji_recent_id,
+      sender_name,
+    );
+  }
+
+  async writeMessageTyping(
+    session: Session,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    sender_display_name: string,
+    topic_id?: string,
+  ): Promise<MessageTypingEvent> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.writeMessageTyping(
+      clan_id,
+      channel_id,
+      mode,
+      is_public,
+      sender_display_name,
+      topic_id,
+    );
+  }
+
+  async writeLastSeenMessage(
+    session: Session,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    message_id: string,
+    timestamp_seconds: number,
+    badge_count: number,
+  ): Promise<LastSeenMessageEvent> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.writeLastSeenMessage(
+      clan_id,
+      channel_id,
+      mode,
+      message_id,
+      timestamp_seconds,
+      badge_count,
+    );
+  }
+
+  async writeLastPinMessage(
+    session: Session,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    message_id: string,
+    timestamp_seconds: number,
+    operation: number,
+    message_sender_avatar: string,
+    message_sender_id: string,
+    message_sender_username: string,
+    message_content: string,
+    message_attachment: string,
+    message_created_time: string,
+  ): Promise<ApiGetPollResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.writeLastPinMessage(
+      clan_id,
+      channel_id,
+      mode,
+      is_public,
+      message_id,
+      timestamp_seconds,
+      operation,
+      message_sender_avatar,
+      message_sender_id,
+      message_sender_username,
+      message_content,
+      message_attachment,
+      message_created_time,
+    );
+  }
+
+  async writeCustomStatus(
+    session: Session,
+    clan_id: string,
+    status: string,
+    time_reset: number,
+    no_clear: boolean,
+  ): Promise<CustomStatusEvent> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.writeCustomStatus(
+      clan_id,
+      status,
+      time_reset,
+      no_clear,
+    );
+  }
+
+  async writeVoiceReaction(
+    session: Session,
+    emojis: Array<string>,
+    channel_id: string,
+  ): Promise<VoiceReactionSend> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.writeVoiceReaction(emojis, channel_id);
+  }
+
+  async forwardWebrtcSignaling(
+    session: Session,
+    receiver_id: string,
+    data_type: number,
+    json_data: string,
+    channel_id: string,
+    caller_id: string,
+  ): Promise<WebrtcSignalingFwd> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.forwardWebrtcSignaling(
+      receiver_id,
+      data_type,
+      json_data,
+      channel_id,
+      caller_id,
+    );
+  }
+
+  async makeCallPush(
+    session: Session,
+    receiver_id: string,
+    json_data: string,
+    channel_id: string,
+    caller_id: string,
+  ): Promise<IncomingCallPush> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.makeCallPush(
+      receiver_id,
+      json_data,
+      channel_id,
+      caller_id,
+    );
+  }
+
+  async writeChannelAppEvent(
+    session: Session,
+    clan_id: string,
+    channel_id: string,
+    action: number,
+  ): Promise<ChannelAppEvent> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.writeChannelAppEvent(clan_id, channel_id, action);
+  }
+
+  async listDataSocket(
+    session: Session,
+    request: ListDataSocket,
+  ): Promise<ApiGetPollResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.apiClient.listDataSocket(request);
   }
 }
