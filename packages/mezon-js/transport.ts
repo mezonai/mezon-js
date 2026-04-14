@@ -308,7 +308,7 @@ export class MezonTransport {
 
     let untypedMessage = fetchOptions as any;
     if (fullUrl !== "") {
-      untypedMessage = data;
+      untypedMessage = {api_request_event: { full_url: fullUrl, body: fetchOptions.body }};
     }
 
     return new Promise<void>((resolve, reject) => {
