@@ -226,6 +226,9 @@ $RECYCLE.BIN/
 *.lnk
 
 packages/**/dist/
+packages/**/*.d.ts
+packages/**/*.d.ts*
+**/package-lock.json
 
 .turbo
 

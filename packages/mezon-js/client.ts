@@ -286,9 +286,28 @@ const DEFAULT_PORT = "7350";
 const DEFAULT_SERVER_KEY = "defaultkey";
 const DEFAULT_TIMEOUT_MS = 30000;
 
+export const ConnectionState = {
+  DISCONNECTED: "disconnected",
+  CONNECTING: "connecting",
+  CONNECTED: "connected",
+} as const;
+
+export type ConnectionStateType =
+  (typeof ConnectionState)[keyof typeof ConnectionState];
+
+let __hasConnectedOnce = false;  
+
 /** A client for Mezon server. */
 export class Client {
+  public static readonly DefaultHeartbeatTimeoutMs = 10000;
+  public static readonly DefaultConnectTimeoutMs = 30000;
+  
   public verbose: boolean = false;
+  private _heartbeatTimeoutMs: number;
+  private _connectionState: ConnectionStateType;
+  private _heartbeatTimer?: ReturnType<typeof setTimeout>;
+  private _connectTimeoutTimer?: ReturnType<typeof setTimeout>;
+  private _connectPromise?: Promise<Session>;
   private readonly apiClient: MezonTransport;
 
   private readonly refreshTokenManager = RefreshTokenManager.getInstance();
@@ -301,6 +320,7 @@ export class Client {
     host = DEFAULT_HOST,
     port = DEFAULT_PORT,
     useSSL = false,
+    readonly platform = "web",
     readonly timeout = DEFAULT_TIMEOUT_MS,
     readonly autoRefreshSession = true,
   ) {
@@ -310,14 +330,31 @@ export class Client {
     const scheme = useSSL ? "https://" : "http://";
     const basePath = `${scheme}${host}:${port}`;
 
-    this.apiClient = new MezonTransport(serverkey, timeout, basePath);
+    this._heartbeatTimeoutMs = Client.DefaultHeartbeatTimeoutMs;
+    this._connectionState = ConnectionState.DISCONNECTED;
+
+    this.apiClient = new MezonTransport(serverkey, timeout, platform, basePath);
   }
 
-  connect(session: Session, createStatus = false, platform = ""): void {
+  isOpen(): boolean {
+    return this._connectionState === ConnectionState.CONNECTED;
+  }
+
+  connect(session: Session, createStatus = false, connectTimeoutMs: number = Client.DefaultConnectTimeoutMs): Promise<Session> {
+    if (this._connectionState === ConnectionState.CONNECTED) {
+      return Promise.resolve(session);
+    }
+
+    if (this._connectionState === ConnectionState.CONNECTING && this._connectPromise) {
+      return this._connectPromise;
+    }
+
+    this.clearConnectTimeout();
+    this._connectionState = ConnectionState.CONNECTING;
+
     this.apiClient.connect(
       session,
       createStatus,
-      platform,
       async (message: any) => {
         if (!message.cid) {
           if (message.notifications) {
@@ -524,9 +561,104 @@ export class Client {
         }
       },
       async (evt: Event) => {
+        this._connectionState = ConnectionState.DISCONNECTED;
+        this.stopHeartbeatLoop();
+        this.clearConnectTimeout();
         this.ondisconnect(evt);
       },
     );
+
+    const connectPromise = new Promise<Session>((resolve, reject) => {
+      this.apiClient.setOnOpen((evt: Event) => {
+        if (this.verbose && window && window.console) {
+          console.log(evt);
+        }
+
+        const isReconnect = __hasConnectedOnce;
+        __hasConnectedOnce = true;
+
+        this.clearConnectTimeout();
+        this._connectionState = ConnectionState.CONNECTED;
+        this.startHeartbeatLoop();
+        this._connectPromise = undefined;
+        
+        resolve(session);
+
+        if (isReconnect) {
+          this.onreconnect(evt);
+        }
+      });
+      this.apiClient.setOnError((evt: Event) => {
+        this._connectionState = ConnectionState.DISCONNECTED;
+        this.stopHeartbeatLoop();
+        this.clearConnectTimeout();
+        this.onerror(evt);
+        this._connectPromise = undefined;
+        this.apiClient.close();
+        reject(evt);
+      });
+
+      this._connectTimeoutTimer = setTimeout(() => {
+        // if promise has resolved by now, the reject() is a no-op
+        this._connectionState = ConnectionState.DISCONNECTED;
+        this.stopHeartbeatLoop();
+        this.apiClient.close();
+        this._connectPromise = undefined;
+        reject("The socket timed out when trying to connect.");
+        this._connectTimeoutTimer = undefined;
+      }, connectTimeoutMs);
+    });
+
+    this._connectPromise = connectPromise;
+    return this._connectPromise;
+  }
+
+  private async pingPong(): Promise<void> {
+    if (!this.isOpen()) {
+      this._connectionState = ConnectionState.DISCONNECTED;
+      this.stopHeartbeatLoop();
+      return;
+    }
+
+    try {
+      await this.apiClient.send({ ping: {} }, this._heartbeatTimeoutMs);
+    } catch {
+      this._connectionState = ConnectionState.DISCONNECTED;
+      this.stopHeartbeatLoop();
+      if (this.isOpen()) {
+        if (window && window.console) {
+          console.error("Server unreachable from heartbeat.");
+        }
+        this.onheartbeattimeout();
+        this.apiClient.close();
+      }
+
+      return;
+    }
+
+    this.startHeartbeatLoop();
+  }
+
+  private startHeartbeatLoop() {
+    this.stopHeartbeatLoop();
+    this._heartbeatTimer = setTimeout(
+      () => this.pingPong(),
+      this._heartbeatTimeoutMs
+    );
+  }
+
+  private stopHeartbeatLoop() {
+    if (this._heartbeatTimer !== undefined) {
+      clearTimeout(this._heartbeatTimer);
+      this._heartbeatTimer = undefined;
+    }
+  }
+
+  private clearConnectTimeout() {
+    if (this._connectTimeoutTimer !== undefined) {
+      clearTimeout(this._connectTimeoutTimer);
+      this._connectTimeoutTimer = undefined;
+    }
   }
 
   onreconnect(evt: Event) {
@@ -536,6 +668,14 @@ export class Client {
   }
 
   ondisconnect(evt: Event) {
+    if (this.verbose && window && window.console) {
+      console.log(evt);
+    }
+  }
+
+  onerror(evt: Event) {
+    this._connectionState = ConnectionState.DISCONNECTED;
+    this.stopHeartbeatLoop();
     if (this.verbose && window && window.console) {
       console.log(evt);
     }

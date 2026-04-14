@@ -10,15 +10,13 @@ export class WebSocketAdapter extends TransportBaseAdapter {
   }
 
   connect(
-    scheme: string,
     host: string,
     port: string,
     _createStatus: boolean,
     token: string,
-    platform: string,
     signal?: AbortSignal
   ): void {
-    const url = `${scheme}://${host}:${port}/ws?token=${token}&platform=${platform}`;
+    const url = `wss://${host}:${port}/ws?token=${token}`;
     const socket = new WebSocket(url);
     socket.binaryType = "arraybuffer";
     this._socket = socket;
@@ -28,6 +26,7 @@ export class WebSocketAdapter extends TransportBaseAdapter {
     }
 
     socket.onopen = (ev: Event) => {
+      console.log("Socket successfully opened!");
       this._isOpen = true;
       this.startPingInterval();
       (this.onOpen as any)?.(ev);
@@ -56,19 +55,18 @@ export class WebSocketAdapter extends TransportBaseAdapter {
     };
   }
 
-  protected transmit(data: Uint8Array): void {
+  protected transmit(msg: any): void {
     if (this._socket && this._socket.readyState === WebSocket.OPEN) {
-      this._socket.send(data);
+      const envelopeWriter = tsproto.Envelope.encode(tsproto.Envelope.fromPartial(msg));
+      const encodedMsg = envelopeWriter.finish();
+      this._socket.send(encodedMsg);
     } else {
       console.warn("WebSocketAdapter: Attempted to send while socket was closed.");
     }
   }
 
   protected transmitPing(): void {
-    const ping = tsproto.Ping.create({});
-    const envelope = tsproto.Envelope.create({ ping });
-    const encoded = tsproto.Envelope.encode(envelope).finish();
-    this.transmit(encoded);
+    this.transmit({ping: {}});
   }
 
   private startPingInterval(): void {

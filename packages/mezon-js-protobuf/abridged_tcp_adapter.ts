@@ -6,7 +6,7 @@ export class AbridgedTcpAdapter extends TransportBaseAdapter {
   private _socket?: any;
   private _pollInterval?: any;
 
-  connect(_scheme: string, host: string, port: string): void {
+  connect(host: string, port: string): void {
     this._socket = native.connect(host, parseInt(port));
     this._socket.send(Buffer.from([0xef])); // Handshake
     this._isOpen = true;

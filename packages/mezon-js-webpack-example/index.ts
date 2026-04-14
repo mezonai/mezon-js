@@ -17,19 +17,22 @@
 import {Client} from "mezon-js";
 
 var useSSL = true; // Enable if server is run with an SSL certificate.
-var clientgw = new Client("defaultkey", "dev-mezon.nccsoft.vn", "8088", useSSL);
-var client = new Client("defaultkey", "dev-mezon.nccsoft.vn", "7305", useSSL);
+var client = new Client("defaultkey", "dev-mezon.nccsoft.vn", "8088", useSSL);
 
-clientgw.authenticateEmail("pocolomos@gmail.com", "C0nandoiner123$").then(async session => {
-  const session2 = await client.connect(session, true, "desktop");
-  console.log("session", session2);
+client.authenticateEmail("pocolomos@gmail.com", "C0nandoiner123$").then(async session => {
+  console.log("session", session);
+  const session2 = await client.connect(session, true);
+  console.log("session 2", session2);
   
   client.onchannelmessage = function(event) {
     console.log("on channel message", event);
   }
 
-  console.log(await client.joinClanChat(session, "1840654648084533248"));
-  await client.listChannelDescs(session, 1000, 0, 1, "1775732550744936448", 1)
+  setTimeout(async () => {
+    console.log("Socket State after 1s:"); 
+    console.log(await client.joinClanChat(session, "1840654648084533248"));
+    await client.listChannelDescs(session, 1000, 0, 1, "1775732550744936448", 1)
+  }, 1000);
 }).catch(e => {
-  console.log("error authenticating.", e);
+  console.log("got error", e);
 });

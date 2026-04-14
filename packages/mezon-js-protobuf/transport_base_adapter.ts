@@ -28,12 +28,10 @@ export abstract class TransportBaseAdapter implements TransportAdapter {
   public onOpen: SocketOpenHandler | null = null;
 
   abstract connect(
-    scheme: string,
     host: string,
     port: string,
     createStatus: boolean,
     token: string,
-    platform: string,
     signal?: AbortSignal,
   ): void;
   abstract close(): void;

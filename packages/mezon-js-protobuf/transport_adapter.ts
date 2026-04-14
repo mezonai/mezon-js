@@ -25,12 +25,10 @@ export interface TransportAdapter {
   isOpen(): boolean;
   close(): void;
   connect(
-    scheme: string,
     host: string,
     port: string,
     createStatus: boolean,
     token: string,
-    platform: string,
     signal?: AbortSignal,
   ): void;
   send(message: any): Promise<any>;
