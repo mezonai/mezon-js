@@ -38,4 +38,11 @@ export class AbridgedTcpAdapter extends TransportBaseAdapter {
       (this.onClose as any)({ wasClean: true } as any);
     }
   }
+
+  protected transmitPing() {
+    const ping = tsproto.Ping.create({});
+    const envelope = tsproto.Envelope.create({ ping });
+    const encoded = tsproto.Envelope.encode(envelope).finish();
+    this.transmit(encoded);
+  }
 }

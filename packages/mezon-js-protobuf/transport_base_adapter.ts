@@ -10,6 +10,7 @@ import {
 export abstract class TransportBaseAdapter implements TransportAdapter {
   protected _isOpen: boolean = false;
   protected _counter: number = 0;
+  protected _pingInterval?: any;
 
   // Storage for pending requests
   protected _pendingRequests: Map<
@@ -39,6 +40,20 @@ export abstract class TransportBaseAdapter implements TransportAdapter {
 
   // This is the raw send implementation specific to TCP or WebSocket
   protected abstract transmit(data: Uint8Array): void;
+  protected abstract transmitPing(): void;
+
+  protected startHeartbeat(intervalMs: number = 30000) {
+    this.stopHeartbeat();
+    this._pingInterval = setInterval(() => {
+      if (this._isOpen) {
+        this.transmitPing(); 
+      }
+    }, intervalMs);
+  }
+
+  protected stopHeartbeat() {
+    if (this._pingInterval) clearInterval(this._pingInterval);
+  }
 
   isOpen(): boolean {
     return this._isOpen;
@@ -52,12 +67,10 @@ export abstract class TransportBaseAdapter implements TransportAdapter {
       throw new Error("Transport adapter is not connected.");
     }
 
-    // 1. Assign a Correlation ID
     const cid = (++this._counter).toString();
-    const payload = { ...msg, cid }; // Attach cid to the envelope
+    const payload = { ...msg, cid };
 
     return new Promise((resolve, reject) => {
-      // 2. Setup Timeout
       const timer = setTimeout(() => {
         if (this._pendingRequests.has(cid)) {
           this._pendingRequests.delete(cid);
@@ -65,10 +78,8 @@ export abstract class TransportBaseAdapter implements TransportAdapter {
         }
       }, timeoutMs);
 
-      // 3. Store the hooks
       this._pendingRequests.set(cid, { resolve, reject, timer });
 
-      // 4. Encode and transmit via the specific implementation
       try {
         const envelopeWriter = tsproto.Envelope.encode(
           tsproto.Envelope.fromPartial(payload),
