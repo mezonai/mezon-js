@@ -359,18 +359,14 @@ export class MezonTransport {
   /** Delete the current user's account. */
   deleteAccount(bearerToken: string, options = {}): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteAccount";
-    const queryParams = new Map<string, any>();
-
     const bodyJson = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -382,18 +378,14 @@ export class MezonTransport {
   /** Fetch the current user's account. */
   getAccount(bearerToken: string, options = {}): Promise<ApiAccount> {
     const urlPath = "/mezon.api.Mezon/GetAccount";
-    const queryParams = new Map<string, any>();
-
     const bodyJson = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.Account.decode(response) as ApiAccount;
       }),
       new Promise<never>((_, reject) =>
@@ -417,14 +409,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateAccount";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.UpdateAccountRequest.encode(
       tsproto.UpdateAccountRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -432,7 +421,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -748,14 +737,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/LinkEmail";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.AccountEmail.encode(
       tsproto.AccountEmail.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -763,7 +749,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.LinkAccountConfirmRequest.decode(
           response,
         ) as ApiLinkAccountConfirmRequest;
@@ -789,14 +775,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/LinkSMS";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.AccountMezon.encode(
       tsproto.AccountMezon.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -804,7 +787,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.LinkAccountConfirmRequest.decode(
           response,
         ) as ApiLinkAccountConfirmRequest;
@@ -830,14 +813,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/ConfirmLinkMezonOTP";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.LinkAccountConfirmRequest.encode(
       tsproto.LinkAccountConfirmRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -846,7 +826,7 @@ export class MezonTransport {
     fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.Session.decode(response) as ApiSession;
       }),
       new Promise<never>((_, reject) =>
@@ -911,14 +891,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/RegistrationEmail";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.RegistrationEmailRequest.encode(
       tsproto.RegistrationEmailRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -926,7 +903,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.Session.decode(response) as ApiSession;
       }),
       new Promise<never>((_, reject) =>
@@ -951,14 +928,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/SessionRefresh";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.SessionRefreshRequest.encode(
       tsproto.SessionRefreshRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (basicAuthUsername) {
@@ -967,7 +941,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.Session.decode(response) as ApiSession;
       }),
       new Promise<never>((_, reject) =>
@@ -991,14 +965,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UnlinkEmail";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.AccountEmail.encode(
       tsproto.AccountEmail.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1006,7 +977,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -1021,16 +992,14 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiListUserActivity> {
     const urlPath = "/mezon.api.Mezon/ListActivity";
-    const queryParams = new Map<string, any>();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ListUserActivity.decode(response) as ApiListUserActivity;
       }),
       new Promise<never>((_, reject) =>
@@ -1054,14 +1023,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/CreateActiviy";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.CreateActivityRequest.encode(
       tsproto.CreateActivityRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1069,7 +1035,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.UserActivity.decode(response) as ApiUserActivity;
       }),
       new Promise<never>((_, reject) =>
@@ -1093,14 +1059,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/AddApp";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.AddAppRequest.encode(
       tsproto.AddAppRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1108,7 +1071,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.App.decode(response) as ApiApp;
       }),
       new Promise<never>((_, reject) =>
@@ -1129,7 +1092,6 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiAppList> {
     const urlPath = "/mezon.api.Mezon/ListApps";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListAppsRequest.encode(
       tsproto.ListAppsRequest.fromPartial({
@@ -1140,7 +1102,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1148,7 +1109,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.AppList.decode(response) as ApiAppList;
       }),
       new Promise<never>((_, reject) =>
@@ -1178,7 +1139,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/AddAppToClan";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.AppClan.encode(
       tsproto.AppClan.fromPartial({
@@ -1188,7 +1148,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1196,7 +1155,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -1211,7 +1170,6 @@ export class MezonTransport {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
     const urlPath = "/mezon.api.Mezon/DeleteApp";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.App.encode(
       tsproto.App.fromPartial({
@@ -1220,7 +1178,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1228,7 +1185,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -1243,7 +1200,6 @@ export class MezonTransport {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
     const urlPath = "/mezon.api.Mezon/GetApp";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.App.encode(
       tsproto.App.fromPartial({
@@ -1252,7 +1208,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1260,7 +1215,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.App.decode(response) as ApiApp;
       }),
       new Promise<never>((_, reject) =>
@@ -1288,14 +1243,12 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateApp";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.UpdateAppRequest.encode(
       tsproto.UpdateAppRequest.fromPartial({ ...body, id: id }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1303,7 +1256,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.App.decode(response) as ApiApp;
       }),
       new Promise<never>((_, reject) =>
@@ -1325,7 +1278,6 @@ export class MezonTransport {
     options = {},
   ): Promise<MezonapiListAuditLog> {
     const urlPath = "/mezon.api.Mezon/ListAuditLog";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListAuditLogRequest.encode(
       tsproto.ListAuditLogRequest.fromPartial({
@@ -1337,7 +1289,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1345,8 +1296,10 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        return tsproto.ListAuditLog.decode(response) as unknown as MezonapiListAuditLog;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        return tsproto.ListAuditLog.decode(
+          response,
+        ) as unknown as MezonapiListAuditLog;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1368,14 +1321,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateCategoryOrder";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.UpdateCategoryOrderRequest.encode(
       tsproto.UpdateCategoryOrderRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1383,7 +1333,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -1408,7 +1358,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/ListCategoryDescs";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.CategoryDesc.encode(
       tsproto.CategoryDesc.fromPartial({
@@ -1421,7 +1370,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1429,7 +1377,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.CategoryDescList.decode(response) as ApiCategoryDescList;
       }),
       new Promise<never>((_, reject) =>
@@ -1448,7 +1396,6 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiListChannelAppsResponse> {
     const urlPath = "/mezon.api.Mezon/ListChannelApps";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListChannelAppsRequest.encode(
       tsproto.ListChannelAppsRequest.fromPartial({
@@ -1457,7 +1404,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1465,7 +1411,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ListChannelAppsResponse.decode(
           response,
         ) as ApiListChannelAppsResponse;
@@ -1494,7 +1440,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/GetChannelCanvasList";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ChannelCanvasListRequest.encode(
       tsproto.ChannelCanvasListRequest.fromPartial({
@@ -1506,7 +1451,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1514,7 +1458,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ChannelCanvasListResponse.decode(
           response,
         ) as ApiChannelCanvasListResponse;
@@ -1540,14 +1484,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/AddChannelFavorite";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.AddFavoriteChannelRequest.encode(
       tsproto.AddFavoriteChannelRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1555,7 +1496,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.AddFavoriteChannelResponse.decode(response);
       }),
       new Promise((_, reject) =>
@@ -1577,7 +1518,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/RemoveChannelFavorite";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.RemoveFavoriteChannelRequest.encode(
       tsproto.RemoveFavoriteChannelRequest.fromPartial({
@@ -1587,7 +1527,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1595,7 +1534,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -1616,7 +1555,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/GetListFavoriteChannel";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListFavoriteChannelRequest.encode(
       tsproto.ListFavoriteChannelRequest.fromPartial({
@@ -1625,7 +1563,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1633,7 +1570,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ListFavoriteChannelResponse.decode(
           response,
         ) as ApiListFavoriteChannelResponse;
@@ -1664,7 +1601,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/ListChannelMessages";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListChannelMessagesRequest.encode(
       tsproto.ListChannelMessagesRequest.fromPartial({
@@ -1678,7 +1614,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1686,8 +1621,10 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        return tsproto.ChannelMessageList.decode(response) as unknown as ApiChannelMessageList;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        return tsproto.ChannelMessageList.decode(
+          response,
+        ) as unknown as ApiChannelMessageList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1711,7 +1648,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/AddChannelUsers";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.AddChannelUsersRequest.encode(
       tsproto.AddChannelUsersRequest.fromPartial({
@@ -1721,7 +1657,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1729,7 +1664,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -1757,7 +1692,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/ListChannelAttachment";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListChannelAttachmentRequest.encode(
       tsproto.ListChannelAttachmentRequest.fromPartial({
@@ -1773,7 +1707,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1781,7 +1714,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ChannelAttachmentList.decode(
           response,
         ) as ApiChannelAttachmentList;
@@ -1808,7 +1741,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/GetChanEncryptionMethod";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ChanEncryptionMethod.encode(
       tsproto.ChanEncryptionMethod.fromPartial({
@@ -1818,7 +1750,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1826,7 +1757,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ChanEncryptionMethod.decode(
           response,
         ) as ApiChanEncryptionMethod;
@@ -1858,7 +1789,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/SetChanEncryptionMethod";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ChanEncryptionMethod.encode(
       tsproto.ChanEncryptionMethod.fromPartial({
@@ -1868,7 +1798,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1876,7 +1805,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -1898,7 +1827,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/LeaveThread";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.LeaveThreadRequest.encode(
       tsproto.LeaveThreadRequest.fromPartial({
@@ -1908,7 +1836,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1916,7 +1843,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -1943,7 +1870,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/ArchiveChannel";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ArchiveChannelRequest.encode(
       tsproto.ArchiveChannelRequest.fromPartial({
@@ -1953,7 +1879,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1961,7 +1886,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -1982,7 +1907,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/ListArchivedChannelDescs";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListArchivedChannelDescsRequest.encode(
       tsproto.ListArchivedChannelDescsRequest.fromPartial({
@@ -1991,7 +1915,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -1999,7 +1922,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ListArchivedChannelDescsResponse.decode(
           response,
         ) as ApiChannelDescList;
@@ -2026,7 +1949,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/RemoveChannelUsers";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.RemoveChannelUsersRequest.encode(
       tsproto.RemoveChannelUsersRequest.fromPartial({
@@ -2036,7 +1958,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -2044,7 +1965,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -2070,7 +1991,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/ListChannelUsers";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListChannelUsersRequest.encode(
       tsproto.ListChannelUsersRequest.fromPartial({
@@ -2084,7 +2004,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -2092,7 +2011,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ChannelUserList.decode(response) as ApiChannelUserList;
       }),
       new Promise<never>((_, reject) =>
@@ -2116,7 +2035,6 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiChannelDescList> {
     const urlPath = "/mezon.api.Mezon/ListChannelDescs";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListChannelDescsRequest.encode(
       tsproto.ListChannelDescsRequest.fromPartial({
@@ -2130,7 +2048,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -2138,7 +2055,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ChannelDescList.decode(response) as ApiChannelDescList;
       }),
       new Promise<never>((_, reject) =>
@@ -2162,14 +2079,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/CreateChannelDesc";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.CreateChannelDescRequest.encode(
       tsproto.CreateChannelDescRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -2177,7 +2091,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ChannelDescription.decode(
           response,
         ) as ApiChannelDescription;
@@ -2199,7 +2113,6 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiAllUsersAddChannelResponse> {
     const urlPath = "/mezon.api.Mezon/ListChannelUsersUC";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.AllUsersAddChannelRequest.encode(
       tsproto.AllUsersAddChannelRequest.fromPartial({
@@ -2209,7 +2122,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -2217,7 +2129,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.AllUsersAddChannelResponse.decode(
           response,
         ) as ApiAllUsersAddChannelResponse;
@@ -2244,7 +2156,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/DeleteChannelDesc";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DeleteChannelDescRequest.encode(
       tsproto.DeleteChannelDescRequest.fromPartial({
@@ -2254,7 +2165,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -2262,7 +2172,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -2289,7 +2199,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateChannelDesc";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.UpdateChannelDescRequest.encode(
       tsproto.UpdateChannelDescRequest.fromPartial({
@@ -2299,7 +2208,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -2307,7 +2215,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -2337,7 +2245,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/ListChannelSetting";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ChannelSettingListRequest.encode(
       tsproto.ChannelSettingListRequest.fromPartial({
@@ -2355,7 +2262,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -2363,7 +2269,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ChannelSettingListResponse.decode(
           response,
         ) as ApiChannelSettingListResponse;
@@ -2385,7 +2291,6 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiVoiceChannelUserList> {
     const urlPath = "/mezon.api.Mezon/ListChannelVoiceUsers";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListChannelUsersRequest.encode(
       tsproto.ListChannelUsersRequest.fromPartial({
@@ -2395,7 +2300,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -2403,7 +2307,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.VoiceChannelUserList.decode(
           response,
         ) as ApiVoiceChannelUserList;
@@ -2426,14 +2330,12 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiClanDescList> {
     const urlPath = "/mezon.api.Mezon/ListClanDescs";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListClanDescRequest.encode(
       tsproto.ListClanDescRequest.fromPartial({ limit, state, cursor }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -2441,7 +2343,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ClanDescList.decode(response) as ApiClanDescList;
       }),
       new Promise<never>((_, reject) =>
@@ -2462,7 +2364,7 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiListChannelBadgeCountResponse> {
     const urlPath = "/mezon.api.Mezon/ListChannelBadgeCount";
-    const queryParams = new Map<string, any>();
+
     const bodyWriter = tsproto.ListChannelBadgeCountRequest.encode(
       tsproto.ListChannelBadgeCountRequest.fromPartial({
         clan_id: clanId,
@@ -2471,14 +2373,14 @@ export class MezonTransport {
       }),
     );
     const encodedBody = bodyWriter.finish();
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ListChannelBadgeCountResponse.decode(
           response,
         ) as ApiListChannelBadgeCountResponse;
@@ -2501,7 +2403,7 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiListUserOnlineResponse> {
     const urlPath = "/mezon.api.Mezon/ListUserOnline";
-    const queryParams = new Map<string, any>();
+
     const bodyWriter = tsproto.ListUserOnlineRequest.encode(
       tsproto.ListUserOnlineRequest.fromPartial({
         clan_id: clanId,
@@ -2510,14 +2412,14 @@ export class MezonTransport {
       }),
     );
     const encodedBody = bodyWriter.finish();
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ListUserOnlineResponse.decode(
           response,
         ) as ApiListUserOnlineResponse;
@@ -2543,7 +2445,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/CreateClanDesc";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.CreateClanDescRequest.encode(
       tsproto.CreateClanDescRequest.fromPartial({
@@ -2554,7 +2455,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -2562,7 +2462,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ClanDesc.decode(response) as ApiClanDesc;
       }),
       new Promise<never>((_, reject) =>
@@ -2586,14 +2486,12 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/DeleteClanDesc";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DeleteClanDescRequest.encode(
       tsproto.DeleteClanDescRequest.fromPartial({ clan_desc_id: clanDescId }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -2601,7 +2499,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -2629,14 +2527,12 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateClanDesc";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.UpdateClanDescRequest.encode(
       tsproto.UpdateClanDescRequest.fromPartial({ clan_id: clanId, ...body }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -2644,7 +2540,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -2666,7 +2562,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/RemoveClanUsers";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.RemoveClanUsersRequest.encode(
       tsproto.RemoveClanUsersRequest.fromPartial({
@@ -2676,7 +2571,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -2684,7 +2578,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -2704,7 +2598,6 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiBannedUserList> {
     const urlPath = "/mezon.api.Mezon/ListBannedUsers";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.BannedUserListRequest.encode(
       tsproto.BannedUserListRequest.fromPartial({
@@ -2714,7 +2607,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -2722,7 +2614,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.BannedUserList.decode(response) as ApiBannedUserList;
       }),
       new Promise<never>((_, reject) =>
@@ -2749,7 +2641,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UnbanClanUsers";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.BanClanUsersRequest.encode(
       tsproto.BanClanUsersRequest.fromPartial({
@@ -2761,7 +2652,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -2769,7 +2659,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -2796,7 +2686,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/BanClanUsers";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.BanClanUsersRequest.encode(
       tsproto.BanClanUsersRequest.fromPartial({
@@ -2808,7 +2697,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -2816,7 +2704,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -2840,14 +2728,12 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/ListClanUsers";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListClanUsersRequest.encode(
       tsproto.ListClanUsersRequest.fromPartial({ clan_id: clanId }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -2855,7 +2741,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ClanUserList.decode(response) as ApiClanUserList;
       }),
       new Promise<never>((_, reject) =>
@@ -2879,14 +2765,12 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/ListClanUsersStatus";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListClanUsersStatusRequest.encode(
       tsproto.ListClanUsersStatusRequest.fromPartial({ clan_id: clanId }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -2894,8 +2778,10 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        return tsproto.ClanUserStatusList.decode(response) as ApiClanUserStatusList;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        return tsproto.ClanUserStatusList.decode(
+          response,
+        ) as ApiClanUserStatusList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -2918,14 +2804,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/CreateCategoryDesc";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.CreateCategoryDescRequest.encode(
       tsproto.CreateCategoryDescRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -2933,7 +2816,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.CategoryDesc.decode(response) as ApiCategoryDesc;
       }),
       new Promise<never>((_, reject) =>
@@ -2957,14 +2840,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/CheckDuplicateName";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.CheckDuplicateNameRequest.encode(
       tsproto.CheckDuplicateNameRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -2972,7 +2852,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         if (response.status >= 200 && response.status < 300) {
           return tsproto.CheckDuplicateNameResponse.decode(
             response,
@@ -3009,7 +2889,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/DeleteCategoryDesc";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DeleteCategoryDescRequest.encode(
       tsproto.DeleteCategoryDescRequest.fromPartial({
@@ -3020,7 +2899,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3028,7 +2906,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {};
       }),
       new Promise((_, reject) =>
@@ -3047,7 +2925,6 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiRegistFcmDeviceTokenResponse> {
     const urlPath = "/mezon.api.Mezon/RegistFCMDeviceToken";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.RegistFcmDeviceTokenRequest.encode(
       tsproto.RegistFcmDeviceTokenRequest.fromPartial({
@@ -3059,7 +2936,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3067,7 +2943,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.RegistFcmDeviceTokenResponse.decode(
           response,
         ) as ApiRegistFcmDeviceTokenResponse;
@@ -3093,14 +2969,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/CloseDMByChannelId";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.DeleteChannelDescRequest.encode(
       tsproto.DeleteChannelDescRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3108,7 +2981,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -3132,14 +3005,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/OpenDMByChannelId";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.DeleteChannelDescRequest.encode(
       tsproto.DeleteChannelDescRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3147,7 +3017,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -3171,14 +3041,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/CreateClanEmoji";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.ClanEmojiCreateRequest.encode(
       tsproto.ClanEmojiCreateRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3186,7 +3053,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -3210,7 +3077,6 @@ export class MezonTransport {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
     const urlPath = "/mezon.api.Mezon/DeleteByIdClanEmoji";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ClanEmojiDeleteRequest.encode(
       tsproto.ClanEmojiDeleteRequest.fromPartial({
@@ -3221,7 +3087,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3229,7 +3094,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -3257,7 +3122,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateClanEmojiById";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ClanEmojiUpdateRequest.encode(
       tsproto.ClanEmojiUpdateRequest.fromPartial({
@@ -3268,7 +3132,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3276,7 +3139,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -3294,18 +3157,14 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiEmojiRecentList> {
     const urlPath = "/mezon.api.Mezon/EmojiRecentList";
-    const queryParams = new Map<string, any>();
-
     const bodyJson = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.EmojiRecentList.decode(response) as ApiEmojiRecentList;
       }),
       new Promise<never>((_, reject) =>
@@ -3323,18 +3182,14 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiEmojiListedResponse> {
     const urlPath = "/mezon.api.Mezon/GetListEmojisByUserId";
-    const queryParams = new Map<string, any>();
-
     const bodyJson = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.EmojiListedResponse.decode(
           response,
         ) as ApiEmojiListedResponse;
@@ -3360,14 +3215,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/SearchMessage";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.SearchMessageRequest.encode(
       tsproto.SearchMessageRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3375,7 +3227,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.SearchMessageResponse.decode(
           response,
         ) as ApiSearchMessageResponse;
@@ -3397,7 +3249,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/CreateEvent";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.Event.encode(
       tsproto.Event.fromPartial({
@@ -3408,7 +3259,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3416,7 +3266,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -3432,14 +3282,12 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiEventList> {
     const urlPath = "/mezon.api.Mezon/ListEvents";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListEventsRequest.encode(
       tsproto.ListEventsRequest.fromPartial({ clan_id: clanId }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3447,7 +3295,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.EventList.decode(response) as ApiEventList;
       }),
       new Promise<never>((_, reject) =>
@@ -3471,14 +3319,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/CreateEvent";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.CreateEventRequest.encode(
       tsproto.CreateEventRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3486,7 +3331,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.EventManagement.decode(response) as ApiEventManagement;
       }),
       new Promise<never>((_, reject) =>
@@ -3510,14 +3355,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateEventUser";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.DeleteEventRequest.encode(
       tsproto.DeleteEventRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3525,7 +3367,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as any;
       }),
       new Promise<never>((_, reject) =>
@@ -3553,7 +3395,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/DeleteEvent";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DeleteEventRequest.encode(
       tsproto.DeleteEventRequest.fromPartial({
@@ -3566,7 +3407,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3574,7 +3414,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as any;
       }),
       new Promise<never>((_, reject) =>
@@ -3604,14 +3444,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateEvent";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.UpdateEventRequest.encode(
       tsproto.UpdateEventRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3619,7 +3456,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as any;
       }),
       new Promise<never>((_, reject) =>
@@ -3639,14 +3476,12 @@ export class MezonTransport {
     options = {},
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteFriends";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DeleteFriendsRequest.encode(
       tsproto.DeleteFriendsRequest.fromPartial({ ids, usernames }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3654,7 +3489,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -3672,14 +3507,12 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiFriendList> {
     const urlPath = "/mezon.api.Mezon/ListFriends";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListFriendsRequest.encode(
       tsproto.ListFriendsRequest.fromPartial({ limit, state, cursor }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3687,7 +3520,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.FriendList.decode(response) as ApiFriendList;
       }),
       new Promise<never>((_, reject) =>
@@ -3707,14 +3540,12 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiAddFriendsResponse> {
     const urlPath = "/mezon.api.Mezon/AddFriends";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.AddFriendsRequest.encode(
       tsproto.AddFriendsRequest.fromPartial({ ids, usernames }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3722,7 +3553,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.AddFriendsResponse.decode(
           response,
         ) as ApiAddFriendsResponse;
@@ -3744,14 +3575,12 @@ export class MezonTransport {
     options = {},
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/BlockFriends";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.BlockFriendsRequest.encode(
       tsproto.BlockFriendsRequest.fromPartial({ ids, usernames }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3759,7 +3588,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -3776,14 +3605,12 @@ export class MezonTransport {
     options = {},
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/UnblockFriends";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.BlockFriendsRequest.encode(
       tsproto.BlockFriendsRequest.fromPartial({ ids, usernames }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3791,7 +3618,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -3807,14 +3634,12 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiNotificationChannelCategorySettingList> {
     const urlPath = "/mezon.api.Mezon/GetChannelCategoryNotiSettingsList";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.NotificationClan.encode(
       tsproto.NotificationClan.fromPartial({ clan_id: clanId }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3822,7 +3647,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.NotificationChannelCategorySettingList.decode(
           response,
         ) as ApiNotificationChannelCategorySettingList;
@@ -3848,14 +3673,12 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/GetUserProfileOnClan";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ClanProfileRequest.encode(
       tsproto.ClanProfileRequest.fromPartial({ clan_id: clanId }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3863,7 +3686,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ClanProfile.decode(response) as ApiClanProfile;
       }),
       new Promise<never>((_, reject) =>
@@ -3882,7 +3705,6 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiNotificationUserChannel> {
     const urlPath = "/mezon.api.Mezon/GetNotificationCategory";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DefaultNotificationCategory.encode(
       tsproto.DefaultNotificationCategory.fromPartial({
@@ -3891,7 +3713,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3899,7 +3720,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.NotificationUserChannel.decode(
           response,
         ) as ApiNotificationUserChannel;
@@ -3920,14 +3741,12 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiNotificationUserChannel> {
     const urlPath = "/mezon.api.Mezon/GetNotificationChannel";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.NotificationChannel.encode(
       tsproto.NotificationChannel.fromPartial({ channel_id: channelId }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3935,7 +3754,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.NotificationUserChannel.decode(
           response,
         ) as ApiNotificationUserChannel;
@@ -3956,14 +3775,12 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiNotificationSetting> {
     const urlPath = "/mezon.api.Mezon/GetNotificationClan";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.NotificationClan.encode(
       tsproto.NotificationClan.fromPartial({ clan_id: clanId }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -3971,7 +3788,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.NotificationSetting.decode(
           response,
         ) as ApiNotificationSetting;
@@ -3992,14 +3809,12 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiNotifiReactMessage> {
     const urlPath = "/mezon.api.Mezon/GetNotificationReactMessage";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.NotifiReactMessage.encode(
       tsproto.NotifiReactMessage.fromPartial({ channel_id: channelId }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4007,7 +3822,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.NotifiReactMessage.decode(
           response,
         ) as ApiNotifiReactMessage;
@@ -4033,14 +3848,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/GiveMeACoffee";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.GiveCoffeeEvent.encode(
       tsproto.GiveCoffeeEvent.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4048,7 +3860,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as any;
       }),
       new Promise<never>((_, reject) =>
@@ -4066,16 +3878,14 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiGetKeyServerResp> {
     const urlPath = "/mezon.api.Mezon/GetKeyServer";
-    const queryParams = new Map<string, any>();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.GetKeyServerResp.decode(response) as ApiGetKeyServerResp;
       }),
       new Promise<never>((_, reject) =>
@@ -4099,14 +3909,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/CreateLinkInviteUser";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.LinkInviteUserRequest.encode(
       tsproto.LinkInviteUserRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4114,7 +3921,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.LinkInviteUser.decode(response) as ApiLinkInviteUser;
       }),
       new Promise<never>((_, reject) =>
@@ -4138,14 +3945,12 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/InviteUser";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.InviteUserRequest.encode(
       tsproto.InviteUserRequest.fromPartial({ invite_id: inviteId }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4153,7 +3958,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.InviteUserRes.decode(response) as ApiInviteUserRes;
       }),
       new Promise<never>((_, reject) =>
@@ -4216,16 +4021,14 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiChannelDescList> {
     const urlPath = "/mezon.api.Mezon/ListChannelByUserId";
-    const queryParams = new Map<string, any>();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ChannelDescList.decode(response) as ApiChannelDescList;
       }),
       new Promise<never>((_, reject) =>
@@ -4249,14 +4052,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/MarkAsRead";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.MarkAsReadRequest.encode(
       tsproto.MarkAsReadRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4264,7 +4064,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as any;
       }),
       new Promise<never>((_, reject) =>
@@ -4282,16 +4082,14 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiMezonOauthClientList> {
     const urlPath = "/mezon.api.Mezon/ListMezonOauthClient";
-    const queryParams = new Map<string, any>();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.MezonOauthClientList.decode(
           response,
         ) as ApiMezonOauthClientList;
@@ -4317,14 +4115,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/SetMuteCategory";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.SetMuteRequest.encode(
       tsproto.SetMuteRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4332,7 +4127,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as any;
       }),
       new Promise<never>((_, reject) =>
@@ -4356,14 +4151,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/SetMuteChannel";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.SetMuteRequest.encode(
       tsproto.SetMuteRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4371,7 +4163,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as any;
       }),
       new Promise<never>((_, reject) =>
@@ -4391,7 +4183,6 @@ export class MezonTransport {
     options = {},
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteNotifications";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DeleteNotificationsRequest.encode(
       tsproto.DeleteNotificationsRequest.fromPartial({
@@ -4401,7 +4192,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4409,7 +4199,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -4429,7 +4219,6 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiNotificationList> {
     const urlPath = "/mezon.api.Mezon/ListNotifications";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListNotificationsRequest.encode(
       tsproto.ListNotificationsRequest.fromPartial({
@@ -4442,7 +4231,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4450,8 +4238,10 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        return tsproto.NotificationList.decode(response) as unknown as ApiNotificationList;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        return tsproto.NotificationList.decode(
+          response,
+        ) as unknown as ApiNotificationList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4474,14 +4264,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/SetNotificationChannelSetting";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.SetNotificationRequest.encode(
       tsproto.SetNotificationRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4489,7 +4276,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -4510,14 +4297,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/SetNotificationClanSetting";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.SetDefaultNotificationRequest.encode(
       tsproto.SetDefaultNotificationRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4525,7 +4309,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -4546,14 +4330,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/SetNotificationCategorySetting";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.SetNotificationRequest.encode(
       tsproto.SetNotificationRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4561,7 +4342,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -4577,7 +4358,6 @@ export class MezonTransport {
     options = {},
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteNotificationCategorySetting";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DefaultNotificationCategory.encode(
       tsproto.DefaultNotificationCategory.fromPartial({
@@ -4586,7 +4366,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4594,7 +4373,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -4610,14 +4389,12 @@ export class MezonTransport {
     options = {},
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteNotificationChannel";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.NotificationChannel.encode(
       tsproto.NotificationChannel.fromPartial({ channel_id: channelId }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4625,7 +4402,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -4641,14 +4418,12 @@ export class MezonTransport {
     options = {},
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteNotiReactMessage";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.NotificationChannel.encode(
       tsproto.NotificationChannel.fromPartial({ channel_id: channelId }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4656,7 +4431,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -4677,14 +4452,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/SetNotificationReactMessage";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.NotificationChannel.encode(
       tsproto.NotificationChannel.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4692,7 +4464,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -4713,14 +4485,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/SetRoleChannelPermission";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.UpdateRoleChannelRequest.encode(
       tsproto.UpdateRoleChannelRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4728,7 +4497,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -4743,16 +4512,14 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiPermissionList> {
     const urlPath = "/mezon.api.Mezon/GetListPermission";
-    const queryParams = new Map<string, any>();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.PermissionList.decode(response) as ApiPermissionList;
       }),
       new Promise<never>((_, reject) =>
@@ -4773,7 +4540,6 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiPermissionRoleChannelListEventResponse> {
     const urlPath = "/mezon.api.Mezon/GetPermissionByRoleIdChannelId";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.PermissionRoleChannelListEventRequest.encode(
       tsproto.PermissionRoleChannelListEventRequest.fromPartial({
@@ -4784,7 +4550,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4792,7 +4557,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.PermissionRoleChannelListEventResponse.decode(
           response,
         ) as ApiPermissionRoleChannelListEventResponse;
@@ -4816,7 +4581,6 @@ export class MezonTransport {
     options = {},
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeletePinMessage";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DeletePinMessage.encode(
       tsproto.DeletePinMessage.fromPartial({
@@ -4828,7 +4592,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4836,7 +4599,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -4854,7 +4617,6 @@ export class MezonTransport {
     options = {},
   ): Promise<tsproto.PinMessagesList> {
     const urlPath = "/mezon.api.Mezon/GetPinMessagesList";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.PinMessageRequest.encode(
       tsproto.PinMessageRequest.fromPartial({
@@ -4865,7 +4627,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4873,8 +4634,10 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        return tsproto.PinMessagesList.decode(response) as unknown as tsproto.PinMessagesList;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        return tsproto.PinMessagesList.decode(
+          response,
+        ) as unknown as tsproto.PinMessagesList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4897,14 +4660,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/CreateMessage2Inbox";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.Message2InboxRequest.encode(
       tsproto.Message2InboxRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4912,7 +4672,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ChannelMessageHeader.decode(
           response,
         ) as ApiChannelMessageHeader;
@@ -4938,14 +4698,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/CreatePinMessage";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.PinMessageRequest.encode(
       tsproto.PinMessageRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4953,7 +4710,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ChannelMessageHeader.decode(
           response,
         ) as ApiChannelMessageHeader;
@@ -4974,14 +4731,12 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiGetPubKeysResponse> {
     const urlPath = "/mezon.api.Mezon/GetPubKeys";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.GetPubKeysRequest.encode(
       tsproto.GetPubKeysRequest.fromPartial({ user_ids: userIds || [] }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -4989,7 +4744,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.GetPubKeysResponse.decode(
           response,
         ) as ApiGetPubKeysResponse;
@@ -5015,14 +4770,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/PushPubKey";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.PushPubKeyRequest.encode(
       tsproto.PushPubKeyRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5030,7 +4782,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -5051,14 +4803,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/AddRolesChannelDesc";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.AddRoleChannelDescRequest.encode(
       tsproto.AddRoleChannelDescRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5066,7 +4815,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -5093,7 +4842,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/ChangeChannelCategory";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ChangeChannelCategoryRequest.encode(
       tsproto.ChangeChannelCategoryRequest.fromPartial({
@@ -5103,7 +4851,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5111,7 +4858,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -5132,14 +4879,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/DeleteRoleChannelDesc";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.DeleteRoleRequest.encode(
       tsproto.DeleteRoleRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5147,7 +4891,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -5166,7 +4910,6 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiRoleListEventResponse> {
     const urlPath = "/mezon.api.Mezon/ListRoles";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.RoleListEventRequest.encode(
       tsproto.RoleListEventRequest.fromPartial({
@@ -5178,7 +4921,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5186,7 +4928,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.RoleListEventResponse.decode(
           response,
         ) as ApiRoleListEventResponse;
@@ -5212,14 +4954,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/CreateRole";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.CreateRoleRequest.encode(
       tsproto.CreateRoleRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5227,7 +4966,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.Role.decode(response) as ApiRole;
       }),
       new Promise<never>((_, reject) =>
@@ -5257,14 +4996,12 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/DeleteRole";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DeleteRoleRequest.encode(
       tsproto.DeleteRoleRequest.fromPartial({ ...body, role_id: roleId }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5272,7 +5009,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -5296,7 +5033,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/DeleteRole";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DeleteRoleRequest.encode(
       tsproto.DeleteRoleRequest.fromPartial({
@@ -5308,7 +5044,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5316,7 +5051,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -5343,14 +5078,12 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateRole";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.UpdateRoleRequest.encode(
       tsproto.UpdateRoleRequest.fromPartial({ ...body, role_id: roleId }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5358,7 +5091,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -5379,14 +5112,12 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/ListRolePermissions";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListPermissionsRequest.encode(
       tsproto.ListPermissionsRequest.fromPartial({ role_id: roleId }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5394,7 +5125,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.PermissionList.decode(response) as ApiPermissionList;
       }),
       new Promise<never>((_, reject) =>
@@ -5420,7 +5151,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/ListRoleUsers";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListRoleUsersRequest.encode(
       tsproto.ListRoleUsersRequest.fromPartial({
@@ -5431,7 +5161,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5439,7 +5168,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.RoleUserList.decode(response) as ApiRoleUserList;
       }),
       new Promise<never>((_, reject) =>
@@ -5464,7 +5193,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/GetRoleOfUserInTheClan";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListPermissionOfUsersRequest.encode(
       tsproto.ListPermissionOfUsersRequest.fromPartial({
@@ -5474,7 +5202,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5482,7 +5209,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.RoleList.decode(response) as ApiRoleList;
       }),
       new Promise<never>((_, reject) =>
@@ -5503,7 +5230,6 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiChannelDescList> {
     const urlPath = "/mezon.api.Mezon/SearchThread";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.SearchThreadRequest.encode(
       tsproto.SearchThreadRequest.fromPartial({
@@ -5514,7 +5240,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5522,7 +5247,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ChannelDescList.decode(response) as ApiChannelDescList;
       }),
       new Promise<never>((_, reject) =>
@@ -5546,14 +5271,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/SendToken";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.TokenSentEvent.encode(
       tsproto.TokenSentEvent.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5561,7 +5283,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -5585,14 +5307,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/SessionLogout";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.SessionLogoutRequest.encode(
       tsproto.SessionLogoutRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5600,7 +5319,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -5621,14 +5340,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/AddClanSticker";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.ClanStickerAddRequest.encode(
       tsproto.ClanStickerAddRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5636,7 +5352,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -5660,7 +5376,6 @@ export class MezonTransport {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
     const urlPath = "/mezon.api.Mezon/DeleteClanStickerById";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ClanStickerDeleteRequest.encode(
       tsproto.ClanStickerDeleteRequest.fromPartial({
@@ -5671,7 +5386,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5679,7 +5393,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -5707,14 +5421,12 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateClanStickerById";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ClanStickerUpdateByIdRequest.encode(
       tsproto.ClanStickerUpdateByIdRequest.fromPartial({ ...body, id: id }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5722,7 +5434,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -5740,16 +5452,14 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiStickerListedResponse> {
     const urlPath = "/mezon.api.Mezon/GetListStickersByUserId";
-    const queryParams = new Map<string, any>();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.StickerListedResponse.decode(
           response,
         ) as ApiStickerListedResponse;
@@ -5775,14 +5485,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/RegisterStreamingChannel";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.RegisterStreamingChannelRequest.encode(
       tsproto.RegisterStreamingChannelRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5790,7 +5497,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.RegisterStreamingChannelResponse.decode(
           response,
         ) as ApiRegisterStreamingChannelResponse;
@@ -5816,7 +5523,6 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiStreamingChannelUserList> {
     const urlPath = "/mezon.api.Mezon/ListStreamingChannelUsers";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListChannelUsersRequest.encode(
       tsproto.ListChannelUsersRequest.fromPartial({
@@ -5830,7 +5536,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5838,7 +5543,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.StreamingChannelUserList.decode(
           response,
         ) as ApiStreamingChannelUserList;
@@ -5858,16 +5563,14 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiSystemMessagesList> {
     const urlPath = "/mezon.api.Mezon/GetSystemMessagesList";
-    const queryParams = new Map<string, any>();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.SystemMessagesList.decode(
           response,
         ) as ApiSystemMessagesList;
@@ -5893,14 +5596,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/CreateSystemMessage";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.SystemMessageRequest.encode(
       tsproto.SystemMessageRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5908,7 +5608,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -5928,7 +5628,6 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiSdTopicList> {
     const urlPath = "/mezon.api.Mezon/ListSdTopic";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListSdTopicRequest.encode(
       tsproto.ListSdTopicRequest.fromPartial({
@@ -5938,7 +5637,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5946,7 +5644,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.SdTopicList.decode(response) as ApiSdTopicList;
       }),
       new Promise<never>((_, reject) =>
@@ -5970,14 +5668,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/CreateSdTopic";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.SdTopicRequest.encode(
       tsproto.SdTopicRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -5985,7 +5680,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.SdTopic.decode(response) as ApiSdTopic;
       }),
       new Promise<never>((_, reject) =>
@@ -6009,14 +5704,12 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/DeleteSystemMessage";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DeleteSystemMessage.encode(
       tsproto.DeleteSystemMessage.fromPartial({ clan_id: clanId }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -6024,7 +5717,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -6048,14 +5741,12 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/GetSystemMessageByClanId";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.GetSystemMessage.encode(
       tsproto.GetSystemMessage.fromPartial({ clan_id: clanId }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -6063,7 +5754,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.SystemMessage.decode(response) as ApiSystemMessage;
       }),
       new Promise<never>((_, reject) =>
@@ -6093,14 +5784,12 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateSystemMessage";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.SystemMessageRequest.encode(
       tsproto.SystemMessageRequest.fromPartial({ ...body, clan_id: clanId }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -6108,7 +5797,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -6137,7 +5826,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/ListThreadDescs";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListThreadRequest.encode(
       tsproto.ListThreadRequest.fromPartial({
@@ -6151,7 +5839,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -6159,7 +5846,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ChannelDescListNoPool.decode(
           response,
         ) as ApiChannelDescList;
@@ -6190,7 +5877,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateCategory";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.UpdateCategoryDescRequest.encode(
       tsproto.UpdateCategoryDescRequest.fromPartial({
@@ -6200,7 +5886,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -6208,7 +5893,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -6232,14 +5917,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateChannelPrivate";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.ChangeChannelPrivateRequest.encode(
       tsproto.ChangeChannelPrivateRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -6247,7 +5929,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -6277,7 +5959,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateUserProfileByClan";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.UpdateClanProfileRequest.encode(
       tsproto.UpdateClanProfileRequest.fromPartial({
@@ -6287,7 +5968,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -6295,7 +5975,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -6319,14 +5999,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UploadOauthFile";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.UploadAttachmentRequest.encode(
       tsproto.UploadAttachmentRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -6334,7 +6011,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.UploadAttachment.decode(response) as ApiUploadAttachment;
       }),
       new Promise<never>((_, reject) =>
@@ -6358,14 +6035,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UploadAttachmentFile";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.UploadAttachmentRequest.encode(
       tsproto.UploadAttachmentRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -6373,7 +6047,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.UploadAttachment.decode(response) as ApiUploadAttachment;
       }),
       new Promise<never>((_, reject) =>
@@ -6396,14 +6070,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/MultipartUploadAttachmentFileStart";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.UploadAttachmentRequest.encode(
       tsproto.UploadAttachmentRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -6411,7 +6082,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.MultipartUploadAttachment.decode(
           response,
         ) as MultipartUploadAttachment;
@@ -6436,14 +6107,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/MultipartUploadAttachmentFileStart";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.MultipartUploadAttachmentFinishRequest.encode(
       tsproto.MultipartUploadAttachmentFinishRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -6451,7 +6119,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return response;
       }),
       new Promise<never>((_, reject) =>
@@ -6475,14 +6143,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateUser";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.UpdateUsersRequest.encode(
       tsproto.UpdateUsersRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -6490,7 +6155,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -6505,16 +6170,14 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiAllUserClans> {
     const urlPath = "/mezon.api.Mezon/ListUserClansByUserId";
-    const queryParams = new Map<string, any>();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.AllUserClans.decode(response) as ApiAllUserClans;
       }),
       new Promise<never>((_, reject) =>
@@ -6534,7 +6197,6 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiUserPermissionInChannelListResponse> {
     const urlPath = "/mezon.api.Mezon/ListUserPermissionInChannel";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.UserPermissionInChannelListRequest.encode(
       tsproto.UserPermissionInChannelListRequest.fromPartial({
@@ -6544,7 +6206,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -6552,7 +6213,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.UserPermissionInChannelListResponse.decode(
           response,
         ) as ApiUserPermissionInChannelListResponse;
@@ -6569,16 +6230,14 @@ export class MezonTransport {
   /** Get user status */
   getUserStatus(bearerToken: string, options = {}): Promise<ApiUserStatus> {
     const urlPath = "/mezon.api.Mezon/GetUserStatus";
-    const queryParams = new Map<string, any>();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.UserStatus.decode(response) as ApiUserStatus;
       }),
       new Promise<never>((_, reject) =>
@@ -6602,14 +6261,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateUserStatus";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.UserStatusUpdate.encode(
       tsproto.UserStatusUpdate.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -6617,7 +6273,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -6638,14 +6294,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateUserCustomStatus";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.UserStatusUpdate.encode(
       tsproto.UserStatusUpdate.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -6653,7 +6306,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -6674,14 +6327,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/GenerateWebhook";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.WebhookCreateRequest.encode(
       tsproto.WebhookCreateRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -6689,7 +6339,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.WebhookGenerateResponse.decode(response);
       }),
       new Promise<never>((_, reject) =>
@@ -6717,7 +6367,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateWebhookById";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.WebhookUpdateRequestById.encode(
       tsproto.WebhookUpdateRequestById.fromPartial({
@@ -6727,7 +6376,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -6735,7 +6383,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -6757,7 +6405,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/ListWebhookByChannelId";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.WebhookListRequest.encode(
       tsproto.WebhookListRequest.fromPartial({
@@ -6767,7 +6414,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -6775,7 +6421,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.WebhookListResponse.decode(
           response,
         ) as ApiWebhookListResponse;
@@ -6805,7 +6451,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/DeleteWebhookById";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.WebhookDeleteRequestById.encode(
       tsproto.WebhookDeleteRequestById.fromPartial({
@@ -6815,7 +6460,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -6823,7 +6467,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -6868,14 +6512,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/EditChannelCanvases";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.EditChannelCanvasRequest.encode(
       tsproto.EditChannelCanvasRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -6883,7 +6524,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.EditChannelCanvasResponse.decode(
           response,
         ) as ApiEditChannelCanvasResponse;
@@ -6909,7 +6550,6 @@ export class MezonTransport {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
     const urlPath = "/mezon.api.Mezon/GetChannelCanvasDetail";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ChannelCanvasDetailRequest.encode(
       tsproto.ChannelCanvasDetailRequest.fromPartial({
@@ -6920,7 +6560,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -6928,7 +6567,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ChannelCanvasDetailResponse.decode(
           response,
         ) as ApiChannelCanvasDetailResponse;
@@ -6956,7 +6595,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/DeleteChannelCanvas";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.DeleteChannelCanvasRequest.encode(
       tsproto.DeleteChannelCanvasRequest.fromPartial({
@@ -6967,7 +6605,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -6975,7 +6612,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -6994,7 +6631,6 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiListOnboardingResponse> {
     const urlPath = "/mezon.api.Mezon/ListOnboarding";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListOnboardingRequest.encode(
       tsproto.ListOnboardingRequest.fromPartial({
@@ -7006,7 +6642,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7014,7 +6649,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ListOnboardingResponse.decode(
           response,
         ) as ApiListOnboardingResponse;
@@ -7040,14 +6675,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/CreateOnboarding";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.CreateOnboardingRequest.encode(
       tsproto.CreateOnboardingRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7055,7 +6687,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ListOnboardingResponse.decode(
           response,
         ) as ApiListOnboardingResponse;
@@ -7080,7 +6712,6 @@ export class MezonTransport {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
     const urlPath = "/mezon.api.Mezon/DeleteOnboarding";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.OnboardingRequest.encode(
       tsproto.OnboardingRequest.fromPartial({
@@ -7090,7 +6721,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7098,7 +6728,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -7118,7 +6748,6 @@ export class MezonTransport {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
     const urlPath = "/mezon.api.Mezon/GetOnboardingDetail";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.OnboardingRequest.encode(
       tsproto.OnboardingRequest.fromPartial({
@@ -7128,7 +6757,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7136,7 +6764,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.OnboardingItem.decode(response) as ApiOnboardingItem;
       }),
       new Promise<never>((_, reject) =>
@@ -7164,7 +6792,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateOnboarding";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.UpdateOnboardingRequest.encode(
       tsproto.UpdateOnboardingRequest.fromPartial({
@@ -7174,7 +6801,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7182,7 +6808,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -7203,14 +6829,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/GenerateClanWebhook";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.GenerateClanWebhookRequest.encode(
       tsproto.GenerateClanWebhookRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7218,7 +6841,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.GenerateClanWebhookResponse.decode(
           response,
         ) as ApiGenerateClanWebhookResponse;
@@ -7244,7 +6867,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/ListClanWebhook";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListClanWebhookRequest.encode(
       tsproto.ListClanWebhookRequest.fromPartial({
@@ -7253,7 +6875,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7261,7 +6882,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ListClanWebhookResponse.decode(
           response,
         ) as ApiListClanWebhookResponse;
@@ -7286,7 +6907,6 @@ export class MezonTransport {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
     const urlPath = "/mezon.api.Mezon/DeleteClanWebhookById";
-    const queryParams = new Map<string, any>();
 
     const body = {
       id: id,
@@ -7298,7 +6918,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7306,7 +6925,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -7331,7 +6950,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateClanWebhookById";
-    const queryParams = new Map<string, any>();
 
     const bodyData = {
       ...body,
@@ -7343,7 +6961,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7351,7 +6968,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -7367,7 +6984,6 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiSdTopic> {
     const urlPath = "/mezon.api.Mezon/GetTopicDetail";
-    const queryParams = new Map<string, any>();
 
     const body = {
       topic_id: topicId,
@@ -7378,7 +6994,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7386,7 +7001,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.SdTopic.decode(response) as ApiSdTopic;
       }),
       new Promise<never>((_, reject) =>
@@ -7407,7 +7022,6 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiListOnboardingStepResponse> {
     const urlPath = "/mezon.api.Mezon/ListOnboardingStep";
-    const queryParams = new Map<string, any>();
 
     const body = {
       clan_id: clanId,
@@ -7420,7 +7034,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7428,7 +7041,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ListOnboardingStepResponse.decode(
           response,
         ) as ApiListOnboardingStepResponse;
@@ -7460,7 +7073,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateOnboardingStep";
-    const queryParams = new Map<string, any>();
 
     const bodyData = {
       ...body,
@@ -7472,7 +7084,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7480,7 +7091,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -7501,14 +7112,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/CreateRoomChannelApps";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.CreateRoomChannelApps.encode(
       tsproto.CreateRoomChannelApps.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7516,8 +7124,10 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        return tsproto.CreateRoomChannelApps.decode(response) as unknown as MezonapiCreateRoomChannelApps;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        return tsproto.CreateRoomChannelApps.decode(
+          response,
+        ) as unknown as MezonapiCreateRoomChannelApps;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -7540,14 +7150,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/GenerateMeetToken";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.GenerateMeetTokenRequest.encode(
       tsproto.GenerateMeetTokenRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7555,7 +7162,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.GenerateMeetTokenResponse.decode(
           response,
         ) as ApiGenerateMeetTokenResponse;
@@ -7577,7 +7184,6 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiMezonOauthClient> {
     const urlPath = "/mezon.api.Mezon/GetMezonOauthClient";
-    const queryParams = new Map<string, any>();
 
     const body = {
       client_id: clientId,
@@ -7589,7 +7195,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7597,7 +7202,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.MezonOauthClient.decode(response) as ApiMezonOauthClient;
       }),
       new Promise<never>((_, reject) =>
@@ -7621,14 +7226,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateMezonOauthClient";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.MezonOauthClient.encode(
       tsproto.MezonOauthClient.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7636,7 +7238,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.MezonOauthClient.decode(response) as ApiMezonOauthClient;
       }),
       new Promise<never>((_, reject) =>
@@ -7654,7 +7256,6 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiCreateHashChannelAppsResponse> {
     const urlPath = "/mezon.api.Mezon/GenerateHashChannelApps";
-    const queryParams = new Map<string, any>();
 
     const body = {
       app_id: appId,
@@ -7665,7 +7266,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7673,7 +7273,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.GenerateHashChannelAppsResponse.decode(
           response,
         ) as ApiCreateHashChannelAppsResponse;
@@ -7699,14 +7299,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/AddUserEvent";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.UserEventRequest.encode(
       tsproto.UserEventRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7714,7 +7311,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -7731,7 +7328,6 @@ export class MezonTransport {
     options = {},
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteUserEvent";
-    const queryParams = new Map<string, any>();
 
     const body = {
       clan_id: clanId,
@@ -7743,7 +7339,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7751,7 +7346,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -7772,14 +7367,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateRoleOrder";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.UpdateRoleOrderRequest.encode(
       tsproto.UpdateRoleOrderRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7787,7 +7379,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -7802,16 +7394,14 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiGenerateMezonMeetResponse> {
     const urlPath = "/mezon.api.Mezon/CreateExternalMezonMeet";
-    const queryParams = new Map<string, any>();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.GenerateMezonMeetResponse.decode(
           response,
         ) as ApiGenerateMezonMeetResponse;
@@ -7887,14 +7477,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/MuteParticipantMezonMeet";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.MeetParticipantRequest.encode(
       tsproto.MeetParticipantRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7902,7 +7489,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -7923,14 +7510,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/RemoveParticipantMezonMeet";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.MeetParticipantRequest.encode(
       tsproto.MeetParticipantRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7938,7 +7522,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -7959,7 +7543,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/ListChannelDetail";
-    const queryParams = new Map<string, any>();
 
     const body = {
       channel_id: channelId,
@@ -7970,7 +7553,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -7978,7 +7560,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ChannelDescription.decode(
           response,
         ) as ApiChannelDescription;
@@ -8004,14 +7586,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/ListChannelTimeline";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.ListChannelTimelineRequest.encode(
       tsproto.ListChannelTimelineRequest.fromPartial(request),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8019,8 +7598,10 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        return tsproto.ListChannelTimelineResponse.decode(response) as unknown as ApiListChannelTimelineResponse;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        return tsproto.ListChannelTimelineResponse.decode(
+          response,
+        ) as unknown as ApiListChannelTimelineResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8043,14 +7624,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/CreateChannelTimeline";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.CreateChannelTimelineRequest.encode(
       tsproto.CreateChannelTimelineRequest.fromPartial(request),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8058,8 +7636,10 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        return tsproto.CreateChannelTimelineResponse.decode(response) as unknown as ApiCreateChannelTimelineResponse;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        return tsproto.CreateChannelTimelineResponse.decode(
+          response,
+        ) as unknown as ApiCreateChannelTimelineResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8082,14 +7662,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateChannelTimeline";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.UpdateChannelTimelineRequest.encode(
       tsproto.UpdateChannelTimelineRequest.fromPartial(request),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8097,8 +7674,10 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        return tsproto.UpdateChannelTimelineResponse.decode(response) as unknown as ApiUpdateChannelTimelineResponse;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        return tsproto.UpdateChannelTimelineResponse.decode(
+          response,
+        ) as unknown as ApiUpdateChannelTimelineResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8121,14 +7700,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/DetailChannelTimeline";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.ChannelTimelineDetailRequest.encode(
       tsproto.ChannelTimelineDetailRequest.fromPartial(request),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8136,8 +7712,10 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        return tsproto.ChannelTimelineDetailResponse.decode(response) as unknown as ApiDetailChannelTimelineResponse;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        return tsproto.ChannelTimelineDetailResponse.decode(
+          response,
+        ) as unknown as ApiDetailChannelTimelineResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8160,14 +7738,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateClanOrder";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.UpdateClanOrderRequest.encode(
       tsproto.UpdateClanOrderRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8175,7 +7750,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -8239,7 +7814,6 @@ export class MezonTransport {
     options = {},
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteQuickMenuAccess";
-    const queryParams = new Map<string, any>();
 
     const body = {
       id: id,
@@ -8255,7 +7829,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8263,7 +7836,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -8281,7 +7854,6 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiQuickMenuAccessList> {
     const urlPath = "/mezon.api.Mezon/ListQuickMenuAccess";
-    const queryParams = new Map<string, any>();
 
     const body = {
       bot_id: botId,
@@ -8294,7 +7866,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8302,7 +7873,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.QuickMenuAccessList.decode(
           response,
         ) as ApiQuickMenuAccessList;
@@ -8328,14 +7899,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/AddQuickMenuAccess";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.QuickMenuAccess.encode(
       tsproto.QuickMenuAccess.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8343,7 +7911,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -8364,14 +7932,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateQuickMenuAccess";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.QuickMenuAccess.encode(
       tsproto.QuickMenuAccess.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8379,7 +7944,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -8395,7 +7960,6 @@ export class MezonTransport {
     options = {},
   ): Promise<ApiForSaleItemList> {
     const urlPath = "/mezon.api.Mezon/ListForSaleItems";
-    const queryParams = new Map<string, any>();
 
     const body = {
       page: page,
@@ -8406,7 +7970,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8414,7 +7977,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ForSaleItemList.decode(response) as ApiForSaleItemList;
       }),
       new Promise<never>((_, reject) =>
@@ -8438,14 +8001,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/IsFollower";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.IsFollowerRequest.encode(
       tsproto.IsFollowerRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8453,7 +8013,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.IsFollowerResponse.decode(
           response,
         ) as ApiIsFollowerResponse;
@@ -8479,14 +8039,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/TransferOwnership";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.TransferOwnershipRequest.encode(
       tsproto.TransferOwnershipRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8494,7 +8051,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -8515,14 +8072,11 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/UpdateUsername";
-    const queryParams = new Map<string, any>();
-
     const bodyWriter = tsproto.UpdateUsernameRequest.encode(
       tsproto.UpdateUsernameRequest.fromPartial(body),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8530,7 +8084,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.Session.decode(response) as ApiSession;
       }),
       new Promise<never>((_, reject) =>
@@ -8554,7 +8108,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/IsBanned";
-    const queryParams = new Map<string, any>();
 
     const body = {
       channel_id: channelId,
@@ -8565,7 +8118,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8573,7 +8125,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.IsBannedResponse.decode(response) as ApiIsBannedResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -8593,7 +8145,6 @@ export class MezonTransport {
     options = {},
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/ReportMessageAbuse";
-    const queryParams = new Map<string, any>();
 
     const body = {
       message_id: messageId,
@@ -8605,7 +8156,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8613,7 +8163,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -8640,7 +8190,6 @@ export class MezonTransport {
     topic_id?: string,
   ): Promise<tsproto.ChannelMessageAck> {
     const urlPath = "/mezon.api.Mezon/SendChannelMessage";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ChannelMessageSend.encode(
       tsproto.ChannelMessageSend.fromPartial({
@@ -8661,7 +8210,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", {}, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8669,8 +8217,10 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        return tsproto.ChannelMessageAck.decode(response) as unknown as tsproto.ChannelMessageAck;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        return tsproto.ChannelMessageAck.decode(
+          response,
+        ) as unknown as tsproto.ChannelMessageAck;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8697,7 +8247,6 @@ export class MezonTransport {
     is_update_msg_topic?: boolean,
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/UpdateChannelMessage";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ChannelMessageUpdate.encode(
       tsproto.ChannelMessageUpdate.fromPartial({
@@ -8716,7 +8265,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", {}, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8724,7 +8272,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ChannelMessageUpdate.decode(response) as any;
       }),
       new Promise<never>((_, reject) =>
@@ -8750,7 +8298,6 @@ export class MezonTransport {
     references?: Uint8Array,
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteChannelMessage";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ChannelMessageRemove.encode(
       tsproto.ChannelMessageRemove.fromPartial({
@@ -8767,7 +8314,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", {}, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8775,7 +8321,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ChannelMessageRemove.decode(response) as any;
       }),
       new Promise<never>((_, reject) =>
@@ -8798,7 +8344,6 @@ export class MezonTransport {
     options = {},
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/UpdateMezonVoiceState";
-    const queryParams = new Map<string, any>();
 
     const body = {
       clan_id: clanId,
@@ -8813,7 +8358,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8821,7 +8365,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -8842,7 +8386,6 @@ export class MezonTransport {
     options = {},
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/MessageButtonClick";
-    const queryParams = new Map<string, any>();
 
     const body = {
       message_id: messageId,
@@ -8858,7 +8401,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8866,7 +8408,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -8887,7 +8429,6 @@ export class MezonTransport {
     options = {},
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DropdownBoxSelected";
-    const queryParams = new Map<string, any>();
 
     const body = {
       message_id: messageId,
@@ -8903,7 +8444,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8911,7 +8451,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -8927,7 +8467,6 @@ export class MezonTransport {
     options = {},
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/ActiveArchivedThread";
-    const queryParams = new Map<string, any>();
 
     const body = {
       clan_id: clanId,
@@ -8939,7 +8478,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8947,7 +8485,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -8963,7 +8501,6 @@ export class MezonTransport {
     options = {},
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/AddAgentToChannel";
-    const queryParams = new Map<string, any>();
 
     const body = {
       room_name: roomName,
@@ -8975,7 +8512,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -8983,7 +8519,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -8999,7 +8535,6 @@ export class MezonTransport {
     options = {},
   ): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DisconnectAgent";
-    const queryParams = new Map<string, any>();
 
     const body = {
       room_name: roomName,
@@ -9011,7 +8546,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -9019,7 +8553,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         return response;
       }),
       new Promise((_, reject) =>
@@ -9040,14 +8574,12 @@ export class MezonTransport {
     }
 
     const urlPath = "/mezon.api.Mezon/ListMutedChannel";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ListMutedChannelRequest.encode(
       tsproto.ListMutedChannelRequest.fromPartial({ clan_id: clanId }),
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -9055,8 +8587,10 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        return tsproto.MutedChannelList.decode(response) as unknown as ApiMutedChannelList;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        return tsproto.MutedChannelList.decode(
+          response,
+        ) as unknown as ApiMutedChannelList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -9084,7 +8618,6 @@ export class MezonTransport {
     sender_name?: string,
   ): Promise<tsproto.ChannelMessageAck> {
     const urlPath = "/mezon.api.Mezon/ReactChannelMessage";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.MessageReaction.encode(
       tsproto.MessageReaction.fromPartial({
@@ -9105,7 +8638,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", {}, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -9113,8 +8645,10 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        return tsproto.ChannelMessageSend.decode(response) as unknown as tsproto.ChannelMessageAck;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        return tsproto.ChannelMessageSend.decode(
+          response,
+        ) as unknown as tsproto.ChannelMessageAck;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -9137,7 +8671,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/CreatePoll";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.CreatePollRequest.encode(
       tsproto.CreatePollRequest.fromPartial({
@@ -9151,7 +8684,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -9159,7 +8691,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         const decoded = tsproto.CreatePollResponse.decode(response);
         return {
           poll_id: decoded.poll_id,
@@ -9198,7 +8730,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/VotePoll";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.VotePollRequest.encode(
       tsproto.VotePollRequest.fromPartial({
@@ -9210,7 +8741,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -9218,7 +8748,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         const decoded =
           response.length > 0
             ? tsproto.VotePollResponse.decode(response)
@@ -9248,7 +8778,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/ClosePoll";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.ClosePollRequest.encode(
       tsproto.ClosePollRequest.fromPartial({
@@ -9259,7 +8788,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -9267,7 +8795,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then((response) => {
         if (
           response.status == 204 ||
           (response.status >= 200 && response.status < 300)
@@ -9298,7 +8826,6 @@ export class MezonTransport {
       );
     }
     const urlPath = "/mezon.api.Mezon/GetPoll";
-    const queryParams = new Map<string, any>();
 
     const bodyWriter = tsproto.GetPollRequest.encode(
       tsproto.GetPollRequest.fromPartial({
@@ -9309,7 +8836,6 @@ export class MezonTransport {
     );
     const encodedBody = bodyWriter.finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
@@ -9317,7 +8843,7 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
         const decoded = tsproto.GetPollResponse.decode(response);
         return {
           poll_id: decoded.poll_id,
