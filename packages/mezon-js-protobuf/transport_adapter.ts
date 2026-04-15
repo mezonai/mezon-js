@@ -53,7 +53,7 @@ export interface SocketErrorHandler {
  * SocketMessageHandler defines a lambda that handles valid WebSocket messages.
  */
 export interface SocketMessageHandler {
-  (message: any): void;
+  (cid: number, message: any): void;
 }
 
 /**

@@ -358,7 +358,7 @@ export class Client {
       session,
       createStatus,
       verbose,
-      async (message: any) => {
+      async (_cid: number, message: any) => {
         if (!message.cid) {
           if (message.notifications) {
             message.notifications.notifications.forEach(

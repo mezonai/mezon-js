@@ -1,6 +1,4 @@
-import {
-  buildFetchOptions,
-} from "./utils";
+import { buildFetchOptions } from "./utils";
 import { encode } from "js-base64";
 import * as tsproto from "mezon-js-protobuf";
 import {
@@ -218,15 +216,15 @@ import { Session } from "./session";
 export class MezonTransport {
   public static readonly DefaultSendTimeoutMs = 10000;
 
-  private readonly cIds: { [key: string]: PromiseExecutor };
+  private readonly cIds: { [key: number]: PromiseExecutor };
   private nextCid: number;
 
   adapter: TransportAdapter;
   private basePath: string;
-  
+
   constructor(
     readonly serverKey: string,
-    readonly timeoutMs: number,    
+    readonly timeoutMs: number,
     readonly platform: string = "web",
     basePath: string,
   ) {
@@ -253,8 +251,8 @@ export class MezonTransport {
     this.adapter.close();
   }
 
-  generatecid(): string {
-    const cid = this.nextCid.toString();
+  generatecid(): number {
+    const cid = this.nextCid;
     ++this.nextCid;
     return cid;
   }
@@ -271,41 +269,39 @@ export class MezonTransport {
     onDisconnected: tsproto.SocketCloseHandler,
     signal?: AbortSignal,
   ): void {
-    const [host, port] = session.ws_url.split(':');
-    this.adapter.connect(
-      host,
-      port,
-      createStatus,
-      session.token,
-      signal
-    );
+    const [host, port] = session.ws_url.split(":");
+    this.adapter.connect(host, port, createStatus, session.token, signal);
 
     this.adapter.onClose = onDisconnected;
-    this.adapter.onMessage = async (message: any) => {
+    this.adapter.onMessage = async (cid: number, message: any) => {
       if (verbose && window && window.console) {
-        console.log("Receive message: %o", message);
+        console.log(
+          "incomming message witch cid %o and message %o",
+          cid,
+          message,
+        );
       }
-      if (message.cid) {        
-        const executor = this.cIds[message.cid];
+      if (cid) {
+        const executor = this.cIds[cid];
         if (!executor) {
           console.error("No promise executor for message: %o", message);
           return;
         }
-        delete this.cIds[message.cid];
+        delete this.cIds[cid];
         if (message.error) {
           executor.reject(message.error);
         } else {
           executor.resolve(message);
         }
       } else {
-        await onMessage(message);
-      }      
+        await onMessage(0, message);
+      }
     };
   }
 
   send(
     data: any,
-    sendTimeout = MezonTransport.DefaultSendTimeoutMs
+    sendTimeout = MezonTransport.DefaultSendTimeoutMs,
   ): Promise<any> {
     const { fullUrl, fetchOptions } = data;
 
@@ -314,7 +310,7 @@ export class MezonTransport {
       untypedMessage = {
         api_request_event: {
           full_url: fullUrl,
-          body: fetchOptions.body
+          body: fetchOptions.body,
         },
       };
     }
@@ -325,20 +321,21 @@ export class MezonTransport {
       } else {
         if (untypedMessage.channel_message_send) {
           untypedMessage.channel_message_send.content = JSON.stringify(
-            untypedMessage.channel_message_send.content
+            untypedMessage.channel_message_send.content,
           );
         } else if (untypedMessage.channel_message_update) {
           untypedMessage.channel_message_update.content = JSON.stringify(
-            untypedMessage.channel_message_update.content
+            untypedMessage.channel_message_update.content,
           );
         } else if (untypedMessage.ephemeral_message_send) {
-          untypedMessage.ephemeral_message_send.message.content = JSON.stringify(
-            untypedMessage.ephemeral_message_send.message?.content
-          ); 
+          untypedMessage.ephemeral_message_send.message.content =
+            JSON.stringify(
+              untypedMessage.ephemeral_message_send.message?.content,
+            );
         } else if (untypedMessage.quick_menu_event) {
           untypedMessage.quick_menu_event.message.content = JSON.stringify(
-            untypedMessage.quick_menu_event.message?.content
-          ); 
+            untypedMessage.quick_menu_event.message?.content,
+          );
         }
 
         const cid = this.generatecid();
@@ -349,7 +346,7 @@ export class MezonTransport {
           }, sendTimeout);
         }
 
-        untypedMessage.cid = cid;
+        untypedMessage.cid = cid.toString();
         this.adapter.send(untypedMessage);
       }
     });
@@ -374,13 +371,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -403,14 +394,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiAccount;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.Account.decode(new Uint8Array(buffer)) as ApiAccount;
-        } else {
-          throw response;
-        }
+        return tsproto.Account.decode(response) as ApiAccount;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -449,13 +433,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -491,14 +469,8 @@ export class MezonTransport {
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiSession;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
-        } else {
-          throw response;
-        }
+        const buffer = await response.arrayBuffer();
+        return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -537,13 +509,7 @@ export class MezonTransport {
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -583,16 +549,10 @@ export class MezonTransport {
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.LoginIDResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiLoginIDResponse;
-        } else {
-          throw response;
-        }
+        const buffer = await response.arrayBuffer();
+        return tsproto.LoginIDResponse.decode(
+          new Uint8Array(buffer),
+        ) as ApiLoginIDResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -632,16 +592,10 @@ export class MezonTransport {
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.LinkAccountConfirmRequest.decode(
-            new Uint8Array(buffer),
-          ) as ApiLinkAccountConfirmRequest;
-        } else {
-          throw response;
-        }
+        const buffer = await response.arrayBuffer();
+        return tsproto.LinkAccountConfirmRequest.decode(
+          new Uint8Array(buffer),
+        ) as ApiLinkAccountConfirmRequest;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -681,16 +635,10 @@ export class MezonTransport {
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.LinkAccountConfirmRequest.decode(
-            new Uint8Array(buffer),
-          ) as ApiLinkAccountConfirmRequest;
-        } else {
-          throw response;
-        }
+        const buffer = await response.arrayBuffer();
+        return tsproto.LinkAccountConfirmRequest.decode(
+          new Uint8Array(buffer),
+        ) as ApiLinkAccountConfirmRequest;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -730,14 +678,8 @@ export class MezonTransport {
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiSession;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
-        } else {
-          throw response;
-        }
+        const buffer = await response.arrayBuffer();
+        return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -782,14 +724,8 @@ export class MezonTransport {
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiSession;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
-        } else {
-          throw response;
-        }
+        const buffer = await response.arrayBuffer();
+        return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -828,16 +764,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.LinkAccountConfirmRequest.decode(
-            new Uint8Array(buffer),
-          ) as ApiLinkAccountConfirmRequest;
-        } else {
-          throw response;
-        }
+        return tsproto.LinkAccountConfirmRequest.decode(
+          response,
+        ) as ApiLinkAccountConfirmRequest;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -876,16 +805,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.LinkAccountConfirmRequest.decode(
-            new Uint8Array(buffer),
-          ) as ApiLinkAccountConfirmRequest;
-        } else {
-          throw response;
-        }
+        return tsproto.LinkAccountConfirmRequest.decode(
+          response,
+        ) as ApiLinkAccountConfirmRequest;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -925,14 +847,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiSession;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
-        } else {
-          throw response;
-        }
+        return tsproto.Session.decode(response) as ApiSession;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -972,14 +887,8 @@ export class MezonTransport {
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiSession;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
-        } else {
-          throw response;
-        }
+        const buffer = await response.arrayBuffer();
+        return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1018,14 +927,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiSession;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
-        } else {
-          throw response;
-        }
+        return tsproto.Session.decode(response) as ApiSession;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1066,14 +968,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiSession;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
-        } else {
-          throw response;
-        }
+        return tsproto.Session.decode(response) as ApiSession;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1112,13 +1007,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -1142,16 +1031,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiListUserActivity;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ListUserActivity.decode(
-            new Uint8Array(buffer),
-          ) as ApiListUserActivity;
-        } else {
-          throw response;
-        }
+        return tsproto.ListUserActivity.decode(response) as ApiListUserActivity;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1190,16 +1070,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiUserActivity;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.UserActivity.decode(
-            new Uint8Array(buffer),
-          ) as ApiUserActivity;
-        } else {
-          throw response;
-        }
+        return tsproto.UserActivity.decode(response) as ApiUserActivity;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1238,14 +1109,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiApp;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.App.decode(new Uint8Array(buffer)) as ApiApp;
-        } else {
-          throw response;
-        }
+        return tsproto.App.decode(response) as ApiApp;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1285,14 +1149,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiAppList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.AppList.decode(new Uint8Array(buffer)) as ApiAppList;
-        } else {
-          throw response;
-        }
+        return tsproto.AppList.decode(response) as ApiAppList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1340,13 +1197,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -1378,13 +1229,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -1416,14 +1261,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiApp;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.App.decode(new Uint8Array(buffer)) as ApiApp;
-        } else {
-          throw response;
-        }
+        return tsproto.App.decode(response) as ApiApp;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1466,14 +1304,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiApp;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.App.decode(new Uint8Array(buffer)) as ApiApp;
-        } else {
-          throw response;
-        }
+        return tsproto.App.decode(response) as ApiApp;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1515,16 +1346,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as MezonapiListAuditLog;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ListAuditLog.decode(
-            new Uint8Array(buffer),
-          ) as unknown as MezonapiListAuditLog;
-        } else {
-          throw response;
-        }
+        return tsproto.ListAuditLog.decode(response) as unknown as MezonapiListAuditLog;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1562,13 +1384,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -1614,16 +1430,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiCategoryDescList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.CategoryDescList.decode(
-            new Uint8Array(buffer),
-          ) as ApiCategoryDescList;
-        } else {
-          throw response;
-        }
+        return tsproto.CategoryDescList.decode(response) as ApiCategoryDescList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1659,16 +1466,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiListChannelAppsResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ListChannelAppsResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiListChannelAppsResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.ListChannelAppsResponse.decode(
+          response,
+        ) as ApiListChannelAppsResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1715,16 +1515,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiChannelCanvasListResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ChannelCanvasListResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiChannelCanvasListResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.ChannelCanvasListResponse.decode(
+          response,
+        ) as ApiChannelCanvasListResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1763,16 +1556,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.AddFavoriteChannelResponse.decode(
-            new Uint8Array(buffer),
-          );
-        } else {
-          throw response;
-        }
+        return tsproto.AddFavoriteChannelResponse.decode(response);
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -1812,13 +1596,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -1856,16 +1634,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiListFavoriteChannelResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ListFavoriteChannelResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiListFavoriteChannelResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.ListFavoriteChannelResponse.decode(
+          response,
+        ) as ApiListFavoriteChannelResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1916,16 +1687,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiChannelMessageList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ChannelMessageList.decode(
-            new Uint8Array(buffer),
-          ) as unknown as ApiChannelMessageList;
-        } else {
-          throw response;
-        }
+        return tsproto.ChannelMessageList.decode(response) as unknown as ApiChannelMessageList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1968,13 +1730,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -2026,16 +1782,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiChannelAttachmentList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ChannelAttachmentList.decode(
-            new Uint8Array(buffer),
-          ) as ApiChannelAttachmentList;
-        } else {
-          throw response;
-        }
+        return tsproto.ChannelAttachmentList.decode(
+          response,
+        ) as ApiChannelAttachmentList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -2078,16 +1827,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiChanEncryptionMethod;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ChanEncryptionMethod.decode(
-            new Uint8Array(buffer),
-          ) as ApiChanEncryptionMethod;
-        } else {
-          throw response;
-        }
+        return tsproto.ChanEncryptionMethod.decode(
+          response,
+        ) as ApiChanEncryptionMethod;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -2135,13 +1877,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -2181,13 +1917,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -2200,13 +1930,17 @@ export class MezonTransport {
     bearerToken: string,
     clanId: string,
     channelId: string,
-    options = {}
+    options = {},
   ): Promise<any> {
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined.",
+      );
     }
     if (channelId === null || channelId === undefined) {
-      throw new Error("'channelId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'channelId' is a required parameter but is null or undefined.",
+      );
     }
     const urlPath = "/mezon.api.Mezon/ArchiveChannel";
     const queryParams = new Map<string, any>();
@@ -2215,7 +1949,7 @@ export class MezonTransport {
       tsproto.ArchiveChannelRequest.fromPartial({
         clan_id: clanId,
         channel_id: channelId,
-      })
+      }),
     );
     const encodedBody = bodyWriter.finish();
 
@@ -2228,13 +1962,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -2246,10 +1974,12 @@ export class MezonTransport {
   listArchivedChannelDescs(
     bearerToken: string,
     clanId: string,
-    options = {}
+    options = {},
   ): Promise<ApiChannelDescList> {
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined.",
+      );
     }
     const urlPath = "/mezon.api.Mezon/ListArchivedChannelDescs";
     const queryParams = new Map<string, any>();
@@ -2257,30 +1987,28 @@ export class MezonTransport {
     const bodyWriter = tsproto.ListArchivedChannelDescsRequest.encode(
       tsproto.ListArchivedChannelDescsRequest.fromPartial({
         clan_id: clanId,
-      })
+      }),
     );
     const encodedBody = bodyWriter.finish();
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, '');
+    const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
-      this.send({fullUrl, fetchOptions}).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiChannelDescList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ListArchivedChannelDescsResponse.decode(new Uint8Array(buffer)) as ApiChannelDescList;
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (response) => {
+        return tsproto.ListArchivedChannelDescsResponse.decode(
+          response,
+        ) as ApiChannelDescList;
       }),
       new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error("Request timed out.")), this.timeoutMs)
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs,
+        ),
       ),
     ]);
   }
@@ -2317,13 +2045,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -2371,16 +2093,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiChannelUserList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ChannelUserList.decode(
-            new Uint8Array(buffer),
-          ) as ApiChannelUserList;
-        } else {
-          throw response;
-        }
+        return tsproto.ChannelUserList.decode(response) as ApiChannelUserList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -2426,16 +2139,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiChannelDescList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ChannelDescList.decode(
-            new Uint8Array(buffer),
-          ) as ApiChannelDescList;
-        } else {
-          throw response;
-        }
+        return tsproto.ChannelDescList.decode(response) as ApiChannelDescList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -2474,16 +2178,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiChannelDescription;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ChannelDescription.decode(
-            new Uint8Array(buffer),
-          ) as ApiChannelDescription;
-        } else {
-          throw response;
-        }
+        return tsproto.ChannelDescription.decode(
+          response,
+        ) as ApiChannelDescription;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -2521,16 +2218,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiAllUsersAddChannelResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.AllUsersAddChannelResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiAllUsersAddChannelResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.AllUsersAddChannelResponse.decode(
+          response,
+        ) as ApiAllUsersAddChannelResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -2573,13 +2263,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -2624,13 +2308,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -2686,16 +2364,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiChannelSettingListResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ChannelSettingListResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiChannelSettingListResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.ChannelSettingListResponse.decode(
+          response,
+        ) as ApiChannelSettingListResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -2733,16 +2404,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiVoiceChannelUserList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.VoiceChannelUserList.decode(
-            new Uint8Array(buffer),
-          ) as ApiVoiceChannelUserList;
-        } else {
-          throw response;
-        }
+        return tsproto.VoiceChannelUserList.decode(
+          response,
+        ) as ApiVoiceChannelUserList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -2778,16 +2442,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiClanDescList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ClanDescList.decode(
-            new Uint8Array(buffer),
-          ) as ApiClanDescList;
-        } else {
-          throw response;
-        }
+        return tsproto.ClanDescList.decode(response) as ApiClanDescList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -2824,16 +2479,9 @@ export class MezonTransport {
     }
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiListChannelBadgeCountResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ListChannelBadgeCountResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiListChannelBadgeCountResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.ListChannelBadgeCountResponse.decode(
+          response,
+        ) as ApiListChannelBadgeCountResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -2870,16 +2518,9 @@ export class MezonTransport {
     }
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiListUserOnlineResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ListUserOnlineResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiListUserOnlineResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.ListUserOnlineResponse.decode(
+          response,
+        ) as ApiListUserOnlineResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -2922,14 +2563,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiClanDesc;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ClanDesc.decode(new Uint8Array(buffer)) as ApiClanDesc;
-        } else {
-          throw response;
-        }
+        return tsproto.ClanDesc.decode(response) as ApiClanDesc;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -2968,13 +2602,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -3017,13 +2645,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -3062,15 +2684,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return buffer.byteLength > 0 ? {} : {};
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3108,16 +2723,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiBannedUserList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.BannedUserList.decode(
-            new Uint8Array(buffer),
-          ) as ApiBannedUserList;
-        } else {
-          throw response;
-        }
+        return tsproto.BannedUserList.decode(response) as ApiBannedUserList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3163,15 +2769,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return buffer.byteLength > 0 ? {} : {};
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3217,15 +2816,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return buffer.byteLength > 0 ? {} : {};
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3264,16 +2856,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiClanUserList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ClanUserList.decode(
-            new Uint8Array(buffer),
-          ) as ApiClanUserList;
-        } else {
-          throw response;
-        }
+        return tsproto.ClanUserList.decode(response) as ApiClanUserList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3312,18 +2895,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiClanUserStatusList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          const u8 = new Uint8Array(buffer);
-          return tsproto.ClanUserStatusList.decode(
-            u8,
-            u8.length,
-          ) as ApiClanUserStatusList;
-        } else {
-          throw response;
-        }
+        return tsproto.ClanUserStatusList.decode(response) as ApiClanUserStatusList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3362,16 +2934,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiCategoryDesc;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.CategoryDesc.decode(
-            new Uint8Array(buffer),
-          ) as ApiCategoryDesc;
-        } else {
-          throw response;
-        }
+        return tsproto.CategoryDesc.decode(response) as ApiCategoryDesc;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3411,9 +2974,8 @@ export class MezonTransport {
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
         if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
           return tsproto.CheckDuplicateNameResponse.decode(
-            new Uint8Array(buffer),
+            response,
           ) as ApiCheckDuplicateNameResponse;
         } else {
           throw response;
@@ -3466,15 +3028,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return buffer.byteLength > 0 ? {} : {};
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {};
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -3513,16 +3068,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiRegistFcmDeviceTokenResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.RegistFcmDeviceTokenResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiRegistFcmDeviceTokenResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.RegistFcmDeviceTokenResponse.decode(
+          response,
+        ) as ApiRegistFcmDeviceTokenResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3560,15 +3108,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return buffer.byteLength > 0 ? {} : {};
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3606,15 +3147,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return buffer.byteLength > 0 ? {} : {};
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3652,15 +3186,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return buffer.byteLength > 0 ? {} : {};
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3702,15 +3229,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return buffer.byteLength > 0 ? {} : {};
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3756,15 +3276,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return buffer.byteLength > 0 ? {} : {};
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3793,16 +3306,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiEmojiRecentList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.EmojiRecentList.decode(
-            new Uint8Array(buffer),
-          ) as ApiEmojiRecentList;
-        } else {
-          throw response;
-        }
+        return tsproto.EmojiRecentList.decode(response) as ApiEmojiRecentList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3831,16 +3335,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiEmojiListedResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.EmojiListedResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiEmojiListedResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.EmojiListedResponse.decode(
+          response,
+        ) as ApiEmojiListedResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3879,16 +3376,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiSearchMessageResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.SearchMessageResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiSearchMessageResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.SearchMessageResponse.decode(
+          response,
+        ) as ApiSearchMessageResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3927,13 +3417,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -3964,16 +3448,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiEventList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.EventList.decode(
-            new Uint8Array(buffer),
-          ) as ApiEventList;
-        } else {
-          throw response;
-        }
+        return tsproto.EventList.decode(response) as ApiEventList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4012,16 +3487,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiEventManagement;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.EventManagement.decode(
-            new Uint8Array(buffer),
-          ) as ApiEventManagement;
-        } else {
-          throw response;
-        }
+        return tsproto.EventManagement.decode(response) as ApiEventManagement;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4059,14 +3525,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as any;
-        } else if (response.status >= 200 && response.status < 300) {
-          return {} as any;
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {} as any;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4114,14 +3574,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as any;
-        } else if (response.status >= 200 && response.status < 300) {
-          return {} as any;
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {} as any;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4165,14 +3619,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as any;
-        } else if (response.status >= 200 && response.status < 300) {
-          return {} as any;
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {} as any;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4207,13 +3655,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -4246,16 +3688,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiFriendList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.FriendList.decode(
-            new Uint8Array(buffer),
-          ) as ApiFriendList;
-        } else {
-          throw response;
-        }
+        return tsproto.FriendList.decode(response) as ApiFriendList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4290,16 +3723,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiAddFriendsResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.AddFriendsResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiAddFriendsResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.AddFriendsResponse.decode(
+          response,
+        ) as ApiAddFriendsResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4334,13 +3760,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -4372,13 +3792,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -4409,16 +3823,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiNotificationChannelCategorySettingList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.NotificationChannelCategorySettingList.decode(
-            new Uint8Array(buffer),
-          ) as ApiNotificationChannelCategorySettingList;
-        } else {
-          throw response;
-        }
+        return tsproto.NotificationChannelCategorySettingList.decode(
+          response,
+        ) as ApiNotificationChannelCategorySettingList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4457,16 +3864,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiClanProfile;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ClanProfile.decode(
-            new Uint8Array(buffer),
-          ) as ApiClanProfile;
-        } else {
-          throw response;
-        }
+        return tsproto.ClanProfile.decode(response) as ApiClanProfile;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4502,16 +3900,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiNotificationUserChannel;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.NotificationUserChannel.decode(
-            new Uint8Array(buffer),
-          ) as ApiNotificationUserChannel;
-        } else {
-          throw response;
-        }
+        return tsproto.NotificationUserChannel.decode(
+          response,
+        ) as ApiNotificationUserChannel;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4545,16 +3936,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiNotificationUserChannel;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.NotificationUserChannel.decode(
-            new Uint8Array(buffer),
-          ) as ApiNotificationUserChannel;
-        } else {
-          throw response;
-        }
+        return tsproto.NotificationUserChannel.decode(
+          response,
+        ) as ApiNotificationUserChannel;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4588,16 +3972,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiNotificationSetting;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.NotificationSetting.decode(
-            new Uint8Array(buffer),
-          ) as ApiNotificationSetting;
-        } else {
-          throw response;
-        }
+        return tsproto.NotificationSetting.decode(
+          response,
+        ) as ApiNotificationSetting;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4631,16 +4008,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiNotifiReactMessage;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.NotifiReactMessage.decode(
-            new Uint8Array(buffer),
-          ) as ApiNotifiReactMessage;
-        } else {
-          throw response;
-        }
+        return tsproto.NotifiReactMessage.decode(
+          response,
+        ) as ApiNotifiReactMessage;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4678,14 +4048,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as any;
-        } else if (response.status >= 200 && response.status < 300) {
-          return {} as any;
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {} as any;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4712,16 +4076,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiGetKeyServerResp;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.GetKeyServerResp.decode(
-            new Uint8Array(buffer),
-          ) as ApiGetKeyServerResp;
-        } else {
-          throw response;
-        }
+        return tsproto.GetKeyServerResp.decode(response) as ApiGetKeyServerResp;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4760,16 +4115,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiLinkInviteUser;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.LinkInviteUser.decode(
-            new Uint8Array(buffer),
-          ) as ApiLinkInviteUser;
-        } else {
-          throw response;
-        }
+        return tsproto.LinkInviteUser.decode(response) as ApiLinkInviteUser;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4808,16 +4154,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiInviteUserRes;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.InviteUserRes.decode(
-            new Uint8Array(buffer),
-          ) as ApiInviteUserRes;
-        } else {
-          throw response;
-        }
+        return tsproto.InviteUserRes.decode(response) as ApiInviteUserRes;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4859,16 +4196,10 @@ export class MezonTransport {
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiInviteUserRes;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.InviteUserRes.decode(
-            new Uint8Array(buffer),
-          ) as ApiInviteUserRes;
-        } else {
-          throw response;
-        }
+        const buffer = await response.arrayBuffer();
+        return tsproto.InviteUserRes.decode(
+          new Uint8Array(buffer),
+        ) as ApiInviteUserRes;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4895,16 +4226,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiChannelDescList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ChannelDescList.decode(
-            new Uint8Array(buffer),
-          ) as ApiChannelDescList;
-        } else {
-          throw response;
-        }
+        return tsproto.ChannelDescList.decode(response) as ApiChannelDescList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4942,14 +4264,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as any;
-        } else if (response.status >= 200 && response.status < 300) {
-          return {} as any;
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {} as any;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4976,16 +4292,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiMezonOauthClientList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.MezonOauthClientList.decode(
-            new Uint8Array(buffer),
-          ) as ApiMezonOauthClientList;
-        } else {
-          throw response;
-        }
+        return tsproto.MezonOauthClientList.decode(
+          response,
+        ) as ApiMezonOauthClientList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -5023,14 +4332,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as any;
-        } else if (response.status >= 200 && response.status < 300) {
-          return {} as any;
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {} as any;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -5068,14 +4371,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as any;
-        } else if (response.status >= 200 && response.status < 300) {
-          return {} as any;
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {} as any;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -5113,13 +4410,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -5160,16 +4451,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiNotificationList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.NotificationList.decode(
-            new Uint8Array(buffer),
-          ) as unknown as ApiNotificationList;
-        } else {
-          throw response;
-        }
+        return tsproto.NotificationList.decode(response) as unknown as ApiNotificationList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -5208,13 +4490,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -5250,13 +4526,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -5292,13 +4562,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -5331,13 +4595,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -5368,13 +4626,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -5405,13 +4657,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -5447,13 +4693,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -5489,13 +4729,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -5519,16 +4753,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiPermissionList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.PermissionList.decode(
-            new Uint8Array(buffer),
-          ) as ApiPermissionList;
-        } else {
-          throw response;
-        }
+        return tsproto.PermissionList.decode(response) as ApiPermissionList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -5568,16 +4793,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiPermissionRoleChannelListEventResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.PermissionRoleChannelListEventResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiPermissionRoleChannelListEventResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.PermissionRoleChannelListEventResponse.decode(
+          response,
+        ) as ApiPermissionRoleChannelListEventResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -5619,13 +4837,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -5662,16 +4874,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as tsproto.PinMessagesList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.PinMessagesList.decode(
-            new Uint8Array(buffer),
-          ) as unknown as tsproto.PinMessagesList;
-        } else {
-          throw response;
-        }
+        return tsproto.PinMessagesList.decode(response) as unknown as tsproto.PinMessagesList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -5710,16 +4913,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiChannelMessageHeader;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ChannelMessageHeader.decode(
-            new Uint8Array(buffer),
-          ) as ApiChannelMessageHeader;
-        } else {
-          throw response;
-        }
+        return tsproto.ChannelMessageHeader.decode(
+          response,
+        ) as ApiChannelMessageHeader;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -5758,16 +4954,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiChannelMessageHeader;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ChannelMessageHeader.decode(
-            new Uint8Array(buffer),
-          ) as ApiChannelMessageHeader;
-        } else {
-          throw response;
-        }
+        return tsproto.ChannelMessageHeader.decode(
+          response,
+        ) as ApiChannelMessageHeader;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -5801,16 +4990,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiGetPubKeysResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.GetPubKeysResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiGetPubKeysResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.GetPubKeysResponse.decode(
+          response,
+        ) as ApiGetPubKeysResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -5849,13 +5031,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -5891,13 +5067,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -5942,13 +5112,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -5984,13 +5148,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -6029,16 +5187,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiRoleListEventResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.RoleListEventResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiRoleListEventResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.RoleListEventResponse.decode(
+          response,
+        ) as ApiRoleListEventResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -6077,14 +5228,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiRole;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.Role.decode(new Uint8Array(buffer)) as ApiRole;
-        } else {
-          throw response;
-        }
+        return tsproto.Role.decode(response) as ApiRole;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -6129,13 +5273,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -6179,13 +5317,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -6227,13 +5359,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -6269,16 +5395,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiPermissionList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.PermissionList.decode(
-            new Uint8Array(buffer),
-          ) as ApiPermissionList;
-        } else {
-          throw response;
-        }
+        return tsproto.PermissionList.decode(response) as ApiPermissionList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -6323,16 +5440,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiRoleUserList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.RoleUserList.decode(
-            new Uint8Array(buffer),
-          ) as ApiRoleUserList;
-        } else {
-          throw response;
-        }
+        return tsproto.RoleUserList.decode(response) as ApiRoleUserList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -6375,14 +5483,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiRoleList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.RoleList.decode(new Uint8Array(buffer)) as ApiRoleList;
-        } else {
-          throw response;
-        }
+        return tsproto.RoleList.decode(response) as ApiRoleList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -6422,16 +5523,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiChannelDescList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ChannelDescList.decode(
-            new Uint8Array(buffer),
-          ) as ApiChannelDescList;
-        } else {
-          throw response;
-        }
+        return tsproto.ChannelDescList.decode(response) as ApiChannelDescList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -6469,14 +5561,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          return {};
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -6515,13 +5601,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -6556,14 +5636,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          return {};
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -6605,14 +5679,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          return {};
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -6654,14 +5722,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          return {};
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -6688,16 +5750,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiStickerListedResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.StickerListedResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiStickerListedResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.StickerListedResponse.decode(
+          response,
+        ) as ApiStickerListedResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -6736,16 +5791,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiRegisterStreamingChannelResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.RegisterStreamingChannelResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiRegisterStreamingChannelResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.RegisterStreamingChannelResponse.decode(
+          response,
+        ) as ApiRegisterStreamingChannelResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -6791,16 +5839,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiStreamingChannelUserList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.StreamingChannelUserList.decode(
-            new Uint8Array(buffer),
-          ) as ApiStreamingChannelUserList;
-        } else {
-          throw response;
-        }
+        return tsproto.StreamingChannelUserList.decode(
+          response,
+        ) as ApiStreamingChannelUserList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -6827,16 +5868,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiSystemMessagesList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.SystemMessagesList.decode(
-            new Uint8Array(buffer),
-          ) as ApiSystemMessagesList;
-        } else {
-          throw response;
-        }
+        return tsproto.SystemMessagesList.decode(
+          response,
+        ) as ApiSystemMessagesList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -6874,14 +5908,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          return {};
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -6919,16 +5947,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiSdTopicList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.SdTopicList.decode(
-            new Uint8Array(buffer),
-          ) as ApiSdTopicList;
-        } else {
-          throw response;
-        }
+        return tsproto.SdTopicList.decode(response) as ApiSdTopicList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -6967,14 +5986,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiSdTopic;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.SdTopic.decode(new Uint8Array(buffer)) as ApiSdTopic;
-        } else {
-          throw response;
-        }
+        return tsproto.SdTopic.decode(response) as ApiSdTopic;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -7012,14 +6024,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          return {};
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -7058,16 +6064,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiSystemMessage;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.SystemMessage.decode(
-            new Uint8Array(buffer),
-          ) as ApiSystemMessage;
-        } else {
-          throw response;
-        }
+        return tsproto.SystemMessage.decode(response) as ApiSystemMessage;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -7111,14 +6108,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          return {};
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -7169,16 +6160,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiChannelDescList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ChannelDescListNoPool.decode(
-            new Uint8Array(buffer),
-          ) as ApiChannelDescList;
-        } else {
-          throw response;
-        }
+        return tsproto.ChannelDescListNoPool.decode(
+          response,
+        ) as ApiChannelDescList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -7224,14 +6208,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          return {};
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -7269,14 +6247,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          return {};
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -7323,14 +6295,8 @@ export class MezonTransport {
     }
 
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          return {};
-        } else {
-          throw response;
-        }
+      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -7369,16 +6335,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiUploadAttachment;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.UploadAttachment.decode(
-            new Uint8Array(buffer),
-          ) as ApiUploadAttachment;
-        } else {
-          throw response;
-        }
+        return tsproto.UploadAttachment.decode(response) as ApiUploadAttachment;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -7417,16 +6374,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiUploadAttachment;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.UploadAttachment.decode(
-            new Uint8Array(buffer),
-          ) as ApiUploadAttachment;
-        } else {
-          throw response;
-        }
+        return tsproto.UploadAttachment.decode(response) as ApiUploadAttachment;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -7464,16 +6412,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as MultipartUploadAttachment;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.MultipartUploadAttachment.decode(
-            new Uint8Array(buffer),
-          ) as MultipartUploadAttachment;
-        } else {
-          throw response;
-        }
+        return tsproto.MultipartUploadAttachment.decode(
+          response,
+        ) as MultipartUploadAttachment;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -7511,13 +6452,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -7556,13 +6491,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -7586,16 +6515,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiAllUserClans;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.AllUserClans.decode(
-            new Uint8Array(buffer),
-          ) as ApiAllUserClans;
-        } else {
-          throw response;
-        }
+        return tsproto.AllUserClans.decode(response) as ApiAllUserClans;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -7633,16 +6553,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiUserPermissionInChannelListResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.UserPermissionInChannelListResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiUserPermissionInChannelListResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.UserPermissionInChannelListResponse.decode(
+          response,
+        ) as ApiUserPermissionInChannelListResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -7666,16 +6579,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiUserStatus;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.UserStatus.decode(
-            new Uint8Array(buffer),
-          ) as ApiUserStatus;
-        } else {
-          throw response;
-        }
+        return tsproto.UserStatus.decode(response) as ApiUserStatus;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -7714,13 +6618,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -7756,13 +6654,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -7798,14 +6690,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {};
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.WebhookGenerateResponse.decode(new Uint8Array(buffer));
-        } else {
-          throw response;
-        }
+        return tsproto.WebhookGenerateResponse.decode(response);
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -7851,13 +6736,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -7897,16 +6776,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiWebhookListResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.WebhookListResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiWebhookListResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.WebhookListResponse.decode(
+          response,
+        ) as ApiWebhookListResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -7952,13 +6824,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -8018,16 +6884,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiEditChannelCanvasResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.EditChannelCanvasResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiEditChannelCanvasResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.EditChannelCanvasResponse.decode(
+          response,
+        ) as ApiEditChannelCanvasResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8070,16 +6929,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiChannelCanvasDetailResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ChannelCanvasDetailResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiChannelCanvasDetailResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.ChannelCanvasDetailResponse.decode(
+          response,
+        ) as ApiChannelCanvasDetailResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8124,13 +6976,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -8169,16 +7015,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiListOnboardingResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ListOnboardingResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiListOnboardingResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.ListOnboardingResponse.decode(
+          response,
+        ) as ApiListOnboardingResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8217,16 +7056,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiListOnboardingResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ListOnboardingResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiListOnboardingResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.ListOnboardingResponse.decode(
+          response,
+        ) as ApiListOnboardingResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8267,13 +7099,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -8311,16 +7137,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiOnboardingItem;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.OnboardingItem.decode(
-            new Uint8Array(buffer),
-          ) as ApiOnboardingItem;
-        } else {
-          throw response;
-        }
+        return tsproto.OnboardingItem.decode(response) as ApiOnboardingItem;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8366,13 +7183,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -8408,16 +7219,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiGenerateClanWebhookResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.GenerateClanWebhookResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiGenerateClanWebhookResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.GenerateClanWebhookResponse.decode(
+          response,
+        ) as ApiGenerateClanWebhookResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8458,16 +7262,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiListClanWebhookResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ListClanWebhookResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiListClanWebhookResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.ListClanWebhookResponse.decode(
+          response,
+        ) as ApiListClanWebhookResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8510,13 +7307,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -8561,13 +7352,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -8602,14 +7387,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiSdTopic;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.SdTopic.decode(new Uint8Array(buffer)) as ApiSdTopic;
-        } else {
-          throw response;
-        }
+        return tsproto.SdTopic.decode(response) as ApiSdTopic;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8651,16 +7429,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiListOnboardingStepResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ListOnboardingStepResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiListOnboardingStepResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.ListOnboardingStepResponse.decode(
+          response,
+        ) as ApiListOnboardingStepResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8710,13 +7481,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -8752,16 +7517,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as MezonapiCreateRoomChannelApps;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.CreateRoomChannelApps.decode(
-            new Uint8Array(buffer),
-          ) as unknown as MezonapiCreateRoomChannelApps;
-        } else {
-          throw response;
-        }
+        return tsproto.CreateRoomChannelApps.decode(response) as unknown as MezonapiCreateRoomChannelApps;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8800,16 +7556,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiGenerateMeetTokenResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.GenerateMeetTokenResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiGenerateMeetTokenResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.GenerateMeetTokenResponse.decode(
+          response,
+        ) as ApiGenerateMeetTokenResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8849,16 +7598,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiMezonOauthClient;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.MezonOauthClient.decode(
-            new Uint8Array(buffer),
-          ) as ApiMezonOauthClient;
-        } else {
-          throw response;
-        }
+        return tsproto.MezonOauthClient.decode(response) as ApiMezonOauthClient;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8897,16 +7637,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiMezonOauthClient;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.MezonOauthClient.decode(
-            new Uint8Array(buffer),
-          ) as ApiMezonOauthClient;
-        } else {
-          throw response;
-        }
+        return tsproto.MezonOauthClient.decode(response) as ApiMezonOauthClient;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8943,16 +7674,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiCreateHashChannelAppsResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.GenerateHashChannelAppsResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiCreateHashChannelAppsResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.GenerateHashChannelAppsResponse.decode(
+          response,
+        ) as ApiCreateHashChannelAppsResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8991,13 +7715,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -9034,13 +7752,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -9076,13 +7788,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -9106,16 +7812,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiGenerateMezonMeetResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.GenerateMezonMeetResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiGenerateMezonMeetResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.GenerateMezonMeetResponse.decode(
+          response,
+        ) as ApiGenerateMezonMeetResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -9162,16 +7861,10 @@ export class MezonTransport {
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiGenerateMeetTokenExternalResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.GenerateMeetTokenExternalResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiGenerateMeetTokenExternalResponse;
-        } else {
-          throw response;
-        }
+        const buffer = await response.arrayBuffer();
+        return tsproto.GenerateMeetTokenExternalResponse.decode(
+          new Uint8Array(buffer),
+        ) as ApiGenerateMeetTokenExternalResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -9210,13 +7903,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -9252,13 +7939,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -9298,16 +7979,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiChannelDescription;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ChannelDescription.decode(
-            new Uint8Array(buffer),
-          ) as ApiChannelDescription;
-        } else {
-          throw response;
-        }
+        return tsproto.ChannelDescription.decode(
+          response,
+        ) as ApiChannelDescription;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -9346,16 +8020,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiListChannelTimelineResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ListChannelTimelineResponse.decode(
-            new Uint8Array(buffer),
-          ) as unknown as ApiListChannelTimelineResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.ListChannelTimelineResponse.decode(response) as unknown as ApiListChannelTimelineResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -9394,16 +8059,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiCreateChannelTimelineResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.CreateChannelTimelineResponse.decode(
-            new Uint8Array(buffer),
-          ) as unknown as ApiCreateChannelTimelineResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.CreateChannelTimelineResponse.decode(response) as unknown as ApiCreateChannelTimelineResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -9442,16 +8098,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiUpdateChannelTimelineResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.UpdateChannelTimelineResponse.decode(
-            new Uint8Array(buffer),
-          ) as unknown as ApiUpdateChannelTimelineResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.UpdateChannelTimelineResponse.decode(response) as unknown as ApiUpdateChannelTimelineResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -9490,16 +8137,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiDetailChannelTimelineResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ChannelTimelineDetailResponse.decode(
-            new Uint8Array(buffer),
-          ) as unknown as ApiDetailChannelTimelineResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.ChannelTimelineDetailResponse.decode(response) as unknown as ApiDetailChannelTimelineResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -9538,13 +8176,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -9582,16 +8214,10 @@ export class MezonTransport {
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiListClanDiscover;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ListClanDiscover.decode(
-            new Uint8Array(buffer),
-          ) as ApiListClanDiscover;
-        } else {
-          throw response;
-        }
+        const buffer = await response.arrayBuffer();
+        return tsproto.ListClanDiscover.decode(
+          new Uint8Array(buffer),
+        ) as ApiListClanDiscover;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -9638,13 +8264,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -9683,16 +8303,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiQuickMenuAccessList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.QuickMenuAccessList.decode(
-            new Uint8Array(buffer),
-          ) as ApiQuickMenuAccessList;
-        } else {
-          throw response;
-        }
+        return tsproto.QuickMenuAccessList.decode(
+          response,
+        ) as ApiQuickMenuAccessList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -9731,13 +8344,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -9773,13 +8380,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -9814,16 +8415,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiForSaleItemList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ForSaleItemList.decode(
-            new Uint8Array(buffer),
-          ) as ApiForSaleItemList;
-        } else {
-          throw response;
-        }
+        return tsproto.ForSaleItemList.decode(response) as ApiForSaleItemList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -9862,16 +8454,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiIsFollowerResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.IsFollowerResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiIsFollowerResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.IsFollowerResponse.decode(
+          response,
+        ) as ApiIsFollowerResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -9910,13 +8495,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -9952,14 +8531,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiSession;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
-        } else {
-          throw response;
-        }
+        return tsproto.Session.decode(response) as ApiSession;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -10002,16 +8574,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiIsBannedResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.IsBannedResponse.decode(
-            new Uint8Array(buffer),
-          ) as ApiIsBannedResponse;
-        } else {
-          throw response;
-        }
+        return tsproto.IsBannedResponse.decode(response) as ApiIsBannedResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -10051,13 +8614,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -10113,16 +8670,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as tsproto.ChannelMessageAck;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ChannelMessageAck.decode(
-            new Uint8Array(buffer),
-          ) as unknown as tsproto.ChannelMessageAck;
-        } else {
-          throw response;
-        }
+        return tsproto.ChannelMessageAck.decode(response) as unknown as tsproto.ChannelMessageAck;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -10177,16 +8725,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as any;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ChannelMessageUpdate.decode(
-            new Uint8Array(buffer),
-          ) as any;
-        } else {
-          throw response;
-        }
+        return tsproto.ChannelMessageUpdate.decode(response) as any;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -10237,16 +8776,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as any;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ChannelMessageRemove.decode(
-            new Uint8Array(buffer),
-          ) as any;
-        } else {
-          throw response;
-        }
+        return tsproto.ChannelMessageRemove.decode(response) as any;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -10292,13 +8822,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -10343,13 +8867,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -10394,13 +8912,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -10436,13 +8948,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -10478,13 +8984,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -10520,13 +9020,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw response;
-        }
+        return response;
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -10562,16 +9056,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiMutedChannelList;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.MutedChannelList.decode(
-            new Uint8Array(buffer),
-          ) as unknown as ApiMutedChannelList;
-        } else {
-          throw response;
-        }
+        return tsproto.MutedChannelList.decode(response) as unknown as ApiMutedChannelList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -10629,16 +9114,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as tsproto.ChannelMessageAck;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          return tsproto.ChannelMessageSend.decode(
-            new Uint8Array(buffer),
-          ) as unknown as tsproto.ChannelMessageAck;
-        } else {
-          throw response;
-        }
+        return tsproto.ChannelMessageSend.decode(response) as unknown as tsproto.ChannelMessageAck;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -10684,31 +9160,22 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiCreatePollResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          const decoded = tsproto.CreatePollResponse.decode(
-            new Uint8Array(buffer),
-          );
-          return {
-            poll_id: decoded.poll_id,
-            message_id: decoded.message_id,
-            question: decoded.question,
-            answers: decoded.answers.map((a) => ({
-              index: a.index,
-              label: a.label,
-            })),
-            answer_counts: decoded.answer_counts,
-            exp: decoded.exp,
-            is_closed: decoded.is_closed,
-            creator_id: decoded.creator_id,
-            type: decoded.type,
-            total_votes: decoded.total_votes,
-          } as ApiCreatePollResponse;
-        } else {
-          throw response;
-        }
+        const decoded = tsproto.CreatePollResponse.decode(response);
+        return {
+          poll_id: decoded.poll_id,
+          message_id: decoded.message_id,
+          question: decoded.question,
+          answers: decoded.answers.map((a) => ({
+            index: a.index,
+            label: a.label,
+          })),
+          answer_counts: decoded.answer_counts,
+          exp: decoded.exp,
+          is_closed: decoded.is_closed,
+          creator_id: decoded.creator_id,
+          type: decoded.type,
+          total_votes: decoded.total_votes,
+        } as ApiCreatePollResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -10752,21 +9219,13 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return { my_answer_indices: [] } as ApiVotePollResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          const bytes = new Uint8Array(buffer);
-          const decoded =
-            bytes.length > 0
-              ? tsproto.VotePollResponse.decode(bytes)
-              : { my_answer_indices: [] };
-          return {
-            my_answer_indices: Array.from(decoded.my_answer_indices ?? []),
-          } as ApiVotePollResponse;
-        } else {
-          throw response;
-        }
+        const decoded =
+          response.length > 0
+            ? tsproto.VotePollResponse.decode(response)
+            : { my_answer_indices: [] };
+        return {
+          my_answer_indices: Array.from(decoded.my_answer_indices ?? []),
+        } as ApiVotePollResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -10859,35 +9318,26 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ fullUrl, fetchOptions }).then(async (response) => {
-        if (response.status == 204) {
-          return {} as ApiGetPollResponse;
-        } else if (response.status >= 200 && response.status < 300) {
-          const buffer = await response.arrayBuffer();
-          const decoded = tsproto.GetPollResponse.decode(
-            new Uint8Array(buffer),
-          );
-          return {
-            poll_id: decoded.poll_id,
-            message_id: decoded.message_id,
-            question: decoded.question,
-            answers: decoded.answers.map((a) => ({
-              index: a.index,
-              label: a.label,
-            })),
-            answer_counts: decoded.answer_counts,
-            exp: decoded.exp,
-            is_closed: decoded.is_closed,
-            creator_id: decoded.creator_id,
-            type: decoded.type,
-            total_votes: decoded.total_votes,
-            voter_details: decoded.voter_details.map((v) => ({
-              answer_index: v.answer_index,
-              user_ids: v.user_ids,
-            })),
-          } as ApiGetPollResponse;
-        } else {
-          throw response;
-        }
+        const decoded = tsproto.GetPollResponse.decode(response);
+        return {
+          poll_id: decoded.poll_id,
+          message_id: decoded.message_id,
+          question: decoded.question,
+          answers: decoded.answers.map((a) => ({
+            index: a.index,
+            label: a.label,
+          })),
+          answer_counts: decoded.answer_counts,
+          exp: decoded.exp,
+          is_closed: decoded.is_closed,
+          creator_id: decoded.creator_id,
+          type: decoded.type,
+          total_votes: decoded.total_votes,
+          voter_details: decoded.voter_details.map((v) => ({
+            answer_index: v.answer_index,
+            user_ids: v.user_ids,
+          })),
+        } as ApiGetPollResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(

@@ -1,10 +1,16 @@
 import * as tsproto from "./rtapi/realtime";
-import { SocketCloseHandler, SocketErrorHandler, SocketMessageHandler, SocketOpenHandler, TransportAdapter } from "./transport_adapter";
+import {
+  SocketCloseHandler,
+  SocketErrorHandler,
+  SocketMessageHandler,
+  SocketOpenHandler,
+  TransportAdapter,
+} from "./transport_adapter";
 
 export class WebSocketAdapter implements TransportAdapter {
   private _socket?: WebSocket;
 
-  constructor() { }
+  constructor() {}
 
   get onClose(): SocketCloseHandler | null {
     return this._socket!.onclose;
@@ -23,24 +29,44 @@ export class WebSocketAdapter implements TransportAdapter {
   }
 
   get onMessage(): SocketMessageHandler | null {
-    return this._socket!.onmessage;
+    return null; //this._socket!.onmessage;
   }
 
   set onMessage(value: SocketMessageHandler | null) {
+    const PREFIX_RAW = 0xff;
+    const CID_LENGTH = 2;
+
     if (value) {
+      console.log("value2", value);
       this._socket!.onmessage = (evt: MessageEvent) => {
         const buffer: ArrayBuffer = evt.data;
         const uintBuffer: Uint8Array = new Uint8Array(buffer);
-        const envelope = tsproto.Envelope.decode(uintBuffer);
 
-        if (envelope.channel_message) {
-          if (envelope.channel_message.code == undefined) {
-            //protobuf plugin does not default-initialize missing Int32Value fields
-            envelope.channel_message.code = 0;
-          }
+        if (uintBuffer.length < 1 + CID_LENGTH) {
+            console.error("Packet too small to contain headers");
+            return;
         }
 
-        value!(envelope);
+        const prefix = uintBuffer[0];        
+        
+        if (prefix === PREFIX_RAW) {
+            const dataView = new DataView(buffer);
+            const cid = dataView.getUint16(1, false);
+            const payload = uintBuffer.subarray(1 + CID_LENGTH);
+            
+            value!(cid, payload);
+        } else {
+          const envelope = tsproto.Envelope.decode(uintBuffer);
+
+          if (envelope.channel_message) {
+            if (envelope.channel_message.code == undefined) {
+              //protobuf plugin does not default-initialize missing Int32Value fields
+              envelope.channel_message.code = 0;
+            }
+          }
+
+          value!(0, envelope);
+        }
       };
     } else {
       value = null;
@@ -85,7 +111,9 @@ export class WebSocketAdapter implements TransportAdapter {
   }
 
   send(msg: any): void {
-    const envelopeWriter = tsproto.Envelope.encode(tsproto.Envelope.fromPartial(msg));
+    const envelopeWriter = tsproto.Envelope.encode(
+      tsproto.Envelope.fromPartial(msg),
+    );
     const encodedMsg = envelopeWriter.finish();
     this._socket!.send(encodedMsg);
   }
