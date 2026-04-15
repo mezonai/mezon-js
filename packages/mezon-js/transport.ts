@@ -303,13 +303,12 @@ export class MezonTransport {
     data: any,
     sendTimeout = MezonTransport.DefaultSendTimeoutMs,
   ): Promise<any> {
-    const { fullUrl, fetchOptions } = data;
-
+    const { urlPath, fetchOptions } = data;
     let untypedMessage = fetchOptions as any;
-    if (fullUrl !== "") {
+    if (urlPath?.includes('/mezon.api.Mezon/')) {
       untypedMessage = {
         api_request_event: {
-          full_url: fullUrl,
+          full_url: urlPath,
           body: fetchOptions.body,
         },
       };
@@ -8875,10 +8874,10 @@ export class MezonTransport {
   }
 
   async followUsers(userIds: string[]): Promise<Status> {
-    const fullUrl = "";
+    const urlPath = "";
     const fetchOptions = { status_follow: { user_ids: userIds } } as any;
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as Status;
       }),
       new Promise<never>((_, reject) =>
@@ -8891,14 +8890,14 @@ export class MezonTransport {
   }
 
   async joinClanChat(clan_id: string): Promise<ClanJoin> {
-    const fullUrl = "";
+    const urlPath = "";
     const fetchOptions = {
       clan_join: {
         clan_id: clan_id,
       },
     } as any;
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as ClanJoin;
       }),
       new Promise<never>((_, reject) =>
@@ -8911,12 +8910,12 @@ export class MezonTransport {
   }
 
   async follower(): Promise<void> {
-    const fullUrl = "";
+    const urlPath = "";
     const fetchOptions = {
       follow_event: {},
     } as any;
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as unknown as void;
       }),
       new Promise<never>((_, reject) =>
@@ -8934,7 +8933,7 @@ export class MezonTransport {
     channel_type: number,
     is_public: boolean,
   ): Promise<Channel> {
-    const fullUrl = "";
+    const urlPath = "";
     const fetchOptions = {
       channel_join: {
         clan_id: clan_id,
@@ -8944,7 +8943,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as Channel;
       }),
       new Promise<never>((_, reject) =>
@@ -8962,7 +8961,7 @@ export class MezonTransport {
     channel_type: number,
     is_public: boolean,
   ): Promise<void> {
-    const fullUrl = "";
+    const urlPath = "";
     const fetchOptions = {
       channel_leave: {
         clan_id: clan_id,
@@ -8972,7 +8971,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as unknown as void;
       }),
       new Promise<never>((_, reject) =>
@@ -8995,7 +8994,7 @@ export class MezonTransport {
     mentions?: string,
     references?: string,
   ): Promise<tsproto.ChannelMessageAck> {
-    const fullUrl = "";
+    const urlPath = "";
     const fetchOptions = {
       channel_message_remove: {
         clan_id: clan_id,
@@ -9010,7 +9009,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as tsproto.ChannelMessageAck;
       }),
       new Promise<never>((_, reject) =>
@@ -9023,10 +9022,10 @@ export class MezonTransport {
   }
 
   unfollowUsers(user_ids: string[]): Promise<void> {
-    const fullUrl = "";
+    const urlPath = "";
     const fetchOptions = { status_unfollow: { user_ids: user_ids } } as any;
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as unknown as void;
       }),
       new Promise<never>((_, reject) =>
@@ -9051,7 +9050,7 @@ export class MezonTransport {
     topic_id?: string,
     is_update_msg_topic?: boolean,
   ): Promise<tsproto.ChannelMessageAck> {
-    const fullUrl = "";
+    const urlPath = "";
     const fetchOptions = {
       channel_message_update: {
         clan_id: clan_id,
@@ -9068,7 +9067,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as tsproto.ChannelMessageAck;
       }),
       new Promise<never>((_, reject) =>
@@ -9081,10 +9080,10 @@ export class MezonTransport {
   }
 
   updateStatus(status?: string): Promise<void> {
-    const fullUrl = "";
+    const urlPath = "";
     const fetchOptions = { status_update: { status: status } } as any;
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as unknown as void;
       }),
       new Promise<never>((_, reject) =>
@@ -9112,7 +9111,7 @@ export class MezonTransport {
     code?: number,
     topic_id?: string,
   ): Promise<QuickMenuEvent> {
-    const fullUrl = "";
+    const urlPath = "";
     const fetchOptions = {
       quick_menu_event: {
         menu_name: menu_name,
@@ -9134,7 +9133,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as QuickMenuEvent;
       }),
       new Promise<never>((_, reject) =>
@@ -9163,7 +9162,7 @@ export class MezonTransport {
     topic_id?: string,
     id?: string,
   ): Promise<tsproto.ChannelMessageAck> {
-    const fullUrl = "";
+    const urlPath = "";
     const fetchOptions = {
       ephemeral_message_send: {
         receiver_ids: receiver_ids,
@@ -9186,7 +9185,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as tsproto.ChannelMessageAck;
       }),
       new Promise<never>((_, reject) =>
@@ -9213,7 +9212,7 @@ export class MezonTransport {
     code?: number,
     topic_id?: string,
   ): Promise<tsproto.ChannelMessageAck> {
-    const fullUrl = "";
+    const urlPath = "";
     const fetchOptions = {
       channel_message_send: {
         clan_id: clan_id,
@@ -9232,7 +9231,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as tsproto.ChannelMessageAck;
       }),
       new Promise<never>((_, reject) =>
@@ -9260,7 +9259,7 @@ export class MezonTransport {
     emoji_recent_id?: string,
     sender_name?: string,
   ): Promise<ApiMessageReaction> {
-    const fullUrl = "";
+    const urlPath = "";
     const fetchOptions = {
       message_reaction_event: {
         id: id,
@@ -9280,7 +9279,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as ApiMessageReaction;
       }),
       new Promise<never>((_, reject) =>
@@ -9300,7 +9299,7 @@ export class MezonTransport {
     sender_display_name: string,
     topic_id?: string,
   ): Promise<MessageTypingEvent> {
-    const fullUrl = "";
+    const urlPath = "";
     const fetchOptions = {
       message_typing_event: {
         clan_id: clan_id,
@@ -9312,7 +9311,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as MessageTypingEvent;
       }),
       new Promise<never>((_, reject) =>
@@ -9332,7 +9331,7 @@ export class MezonTransport {
     timestamp_seconds: number,
     badge_count: number,
   ): Promise<LastSeenMessageEvent> {
-    const fullUrl = "";
+    const urlPath = "";
     const fetchOptions = {
       last_seen_message_event: {
         clan_id: clan_id,
@@ -9344,7 +9343,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as LastSeenMessageEvent;
       }),
       new Promise<never>((_, reject) =>
@@ -9371,7 +9370,7 @@ export class MezonTransport {
     message_attachment: string,
     message_created_time: string,
   ): Promise<LastPinMessageEvent> {
-    const fullUrl = "";
+    const urlPath = "";
     const fetchOptions = {
       last_pin_message_event: {
         clan_id: clan_id,
@@ -9390,7 +9389,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as LastPinMessageEvent;
       }),
       new Promise<never>((_, reject) =>
@@ -9408,7 +9407,7 @@ export class MezonTransport {
     time_reset: number,
     no_clear: boolean,
   ): Promise<CustomStatusEvent> {
-    const fullUrl = "";
+    const urlPath = "";
     const fetchOptions = {
       custom_status_event: {
         clan_id: clan_id,
@@ -9418,7 +9417,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as CustomStatusEvent;
       }),
       new Promise<never>((_, reject) =>
@@ -9434,7 +9433,7 @@ export class MezonTransport {
     emojis: Array<string>,
     channel_id: string,
   ): Promise<VoiceReactionSend> {
-    const fullUrl = "";
+    const urlPath = "";
     const fetchOptions = {
       voice_reaction_send: {
         emojis: emojis,
@@ -9442,7 +9441,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as VoiceReactionSend;
       }),
       new Promise<never>((_, reject) =>
@@ -9461,7 +9460,7 @@ export class MezonTransport {
     channel_id: string,
     caller_id: string,
   ): Promise<WebrtcSignalingFwd> {
-    const fullUrl = "";
+    const urlPath = "";
     const fetchOptions = {
       webrtc_signaling_fwd: {
         receiver_id: receiver_id,
@@ -9472,7 +9471,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as WebrtcSignalingFwd;
       }),
       new Promise<never>((_, reject) =>
@@ -9490,7 +9489,7 @@ export class MezonTransport {
     channel_id: string,
     caller_id: string,
   ): Promise<IncomingCallPush> {
-    const fullUrl = "";
+    const urlPath = "";
     const fetchOptions = {
       incoming_call_push: {
         receiver_id: receiver_id,
@@ -9500,7 +9499,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as IncomingCallPush;
       }),
       new Promise<never>((_, reject) =>
@@ -9517,7 +9516,7 @@ export class MezonTransport {
     channel_id: string,
     action: number,
   ): Promise<ChannelAppEvent> {
-    const fullUrl = "";
+    const urlPath = "";
     const fetchOptions = {
       channel_app_event: {
         clan_id: clan_id,
@@ -9526,7 +9525,7 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as ChannelAppEvent;
       }),
       new Promise<never>((_, reject) =>
@@ -9539,12 +9538,12 @@ export class MezonTransport {
   }
 
   async listDataSocket(request: ListDataSocket): Promise<any> {
-    const fullUrl = "";
+    const urlPath = "";
     const fetchOptions = {
       list_data_socket: request,
     } as any;
     return Promise.race([
-      this.send({ fullUrl, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as any;
       }),
       new Promise<never>((_, reject) =>

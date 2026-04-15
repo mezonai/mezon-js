@@ -622,7 +622,9 @@ export class Client {
     }
 
     try {
-      await this.transport.send({ ping: {} }, this._heartbeatTimeoutMs);
+      const urlPath = "";
+      const fetchOptions = { ping: {} };
+      await this.transport.send({ urlPath, fetchOptions }, this._heartbeatTimeoutMs);
     } catch {
       this._connectionState = ConnectionState.DISCONNECTED;
       this.stopHeartbeatLoop();
