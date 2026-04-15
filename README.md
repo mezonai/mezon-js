@@ -18,7 +18,7 @@ $GOPATH/src/github.com/nccasia/mezon-api/common/api/api.proto
 ```
 
 ```
-npx protoc --plugin="./node_modules/.bin/protoc-gen-ts_proto.cmd" --proto_path=../../../mezon-api/common --ts_proto_out=. --ts_proto_opt=snakeToCamel=false --ts_proto_opt=esModuleInterop=true --ts_proto_opt=forceLong=string ../../../mezon-api/common/rtapi/realtime.proto ../../../mezon-api/common/api/api.proto
+npx protoc --plugin="./node_modules/.bin/protoc-gen-ts_proto.cmd" --proto_path=../../../mezon-protocol --ts_proto_out=. --ts_proto_opt=snakeToCamel=false --ts_proto_opt=esModuleInterop=true --ts_proto_opt=forceLong=string ../../../mezon-protocol/rtapi/realtime.proto ../../../mezon-protocol/api/api.proto
 ```
 
 
@@ -28,7 +28,6 @@ npx protoc --plugin="./node_modules/.bin/protoc-gen-ts_proto.cmd" --proto_path=.
 cd openapi-gen
 go run main.go "$GOPATH/src/github.com/nccasia/mezon-api/apigrpc/apigrpc.swagger.json" "Mezon" > ../packages/mezon-js/api.gen.ts
 
-go run main.go "../../mezon-api/apigrpc/apigrpc.swagger.json" "Mezon" > ../packages/mezon-js/api.gen1.ts
 ```
 
 ```

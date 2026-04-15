@@ -340,7 +340,9 @@ export class Client {
     return this._connectionState === ConnectionState.CONNECTED;
   }
 
-  connect(session: Session, createStatus = false, connectTimeoutMs: number = Client.DefaultConnectTimeoutMs): Promise<Session> {
+  connect(session: Session, createStatus = false, verbose = false, connectTimeoutMs: number = Client.DefaultConnectTimeoutMs): Promise<Session> {
+    this.verbose = verbose;
+
     if (this._connectionState === ConnectionState.CONNECTED) {
       return Promise.resolve(session);
     }
@@ -355,8 +357,8 @@ export class Client {
     this.transport.connect(
       session,
       createStatus,
+      verbose,
       async (message: any) => {
-        console.log("onMessage client");
         if (!message.cid) {
           if (message.notifications) {
             message.notifications.notifications.forEach(

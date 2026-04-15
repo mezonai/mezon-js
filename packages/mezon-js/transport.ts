@@ -266,6 +266,7 @@ export class MezonTransport {
   connect(
     session: Session,
     createStatus = false,
+    verbose = false,
     onMessage: tsproto.SocketMessageHandler,
     onDisconnected: tsproto.SocketCloseHandler,
     signal?: AbortSignal,
@@ -281,8 +282,10 @@ export class MezonTransport {
 
     this.adapter.onClose = onDisconnected;
     this.adapter.onMessage = async (message: any) => {
-      if (message.cid) {
-        console.log("cid", message);
+      if (verbose && window && window.console) {
+        console.log("Receive message: %o", message);
+      }
+      if (message.cid) {        
         const executor = this.cIds[message.cid];
         if (!executor) {
           console.error("No promise executor for message: %o", message);
@@ -308,7 +311,12 @@ export class MezonTransport {
 
     let untypedMessage = fetchOptions as any;
     if (fullUrl !== "") {
-      untypedMessage = {api_request_event: { full_url: fullUrl, body: fetchOptions.body }};
+      untypedMessage = {
+        api_request_event: {
+          full_url: fullUrl,
+          body: fetchOptions.body
+        },
+      };
     }
 
     return new Promise<void>((resolve, reject) => {
