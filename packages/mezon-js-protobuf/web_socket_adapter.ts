@@ -37,7 +37,6 @@ export class WebSocketAdapter implements TransportAdapter {
     const CID_LENGTH = 2;
 
     if (value) {
-      console.log("value2", value);
       this._socket!.onmessage = (evt: MessageEvent) => {
         const buffer: ArrayBuffer = evt.data;
         const uintBuffer: Uint8Array = new Uint8Array(buffer);
@@ -65,7 +64,7 @@ export class WebSocketAdapter implements TransportAdapter {
             }
           }
 
-          value!(0, envelope);
+          value!(Number(envelope.cid), envelope);
         }
       };
     } else {
