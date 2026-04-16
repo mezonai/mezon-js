@@ -1,0 +1,11 @@
+{
+    "name": "mezon-js-node-example",
+    "version": "1.0.0",
+    "description": "An example project that utilizes mezon-js and node",
+    "private": true,
+    "license": "Apache-2.0",
+    "dependencies": {
+        "mezon-js": "file:../mezon-js",
+        "mezon-js-protobuf": "file:../mezon-js-protobuf"
+    }
+}
