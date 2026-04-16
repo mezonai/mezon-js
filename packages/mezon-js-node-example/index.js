@@ -5,12 +5,11 @@ global.navigator = { userAgent: 'node' };
 const { Client } = require("mezon-js");
 
 var useSSL = true; // Enable if server is run with an SSL certificate.
-var client = new Client("defaultkey", "dev-mezon.nccsoft.vn", "8088", useSSL);
+var client = new Client("defaultkey", "dev-mezon.nccsoft.vn", "8088", useSSL, "desktop");
 
-client.authenticateEmail("pocolomos@gmail.com", "xxxxxx").then(async session => {
+client.authenticateEmail("pocolomos@gmail.com", "C0nandoiner123$").then(async session => {
   const session2 = await client.connect(session, true, true);
-  console.log("session 2", session2);
-  
+  console.log("session 2", session);
   client.onchannelmessage = function(event) {
     console.log("on channel message", event);
   }
