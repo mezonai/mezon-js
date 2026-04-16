@@ -34,14 +34,17 @@ export class WebSocketAdapter implements TransportAdapter {
 
   set onMessage(value: SocketMessageHandler | null) {
     const PREFIX_RAW = 0xff;
-    const CID_LENGTH = 2;
 
     if (value) {
       this._socket!.onmessage = (evt: MessageEvent) => {
         const buffer: ArrayBuffer = evt.data;
         const uintBuffer: Uint8Array = new Uint8Array(buffer);
 
-        if (uintBuffer.length < 1 + CID_LENGTH) {
+        // Header Length: 1 (Prefix) + 2 (CID) + 4 (Code) = 7 bytes
+        const RAW_HEADER_LENGTH = 7; 
+        const CODE_LENGTH = 3;
+
+        if (uintBuffer.length < 1 + RAW_HEADER_LENGTH) {
             console.error("Packet too small to contain headers");
             return;
         }
@@ -51,9 +54,10 @@ export class WebSocketAdapter implements TransportAdapter {
         if (prefix === PREFIX_RAW) {
             const dataView = new DataView(buffer);
             const cid = dataView.getUint16(1, false);
-            const payload = uintBuffer.subarray(1 + CID_LENGTH);
+            const code = dataView.getUint32(CODE_LENGTH, false);
+            const payload = uintBuffer.subarray(RAW_HEADER_LENGTH);
             
-            value!(cid, payload);
+            value!(cid, code, payload);
         } else {
           const envelope = tsproto.Envelope.decode(uintBuffer);
 
@@ -64,7 +68,7 @@ export class WebSocketAdapter implements TransportAdapter {
             }
           }
 
-          value!(Number(envelope.cid), envelope);
+          value!(Number(envelope.cid), 0, envelope);
         }
       };
     } else {

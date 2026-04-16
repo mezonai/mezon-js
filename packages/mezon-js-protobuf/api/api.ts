@@ -4185,6 +4185,9 @@ export interface ListUserOnlineResponse {
   total_count: number;
 }
 
+export interface NoParams {
+}
+
 function createBaseAccount(): Account {
   return {
     user: undefined,
@@ -45032,6 +45035,49 @@ export const ListUserOnlineResponse = {
     const message = createBaseListUserOnlineResponse();
     message.users = object.users?.map((e) => User.fromPartial(e)) || [];
     message.total_count = object.total_count ?? 0;
+    return message;
+  },
+};
+
+function createBaseNoParams(): NoParams {
+  return {};
+}
+
+export const NoParams = {
+  encode(_: NoParams, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NoParams {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNoParams();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): NoParams {
+    return {};
+  },
+
+  toJSON(_: NoParams): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<NoParams>, I>>(base?: I): NoParams {
+    return NoParams.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<NoParams>, I>>(_: I): NoParams {
+    const message = createBaseNoParams();
     return message;
   },
 };

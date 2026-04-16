@@ -273,7 +273,11 @@ export class MezonTransport {
     this.adapter.connect(host, port, createStatus, session.token, signal);
 
     this.adapter.onClose = onDisconnected;
-    this.adapter.onMessage = async (cid: number, message: any) => {
+    this.adapter.onMessage = async (
+      cid: number,
+      code: number,
+      message: any,
+    ) => {
       if (verbose && window && window.console) {
         console.log(
           "incomming message witch cid %o and message %o",
@@ -291,10 +295,10 @@ export class MezonTransport {
         if (message.error) {
           executor.reject(message.error);
         } else {
-          executor.resolve(message);
+          executor.resolve({ code, message });
         }
       } else {
-        await onMessage(0, message);
+        await onMessage(0, 0, message);
       }
     };
   }
@@ -305,7 +309,7 @@ export class MezonTransport {
   ): Promise<any> {
     const { urlPath, fetchOptions } = data;
     let untypedMessage = fetchOptions as any;
-    if (urlPath?.includes('/mezon.api.Mezon/')) {
+    if (urlPath?.includes("/mezon.api.Mezon/")) {
       untypedMessage = {
         api_request_event: {
           full_url: urlPath,
@@ -385,7 +389,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.Account.decode(response) as ApiAccount;
+        if (response.code != 0) {
+          return {} as ApiAccount;
+        }
+        return tsproto.Account.decode(response.message) as ApiAccount;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -749,8 +756,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiLinkAccountConfirmRequest;
+        }
         return tsproto.LinkAccountConfirmRequest.decode(
-          response,
+          response.message,
         ) as ApiLinkAccountConfirmRequest;
       }),
       new Promise<never>((_, reject) =>
@@ -787,8 +797,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiLinkAccountConfirmRequest;
+        }
         return tsproto.LinkAccountConfirmRequest.decode(
-          response,
+          response.message,
         ) as ApiLinkAccountConfirmRequest;
       }),
       new Promise<never>((_, reject) =>
@@ -826,7 +839,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.Session.decode(response) as ApiSession;
+        if (response.code != 0) {
+          return {} as ApiSession;
+        }
+        return tsproto.Session.decode(response.message) as ApiSession;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -903,7 +919,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.Session.decode(response) as ApiSession;
+        if (response.code != 0) {
+          return {} as ApiSession;
+        }
+        return tsproto.Session.decode(response.message) as ApiSession;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -941,7 +960,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.Session.decode(response) as ApiSession;
+        if (response.code != 0) {
+          return {} as ApiSession;
+        }
+        return tsproto.Session.decode(response.message) as ApiSession;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -999,7 +1021,12 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.ListUserActivity.decode(response) as ApiListUserActivity;
+        if (response.code != 0) {
+          return {} as ApiListUserActivity;
+        }
+        return tsproto.ListUserActivity.decode(
+          response.message,
+        ) as ApiListUserActivity;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1035,7 +1062,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.UserActivity.decode(response) as ApiUserActivity;
+        if (response.code != 0) {
+          return {} as ApiUserActivity;
+        }
+        return tsproto.UserActivity.decode(response.message) as ApiUserActivity;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1071,7 +1101,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.App.decode(response) as ApiApp;
+        if (response.code != 0) {
+          return {} as ApiApp;
+        }
+        return tsproto.App.decode(response.message) as ApiApp;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1109,7 +1142,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.AppList.decode(response) as ApiAppList;
+        if (response.code != 0) {
+          return {} as ApiAppList;
+        }
+        return tsproto.AppList.decode(response.message) as ApiAppList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1215,7 +1251,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.App.decode(response) as ApiApp;
+        if (response.code != 0) {
+          return {} as ApiApp;
+        }
+        return tsproto.App.decode(response.message) as ApiApp;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1256,7 +1295,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.App.decode(response) as ApiApp;
+        if (response.code != 0) {
+          return {} as ApiApp;
+        }
+        return tsproto.App.decode(response.message) as ApiApp;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1377,7 +1419,12 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.CategoryDescList.decode(response) as ApiCategoryDescList;
+        if (response.code != 0) {
+          return {} as ApiCategoryDescList;
+        }
+        return tsproto.CategoryDescList.decode(
+          response.message,
+        ) as ApiCategoryDescList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -1411,8 +1458,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiListChannelAppsResponse;
+        }
         return tsproto.ListChannelAppsResponse.decode(
-          response,
+          response.message,
         ) as ApiListChannelAppsResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -1458,8 +1508,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiChannelCanvasListResponse;
+        }
         return tsproto.ChannelCanvasListResponse.decode(
-          response,
+          response.message,
         ) as ApiChannelCanvasListResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -1570,8 +1623,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiListFavoriteChannelResponse;
+        }
         return tsproto.ListFavoriteChannelResponse.decode(
-          response,
+          response.message,
         ) as ApiListFavoriteChannelResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -1714,8 +1770,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiChannelAttachmentList;
+        }
         return tsproto.ChannelAttachmentList.decode(
-          response,
+          response.message,
         ) as ApiChannelAttachmentList;
       }),
       new Promise<never>((_, reject) =>
@@ -1757,8 +1816,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiChanEncryptionMethod;
+        }
         return tsproto.ChanEncryptionMethod.decode(
-          response,
+          response.message,
         ) as ApiChanEncryptionMethod;
       }),
       new Promise<never>((_, reject) =>
@@ -1922,8 +1984,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiChannelDescList;
+        }
         return tsproto.ListArchivedChannelDescsResponse.decode(
-          response,
+          response.message,
         ) as ApiChannelDescList;
       }),
       new Promise<never>((_, reject) =>
@@ -2011,7 +2076,12 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.ChannelUserList.decode(response) as ApiChannelUserList;
+        if (response.code != 0) {
+          return {} as ApiChannelUserList;
+        }
+        return tsproto.ChannelUserList.decode(
+          response.message,
+        ) as ApiChannelUserList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -2055,7 +2125,12 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.ChannelDescList.decode(response) as ApiChannelDescList;
+        if (response.code != 0) {
+          return {} as ApiChannelDescList;
+        }
+        return tsproto.ChannelDescList.decode(
+          response.message,
+        ) as ApiChannelDescList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -2091,8 +2166,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiChannelDescription;
+        }
         return tsproto.ChannelDescription.decode(
-          response,
+          response.message,
         ) as ApiChannelDescription;
       }),
       new Promise<never>((_, reject) =>
@@ -2129,8 +2207,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiAllUsersAddChannelResponse;
+        }
         return tsproto.AllUsersAddChannelResponse.decode(
-          response,
+          response.message,
         ) as ApiAllUsersAddChannelResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -2269,8 +2350,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiChannelSettingListResponse;
+        }
         return tsproto.ChannelSettingListResponse.decode(
-          response,
+          response.message,
         ) as ApiChannelSettingListResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -2307,8 +2391,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiVoiceChannelUserList;
+        }
         return tsproto.VoiceChannelUserList.decode(
-          response,
+          response.message,
         ) as ApiVoiceChannelUserList;
       }),
       new Promise<never>((_, reject) =>
@@ -2343,7 +2430,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.ClanDescList.decode(response) as ApiClanDescList;
+        if (response.code != 0) {
+          return {} as ApiClanDescList;
+        }
+        return tsproto.ClanDescList.decode(response.message) as ApiClanDescList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -2380,8 +2470,11 @@ export class MezonTransport {
     }
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiListChannelBadgeCountResponse;
+        }
         return tsproto.ListChannelBadgeCountResponse.decode(
-          response,
+          response.message,
         ) as ApiListChannelBadgeCountResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -2419,8 +2512,11 @@ export class MezonTransport {
     }
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiListUserOnlineResponse;
+        }
         return tsproto.ListUserOnlineResponse.decode(
-          response,
+          response.message,
         ) as ApiListUserOnlineResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -2462,7 +2558,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.ClanDesc.decode(response) as ApiClanDesc;
+        if (response.code != 0) {
+          return {} as ApiClanDesc;
+        }
+        return tsproto.ClanDesc.decode(response.message) as ApiClanDesc;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -2614,7 +2713,12 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.BannedUserList.decode(response) as ApiBannedUserList;
+        if (response.code != 0) {
+          return {} as ApiBannedUserList;
+        }
+        return tsproto.BannedUserList.decode(
+          response.message,
+        ) as ApiBannedUserList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -2741,7 +2845,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.ClanUserList.decode(response) as ApiClanUserList;
+        if (response.code != 0) {
+          return {} as ApiClanUserList;
+        }
+        return tsproto.ClanUserList.decode(response.message) as ApiClanUserList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -2778,8 +2885,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiClanUserStatusList;
+        }
         return tsproto.ClanUserStatusList.decode(
-          response,
+          response.message,
         ) as ApiClanUserStatusList;
       }),
       new Promise<never>((_, reject) =>
@@ -2816,7 +2926,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.CategoryDesc.decode(response) as ApiCategoryDesc;
+        if (response.code != 0) {
+          return {} as ApiCategoryDesc;
+        }
+        return tsproto.CategoryDesc.decode(response.message) as ApiCategoryDesc;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -2943,8 +3056,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiRegistFcmDeviceTokenResponse;
+        }
         return tsproto.RegistFcmDeviceTokenResponse.decode(
-          response,
+          response.message,
         ) as ApiRegistFcmDeviceTokenResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -3164,7 +3280,12 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.EmojiRecentList.decode(response) as ApiEmojiRecentList;
+        if (response.code != 0) {
+          return {} as ApiEmojiRecentList;
+        }
+        return tsproto.EmojiRecentList.decode(
+          response.message,
+        ) as ApiEmojiRecentList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3189,8 +3310,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiEmojiListedResponse;
+        }
         return tsproto.EmojiListedResponse.decode(
-          response,
+          response.message,
         ) as ApiEmojiListedResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -3227,8 +3351,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiSearchMessageResponse;
+        }
         return tsproto.SearchMessageResponse.decode(
-          response,
+          response.message,
         ) as ApiSearchMessageResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -3295,7 +3422,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.EventList.decode(response) as ApiEventList;
+        if (response.code != 0) {
+          return {} as ApiEventList;
+        }
+        return tsproto.EventList.decode(response.message) as ApiEventList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3331,7 +3461,12 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.EventManagement.decode(response) as ApiEventManagement;
+        if (response.code != 0) {
+          return {} as ApiEventManagement;
+        }
+        return tsproto.EventManagement.decode(
+          response.message,
+        ) as ApiEventManagement;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3520,7 +3655,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.FriendList.decode(response) as ApiFriendList;
+        if (response.code != 0) {
+          return {} as ApiFriendList;
+        }
+        return tsproto.FriendList.decode(response.message) as ApiFriendList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3553,8 +3691,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiAddFriendsResponse;
+        }
         return tsproto.AddFriendsResponse.decode(
-          response,
+          response.message,
         ) as ApiAddFriendsResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -3647,8 +3788,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiNotificationChannelCategorySettingList;
+        }
         return tsproto.NotificationChannelCategorySettingList.decode(
-          response,
+          response.message,
         ) as ApiNotificationChannelCategorySettingList;
       }),
       new Promise<never>((_, reject) =>
@@ -3686,7 +3830,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.ClanProfile.decode(response) as ApiClanProfile;
+        if (response.code != 0) {
+          return {} as ApiClanProfile;
+        }
+        return tsproto.ClanProfile.decode(response.message) as ApiClanProfile;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3720,8 +3867,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiNotificationUserChannel;
+        }
         return tsproto.NotificationUserChannel.decode(
-          response,
+          response.message,
         ) as ApiNotificationUserChannel;
       }),
       new Promise<never>((_, reject) =>
@@ -3754,8 +3904,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiNotificationUserChannel;
+        }
         return tsproto.NotificationUserChannel.decode(
-          response,
+          response.message,
         ) as ApiNotificationUserChannel;
       }),
       new Promise<never>((_, reject) =>
@@ -3788,8 +3941,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiNotificationSetting;
+        }
         return tsproto.NotificationSetting.decode(
-          response,
+          response.message,
         ) as ApiNotificationSetting;
       }),
       new Promise<never>((_, reject) =>
@@ -3822,8 +3978,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiNotifiReactMessage;
+        }
         return tsproto.NotifiReactMessage.decode(
-          response,
+          response.message,
         ) as ApiNotifiReactMessage;
       }),
       new Promise<never>((_, reject) =>
@@ -3885,7 +4044,12 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.GetKeyServerResp.decode(response) as ApiGetKeyServerResp;
+        if (response.code != 0) {
+          return {} as ApiGetKeyServerResp;
+        }
+        return tsproto.GetKeyServerResp.decode(
+          response.message,
+        ) as ApiGetKeyServerResp;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3921,7 +4085,12 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.LinkInviteUser.decode(response) as ApiLinkInviteUser;
+        if (response.code != 0) {
+          return {} as ApiLinkInviteUser;
+        }
+        return tsproto.LinkInviteUser.decode(
+          response.message,
+        ) as ApiLinkInviteUser;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3958,7 +4127,12 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.InviteUserRes.decode(response) as ApiInviteUserRes;
+        if (response.code != 0) {
+          return {} as ApiInviteUserRes;
+        }
+        return tsproto.InviteUserRes.decode(
+          response.message,
+        ) as ApiInviteUserRes;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4028,7 +4202,12 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.ChannelDescList.decode(response) as ApiChannelDescList;
+        if (response.code != 0) {
+          return {} as ApiChannelDescList;
+        }
+        return tsproto.ChannelDescList.decode(
+          response.message,
+        ) as ApiChannelDescList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4089,8 +4268,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiMezonOauthClientList;
+        }
         return tsproto.MezonOauthClientList.decode(
-          response,
+          response.message,
         ) as ApiMezonOauthClientList;
       }),
       new Promise<never>((_, reject) =>
@@ -4519,7 +4701,12 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.PermissionList.decode(response) as ApiPermissionList;
+        if (response.code != 0) {
+          return {} as ApiPermissionList;
+        }
+        return tsproto.PermissionList.decode(
+          response.message,
+        ) as ApiPermissionList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4557,8 +4744,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiPermissionRoleChannelListEventResponse;
+        }
         return tsproto.PermissionRoleChannelListEventResponse.decode(
-          response,
+          response.message,
         ) as ApiPermissionRoleChannelListEventResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -4672,8 +4862,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiChannelMessageHeader;
+        }
         return tsproto.ChannelMessageHeader.decode(
-          response,
+          response.message,
         ) as ApiChannelMessageHeader;
       }),
       new Promise<never>((_, reject) =>
@@ -4710,8 +4903,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiChannelMessageHeader;
+        }
         return tsproto.ChannelMessageHeader.decode(
-          response,
+          response.message,
         ) as ApiChannelMessageHeader;
       }),
       new Promise<never>((_, reject) =>
@@ -4744,8 +4940,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiGetPubKeysResponse;
+        }
         return tsproto.GetPubKeysResponse.decode(
-          response,
+          response.message,
         ) as ApiGetPubKeysResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -4928,8 +5127,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiRoleListEventResponse;
+        }
         return tsproto.RoleListEventResponse.decode(
-          response,
+          response.message,
         ) as ApiRoleListEventResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -4966,7 +5168,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.Role.decode(response) as ApiRole;
+        if (response.code != 0) {
+          return {} as ApiRole;
+        }
+        return tsproto.Role.decode(response.message) as ApiRole;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -5125,7 +5330,12 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.PermissionList.decode(response) as ApiPermissionList;
+        if (response.code != 0) {
+          return {} as ApiPermissionList;
+        }
+        return tsproto.PermissionList.decode(
+          response.message,
+        ) as ApiPermissionList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -5168,7 +5378,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.RoleUserList.decode(response) as ApiRoleUserList;
+        if (response.code != 0) {
+          return {} as ApiRoleUserList;
+        }
+        return tsproto.RoleUserList.decode(response.message) as ApiRoleUserList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -5209,7 +5422,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.RoleList.decode(response) as ApiRoleList;
+        if (response.code != 0) {
+          return {} as ApiRoleList;
+        }
+        return tsproto.RoleList.decode(response.message) as ApiRoleList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -5247,7 +5463,12 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.ChannelDescList.decode(response) as ApiChannelDescList;
+        if (response.code != 0) {
+          return {} as ApiChannelDescList;
+        }
+        return tsproto.ChannelDescList.decode(
+          response.message,
+        ) as ApiChannelDescList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -5459,8 +5680,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiStickerListedResponse;
+        }
         return tsproto.StickerListedResponse.decode(
-          response,
+          response.message,
         ) as ApiStickerListedResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -5497,8 +5721,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiRegisterStreamingChannelResponse;
+        }
         return tsproto.RegisterStreamingChannelResponse.decode(
-          response,
+          response.message,
         ) as ApiRegisterStreamingChannelResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -5543,8 +5770,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiStreamingChannelUserList;
+        }
         return tsproto.StreamingChannelUserList.decode(
-          response,
+          response.message,
         ) as ApiStreamingChannelUserList;
       }),
       new Promise<never>((_, reject) =>
@@ -5570,8 +5800,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiSystemMessagesList;
+        }
         return tsproto.SystemMessagesList.decode(
-          response,
+          response.message,
         ) as ApiSystemMessagesList;
       }),
       new Promise<never>((_, reject) =>
@@ -5644,7 +5877,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.SdTopicList.decode(response) as ApiSdTopicList;
+        if (response.code != 0) {
+          return {} as ApiSdTopicList;
+        }
+        return tsproto.SdTopicList.decode(response.message) as ApiSdTopicList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -5680,7 +5916,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.SdTopic.decode(response) as ApiSdTopic;
+        if (response.code != 0) {
+          return {} as ApiSdTopic;
+        }
+        return tsproto.SdTopic.decode(response.message) as ApiSdTopic;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -5754,7 +5993,12 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.SystemMessage.decode(response) as ApiSystemMessage;
+        if (response.code != 0) {
+          return {} as ApiSystemMessage;
+        }
+        return tsproto.SystemMessage.decode(
+          response.message,
+        ) as ApiSystemMessage;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -5846,8 +6090,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiChannelDescList;
+        }
         return tsproto.ChannelDescListNoPool.decode(
-          response,
+          response.message,
         ) as ApiChannelDescList;
       }),
       new Promise<never>((_, reject) =>
@@ -6011,7 +6258,12 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.UploadAttachment.decode(response) as ApiUploadAttachment;
+        if (response.code != 0) {
+          return {} as ApiUploadAttachment;
+        }
+        return tsproto.UploadAttachment.decode(
+          response.message,
+        ) as ApiUploadAttachment;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -6047,7 +6299,12 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.UploadAttachment.decode(response) as ApiUploadAttachment;
+        if (response.code != 0) {
+          return {} as ApiUploadAttachment;
+        }
+        return tsproto.UploadAttachment.decode(
+          response.message,
+        ) as ApiUploadAttachment;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -6082,8 +6339,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as MultipartUploadAttachment;
+        }
         return tsproto.MultipartUploadAttachment.decode(
-          response,
+          response.message,
         ) as MultipartUploadAttachment;
       }),
       new Promise<never>((_, reject) =>
@@ -6177,7 +6437,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.AllUserClans.decode(response) as ApiAllUserClans;
+        if (response.code != 0) {
+          return {} as ApiAllUserClans;
+        }
+        return tsproto.AllUserClans.decode(response.message) as ApiAllUserClans;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -6213,8 +6476,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiUserPermissionInChannelListResponse;
+        }
         return tsproto.UserPermissionInChannelListResponse.decode(
-          response,
+          response.message,
         ) as ApiUserPermissionInChannelListResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -6237,7 +6503,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.UserStatus.decode(response) as ApiUserStatus;
+        if (response.code != 0) {
+          return {} as ApiUserStatus;
+        }
+        return tsproto.UserStatus.decode(response.message) as ApiUserStatus;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -6421,8 +6690,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiWebhookListResponse;
+        }
         return tsproto.WebhookListResponse.decode(
-          response,
+          response.message,
         ) as ApiWebhookListResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -6524,8 +6796,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiEditChannelCanvasResponse;
+        }
         return tsproto.EditChannelCanvasResponse.decode(
-          response,
+          response.message,
         ) as ApiEditChannelCanvasResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -6567,8 +6842,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiChannelCanvasDetailResponse;
+        }
         return tsproto.ChannelCanvasDetailResponse.decode(
-          response,
+          response.message,
         ) as ApiChannelCanvasDetailResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -6649,8 +6927,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiListOnboardingResponse;
+        }
         return tsproto.ListOnboardingResponse.decode(
-          response,
+          response.message,
         ) as ApiListOnboardingResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -6687,8 +6968,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiListOnboardingResponse;
+        }
         return tsproto.ListOnboardingResponse.decode(
-          response,
+          response.message,
         ) as ApiListOnboardingResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -6764,7 +7048,12 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.OnboardingItem.decode(response) as ApiOnboardingItem;
+        if (response.code != 0) {
+          return {} as ApiOnboardingItem;
+        }
+        return tsproto.OnboardingItem.decode(
+          response.message,
+        ) as ApiOnboardingItem;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -6841,8 +7130,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiGenerateClanWebhookResponse;
+        }
         return tsproto.GenerateClanWebhookResponse.decode(
-          response,
+          response.message,
         ) as ApiGenerateClanWebhookResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -6882,8 +7174,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiListClanWebhookResponse;
+        }
         return tsproto.ListClanWebhookResponse.decode(
-          response,
+          response.message,
         ) as ApiListClanWebhookResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -7001,7 +7296,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.SdTopic.decode(response) as ApiSdTopic;
+        if (response.code != 0) {
+          return {} as ApiSdTopic;
+        }
+        return tsproto.SdTopic.decode(response.message) as ApiSdTopic;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -7041,8 +7339,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiListOnboardingStepResponse;
+        }
         return tsproto.ListOnboardingStepResponse.decode(
-          response,
+          response.message,
         ) as ApiListOnboardingStepResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -7162,8 +7463,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiGenerateMeetTokenResponse;
+        }
         return tsproto.GenerateMeetTokenResponse.decode(
-          response,
+          response.message,
         ) as ApiGenerateMeetTokenResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -7202,7 +7506,12 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.MezonOauthClient.decode(response) as ApiMezonOauthClient;
+        if (response.code != 0) {
+          return {} as ApiMezonOauthClient;
+        }
+        return tsproto.MezonOauthClient.decode(
+          response.message,
+        ) as ApiMezonOauthClient;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -7238,7 +7547,12 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.MezonOauthClient.decode(response) as ApiMezonOauthClient;
+        if (response.code != 0) {
+          return {} as ApiMezonOauthClient;
+        }
+        return tsproto.MezonOauthClient.decode(
+          response.message,
+        ) as ApiMezonOauthClient;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -7273,8 +7587,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiCreateHashChannelAppsResponse;
+        }
         return tsproto.GenerateHashChannelAppsResponse.decode(
-          response,
+          response.message,
         ) as ApiCreateHashChannelAppsResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -7401,8 +7718,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiGenerateMezonMeetResponse;
+        }
         return tsproto.GenerateMezonMeetResponse.decode(
-          response,
+          response.message,
         ) as ApiGenerateMezonMeetResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -7560,8 +7880,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiChannelDescription;
+        }
         return tsproto.ChannelDescription.decode(
-          response,
+          response.message,
         ) as ApiChannelDescription;
       }),
       new Promise<never>((_, reject) =>
@@ -7873,8 +8196,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiQuickMenuAccessList;
+        }
         return tsproto.QuickMenuAccessList.decode(
-          response,
+          response.message,
         ) as ApiQuickMenuAccessList;
       }),
       new Promise<never>((_, reject) =>
@@ -7977,7 +8303,12 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.ForSaleItemList.decode(response) as ApiForSaleItemList;
+        if (response.code != 0) {
+          return {} as ApiForSaleItemList;
+        }
+        return tsproto.ForSaleItemList.decode(
+          response.message,
+        ) as ApiForSaleItemList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8013,8 +8344,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiIsFollowerResponse;
+        }
         return tsproto.IsFollowerResponse.decode(
-          response,
+          response.message,
         ) as ApiIsFollowerResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -8084,7 +8418,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.Session.decode(response) as ApiSession;
+        if (response.code != 0) {
+          return {} as ApiSession;
+        }
+        return tsproto.Session.decode(response.message) as ApiSession;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8125,7 +8462,12 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.IsBannedResponse.decode(response) as ApiIsBannedResponse;
+        if (response.code != 0) {
+          return {} as ApiIsBannedResponse;
+        }
+        return tsproto.IsBannedResponse.decode(
+          response.message,
+        ) as ApiIsBannedResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8272,7 +8614,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.ChannelMessageUpdate.decode(response) as any;
+        if (response.code != 0) {
+          return {} as any;
+        }
+        return tsproto.ChannelMessageUpdate.decode(response.message) as any;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8321,7 +8666,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.ChannelMessageRemove.decode(response) as any;
+        if (response.code != 0) {
+          return {} as any;
+        }
+        return tsproto.ChannelMessageRemove.decode(response.message) as any;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(

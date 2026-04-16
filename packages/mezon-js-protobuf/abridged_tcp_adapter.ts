@@ -41,7 +41,7 @@ export class AbridgedTcpAdapter implements TransportAdapter {
           }
         }
 
-        value!(0, envelope);
+        value!(0, 0, envelope);
       };
     } else {
       value = null;
