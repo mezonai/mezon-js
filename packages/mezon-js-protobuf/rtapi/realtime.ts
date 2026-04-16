@@ -399,20 +399,24 @@ export interface Envelope {
     | AllowAnonymousEvent
     | undefined;
   /** Message sending to another server for update localcache */
-  update_localcache_event?:
-    | UpdateLocalCacheEvent
+  api_request_event?:
+    | ApiRequestEvent
     | undefined;
   /** Clan Created Event */
   clan_created_event?:
     | ClanCreatedEvent
     | undefined;
   /** Voice Agent Event */
-  aiagent_enabled_event?: AIAgentEnabledEvent | undefined;
+  aiagent_enabled_event?:
+    | AIAgentEnabledEvent
+    | undefined;
+  /** Ban Channel User Event */
+  list_channel_users_banned_event?: ListChannelUsersBannedEvent | undefined;
 }
 
-export interface UpdateLocalCacheEvent {
-  params1: string[];
-  params2: string[];
+export interface ApiRequestEvent {
+  full_url: string;
+  body: Uint8Array;
 }
 
 export interface FollowEvent {
@@ -425,6 +429,10 @@ export interface BannedUserEvent {
   channel_id: string;
   clan_id: string;
   ban_time: number;
+}
+
+export interface ListChannelUsersBannedEvent {
+  banned_user_ids: string[];
 }
 
 export interface ChannelCanvas {
@@ -1300,7 +1308,7 @@ export interface UserPresence {
   /** The user this presence belongs to. */
   user_id: string;
   /** A unique session ID identifying the particular connection, because the user may have many. */
-  session_id: string;
+  session_id: number;
   /** The username for display purposes. */
   username: string;
   /** A user-set status message for this stream, if applicable. */
@@ -1801,9 +1809,10 @@ function createBaseEnvelope(): Envelope {
     ban_user_event: undefined,
     active_archived_thread: undefined,
     allow_anonymous_event: undefined,
-    update_localcache_event: undefined,
+    api_request_event: undefined,
     clan_created_event: undefined,
     aiagent_enabled_event: undefined,
+    list_channel_users_banned_event: undefined,
   };
 }
 
@@ -2083,14 +2092,17 @@ export const Envelope = {
     if (message.allow_anonymous_event !== undefined) {
       AllowAnonymousEvent.encode(message.allow_anonymous_event, writer.uint32(730).fork()).ldelim();
     }
-    if (message.update_localcache_event !== undefined) {
-      UpdateLocalCacheEvent.encode(message.update_localcache_event, writer.uint32(738).fork()).ldelim();
+    if (message.api_request_event !== undefined) {
+      ApiRequestEvent.encode(message.api_request_event, writer.uint32(738).fork()).ldelim();
     }
     if (message.clan_created_event !== undefined) {
       ClanCreatedEvent.encode(message.clan_created_event, writer.uint32(746).fork()).ldelim();
     }
     if (message.aiagent_enabled_event !== undefined) {
       AIAgentEnabledEvent.encode(message.aiagent_enabled_event, writer.uint32(754).fork()).ldelim();
+    }
+    if (message.list_channel_users_banned_event !== undefined) {
+      ListChannelUsersBannedEvent.encode(message.list_channel_users_banned_event, writer.uint32(762).fork()).ldelim();
     }
     return writer;
   },
@@ -2744,7 +2756,7 @@ export const Envelope = {
             break;
           }
 
-          message.update_localcache_event = UpdateLocalCacheEvent.decode(reader, reader.uint32());
+          message.api_request_event = ApiRequestEvent.decode(reader, reader.uint32());
           continue;
         case 93:
           if (tag !== 746) {
@@ -2759,6 +2771,13 @@ export const Envelope = {
           }
 
           message.aiagent_enabled_event = AIAgentEnabledEvent.decode(reader, reader.uint32());
+          continue;
+        case 95:
+          if (tag !== 762) {
+            break;
+          }
+
+          message.list_channel_users_banned_event = ListChannelUsersBannedEvent.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -2978,14 +2997,17 @@ export const Envelope = {
       allow_anonymous_event: isSet(object.allow_anonymous_event)
         ? AllowAnonymousEvent.fromJSON(object.allow_anonymous_event)
         : undefined,
-      update_localcache_event: isSet(object.update_localcache_event)
-        ? UpdateLocalCacheEvent.fromJSON(object.update_localcache_event)
+      api_request_event: isSet(object.api_request_event)
+        ? ApiRequestEvent.fromJSON(object.api_request_event)
         : undefined,
       clan_created_event: isSet(object.clan_created_event)
         ? ClanCreatedEvent.fromJSON(object.clan_created_event)
         : undefined,
       aiagent_enabled_event: isSet(object.aiagent_enabled_event)
         ? AIAgentEnabledEvent.fromJSON(object.aiagent_enabled_event)
+        : undefined,
+      list_channel_users_banned_event: isSet(object.list_channel_users_banned_event)
+        ? ListChannelUsersBannedEvent.fromJSON(object.list_channel_users_banned_event)
         : undefined,
     };
   },
@@ -3267,14 +3289,17 @@ export const Envelope = {
     if (message.allow_anonymous_event !== undefined) {
       obj.allow_anonymous_event = AllowAnonymousEvent.toJSON(message.allow_anonymous_event);
     }
-    if (message.update_localcache_event !== undefined) {
-      obj.update_localcache_event = UpdateLocalCacheEvent.toJSON(message.update_localcache_event);
+    if (message.api_request_event !== undefined) {
+      obj.api_request_event = ApiRequestEvent.toJSON(message.api_request_event);
     }
     if (message.clan_created_event !== undefined) {
       obj.clan_created_event = ClanCreatedEvent.toJSON(message.clan_created_event);
     }
     if (message.aiagent_enabled_event !== undefined) {
       obj.aiagent_enabled_event = AIAgentEnabledEvent.toJSON(message.aiagent_enabled_event);
+    }
+    if (message.list_channel_users_banned_event !== undefined) {
+      obj.list_channel_users_banned_event = ListChannelUsersBannedEvent.toJSON(message.list_channel_users_banned_event);
     }
     return obj;
   },
@@ -3578,10 +3603,9 @@ export const Envelope = {
       (object.allow_anonymous_event !== undefined && object.allow_anonymous_event !== null)
         ? AllowAnonymousEvent.fromPartial(object.allow_anonymous_event)
         : undefined;
-    message.update_localcache_event =
-      (object.update_localcache_event !== undefined && object.update_localcache_event !== null)
-        ? UpdateLocalCacheEvent.fromPartial(object.update_localcache_event)
-        : undefined;
+    message.api_request_event = (object.api_request_event !== undefined && object.api_request_event !== null)
+      ? ApiRequestEvent.fromPartial(object.api_request_event)
+      : undefined;
     message.clan_created_event = (object.clan_created_event !== undefined && object.clan_created_event !== null)
       ? ClanCreatedEvent.fromPartial(object.clan_created_event)
       : undefined;
@@ -3589,70 +3613,50 @@ export const Envelope = {
       (object.aiagent_enabled_event !== undefined && object.aiagent_enabled_event !== null)
         ? AIAgentEnabledEvent.fromPartial(object.aiagent_enabled_event)
         : undefined;
+    message.list_channel_users_banned_event =
+      (object.list_channel_users_banned_event !== undefined && object.list_channel_users_banned_event !== null)
+        ? ListChannelUsersBannedEvent.fromPartial(object.list_channel_users_banned_event)
+        : undefined;
     return message;
   },
 };
 
-function createBaseUpdateLocalCacheEvent(): UpdateLocalCacheEvent {
-  return { params1: [], params2: [] };
+function createBaseApiRequestEvent(): ApiRequestEvent {
+  return { full_url: "", body: new Uint8Array(0) };
 }
 
-export const UpdateLocalCacheEvent = {
-  encode(message: UpdateLocalCacheEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    writer.uint32(10).fork();
-    for (const v of message.params1) {
-      writer.int64(v);
+export const ApiRequestEvent = {
+  encode(message: ApiRequestEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.full_url !== "") {
+      writer.uint32(10).string(message.full_url);
     }
-    writer.ldelim();
-    writer.uint32(18).fork();
-    for (const v of message.params2) {
-      writer.int64(v);
+    if (message.body.length !== 0) {
+      writer.uint32(18).bytes(message.body);
     }
-    writer.ldelim();
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateLocalCacheEvent {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ApiRequestEvent {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUpdateLocalCacheEvent();
+    const message = createBaseApiRequestEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag === 8) {
-            message.params1.push(longToString(reader.int64() as Long));
-
-            continue;
+          if (tag !== 10) {
+            break;
           }
 
-          if (tag === 10) {
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
-              message.params1.push(longToString(reader.int64() as Long));
-            }
-
-            continue;
-          }
-
-          break;
+          message.full_url = reader.string();
+          continue;
         case 2:
-          if (tag === 16) {
-            message.params2.push(longToString(reader.int64() as Long));
-
-            continue;
+          if (tag !== 18) {
+            break;
           }
 
-          if (tag === 18) {
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
-              message.params2.push(longToString(reader.int64() as Long));
-            }
-
-            continue;
-          }
-
-          break;
+          message.body = reader.bytes();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3662,31 +3666,31 @@ export const UpdateLocalCacheEvent = {
     return message;
   },
 
-  fromJSON(object: any): UpdateLocalCacheEvent {
+  fromJSON(object: any): ApiRequestEvent {
     return {
-      params1: globalThis.Array.isArray(object?.params1) ? object.params1.map((e: any) => globalThis.String(e)) : [],
-      params2: globalThis.Array.isArray(object?.params2) ? object.params2.map((e: any) => globalThis.String(e)) : [],
+      full_url: isSet(object.full_url) ? globalThis.String(object.full_url) : "",
+      body: isSet(object.body) ? bytesFromBase64(object.body) : new Uint8Array(0),
     };
   },
 
-  toJSON(message: UpdateLocalCacheEvent): unknown {
+  toJSON(message: ApiRequestEvent): unknown {
     const obj: any = {};
-    if (message.params1?.length) {
-      obj.params1 = message.params1;
+    if (message.full_url !== "") {
+      obj.full_url = message.full_url;
     }
-    if (message.params2?.length) {
-      obj.params2 = message.params2;
+    if (message.body.length !== 0) {
+      obj.body = base64FromBytes(message.body);
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<UpdateLocalCacheEvent>, I>>(base?: I): UpdateLocalCacheEvent {
-    return UpdateLocalCacheEvent.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<ApiRequestEvent>, I>>(base?: I): ApiRequestEvent {
+    return ApiRequestEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<UpdateLocalCacheEvent>, I>>(object: I): UpdateLocalCacheEvent {
-    const message = createBaseUpdateLocalCacheEvent();
-    message.params1 = object.params1?.map((e) => e) || [];
-    message.params2 = object.params2?.map((e) => e) || [];
+  fromPartial<I extends Exact<DeepPartial<ApiRequestEvent>, I>>(object: I): ApiRequestEvent {
+    const message = createBaseApiRequestEvent();
+    message.full_url = object.full_url ?? "";
+    message.body = object.body ?? new Uint8Array(0);
     return message;
   },
 };
@@ -3876,6 +3880,79 @@ export const BannedUserEvent = {
     message.channel_id = object.channel_id ?? "0";
     message.clan_id = object.clan_id ?? "0";
     message.ban_time = object.ban_time ?? 0;
+    return message;
+  },
+};
+
+function createBaseListChannelUsersBannedEvent(): ListChannelUsersBannedEvent {
+  return { banned_user_ids: [] };
+}
+
+export const ListChannelUsersBannedEvent = {
+  encode(message: ListChannelUsersBannedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    writer.uint32(10).fork();
+    for (const v of message.banned_user_ids) {
+      writer.int64(v);
+    }
+    writer.ldelim();
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelUsersBannedEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListChannelUsersBannedEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag === 8) {
+            message.banned_user_ids.push(longToString(reader.int64() as Long));
+
+            continue;
+          }
+
+          if (tag === 10) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.banned_user_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListChannelUsersBannedEvent {
+    return {
+      banned_user_ids: globalThis.Array.isArray(object?.banned_user_ids)
+        ? object.banned_user_ids.map((e: any) => globalThis.String(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ListChannelUsersBannedEvent): unknown {
+    const obj: any = {};
+    if (message.banned_user_ids?.length) {
+      obj.banned_user_ids = message.banned_user_ids;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListChannelUsersBannedEvent>, I>>(base?: I): ListChannelUsersBannedEvent {
+    return ListChannelUsersBannedEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListChannelUsersBannedEvent>, I>>(object: I): ListChannelUsersBannedEvent {
+    const message = createBaseListChannelUsersBannedEvent();
+    message.banned_user_ids = object.banned_user_ids?.map((e) => e) || [];
     return message;
   },
 };
@@ -11293,7 +11370,7 @@ export const StreamPresenceEvent = {
 };
 
 function createBaseUserPresence(): UserPresence {
-  return { user_id: "0", session_id: "", username: "", status: undefined, is_mobile: false, user_status: "" };
+  return { user_id: "0", session_id: 0, username: "", status: undefined, is_mobile: false, user_status: "" };
 }
 
 export const UserPresence = {
@@ -11301,8 +11378,8 @@ export const UserPresence = {
     if (message.user_id !== "0") {
       writer.uint32(8).int64(message.user_id);
     }
-    if (message.session_id !== "") {
-      writer.uint32(18).string(message.session_id);
+    if (message.session_id !== 0) {
+      writer.uint32(16).int32(message.session_id);
     }
     if (message.username !== "") {
       writer.uint32(26).string(message.username);
@@ -11334,11 +11411,11 @@ export const UserPresence = {
           message.user_id = longToString(reader.int64() as Long);
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.session_id = reader.string();
+          message.session_id = reader.int32();
           continue;
         case 3:
           if (tag !== 26) {
@@ -11380,7 +11457,7 @@ export const UserPresence = {
   fromJSON(object: any): UserPresence {
     return {
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
-      session_id: isSet(object.session_id) ? globalThis.String(object.session_id) : "",
+      session_id: isSet(object.session_id) ? globalThis.Number(object.session_id) : 0,
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       status: isSet(object.status) ? String(object.status) : undefined,
       is_mobile: isSet(object.is_mobile) ? globalThis.Boolean(object.is_mobile) : false,
@@ -11393,8 +11470,8 @@ export const UserPresence = {
     if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
-    if (message.session_id !== "") {
-      obj.session_id = message.session_id;
+    if (message.session_id !== 0) {
+      obj.session_id = Math.round(message.session_id);
     }
     if (message.username !== "") {
       obj.username = message.username;
@@ -11417,7 +11494,7 @@ export const UserPresence = {
   fromPartial<I extends Exact<DeepPartial<UserPresence>, I>>(object: I): UserPresence {
     const message = createBaseUserPresence();
     message.user_id = object.user_id ?? "0";
-    message.session_id = object.session_id ?? "";
+    message.session_id = object.session_id ?? 0;
     message.username = object.username ?? "";
     message.status = object.status ?? undefined;
     message.is_mobile = object.is_mobile ?? false;

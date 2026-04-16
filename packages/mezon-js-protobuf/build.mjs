@@ -19,6 +19,7 @@ const external = [
   'protobufjs',
   'protobufjs/minimal',
   'long',
+  'js-native',
 ];
 
 // Shared esbuild config
@@ -27,7 +28,7 @@ const config = {
   entryPoints: ['index.ts'],
   bundle: true,
   target: 'es6',
-  platform: 'neutral',
+  platform: 'node',
   treeShaking: true,
   globalName: 'mezonjsprotobuf',
   external,

@@ -17,18 +17,24 @@
 import {Client} from "mezon-js";
 
 var useSSL = true; // Enable if server is run with an SSL certificate.
-var clientgw = new Client("defaultkey", "dev-mezon.nccsoft.vn", "8088", useSSL);
-var client = new Client("defaultkey", "172.16.11.90", "7350", false);
+var client = new Client("defaultkey", "dev-mezon.nccsoft.vn", "8088", useSSL);
 
-clientgw.authenticateEmail("pocolomos@gmail.com", "xxxxxxxxxxx").then(async session => {
-
-  console.log(await client.sessionRefresh(session))
-  //const socket = client.createSocket(false, "localhost", "7349", true, new WebSocketAdapterPb());
-  //const session2 = await socket.connect(session, true, "desktop");
-  //console.log("session", session2);
-  //const resp = await socket.writeEphemeralMessage("1780188277182042112","1775732550744936448", "1775820446206267392", 2, false, {'t': 'Hello from Mezon JS Webpack Example with Protobuf!'});
-  //console.log('resp', resp);
+client.authenticateEmail("pocolomos@gmail.com", "C0nandoiner123$").then(async session => {
+  const session2 = await client.connect(session, true, true);
+  console.log("session 2", session2);
   
+  client.onchannelmessage = function(event) {
+    console.log("on channel message", event);
+  }
+
+  setTimeout(async () => {
+    console.log("Socket State after 1s:"); 
+    console.log(await client.joinClanChat(session, "2041858765849890816"));
+    await client.writeChatMessage(session, "2041858765849890816", "2041858767636664320", 2, true, {t:"OK"}, [], [], [], false, false, "", 0);
+    client.listChannelDescs(session, 1000, 0, 1, "2041858765849890816", 1).then(message => {
+     console.log("response ", message);
+    });
+  }, 1000);
 }).catch(e => {
-  console.log("error authenticating.", e);
+  console.log("got error", e);
 });

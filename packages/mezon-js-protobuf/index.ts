@@ -1,4 +1,6 @@
-export * from "./web_socket_adapter_pb";
+export * from "./transport_adapter";
+export * from "./abridged_tcp_adapter";
+export * from "./web_socket_adapter";
 export * from "./api/api";
 export {
   ActiveArchivedThread,
@@ -8,4 +10,5 @@ export {
   ChannelMessageRemove,
   ChannelMessageUpdate,
   ChannelMessageSend,
+  ChannelMessageAck
 } from "./rtapi/realtime";

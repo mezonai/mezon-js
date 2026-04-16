@@ -18,13 +18,13 @@ Mezon JavaScript Protobuf adapter
 
     ```js
     import {Client} from "mezon-js";
-    import {WebSocketAdapterPb} from "mezon-js-protobuf"
+    import {WebSocketAdapter} from "mezon-js-protobuf"
 
     const useSSL = false; // Enable if server is run with an SSL certificate.
     const client = new Client("defaultkey", "127.0.0.1", 7350, useSSL);
 
     const trace = false;
-    const socket = client.createSocket(useSSL, trace, new WebSocketAdapterPb());
+    const socket = client.createSocket(useSSL, trace, new WebSocketAdapter());
     ```
 
 3. Use the WebSocket:

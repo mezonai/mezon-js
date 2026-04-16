@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "include": [
-    "./*",
+    "./*", "../mezon-js-protobuf/abridged_tcp_adapter.ts",
   ],
   "compilerOptions": {
     "outDir": "dist",
@@ -20,6 +20,10 @@
       "dom",
       "es6"
     ],
+    "paths": {
+      "js-native": ["../js-native/index.js"] 
+    },
+    "allowJs": true
   },
   "exclude": [
     "node_modules",

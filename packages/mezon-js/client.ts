@@ -40,7 +40,6 @@ import {
   ApiFriendList,
   ApiNotificationList,
   ApiUpdateAccountRequest,
-  MezonApi,
   ApiSession,
   ApiClanProfile,
   ApiChannelUserList,
@@ -172,8 +171,6 @@ import {
   ApiMeetParticipantRequest,
   ApiLinkAccountConfirmRequest,
   ApiLinkAccountMezon,
-  ApiUser,
-  ApiFriend,
   ApiAddFriendsResponse,
   ApiUpdateUsernameRequest,
   ApiBannedUserList,
@@ -191,10 +188,81 @@ import {
   ApiDetailChannelTimelineRequest,
   ApiDetailChannelTimelineResponse,
   ApiMutedChannelList,
-} from "./api";
+  AddClanUserEvent,
+  AddFriend,
+  AiAgentEnabledEvent,
+  AllowAnonymousEvent,
+  ApiMessageReaction,
+  ApiNotification,
+  ApiWebhook,
+  BannedUserEvent,
+  BlockFriend,
+  CategoryEvent,
+  ChannelAppEvent,
+  ChannelCanvas,
+  ChannelCreatedEvent,
+  ChannelDeletedEvent,
+  ChannelPresenceEvent,
+  ChannelUpdatedEvent,
+  ClanDeletedEvent,
+  ClanProfileUpdatedEvent,
+  ClanUpdatedEvent,
+  CustomStatusEvent,
+  DeleteAccountEvent,
+  EventEmoji,
+  JoinChannelAppData,
+  LastPinMessageEvent,
+  LastSeenMessageEvent,
+  ListActivity,
+  ListChannelUsersBannedEvent,
+  MarkAsRead,
+  MeetParticipantEvent,
+  MessageTypingEvent,
+  PermissionChangedEvent,
+  PermissionSet,
+  QuickMenuEvent,
+  RemoveFriend,
+  RoleAssignedEvent,
+  RoleEvent,
+  SdTopicEvent,
+  StatusPresenceEvent,
+  StickerCreateEvent,
+  StickerDeleteEvent,
+  StickerUpdateEvent,
+  StreamingEndedEvent,
+  StreamingJoinedEvent,
+  StreamingLeavedEvent,
+  StreamingStartedEvent,
+  TransferOwnershipEvent,
+  UnblockFriend,
+  UnmuteEvent,
+  UnpinMessageEvent,
+  UserChannelAddedEvent,
+  UserChannelRemovedEvent,
+  UserClanRemovedEvent,
+  UserProfileUpdatedEvent,
+  UserStatusEvent,
+  VoiceEndedEvent,
+  VoiceJoinedEvent,
+  VoiceLeavedEvent,
+  VoiceReactionSend,
+  VoiceStartedEvent,
+  WebrtcSignalingFwd,
+  CreateChannelMessageFromEvent,
+  ChannelMessageList,
+  Friends,
+  ApiUpdateChannelDescRequest,
+  ApiUpdateClanProfileRequest,
+  ApiUpdateRoleRequest,
+  ListDataSocket,
+  IncomingCallPush,
+  Channel,
+  ClanJoin,
+  Status,
+} from "./types";
 import { Session } from "./session";
 import { RefreshTokenManager } from "./refresh_token_manager";
-import { DefaultSocket, Socket, ChannelMessageAck } from "./socket";
+
 import {
   decodeAttachments,
   decodeMentions,
@@ -202,210 +270,45 @@ import {
   decodeReactions,
   decodeRefs,
   safeJSONParse,
-  decodeChannelTimelineAttachments
+  decodeChannelTimelineAttachments,
 } from "./utils";
-import { MultipartUploadAttachment, MultipartUploadAttachmentFinishRequest, WebSocketAdapter, WebSocketAdapterPb } from "mezon-js-protobuf";
+import {
+  ChannelMessageAck,
+  DropdownBoxSelected,
+  MessageButtonClicked,
+  MultipartUploadAttachment,
+  MultipartUploadAttachmentFinishRequest,
+} from "mezon-js-protobuf";
+import { MezonTransport } from "./transport";
 
 const DEFAULT_HOST = "127.0.0.1";
 const DEFAULT_PORT = "7350";
 const DEFAULT_SERVER_KEY = "defaultkey";
 const DEFAULT_TIMEOUT_MS = 30000;
 
-export enum ChannelType {
-  CHANNEL_TYPE_CHANNEL = 1,
-  CHANNEL_TYPE_GROUP = 2,
-  CHANNEL_TYPE_DM = 3,
-  CHANNEL_TYPE_FORUM = 5,
-  CHANNEL_TYPE_STREAMING = 6,
-  CHANNEL_TYPE_THREAD = 7,
-  CHANNEL_TYPE_APP = 8,
-  CHANNEL_TYPE_ANNOUNCEMENT = 9,
-  CHANNEL_TYPE_MEZON_VOICE = 10,
-}
-export enum ChannelStreamMode {
-  STREAM_MODE_CHANNEL = 2,
-  STREAM_MODE_GROUP = 3,
-  STREAM_MODE_DM = 4,
-  STREAM_MODE_CLAN = 5,
-  STREAM_MODE_THREAD = 6,
-}
+export const ConnectionState = {
+  DISCONNECTED: "disconnected",
+  CONNECTING: "connecting",
+  CONNECTED: "connected",
+} as const;
 
-export enum NotificationType {
-  ALL_MESSAGE = 1,
-  MENTION_MESSAGE = 2,
-  NOTHING_MESSAGE = 3,
-}
+export type ConnectionStateType =
+  (typeof ConnectionState)[keyof typeof ConnectionState];
 
-export enum WebrtcSignalingType {
-  WEBRTC_SDP_INIT = 0,
-  WEBRTC_SDP_OFFER = 1,
-  WEBRTC_SDP_ANSWER = 2,
-  WEBRTC_ICE_CANDIDATE = 3,
-  WEBRTC_SDP_QUIT = 4,
-  WEBRTC_SDP_TIMEOUT = 5,
-  WEBRTC_SDP_NOT_AVAILABLE = 6,
-  WEBRTC_SDP_JOINED_OTHER_CALL = 7,
-  WEBRTC_SDP_STATUS_REMOTE_MEDIA = 8,
-}
-
-/** Response for an RPC function executed on the server. */
-export interface RpcResponse {
-  /** The identifier of the function. */
-  id?: string;
-  /** The payload of the function which must be a JSON object. */
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  payload?: object;
-}
-
-/** A list of channel messages, usually a result of a list operation. */
-export interface ChannelMessageList {
-  /** Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors. */
-  cacheable_cursor?: string;
-  /**last seen message from user on channel */
-  last_seen_message?: ApiChannelMessageHeader;
-  /**last sent message from channel */
-  last_sent_message?: ApiChannelMessageHeader;
-  /** A list of messages. */
-  messages?: Array<ChannelMessage>;
-  /** The cursor to send when retireving the next page, if any. */
-  next_cursor?: string;
-  /** The cursor to send when retrieving the previous page, if any. */
-  prev_cursor?: string;
-}
-
-/** A collection of zero or more users. */
-export interface Users {
-  /** The User objects. */
-  users?: Array<ApiUser>;
-}
-
-/** A collection of zero or more friends of the user. */
-export interface Friends {
-  /** The Friend objects. */
-  friends?: Array<ApiFriend>;
-  /** Cursor for the next page of results, if any. */
-  cursor?: string;
-}
-
-/** A notification in the server. */
-export interface Notification {
-  /** Category code for this notification. */
-  code?: number;
-  /** Content of the notification in JSON. */
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  content?: {};
-  /** The UNIX time when the notification was created. */
-  create_time_seconds?: number;
-  /** ID of the Notification. */
-  id?: string;
-  /** True if this notification was persisted to the database. */
-  persistent?: boolean;
-  /** ID of the sender, if a user. Otherwise 'null'. */
-  sender_id?: string;
-  /** Subject of the notification. */
-  subject?: string;
-}
-
-/** A collection of zero or more notifications. */
-export interface NotificationList {
-  /** Use this cursor to paginate notifications. Cache this to catch up to new notifications. */
-  cacheable_cursor?: string;
-  /** Collection of notifications. */
-  notifications?: Array<Notification>;
-}
-
-/** Update fields in a given channel. */
-export interface ApiUpdateChannelDescRequest {
-  /** The ID of the channel to update. */
-  channel_id: string;
-  /** The channel lable */
-  channel_label: string | undefined;
-  /** The category of channel */
-  category_id: string | undefined;
-  /** The app url of channel */
-  app_id: string | undefined;
-  //
-  e2ee?: number;
-  //
-  topic?: string;
-  //
-  age_restricted?: number;
-  //
-  channel_avatar?: string;
-}
-
-/** Add users to a channel. */
-export interface ApiAddChannelUsersRequest {
-  /** The channel to add users to. */
-  channel_id: string;
-  /** The users to add. */
-  user_ids: string[];
-}
-
-/** Kick a set of users from a channel. */
-export interface ApiKickChannelUsersRequest {
-  /** The channel ID to kick from. */
-  channel_id: string;
-  /** The users to kick. */
-  user_ids: string[];
-}
-
-/** Leave a channel. */
-export interface ApiLeaveChannelRequest {
-  /** The channel ID to leave. */
-  channel_id: string;
-}
-
-/** Update Clan profile information */
-export interface ApiUpdateClanDescProfileRequest {
-  /** Clan id */
-  clan_id: string;
-  /** Clan nick name */
-  nick_name: string;
-  /** Clan profile banner */
-  profile_banner: string;
-  /** Clan profile theme */
-  profile_theme: string;
-  /** Clan profile avatar */
-  avatar_url: string;
-}
-
-export interface ApiUpdateClanProfileRequest {
-  /** Clan id*/
-  clan_id: string;
-  /** Clan nick name */
-  nick_name: string;
-  /** Clan profile avatar */
-  avatar: string;
-}
-
-/** Update fields in a given role. */
-export interface ApiUpdateRoleRequest {
-  /** The ID of the role to update. */
-  role_id: string;
-  /** The users to add. */
-  add_user_ids: string[];
-  /** The permissions to add. */
-  active_permission_ids: string[];
-  /** The users to remove. */
-  remove_user_ids: string[];
-  /** The permissions to remove. */
-  remove_permission_ids: string[];
-  //
-  clan_id: string;
-  max_permission_id: string;
-  title?: string | undefined;
-  color?: string | undefined;
-  role_icon?: string | undefined;
-  description?: string | undefined;
-  display_online?: number | undefined;
-  allow_mention?: number | undefined;
-}
+let __hasConnectedOnce = false;  
 
 /** A client for Mezon server. */
 export class Client {
-  /** The low level API client for Mezon server. */
-  private readonly apiClient: MezonApi;
+  public static readonly DefaultHeartbeatTimeoutMs = 10000;
+  public static readonly DefaultConnectTimeoutMs = 30000;
+  
+  public verbose: boolean = false;
+  private _heartbeatTimeoutMs: number;
+  private _connectionState: ConnectionStateType;
+  private _heartbeatTimer?: ReturnType<typeof setTimeout>;
+  private _connectTimeoutTimer?: ReturnType<typeof setTimeout>;
+  private _connectPromise?: Promise<Session>;
+  private readonly transport: MezonTransport;
 
   private readonly refreshTokenManager = RefreshTokenManager.getInstance();
   host: string;
@@ -417,6 +320,7 @@ export class Client {
     host = DEFAULT_HOST,
     port = DEFAULT_PORT,
     useSSL = false,
+    readonly platform = "web",
     readonly timeout = DEFAULT_TIMEOUT_MS,
     readonly autoRefreshSession = true,
   ) {
@@ -426,7 +330,766 @@ export class Client {
     const scheme = useSSL ? "https://" : "http://";
     const basePath = `${scheme}${host}:${port}`;
 
-    this.apiClient = new MezonApi(serverkey, timeout, basePath);
+    this._heartbeatTimeoutMs = Client.DefaultHeartbeatTimeoutMs;
+    this._connectionState = ConnectionState.DISCONNECTED;
+
+    this.transport = new MezonTransport(serverkey, timeout, platform, basePath);
+  }
+
+  isOpen(): boolean {
+    return this._connectionState === ConnectionState.CONNECTED;
+  }
+
+  connect(session: Session, createStatus = false, verbose = false, connectTimeoutMs: number = Client.DefaultConnectTimeoutMs): Promise<Session> {
+    this.verbose = verbose;
+
+    if (this._connectionState === ConnectionState.CONNECTED) {
+      return Promise.resolve(session);
+    }
+
+    if (this._connectionState === ConnectionState.CONNECTING && this._connectPromise) {
+      return this._connectPromise;
+    }
+
+    this.clearConnectTimeout();
+    this._connectionState = ConnectionState.CONNECTING;
+
+    this.transport.connect(
+      session,
+      createStatus,
+      verbose,
+      async (_cid: number, message: any) => {
+        if (!message.cid) {
+          if (message.notifications) {
+            message.notifications.notifications.forEach(
+              (n: ApiNotification) => {
+                n.content = n.content
+                  ? decodeNotificationFcm(n.content)
+                  : undefined;
+                this.onnotification(n);
+              },
+            );
+          } else if (message.voice_started_event) {
+            this.onvoicestarted(message.voice_started_event);
+          } else if (message.voice_ended_event) {
+            this.onvoiceended(message.voice_ended_event);
+          } else if (message.voice_joined_event) {
+            this.onvoicejoined(message.voice_joined_event);
+          } else if (message.voice_leaved_event) {
+            this.onvoiceleaved(message.voice_leaved_event);
+          } else if (message.channel_created_event) {
+            this.onchannelcreated(message.channel_created_event);
+          } else if (message.category_event) {
+            this.oncategoryevent(message.category_event);
+          } else if (message.role_event) {
+            this.onroleevent(message.role_event);
+          } else if (message.event_emoji) {
+            this.oneventemoji(message.event_emoji);
+          } else if (message.noti_user_channel) {
+            this.oneventnotiuserchannel(message.noti_user_channel);
+          } else if (message.webhook_event) {
+            this.oneventwebhook(message.webhook_event);
+          } else if (message.channel_deleted_event) {
+            this.onchanneldeleted(message.channel_deleted_event);
+          } else if (message.clan_deleted_event) {
+            this.onclandeleted(message.clan_deleted_event);
+          } else if (message.sticker_create_event) {
+            this.onstickercreated(message.sticker_create_event);
+          } else if (message.sticker_update_event) {
+            this.onstickerupdated(message.sticker_update_event);
+          } else if (message.sticker_delete_event) {
+            this.onstickerdeleted(message.sticker_delete_event);
+          } else if (message.channel_updated_event) {
+            this.onchannelupdated(message.channel_updated_event);
+          } else if (message.delete_account_event) {
+            this.ondeleteaccount(message.delete_account_event);
+          } else if (message.clan_profile_updated_event) {
+            this.onclanprofileupdated(message.clan_profile_updated_event);
+          } else if (message.clan_updated_event) {
+            this.onclanupdated(message.clan_updated_event);
+          } else if (message.last_seen_message_event) {
+            this.onlastseenupdated(message.last_seen_message_event);
+          } else if (message.status_presence_event) {
+            this.onstatuspresence(
+              <StatusPresenceEvent>message.status_presence_event,
+            );
+          } else if (message.channel_message) {
+            const channelMessage = CreateChannelMessageFromEvent(message);
+            this.onchannelmessage(channelMessage);
+          } else if (message.message_typing_event) {
+            this.onmessagetyping(
+              <MessageTypingEvent>message.message_typing_event,
+            );
+          } else if (message.message_reaction_event) {
+            this.onmessagereaction(
+              <ApiMessageReaction>message.message_reaction_event,
+            );
+          } else if (message.channel_presence_event) {
+            this.onchannelpresence(
+              <ChannelPresenceEvent>message.channel_presence_event,
+            );
+          } else if (message.last_pin_message_event) {
+            this.onpinmessage(
+              <LastPinMessageEvent>message.last_pin_message_event,
+            );
+          } else if (message.custom_status_event) {
+            this.oncustomstatus(<CustomStatusEvent>message.custom_status_event);
+          } else if (message.canvas_event) {
+            this.oncanvasevent(<ChannelCanvas>message.canvas_event);
+          } else if (message.user_channel_added_event) {
+            this.onuserchanneladded(
+              <UserChannelAddedEvent>message.user_channel_added_event,
+            );
+          } else if (message.add_clan_user_event) {
+            this.onuserclanadded(<AddClanUserEvent>message.add_clan_user_event);
+          } else if (message.user_profile_updated_event) {
+            this.onuserprofileupdate(
+              <UserProfileUpdatedEvent>message.user_profile_updated_event,
+            );
+          } else if (message.user_channel_removed_event) {
+            this.onuserchannelremoved(
+              <UserChannelRemovedEvent>message.user_channel_removed_event,
+            );
+          } else if (message.block_friend) {
+            this.onblockfriend(<BlockFriend>message.block_friend);
+          } else if (message.un_block_friend) {
+            this.onunblockfriend(<UnblockFriend>message.un_block_friend);
+          } else if (message.add_friend) {
+            this.onaddfriend(<AddFriend>message.add_friend);
+          } else if (message.remove_friend) {
+            this.onremovefriend(<RemoveFriend>message.remove_friend);
+          } else if (message.user_clan_removed_event) {
+            this.onuserclanremoved(
+              <UserClanRemovedEvent>message.user_clan_removed_event,
+            );
+          } else if (message.clan_event_created) {
+            this.oneventcreated(message.clan_event_created);
+          } else if (message.give_coffee_event) {
+            this.oncoffeegiven(<ApiGiveCoffeeEvent>message.give_coffee_event);
+          } else if (message.role_assign_event) {
+            this.onroleassign(<RoleAssignedEvent>message.role_assign_event);
+          } else if (message.streaming_started_event) {
+            this.onstreamingchannelstarted(
+              <StreamingStartedEvent>message.streaming_started_event,
+            );
+          } else if (message.streaming_ended_event) {
+            this.onstreamingchannelended(
+              <StreamingEndedEvent>message.streaming_ended_event,
+            );
+          } else if (message.streaming_joined_event) {
+            this.onstreamingchanneljoined(
+              <StreamingJoinedEvent>message.streaming_joined_event,
+            );
+          } else if (message.streaming_leaved_event) {
+            this.onstreamingchannelleaved(
+              <StreamingLeavedEvent>message.streaming_leaved_event,
+            );
+          } else if (message.permission_set_event) {
+            this.onpermissionset(<PermissionSet>message.permission_set_event);
+          } else if (message.permission_changed_event) {
+            this.onpermissionchanged(
+              <PermissionChangedEvent>message.permission_changed_event,
+            );
+          } else if (message.unmute_event) {
+            this.onunmuteevent(<UnmuteEvent>message.unmute_event);
+          } else if (message.token_sent_event) {
+            this.ontokensent(<ApiTokenSentEvent>message.token_sent_event);
+          } else if (message.message_button_clicked) {
+            this.onmessagebuttonclicked(
+              <MessageButtonClicked>message.message_button_clicked,
+            );
+          } else if (message.dropdown_box_selected) {
+            this.onmessagedropdownboxselected(
+              <DropdownBoxSelected>message.dropdown_box_selected,
+            );
+          } else if (message.mark_as_read) {
+            this.onmarkasread(<MarkAsRead>message.mark_as_read);
+          } else if (message.voice_reaction_send) {
+            this.onvoicereactionmessage(
+              <VoiceReactionSend>message.voice_reaction_send,
+            );
+          } else if (message.webrtc_signaling_fwd) {
+            this.onwebrtcsignalingfwd(
+              <WebrtcSignalingFwd>message.webrtc_signaling_fwd,
+            );
+          } else if (message.list_activity) {
+            this.onactivityupdated(<ListActivity>message.list_activity);
+          } else if (message.sd_topic_event) {
+            this.onsdtopicevent(<SdTopicEvent>message.sd_topic_event);
+          } else if (message.channel_app_event) {
+            this.onchannelappevent(<ChannelAppEvent>message.channel_app_event);
+          } else if (message.user_status_event) {
+            this.onuserstatusevent(<UserStatusEvent>message.user_status_event);
+          } else if (message.join_channel_app_data) {
+            this.onjoinchannelappevent(
+              <JoinChannelAppData>message.join_channel_app_data,
+            );
+          } else if (message.unpin_message_event) {
+            this.onunpinmessageevent(
+              <UnpinMessageEvent>message.unpin_message_event,
+            );
+          } else if (message.quick_menu_event) {
+            this.onquickmenuevent(<QuickMenuEvent>message.quick_menu_event);
+          } else if (message.meet_participant_event) {
+            this.onmeetparticipantevent(
+              <MeetParticipantEvent>message.meet_participant_event,
+            );
+          } else if (message.transfer_ownership_event) {
+            this.ontransferownership(
+              <TransferOwnershipEvent>message.transfer_ownership_event,
+            );
+          } else if (message.ban_user_event) {
+            this.onbanneduser(<BannedUserEvent>message.ban_user_event);
+          } else if (message.list_channel_users_banned_event) {
+            this.onlistchannelusersbanned(
+              <ListChannelUsersBannedEvent>(
+                message.list_channel_users_banned_event
+              ),
+            );
+          } else if (message.allow_anonymous_event) {
+            this.onallowanonymousevent(
+              <AllowAnonymousEvent>message.allow_anonymous_event,
+            );
+          } else if (message.aiagent_enabled_event) {
+            this.onaiagentenabled(
+              <AiAgentEnabledEvent>message.aiagent_enabled_event,
+            );
+          } else {
+            if (this.verbose && window && window.console) {
+              console.log("Unrecognized message received: %o", message);
+            }
+          }
+        }
+      },
+      async (evt: Event) => {
+        this._connectionState = ConnectionState.DISCONNECTED;
+        this.stopHeartbeatLoop();
+        this.clearConnectTimeout();
+        this.ondisconnect(evt);
+      },
+    );
+
+    const connectPromise = new Promise<Session>((resolve, reject) => {
+      this.transport.setOnOpen((evt: Event) => {
+        if (this.verbose && window && window.console) {
+          console.log(evt);
+        }
+
+        const isReconnect = __hasConnectedOnce;
+        __hasConnectedOnce = true;
+
+        this.clearConnectTimeout();
+        this._connectionState = ConnectionState.CONNECTED;
+        this.startHeartbeatLoop();
+        this._connectPromise = undefined;
+        
+        resolve(session);
+
+        if (isReconnect) {
+          this.onreconnect(evt);
+        }
+      });
+      this.transport.setOnError((evt: Event) => {
+        this._connectionState = ConnectionState.DISCONNECTED;
+        this.stopHeartbeatLoop();
+        this.clearConnectTimeout();
+        this.onerror(evt);
+        this._connectPromise = undefined;
+        this.transport.close();
+        reject(evt);
+      });
+
+      this._connectTimeoutTimer = setTimeout(() => {
+        // if promise has resolved by now, the reject() is a no-op
+        this._connectionState = ConnectionState.DISCONNECTED;
+        this.stopHeartbeatLoop();
+        this.transport.close();
+        this._connectPromise = undefined;
+        reject("The socket timed out when trying to connect.");
+        this._connectTimeoutTimer = undefined;
+      }, connectTimeoutMs);
+    });
+
+    this._connectPromise = connectPromise;
+    return this._connectPromise;
+  }
+
+  private async pingPong(): Promise<void> {
+    if (!this.isOpen()) {
+      this._connectionState = ConnectionState.DISCONNECTED;
+      this.stopHeartbeatLoop();
+      return;
+    }
+
+    try {
+      const urlPath = "";
+      const fetchOptions = { ping: {} };
+      await this.transport.send({ urlPath, fetchOptions }, this._heartbeatTimeoutMs);
+    } catch {
+      this._connectionState = ConnectionState.DISCONNECTED;
+      this.stopHeartbeatLoop();
+      if (this.isOpen()) {
+        if (window && window.console) {
+          console.error("Server unreachable from heartbeat.");
+        }
+        this.onheartbeattimeout();
+        this.transport.close();
+      }
+
+      return;
+    }
+
+    this.startHeartbeatLoop();
+  }
+
+  private startHeartbeatLoop() {
+    this.stopHeartbeatLoop();
+    this._heartbeatTimer = setTimeout(
+      () => this.pingPong(),
+      this._heartbeatTimeoutMs
+    );
+  }
+
+  private stopHeartbeatLoop() {
+    if (this._heartbeatTimer !== undefined) {
+      clearTimeout(this._heartbeatTimer);
+      this._heartbeatTimer = undefined;
+    }
+  }
+
+  private clearConnectTimeout() {
+    if (this._connectTimeoutTimer !== undefined) {
+      clearTimeout(this._connectTimeoutTimer);
+      this._connectTimeoutTimer = undefined;
+    }
+  }
+
+  onreconnect(evt: Event) {
+    if (this.verbose && window && window.console) {
+      console.log(evt);
+    }
+  }
+
+  ondisconnect(evt: Event) {
+    if (this.verbose && window && window.console) {
+      console.log(evt);
+    }
+  }
+
+  onerror(evt: Event) {
+    this._connectionState = ConnectionState.DISCONNECTED;
+    this.stopHeartbeatLoop();
+    if (this.verbose && window && window.console) {
+      console.log(evt);
+    }
+  }
+
+  onmessagetyping(messagetyping: MessageTypingEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(messagetyping);
+    }
+  }
+
+  onmessagereaction(messagereaction: ApiMessageReaction) {
+    if (this.verbose && window && window.console) {
+      console.log(messagereaction);
+    }
+  }
+
+  onchannelmessage(channelMessage: ChannelMessage) {
+    if (this.verbose && window && window.console) {
+      console.log(channelMessage);
+    }
+  }
+
+  onchannelpresence(channelPresence: ChannelPresenceEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(channelPresence);
+    }
+  }
+
+  onuserchanneladded(user: UserChannelAddedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onuserclanadded(user: AddClanUserEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onuserprofileupdate(user: UserProfileUpdatedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onuserchannelremoved(user: UserChannelRemovedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onaddfriend(user: AddFriend) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onremovefriend(user: RemoveFriend) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onblockfriend(user: BlockFriend) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onunblockfriend(user: UnblockFriend) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onuserclanremoved(user: UserClanRemovedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onnotification(notification: ApiNotification) {
+    if (this.verbose && window && window.console) {
+      console.log(notification);
+    }
+  }
+
+  onstatuspresence(statusPresence: StatusPresenceEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(statusPresence);
+    }
+  }
+
+  onpinmessage(pin: LastPinMessageEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(pin);
+    }
+  }
+
+  onvoiceended(voice: VoiceEndedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(voice);
+    }
+  }
+
+  onvoicestarted(voice: VoiceStartedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(voice);
+    }
+  }
+
+  onvoicejoined(voiceParticipant: VoiceJoinedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(voiceParticipant);
+    }
+  }
+
+  onvoiceleaved(voiceParticipant: VoiceLeavedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(voiceParticipant);
+    }
+  }
+
+  onchannelcreated(channelCreated: ChannelCreatedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(channelCreated);
+    }
+  }
+
+  oncategoryevent(categoryEvent: CategoryEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(categoryEvent);
+    }
+  }
+
+  onroleevent(roleEvent: RoleEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(roleEvent);
+    }
+  }
+
+  oneventemoji(eventEmoji: EventEmoji) {
+    if (this.verbose && window && window.console) {
+      console.log(eventEmoji);
+    }
+  }
+
+  oneventnotiuserchannel(notiUserChannel: ApiNotificationUserChannel) {
+    if (this.verbose && window && window.console) {
+      console.log(notiUserChannel);
+    }
+  }
+
+  oneventwebhook(webhook_event: ApiWebhook) {
+    if (this.verbose && window && window.console) {
+      console.log(webhook_event);
+    }
+  }
+
+  onchanneldeleted(channelDeleted: ChannelDeletedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(channelDeleted);
+    }
+  }
+
+  onclandeleted(clanDeleted: ClanDeletedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(clanDeleted);
+    }
+  }
+
+  onstickercreated(stickerCreated: StickerCreateEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(stickerCreated);
+    }
+  }
+
+  onstickerdeleted(stickerDeleted: StickerDeleteEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(stickerDeleted);
+    }
+  }
+
+  onstickerupdated(stickerUpdated: StickerUpdateEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(stickerUpdated);
+    }
+  }
+
+  onchannelupdated(channelUpdated: ChannelUpdatedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(channelUpdated);
+    }
+  }
+
+  ondeleteaccount(deleteAccountEvent: DeleteAccountEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(deleteAccountEvent);
+    }
+  }
+
+  onclanprofileupdated(clanprofile: ClanProfileUpdatedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(clanprofile);
+    }
+  }
+
+  onclanupdated(clan: ClanUpdatedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(clan);
+    }
+  }
+
+  onlastseenupdated(event: LastSeenMessageEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onheartbeattimeout() {
+    if (this.verbose && window && window.console) {
+      console.log("Heartbeat timeout.");
+    }
+  }
+
+  oncustomstatus(statusEvent: CustomStatusEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(statusEvent);
+    }
+  }
+
+  oncanvasevent(canvasEvent: ChannelCanvas) {
+    if (this.verbose && window && window.console) {
+      console.log(canvasEvent);
+    }
+  }
+
+  oneventcreated(clan_event_created: ApiCreateEventRequest) {
+    if (this.verbose && window && window.console) {
+      console.log(clan_event_created);
+    }
+  }
+
+  oncoffeegiven(give_coffee_event: ApiGiveCoffeeEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(give_coffee_event);
+    }
+  }
+
+  onroleassign(role_assign_event: RoleAssignedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(role_assign_event);
+    }
+  }
+
+  onstreamingchannelstarted(streaming_started_event: StreamingStartedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(streaming_started_event);
+    }
+  }
+
+  onstreamingchannelended(streaming_ended_event: StreamingEndedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(streaming_ended_event);
+    }
+  }
+
+  onstreamingchanneljoined(streaming_joined_event: StreamingJoinedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(streaming_joined_event);
+    }
+  }
+
+  onstreamingchannelleaved(streaming_leaved_event: StreamingLeavedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(streaming_leaved_event);
+    }
+  }
+
+  onpermissionset(permission_set_event: PermissionSet) {
+    if (this.verbose && window && window.console) {
+      console.log(permission_set_event);
+    }
+  }
+
+  onpermissionchanged(permission_changed_event: PermissionChangedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(permission_changed_event);
+    }
+  }
+
+  onunmuteevent(unmute_event: UnmuteEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(unmute_event);
+    }
+  }
+
+  ontokensent(tokenSentEvent: ApiTokenSentEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(tokenSentEvent);
+    }
+  }
+
+  onmessagebuttonclicked(messageButtonClicked: MessageButtonClicked) {
+    if (this.verbose && window && window.console) {
+      console.log(messageButtonClicked);
+    }
+  }
+
+  onmessagedropdownboxselected(msg: DropdownBoxSelected) {
+    if (this.verbose && window && window.console) {
+      console.log(msg);
+    }
+  }
+
+  onmarkasread(event: MarkAsRead) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onvoicereactionmessage(event: VoiceReactionSend) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onwebrtcsignalingfwd(event: WebrtcSignalingFwd) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onactivityupdated(list_activity: ListActivity) {
+    if (this.verbose && window && window.console) {
+      console.log(list_activity);
+    }
+  }
+
+  onsdtopicevent(sd_topic_event: SdTopicEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(sd_topic_event);
+    }
+  }
+
+  onchannelappevent(event: ChannelAppEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onuserstatusevent(user_status_event: UserStatusEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(user_status_event);
+    }
+  }
+
+  onjoinchannelappevent(join_channel_app_data: JoinChannelAppData) {
+    if (this.verbose && window && window.console) {
+      console.log(join_channel_app_data);
+    }
+  }
+
+  onunpinmessageevent(unpin_message_event: UnpinMessageEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(unpin_message_event);
+    }
+  }
+
+  onquickmenuevent(event: QuickMenuEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  ontransferownership(event: TransferOwnershipEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onbanneduser(event: BannedUserEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onlistchannelusersbanned(event: ListChannelUsersBannedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onmeetparticipantevent(event: MeetParticipantEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onallowanonymousevent(event: AllowAnonymousEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onaiagentenabled(event: AiAgentEnabledEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
   }
 
   /**
@@ -456,7 +1119,7 @@ export class Client {
       token: token,
       vars: vars,
     };
-    return this.apiClient
+    return this.transport
       .authenticateMezon(
         this.serverkey,
         "",
@@ -493,7 +1156,7 @@ export class Client {
       },
     };
 
-    return this.apiClient
+    return this.transport
       .AuthenticateSMSOTPRequest(this.serverkey, "", request, username)
       .then((response: ApiLinkAccountConfirmRequest) => {
         return Promise.resolve(response);
@@ -514,7 +1177,7 @@ export class Client {
       },
     };
 
-    return this.apiClient
+    return this.transport
       .AuthenticateEmailOTPRequest(this.serverkey, "", request, username)
       .then((response: ApiLinkAccountConfirmRequest) => {
         return Promise.resolve(response);
@@ -524,7 +1187,7 @@ export class Client {
   async confirmAuthenticateOTP(
     request: ApiLinkAccountConfirmRequest,
   ): Promise<Session> {
-    return this.apiClient
+    return this.transport
       .confirmAuthenticateOTP(this.serverkey, "", request)
       .then((apiSession: ApiSession) => {
         return new Session(
@@ -555,7 +1218,7 @@ export class Client {
       },
     };
 
-    return this.apiClient
+    return this.transport
       .authenticateEmail(this.serverkey, "", request, username)
       .then((apiSession: ApiSession) => {
         return new Session(
@@ -578,7 +1241,7 @@ export class Client {
 
     const scheme = useSSL ? "https://" : "http://";
     const basePath = `${scheme}${host}:${port}`;
-    return this.apiClient.setBasePath(basePath);
+    return this.transport.setBasePath(basePath);
   }
 
   /** Add users to a channel, or accept their join requests. */
@@ -595,7 +1258,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .addChannelUsers(session.token, channelId, ids)
       .then((response: any) => {
         return response !== undefined;
@@ -616,7 +1279,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.addFriends(session.token, ids, usernames);
+    return this.transport.addFriends(session.token, ids, usernames);
   }
 
   /** Block one or more users by ID or username. */
@@ -633,7 +1296,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .blockFriends(session.token, ids, usernames)
       .then((response: any) => {
         return Promise.resolve(response != undefined);
@@ -654,7 +1317,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .unblockFriends(session.token, ids, usernames)
       .then((response: any) => {
         return Promise.resolve(response != undefined);
@@ -674,7 +1337,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.uploadOauthFile(session.token, request);
+    return this.transport.uploadOauthFile(session.token, request);
   }
 
   /** Create a new group with the current user as the creator and superadmin. */
@@ -690,7 +1353,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.uploadAttachmentFile(session.token, request);
+    return this.transport.uploadAttachmentFile(session.token, request);
   }
 
   async multipartUploadAttachmentFile(
@@ -705,7 +1368,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.multipartUploadAttachmentFile(session.token, request);
+    return this.transport.multipartUploadAttachmentFile(session.token, request);
   }
 
   async multipartUploadAttachmentFileFinish(
@@ -720,7 +1383,10 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.multipartUploadAttachmentFileFinsih(session.token, request);
+    return this.transport.multipartUploadAttachmentFileFinsih(
+      session.token,
+      request,
+    );
   }
 
   /** Create a channel within clan */
@@ -736,7 +1402,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .createChannelDesc(session.token, request)
       .then((response: ApiChannelDescription) => {
         return Promise.resolve(response);
@@ -756,7 +1422,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .createClanDesc(session.token, request)
       .then((response: ApiClanDesc) => {
         return Promise.resolve(response);
@@ -776,7 +1442,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.checkDuplicateName(session.token, request);
+    return this.transport.checkDuplicateName(session.token, request);
   }
 
   /**  */
@@ -792,7 +1458,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .createCategoryDesc(session.token, request)
       .then((response: ApiCategoryDesc) => {
         return Promise.resolve(response);
@@ -812,7 +1478,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .createRole(session.token, request)
       .then((response: ApiRole) => {
         return Promise.resolve(response);
@@ -832,7 +1498,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .createEvent(session.token, request)
       .then((response: ApiEventManagement) => {
         return Promise.resolve(response);
@@ -852,7 +1518,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .addRolesChannelDesc(session.token, request)
       .then((response: ApiRole) => {
         return response !== undefined;
@@ -872,7 +1538,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deleteRoleChannelDesc(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -888,30 +1554,11 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deleteApp(session.token, appId)
       .then((response: any) => {
         return response !== undefined;
       });
-  }
-
-  /** A socket created with the client's configuration. */
-  createSocket(
-    useSSL = false,
-    host: string,
-    port: string,
-    verbose = false,
-    adapter: WebSocketAdapter = new WebSocketAdapterPb(),
-    sendTimeoutMs: number = DefaultSocket.DefaultSendTimeoutMs,
-  ): Socket {
-    return new DefaultSocket(
-      host,
-      port,
-      useSSL,
-      verbose,
-      adapter,
-      sendTimeoutMs,
-    );
   }
 
   /** Delete one or more users by ID or username. */
@@ -928,7 +1575,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deleteFriends(session.token, ids, usernames)
       .then((response: any) => {
         return response !== undefined;
@@ -949,7 +1596,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deleteChannelDesc(session.token, clanId, channelId)
       .then((response: any) => {
         return response !== undefined;
@@ -966,7 +1613,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deleteClanDesc(session.token, clanDescId)
       .then((response: any) => {
         return response !== undefined;
@@ -988,7 +1635,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deleteCategoryDesc(session.token, categoryId, clanId, categoryLabel)
       .then((response: any) => {
         return response !== undefined;
@@ -1009,7 +1656,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deleteNotifications(session.token, ids, category)
       .then((response: any) => {
         return Promise.resolve(response != undefined);
@@ -1031,7 +1678,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deleteRole(session.token, roleId, "0", clanId, roleLabel)
       .then((response: any) => {
         return response !== undefined;
@@ -1055,7 +1702,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deleteEvent(
         session.token,
         eventId,
@@ -1082,7 +1729,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateEventUser(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -1099,7 +1746,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .event(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response != undefined);
@@ -1116,7 +1763,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.getAccount(session.token);
+    return this.transport.getAccount(session.token);
   }
 
   /** Kick a set of users from a clan. */
@@ -1133,7 +1780,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .removeClanUsers(session.token, clanId, ids)
       .then((response: any) => {
         return Promise.resolve(response != undefined);
@@ -1153,7 +1800,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listBannedUsers(session.token, clanId, channelId)
       .then((response: ApiBannedUserList) => {
         return Promise.resolve(response);
@@ -1175,7 +1822,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .unbanClanUsers(session.token, clanId, channelId, userIds)
       .then((response: any) => {
         return Promise.resolve(response != undefined);
@@ -1198,7 +1845,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .banClanUsers(session.token, clanId, channelId, userIds, banTime)
       .then((response: any) => {
         return Promise.resolve(response != undefined);
@@ -1219,7 +1866,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .removeChannelUsers(session.token, channelId, ids)
       .then((response: any) => {
         return Promise.resolve(response != undefined);
@@ -1244,7 +1891,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listChannelMessages(
         session.token,
         clanId,
@@ -1353,12 +2000,8 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listChannelVoiceUsers(
-        session.token,
-        clanId,
-        limit
-      )
+    return this.transport
+      .listChannelVoiceUsers(session.token, clanId, limit)
       .then((response: ApiVoiceChannelUserList) => {
         const result: ApiVoiceChannelUserList = {
           voice_channel_users: [],
@@ -1398,7 +2041,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listChannelUsers(
         session.token,
         clanId,
@@ -1455,7 +2098,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listChannelAttachment(
         session.token,
         channelId,
@@ -1506,7 +2149,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listClanUsers(session.token, clanId)
       .then((response: ApiClanUserList) => {
         const result: ApiClanUserList = {
@@ -1564,7 +2207,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listClanUsersStatus(session.token, clanId)
       .then((response: ApiClanUserStatusList) => {
         const result: ApiClanUserStatusList = {
@@ -1595,7 +2238,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listChannelDetail(session.token, channelId)
       .then((response: ApiChannelDescription) => {
         return Promise.resolve(response);
@@ -1620,7 +2263,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listChannelDescs(
         session.token,
         limit,
@@ -1662,7 +2305,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listClanDescs(session.token, limit, state, cursor)
       .then((response: ApiClanDescList) => {
         const result: ApiClanDescList = {
@@ -1693,7 +2336,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listChannelBadgeCount(session.token, clanId, limit, page)
       .then((response: ApiListChannelBadgeCountResponse) => ({
         channeldesc: response.channeldesc ?? [],
@@ -1716,7 +2359,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listUserOnline(session.token, clanId, limit, page)
       .then((response: ApiListUserOnlineResponse) => ({
         users: response.users ?? [],
@@ -1739,7 +2382,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listCategoryDescs(session.token, clanId, creatorId, categoryName)
       .then((response: ApiCategoryDescList) => {
         const result: ApiCategoryDescList = {
@@ -1765,7 +2408,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listEvents(session.token, clanId)
       .then((response: ApiEventList) => {
         return Promise.resolve(response);
@@ -1782,7 +2425,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getListPermission(session.token)
       .then((response: ApiPermissionList) => {
         return Promise.resolve(response);
@@ -1802,7 +2445,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listRolePermissions(session.token, roleId)
       .then((response: ApiPermissionList) => {
         return Promise.resolve(response);
@@ -1824,7 +2467,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listRoleUsers(session.token, roleId, limit, cursor)
       .then((response: ApiRoleUserList) => {
         return Promise.resolve(response);
@@ -1846,7 +2489,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .registFCMDeviceToken(
         session.token,
         tokenId,
@@ -1871,7 +2514,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getUserProfileOnClan(session.token, clanId)
       .then((response: ApiClanProfile) => {
         return Promise.resolve(response);
@@ -1891,7 +2534,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .closeDirectMess(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -1910,7 +2553,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .openDirectMess(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -1929,7 +2572,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.confirmLinkMezonOTP(session.token, request);
+    return this.transport.confirmLinkMezonOTP(session.token, request);
   }
 
   /** Add a custom ID to the social profiles on the current user's account. */
@@ -1945,7 +2588,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .linkSMS(session.token, request)
       .then((response: ApiLinkAccountConfirmRequest) => {
         return Promise.resolve(response);
@@ -1965,7 +2608,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .linkEmail(session.token, request)
       .then((response: ApiLinkAccountConfirmRequest) => {
         return Promise.resolve(response);
@@ -1987,7 +2630,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listFriends(session.token, limit, state, cursor)
       .then((response: ApiFriendList) => {
         const result: Friends = {
@@ -2046,7 +2689,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listNotifications(
         session.token,
         limit,
@@ -2097,7 +2740,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .sessionLogout(session.token, {
         refresh_token: refreshToken,
         token: token,
@@ -2138,7 +2781,7 @@ export class Client {
       session.refresh_token,
       async () => {
         try {
-          const apiSession = await this.apiClient.sessionRefresh(
+          const apiSession = await this.transport.sessionRefresh(
             this.serverkey,
             "",
             {
@@ -2178,7 +2821,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .unlinkEmail(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -2198,7 +2841,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateUsername(session.token, request)
       .then((response: ApiSession) => {
         return Promise.resolve(response);
@@ -2218,7 +2861,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateAccount(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -2239,7 +2882,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateChannelDesc(session.token, channelId, request)
       .then((response: any) => {
         return response !== undefined;
@@ -2260,7 +2903,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateClanDesc(session.token, clanId, request)
       .then((response: any) => {
         return response !== undefined;
@@ -2281,7 +2924,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateCategory(session.token, clanId, request)
       .then((response: any) => {
         return response !== undefined;
@@ -2301,7 +2944,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateUserProfileByClan(session.token, clanId, request)
       .then((response: any) => {
         return response !== undefined;
@@ -2322,7 +2965,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateRole(session.token, roleId, request)
       .then((response: any) => {
         return response !== undefined;
@@ -2343,7 +2986,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateEvent(session.token, roleId, request)
       .then((response: any) => {
         return response !== undefined;
@@ -2364,7 +3007,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateApp(session.token, roleId, request)
       .then((response: ApiApp) => {
         return Promise.resolve(response);
@@ -2384,7 +3027,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .createLinkInviteUser(session.token, request)
       .then((response: ApiLinkInviteUser) => {
         return Promise.resolve(response);
@@ -2393,7 +3036,7 @@ export class Client {
 
   /** Get link invite user */
   async getLinkInvite(inviteId: string): Promise<ApiInviteUserRes> {
-    return this.apiClient
+    return this.transport
       .getLinkInvite(this.serverkey, "", inviteId)
       .then((response: ApiInviteUserRes) => {
         return Promise.resolve(response);
@@ -2413,7 +3056,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getRoleOfUserInTheClan(session.token, clanId)
       .then((response: ApiRoleList) => {
         return Promise.resolve(response);
@@ -2433,7 +3076,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .inviteUser(session.token, inviteId)
       .then((response: ApiInviteUserRes) => {
         return Promise.resolve(response);
@@ -2453,7 +3096,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .setNotificationClanSetting(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -2473,7 +3116,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .setNotificationChannelSetting(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -2493,7 +3136,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .setMuteCategory(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -2513,7 +3156,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .setMuteChannel(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -2533,7 +3176,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateChannelPrivate(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -2553,7 +3196,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .setNotificationCategorySetting(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -2572,7 +3215,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deleteNotificationCategorySetting(session.token, category_id)
       .then((response: any) => {
         return response !== undefined;
@@ -2591,7 +3234,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deleteNotificationChannel(session.token, channel_id)
       .then((response: any) => {
         return response !== undefined;
@@ -2611,7 +3254,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .setNotificationReactMessage(session.token, { channel_id })
       .then((response: any) => {
         return response !== undefined;
@@ -2631,7 +3274,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deleteNotiReactMessage(session.token, channel_id)
       .then((response: any) => {
         return response !== undefined;
@@ -2651,7 +3294,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .searchMessage(session.token, request)
       .then((response: ApiSearchMessageResponse) => {
         return Promise.resolve(response);
@@ -2671,7 +3314,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .createMessage2Inbox(session.token, request)
       .then((response: ApiChannelMessageHeader) => {
         return Promise.resolve(response);
@@ -2691,7 +3334,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .createPinMessage(session.token, request)
       .then((response: ApiChannelMessageHeader) => {
         return Promise.resolve(response);
@@ -2712,7 +3355,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getPinMessagesList(session.token, messageId, channelId, clanId)
       .then((response) => {
         const result: ApiPinMessagesList = {
@@ -2756,7 +3399,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deletePinMessage(session.token, id, messageId, channelId, clanId)
       .then((response: any) => {
         return response !== undefined;
@@ -2773,7 +3416,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .createClanEmoji(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -2794,7 +3437,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateClanEmojiById(session.token, id, request)
       .then((response: any) => {
         return response !== undefined;
@@ -2816,7 +3459,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deleteClanEmojiById(session.token, id, clan_id, emojiLabel)
       .then((response: any) => {
         return response !== undefined;
@@ -2836,7 +3479,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .generateWebhook(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -2857,7 +3500,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listWebhookByChannelId(session.token, channel_id, clan_id)
       .then((response: ApiWebhookListResponse) => {
         return Promise.resolve(response);
@@ -2878,7 +3521,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateWebhookById(session.token, id, request)
       .then((response: any) => {
         return response !== undefined;
@@ -2899,7 +3542,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deleteWebhookById(session.token, id, request)
       .then((response: any) => {
         return response !== undefined;
@@ -2916,7 +3559,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .addClanSticker(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -2938,7 +3581,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deleteClanStickerById(session.token, id, clan_id, stickerLabel)
       .then((response: any) => {
         return response !== undefined;
@@ -2959,7 +3602,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateClanStickerById(session.token, id, request)
       .then((response: any) => {
         return response !== undefined;
@@ -2980,7 +3623,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .changeChannelCategory(session.token, id, request)
       .then((response: any) => {
         return response !== undefined;
@@ -3000,7 +3643,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .setRoleChannelPermission(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -3016,7 +3659,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .addApp(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -3032,7 +3675,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.getApp(session.token, id).then((response: ApiApp) => {
+    return this.transport.getApp(session.token, id).then((response: ApiApp) => {
       return Promise.resolve(response);
     });
   }
@@ -3046,7 +3689,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listApps(session.token)
       .then((response: ApiAppList) => {
         return Promise.resolve(response);
@@ -3062,7 +3705,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .addAppToClan(session.token, appId, clanId)
       .then((response: ApiAppList) => {
         return response !== undefined;
@@ -3080,7 +3723,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getSystemMessagesList(session.token)
       .then((response: ApiSystemMessagesList) => {
         return Promise.resolve(response);
@@ -3099,7 +3742,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getSystemMessageByClanId(session.token, clanId)
       .then((response: ApiSystemMessage) => {
         return Promise.resolve(response);
@@ -3118,7 +3761,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .createSystemMessage(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -3138,7 +3781,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateSystemMessage(session.token, clanId, request)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -3154,7 +3797,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deleteSystemMessage(session.token, clanId)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -3173,7 +3816,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateCategoryOrder(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -3192,7 +3835,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .giveMeACoffee(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -3208,7 +3851,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .sendToken(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -3233,7 +3876,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listStreamingChannelUsers(
         session.token,
         clanId,
@@ -3276,7 +3919,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .registerStreamingChannel(session.token, request)
       .then((response: ApiRegisterStreamingChannelResponse) => {
         return response !== undefined;
@@ -3296,7 +3939,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listChannelApps(session.token, clanId)
       .then((response: ApiListChannelAppsResponse) => {
         const result: ApiListChannelAppsResponse = {
@@ -3334,7 +3977,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getChannelCategoryNotiSettingsList(session.token, clanId)
       .then((response: ApiNotificationChannelCategorySettingList) => {
         return Promise.resolve(response);
@@ -3353,7 +3996,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getNotificationCategory(session.token, categoryId)
       .then((response: ApiNotificationUserChannel) => {
         return Promise.resolve(response);
@@ -3372,7 +4015,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getNotificationChannel(session.token, channelId)
       .then((response: ApiNotificationUserChannel) => {
         return Promise.resolve(response);
@@ -3391,7 +4034,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getNotificationClan(session.token, clanId)
       .then((response: ApiNotificationSetting) => {
         return Promise.resolve(response);
@@ -3410,7 +4053,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getNotificationReactMessage(session.token, channelId)
       .then((response: ApiNotifiReactMessage) => {
         return Promise.resolve(response);
@@ -3426,7 +4069,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listChannelByUserId(session.token)
       .then((response: ApiChannelDescList) => {
         return Promise.resolve(response);
@@ -3446,7 +4089,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listChannelUsersUC(session.token, channel_id, limit)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -3464,7 +4107,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getListEmojisByUserId(session.token)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -3480,7 +4123,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .emojiRecentList(session.token)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -3498,7 +4141,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getListStickersByUserId(session.token)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -3514,7 +4157,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listUserClansByUserId(session.token)
       .then((response: ApiAllUserClans) => {
         return Promise.resolve(response);
@@ -3536,7 +4179,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listRoles(session.token, clanId, limit, state, cursor)
       .then((response: ApiRoleListEventResponse) => {
         const result: ApiRoleListEventResponse = {
@@ -3561,7 +4204,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listUserPermissionInChannel(session.token, clanId, channelId)
       .then((response: ApiUserPermissionInChannelListResponse) => {
         const result: ApiUserPermissionInChannelListResponse = {
@@ -3588,7 +4231,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getPermissionByRoleIdChannelId(session.token, roleId, channelId, userId)
       .then((response: ApiPermissionRoleChannelListEventResponse) => {
         const result: ApiPermissionRoleChannelListEventResponse = {
@@ -3614,7 +4257,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .markAsRead(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -3639,7 +4282,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listThreadDescs(
         session.token,
         channelId,
@@ -3675,14 +4318,16 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listChannelTimeline(session.token, request)
       .then((response: ApiListChannelTimelineResponse) => {
         response.events?.forEach((event) => {
           event.attachments = [];
           let previewImgs;
           try {
-            const decodedAttachments = decodeChannelTimelineAttachments(event.preview_imgs);
+            const decodedAttachments = decodeChannelTimelineAttachments(
+              event.preview_imgs,
+            );
             previewImgs =
               decodedAttachments?.attachments ||
               decodedAttachments ||
@@ -3712,7 +4357,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .createChannelTimeline(session.token, request)
       .then((response: ApiCreateChannelTimelineResponse) => {
         const event = response.event;
@@ -3720,8 +4365,12 @@ export class Client {
           let attachments;
           let previewImgs;
           try {
-            const decodedAttachments = decodeChannelTimelineAttachments(event.attachments);
-            const decodedPreviewImgs = decodeChannelTimelineAttachments(event.preview_imgs);
+            const decodedAttachments = decodeChannelTimelineAttachments(
+              event.attachments,
+            );
+            const decodedPreviewImgs = decodeChannelTimelineAttachments(
+              event.preview_imgs,
+            );
             attachments =
               decodedAttachments?.attachments ||
               decodedAttachments ||
@@ -3761,7 +4410,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateChannelTimeline(session.token, request)
       .then((response: ApiUpdateChannelTimelineResponse) => {
         const event = response.event;
@@ -3769,8 +4418,12 @@ export class Client {
           let attachments;
           let previewImgs;
           try {
-            const decodedAttachments = decodeChannelTimelineAttachments(event.attachments);
-            const decodedPreviewImgs = decodeChannelTimelineAttachments(event.preview_imgs);
+            const decodedAttachments = decodeChannelTimelineAttachments(
+              event.attachments,
+            );
+            const decodedPreviewImgs = decodeChannelTimelineAttachments(
+              event.preview_imgs,
+            );
             attachments =
               decodedAttachments?.attachments ||
               decodedAttachments ||
@@ -3810,7 +4463,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .detailChannelTimeline(session.token, request)
       .then((response: ApiDetailChannelTimelineResponse) => {
         const event = response.event;
@@ -3818,8 +4471,12 @@ export class Client {
           let attachments;
           let previewImgs;
           try {
-            const decodedAttachments = decodeChannelTimelineAttachments(event.attachments);
-            const decodedPreviewImgs = decodeChannelTimelineAttachments(event.preview_imgs);
+            const decodedAttachments = decodeChannelTimelineAttachments(
+              event.attachments,
+            );
+            const decodedPreviewImgs = decodeChannelTimelineAttachments(
+              event.preview_imgs,
+            );
             attachments =
               decodedAttachments?.attachments ||
               decodedAttachments ||
@@ -3860,7 +4517,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .leaveThread(session.token, clanId, channelId)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -3881,7 +4538,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .archiveChannel(session.token, clanId, channelId)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -3901,7 +4558,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listArchivedChannelDescs(session.token, clanId)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -3929,7 +4586,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listChannelSetting(
         session.token,
         clanId,
@@ -3963,7 +4620,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getChannelCanvasList(session.token, channelId, clanId, limit, page)
       .then((response: ApiChannelCanvasListResponse) => {
         const result: ApiChannelCanvasListResponse = {
@@ -3996,7 +4653,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getChannelCanvasDetail(session.token, id, clanId, channelId)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -4015,7 +4672,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .editChannelCanvases(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -4037,7 +4694,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deleteChannelCanvas(session.token, canvasId, clanId, channelId)
       .then((response: any) => {
         return response !== undefined;
@@ -4057,7 +4714,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .addChannelFavorite(session.token, {
         channel_id: channelId,
         clan_id: clanId,
@@ -4080,7 +4737,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .removeChannelFavorite(session.token, clanId, channelId)
       .then((response: any) => {
         return response;
@@ -4096,7 +4753,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getListFavoriteChannel(session.token, clanId)
       .then((response: any) => {
         return response;
@@ -4112,7 +4769,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listActivity(session.token).then((response: any) => {
+    return this.transport.listActivity(session.token).then((response: any) => {
       return response;
     });
   }
@@ -4129,7 +4786,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .createActiviy(session.token, request)
       .then((response: any) => {
         return response;
@@ -4137,7 +4794,7 @@ export class Client {
   }
 
   async createQRLogin(requet: ApiLoginRequest): Promise<ApiLoginIDResponse> {
-    const apiSession = await this.apiClient.createQRLogin(
+    const apiSession = await this.transport.createQRLogin(
       this.serverkey,
       "",
       requet,
@@ -4152,7 +4809,7 @@ export class Client {
   async checkLoginRequest(
     requet: ApiConfirmLoginRequest,
   ): Promise<Session | null> {
-    const apiSession = await this.apiClient.checkLoginRequest(
+    const apiSession = await this.transport.checkLoginRequest(
       this.serverkey,
       "",
       requet,
@@ -4184,7 +4841,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .confirmLogin(session.token, basePath, body)
       .then((response: any) => {
         return response;
@@ -4203,7 +4860,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getChanEncryptionMethod(session.token, channelId)
       .then((response: ApiChanEncryptionMethod) => {
         return response;
@@ -4223,7 +4880,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .setChanEncryptionMethod(session.token, channelId, { method: method })
       .then((response: any) => {
         return response;
@@ -4242,7 +4899,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getPubKeys(session.token, userIds)
       .then((response: ApiGetPubKeysResponse) => {
         return response;
@@ -4261,7 +4918,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .pushPubKey(session.token, { PK: PK })
       .then((response: ApiGetPubKeysResponse) => {
         return response;
@@ -4277,7 +4934,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getKeyServer(session.token)
       .then((response: ApiGetKeyServerResp) => {
         return response;
@@ -4299,7 +4956,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listAuditLog(session.token, actionLog, userId, clanId, date_log)
       .then((response: MezonapiListAuditLog) => {
         return response;
@@ -4321,7 +4978,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listOnboarding(session.token, clanId, guideType, limit, page)
       .then((response: ApiListOnboardingResponse) => {
         return response;
@@ -4341,7 +4998,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getOnboardingDetail(session.token, id, clanId)
       .then((response: ApiOnboardingItem) => {
         return Promise.resolve(response);
@@ -4360,7 +5017,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .createOnboarding(session.token, request)
       .then((response: ApiListOnboardingResponse) => {
         return response;
@@ -4380,7 +5037,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateOnboarding(session.token, id, request)
       .then((response: any) => {
         return response !== undefined;
@@ -4400,7 +5057,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deleteOnboarding(session.token, id, clanId)
       .then((response: any) => {
         return response !== undefined;
@@ -4420,7 +5077,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .generateClanWebhook(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -4440,7 +5097,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listClanWebhook(session.token, clan_id)
       .then((response: ApiListClanWebhookResponse) => {
         return Promise.resolve(response);
@@ -4457,7 +5114,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deleteClanWebhookById(session.token, id, clan_id)
       .then((response: any) => {
         return response !== undefined;
@@ -4478,7 +5135,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateClanWebhookById(session.token, id, request)
       .then((response: any) => {
         return response !== undefined;
@@ -4500,7 +5157,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listOnboardingStep(session.token, clan_id, limit, page)
       .then((response: ApiListOnboardingStepResponse) => {
         return Promise.resolve(response);
@@ -4521,7 +5178,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateOnboardingStepByClanId(session.token, clan_id, request)
       .then((response: any) => {
         return response !== undefined;
@@ -4538,7 +5195,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateUserStatus(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -4555,7 +5212,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateUserCustomStatus(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -4572,7 +5229,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getUserStatus(session.token)
       .then((response: ApiUserStatus) => {
         return Promise.resolve(response);
@@ -4593,7 +5250,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listSdTopic(session.token, clanId, limit)
       .then((response: ApiSdTopicList) => {
         return Promise.resolve(response);
@@ -4613,7 +5270,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .createSdTopic(session.token, request)
       .then((response: ApiSdTopic) => {
         return response;
@@ -4633,7 +5290,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getTopicDetail(session.token, topicId)
       .then((response: ApiSdTopic) => {
         return Promise.resolve(response);
@@ -4653,7 +5310,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .createRoomChannelApps(session.token, body)
       .then((response: MezonapiCreateRoomChannelApps) => {
         return Promise.resolve(response);
@@ -4673,7 +5330,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .generateMeetToken(session.token, body)
       .then((response: ApiGenerateMeetTokenResponse) => {
         return Promise.resolve(response);
@@ -4692,7 +5349,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listMezonOauthClient(session.token)
       .then((response: ApiMezonOauthClientList) => {
         return Promise.resolve(response);
@@ -4712,7 +5369,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .getMezonOauthClient(session.token, clientId, clientName)
       .then((response: ApiMezonOauthClient) => {
         return Promise.resolve(response);
@@ -4731,7 +5388,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateMezonOauthClient(session.token, body)
       .then((response: ApiMezonOauthClient) => {
         return Promise.resolve(response);
@@ -4753,7 +5410,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .searchThread(session.token, clanId, channelId, label)
       .then((response: ApiChannelDescList) => {
         return Promise.resolve(response);
@@ -4773,7 +5430,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .generateHashChannelApps(session.token, appId)
       .then((response: ApiCreateHashChannelAppsResponse) => {
         return Promise.resolve(response);
@@ -4794,7 +5451,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .registrationEmail(session.token, {
         email: email,
         password: password,
@@ -4818,7 +5475,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .addUserEvent(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -4839,7 +5496,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deleteUserEvent(session.token, clanId, eventId)
       .then((response: any) => {
         return response !== undefined;
@@ -4858,7 +5515,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateRoleOrder(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -4874,7 +5531,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteAccount(session.token).then((response: any) => {
+    return this.transport.deleteAccount(session.token).then((response: any) => {
       return Promise.resolve(response);
     });
   }
@@ -4890,7 +5547,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .createExternalMezonMeet(session.token)
       .then((response: ApiGenerateMezonMeetResponse) => {
         return Promise.resolve(response);
@@ -4904,8 +5561,15 @@ export class Client {
     metadata?: string,
     isGuest?: boolean,
   ): Promise<ApiGenerateMeetTokenExternalResponse> {
-    return this.apiClient
-      .generateMeetTokenExternal("", basePath, token, username, metadata, isGuest)
+    return this.transport
+      .generateMeetTokenExternal(
+        "",
+        basePath,
+        token,
+        username,
+        metadata,
+        isGuest,
+      )
       .then((response: ApiGenerateMeetTokenExternalResponse) => {
         return Promise.resolve(response);
       });
@@ -4923,7 +5587,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .removeParticipantMezonMeet(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -4942,7 +5606,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .muteParticipantMezonMeet(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -4962,7 +5626,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateClanOrder(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -4974,7 +5638,7 @@ export class Client {
     basePath: string,
     request: ApiClanDiscoverRequest,
   ): Promise<ApiListClanDiscover> {
-    return this.apiClient
+    return this.transport
       .clanDiscover(this.serverkey, "", basePath, request)
       .then((response: ApiListClanDiscover) => {
         return Promise.resolve(response);
@@ -4995,7 +5659,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listQuickMenuAccess(session.token, botId, channelId, menuType)
       .then((response: ApiQuickMenuAccessList) => {
         return Promise.resolve(response);
@@ -5015,7 +5679,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deleteQuickMenuAccess(session.token, id, clanId)
       .then((response: any) => {
         return response !== undefined;
@@ -5034,7 +5698,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .addQuickMenuAccess(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -5053,7 +5717,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateQuickMenuAccess(session.token, request)
       .then((response: any) => {
         return response !== undefined;
@@ -5072,7 +5736,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listForSaleItems(session.token, page)
       .then((response: ApiForSaleItemList) => {
         return Promise.resolve(response);
@@ -5091,7 +5755,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .isFollower(session.token, req)
       .then((response: ApiIsFollowerResponse) => {
         return Promise.resolve(response);
@@ -5110,7 +5774,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .transferOwnership(session.token, req)
       .then((response: any) => {
         return response !== undefined;
@@ -5129,7 +5793,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .isBanned(session.token, channelId)
       .then((response: ApiIsBannedResponse) => {
         return Promise.resolve(response);
@@ -5149,7 +5813,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .reportMessageAbuse(session.token, messageId, abuseType)
       .then((response: any) => {
         return response !== undefined;
@@ -5172,7 +5836,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateMezonVoiceState(
         session.token,
         clanId,
@@ -5210,7 +5874,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .sendChannelMessage(
         session.token,
         clanId,
@@ -5254,7 +5918,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .updateChannelMessage(
         session.token,
         clanId,
@@ -5294,7 +5958,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .deleteChannelMessage(
         session.token,
         clanId,
@@ -5329,7 +5993,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .messageButtonClick(
         session.token,
         messageId,
@@ -5361,7 +6025,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .dropdownBoxSelected(
         session.token,
         messageId,
@@ -5389,7 +6053,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .activeArchivedThread(session.token, clanId, channelId)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -5409,7 +6073,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .addAgentToChannel(session.token, roomName, channelId)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -5429,7 +6093,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .disconnectAgent(session.token, roomName, channelId)
       .then((response: any) => {
         return Promise.resolve(response);
@@ -5448,7 +6112,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .listMutedChannel(session.token, clanId)
       .then((response: ApiMutedChannelList) => {
         return Promise.resolve(response);
@@ -5456,21 +6120,21 @@ export class Client {
   }
 
   async channelMessageReact(
-      session: Session,
-      clanId: string,
-      channelId: string,
-      mode: number,
-      isPublic: boolean,
-      messageId: string,
-      emojiId: string,
-      emoji: string,
-      count: number,
-      messageSenderId: string,
-      actionDelete: boolean,
-      topicId?: string,
-      emojiRecentId?: string,
-      senderName?: string
-    ): Promise<ChannelMessageAck> {
+    session: Session,
+    clanId: string,
+    channelId: string,
+    mode: number,
+    isPublic: boolean,
+    messageId: string,
+    emojiId: string,
+    emoji: string,
+    count: number,
+    messageSenderId: string,
+    actionDelete: boolean,
+    topicId?: string,
+    emojiRecentId?: string,
+    senderName?: string,
+  ): Promise<ChannelMessageAck> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -5479,7 +6143,7 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
+    return this.transport
       .channelMessageReact(
         session.token,
         clanId,
@@ -5504,7 +6168,7 @@ export class Client {
   /** Create a poll in a channel. */
   async createPoll(
     session: Session,
-    request: ApiCreatePollRequest
+    request: ApiCreatePollRequest,
   ): Promise<ApiCreatePollResponse> {
     if (
       this.autoRefreshSession &&
@@ -5513,11 +6177,14 @@ export class Client {
     ) {
       await this.sessionRefresh(session);
     }
-    return this.apiClient.createPoll(session.token, request);
+    return this.transport.createPoll(session.token, request);
   }
 
   /** Vote on a poll. */
-  async votePoll(session: Session, request: ApiVotePollRequest): Promise<ApiVotePollResponse> {
+  async votePoll(
+    session: Session,
+    request: ApiVotePollRequest,
+  ): Promise<ApiVotePollResponse> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -5525,11 +6192,14 @@ export class Client {
     ) {
       await this.sessionRefresh(session);
     }
-    return this.apiClient.votePoll(session.token, request);
+    return this.transport.votePoll(session.token, request);
   }
 
   /** Close a poll (creator only). */
-  async closePoll(session: Session, request: ApiClosePollRequest): Promise<any> {
+  async closePoll(
+    session: Session,
+    request: ApiClosePollRequest,
+  ): Promise<any> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -5537,13 +6207,13 @@ export class Client {
     ) {
       await this.sessionRefresh(session);
     }
-    return this.apiClient.closePoll(session.token, request);
+    return this.transport.closePoll(session.token, request);
   }
 
   /** Get poll details. */
   async getPoll(
     session: Session,
-    request: ApiGetPollRequest
+    request: ApiGetPollRequest,
   ): Promise<ApiGetPollResponse> {
     if (
       this.autoRefreshSession &&
@@ -5552,6 +6222,559 @@ export class Client {
     ) {
       await this.sessionRefresh(session);
     }
-    return this.apiClient.getPoll(session.token, request);
+    return this.transport.getPoll(session.token, request);
+  }
+
+  async followUsers(
+    session: Session,
+    userIds: string[],
+  ): Promise<Status> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.transport.followUsers(userIds);
+  }
+
+  async joinClanChat(
+    session: Session,
+    clan_id: string,
+  ): Promise<ClanJoin> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.transport.joinClanChat(clan_id);
+  }
+
+  async follower(
+    session: Session
+  ): Promise<void> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.transport.follower();
+  }
+
+  async joinChat(
+    session: Session,
+    clan_id: string,
+    channel_id: string,
+    channel_type: number,
+    is_public: boolean,
+  ): Promise<Channel> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.transport.joinChat(
+      clan_id,
+      channel_id,
+      channel_type,
+      is_public,
+    );
+  }
+
+  async leaveChat(
+    session: Session,
+    clan_id: string,
+    channel_id: string,
+    channel_type: number,
+    is_public: boolean,
+  ): Promise<void> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.transport.leaveChat(
+      clan_id,
+      channel_id,
+      channel_type,
+      is_public,
+    );
+  }
+
+  async removeChatMessage(
+    session: Session,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    message_id: string,
+    has_attachment?: boolean,
+    topic_id?: string,
+    mentions?: string,
+    references?: string,
+  ): Promise<ChannelMessageAck> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.transport.removeChatMessage(
+      clan_id,
+      channel_id,
+      mode,
+      is_public,
+      message_id,
+      has_attachment,
+      topic_id,
+      mentions,
+      references,
+    );
+  }
+
+  async unfollowUsers(
+    session: Session,
+    user_ids: string[],
+  ): Promise<void> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.transport.unfollowUsers(user_ids);
+  }
+
+  async updateChatMessage(
+    session: Session,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    message_id: string,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    hideEditted?: boolean,
+    topic_id?: string,
+    is_update_msg_topic?: boolean,
+  ): Promise<ChannelMessageAck> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.transport.updateChatMessage(
+      clan_id,
+      channel_id,
+      mode,
+      is_public,
+      message_id,
+      content,
+      mentions,
+      attachments,
+      hideEditted,
+      topic_id,
+      is_update_msg_topic,
+    );
+  }
+
+  async updateStatus(
+    session: Session,
+    status?: string,
+  ): Promise<void> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.transport.updateStatus(status);
+  }
+
+  async writeQuickMenuEvent(
+    session: Session,
+    menu_name: string,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymous_message?: boolean,
+    mention_everyone?: boolean,
+    avatar?: string,
+    code?: number,
+    topic_id?: string,
+  ): Promise<QuickMenuEvent> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.transport.writeQuickMenuEvent(
+      menu_name,
+      clan_id,
+      channel_id,
+      mode,
+      is_public,
+      content,
+      mentions,
+      attachments,
+      references,
+      anonymous_message,
+      mention_everyone,
+      avatar,
+      code,
+      topic_id,
+    );
+  }
+
+  async writeEphemeralMessage(
+    session: Session,
+    receiver_ids: string[],
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymous_message?: boolean,
+    mention_everyone?: boolean,
+    avatar?: string,
+    code?: number,
+    topic_id?: string,
+    id?: string,
+  ): Promise<ChannelMessageAck> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.transport.writeEphemeralMessage(
+      receiver_ids,
+      clan_id,
+      channel_id,
+      mode,
+      is_public,
+      content,
+      mentions,
+      attachments,
+      references,
+      anonymous_message,
+      mention_everyone,
+      avatar,
+      code,
+      topic_id,
+      id,
+    );
+  }
+
+  async writeChatMessage(
+    session: Session,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymous_message?: boolean,
+    mention_everyone?: boolean,
+    avatar?: string,
+    code?: number,
+    topic_id?: string,
+  ): Promise<ChannelMessageAck> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.transport.writeChatMessage(
+      clan_id,
+      channel_id,
+      mode,
+      is_public,
+      content,
+      mentions,
+      attachments,
+      references,
+      anonymous_message,
+      mention_everyone,
+      avatar,
+      code,
+      topic_id);
+  }
+
+  async writeMessageReaction(
+    session: Session,
+    id: string,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    message_id: string,
+    emoji_id: string,
+    emoji: string,
+    count: number,
+    message_sender_id: string,
+    action_delete: boolean,
+    topic_id?: string,
+    emoji_recent_id?: string,
+    sender_name?: string,
+  ): Promise<ApiMessageReaction> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.transport.writeMessageReaction(
+      id,
+      clan_id,
+      channel_id,
+      mode,
+      is_public,
+      message_id,
+      emoji_id,
+      emoji,
+      count,
+      message_sender_id,
+      action_delete,
+      topic_id,
+      emoji_recent_id,
+      sender_name,
+    );
+  }
+
+  async writeMessageTyping(
+    session: Session,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    sender_display_name: string,
+    topic_id?: string,
+  ): Promise<MessageTypingEvent> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.transport.writeMessageTyping(
+      clan_id,
+      channel_id,
+      mode,
+      is_public,
+      sender_display_name,
+      topic_id,
+    );
+  }
+
+  async writeLastSeenMessage(
+    session: Session,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    message_id: string,
+    timestamp_seconds: number,
+    badge_count: number,
+  ): Promise<LastSeenMessageEvent> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.transport.writeLastSeenMessage(
+      clan_id,
+      channel_id,
+      mode,
+      message_id,
+      timestamp_seconds,
+      badge_count,
+    );
+  }
+
+  async writeLastPinMessage(
+    session: Session,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    message_id: string,
+    timestamp_seconds: number,
+    operation: number,
+    message_sender_avatar: string,
+    message_sender_id: string,
+    message_sender_username: string,
+    message_content: string,
+    message_attachment: string,
+    message_created_time: string,
+  ): Promise<ApiGetPollResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.transport.writeLastPinMessage(
+      clan_id,
+      channel_id,
+      mode,
+      is_public,
+      message_id,
+      timestamp_seconds,
+      operation,
+      message_sender_avatar,
+      message_sender_id,
+      message_sender_username,
+      message_content,
+      message_attachment,
+      message_created_time,
+    );
+  }
+
+  async writeCustomStatus(
+    session: Session,
+    clan_id: string,
+    status: string,
+    time_reset: number,
+    no_clear: boolean,
+  ): Promise<CustomStatusEvent> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.transport.writeCustomStatus(
+      clan_id,
+      status,
+      time_reset,
+      no_clear,
+    );
+  }
+
+  async writeVoiceReaction(
+    session: Session,
+    emojis: Array<string>,
+    channel_id: string,
+  ): Promise<VoiceReactionSend> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.transport.writeVoiceReaction(emojis, channel_id);
+  }
+
+  async forwardWebrtcSignaling(
+    session: Session,
+    receiver_id: string,
+    data_type: number,
+    json_data: string,
+    channel_id: string,
+    caller_id: string,
+  ): Promise<WebrtcSignalingFwd> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.transport.forwardWebrtcSignaling(
+      receiver_id,
+      data_type,
+      json_data,
+      channel_id,
+      caller_id,
+    );
+  }
+
+  async makeCallPush(
+    session: Session,
+    receiver_id: string,
+    json_data: string,
+    channel_id: string,
+    caller_id: string,
+  ): Promise<IncomingCallPush> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.transport.makeCallPush(
+      receiver_id,
+      json_data,
+      channel_id,
+      caller_id,
+    );
+  }
+
+  async writeChannelAppEvent(
+    session: Session,
+    clan_id: string,
+    channel_id: string,
+    action: number,
+  ): Promise<ChannelAppEvent> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.transport.writeChannelAppEvent(clan_id, channel_id, action);
+  }
+
+  async listDataSocket(
+    session: Session,
+    request: ListDataSocket,
+  ): Promise<ApiGetPollResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+    return this.transport.listDataSocket(request);
   }
 }

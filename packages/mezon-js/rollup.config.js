@@ -28,9 +28,9 @@ export default {
     name: "mezonjs",
     dir: "dist",
     entryFileNames: "mezon-js.umd.js",
-    sourcemap: true,
+    sourcemap: true
   },
-  plugins: [
+  plugins: [    
     typescript({
       include: ["./*.ts"],
       exclude: ["../mezon-js-protobuf/**"],
