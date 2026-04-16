@@ -312,7 +312,7 @@ export class MezonTransport {
     if (urlPath?.includes("/mezon.api.Mezon/")) {
       untypedMessage = {
         api_request_event: {
-          full_url: urlPath,
+          full_url: urlPath.substring(17),
           body: fetchOptions.body,
         },
       };
