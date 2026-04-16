@@ -41,23 +41,23 @@ export class WebSocketAdapter implements TransportAdapter {
         const uintBuffer: Uint8Array = new Uint8Array(buffer);
 
         // Header Length: 1 (Prefix) + 2 (CID) + 4 (Code) = 7 bytes
-        const RAW_HEADER_LENGTH = 7; 
+        const RAW_HEADER_LENGTH = 7;
         const CODE_LENGTH = 3;
 
-        if (uintBuffer.length < 1 + RAW_HEADER_LENGTH) {
-            console.error("Packet too small to contain headers");
-            return;
+        if (uintBuffer.length < 1) {
+          console.error("Packet too small to contain headers");
+          return;
         }
 
-        const prefix = uintBuffer[0];        
-        
+        const prefix = uintBuffer[0];
+
         if (prefix === PREFIX_RAW) {
-            const dataView = new DataView(buffer);
-            const cid = dataView.getUint16(1, false);
-            const code = dataView.getUint32(CODE_LENGTH, false);
-            const payload = uintBuffer.subarray(RAW_HEADER_LENGTH);
-            
-            value!(cid, code, payload);
+          const dataView = new DataView(buffer);
+          const cid = dataView.getUint16(1, false);
+          const code = dataView.getUint32(CODE_LENGTH, false);
+          const payload = uintBuffer.subarray(RAW_HEADER_LENGTH);
+
+          value!(cid, code, payload);
         } else {
           const envelope = tsproto.Envelope.decode(uintBuffer);
 
