@@ -12,6 +12,7 @@
 #else
 #include <arpa/inet.h>
 #include <fcntl.h>
+#include <netdb.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -26,8 +27,7 @@ typedef struct {
   bool connected;
 } MezonInternalContext;
 
-// Sets socket to non-blocking mode
-void set_nonblocking(SOCKET sock) {
+void set_nonblocking(int sock) {
 #ifdef _WIN32
   unsigned long mode = 1;
   ioctlsocket(sock, FIONBIO, &mode);
@@ -37,30 +37,84 @@ void set_nonblocking(SOCKET sock) {
 #endif
 }
 
+
+napi_value Send(napi_env env, napi_callback_info info) {
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+
+  MezonInternalContext *ctx;
+
+  napi_unwrap(env, jsthis, (void **)&ctx);
+
+  void *data;
+  size_t length;
+  napi_get_buffer_info(env, args[0], &data, &length);
+
+  int bytes_sent = send(ctx->sock, (const char *)data, (int)length, 0);
+
+  napi_value result;
+  napi_create_int32(env, bytes_sent, &result);
+  return result;
+}
+
 napi_value Connect(napi_env env, napi_callback_info info) {
+  size_t argc = 2;
+  napi_value args[2];
+  napi_get_cb_info(env, info, &argc, args, nullptr, nullptr);
+
+  if (argc < 2) {
+    napi_throw_type_error(env, nullptr, "Expects (host, port)");
+    return nullptr;
+  }
+
+  char host[256];
+  size_t host_len;
+  napi_get_value_string_utf8(env, args[0], host, sizeof(host), &host_len);
+
+  int32_t port;
+  napi_get_value_int32(env, args[1], &port);
+  char port_str[16];
+  snprintf(port_str, sizeof(port_str), "%d", port);
+
 #ifdef _WIN32
   WSADATA wsa;
-  WSAStartup(MAKEWORD(2, 2), &wsa);
+  if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
+    napi_throw_error(env, nullptr, "WSAStartup failed");
+    return nullptr;
+  }
 #endif
+
+  // DNS Resolution Setup
+  struct addrinfo hints, *res;
+  memset(&hints, 0, sizeof(hints));
+  hints.ai_family = AF_INET;  // IPv4
+  hints.ai_socktype = SOCK_STREAM;
+
+  if (getaddrinfo(host, port_str, &hints, &res) != 0) {
+    napi_throw_error(env, nullptr, "DNS resolution failed for host");
+    return nullptr;
+  }
 
   MezonInternalContext *ctx = new MezonInternalContext();
   ctx->env = env;
   ctx->connected = false;
-  ctx->sock = socket(AF_INET, SOCK_STREAM, 0);
+  ctx->sock = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 
-  struct sockaddr_in dest;
-  memset(&dest, 0, sizeof(dest));
-  dest.sin_family = AF_INET;
-  dest.sin_port = htons(4433);
-  inet_pton(AF_INET, "172.29.223.11", &dest.sin_addr);
+  if (ctx->sock < 0) {
+    freeaddrinfo(res);
+    delete ctx;
+    napi_throw_error(env, nullptr, "Failed to create socket");
+    return nullptr;
+  }
 
-  // Set non-blocking BEFORE connect to handle it consistently with mobile
   set_nonblocking(ctx->sock);
 
-  int r = connect(ctx->sock, (struct sockaddr *)&dest, sizeof(dest));
+  // Initial non-blocking connect
+  connect(ctx->sock, res->ai_addr, res->ai_addrlen);
 
-  // In non-blocking mode, connect usually returns -1 with EINPROGRESS/WSAEWOULDBLOCK
-  // The actual connection status will be checked in the first Poll() call.
+  freeaddrinfo(res);  // Clean up DNS results
 
   napi_value result;
   napi_create_object(env, &result);
@@ -68,14 +122,24 @@ napi_value Connect(napi_env env, napi_callback_info info) {
       env, result, ctx,
       [](napi_env env, void *data, void *hint) {
         MezonInternalContext *c = (MezonInternalContext *)data;
+        if (c->sock >= 0) {
 #ifdef _WIN32
-        closesocket(c->sock);
+          closesocket(c->sock);
 #else
-        close(c->sock);
+          close(c->sock);
 #endif
+        }
         delete c;
       },
       nullptr, nullptr);
+  napi_value send_fn;
+  napi_create_function(env, "send", NAPI_AUTO_LENGTH, Send, nullptr, &send_fn);
+
+  napi_status status = napi_set_named_property(env, result, "send", send_fn);
+
+  if (status != napi_ok) {
+    napi_throw_error(env, nullptr, "Failed to attach send method");
+  }
 
   return result;
 }
@@ -117,26 +181,6 @@ napi_value Poll(napi_env env, napi_callback_info info) {
   }
 
   // No data available right now
-  return nullptr;
-}
-
-napi_value Send(napi_env env, napi_callback_info info) {
-  size_t argc = 1;
-  napi_value args[1];
-  napi_value thisArg;
-  napi_get_cb_info(env, info, &argc, args, &thisArg, nullptr);
-
-  void *data;
-  size_t len;
-  napi_get_buffer_info(env, args[0], &data, &len);
-
-  MezonInternalContext *ctx;
-  napi_unwrap(env, thisArg, (void **)&ctx);
-
-  // If we just connected, the first thing sent over Abridged TCP is 0xef
-  // (This could also be moved to the Connect logic)
-
-  send(ctx->sock, (const char *)data, (int)len, 0);
   return nullptr;
 }
 

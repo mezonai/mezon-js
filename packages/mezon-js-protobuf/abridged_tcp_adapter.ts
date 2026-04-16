@@ -80,9 +80,6 @@ export class AbridgedTcpAdapter implements TransportAdapter {
     
     this._socket = native.connect(host, parseInt(port));
     this._socket.send(Buffer.from([0xef])); // Handshake
-
-    console.error("create status", createStatus);
-    console.error("token", token);
   }
 
   send(msg: any): void {
