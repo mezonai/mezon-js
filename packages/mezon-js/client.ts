@@ -278,6 +278,7 @@ import {
   MessageButtonClicked,
   MultipartUploadAttachment,
   MultipartUploadAttachmentFinishRequest,
+  TransportAdapter,
 } from "mezon-js-protobuf";
 import { MezonTransport } from "./transport";
 
@@ -295,13 +296,13 @@ export const ConnectionState = {
 export type ConnectionStateType =
   (typeof ConnectionState)[keyof typeof ConnectionState];
 
-let __hasConnectedOnce = false;  
+let __hasConnectedOnce = false;
 
 /** A client for Mezon server. */
 export class Client {
   public static readonly DefaultHeartbeatTimeoutMs = 10000;
   public static readonly DefaultConnectTimeoutMs = 30000;
-  
+
   public verbose: boolean = false;
   private _heartbeatTimeoutMs: number;
   private _connectionState: ConnectionStateType;
@@ -320,7 +321,7 @@ export class Client {
     host = DEFAULT_HOST,
     port = DEFAULT_PORT,
     useSSL = false,
-    readonly platform = "web",
+    adapter: any = null,
     readonly timeout = DEFAULT_TIMEOUT_MS,
     readonly autoFallbackHttp = true,
   ) {
@@ -333,21 +334,33 @@ export class Client {
     this._heartbeatTimeoutMs = Client.DefaultHeartbeatTimeoutMs;
     this._connectionState = ConnectionState.DISCONNECTED;
 
-    this.transport = new MezonTransport(serverkey, timeout, platform, basePath);
+    this.transport = new MezonTransport(serverkey, timeout, adapter, basePath);
   }
 
   isOpen(): boolean {
     return this._connectionState === ConnectionState.CONNECTED;
   }
 
-  connect(session: Session, createStatus = false, verbose = false, connectTimeoutMs: number = Client.DefaultConnectTimeoutMs): Promise<Session> {
+  setTransportAdapter(transportAdapter: TransportAdapter) {
+    this.transport.setTransportAdapter(transportAdapter);
+  }
+
+  connect(
+    session: Session,
+    createStatus = false,
+    verbose = false,
+    connectTimeoutMs: number = Client.DefaultConnectTimeoutMs,
+  ): Promise<Session> {
     this.verbose = verbose;
 
     if (this._connectionState === ConnectionState.CONNECTED) {
       return Promise.resolve(session);
     }
 
-    if (this._connectionState === ConnectionState.CONNECTING && this._connectPromise) {
+    if (
+      this._connectionState === ConnectionState.CONNECTING &&
+      this._connectPromise
+    ) {
       return this._connectPromise;
     }
 
@@ -582,7 +595,7 @@ export class Client {
         this._connectionState = ConnectionState.CONNECTED;
         this.startHeartbeatLoop();
         this._connectPromise = undefined;
-        
+
         resolve(session);
 
         if (isReconnect) {
@@ -624,7 +637,10 @@ export class Client {
     try {
       const urlPath = "";
       const fetchOptions = { ping: {} };
-      await this.transport.send({ urlPath, fetchOptions }, this._heartbeatTimeoutMs);
+      await this.transport.send(
+        { urlPath, fetchOptions },
+        this._heartbeatTimeoutMs,
+      );
     } catch {
       this._connectionState = ConnectionState.DISCONNECTED;
       this.stopHeartbeatLoop();
@@ -646,7 +662,7 @@ export class Client {
     this.stopHeartbeatLoop();
     this._heartbeatTimer = setTimeout(
       () => this.pingPong(),
-      this._heartbeatTimeoutMs
+      this._heartbeatTimeoutMs,
     );
   }
 
@@ -1250,7 +1266,10 @@ export class Client {
     channelId: string,
     ids?: Array<string>,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1267,7 +1286,10 @@ export class Client {
     ids?: Array<string>,
     usernames?: Array<string>,
   ): Promise<ApiAddFriendsResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1280,7 +1302,10 @@ export class Client {
     ids?: Array<string>,
     usernames?: Array<string>,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1297,7 +1322,10 @@ export class Client {
     ids?: Array<string>,
     usernames?: Array<string>,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1313,7 +1341,10 @@ export class Client {
     session: Session,
     request: ApiUploadAttachmentRequest,
   ): Promise<ApiUploadAttachment> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1325,7 +1356,10 @@ export class Client {
     session: Session,
     request: ApiUploadAttachmentRequest,
   ): Promise<ApiUploadAttachment> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1336,7 +1370,10 @@ export class Client {
     session: Session,
     request: ApiUploadAttachmentRequest,
   ): Promise<MultipartUploadAttachment> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1347,7 +1384,10 @@ export class Client {
     session: Session,
     request: MultipartUploadAttachmentFinishRequest,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1362,7 +1402,10 @@ export class Client {
     session: Session,
     request: ApiCreateChannelDescRequest,
   ): Promise<ApiChannelDescription> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1378,7 +1421,10 @@ export class Client {
     session: Session,
     request: ApiCreateClanDescRequest,
   ): Promise<ApiClanDesc> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1394,7 +1440,10 @@ export class Client {
     session: Session,
     request: ApiCheckDuplicateNameRequest,
   ): Promise<ApiCheckDuplicateNameResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1406,7 +1455,10 @@ export class Client {
     session: Session,
     request: ApiCreateCategoryDescRequest,
   ): Promise<ApiCategoryDesc> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1422,7 +1474,10 @@ export class Client {
     session: Session,
     request: ApiCreateRoleRequest,
   ): Promise<ApiRole> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1438,7 +1493,10 @@ export class Client {
     session: Session,
     request: ApiCreateEventRequest,
   ): Promise<ApiEventManagement> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1454,7 +1512,10 @@ export class Client {
     session: Session,
     request: ApiAddRoleChannelDescRequest,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1470,7 +1531,10 @@ export class Client {
     session: Session,
     request: ApiDeleteRoleRequest,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1482,7 +1546,10 @@ export class Client {
   }
 
   async deleteApp(session: Session, appId: string): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1499,7 +1566,10 @@ export class Client {
     ids?: Array<string>,
     usernames?: Array<string>,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1516,7 +1586,10 @@ export class Client {
     clanId: string,
     channelId: string,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1529,7 +1602,10 @@ export class Client {
 
   /** Delete a clan desc by ID. */
   async deleteClanDesc(session: Session, clanDescId: string): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1547,7 +1623,10 @@ export class Client {
     clanId: string,
     categoryLabel?: string,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1564,7 +1643,10 @@ export class Client {
     ids?: Array<string>,
     category?: number,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1582,7 +1664,10 @@ export class Client {
     clanId: string,
     roleLabel?: string,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1602,7 +1687,10 @@ export class Client {
     eventLabel?: string,
     channelId?: string,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1625,7 +1713,10 @@ export class Client {
     session: Session,
     request: ApiDeleteEventRequest,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1638,7 +1729,10 @@ export class Client {
 
   /** Submit an event for processing in the server's registered runtime custom events handler. */
   async emitEvent(session: Session, request: ApiEvent): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1651,7 +1745,10 @@ export class Client {
 
   /** Fetch the current user's account. */
   async getAccount(session: Session): Promise<ApiAccount> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1664,7 +1761,10 @@ export class Client {
     clanId: string,
     ids?: Array<string>,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1680,7 +1780,10 @@ export class Client {
     clanId?: string,
     channelId?: string,
   ): Promise<ApiBannedUserList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1698,7 +1801,10 @@ export class Client {
     channelId?: string,
     userIds?: Array<string>,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1717,7 +1823,10 @@ export class Client {
     userIds?: Array<string>,
     banTime?: number,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1734,7 +1843,10 @@ export class Client {
     channelId: string,
     ids?: Array<string>,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1755,7 +1867,10 @@ export class Client {
     limit?: number,
     topicId?: string,
   ): Promise<ChannelMessageList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1860,7 +1975,10 @@ export class Client {
     clanId: string,
     limit?: number,
   ): Promise<ApiVoiceChannelUserList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1897,7 +2015,10 @@ export class Client {
     limit?: number,
     cursor?: string,
   ): Promise<ApiChannelUserList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1950,7 +2071,10 @@ export class Client {
     before?: number,
     after?: number,
   ): Promise<ApiChannelAttachmentList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -1997,7 +2121,10 @@ export class Client {
     session: Session,
     clanId: string,
   ): Promise<ApiClanUserList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2051,7 +2178,10 @@ export class Client {
     session: Session,
     clanId: string,
   ): Promise<ApiClanUserStatusList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2078,7 +2208,10 @@ export class Client {
     session: Session,
     channelId: string,
   ): Promise<ApiChannelDescription> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2099,7 +2232,10 @@ export class Client {
     channelType?: number,
     isMobile?: boolean,
   ): Promise<ApiChannelDescList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2137,7 +2273,10 @@ export class Client {
     state?: number,
     cursor?: string,
   ): Promise<ApiClanDescList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2164,7 +2303,10 @@ export class Client {
     limit?: number,
     page?: number,
   ): Promise<ApiListChannelBadgeCountResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2183,7 +2325,10 @@ export class Client {
     limit?: number,
     page?: number,
   ): Promise<ApiListUserOnlineResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2202,7 +2347,10 @@ export class Client {
     creatorId?: string,
     categoryName?: string,
   ): Promise<ApiCategoryDescList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2224,7 +2372,10 @@ export class Client {
 
   /** List event */
   async listEvents(session: Session, clanId?: string): Promise<ApiEventList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2237,7 +2388,10 @@ export class Client {
 
   /** List permission */
   async getListPermission(session: Session): Promise<ApiPermissionList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2253,7 +2407,10 @@ export class Client {
     session: Session,
     roleId: string,
   ): Promise<ApiPermissionList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2271,7 +2428,10 @@ export class Client {
     limit?: number,
     cursor?: string,
   ): Promise<ApiRoleUserList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2289,7 +2449,10 @@ export class Client {
     platform: string,
     voipToken?: string,
   ): Promise<ApiRegistFcmDeviceTokenResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2310,7 +2473,10 @@ export class Client {
     session: Session,
     clanId: string,
   ): Promise<ApiClanProfile> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2326,7 +2492,10 @@ export class Client {
     session: Session,
     request: ApiDeleteChannelDescRequest,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2341,7 +2510,10 @@ export class Client {
     session: Session,
     request: ApiDeleteChannelDescRequest,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2356,7 +2528,10 @@ export class Client {
     session: Session,
     request: ApiLinkAccountConfirmRequest,
   ): Promise<ApiSession> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2368,7 +2543,10 @@ export class Client {
     session: Session,
     request: ApiLinkAccountMezon,
   ): Promise<ApiLinkAccountConfirmRequest> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2384,7 +2562,10 @@ export class Client {
     session: Session,
     request: ApiAccountEmail,
   ): Promise<ApiLinkAccountConfirmRequest> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2402,7 +2583,10 @@ export class Client {
     limit?: number,
     cursor?: string,
   ): Promise<Friends> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2457,7 +2641,10 @@ export class Client {
     category?: number,
     direction?: number,
   ): Promise<ApiNotificationList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2504,7 +2691,10 @@ export class Client {
     deviceId: string,
     platform: string,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2581,7 +2771,10 @@ export class Client {
     session: Session,
     request: ApiAccountEmail,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2597,7 +2790,10 @@ export class Client {
     session: Session,
     request: ApiUpdateUsernameRequest,
   ): Promise<ApiSession> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2613,7 +2809,10 @@ export class Client {
     session: Session,
     request: ApiUpdateAccountRequest,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2630,7 +2829,10 @@ export class Client {
     channelId: string,
     request: ApiUpdateChannelDescRequest,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2647,7 +2849,10 @@ export class Client {
     clanId: string,
     request: MezonUpdateClanDescBody,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2664,7 +2869,10 @@ export class Client {
     clanId: string,
     request: ApiUpdateCategoryDescRequest,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2680,7 +2888,10 @@ export class Client {
     clanId: string,
     request: ApiUpdateClanProfileRequest,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2697,7 +2908,10 @@ export class Client {
     roleId: string,
     request: ApiUpdateRoleRequest,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2714,7 +2928,10 @@ export class Client {
     roleId: string,
     request: MezonUpdateEventBody,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2731,7 +2948,10 @@ export class Client {
     roleId: string,
     request: MezonUpdateAppBody,
   ): Promise<ApiApp> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2747,7 +2967,10 @@ export class Client {
     session: Session,
     request: ApiLinkInviteUserRequest,
   ): Promise<ApiLinkInviteUser> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2772,7 +2995,10 @@ export class Client {
     session: Session,
     clanId: string,
   ): Promise<ApiRoleList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2788,7 +3014,10 @@ export class Client {
     session: Session,
     inviteId: string,
   ): Promise<ApiInviteUserRes> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2804,7 +3033,10 @@ export class Client {
     session: Session,
     request: ApiSetDefaultNotificationRequest,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2820,7 +3052,10 @@ export class Client {
     session: Session,
     request: ApiSetNotificationRequest,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2836,7 +3071,10 @@ export class Client {
     session: Session,
     request: ApiSetMuteRequest,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2852,7 +3090,10 @@ export class Client {
     session: Session,
     request: ApiSetMuteRequest,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2868,7 +3109,10 @@ export class Client {
     session: Session,
     request: ApiChangeChannelPrivateRequest,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2884,7 +3128,10 @@ export class Client {
     session: Session,
     request: ApiSetNotificationRequest,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2899,7 +3146,10 @@ export class Client {
     session: Session,
     category_id: string,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2914,7 +3164,10 @@ export class Client {
     session: Session,
     channel_id: string,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2930,7 +3183,10 @@ export class Client {
     session: Session,
     channel_id: string,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2946,7 +3202,10 @@ export class Client {
     session: Session,
     channel_id: string,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2962,7 +3221,10 @@ export class Client {
     session: Session,
     request: ApiSearchMessageRequest,
   ): Promise<ApiSearchMessageResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2978,7 +3240,10 @@ export class Client {
     session: Session,
     request: ApiMessage2InboxRequest,
   ): Promise<ApiChannelMessageHeader> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -2994,7 +3259,10 @@ export class Client {
     session: Session,
     request: ApiPinMessageRequest,
   ): Promise<ApiChannelMessageHeader> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3011,7 +3279,10 @@ export class Client {
     channelId: string,
     clanId: string,
   ): Promise<ApiPinMessagesList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3051,7 +3322,10 @@ export class Client {
     channelId?: string,
     clanId?: string,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3064,7 +3338,10 @@ export class Client {
 
   /** create clan emoji */
   async createClanEmoji(session: Session, request: ApiClanEmojiCreateRequest) {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3081,7 +3358,10 @@ export class Client {
     id: string,
     request: MezonUpdateClanEmojiByIdBody,
   ) {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3099,7 +3379,10 @@ export class Client {
     clan_id: string,
     emojiLabel?: string,
   ) {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3115,7 +3398,10 @@ export class Client {
     session: Session,
     request: ApiWebhookCreateRequest,
   ): Promise<ApiWebhookGenerateResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3132,7 +3418,10 @@ export class Client {
     channel_id: string,
     clan_id: string,
   ): Promise<ApiWebhookListResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3149,7 +3438,10 @@ export class Client {
     id: string,
     request: MezonUpdateWebhookByIdBody,
   ) {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3166,7 +3458,10 @@ export class Client {
     id: string,
     request: MezonDeleteWebhookByIdBody,
   ) {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3179,7 +3474,10 @@ export class Client {
 
   //**Add a new sticker */
   async addClanSticker(session: Session, request: ApiClanStickerAddRequest) {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3197,7 +3495,10 @@ export class Client {
     clan_id: string,
     stickerLabel?: string,
   ) {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3214,7 +3515,10 @@ export class Client {
     id: string,
     request: MezonUpdateClanStickerByIdBody,
   ) {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3231,7 +3535,10 @@ export class Client {
     id: string,
     request: MezonChangeChannelCategoryBody,
   ) {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3247,7 +3554,10 @@ export class Client {
     session: Session,
     request: ApiUpdateRoleChannelRequest,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3259,7 +3569,10 @@ export class Client {
   }
 
   async addApp(session: Session, request: ApiAddAppRequest): Promise<ApiApp> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3271,7 +3584,10 @@ export class Client {
   }
 
   async getApp(session: Session, id: string): Promise<ApiApp> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3281,7 +3597,10 @@ export class Client {
   }
 
   async listApps(session: Session): Promise<ApiAppList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3293,7 +3612,10 @@ export class Client {
   }
 
   async addAppToClan(session: Session, appId: string, clanId: string) {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3307,7 +3629,10 @@ export class Client {
   async getSystemMessagesList(
     session: Session,
   ): Promise<ApiSystemMessagesList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3322,7 +3647,10 @@ export class Client {
     session: Session,
     clanId: string,
   ): Promise<ApiSystemMessage> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3337,7 +3665,10 @@ export class Client {
     session: Session,
     request: ApiSystemMessageRequest,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3353,7 +3684,10 @@ export class Client {
     clanId: string,
     request: MezonUpdateSystemMessageBody,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3365,7 +3699,10 @@ export class Client {
   }
 
   async deleteSystemMessage(session: Session, clanId: string): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3380,7 +3717,10 @@ export class Client {
     session: Session,
     request: ApiUpdateCategoryOrderRequest,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3395,7 +3735,10 @@ export class Client {
     session: Session,
     request: ApiGiveCoffeeEvent,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3407,7 +3750,10 @@ export class Client {
   }
 
   async sendToken(session: Session, request: ApiTokenSentEvent): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3428,7 +3774,10 @@ export class Client {
     limit?: number,
     cursor?: string,
   ): Promise<ApiStreamingChannelUserList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3467,7 +3816,10 @@ export class Client {
     session: Session,
     request: ApiRegisterStreamingChannelRequest,
   ) {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3483,7 +3835,10 @@ export class Client {
     session: Session,
     clanId: string,
   ): Promise<ApiListChannelAppsResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3517,7 +3872,10 @@ export class Client {
     session: Session,
     clanId: string,
   ): Promise<ApiNotificationChannelCategorySettingList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3532,7 +3890,10 @@ export class Client {
     session: Session,
     categoryId: string,
   ): Promise<ApiNotificationUserChannel> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3547,7 +3908,10 @@ export class Client {
     session: Session,
     channelId: string,
   ): Promise<ApiNotificationUserChannel> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3562,7 +3926,10 @@ export class Client {
     session: Session,
     clanId: string,
   ): Promise<ApiNotificationSetting> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3577,7 +3944,10 @@ export class Client {
     session: Session,
     channelId: string,
   ): Promise<ApiNotifiReactMessage> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3589,7 +3959,10 @@ export class Client {
   }
 
   async listChannelByUserId(session: Session): Promise<ApiChannelDescList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3605,7 +3978,10 @@ export class Client {
     channel_id: string,
     limit: number,
   ): Promise<ApiAllUsersAddChannelResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3619,7 +3995,10 @@ export class Client {
   async getListEmojisByUserId(
     session: Session,
   ): Promise<ApiEmojiListedResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3631,7 +4010,10 @@ export class Client {
   }
 
   async emojiRecentList(session: Session): Promise<ApiEmojiRecentList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3645,7 +4027,10 @@ export class Client {
   async getListStickersByUserId(
     session: Session,
   ): Promise<ApiStickerListedResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3657,7 +4042,10 @@ export class Client {
   }
 
   async listUserClansByUserId(session: Session): Promise<ApiAllUserClans> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3675,7 +4063,10 @@ export class Client {
     state?: number,
     cursor?: string,
   ): Promise<ApiRoleListEventResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3696,7 +4087,10 @@ export class Client {
     clanId?: string,
     channelId?: string,
   ): Promise<ApiUserPermissionInChannelListResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3719,7 +4113,10 @@ export class Client {
     channelId?: string,
     userId?: string,
   ): Promise<ApiPermissionRoleChannelListEventResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3741,7 +4138,10 @@ export class Client {
     session: Session,
     request: ApiMarkAsReadRequest,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3762,7 +4162,10 @@ export class Client {
     threadId?: string,
     page?: number,
   ): Promise<ApiChannelDescList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3794,7 +4197,10 @@ export class Client {
     session: Session,
     request: ApiListChannelTimelineRequest,
   ): Promise<ApiListChannelTimelineResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3829,7 +4235,10 @@ export class Client {
     session: Session,
     request: ApiCreateChannelTimelineRequest,
   ): Promise<ApiCreateChannelTimelineResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3878,7 +4287,10 @@ export class Client {
     session: Session,
     request: ApiUpdateChannelTimelineRequest,
   ): Promise<ApiUpdateChannelTimelineResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3927,7 +4339,10 @@ export class Client {
     session: Session,
     request: ApiDetailChannelTimelineRequest,
   ): Promise<ApiDetailChannelTimelineResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3977,7 +4392,10 @@ export class Client {
     clanId: string,
     channelId: string,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -3994,7 +4412,10 @@ export class Client {
     clanId: string,
     channelId: string,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4008,9 +4429,12 @@ export class Client {
   /** List archived top-level channels in a clan. */
   async listArchivedChannelDescs(
     session: Session,
-    clanId: string
+    clanId: string,
   ): Promise<ApiChannelDescList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4034,7 +4458,10 @@ export class Client {
     page?: number,
     channelLabel?: string,
   ): Promise<ApiChannelSettingListResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4064,7 +4491,10 @@ export class Client {
     limit?: number,
     page?: number,
   ): Promise<ApiChannelCanvasListResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4093,7 +4523,10 @@ export class Client {
     clanId?: string,
     channelId?: string,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4108,7 +4541,10 @@ export class Client {
     session: Session,
     request: ApiEditChannelCanvasRequest,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4126,7 +4562,10 @@ export class Client {
     clanId?: string,
     channelId?: string,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4142,7 +4581,10 @@ export class Client {
     channelId: string,
     clanId: string,
   ): Promise<ApiAddFavoriteChannelResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4161,7 +4603,10 @@ export class Client {
     clanId: string,
     channelId: string,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4173,7 +4618,10 @@ export class Client {
   }
 
   async getListFavoriteChannel(session: Session, clanId: string): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4185,7 +4633,10 @@ export class Client {
   }
   /** List activity */
   async listActivity(session: Session): Promise<ApiListUserActivity> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4198,7 +4649,10 @@ export class Client {
     session: Session,
     request: ApiCreateActivityRequest,
   ): Promise<ApiUserActivity> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4249,7 +4703,10 @@ export class Client {
     basePath: string,
     body: ApiConfirmLoginRequest,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4264,7 +4721,10 @@ export class Client {
     session: Session,
     channelId: string,
   ): Promise<ApiChanEncryptionMethod> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4280,7 +4740,10 @@ export class Client {
     channelId: string,
     method: string,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4295,7 +4758,10 @@ export class Client {
     session: Session,
     userIds: Array<string>,
   ): Promise<ApiGetPubKeysResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4310,7 +4776,10 @@ export class Client {
     session: Session,
     PK: ApiPubKey,
   ): Promise<ApiGetPubKeysResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4322,7 +4791,10 @@ export class Client {
   }
 
   async getKeyServer(session: Session): Promise<ApiGetKeyServerResp> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4340,7 +4812,10 @@ export class Client {
     clanId?: string,
     date_log?: string,
   ): Promise<MezonapiListAuditLog> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4358,7 +4833,10 @@ export class Client {
     limit?: number,
     page?: number,
   ): Promise<ApiListOnboardingResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4374,7 +4852,10 @@ export class Client {
     id: string,
     clanId?: string,
   ): Promise<ApiOnboardingItem> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4389,7 +4870,10 @@ export class Client {
     session: Session,
     request: ApiCreateOnboardingRequest,
   ): Promise<ApiListOnboardingResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4405,7 +4889,10 @@ export class Client {
     id: string,
     request: MezonUpdateOnboardingBody,
   ) {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4421,7 +4908,10 @@ export class Client {
     id: string,
     clanId?: string,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4437,7 +4927,10 @@ export class Client {
     session: Session,
     request: ApiGenerateClanWebhookRequest,
   ): Promise<ApiGenerateClanWebhookResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4453,7 +4946,10 @@ export class Client {
     session: Session,
     clan_id: string,
   ): Promise<ApiListClanWebhookResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4466,7 +4962,10 @@ export class Client {
 
   //**disabled webhook by id */
   async deleteClanWebhookById(session: Session, id: string, clan_id: string) {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4483,7 +4982,10 @@ export class Client {
     id: string,
     request: MezonUpdateClanWebhookByIdBody,
   ) {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4501,7 +5003,10 @@ export class Client {
     limit?: number,
     page?: number,
   ): Promise<ApiListOnboardingStepResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4518,7 +5023,10 @@ export class Client {
     clan_id: string,
     request: MezonUpdateOnboardingStepByClanIdBody,
   ) {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4531,7 +5039,10 @@ export class Client {
 
   //**update status */
   async updateUserStatus(session: Session, request: ApiUserStatusUpdate) {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4544,7 +5055,10 @@ export class Client {
 
   /** Update user custom status (user_status). */
   async updateUserCustomStatus(session: Session, request: ApiUserStatusUpdate) {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4557,7 +5071,10 @@ export class Client {
 
   //**get user status */
   async getUserStatus(session: Session): Promise<ApiUserStatus> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4574,7 +5091,10 @@ export class Client {
     clanId?: string,
     limit?: number,
   ): Promise<ApiSdTopicList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4590,7 +5110,10 @@ export class Client {
     session: Session,
     request: ApiSdTopicRequest,
   ): Promise<ApiSdTopic> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4606,7 +5129,10 @@ export class Client {
     session: Session,
     topicId?: string,
   ): Promise<ApiSdTopic> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4622,7 +5148,10 @@ export class Client {
     session: Session,
     body: MezonapiCreateRoomChannelApps,
   ): Promise<MezonapiCreateRoomChannelApps> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4638,7 +5167,10 @@ export class Client {
     session: Session,
     body: ApiGenerateMeetTokenRequest,
   ): Promise<ApiGenerateMeetTokenResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4653,7 +5185,10 @@ export class Client {
   async listMezonOauthClient(
     session: Session,
   ): Promise<ApiMezonOauthClientList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4669,7 +5204,10 @@ export class Client {
     clientId?: string,
     clientName?: string,
   ): Promise<ApiMezonOauthClient> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4684,7 +5222,10 @@ export class Client {
     session: Session,
     body: ApiMezonOauthClient,
   ): Promise<ApiMezonOauthClient> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4702,7 +5243,10 @@ export class Client {
     channelId?: string,
     label?: string,
   ): Promise<ApiChannelDescList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4718,7 +5262,10 @@ export class Client {
     session: Session,
     appId?: string,
   ): Promise<ApiCreateHashChannelAppsResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4735,7 +5282,10 @@ export class Client {
     password?: string,
     oldPassword?: string,
   ): Promise<ApiSession> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4755,7 +5305,10 @@ export class Client {
     session: Session,
     request: ApiUserEventRequest,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4772,7 +5325,10 @@ export class Client {
     clanId?: string,
     eventId?: string,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4787,7 +5343,10 @@ export class Client {
     session: Session,
     request: ApiUpdateRoleOrderRequest,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4799,7 +5358,10 @@ export class Client {
   }
 
   async deleteAccount(session: Session): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4811,7 +5373,10 @@ export class Client {
   async createExternalMezonMeet(
     session: Session,
   ): Promise<ApiGenerateMezonMeetResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4847,7 +5412,10 @@ export class Client {
     session: Session,
     request: ApiMeetParticipantRequest,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4862,7 +5430,10 @@ export class Client {
     session: Session,
     request: ApiMeetParticipantRequest,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4878,7 +5449,10 @@ export class Client {
     session: Session,
     request: ApiUpdateClanOrderRequest,
   ): Promise<boolean> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4907,7 +5481,10 @@ export class Client {
     channelId: string,
     menuType: number,
   ): Promise<ApiQuickMenuAccessList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4923,7 +5500,10 @@ export class Client {
     id: string,
     clanId: string,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4938,7 +5518,10 @@ export class Client {
     session: Session,
     request: ApiQuickMenuAccessRequest,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4953,7 +5536,10 @@ export class Client {
     session: Session,
     request: ApiQuickMenuAccessRequest,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4968,7 +5554,10 @@ export class Client {
     session: Session,
     page?: number,
   ): Promise<ApiForSaleItemList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4983,7 +5572,10 @@ export class Client {
     session: Session,
     req: ApiIsFollowerRequest,
   ): Promise<ApiIsFollowerResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -4998,7 +5590,10 @@ export class Client {
     session: Session,
     req: ApiTransferOwnershipRequest,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -5013,7 +5608,10 @@ export class Client {
     session: Session,
     channelId: string,
   ): Promise<ApiIsBannedResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -5029,7 +5627,10 @@ export class Client {
     messageId?: string,
     abuseType?: string,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -5048,7 +5649,10 @@ export class Client {
     roomName?: string,
     state?: number,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -5082,7 +5686,10 @@ export class Client {
     code?: number,
     topicId?: string,
   ): Promise<ChannelMessageAck> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -5122,7 +5729,10 @@ export class Client {
     topicId?: string,
     isUpdateMsgTopic?: boolean,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -5158,7 +5768,10 @@ export class Client {
     mentions?: Uint8Array,
     references?: Uint8Array,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -5189,7 +5802,10 @@ export class Client {
     userId?: string,
     extraData?: string,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -5217,7 +5833,10 @@ export class Client {
     userId?: string,
     values?: string[],
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -5241,7 +5860,10 @@ export class Client {
     clanId?: string,
     channelId?: string,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -5257,7 +5879,10 @@ export class Client {
     roomName?: string,
     channelId?: string,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -5273,7 +5898,10 @@ export class Client {
     roomName?: string,
     channelId?: string,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -5288,7 +5916,10 @@ export class Client {
     session: Session,
     clanId: string,
   ): Promise<ApiMutedChannelList> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -5315,7 +5946,10 @@ export class Client {
     emojiRecentId?: string,
     senderName?: string,
   ): Promise<ChannelMessageAck> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
 
@@ -5346,7 +5980,10 @@ export class Client {
     session: Session,
     request: ApiCreatePollRequest,
   ): Promise<ApiCreatePollResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.createPoll(session.token, request);
@@ -5357,7 +5994,10 @@ export class Client {
     session: Session,
     request: ApiVotePollRequest,
   ): Promise<ApiVotePollResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.votePoll(session.token, request);
@@ -5368,7 +6008,10 @@ export class Client {
     session: Session,
     request: ApiClosePollRequest,
   ): Promise<any> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.closePoll(session.token, request);
@@ -5379,36 +6022,40 @@ export class Client {
     session: Session,
     request: ApiGetPollRequest,
   ): Promise<ApiGetPollResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.getPoll(session.token, request);
   }
 
-  async followUsers(
-    session: Session,
-    userIds: string[],
-  ): Promise<Status> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+  async followUsers(session: Session, userIds: string[]): Promise<Status> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.followUsers(userIds);
   }
 
-  async joinClanChat(
-    session: Session,
-    clan_id: string,
-  ): Promise<ClanJoin> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+  async joinClanChat(session: Session, clan_id: string): Promise<ClanJoin> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.joinClanChat(clan_id);
   }
 
-  async follower(
-    session: Session
-  ): Promise<void> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+  async follower(session: Session): Promise<void> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.follower();
@@ -5421,7 +6068,10 @@ export class Client {
     channel_type: number,
     is_public: boolean,
   ): Promise<Channel> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.joinChat(
@@ -5439,7 +6089,10 @@ export class Client {
     channel_type: number,
     is_public: boolean,
   ): Promise<void> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.leaveChat(
@@ -5462,7 +6115,10 @@ export class Client {
     mentions?: string,
     references?: string,
   ): Promise<ChannelMessageAck> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.removeChatMessage(
@@ -5478,11 +6134,11 @@ export class Client {
     );
   }
 
-  async unfollowUsers(
-    session: Session,
-    user_ids: string[],
-  ): Promise<void> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+  async unfollowUsers(session: Session, user_ids: string[]): Promise<void> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.unfollowUsers(user_ids);
@@ -5502,7 +6158,10 @@ export class Client {
     topic_id?: string,
     is_update_msg_topic?: boolean,
   ): Promise<ChannelMessageAck> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.updateChatMessage(
@@ -5520,11 +6179,11 @@ export class Client {
     );
   }
 
-  async updateStatus(
-    session: Session,
-    status?: string,
-  ): Promise<void> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+  async updateStatus(session: Session, status?: string): Promise<void> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.updateStatus(status);
@@ -5547,7 +6206,10 @@ export class Client {
     code?: number,
     topic_id?: string,
   ): Promise<QuickMenuEvent> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.writeQuickMenuEvent(
@@ -5586,7 +6248,10 @@ export class Client {
     topic_id?: string,
     id?: string,
   ): Promise<ChannelMessageAck> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.writeEphemeralMessage(
@@ -5624,7 +6289,10 @@ export class Client {
     code?: number,
     topic_id?: string,
   ): Promise<ChannelMessageAck> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.writeChatMessage(
@@ -5640,7 +6308,8 @@ export class Client {
       mention_everyone,
       avatar,
       code,
-      topic_id);
+      topic_id,
+    );
   }
 
   async writeMessageReaction(
@@ -5660,7 +6329,10 @@ export class Client {
     emoji_recent_id?: string,
     sender_name?: string,
   ): Promise<ApiMessageReaction> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.writeMessageReaction(
@@ -5690,7 +6362,10 @@ export class Client {
     sender_display_name: string,
     topic_id?: string,
   ): Promise<MessageTypingEvent> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.writeMessageTyping(
@@ -5712,7 +6387,10 @@ export class Client {
     timestamp_seconds: number,
     badge_count: number,
   ): Promise<LastSeenMessageEvent> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.writeLastSeenMessage(
@@ -5741,7 +6419,10 @@ export class Client {
     message_attachment: string,
     message_created_time: string,
   ): Promise<ApiGetPollResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.writeLastPinMessage(
@@ -5768,7 +6449,10 @@ export class Client {
     time_reset: number,
     no_clear: boolean,
   ): Promise<CustomStatusEvent> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.writeCustomStatus(
@@ -5784,7 +6468,10 @@ export class Client {
     emojis: Array<string>,
     channel_id: string,
   ): Promise<VoiceReactionSend> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.writeVoiceReaction(emojis, channel_id);
@@ -5798,7 +6485,10 @@ export class Client {
     channel_id: string,
     caller_id: string,
   ): Promise<WebrtcSignalingFwd> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.forwardWebrtcSignaling(
@@ -5817,7 +6507,10 @@ export class Client {
     channel_id: string,
     caller_id: string,
   ): Promise<IncomingCallPush> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.makeCallPush(
@@ -5834,7 +6527,10 @@ export class Client {
     channel_id: string,
     action: number,
   ): Promise<ChannelAppEvent> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.writeChannelAppEvent(clan_id, channel_id, action);
@@ -5844,7 +6540,10 @@ export class Client {
     session: Session,
     request: ListDataSocket,
   ): Promise<ApiGetPollResponse> {
-    if (this.autoFallbackHttp && this._connectionState !== ConnectionState.CONNECTED) {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.listDataSocket(request);

@@ -19,26 +19,34 @@ const external = [
   'protobufjs',
   'protobufjs/minimal',
   'long',
+  'node:net',
+  'net'
 ];
+
+const entryPoints = {
+  'mezon-js-protobuf': './index.ts',
+  'abridged_tcp_adapter': './abridged_tcp_adapter.ts'
+};
 
 // Shared esbuild config
 const config = {
   logLevel: 'info',
-  entryPoints: ['index.ts'],
+  entryPoints: entryPoints,
   bundle: true,
   target: 'es6',
   platform: 'node',
   treeShaking: true,
   globalName: 'mezonjsprotobuf',
   external,
+  outdir: 'dist',
 };
 
 // Build CommonJS (minified)
 await esbuild.build({
   ...config,
   format: 'cjs',
-  outfile: 'dist/mezon-js-protobuf.cjs.js',
   minify: true,
+  outExtension: { '.js': '.cjs.js' },
   minifyWhitespace: true,
   minifyIdentifiers: true,
   minifySyntax: true,
@@ -49,7 +57,7 @@ await esbuild.build({
 await esbuild.build({
   ...config,
   format: 'esm',
-  outfile: 'dist/mezon-js-protobuf.esm.mjs',
+  outExtension: { '.js': '.esm.mjs' },
   minify: true,
   minifyWhitespace: true,
   minifyIdentifiers: true,
@@ -60,6 +68,8 @@ await esbuild.build({
 await esbuild.build({
   ...config,
   format: 'iife',
+  entryPoints: ['./index.ts'],
+  outdir: undefined,
   outfile: 'dist/mezon-js-protobuf.iife.js',
   minify: true,
   minifyWhitespace: true,

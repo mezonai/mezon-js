@@ -224,14 +224,18 @@ export class MezonTransport {
   constructor(
     readonly serverKey: string,
     readonly timeoutMs: number,
-    readonly platform: string = "web",
+    adapter: TransportAdapter,
     basePath: string,
   ) {
     this.cIds = {};
     this.nextCid = 1;
 
     this.basePath = basePath;
-    this.adapter = new WebSocketAdapter();
+    if (!adapter) {
+      this.adapter = new WebSocketAdapter();
+    } else {
+      this.adapter = adapter;
+    }
   }
 
   setOnOpen(onopen: (evt: Event) => void) {
