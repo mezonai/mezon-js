@@ -48,8 +48,6 @@ export class AbridgedTcpAdapter implements TransportAdapter {
     token: string,
     signal?: AbortSignal,
   ): void {
-    host = "localhost";
-    port = "7349";
     const client = net.createConnection({ host, port: parseInt(port) });
 
     // Assign immediately so isOpen(), send(), and close() work right away
@@ -65,9 +63,10 @@ export class AbridgedTcpAdapter implements TransportAdapter {
     });
 
     client.on("data", (data: Buffer) => {
-      const PREFIX_RAW = 0xff;
-      const RAW_HEADER_LENGTH = 7; // Header Length: 1 (Prefix) + 2 (CID) + 4 (Code) = 7 bytes
+      const PREFIX_RAW = 0xff;      
       const CODE_LENGTH = 3;
+      const RAW_HEADER_LENGTH = 7; // Header Length: 1 (Prefix) + 2 (CID) + 4 (Code) = 7 bytes
+      const PAYLOAD_LENGTH = 11; // Header Length: 1 (Prefix) + 2 (CID) + 4 (Code)  + 4 (len payload) = 11 bytes
 
       if (!this._onMessage) return;
 
@@ -94,7 +93,8 @@ export class AbridgedTcpAdapter implements TransportAdapter {
       if (prefix === PREFIX_RAW) {
         const cid = data.readUInt16BE(1); // Bytes 1-2
         const code = data.readInt32BE(CODE_LENGTH); // Bytes 3-6
-        const payload = data.subarray(RAW_HEADER_LENGTH);
+        const payloadLen = data.readInt32BE(RAW_HEADER_LENGTH); // Bytes 7-10
+        const payload = data.subarray(PAYLOAD_LENGTH, PAYLOAD_LENGTH + payloadLen);
        
         this._onMessage!(cid, code, payload);
 
