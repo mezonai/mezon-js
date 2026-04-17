@@ -19,7 +19,6 @@ const external = [
   'protobufjs',
   'protobufjs/minimal',
   'long',
-  'js-native',
 ];
 
 // Shared esbuild config
@@ -43,6 +42,7 @@ await esbuild.build({
   minifyWhitespace: true,
   minifyIdentifiers: true,
   minifySyntax: true,
+  external: ['node:net']
 });
 
 // Build ESM (minified)

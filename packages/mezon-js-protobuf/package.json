@@ -23,7 +23,6 @@
     "build:bundle": "node build.mjs"
   },
   "dependencies": {
-    "js-native": "*",
     "protobufjs": "^7.2.4"
   },
   "peerDependencies": {

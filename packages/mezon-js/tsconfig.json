@@ -20,10 +20,6 @@
       "dom",
       "es6"
     ],
-    "paths": {
-      "js-native": ["../js-native/index.js"] 
-    },
-    "allowJs": true
   },
   "exclude": [
     "node_modules",

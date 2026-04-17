@@ -4,9 +4,8 @@ import * as tsproto from "mezon-js-protobuf";
 import {
   MultipartUploadAttachment,
   MultipartUploadAttachmentFinishRequest,
-  WebSocketAdapter,
   TransportAdapter,
-  AbridgedTcpAdapter,
+  WebSocketAdapter,
 } from "mezon-js-protobuf";
 import {
   ApiAccount,
@@ -232,11 +231,7 @@ export class MezonTransport {
     this.nextCid = 1;
 
     this.basePath = basePath;
-    if (platform == "desktop") {
-      this.adapter = new AbridgedTcpAdapter();
-    } else {
-      this.adapter = new WebSocketAdapter();
-    }
+    this.adapter = new WebSocketAdapter();
   }
 
   setOnOpen(onopen: (evt: Event) => void) {
