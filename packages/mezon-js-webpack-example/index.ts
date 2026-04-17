@@ -19,7 +19,7 @@ import {Client} from "mezon-js";
 var useSSL = true; // Enable if server is run with an SSL certificate.
 var client = new Client("defaultkey", "dev-mezon.nccsoft.vn", "8088", useSSL);
 
-client.authenticateEmail("pocolomos@gmail.com", "C0nandoiner123$").then(async session => {
+client.authenticateEmail("pocolomos@gmail.com", "xxxxxx").then(async session => {
   const session2 = await client.connect(session, true, true);
   console.log("session 2", session2);
   
