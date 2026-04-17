@@ -34,23 +34,21 @@ export class WebSocketAdapter implements TransportAdapter {
 
   set onMessage(value: SocketMessageHandler | null) {
     const PREFIX_RAW = 0xff;
+    const RAW_HEADER_LENGTH = 7; // Header Length: 1 (Prefix) + 2 (CID) + 4 (Code) = 7 bytes
+    const CODE_LENGTH = 3;
 
     if (value) {
       this._socket!.onmessage = (evt: MessageEvent) => {
         const buffer: ArrayBuffer = evt.data;
         const uintBuffer: Uint8Array = new Uint8Array(buffer);
 
-        // Header Length: 1 (Prefix) + 2 (CID) + 4 (Code) = 7 bytes
-        const RAW_HEADER_LENGTH = 7;
-        const CODE_LENGTH = 3;
-
         if (uintBuffer.length < 1) {
           console.error("Packet too small to contain headers");
           return;
         }
 
+        // API request
         const prefix = uintBuffer[0];
-
         if (prefix === PREFIX_RAW) {
           const dataView = new DataView(buffer);
           const cid = dataView.getUint16(1, false);
@@ -58,18 +56,20 @@ export class WebSocketAdapter implements TransportAdapter {
           const payload = uintBuffer.subarray(RAW_HEADER_LENGTH);
 
           value!(cid, code, payload);
-        } else {
-          const envelope = tsproto.Envelope.decode(uintBuffer);
 
-          if (envelope.channel_message) {
-            if (envelope.channel_message.code == undefined) {
-              //protobuf plugin does not default-initialize missing Int32Value fields
-              envelope.channel_message.code = 0;
-            }
-          }
-
-          value!(Number(envelope.cid), 0, envelope);
+          return;
         }
+
+        const envelope = tsproto.Envelope.decode(uintBuffer);
+
+        if (envelope.channel_message) {
+          if (envelope.channel_message.code == undefined) {
+            //protobuf plugin does not default-initialize missing Int32Value fields
+            envelope.channel_message.code = 0;
+          }
+        }
+
+        value!(Number(envelope.cid), 0, envelope);
       };
     } else {
       value = null;

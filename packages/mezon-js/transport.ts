@@ -283,7 +283,7 @@ export class MezonTransport {
     ) => {
       if (verbose && window && window.console) {
         console.log(
-          "incomming message witch cid %o and message %o",
+          "incomming message with cid %o and message %o",
           cid,
           message,
         );

@@ -567,6 +567,10 @@ export class Client {
             this.onaiagentenabled(
               <AiAgentEnabledEvent>message.aiagent_enabled_event,
             );
+          } else if (message.pong) {
+            if (this.verbose && window && window.console) {
+              console.log("Pong message received: %o", message);
+            }
           } else {
             if (this.verbose && window && window.console) {
               console.log("Unrecognized message received: %o", message);
