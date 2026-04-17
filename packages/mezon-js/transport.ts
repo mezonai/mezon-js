@@ -261,6 +261,10 @@ export class MezonTransport {
     this.adapter = transportAdapter;
   }
 
+  setFallbackSession(_session: Session) {
+
+  }
+
   connect(
     session: Session,
     createStatus = false,
