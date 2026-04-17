@@ -1,11 +1,17 @@
-import native from "js-native";
 import * as tsproto from "./rtapi/realtime";
-import { SocketCloseHandler, SocketErrorHandler, SocketMessageHandler, SocketOpenHandler, TransportAdapter } from "./transport_adapter";
+import {
+  SocketCloseHandler,
+  SocketErrorHandler,
+  SocketMessageHandler,
+  SocketOpenHandler,
+  TransportAdapter,
+} from "./transport_adapter";
+import net from "node:net";
 
 export class AbridgedTcpAdapter implements TransportAdapter {
   private _socket?: any;
 
-  constructor() { }
+  constructor() {}
 
   get onClose(): SocketCloseHandler | null {
     return this._socket!.onclose;
@@ -68,7 +74,7 @@ export class AbridgedTcpAdapter implements TransportAdapter {
   connect(
     host: string,
     port: string,
-    createStatus: boolean,
+    _createStatus: boolean,
     token: string,
     signal?: AbortSignal,
   ): void {
@@ -77,14 +83,34 @@ export class AbridgedTcpAdapter implements TransportAdapter {
         this.close();
       });
     }
-    
-    this._socket = native.connect(host, parseInt(port));
-    this._socket.send(Buffer.from([0xef])); // Handshake
+
+    //this._socket = native.connect(host, parseInt(port));
+    console.log("host, port", host, port);
+
+    const client = net.createConnection(
+      { host: "localhost", port: 7349 },
+      () => {
+        console.log("Connected to raw TCP server!");
+
+        const magicByte = 0xef;
+        const encoder = new TextEncoder();
+        const tokenBytes = encoder.encode(token);
+        const payload = new Uint8Array(1 + tokenBytes.length);
+        payload[0] = magicByte;
+        payload.set(tokenBytes, 1);
+
+        client.write(payload);
+      },
+    );
   }
 
   send(msg: any): void {
-    const envelopeWriter = tsproto.Envelope.encode(tsproto.Envelope.fromPartial(msg));
+    const envelopeWriter = tsproto.Envelope.encode(
+      tsproto.Envelope.fromPartial(msg),
+    );
     const encodedMsg = envelopeWriter.finish();
     this._socket!.send(encodedMsg);
   }
 }
+
+export default AbridgedTcpAdapter;

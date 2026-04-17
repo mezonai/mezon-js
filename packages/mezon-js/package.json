@@ -43,7 +43,6 @@
   "dependencies": {
     "base64-arraybuffer": "^1.0.2",
     "js-base64": "^3.7.8",
-    "js-native": "*",
     "mezon-js-protobuf": "^1.10.38",
     "whatwg-fetch": "^3.6.2"
   },
