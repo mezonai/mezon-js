@@ -11,6 +11,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/mezon-js-protobuf.esm.mjs",
       "require": "./dist/mezon-js-protobuf.cjs.js"
+    },
+    "./abridged_tcp_adapter": {
+      "types": "./dist/abridged_tcp_adapter.d.ts",
+      "import": "./dist/abridged_tcp_adapter.esm.mjs",
+      "require": "./dist/abridged_tcp_adapter.cjs.js"
     }
   },
   "files": [

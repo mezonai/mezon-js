@@ -4,7 +4,7 @@
     "./*",
     "./rtapi/*",
     "./api/*",
-    "./google/protobuf/*"
+    "./google/protobuf/*",
   ],
   "compilerOptions": {
     "outDir": "dist",
