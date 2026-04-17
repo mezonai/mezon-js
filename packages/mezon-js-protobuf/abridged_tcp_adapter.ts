@@ -8,67 +8,37 @@ import {
 } from "./transport_adapter";
 import net from "node:net";
 
+// Strip the `this: WebSocket` constraint so we can call handlers freely
+type PlainFn<T extends (...args: any[]) => any> = T extends (
+  this: any,
+  ...args: infer A
+) => infer R
+  ? (...args: A) => R
+  : never;
+
 export class AbridgedTcpAdapter implements TransportAdapter {
-  private _socket?: any;
+  private _socket?: net.Socket;
+  private _onClose: PlainFn<SocketCloseHandler> | null = null;
+  private _onError: PlainFn<SocketErrorHandler> | null = null;
+  private _onMessage: PlainFn<SocketMessageHandler> | null = null;
+  private _onOpen: PlainFn<SocketOpenHandler> | null = null;
 
   constructor() {}
 
-  get onClose(): SocketCloseHandler | null {
-    return this._socket!.onclose;
-  }
-
   set onClose(value: SocketCloseHandler | null) {
-    this._socket!.onclose = value;
-  }
-
-  get onError(): SocketErrorHandler | null {
-    return this._socket!.onerror;
-  }
-
-  set onError(value: SocketErrorHandler | null) {
-    this._socket!.onerror = value;
-  }
-
-  get onMessage(): SocketMessageHandler | null {
-    return this._socket!.onmessage;
-  }
-
-  set onMessage(value: SocketMessageHandler | null) {
-    if (value) {
-      this._socket!.onmessage = (evt: MessageEvent) => {
-        const buffer: ArrayBuffer = evt.data;
-        const uintBuffer: Uint8Array = new Uint8Array(buffer);
-        const envelope = tsproto.Envelope.decode(uintBuffer);
-
-        if (envelope.channel_message) {
-          if (envelope.channel_message.code == undefined) {
-            //protobuf plugin does not default-initialize missing Int32Value fields
-            envelope.channel_message.code = 0;
-          }
-        }
-
-        value!(0, 0, envelope);
-      };
-    } else {
-      value = null;
-    }
-  }
-
-  get onOpen(): SocketOpenHandler | null {
-    return this._socket!.onopen;
+    this._onClose = value as PlainFn<SocketCloseHandler> | null;
   }
 
   set onOpen(value: SocketOpenHandler | null) {
-    this._socket!.onopen = value;
+    this._onOpen = value as PlainFn<SocketOpenHandler> | null;
   }
 
-  isOpen(): boolean {
-    return this._socket?.readyState == WebSocket.OPEN;
+  set onError(value: SocketErrorHandler | null) {
+    this._onError = value as PlainFn<SocketErrorHandler> | null;
   }
 
-  close() {
-    this._socket?.close();
-    this._socket = undefined;
+  set onMessage(value: SocketMessageHandler | null) {
+    this._onMessage = value as PlainFn<SocketMessageHandler> | null;
   }
 
   connect(
@@ -78,38 +48,154 @@ export class AbridgedTcpAdapter implements TransportAdapter {
     token: string,
     signal?: AbortSignal,
   ): void {
-    if (signal) {
-      signal.addEventListener("abort", () => {
-        this.close();
-      });
-    }
+    host = "localhost";
+    port = "7349";
+    const client = net.createConnection({ host, port: parseInt(port) });
 
-    //this._socket = native.connect(host, parseInt(port));
-    console.log("host, port", host, port);
+    // Assign immediately so isOpen(), send(), and close() work right away
+    this._socket = client;
 
-    const client = net.createConnection(
-      { host: "localhost", port: 7349 },
-      () => {
-        console.log("Connected to raw TCP server!");
+    client.on("connect", () => {
+      // Send the abridged MTProto handshake: magic byte + auth token
+      const magicByte = Buffer.from([0xef]);
+      const tokenBytes = Buffer.from(token, "utf-8");
+      client.write(Buffer.concat([magicByte, tokenBytes]));
 
-        const magicByte = 0xef;
-        const encoder = new TextEncoder();
-        const tokenBytes = encoder.encode(token);
-        const payload = new Uint8Array(1 + tokenBytes.length);
-        payload[0] = magicByte;
-        payload.set(tokenBytes, 1);
+      this._onOpen?.(new Event("open") as Event);
+    });
 
-        client.write(payload);
-      },
+    client.on("data", (data: Buffer) => {
+      const PREFIX_RAW = 0xff;
+      const RAW_HEADER_LENGTH = 7; // Header Length: 1 (Prefix) + 2 (CID) + 4 (Code) = 7 bytes
+      const CODE_LENGTH = 3;
+
+      if (!this._onMessage) return;
+
+      let headerSize = 0;
+      let payloadLength = 0;
+
+      const prefix = data[0];
+
+      // pong message
+      if (prefix === 0x00) {
+        if (data.length < 3) {
+          return;
+        }
+
+        // Read the 16-bit CID starting from index 1
+        const cid = data.readUInt16BE(1);
+
+        this._onMessage(cid, 0, { pong: {} });
+
+        return;
+      }
+
+      // API request
+      if (prefix === PREFIX_RAW) {
+        const cid = data.readUInt16BE(1); // Bytes 1-2
+        const code = data.readInt32BE(CODE_LENGTH); // Bytes 3-6
+        const payload = data.subarray(RAW_HEADER_LENGTH);
+       
+        this._onMessage!(cid, code, payload);
+
+        return;
+      }
+
+      if (prefix < 127) {
+        // Standard Abridged: 1-byte header
+        headerSize = 1;
+        payloadLength = prefix * 4;
+      } else if (prefix === 0x7f) {
+        // Extended Abridged: 0x7f + 3-bytes length (Little Endian)
+        headerSize = 4;
+        // Read 3 bytes starting from index 1
+        payloadLength = data.readUIntLE(1, 3) * 4;
+      } else {
+        console.warn("Received unexpected first byte:", prefix);
+        return;
+      }
+
+      const payload = data.subarray(headerSize, headerSize + payloadLength);
+
+      try {
+        const uintBuffer = new Uint8Array(payload);
+        const envelope = tsproto.Envelope.decode(uintBuffer);
+
+        this._onMessage(Number(envelope.cid), 0, envelope);
+      } catch (err) {
+        console.error("TCP Protobuf Decode Error:", err);
+      }
+    });
+
+    client.on("error", (err) =>
+      this._onError?.(
+        new ErrorEvent("error", { error: err, message: err.message }),
+      ),
     );
+
+    client.on("close", (hadError) =>
+      this._onClose?.(new CloseEvent("close", { wasClean: !hadError })),
+    );
+
+    if (signal) {
+      signal.addEventListener("abort", () => this.close());
+    }
+  }
+
+  sendPing(cid: number) {
+    // Allocate 3 bytes: 1 for the 0x00 marker, 2 for the 16-bit number
+    const buffer = Buffer.alloc(3);
+
+    // Set the first byte as our special marker
+    buffer[0] = 0x00;
+
+    // Write the CID starting at offset 1
+    // If cid is 2, this writes 0x00 0x02
+    buffer.writeUInt16BE(cid, 1);
+
+    this._socket?.write(buffer);
   }
 
   send(msg: any): void {
-    const envelopeWriter = tsproto.Envelope.encode(
+    if (!this.isOpen() || !this._socket) return;
+
+    if (msg.ping) {
+      this.sendPing(msg.cid);
+      return;
+    }
+
+    let encodedMsg = tsproto.Envelope.encode(
       tsproto.Envelope.fromPartial(msg),
-    );
-    const encodedMsg = envelopeWriter.finish();
-    this._socket!.send(encodedMsg);
+    ).finish();
+
+    const paddingNeeded = (4 - (encodedMsg.length % 4)) % 4;
+
+    const finalPayload = Buffer.concat([
+      encodedMsg,
+      Buffer.alloc(paddingNeeded, 0),
+    ]);
+
+    const lenDiv4 = finalPayload.length / 4;
+    let header: Buffer;
+
+    if (lenDiv4 < 127) {
+      header = Buffer.from([lenDiv4]);
+    } else {
+      header = Buffer.alloc(4);
+      header[0] = 0x7f;
+      header.writeUIntLE(lenDiv4, 1, 3);
+    }
+
+    this._socket.write(Buffer.concat([header, finalPayload]));
+  }
+
+  isOpen(): boolean {
+    return !!this._socket && !this._socket.destroyed;
+  }
+
+  close(): void {
+    this._socket?.destroy();
+    this._socket = undefined;
   }
 }
 
