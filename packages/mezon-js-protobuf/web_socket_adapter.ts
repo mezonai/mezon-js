@@ -7,8 +7,12 @@ import {
   TransportAdapter,
 } from "./transport_adapter";
 
+const CODE_FIN = 0x1234;
+
 export class WebSocketAdapter implements TransportAdapter {
   private _socket?: WebSocket;
+
+  private _streams = new Map<number, Buffer[]>();
 
   constructor() {}
 
@@ -54,6 +58,28 @@ export class WebSocketAdapter implements TransportAdapter {
           const cid = dataView.getUint16(1, false);
           const code = dataView.getUint32(CODE_LENGTH, false);
           const payload = uintBuffer.subarray(RAW_HEADER_LENGTH);
+
+          if (!this._streams.has(cid)) {
+            this._streams.set(cid, []);
+          }
+
+          const chunks = this._streams.get(cid)!;
+
+          if (code === CODE_FIN) {
+            // If there's a final payload in the FIN packet, add it
+            if (payload.byteLength) {
+              const bufferPayload = Buffer.from(payload.buffer, payload.byteOffset, payload.byteLength);
+              chunks.push(bufferPayload);
+            }
+
+            const completeBuffer = Buffer.concat(chunks);
+
+            value!(cid, code, completeBuffer);
+
+            this._streams.delete(cid);
+          } else {
+            chunks.push(Buffer.from(payload)); // Copy the subarray to ensure data persistence
+          }
 
           value!(cid, code, payload);
 
@@ -105,7 +131,7 @@ export class WebSocketAdapter implements TransportAdapter {
         this.close();
       });
     }
-    const portPart = port ? `:${port}` : '';
+    const portPart = port ? `:${port}` : "";
     const url = `wss://${host}${portPart}/ws?lang=en&status=${encodeURIComponent(
       createStatus.toString(),
     )}&token=${encodeURIComponent(token)}`;
