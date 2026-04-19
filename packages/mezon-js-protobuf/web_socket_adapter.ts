@@ -7,7 +7,7 @@ import {
   TransportAdapter,
 } from "./transport_adapter";
 
-const CODE_FIN = 0x1234;
+const CODE_FIN = 0xFF;
 
 export class WebSocketAdapter implements TransportAdapter {
   private _socket?: WebSocket;
@@ -63,9 +63,12 @@ export class WebSocketAdapter implements TransportAdapter {
             this._streams.set(cid, []);
           }
 
+          const responseCode = (code >>> 16) & 0xFFFF;
+          const finFlag = code & 0xFFFF;
+
           const chunks = this._streams.get(cid)!;
 
-          if (code === CODE_FIN) {
+          if (finFlag === CODE_FIN) {
             // If there's a final payload in the FIN packet, add it
             if (payload.byteLength) {
               const bufferPayload = Buffer.from(payload.buffer, payload.byteOffset, payload.byteLength);
@@ -74,7 +77,7 @@ export class WebSocketAdapter implements TransportAdapter {
 
             const completeBuffer = Buffer.concat(chunks);
 
-            value!(cid, code, completeBuffer);
+            value!(cid, responseCode, completeBuffer);
 
             this._streams.delete(cid);
           } else {
