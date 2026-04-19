@@ -16,12 +16,16 @@ type PlainFn<T extends (...args: any[]) => any> = T extends (
   ? (...args: A) => R
   : never;
 
+const CODE_FIN = 0x1234;
+
 export class AbridgedTcpAdapter implements TransportAdapter {
   private _socket?: net.Socket;
   private _onClose: PlainFn<SocketCloseHandler> | null = null;
   private _onError: PlainFn<SocketErrorHandler> | null = null;
   private _onMessage: PlainFn<SocketMessageHandler> | null = null;
   private _onOpen: PlainFn<SocketOpenHandler> | null = null;
+
+  private _streams = new Map<number, Buffer[]>();
 
   constructor() {}
 
@@ -63,7 +67,7 @@ export class AbridgedTcpAdapter implements TransportAdapter {
     });
 
     client.on("data", (data: Buffer) => {
-      const PREFIX_RAW = 0xff;      
+      const PREFIX_RAW = 0xff;
       const CODE_LENGTH = 3;
       const RAW_HEADER_LENGTH = 7; // Header Length: 1 (Prefix) + 2 (CID) + 4 (Code) = 7 bytes
       const PAYLOAD_LENGTH = 11; // Header Length: 1 (Prefix) + 2 (CID) + 4 (Code)  + 4 (len payload) = 11 bytes
@@ -92,11 +96,31 @@ export class AbridgedTcpAdapter implements TransportAdapter {
       // API request
       if (prefix === PREFIX_RAW) {
         const cid = data.readUInt16BE(1); // Bytes 1-2
-        const code = data.readInt32BE(CODE_LENGTH); // Bytes 3-6
+        const code = data.readInt32BE(CODE_LENGTH); // Bytes 3-6 (e.g. 3,4,5,6)
         const payloadLen = data.readInt32BE(RAW_HEADER_LENGTH); // Bytes 7-10
-        const payload = data.subarray(PAYLOAD_LENGTH, PAYLOAD_LENGTH + payloadLen);
-       
-        this._onMessage!(cid, code, payload);
+        const payload = data.subarray(
+          PAYLOAD_LENGTH,
+          PAYLOAD_LENGTH + payloadLen,
+        );
+
+        if (!this._streams.has(cid)) {
+          this._streams.set(cid, []);
+        }
+
+        const chunks = this._streams.get(cid)!;
+
+        if (code === CODE_FIN) {
+          // If there's a final payload in the FIN packet, add it
+          if (payloadLen > 0) chunks.push(payload);
+
+          const completeBuffer = Buffer.concat(chunks);
+
+          this._onMessage!(cid, code, completeBuffer);
+
+          this._streams.delete(cid);
+        } else {
+          chunks.push(Buffer.from(payload)); // Copy the subarray to ensure data persistence
+        }
 
         return;
       }
