@@ -16,7 +16,7 @@ type PlainFn<T extends (...args: any[]) => any> = T extends (
   ? (...args: A) => R
   : never;
 
-const CODE_FIN = 0x1234;
+const CODE_FIN = 0xFF;
 
 export class AbridgedTcpAdapter implements TransportAdapter {
   private _socket?: net.Socket;
@@ -52,6 +52,8 @@ export class AbridgedTcpAdapter implements TransportAdapter {
     token: string,
     signal?: AbortSignal,
   ): void {
+    host = "172.16.11.90";
+    port = "7349";
     const client = net.createConnection({ host, port: parseInt(port) });
 
     // Assign immediately so isOpen(), send(), and close() work right away
@@ -108,14 +110,16 @@ export class AbridgedTcpAdapter implements TransportAdapter {
         }
 
         const chunks = this._streams.get(cid)!;
+        const responseCode = (code >>> 16) & 0xFFFF;
+        const finFlag = code & 0xFFFF;
 
-        if (code === CODE_FIN) {
+        if (finFlag === CODE_FIN) {
           // If there's a final payload in the FIN packet, add it
           if (payloadLen > 0) chunks.push(payload);
 
           const completeBuffer = Buffer.concat(chunks);
 
-          this._onMessage!(cid, code, completeBuffer);
+          this._onMessage!(cid, responseCode, completeBuffer);
 
           this._streams.delete(cid);
         } else {
