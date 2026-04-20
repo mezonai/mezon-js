@@ -236,6 +236,7 @@ enum ApiNameEnum {
   GetChannelCanvasList,
   ListChannelTimeline,
   ListChannelMessages,
+  ListActivity
 }
 
 import { Session } from "./session";
@@ -324,7 +325,7 @@ export class MezonTransport {
           message,
         );
       }
-      if (cid) {
+      if (cid != 0) {
         const executor = this.cIds[cid];
         if (!executor) {
           console.error("No promise executor for message: %o", message);
@@ -391,6 +392,7 @@ export class MezonTransport {
         }
 
         untypedMessage.cid = cid.toString();
+        console.log("send cid", cid);
         this.adapter.send(untypedMessage);
       }
     });
@@ -1004,7 +1006,9 @@ export class MezonTransport {
         if (response.code != 0) {
           return {} as ApiSession;
         }
-        return tsproto.Session.decode(response.message) as ApiSession;
+        const apiSession = tsproto.Session.decode(response.message) as ApiSession;
+        console.log("apiSession", response.message, apiSession);
+        return apiSession
       }),
       new Promise<never>((_, reject) =>
         setTimeout(

@@ -12,7 +12,7 @@ const CODE_FIN = 0xFF;
 export class WebSocketAdapter implements TransportAdapter {
   private _socket?: WebSocket;
 
-  private _streams = new Map<number, Buffer[]>();
+  private _streams = new Map<number, Uint8Array[]>();
 
   constructor() {}
 
@@ -71,20 +71,26 @@ export class WebSocketAdapter implements TransportAdapter {
           if (finFlag === CODE_FIN) {
             // If there's a final payload in the FIN packet, add it
             if (payload.byteLength) {
-              const bufferPayload = Buffer.from(payload.buffer, payload.byteOffset, payload.byteLength);
-              chunks.push(bufferPayload);
+              const part = new Uint8Array(payload.buffer, payload.byteOffset, payload.byteLength);
+              chunks.push(part);
             }
+            const totalLength = chunks.reduce((acc, arr) => acc + arr.length, 0);
+            const completeBuffer = new Uint8Array(totalLength);
 
-            const completeBuffer = Buffer.concat(chunks);
+            let offset = 0;
+            for (const arr of chunks) {
+              completeBuffer.set(arr, offset);
+              offset += arr.length;
+            }
 
             value!(cid, responseCode, completeBuffer);
 
             this._streams.delete(cid);
-          } else {
-            chunks.push(Buffer.from(payload)); // Copy the subarray to ensure data persistence
-          }
 
-          value!(cid, code, payload);
+            return;
+          } else {
+            chunks.push(new Uint8Array(payload));
+          }
 
           return;
         }
