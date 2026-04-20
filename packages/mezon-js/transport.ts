@@ -398,7 +398,6 @@ export class MezonTransport {
         }
 
         untypedMessage.cid = cid.toString();
-        console.log("send cid", cid);
         this.adapter.send(untypedMessage);
       }
     });
