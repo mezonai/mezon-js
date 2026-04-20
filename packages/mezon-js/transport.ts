@@ -1006,9 +1006,8 @@ export class MezonTransport {
         if (response.code != 0) {
           return {} as ApiSession;
         }
-        const apiSession = tsproto.Session.decode(response.message) as ApiSession;
-        console.log("apiSession", response.message, apiSession);
-        return apiSession
+        
+        return tsproto.Session.decode(response.message) as ApiSession;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
