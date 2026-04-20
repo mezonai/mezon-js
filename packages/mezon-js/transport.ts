@@ -9932,8 +9932,8 @@ export class MezonTransport {
       list_data_socket: request,
     } as any;
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
-        return {} as any;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        return response as any;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(

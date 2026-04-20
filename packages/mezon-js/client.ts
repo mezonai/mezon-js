@@ -6543,7 +6543,7 @@ export class Client {
   async listDataSocket(
     session: Session,
     request: ListDataSocket,
-  ): Promise<ApiGetPollResponse> {
+  ): Promise<any> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
