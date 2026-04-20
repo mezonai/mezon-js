@@ -211,6 +211,10 @@ import {
 } from "./types";
 
 enum ApiNameEnum {
+  ListChannelDescs,
+	GetAccount,
+	ListClanDescs,
+	ListClanUsers,
   ListRoles,
   ListEvents,
   GetRoleOfUserInTheClan,
