@@ -240,7 +240,9 @@ enum ApiNameEnum {
   GetChannelCanvasList,
   ListChannelTimeline,
   ListChannelMessages,
-  ListActivity
+  ListActivity,
+  ListChannelByUserId,
+	ListUserClansByUserId
 }
 
 import { Session } from "./session";
