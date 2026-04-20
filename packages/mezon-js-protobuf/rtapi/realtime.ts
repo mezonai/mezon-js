@@ -415,7 +415,8 @@ export interface Envelope {
 }
 
 export interface ApiRequestEvent {
-  full_url: string;
+  api_index: number;
+  api_name: string;
   body: Uint8Array;
 }
 
@@ -3622,16 +3623,19 @@ export const Envelope = {
 };
 
 function createBaseApiRequestEvent(): ApiRequestEvent {
-  return { full_url: "", body: new Uint8Array(0) };
+  return { api_index: 0, api_name: "", body: new Uint8Array(0) };
 }
 
 export const ApiRequestEvent = {
   encode(message: ApiRequestEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.full_url !== "") {
-      writer.uint32(10).string(message.full_url);
+    if (message.api_index !== 0) {
+      writer.uint32(8).int32(message.api_index);
+    }
+    if (message.api_name !== "") {
+      writer.uint32(18).string(message.api_name);
     }
     if (message.body.length !== 0) {
-      writer.uint32(18).bytes(message.body);
+      writer.uint32(26).bytes(message.body);
     }
     return writer;
   },
@@ -3644,14 +3648,21 @@ export const ApiRequestEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.full_url = reader.string();
+          message.api_index = reader.int32();
           continue;
         case 2:
           if (tag !== 18) {
+            break;
+          }
+
+          message.api_name = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
             break;
           }
 
@@ -3668,15 +3679,19 @@ export const ApiRequestEvent = {
 
   fromJSON(object: any): ApiRequestEvent {
     return {
-      full_url: isSet(object.full_url) ? globalThis.String(object.full_url) : "",
+      api_index: isSet(object.api_index) ? globalThis.Number(object.api_index) : 0,
+      api_name: isSet(object.api_name) ? globalThis.String(object.api_name) : "",
       body: isSet(object.body) ? bytesFromBase64(object.body) : new Uint8Array(0),
     };
   },
 
   toJSON(message: ApiRequestEvent): unknown {
     const obj: any = {};
-    if (message.full_url !== "") {
-      obj.full_url = message.full_url;
+    if (message.api_index !== 0) {
+      obj.api_index = Math.round(message.api_index);
+    }
+    if (message.api_name !== "") {
+      obj.api_name = message.api_name;
     }
     if (message.body.length !== 0) {
       obj.body = base64FromBytes(message.body);
@@ -3689,7 +3704,8 @@ export const ApiRequestEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<ApiRequestEvent>, I>>(object: I): ApiRequestEvent {
     const message = createBaseApiRequestEvent();
-    message.full_url = object.full_url ?? "";
+    message.api_index = object.api_index ?? 0;
+    message.api_name = object.api_name ?? "";
     message.body = object.body ?? new Uint8Array(0);
     return message;
   },

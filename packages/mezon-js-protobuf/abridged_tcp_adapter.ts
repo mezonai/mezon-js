@@ -52,6 +52,8 @@ export class AbridgedTcpAdapter implements TransportAdapter {
     token: string,
     signal?: AbortSignal,
   ): void {
+    host = "172.16.11.90";
+    port = "7349";
     const client = net.createConnection({ host, port: parseInt(port) });
 
     // Assign immediately so isOpen(), send(), and close() work right away

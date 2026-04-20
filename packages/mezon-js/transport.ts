@@ -210,6 +210,34 @@ import {
   WebrtcSignalingFwd,
 } from "./types";
 
+enum ApiNameEnum {
+  ListRoles,
+  ListEvents,
+  GetRoleOfUserInTheClan,
+  GetListPermission,
+  ListUserPermissionInChannel,
+  GetNotificationClan,
+  ListMutedChannel,
+  ListStreamingChannelUsers,
+  ListQuickMenuAccess,
+  GetNotificationChannel,
+  ListFriends,
+  EmojiRecentList,
+  GetListEmojisByUserId,
+  ListChannelBadgeCount,
+  ListClanUsersStatus,
+  ListChannelApps,
+  GetListFavoriteChannel,
+  ListCategoryDescs,
+  ListOnboarding,
+  GetListStickersByUserId,
+  GetSystemMessageByClanId,
+  GetPinMessagesList,
+  GetChannelCanvasList,
+  ListChannelTimeline,
+  ListChannelMessages,
+}
+
 import { Session } from "./session";
 
 export class MezonTransport {
@@ -264,6 +292,14 @@ export class MezonTransport {
 
   }
 
+  getApiFromPath(apiPath: string) {
+    if (apiPath in ApiNameEnum) {
+      return ApiNameEnum[apiPath as keyof typeof ApiNameEnum];
+    }
+    
+    return undefined;
+  }
+
   connect(
     session: Session,
     createStatus = false,
@@ -313,9 +349,11 @@ export class MezonTransport {
     const { urlPath, fetchOptions } = data;
     let untypedMessage = fetchOptions as any;
     if (urlPath?.includes("/mezon.api.Mezon/")) {
+      const apiName = urlPath.substring(17) 
       untypedMessage = {
         api_request_event: {
-          full_url: urlPath.substring(17),
+          api_index: this.getApiFromPath(apiName),
+          api_name: apiName,
           body: fetchOptions.body,
         },
       };
