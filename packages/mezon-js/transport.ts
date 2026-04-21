@@ -1471,7 +1471,7 @@ export class MezonTransport {
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ListAuditLog.decode(
-          response,
+          response.message,
         ) as unknown as MezonapiListAuditLog;
       }),
       new Promise<never>((_, reject) =>
@@ -1778,7 +1778,7 @@ export class MezonTransport {
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ChannelMessageList.decode(
-          response,
+          response.message,
         ) as unknown as ApiChannelMessageList;
       }),
       new Promise<never>((_, reject) =>
@@ -4205,7 +4205,7 @@ export class MezonTransport {
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.NotificationList.decode(
-          response,
+          response.message,
         ) as unknown as ApiNotificationList;
       }),
       new Promise<never>((_, reject) =>
@@ -4553,7 +4553,7 @@ export class MezonTransport {
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.PinMessagesList.decode(
-          response,
+          response.message,
         ) as unknown as tsproto.PinMessagesList;
       }),
       new Promise<never>((_, reject) =>
@@ -6852,7 +6852,7 @@ export class MezonTransport {
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.CreateRoomChannelApps.decode(
-          response,
+          response.message,
         ) as unknown as MezonapiCreateRoomChannelApps;
       }),
       new Promise<never>((_, reject) =>
@@ -7289,7 +7289,7 @@ export class MezonTransport {
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ListChannelTimelineResponse.decode(
-          response,
+          response.message,
         ) as unknown as ApiListChannelTimelineResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -7323,7 +7323,7 @@ export class MezonTransport {
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.CreateChannelTimelineResponse.decode(
-          response,
+          response.message,
         ) as unknown as ApiCreateChannelTimelineResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -7357,7 +7357,7 @@ export class MezonTransport {
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.UpdateChannelTimelineResponse.decode(
-          response,
+          response.message,
         ) as unknown as ApiUpdateChannelTimelineResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -7391,7 +7391,7 @@ export class MezonTransport {
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ChannelTimelineDetailResponse.decode(
-          response,
+          response.message,
         ) as unknown as ApiDetailChannelTimelineResponse;
       }),
       new Promise<never>((_, reject) =>
@@ -7858,7 +7858,7 @@ export class MezonTransport {
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ChannelMessageAck.decode(
-          response,
+          response.message,
         ) as unknown as tsproto.ChannelMessageAck;
       }),
       new Promise<never>((_, reject) =>
@@ -8195,7 +8195,7 @@ export class MezonTransport {
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.MutedChannelList.decode(
-          response,
+          response.message,
         ) as unknown as ApiMutedChannelList;
       }),
       new Promise<never>((_, reject) =>
@@ -8249,7 +8249,7 @@ export class MezonTransport {
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
         return tsproto.ChannelMessageSend.decode(
-          response,
+          response.message,
         ) as unknown as tsproto.ChannelMessageAck;
       }),
       new Promise<never>((_, reject) =>
