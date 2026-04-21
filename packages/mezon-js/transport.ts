@@ -213,9 +213,9 @@ import {
 enum ApiNameEnum {
   // HOT PATH
   ListChannelDescs,
-	GetAccount,
-	ListClanDescs,
-	ListClanUsers,
+  GetAccount,
+  ListClanDescs,
+  ListClanUsers,
   ListRoles,
   ListEvents,
   GetRoleOfUserInTheClan,
@@ -243,172 +243,172 @@ enum ApiNameEnum {
   ListChannelMessages,
   ListActivity,
   ListChannelByUserId,
-	ListUserClansByUserId,
+  ListUserClansByUserId,
   GetUserProfileOnClan,
-	RegistFCMDeviceToken,
-	IsBanned,
-	ListThreadDescs,
-	ListArchivedChannelDescs,
-	ListChannelDetail,
-	GetChannelCategoryNotiSettingsList,
-	ListRoleUsers,
-	ListChannelUsers,
-	ListChannelAttachment,
-	ListChannelVoiceUsers,
-	ListUserOnline,
-	ListNotifications,
-	ListChannelUsersUC,
-	ListWebhookByChannelId,
-	GetPermissionByRoleIdChannelId,
-	ListChannelSetting,
-	ListApps,
-	GetApp,
-	ListForSaleItems,
-	ListClanWebhook,
-	GetUserStatus,
-	ListSdTopic,
-	// COLD PATH
-	AddFriends,
-	AddChannelUsers,
-	RegistrationEmail,
-	BlockFriends,
-	UnblockFriends,
-	UploadAttachmentFile,
-	UploadOauthFile,
-	AddRolesChannelDesc,
-	CreateCategoryDesc,
-	CreateChannelDesc,
-	CreateRole,
-	CreateEvent,
-	DeleteRole,
-	DeleteEvent,
-	DeleteRoleChannelDesc,
-	DeleteChannelDesc,
-	CloseDMByChannelId,
-	OpenDMByChannelId,
-	DeleteAccount,
-	DeleteFriends,
-	DeleteCategoryDesc,
-	DeleteNotifications,
-	DeleteClanDesc,
-	UpdateUser,
-	UpdateUserProfileByClan,
-	UpdateClanOrder,
-	RemoveChannelUsers,
-	LeaveThread,
-	ArchiveChannel,
-	LinkSMS,
-	ConfirmLinkMezonOTP,
-	LinkEmail,
-	CreateClanDesc,
-	RemoveClanUsers,
-	BanClanUsers,
-	CreateLinkInviteUser,
-	InviteUser,
-	SetRoleChannelPermission,
-	SetNotificationChannelSetting,
-	SetMuteChannel,
-	SetMuteCategory,
-	SetNotificationClanSetting,
-	SetNotificationCategorySetting,
-	DeleteNotificationCategorySetting,
-	DeleteNotificationChannel,
-	CreatePinMessage,
-	CreateMessage2Inbox,
-	UnlinkMezon,
-	UnlinkEmail,
-	UpdateAccount,
-	UpdateUsername,
-	UpdateCategory,
-	UpdateCategoryOrder,
-	UpdateRoleOrder,
-	UpdateClanDesc,
-	UpdateChannelDesc,
-	UpdateChannelPrivate,
-	UpdateRole,
-	UpdateEvent,
-	SearchMessage,
-	CreateClanEmoji,
-	DeleteByIdClanEmoji,
-	UpdateClanEmojiById,
-	GenerateWebhook,
-	HandleWebhook,
-	UpdateWebhookById,
-	DeleteWebhookById,
-	AddClanSticker,
-	UpdateClanStickerById,
-	DeleteClanStickerById,
-	ChangeChannelCategory,
-	CheckDuplicateName,
-	AddApp,
-	DeleteApp,
-	UpdateApp,
-	AddAppToClan,
-	CreateSystemMessage,
-	UpdateSystemMessage,
-	DeleteSystemMessage,
-	StreamingServerCallback,
-	EditChannelCanvases,
-	GetChannelCanvasDetail,
-	DeleteChannelCanvas,
-	AddChannelFavorite,
-	RemoveChannelFavorite,
-	CreateActiviy,
-	GetPubKeys,
-	PushPubKey,
-	GetChanEncryptionMethod,
-	SetChanEncryptionMethod,
-	GetKeyServer,
-	ListAuditLog,
-	GetOnboardingDetail,
-	CreateOnboarding,
-	UpdateOnboarding,
-	DeleteOnboarding,
-	ListOnboardingStep,
-	UpdateOnboardingStep,
-	GenerateClanWebhook,
-	UpdateClanWebhookById,
-	DeleteClanWebhookById,
-	HandleClanWebhook,
-	UpdateUserStatus,
-	UpdateUserCustomStatus,
-	GetTopicDetail,
-	CreateSdTopic,
-	DeleteSdTopic,
-	CreateExternalMezonMeet,
-	GenerateMeetToken,
-	RemoveParticipantMezonMeet,
-	MuteParticipantMezonMeet,
-	CreateRoomChannelApps,
-	GetMezonOauthClient,
-	DeleteMezonOauthClient,
-	UpdateMezonOauthClient,
-	SearchThread,
-	GenerateHashChannelApps,
-	DeleteUserEvent,
-	AddUserEvent,
-	DeleteQuickMenuAccess,
-	AddQuickMenuAccess,
-	UpdateQuickMenuAccess,
-	TransferOwnership,
-	SendChannelMessage,
-	UpdateChannelMessage,
-	DeleteChannelMessage,
-	ReportMessageAbuse,
-	MessageButtonClick,
-	ActiveArchivedThread,
-	UpdateChannelTimeline,
-	AddAgentToChannel,
-	DisconnectAgent,
-	CreateChannelTimeline,
-	DetailChannelTimeline,
-	CreatePoll,
-	VotePoll,
-	ClosePoll,
-	GetPoll,
-	ReactChannelMessage,
-	MultipartUploadAttachmentFileStart,
-	MultipartUploadAttachmentFileFinish
+  RegistFCMDeviceToken,
+  IsBanned,
+  ListThreadDescs,
+  ListArchivedChannelDescs,
+  ListChannelDetail,
+  GetChannelCategoryNotiSettingsList,
+  ListRoleUsers,
+  ListChannelUsers,
+  ListChannelAttachment,
+  ListChannelVoiceUsers,
+  ListUserOnline,
+  ListNotifications,
+  ListChannelUsersUC,
+  ListWebhookByChannelId,
+  GetPermissionByRoleIdChannelId,
+  ListChannelSetting,
+  ListApps,
+  GetApp,
+  ListForSaleItems,
+  ListClanWebhook,
+  GetUserStatus,
+  ListSdTopic,
+  // COLD PATH
+  AddFriends,
+  AddChannelUsers,
+  RegistrationEmail,
+  BlockFriends,
+  UnblockFriends,
+  UploadAttachmentFile,
+  UploadOauthFile,
+  AddRolesChannelDesc,
+  CreateCategoryDesc,
+  CreateChannelDesc,
+  CreateRole,
+  CreateEvent,
+  DeleteRole,
+  DeleteEvent,
+  DeleteRoleChannelDesc,
+  DeleteChannelDesc,
+  CloseDMByChannelId,
+  OpenDMByChannelId,
+  DeleteAccount,
+  DeleteFriends,
+  DeleteCategoryDesc,
+  DeleteNotifications,
+  DeleteClanDesc,
+  UpdateUser,
+  UpdateUserProfileByClan,
+  UpdateClanOrder,
+  RemoveChannelUsers,
+  LeaveThread,
+  ArchiveChannel,
+  LinkSMS,
+  ConfirmLinkMezonOTP,
+  LinkEmail,
+  CreateClanDesc,
+  RemoveClanUsers,
+  BanClanUsers,
+  CreateLinkInviteUser,
+  InviteUser,
+  SetRoleChannelPermission,
+  SetNotificationChannelSetting,
+  SetMuteChannel,
+  SetMuteCategory,
+  SetNotificationClanSetting,
+  SetNotificationCategorySetting,
+  DeleteNotificationCategorySetting,
+  DeleteNotificationChannel,
+  CreatePinMessage,
+  CreateMessage2Inbox,
+  UnlinkMezon,
+  UnlinkEmail,
+  UpdateAccount,
+  UpdateUsername,
+  UpdateCategory,
+  UpdateCategoryOrder,
+  UpdateRoleOrder,
+  UpdateClanDesc,
+  UpdateChannelDesc,
+  UpdateChannelPrivate,
+  UpdateRole,
+  UpdateEvent,
+  SearchMessage,
+  CreateClanEmoji,
+  DeleteByIdClanEmoji,
+  UpdateClanEmojiById,
+  GenerateWebhook,
+  HandleWebhook,
+  UpdateWebhookById,
+  DeleteWebhookById,
+  AddClanSticker,
+  UpdateClanStickerById,
+  DeleteClanStickerById,
+  ChangeChannelCategory,
+  CheckDuplicateName,
+  AddApp,
+  DeleteApp,
+  UpdateApp,
+  AddAppToClan,
+  CreateSystemMessage,
+  UpdateSystemMessage,
+  DeleteSystemMessage,
+  StreamingServerCallback,
+  EditChannelCanvases,
+  GetChannelCanvasDetail,
+  DeleteChannelCanvas,
+  AddChannelFavorite,
+  RemoveChannelFavorite,
+  CreateActiviy,
+  GetPubKeys,
+  PushPubKey,
+  GetChanEncryptionMethod,
+  SetChanEncryptionMethod,
+  GetKeyServer,
+  ListAuditLog,
+  GetOnboardingDetail,
+  CreateOnboarding,
+  UpdateOnboarding,
+  DeleteOnboarding,
+  ListOnboardingStep,
+  UpdateOnboardingStep,
+  GenerateClanWebhook,
+  UpdateClanWebhookById,
+  DeleteClanWebhookById,
+  HandleClanWebhook,
+  UpdateUserStatus,
+  UpdateUserCustomStatus,
+  GetTopicDetail,
+  CreateSdTopic,
+  DeleteSdTopic,
+  CreateExternalMezonMeet,
+  GenerateMeetToken,
+  RemoveParticipantMezonMeet,
+  MuteParticipantMezonMeet,
+  CreateRoomChannelApps,
+  GetMezonOauthClient,
+  DeleteMezonOauthClient,
+  UpdateMezonOauthClient,
+  SearchThread,
+  GenerateHashChannelApps,
+  DeleteUserEvent,
+  AddUserEvent,
+  DeleteQuickMenuAccess,
+  AddQuickMenuAccess,
+  UpdateQuickMenuAccess,
+  TransferOwnership,
+  SendChannelMessage,
+  UpdateChannelMessage,
+  DeleteChannelMessage,
+  ReportMessageAbuse,
+  MessageButtonClick,
+  ActiveArchivedThread,
+  UpdateChannelTimeline,
+  AddAgentToChannel,
+  DisconnectAgent,
+  CreateChannelTimeline,
+  DetailChannelTimeline,
+  CreatePoll,
+  VotePoll,
+  ClosePoll,
+  GetPoll,
+  ReactChannelMessage,
+  MultipartUploadAttachmentFileStart,
+  MultipartUploadAttachmentFileFinish,
 }
 
 import { Session } from "./session";
@@ -461,28 +461,27 @@ export class MezonTransport {
     this.adapter = transportAdapter;
   }
 
-  setFallbackSession(_session: Session) {
-
-  }
+  setFallbackSession(_session: Session) {}
 
   getApiFromPath(apiPath: string) {
     if (apiPath in ApiNameEnum) {
       return ApiNameEnum[apiPath as keyof typeof ApiNameEnum];
     }
-    
+
     return undefined;
   }
 
   connect(
-    session: Session,
+    session_id: string,
+    url: string,
     createStatus = false,
     verbose = false,
     onMessage: tsproto.SocketMessageHandler,
     onDisconnected: tsproto.SocketCloseHandler,
     signal?: AbortSignal,
   ): void {
-    const [host, port] = session.ws_url.split(":");
-    this.adapter.connect(host, port, createStatus, session.token, signal);
+    const [host, port] = url.split(":");
+    this.adapter.connect(host, port, createStatus, session_id, signal);
 
     this.adapter.onClose = onDisconnected;
     this.adapter.onMessage = async (
@@ -522,7 +521,7 @@ export class MezonTransport {
     const { urlPath, fetchOptions } = data;
     let untypedMessage = fetchOptions as any;
     if (urlPath?.includes("/mezon.api.Mezon/")) {
-      const apiName = urlPath.substring(17) 
+      const apiName = urlPath.substring(17);
       untypedMessage = {
         api_request_event: {
           api_index: this.getApiFromPath(apiName),
@@ -574,13 +573,10 @@ export class MezonTransport {
   }
 
   /** Delete the current user's account. */
-  deleteAccount(bearerToken: string, options = {}): Promise<any> {
+  deleteAccount(options = {}): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteAccount";
     const bodyJson = "";
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -593,13 +589,10 @@ export class MezonTransport {
   }
 
   /** Fetch the current user's account. */
-  getAccount(bearerToken: string, options = {}): Promise<ApiAccount> {
+  getAccount(options = {}): Promise<ApiAccount> {
     const urlPath = "/mezon.api.Mezon/GetAccount";
     const bodyJson = "";
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -618,11 +611,7 @@ export class MezonTransport {
   }
 
   /** Update fields in the current user's account. */
-  updateAccount(
-    bearerToken: string,
-    body: ApiUpdateAccountRequest,
-    options = {},
-  ): Promise<any> {
+  updateAccount(body: ApiUpdateAccountRequest, options = {}): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -636,9 +625,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -692,7 +678,6 @@ export class MezonTransport {
 
   /**  */
   confirmLogin(
-    bearerToken: string,
     basePath: string,
     body: ApiConfirmLoginRequest,
     options = {},
@@ -710,9 +695,7 @@ export class MezonTransport {
 
     const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
+
     fetchOptions.headers["Accept"] = "application/x-protobuf";
     fetchOptions.headers["Content-Type"] = "application/json";
 
@@ -947,7 +930,6 @@ export class MezonTransport {
 
   /** Add an email+password to the social profiles on the current user's account. */
   linkEmail(
-    bearerToken: string,
     body: ApiAccountEmail,
     options = {},
   ): Promise<ApiLinkAccountConfirmRequest> {
@@ -964,9 +946,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -988,7 +967,6 @@ export class MezonTransport {
 
   /** Add a mezon ID to the social profiles on the current user's account. */
   linkSMS(
-    bearerToken: string,
     body: ApiLinkAccountMezon,
     options = {},
   ): Promise<ApiLinkAccountConfirmRequest> {
@@ -1005,9 +983,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -1029,7 +1004,6 @@ export class MezonTransport {
 
   /**  */
   confirmLinkMezonOTP(
-    bearerToken: string,
     body: ApiLinkAccountConfirmRequest,
     options = {},
   ): Promise<ApiSession> {
@@ -1046,9 +1020,7 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
+
     fetchOptions.headers["Accept"] = "application/x-protobuf";
 
     return Promise.race([
@@ -1110,7 +1082,6 @@ export class MezonTransport {
 
   /** Authenticate a user with an email+password against the server. */
   registrationEmail(
-    bearerToken: string,
     body: ApiRegistrationEmailRequest,
     options = {},
   ): Promise<ApiSession> {
@@ -1127,9 +1098,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -1177,7 +1145,7 @@ export class MezonTransport {
         if (response.code != 0) {
           return {} as ApiSession;
         }
-        
+
         return tsproto.Session.decode(response.message) as ApiSession;
       }),
       new Promise<never>((_, reject) =>
@@ -1190,11 +1158,7 @@ export class MezonTransport {
   }
 
   /** Remove the email+password from the social profiles on the current user's account. */
-  unlinkEmail(
-    bearerToken: string,
-    body: ApiAccountEmail,
-    options = {},
-  ): Promise<any> {
+  unlinkEmail(body: ApiAccountEmail, options = {}): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -1208,9 +1172,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -1223,16 +1184,10 @@ export class MezonTransport {
   }
 
   /** List activity */
-  listActivity(
-    bearerToken: string,
-    options = {},
-  ): Promise<ApiListUserActivity> {
+  listActivity(options = {}): Promise<ApiListUserActivity> {
     const urlPath = "/mezon.api.Mezon/ListActivity";
 
     const fetchOptions = buildFetchOptions("POST", options, "");
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -1254,7 +1209,6 @@ export class MezonTransport {
 
   /** Create user activity */
   createActiviy(
-    bearerToken: string,
     body: ApiCreateActivityRequest,
     options = {},
   ): Promise<ApiUserActivity> {
@@ -1271,9 +1225,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -1292,11 +1243,7 @@ export class MezonTransport {
   }
 
   /** Add a new apps. */
-  addApp(
-    bearerToken: string,
-    body: ApiAddAppRequest,
-    options = {},
-  ): Promise<ApiApp> {
+  addApp(body: ApiAddAppRequest, options = {}): Promise<ApiApp> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -1310,9 +1257,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -1332,7 +1276,6 @@ export class MezonTransport {
 
   /** List (and optionally filter) accounts. */
   listApps(
-    bearerToken: string,
     filter?: string,
     tombstones?: boolean,
     cursor?: string,
@@ -1351,9 +1294,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -1372,12 +1312,7 @@ export class MezonTransport {
   }
 
   /** Add an app to clan. */
-  addAppToClan(
-    bearerToken: string,
-    appId: string,
-    clanId: string,
-    options = {},
-  ): Promise<any> {
+  addAppToClan(appId: string, clanId: string, options = {}): Promise<any> {
     if (appId === null || appId === undefined) {
       throw new Error(
         "'appId' is a required parameter but is null or undefined.",
@@ -1400,9 +1335,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -1415,7 +1347,7 @@ export class MezonTransport {
   }
 
   /** Delete all information stored for an app. */
-  deleteApp(bearerToken: string, id: string, options = {}): Promise<any> {
+  deleteApp(id: string, options = {}): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
@@ -1430,9 +1362,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -1445,7 +1374,7 @@ export class MezonTransport {
   }
 
   /** Get detailed app information. */
-  getApp(bearerToken: string, id: string, options = {}): Promise<ApiApp> {
+  getApp(id: string, options = {}): Promise<ApiApp> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
@@ -1460,9 +1389,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -1482,7 +1408,6 @@ export class MezonTransport {
 
   /** Update one or more fields on a app. */
   updateApp(
-    bearerToken: string,
     id: string,
     body: MezonUpdateAppBody,
     options = {},
@@ -1504,9 +1429,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -1526,7 +1448,6 @@ export class MezonTransport {
 
   /**  */
   listAuditLog(
-    bearerToken: string,
     actionLog?: string,
     userId?: string,
     clanId?: string,
@@ -1547,9 +1468,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -1567,7 +1485,6 @@ export class MezonTransport {
   }
   /**  */
   updateCategoryOrder(
-    bearerToken: string,
     body: ApiUpdateCategoryOrderRequest,
     options = {},
   ): Promise<any> {
@@ -1584,9 +1501,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -1600,7 +1514,6 @@ export class MezonTransport {
 
   /**  */
   listCategoryDescs(
-    bearerToken: string,
     clanId: string,
     creatorId?: string,
     categoryName?: string,
@@ -1628,9 +1541,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -1652,7 +1562,6 @@ export class MezonTransport {
 
   /** List channel apps. */
   listChannelApps(
-    bearerToken: string,
     clanId?: string,
     options = {},
   ): Promise<ApiListChannelAppsResponse> {
@@ -1667,9 +1576,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -1691,7 +1597,6 @@ export class MezonTransport {
 
   /**  */
   getChannelCanvasList(
-    bearerToken: string,
     channelId: string,
     clanId?: string,
     limit?: number,
@@ -1717,9 +1622,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -1741,7 +1643,6 @@ export class MezonTransport {
 
   /**  */
   addChannelFavorite(
-    bearerToken: string,
     body: ApiAddFavoriteChannelRequest,
     options = {},
   ): Promise<any> {
@@ -1758,9 +1659,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -1774,7 +1672,6 @@ export class MezonTransport {
 
   /**  */
   removeChannelFavorite(
-    bearerToken: string,
     channelId: string,
     clanId?: string,
     options = {},
@@ -1796,9 +1693,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -1812,7 +1706,6 @@ export class MezonTransport {
 
   /**  */
   getListFavoriteChannel(
-    bearerToken: string,
     clanId: string,
     options = {},
   ): Promise<ApiListFavoriteChannelResponse> {
@@ -1832,9 +1725,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -1856,7 +1746,6 @@ export class MezonTransport {
 
   /** List a channel's message history. */
   listChannelMessages(
-    bearerToken: string,
     clanId: string,
     channelId: string,
     messageId?: string,
@@ -1886,9 +1775,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -1907,7 +1793,6 @@ export class MezonTransport {
 
   /** Add users to a channel. */
   addChannelUsers(
-    bearerToken: string,
     channelId: string,
     userIds?: Array<string>,
     options = {},
@@ -1929,9 +1814,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -1945,7 +1827,6 @@ export class MezonTransport {
 
   /** List all attachment that are part of a channel. */
   listChannelAttachment(
-    bearerToken: string,
     channelId: string,
     clanId?: string,
     fileType?: string,
@@ -1979,9 +1860,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -2003,7 +1881,6 @@ export class MezonTransport {
 
   /** get channel encryption method */
   getChanEncryptionMethod(
-    bearerToken: string,
     channelId: string,
     method?: string,
     options = {},
@@ -2025,9 +1902,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -2049,7 +1923,6 @@ export class MezonTransport {
 
   /** store channel encryption method */
   setChanEncryptionMethod(
-    bearerToken: string,
     channelId: string,
     body: MezonSetChanEncryptionMethodBody,
     options = {},
@@ -2076,9 +1949,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -2091,12 +1961,7 @@ export class MezonTransport {
   }
 
   /** Leave a channel the user is a member of. */
-  leaveThread(
-    bearerToken: string,
-    clanId: string,
-    channelId: string,
-    options = {},
-  ): Promise<any> {
+  leaveThread(clanId: string, channelId: string, options = {}): Promise<any> {
     if (channelId === null || channelId === undefined) {
       throw new Error(
         "'channelId' is a required parameter but is null or undefined.",
@@ -2114,9 +1979,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -2130,7 +1992,6 @@ export class MezonTransport {
 
   /** Archive a single channel/thread (active = 0). */
   archiveChannel(
-    bearerToken: string,
     clanId: string,
     channelId: string,
     options = {},
@@ -2157,9 +2018,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -2173,7 +2031,6 @@ export class MezonTransport {
 
   /** List archived top-level channels in a clan. */
   listArchivedChannelDescs(
-    bearerToken: string,
     clanId: string,
     options = {},
   ): Promise<ApiChannelDescList> {
@@ -2193,9 +2050,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -2217,7 +2071,6 @@ export class MezonTransport {
 
   /** Kick a set of users from a channel. */
   removeChannelUsers(
-    bearerToken: string,
     channelId: string,
     userIds?: Array<string>,
     options = {},
@@ -2239,9 +2092,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -2255,7 +2105,6 @@ export class MezonTransport {
 
   /** List all users that are part of a channel. */
   listChannelUsers(
-    bearerToken: string,
     clanId: string,
     channelId: string,
     channelType?: number,
@@ -2285,9 +2134,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -2309,7 +2155,6 @@ export class MezonTransport {
 
   /** List user channels */
   listChannelDescs(
-    bearerToken: string,
     limit?: number,
     state?: number,
     page?: number,
@@ -2334,9 +2179,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -2358,7 +2200,6 @@ export class MezonTransport {
 
   /** Create a new channel with the current user as the owner. */
   createChannelDesc(
-    bearerToken: string,
     body: ApiCreateChannelDescRequest,
     options = {},
   ): Promise<ApiChannelDescription> {
@@ -2375,9 +2216,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -2399,7 +2237,6 @@ export class MezonTransport {
 
   /** list user add channel by channel ids */
   listChannelUsersUC(
-    bearerToken: string,
     channelId?: string,
     limit?: number,
     options = {},
@@ -2416,9 +2253,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -2440,7 +2274,6 @@ export class MezonTransport {
 
   /** Delete a channel by ID. */
   deleteChannelDesc(
-    bearerToken: string,
     clanId: string,
     channelId: string,
     options = {},
@@ -2462,9 +2295,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -2478,7 +2308,6 @@ export class MezonTransport {
 
   /** Update fields in a given channel. */
   updateChannelDesc(
-    bearerToken: string,
     channelId: string,
     body: ApiUpdateChannelDescRequest,
     options = {},
@@ -2505,9 +2334,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -2521,7 +2347,6 @@ export class MezonTransport {
 
   /** List channel setting */
   listChannelSetting(
-    bearerToken: string,
     clanId: string,
     parentId?: string,
     categoryId?: string,
@@ -2559,9 +2384,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -2583,7 +2405,6 @@ export class MezonTransport {
 
   /** List all users that are part of a channel. */
   listChannelVoiceUsers(
-    bearerToken: string,
     clanId?: string,
     limit?: number,
     options = {},
@@ -2600,9 +2421,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -2624,7 +2442,6 @@ export class MezonTransport {
 
   /** List clans */
   listClanDescs(
-    bearerToken: string,
     limit?: number,
     state?: number,
     cursor?: string,
@@ -2639,9 +2456,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -2661,7 +2475,6 @@ export class MezonTransport {
 
   /** Paged list of channel unread/badge metadata (HTTP counterpart to socket ListChannelBadgeCount). */
   listChannelBadgeCount(
-    bearerToken: string,
     clanId: string,
     limit?: number,
     page?: number,
@@ -2680,9 +2493,7 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
+
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
         if (response.code != 0) {
@@ -2703,7 +2514,6 @@ export class MezonTransport {
 
   /** Paged list of online users in a clan (HTTP counterpart to socket ListUserOnline). */
   listUserOnline(
-    bearerToken: string,
     clanId: string,
     limit?: number,
     page?: number,
@@ -2722,9 +2532,7 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
+
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
         if (response.code != 0) {
@@ -2745,7 +2553,6 @@ export class MezonTransport {
 
   /** Create a clan */
   createClanDesc(
-    bearerToken: string,
     body: ApiCreateClanDescRequest,
     options = {},
   ): Promise<ApiClanDesc> {
@@ -2767,9 +2574,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -2788,11 +2592,7 @@ export class MezonTransport {
   }
 
   /** Delete a clan desc by ID. */
-  deleteClanDesc(
-    bearerToken: string,
-    clanDescId: string,
-    options = {},
-  ): Promise<any> {
+  deleteClanDesc(clanDescId: string, options = {}): Promise<any> {
     if (clanDescId === null || clanDescId === undefined) {
       throw new Error(
         "'clanDescId' is a required parameter but is null or undefined.",
@@ -2807,9 +2607,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -2823,7 +2620,6 @@ export class MezonTransport {
 
   /** Update fields in a given clan. */
   updateClanDesc(
-    bearerToken: string,
     clanId: string,
     // eslint-disable-next-line @typescript-eslint/ban-types
     body: {},
@@ -2848,9 +2644,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -2864,7 +2657,6 @@ export class MezonTransport {
 
   /** Kick a set of users from a clan. */
   removeClanUsers(
-    bearerToken: string,
     clanId: string,
     userIds?: Array<string>,
     options = {},
@@ -2886,9 +2678,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -2905,7 +2694,6 @@ export class MezonTransport {
 
   /** List banned user */
   listBannedUsers(
-    bearerToken: string,
     clanId?: string,
     channelId?: string,
     options = {},
@@ -2922,9 +2710,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -2946,7 +2731,6 @@ export class MezonTransport {
 
   /** Ban a set of users from a channel. */
   unbanClanUsers(
-    bearerToken: string,
     clanId: string,
     channelId?: string,
     userIds?: Array<string>,
@@ -2972,9 +2756,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -2991,7 +2772,6 @@ export class MezonTransport {
 
   /** Ban a set of users from a channel. */
   banClanUsers(
-    bearerToken: string,
     clanId: string,
     channelId?: string,
     userIds?: Array<string>,
@@ -3017,9 +2797,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -3035,11 +2812,7 @@ export class MezonTransport {
   }
 
   /** List all users that are part of a clan. */
-  listClanUsers(
-    bearerToken: string,
-    clanId: string,
-    options = {},
-  ): Promise<ApiClanUserList> {
+  listClanUsers(clanId: string, options = {}): Promise<ApiClanUserList> {
     if (clanId === null || clanId === undefined) {
       throw new Error(
         "'clanId' is a required parameter but is null or undefined.",
@@ -3054,9 +2827,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -3076,7 +2846,6 @@ export class MezonTransport {
 
   /** List clan members' custom status strings (user_status). */
   listClanUsersStatus(
-    bearerToken: string,
     clanId: string,
     options = {},
   ): Promise<ApiClanUserStatusList> {
@@ -3094,9 +2863,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -3118,7 +2884,6 @@ export class MezonTransport {
 
   /**  */
   createCategoryDesc(
-    bearerToken: string,
     body: ApiCreateCategoryDescRequest,
     options = {},
   ): Promise<ApiCategoryDesc> {
@@ -3135,9 +2900,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -3157,7 +2919,6 @@ export class MezonTransport {
 
   /** Check whether a clan/category/channel/thread/nickname/username already exists. */
   checkDuplicateName(
-    bearerToken: string,
     body: ApiCheckDuplicateNameRequest,
     options = {},
   ): Promise<ApiCheckDuplicateNameResponse> {
@@ -3174,9 +2935,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -3199,7 +2957,6 @@ export class MezonTransport {
 
   /**  */
   deleteCategoryDesc(
-    bearerToken: string,
     categoryId: string,
     clanId: string,
     categoryLabel?: string,
@@ -3228,9 +2985,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -3244,7 +2998,6 @@ export class MezonTransport {
 
   /** regist fcm device token */
   registFCMDeviceToken(
-    bearerToken: string,
     token?: string,
     deviceId?: string,
     platform?: string,
@@ -3265,9 +3018,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -3289,7 +3039,6 @@ export class MezonTransport {
 
   /** close direct message. */
   closeDirectMess(
-    bearerToken: string,
     body: ApiDeleteChannelDescRequest,
     options = {},
   ): Promise<any> {
@@ -3306,9 +3055,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -3325,7 +3071,6 @@ export class MezonTransport {
 
   /** open direct message. */
   openDirectMess(
-    bearerToken: string,
     body: ApiDeleteChannelDescRequest,
     options = {},
   ): Promise<any> {
@@ -3342,9 +3087,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -3360,11 +3102,7 @@ export class MezonTransport {
   }
 
   /** Post clan Emoji  /v2/emoji/create */
-  createClanEmoji(
-    bearerToken: string,
-    body: ApiClanEmojiCreateRequest,
-    options = {},
-  ): Promise<any> {
+  createClanEmoji(body: ApiClanEmojiCreateRequest, options = {}): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -3378,9 +3116,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -3397,7 +3132,6 @@ export class MezonTransport {
 
   /** Delete a emoji by ID. */
   deleteClanEmojiById(
-    bearerToken: string,
     id: string,
     clanId?: string,
     emojiLabel?: string,
@@ -3419,9 +3153,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -3438,7 +3169,6 @@ export class MezonTransport {
 
   /** Update ClanEmoj By id */
   updateClanEmojiById(
-    bearerToken: string,
     id: string,
     body: MezonUpdateClanEmojiByIdBody,
     options = {},
@@ -3464,9 +3194,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -3482,16 +3209,10 @@ export class MezonTransport {
   }
 
   /** get list emoji recent by user id */
-  emojiRecentList(
-    bearerToken: string,
-    options = {},
-  ): Promise<ApiEmojiRecentList> {
+  emojiRecentList(options = {}): Promise<ApiEmojiRecentList> {
     const urlPath = "/mezon.api.Mezon/EmojiRecentList";
     const bodyJson = "";
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -3512,16 +3233,10 @@ export class MezonTransport {
   }
 
   /** get list emoji by user id */
-  getListEmojisByUserId(
-    bearerToken: string,
-    options = {},
-  ): Promise<ApiEmojiListedResponse> {
+  getListEmojisByUserId(options = {}): Promise<ApiEmojiListedResponse> {
     const urlPath = "/mezon.api.Mezon/GetListEmojisByUserId";
     const bodyJson = "";
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -3543,7 +3258,6 @@ export class MezonTransport {
 
   /** Search message from elasticsearch service. */
   searchMessage(
-    bearerToken: string,
     body: ApiSearchMessageRequest,
     options = {},
   ): Promise<ApiSearchMessageResponse> {
@@ -3560,9 +3274,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -3583,7 +3294,7 @@ export class MezonTransport {
   }
 
   /** Submit an event for processing in the server's registered runtime custom events handler. */
-  event(bearerToken: string, body: ApiEvent, options = {}): Promise<any> {
+  event(body: ApiEvent, options = {}): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -3602,9 +3313,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -3617,11 +3325,7 @@ export class MezonTransport {
   }
 
   /** List user events */
-  listEvents(
-    bearerToken: string,
-    clanId?: string,
-    options = {},
-  ): Promise<ApiEventList> {
+  listEvents(clanId?: string, options = {}): Promise<ApiEventList> {
     const urlPath = "/mezon.api.Mezon/ListEvents";
 
     const bodyWriter = tsproto.ListEventsRequest.encode(
@@ -3631,9 +3335,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -3653,7 +3354,6 @@ export class MezonTransport {
 
   /** Create a new event for clan. */
   createEvent(
-    bearerToken: string,
     body: ApiCreateEventRequest,
     options = {},
   ): Promise<ApiEventManagement> {
@@ -3670,9 +3370,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -3693,11 +3390,7 @@ export class MezonTransport {
   }
 
   /** Update fields in a given event. */
-  updateEventUser(
-    bearerToken: string,
-    body: ApiDeleteEventRequest,
-    options = {},
-  ): Promise<any> {
+  updateEventUser(body: ApiDeleteEventRequest, options = {}): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -3711,9 +3404,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -3730,7 +3420,6 @@ export class MezonTransport {
 
   /** Delete a event by ID. */
   deleteEvent(
-    bearerToken: string,
     eventId: string,
     clanId?: string,
     creatorId?: string,
@@ -3758,9 +3447,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -3777,7 +3463,6 @@ export class MezonTransport {
 
   /** Update fields in a given event. */
   updateEvent(
-    bearerToken: string,
     eventId: string,
     body: MezonUpdateEventBody,
     options = {},
@@ -3800,9 +3485,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -3819,7 +3501,6 @@ export class MezonTransport {
 
   /** Delete one or more users by ID or username. */
   deleteFriends(
-    bearerToken: string,
     ids?: Array<string>,
     usernames?: Array<string>,
     options = {},
@@ -3833,9 +3514,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -3849,7 +3527,6 @@ export class MezonTransport {
 
   /** List all friends for the current user. */
   listFriends(
-    bearerToken: string,
     limit?: number,
     state?: number,
     cursor?: string,
@@ -3864,9 +3541,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -3886,7 +3560,6 @@ export class MezonTransport {
 
   /** Add friends by ID or username to a user's account. */
   addFriends(
-    bearerToken: string,
     ids?: Array<string>,
     usernames?: Array<string>,
     options = {},
@@ -3900,9 +3573,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -3924,7 +3594,6 @@ export class MezonTransport {
 
   /** Block one or more users by ID or username. */
   blockFriends(
-    bearerToken: string,
     ids?: Array<string>,
     usernames?: Array<string>,
     options = {},
@@ -3938,9 +3607,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -3954,7 +3620,6 @@ export class MezonTransport {
 
   /** Block one or more users by ID or username. */
   unblockFriends(
-    bearerToken: string,
     ids?: Array<string>,
     usernames?: Array<string>,
     options = {},
@@ -3968,9 +3633,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -3984,7 +3646,6 @@ export class MezonTransport {
 
   /** List GetChannelCategoryNotiSettingsList */
   getChannelCategoryNotiSettingsList(
-    bearerToken: string,
     clanId?: string,
     options = {},
   ): Promise<ApiNotificationChannelCategorySettingList> {
@@ -3997,9 +3658,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -4020,11 +3678,7 @@ export class MezonTransport {
   }
 
   /**  */
-  getUserProfileOnClan(
-    bearerToken: string,
-    clanId: string,
-    options = {},
-  ): Promise<ApiClanProfile> {
+  getUserProfileOnClan(clanId: string, options = {}): Promise<ApiClanProfile> {
     if (clanId === null || clanId === undefined) {
       throw new Error(
         "'clanId' is a required parameter but is null or undefined.",
@@ -4039,9 +3693,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -4061,7 +3712,6 @@ export class MezonTransport {
 
   /** List GetNotificationChannel */
   getNotificationCategory(
-    bearerToken: string,
     categoryId?: string,
     options = {},
   ): Promise<ApiNotificationUserChannel> {
@@ -4076,9 +3726,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -4100,7 +3747,6 @@ export class MezonTransport {
 
   /** List GetNotificationChannel */
   getNotificationChannel(
-    bearerToken: string,
     channelId?: string,
     options = {},
   ): Promise<ApiNotificationUserChannel> {
@@ -4113,9 +3759,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -4137,7 +3780,6 @@ export class MezonTransport {
 
   /** List GetNotificationClan */
   getNotificationClan(
-    bearerToken: string,
     clanId?: string,
     options = {},
   ): Promise<ApiNotificationSetting> {
@@ -4150,9 +3792,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -4174,7 +3813,6 @@ export class MezonTransport {
 
   /** List GetNotificationReactMessage */
   getNotificationReactMessage(
-    bearerToken: string,
     channelId?: string,
     options = {},
   ): Promise<ApiNotifiReactMessage> {
@@ -4187,9 +3825,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -4210,11 +3845,7 @@ export class MezonTransport {
   }
 
   /** Give a coffee */
-  giveMeACoffee(
-    bearerToken: string,
-    body: ApiGiveCoffeeEvent,
-    options = {},
-  ): Promise<any> {
+  giveMeACoffee(body: ApiGiveCoffeeEvent, options = {}): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -4228,9 +3859,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -4246,16 +3874,10 @@ export class MezonTransport {
   }
 
   /** get key server */
-  getKeyServer(
-    bearerToken: string,
-    options = {},
-  ): Promise<ApiGetKeyServerResp> {
+  getKeyServer(options = {}): Promise<ApiGetKeyServerResp> {
     const urlPath = "/mezon.api.Mezon/GetKeyServer";
 
     const fetchOptions = buildFetchOptions("POST", options, "");
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -4277,7 +3899,6 @@ export class MezonTransport {
 
   /** Add users to a channel. */
   createLinkInviteUser(
-    bearerToken: string,
     body: ApiLinkInviteUserRequest,
     options = {},
   ): Promise<ApiLinkInviteUser> {
@@ -4294,9 +3915,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -4317,11 +3935,7 @@ export class MezonTransport {
   }
 
   /** Add users to a channel. */
-  inviteUser(
-    bearerToken: string,
-    inviteId: string,
-    options = {},
-  ): Promise<ApiInviteUserRes> {
+  inviteUser(inviteId: string, options = {}): Promise<ApiInviteUserRes> {
     if (inviteId === null || inviteId === undefined) {
       throw new Error(
         "'inviteId' is a required parameter but is null or undefined.",
@@ -4336,9 +3950,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -4404,16 +4015,10 @@ export class MezonTransport {
   }
 
   /** List HashtagDMList */
-  listChannelByUserId(
-    bearerToken: string,
-    options = {},
-  ): Promise<ApiChannelDescList> {
+  listChannelByUserId(options = {}): Promise<ApiChannelDescList> {
     const urlPath = "/mezon.api.Mezon/ListChannelByUserId";
 
     const fetchOptions = buildFetchOptions("POST", options, "");
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -4434,11 +4039,7 @@ export class MezonTransport {
   }
 
   /** Mark as read */
-  markAsRead(
-    bearerToken: string,
-    body: ApiMarkAsReadRequest,
-    options = {},
-  ): Promise<any> {
+  markAsRead(body: ApiMarkAsReadRequest, options = {}): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -4452,9 +4053,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -4470,16 +4068,10 @@ export class MezonTransport {
   }
 
   /** List mezon OAuth client */
-  listMezonOauthClient(
-    bearerToken: string,
-    options = {},
-  ): Promise<ApiMezonOauthClientList> {
+  listMezonOauthClient(options = {}): Promise<ApiMezonOauthClientList> {
     const urlPath = "/mezon.api.Mezon/ListMezonOauthClient";
 
     const fetchOptions = buildFetchOptions("POST", options, "");
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -4500,11 +4092,7 @@ export class MezonTransport {
   }
 
   /** set mute notification user channel. */
-  setMuteCategory(
-    bearerToken: string,
-    body: ApiSetMuteRequest,
-    options = {},
-  ): Promise<any> {
+  setMuteCategory(body: ApiSetMuteRequest, options = {}): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -4518,9 +4106,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -4536,11 +4121,7 @@ export class MezonTransport {
   }
 
   /** set mute notification user channel. */
-  setMuteChannel(
-    bearerToken: string,
-    body: ApiSetMuteRequest,
-    options = {},
-  ): Promise<any> {
+  setMuteChannel(body: ApiSetMuteRequest, options = {}): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -4554,9 +4135,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -4573,7 +4151,6 @@ export class MezonTransport {
 
   /** Delete one or more notifications for the current user. */
   deleteNotifications(
-    bearerToken: string,
     ids?: Array<string>,
     category?: number,
     options = {},
@@ -4590,9 +4167,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -4606,7 +4180,6 @@ export class MezonTransport {
 
   /** Fetch list of notifications. */
   listNotifications(
-    bearerToken: string,
     limit?: number,
     clanId?: string,
     notificationId?: string,
@@ -4629,9 +4202,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -4650,7 +4220,6 @@ export class MezonTransport {
 
   /** set notification user channel. */
   setNotificationChannelSetting(
-    bearerToken: string,
     body: ApiSetNotificationRequest,
     options = {},
   ): Promise<any> {
@@ -4667,9 +4236,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -4683,7 +4249,6 @@ export class MezonTransport {
 
   /** set notification user channel. */
   setNotificationClanSetting(
-    bearerToken: string,
     body: ApiSetDefaultNotificationRequest,
     options = {},
   ): Promise<any> {
@@ -4700,9 +4265,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -4716,7 +4278,6 @@ export class MezonTransport {
 
   /** set notification user channel. */
   setNotificationCategorySetting(
-    bearerToken: string,
     body: ApiSetNotificationRequest,
     options = {},
   ): Promise<any> {
@@ -4733,9 +4294,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -4749,7 +4307,6 @@ export class MezonTransport {
 
   /**  */
   deleteNotificationCategorySetting(
-    bearerToken: string,
     categoryId?: string,
     options = {},
   ): Promise<any> {
@@ -4764,9 +4321,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -4779,11 +4333,7 @@ export class MezonTransport {
   }
 
   /**  */
-  deleteNotificationChannel(
-    bearerToken: string,
-    channelId?: string,
-    options = {},
-  ): Promise<any> {
+  deleteNotificationChannel(channelId?: string, options = {}): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteNotificationChannel";
 
     const bodyWriter = tsproto.NotificationChannel.encode(
@@ -4793,9 +4343,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -4808,11 +4355,7 @@ export class MezonTransport {
   }
 
   /**  */
-  deleteNotiReactMessage(
-    bearerToken: string,
-    channelId?: string,
-    options = {},
-  ): Promise<any> {
+  deleteNotiReactMessage(channelId?: string, options = {}): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteNotiReactMessage";
 
     const bodyWriter = tsproto.NotificationChannel.encode(
@@ -4822,9 +4365,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -4838,7 +4378,6 @@ export class MezonTransport {
 
   /**  */
   setNotificationReactMessage(
-    bearerToken: string,
     body: ApiNotificationChannel,
     options = {},
   ): Promise<any> {
@@ -4855,9 +4394,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -4871,7 +4407,6 @@ export class MezonTransport {
 
   /** set permission role channel. */
   setRoleChannelPermission(
-    bearerToken: string,
     body: ApiUpdateRoleChannelRequest,
     options = {},
   ): Promise<any> {
@@ -4888,9 +4423,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -4903,16 +4435,10 @@ export class MezonTransport {
   }
 
   /** Get permission list */
-  getListPermission(
-    bearerToken: string,
-    options = {},
-  ): Promise<ApiPermissionList> {
+  getListPermission(options = {}): Promise<ApiPermissionList> {
     const urlPath = "/mezon.api.Mezon/GetListPermission";
 
     const fetchOptions = buildFetchOptions("POST", options, "");
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -4934,7 +4460,6 @@ export class MezonTransport {
 
   /** GetPermissionByRoleIdChannelId */
   getPermissionByRoleIdChannelId(
-    bearerToken: string,
     roleId?: string,
     channelId?: string,
     userId?: string,
@@ -4953,9 +4478,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -4977,7 +4499,6 @@ export class MezonTransport {
 
   /**  */
   deletePinMessage(
-    bearerToken: string,
     id?: string,
     messageId?: string,
     channelId?: string,
@@ -4998,9 +4519,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -5014,7 +4532,6 @@ export class MezonTransport {
 
   /**  */
   getPinMessagesList(
-    bearerToken: string,
     messageId?: string,
     channelId?: string,
     clanId?: string,
@@ -5033,9 +4550,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -5054,7 +4568,6 @@ export class MezonTransport {
 
   /** create message to inbox. */
   createMessage2Inbox(
-    bearerToken: string,
     body: ApiMessage2InboxRequest,
     options = {},
   ): Promise<ApiChannelMessageHeader> {
@@ -5071,9 +4584,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -5095,7 +4605,6 @@ export class MezonTransport {
 
   /** set notification user channel. */
   createPinMessage(
-    bearerToken: string,
     body: ApiPinMessageRequest,
     options = {},
   ): Promise<ApiChannelMessageHeader> {
@@ -5112,9 +4621,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -5136,7 +4642,6 @@ export class MezonTransport {
 
   /** get pubkey */
   getPubKeys(
-    bearerToken: string,
     userIds?: Array<string>,
     options = {},
   ): Promise<ApiGetPubKeysResponse> {
@@ -5149,9 +4654,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -5172,11 +4674,7 @@ export class MezonTransport {
   }
 
   /** store pubkey for e2ee */
-  pushPubKey(
-    bearerToken: string,
-    body: ApiPushPubKeyRequest,
-    options = {},
-  ): Promise<any> {
+  pushPubKey(body: ApiPushPubKeyRequest, options = {}): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -5190,9 +4688,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -5206,7 +4701,6 @@ export class MezonTransport {
 
   /**  */
   addRolesChannelDesc(
-    bearerToken: string,
     body: ApiAddRoleChannelDescRequest,
     options = {},
   ): Promise<any> {
@@ -5223,9 +4717,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -5239,7 +4730,6 @@ export class MezonTransport {
 
   /** update the category of a channel */
   changeChannelCategory(
-    bearerToken: string,
     newCategoryId: string,
     body: MezonChangeChannelCategoryBody,
     options = {},
@@ -5266,9 +4756,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -5282,7 +4769,6 @@ export class MezonTransport {
 
   /** Update a role when Delete a role by ID. */
   deleteRoleChannelDesc(
-    bearerToken: string,
     body: ApiDeleteRoleRequest,
     options = {},
   ): Promise<any> {
@@ -5299,9 +4785,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -5315,7 +4798,6 @@ export class MezonTransport {
 
   /** ListRoles */
   listRoles(
-    bearerToken: string,
     clanId?: string,
     limit?: number,
     state?: number,
@@ -5336,9 +4818,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -5359,11 +4838,7 @@ export class MezonTransport {
   }
 
   /** Create a new role for clan. */
-  createRole(
-    bearerToken: string,
-    body: ApiCreateRoleRequest,
-    options = {},
-  ): Promise<ApiRole> {
+  createRole(body: ApiCreateRoleRequest, options = {}): Promise<ApiRole> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -5377,9 +4852,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -5399,7 +4871,6 @@ export class MezonTransport {
 
   /** Update a role when Delete a role by ID. */
   updateRoleDelete(
-    bearerToken: string,
     roleId: string,
     body: MezonUpdateRoleDeleteBody,
     options = {},
@@ -5423,9 +4894,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -5439,7 +4907,6 @@ export class MezonTransport {
 
   /** Delete a role by ID. */
   deleteRole(
-    bearerToken: string,
     roleId: string,
     channelId?: string,
     clanId?: string,
@@ -5465,9 +4932,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -5481,7 +4945,6 @@ export class MezonTransport {
 
   /** Update fields in a given role. */
   updateRole(
-    bearerToken: string,
     roleId: string,
     body: MezonUpdateRoleBody,
     options = {},
@@ -5505,9 +4968,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -5521,7 +4981,6 @@ export class MezonTransport {
 
   /** List role permissions */
   listRolePermissions(
-    bearerToken: string,
     roleId: string,
     options = {},
   ): Promise<ApiPermissionList> {
@@ -5539,9 +4998,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -5563,7 +5019,6 @@ export class MezonTransport {
 
   /** List role permissions */
   listRoleUsers(
-    bearerToken: string,
     roleId: string,
     limit?: number,
     cursor?: string,
@@ -5587,9 +5042,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -5609,7 +5061,6 @@ export class MezonTransport {
 
   /**  */
   getRoleOfUserInTheClan(
-    bearerToken: string,
     clanId: string,
     channelId?: string,
     options = {},
@@ -5631,9 +5082,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -5653,7 +5101,6 @@ export class MezonTransport {
 
   /**  */
   searchThread(
-    bearerToken: string,
     clanId?: string,
     channelId?: string,
     label?: string,
@@ -5672,9 +5119,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -5695,11 +5139,7 @@ export class MezonTransport {
   }
 
   /** UpdateWallets */
-  sendToken(
-    bearerToken: string,
-    body: ApiTokenSentEvent,
-    options = {},
-  ): Promise<any> {
+  sendToken(body: ApiTokenSentEvent, options = {}): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -5713,9 +5153,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -5731,11 +5168,7 @@ export class MezonTransport {
   }
 
   /** Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user. */
-  sessionLogout(
-    bearerToken: string,
-    body: ApiSessionLogoutRequest,
-    options = {},
-  ): Promise<any> {
+  sessionLogout(body: ApiSessionLogoutRequest, options = {}): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -5749,9 +5182,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -5764,11 +5194,7 @@ export class MezonTransport {
   }
 
   /** Add a new sticker */
-  addClanSticker(
-    bearerToken: string,
-    body: ApiClanStickerAddRequest,
-    options = {},
-  ): Promise<any> {
+  addClanSticker(body: ApiClanStickerAddRequest, options = {}): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -5782,9 +5208,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -5801,7 +5224,6 @@ export class MezonTransport {
 
   /** Delete a sticker by ID */
   deleteClanStickerById(
-    bearerToken: string,
     id: string,
     clanId?: string,
     stickerLabel?: string,
@@ -5823,9 +5245,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -5842,7 +5261,6 @@ export class MezonTransport {
 
   /** Update a sticker by ID */
   updateClanStickerById(
-    bearerToken: string,
     id: string,
     body: MezonUpdateClanStickerByIdBody,
     options = {},
@@ -5864,9 +5282,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -5882,16 +5297,10 @@ export class MezonTransport {
   }
 
   /** get list sticker by user id */
-  getListStickersByUserId(
-    bearerToken: string,
-    options = {},
-  ): Promise<ApiStickerListedResponse> {
+  getListStickersByUserId(options = {}): Promise<ApiStickerListedResponse> {
     const urlPath = "/mezon.api.Mezon/GetListStickersByUserId";
 
     const fetchOptions = buildFetchOptions("POST", options, "");
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -5913,7 +5322,6 @@ export class MezonTransport {
 
   /** Register streaming in channel ( for bot - get streaming key) */
   registerStreamingChannel(
-    bearerToken: string,
     body: ApiRegisterStreamingChannelRequest,
     options = {},
   ): Promise<ApiRegisterStreamingChannelResponse> {
@@ -5930,9 +5338,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -5954,7 +5359,6 @@ export class MezonTransport {
 
   /** List all users that are part of a channel. */
   listStreamingChannelUsers(
-    bearerToken: string,
     clanId?: string,
     channelId?: string,
     channelType?: number,
@@ -5979,9 +5383,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -6002,16 +5403,10 @@ export class MezonTransport {
   }
 
   /** Get the list of system messages. */
-  getSystemMessagesList(
-    bearerToken: string,
-    options = {},
-  ): Promise<ApiSystemMessagesList> {
+  getSystemMessagesList(options = {}): Promise<ApiSystemMessagesList> {
     const urlPath = "/mezon.api.Mezon/GetSystemMessagesList";
 
     const fetchOptions = buildFetchOptions("POST", options, "");
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -6033,7 +5428,6 @@ export class MezonTransport {
 
   /** Create a system messages. */
   createSystemMessage(
-    bearerToken: string,
     body: ApiSystemMessageRequest,
     options = {},
   ): Promise<any> {
@@ -6050,9 +5444,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -6069,7 +5460,6 @@ export class MezonTransport {
 
   /** List Sd Topic */
   listSdTopic(
-    bearerToken: string,
     clanId?: string,
     limit?: number,
     options = {},
@@ -6086,9 +5476,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -6107,11 +5494,7 @@ export class MezonTransport {
   }
 
   /** Create Sd Topic */
-  createSdTopic(
-    bearerToken: string,
-    body: ApiSdTopicRequest,
-    options = {},
-  ): Promise<ApiSdTopic> {
+  createSdTopic(body: ApiSdTopicRequest, options = {}): Promise<ApiSdTopic> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -6125,9 +5508,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -6146,11 +5526,7 @@ export class MezonTransport {
   }
 
   /** Delete a specific system messages. */
-  deleteSystemMessage(
-    bearerToken: string,
-    clanId: string,
-    options = {},
-  ): Promise<any> {
+  deleteSystemMessage(clanId: string, options = {}): Promise<any> {
     if (clanId === null || clanId === undefined) {
       throw new Error(
         "'clanId' is a required parameter but is null or undefined.",
@@ -6165,9 +5541,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -6184,7 +5557,6 @@ export class MezonTransport {
 
   /** Get details of a specific system messages. */
   getSystemMessageByClanId(
-    bearerToken: string,
     clanId: string,
     options = {},
   ): Promise<ApiSystemMessage> {
@@ -6202,9 +5574,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -6226,7 +5595,6 @@ export class MezonTransport {
 
   /** Update a system messages. */
   updateSystemMessage(
-    bearerToken: string,
     clanId: string,
     body: MezonUpdateSystemMessageBody,
     options = {},
@@ -6250,9 +5618,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -6269,7 +5634,6 @@ export class MezonTransport {
 
   /** List user channels */
   listThreadDescs(
-    bearerToken: string,
     channelId: string,
     limit?: number,
     state?: number,
@@ -6299,9 +5663,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -6322,7 +5683,6 @@ export class MezonTransport {
   }
   /** Update fields in a given category. */
   updateCategory(
-    bearerToken: string,
     clanId: string,
     body: MezonUpdateCategoryBody,
     options = {},
@@ -6349,9 +5709,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -6368,7 +5725,6 @@ export class MezonTransport {
 
   /** Update channel private. */
   updateChannelPrivate(
-    bearerToken: string,
     body: ApiChangeChannelPrivateRequest,
     options = {},
   ): Promise<any> {
@@ -6385,9 +5741,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -6404,7 +5757,6 @@ export class MezonTransport {
 
   /**  */
   updateUserProfileByClan(
-    bearerToken: string,
     clanId: string,
     body: MezonUpdateUserProfileByClanBody,
     options = {},
@@ -6431,9 +5783,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
@@ -6450,7 +5799,6 @@ export class MezonTransport {
 
   /** Upload attachment */
   uploadOauthFile(
-    bearerToken: string,
     body: ApiUploadAttachmentRequest,
     options = {},
   ): Promise<ApiUploadAttachment> {
@@ -6467,9 +5815,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -6491,7 +5836,6 @@ export class MezonTransport {
 
   /** Upload attachment */
   uploadAttachmentFile(
-    bearerToken: string,
     body: ApiUploadAttachmentRequest,
     options = {},
   ): Promise<ApiUploadAttachment> {
@@ -6508,9 +5852,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -6531,7 +5872,6 @@ export class MezonTransport {
   }
 
   multipartUploadAttachmentFile(
-    bearerToken: string,
     body: ApiUploadAttachmentRequest,
     options = {},
   ): Promise<MultipartUploadAttachment> {
@@ -6548,9 +5888,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -6571,7 +5908,6 @@ export class MezonTransport {
   }
 
   multipartUploadAttachmentFileFinsih(
-    bearerToken: string,
     body: MultipartUploadAttachmentFinishRequest,
     options = {},
   ): Promise<any> {
@@ -6588,9 +5924,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -6606,11 +5939,7 @@ export class MezonTransport {
   }
 
   /**  */
-  updateUser(
-    bearerToken: string,
-    body: ApiUpdateUsersRequest,
-    options = {},
-  ): Promise<any> {
+  updateUser(body: ApiUpdateUsersRequest, options = {}): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -6624,9 +5953,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -6639,16 +5965,10 @@ export class MezonTransport {
   }
 
   /** ListUserClansByUserId */
-  listUserClansByUserId(
-    bearerToken: string,
-    options = {},
-  ): Promise<ApiAllUserClans> {
+  listUserClansByUserId(options = {}): Promise<ApiAllUserClans> {
     const urlPath = "/mezon.api.Mezon/ListUserClansByUserId";
 
     const fetchOptions = buildFetchOptions("POST", options, "");
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -6668,7 +5988,6 @@ export class MezonTransport {
 
   /** ListUserPermissionInChannel */
   listUserPermissionInChannel(
-    bearerToken: string,
     clanId?: string,
     channelId?: string,
     options = {},
@@ -6685,9 +6004,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -6708,13 +6024,10 @@ export class MezonTransport {
   }
 
   /** Get user status */
-  getUserStatus(bearerToken: string, options = {}): Promise<ApiUserStatus> {
+  getUserStatus(options = {}): Promise<ApiUserStatus> {
     const urlPath = "/mezon.api.Mezon/GetUserStatus";
 
     const fetchOptions = buildFetchOptions("POST", options, "");
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -6733,11 +6046,7 @@ export class MezonTransport {
   }
 
   /** Update user status */
-  updateUserStatus(
-    bearerToken: string,
-    body: ApiUserStatusUpdate,
-    options = {},
-  ): Promise<any> {
+  updateUserStatus(body: ApiUserStatusUpdate, options = {}): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -6751,9 +6060,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -6767,7 +6073,6 @@ export class MezonTransport {
 
   /** Update user custom status (user_status). */
   updateUserCustomStatus(
-    bearerToken: string,
     body: ApiUserStatusUpdate,
     options = {},
   ): Promise<any> {
@@ -6784,9 +6089,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -6799,11 +6101,7 @@ export class MezonTransport {
   }
 
   /** create webhook */
-  generateWebhook(
-    bearerToken: string,
-    body: ApiWebhookCreateRequest,
-    options = {},
-  ): Promise<any> {
+  generateWebhook(body: ApiWebhookCreateRequest, options = {}): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -6817,9 +6115,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -6836,7 +6131,6 @@ export class MezonTransport {
 
   /** update webhook name by id */
   updateWebhookById(
-    bearerToken: string,
     id: string,
     body: MezonUpdateWebhookByIdBody,
     options = {},
@@ -6861,9 +6155,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -6877,7 +6168,6 @@ export class MezonTransport {
 
   /** list webhook belong to the channel */
   listWebhookByChannelId(
-    bearerToken: string,
     channelId: string,
     clanId?: string,
     options = {},
@@ -6899,9 +6189,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -6923,7 +6210,6 @@ export class MezonTransport {
 
   /** disabled webhook */
   deleteWebhookById(
-    bearerToken: string,
     id: string,
     body: MezonDeleteWebhookByIdBody,
     options = {},
@@ -6948,9 +6234,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -6988,7 +6271,6 @@ export class MezonTransport {
 
   /** Channel canvas editor */
   editChannelCanvases(
-    bearerToken: string,
     body: ApiEditChannelCanvasRequest,
     options = {},
   ): Promise<ApiEditChannelCanvasResponse> {
@@ -7005,9 +6287,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -7029,7 +6308,6 @@ export class MezonTransport {
 
   /**  */
   getChannelCanvasDetail(
-    bearerToken: string,
     id: string,
     clanId?: string,
     channelId?: string,
@@ -7051,9 +6329,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -7075,7 +6350,6 @@ export class MezonTransport {
 
   /**  */
   deleteChannelCanvas(
-    bearerToken: string,
     canvasId: string,
     clanId?: string,
     channelId?: string,
@@ -7099,9 +6373,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -7115,7 +6386,6 @@ export class MezonTransport {
 
   /** list onboarding. */
   listOnboarding(
-    bearerToken: string,
     clanId?: string,
     guideType?: number,
     limit?: number,
@@ -7136,9 +6406,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -7160,7 +6427,6 @@ export class MezonTransport {
 
   /** create onboarding. */
   createOnboarding(
-    bearerToken: string,
     body: ApiCreateOnboardingRequest,
     options = {},
   ): Promise<ApiListOnboardingResponse> {
@@ -7177,9 +6443,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -7200,12 +6463,7 @@ export class MezonTransport {
   }
 
   /** delete onboarding. */
-  deleteOnboarding(
-    bearerToken: string,
-    id: string,
-    clanId?: string,
-    options = {},
-  ): Promise<any> {
+  deleteOnboarding(id: string, clanId?: string, options = {}): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
@@ -7221,9 +6479,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -7237,7 +6492,6 @@ export class MezonTransport {
 
   /** get detailed onboarding information. */
   getOnboardingDetail(
-    bearerToken: string,
     id: string,
     clanId?: string,
     options = {},
@@ -7257,9 +6511,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -7281,7 +6532,6 @@ export class MezonTransport {
 
   /** update onboarding. */
   updateOnboarding(
-    bearerToken: string,
     id: string,
     body: MezonUpdateOnboardingBody,
     options = {},
@@ -7306,9 +6556,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -7322,7 +6569,6 @@ export class MezonTransport {
 
   /** Generate clan webhook. */
   generateClanWebhook(
-    bearerToken: string,
     body: ApiGenerateClanWebhookRequest,
     options = {},
   ): Promise<ApiGenerateClanWebhookResponse> {
@@ -7339,9 +6585,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -7363,7 +6606,6 @@ export class MezonTransport {
 
   /** List clan webhook. */
   listClanWebhook(
-    bearerToken: string,
     clanId: string,
     options = {},
   ): Promise<ApiListClanWebhookResponse> {
@@ -7383,9 +6625,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -7407,7 +6646,6 @@ export class MezonTransport {
 
   /** Disabled clan webhook. */
   deleteClanWebhookById(
-    bearerToken: string,
     id: string,
     clanId?: string,
     options = {},
@@ -7429,9 +6667,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -7445,7 +6680,6 @@ export class MezonTransport {
 
   /** Update clan webhook by id. */
   updateClanWebhookById(
-    bearerToken: string,
     id: string,
     body: MezonUpdateClanWebhookByIdBody,
     options = {},
@@ -7472,9 +6706,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -7487,11 +6718,7 @@ export class MezonTransport {
   }
 
   /** Sd Topic */
-  getTopicDetail(
-    bearerToken: string,
-    topicId?: string,
-    options = {},
-  ): Promise<ApiSdTopic> {
+  getTopicDetail(topicId?: string, options = {}): Promise<ApiSdTopic> {
     const urlPath = "/mezon.api.Mezon/GetTopicDetail";
 
     const body = {
@@ -7505,9 +6732,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -7527,7 +6751,6 @@ export class MezonTransport {
 
   /** List onboarding step. */
   listOnboardingStep(
-    bearerToken: string,
     clanId?: string,
     limit?: number,
     page?: number,
@@ -7548,9 +6771,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -7572,7 +6792,6 @@ export class MezonTransport {
 
   /** Update onboarding step. */
   updateOnboardingStepByClanId(
-    bearerToken: string,
     clanId: string,
     body: MezonUpdateOnboardingStepByClanIdBody,
     options = {},
@@ -7601,9 +6820,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -7617,7 +6833,6 @@ export class MezonTransport {
 
   /** create meeting room */
   createRoomChannelApps(
-    bearerToken: string,
     body: MezonapiCreateRoomChannelApps,
     options = {},
   ): Promise<MezonapiCreateRoomChannelApps> {
@@ -7634,9 +6849,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -7655,7 +6867,6 @@ export class MezonTransport {
 
   /** Generate Meet Token */
   generateMeetToken(
-    bearerToken: string,
     body: ApiGenerateMeetTokenRequest,
     options = {},
   ): Promise<ApiGenerateMeetTokenResponse> {
@@ -7672,9 +6883,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -7696,7 +6904,6 @@ export class MezonTransport {
 
   /** Create mezon OAuth client */
   getMezonOauthClient(
-    bearerToken: string,
     clientId?: string,
     clientName?: string,
     options = {},
@@ -7715,9 +6922,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -7739,7 +6943,6 @@ export class MezonTransport {
 
   /** update mezon OAuth */
   updateMezonOauthClient(
-    bearerToken: string,
     body: ApiMezonOauthClient,
     options = {},
   ): Promise<ApiMezonOauthClient> {
@@ -7756,9 +6959,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -7779,7 +6979,6 @@ export class MezonTransport {
   }
   /**  */
   generateHashChannelApps(
-    bearerToken: string,
     appId?: string,
     options = {},
   ): Promise<ApiCreateHashChannelAppsResponse> {
@@ -7796,9 +6995,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -7819,11 +7015,7 @@ export class MezonTransport {
   }
 
   /** Add user event */
-  addUserEvent(
-    bearerToken: string,
-    body: ApiUserEventRequest,
-    options = {},
-  ): Promise<any> {
+  addUserEvent(body: ApiUserEventRequest, options = {}): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -7837,9 +7029,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -7853,7 +7042,6 @@ export class MezonTransport {
 
   /** Delete user event */
   deleteUserEvent(
-    bearerToken: string,
     clanId?: string,
     eventId?: string,
     options = {},
@@ -7872,9 +7060,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -7887,11 +7072,7 @@ export class MezonTransport {
   }
 
   /**  */
-  updateRoleOrder(
-    bearerToken: string,
-    body: ApiUpdateRoleOrderRequest,
-    options = {},
-  ): Promise<any> {
+  updateRoleOrder(body: ApiUpdateRoleOrderRequest, options = {}): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -7905,9 +7086,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -7920,16 +7098,10 @@ export class MezonTransport {
   }
 
   /** Create external Mezon meet */
-  createExternalMezonMeet(
-    bearerToken: string,
-    options = {},
-  ): Promise<ApiGenerateMezonMeetResponse> {
+  createExternalMezonMeet(options = {}): Promise<ApiGenerateMezonMeetResponse> {
     const urlPath = "/mezon.api.Mezon/CreateExternalMezonMeet";
 
     const fetchOptions = buildFetchOptions("POST", options, "");
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -7951,7 +7123,6 @@ export class MezonTransport {
 
   /** handler external mezon meet */
   generateMeetTokenExternal(
-    bearerToken: string,
     basePath: string,
     token: string,
     username?: string,
@@ -7977,9 +7148,7 @@ export class MezonTransport {
 
     const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
+
     fetchOptions.headers["Accept"] = "application/x-protobuf";
     fetchOptions.headers["Content-Type"] = "application/json";
 
@@ -8001,7 +7170,6 @@ export class MezonTransport {
 
   /** mute participant in the room */
   muteParticipantMezonMeet(
-    bearerToken: string,
     body: ApiMeetParticipantRequest,
     options = {},
   ): Promise<any> {
@@ -8018,9 +7186,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -8034,7 +7199,6 @@ export class MezonTransport {
 
   /** Remove participant out the room */
   removeParticipantMezonMeet(
-    bearerToken: string,
     body: ApiMeetParticipantRequest,
     options = {},
   ): Promise<any> {
@@ -8051,9 +7215,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -8067,7 +7228,6 @@ export class MezonTransport {
 
   /** List channels detail */
   listChannelDetail(
-    bearerToken: string,
     channelId: string,
     options = {},
   ): Promise<ApiChannelDescription> {
@@ -8089,9 +7249,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -8113,7 +7270,6 @@ export class MezonTransport {
 
   /** List channel events */
   listChannelTimeline(
-    bearerToken: string,
     request: ApiListChannelTimelineRequest,
     options = {},
   ): Promise<ApiListChannelTimelineResponse> {
@@ -8130,9 +7286,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -8151,7 +7304,6 @@ export class MezonTransport {
 
   /** Create channel event */
   createChannelTimeline(
-    bearerToken: string,
     request: ApiCreateChannelTimelineRequest,
     options = {},
   ): Promise<ApiCreateChannelTimelineResponse> {
@@ -8168,9 +7320,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -8189,7 +7338,6 @@ export class MezonTransport {
 
   /** Update channel event */
   updateChannelTimeline(
-    bearerToken: string,
     request: ApiUpdateChannelTimelineRequest,
     options = {},
   ): Promise<ApiUpdateChannelTimelineResponse> {
@@ -8206,9 +7354,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -8227,7 +7372,6 @@ export class MezonTransport {
 
   /** List channel events */
   detailChannelTimeline(
-    bearerToken: string,
     request: ApiDetailChannelTimelineRequest,
     options = {},
   ): Promise<ApiDetailChannelTimelineResponse> {
@@ -8244,9 +7388,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -8264,11 +7405,7 @@ export class MezonTransport {
   }
 
   /**  */
-  updateClanOrder(
-    bearerToken: string,
-    body: ApiUpdateClanOrderRequest,
-    options = {},
-  ): Promise<any> {
+  updateClanOrder(body: ApiUpdateClanOrderRequest, options = {}): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -8282,9 +7419,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -8341,7 +7475,6 @@ export class MezonTransport {
   }
   /**  */
   deleteQuickMenuAccess(
-    bearerToken: string,
     id?: string,
     clanId?: string,
     botId?: string,
@@ -8368,9 +7501,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -8384,7 +7514,6 @@ export class MezonTransport {
 
   /**  */
   listQuickMenuAccess(
-    bearerToken: string,
     botId?: string,
     channelId?: string,
     menuType?: number,
@@ -8405,9 +7534,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -8429,7 +7555,6 @@ export class MezonTransport {
 
   /**  */
   addQuickMenuAccess(
-    bearerToken: string,
     body: ApiQuickMenuAccessRequest,
     options = {},
   ): Promise<any> {
@@ -8446,9 +7571,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -8462,7 +7584,6 @@ export class MezonTransport {
 
   /**  */
   updateQuickMenuAccess(
-    bearerToken: string,
     body: ApiQuickMenuAccessRequest,
     options = {},
   ): Promise<any> {
@@ -8479,9 +7600,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -8494,11 +7612,7 @@ export class MezonTransport {
   }
 
   /** For sale items */
-  listForSaleItems(
-    bearerToken: string,
-    page?: number,
-    options = {},
-  ): Promise<ApiForSaleItemList> {
+  listForSaleItems(page?: number, options = {}): Promise<ApiForSaleItemList> {
     const urlPath = "/mezon.api.Mezon/ListForSaleItems";
 
     const body = {
@@ -8512,9 +7626,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -8536,7 +7647,6 @@ export class MezonTransport {
 
   /**  */
   isFollower(
-    bearerToken: string,
     body: ApiIsFollowerRequest,
     options = {},
   ): Promise<ApiIsFollowerResponse> {
@@ -8553,9 +7663,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -8577,7 +7684,6 @@ export class MezonTransport {
 
   /**  */
   transferOwnership(
-    bearerToken: string,
     body: ApiTransferOwnershipRequest,
     options = {},
   ): Promise<any> {
@@ -8594,9 +7700,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -8610,7 +7713,6 @@ export class MezonTransport {
 
   /** Update username */
   updateUsername(
-    bearerToken: string,
     body: ApiUpdateUsernameRequest,
     options = {},
   ): Promise<ApiSession> {
@@ -8627,9 +7729,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -8648,11 +7747,7 @@ export class MezonTransport {
   }
 
   /** Ban a set of users from a channel. */
-  isBanned(
-    bearerToken: string,
-    channelId: string,
-    options = {},
-  ): Promise<ApiIsBannedResponse> {
+  isBanned(channelId: string, options = {}): Promise<ApiIsBannedResponse> {
     if (channelId === null || channelId === undefined) {
       throw new Error(
         "'channelId' is a required parameter but is null or undefined.",
@@ -8671,9 +7766,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -8695,7 +7787,6 @@ export class MezonTransport {
 
   /**  */
   reportMessageAbuse(
-    bearerToken: string,
     messageId?: string,
     abuseType?: string,
     options = {},
@@ -8714,9 +7805,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -8730,7 +7818,6 @@ export class MezonTransport {
 
   /**  */
   sendChannelMessage(
-    bearerToken: string,
     clan_id: string,
     channel_id: string,
     mode: number,
@@ -8768,9 +7855,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", {}, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -8789,7 +7873,6 @@ export class MezonTransport {
 
   /**  */
   updateChannelMessage(
-    bearerToken: string,
     clan_id: string,
     channel_id: string,
     mode: number,
@@ -8823,9 +7906,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", {}, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -8845,7 +7925,6 @@ export class MezonTransport {
 
   /**  */
   deleteChannelMessage(
-    bearerToken: string,
     clan_id: string,
     channel_id: string,
     mode: number,
@@ -8875,9 +7954,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", {}, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -8897,7 +7973,6 @@ export class MezonTransport {
 
   /**  */
   updateMezonVoiceState(
-    bearerToken: string,
     clanId?: string,
     channelId?: string,
     displayName?: string,
@@ -8922,9 +7997,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -8938,7 +8010,6 @@ export class MezonTransport {
 
   /**  */
   messageButtonClick(
-    bearerToken: string,
     messageId?: string,
     channelId?: string,
     buttonId?: string,
@@ -8965,9 +8036,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -8981,7 +8049,6 @@ export class MezonTransport {
 
   /**  */
   dropdownBoxSelected(
-    bearerToken: string,
     messageId?: string,
     channelId?: string,
     selectboxId?: string,
@@ -9008,9 +8075,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -9023,7 +8087,6 @@ export class MezonTransport {
   }
 
   activeArchivedThread(
-    bearerToken: string,
     clanId?: string,
     channelId?: string,
     options = {},
@@ -9042,9 +8105,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -9057,7 +8117,6 @@ export class MezonTransport {
   }
 
   addAgentToChannel(
-    bearerToken: string,
     roomName?: string,
     channelId?: string,
     options = {},
@@ -9076,9 +8135,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -9091,7 +8147,6 @@ export class MezonTransport {
   }
 
   disconnectAgent(
-    bearerToken: string,
     roomName?: string,
     channelId?: string,
     options = {},
@@ -9110,9 +8165,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -9124,11 +8176,7 @@ export class MezonTransport {
     ]);
   }
 
-  listMutedChannel(
-    bearerToken: string,
-    clanId: string,
-    options = {},
-  ): Promise<ApiMutedChannelList> {
+  listMutedChannel(clanId: string, options = {}): Promise<ApiMutedChannelList> {
     if (clanId === null || clanId === undefined) {
       throw new Error(
         "'clanId' is a required parameter but is null or undefined.",
@@ -9144,9 +8192,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -9164,7 +8209,6 @@ export class MezonTransport {
   }
 
   channelMessageReact(
-    bearerToken: string,
     clan_id: string,
     channel_id: string,
     mode: number,
@@ -9202,9 +8246,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", {}, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -9223,7 +8264,6 @@ export class MezonTransport {
 
   /** Create a poll in a channel. */
   createPoll(
-    bearerToken: string,
     body: ApiCreatePollRequest,
     options = {},
   ): Promise<ApiCreatePollResponse> {
@@ -9248,9 +8288,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -9282,7 +8319,6 @@ export class MezonTransport {
 
   /** Vote on a poll. */
   votePoll(
-    bearerToken: string,
     body: ApiVotePollRequest,
     options = {},
   ): Promise<ApiVotePollResponse> {
@@ -9305,9 +8341,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
@@ -9329,11 +8362,7 @@ export class MezonTransport {
   }
 
   /** Close a poll (creator only). */
-  closePoll(
-    bearerToken: string,
-    body: ApiClosePollRequest,
-    options = {},
-  ): Promise<any> {
+  closePoll(body: ApiClosePollRequest, options = {}): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -9352,9 +8381,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
@@ -9377,11 +8403,7 @@ export class MezonTransport {
   }
 
   /** Get poll details. */
-  getPoll(
-    bearerToken: string,
-    body: ApiGetPollRequest,
-    options = {},
-  ): Promise<ApiGetPollResponse> {
+  getPoll(body: ApiGetPollRequest, options = {}): Promise<ApiGetPollResponse> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined.",
@@ -9400,9 +8422,6 @@ export class MezonTransport {
 
     const fetchOptions = buildFetchOptions("POST", options, "");
     fetchOptions.body = encodedBody;
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
