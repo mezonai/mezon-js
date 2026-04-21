@@ -260,7 +260,6 @@ import {
   ClanJoin,
   Status,
 } from "./types";
-import { Session } from "./session";
 
 import {
   decodeAttachments,
@@ -1123,11 +1122,6 @@ export class Client {
     console.log(`Token refresh occurred. Token: ${session.token}`);
   }
 
-  /** check session isexpired */
-  isexpired(session: Session): boolean {
-    return session.isexpired(Date.now() / 1000);
-  }
-
   /** Authenticate a user with a custom id against the server. */
   authenticateMezon(
     token: string,
@@ -1136,7 +1130,7 @@ export class Client {
     isRemember?: boolean,
     vars: Record<string, string> = {},
     options: any = {},
-  ): Promise<Session> {
+  ): Promise<ApiSession> {
     const request = {
       token: token,
       vars: vars,
@@ -1152,15 +1146,15 @@ export class Client {
         options,
       )
       .then((apiSession: ApiSession) => {
-        return new Session(
-          apiSession.token || "",
-          apiSession.refresh_token || "",
-          apiSession.created || false,
-          apiSession.api_url || "",
-          apiSession.ws_url || "",
-          apiSession.id_token || "",
-          apiSession.is_remember || false,
-        );
+        return {
+          token: apiSession.token || "",
+          refresh_token: apiSession.refresh_token || "",
+          created: apiSession.created || false,
+          api_url: apiSession.api_url || "",
+          ws_url: apiSession.ws_url || "",
+          id_token: apiSession.id_token || "",
+          is_remember: apiSession.is_remember || false,
+        };
       });
   }
 
@@ -1208,19 +1202,19 @@ export class Client {
 
   async confirmAuthenticateOTP(
     request: ApiLinkAccountConfirmRequest,
-  ): Promise<Session> {
+  ): Promise<ApiSession> {
     return this.transport
       .confirmAuthenticateOTP(this.serverkey, "", request)
       .then((apiSession: ApiSession) => {
-        return new Session(
-          apiSession.token || "",
-          apiSession.refresh_token || "",
-          apiSession.created || false,
-          apiSession.api_url || "",
-          apiSession.ws_url || "",
-          apiSession.id_token || "",
-          apiSession.is_remember || false,
-        );
+        return {
+          token: apiSession.token || "",
+          refresh_token: apiSession.refresh_token || "",
+          created: apiSession.created || false,
+          api_url: apiSession.api_url || "",
+          ws_url: apiSession.ws_url || "",
+          id_token: apiSession.id_token || "",
+          is_remember: apiSession.is_remember || false,
+        };
       });
   }
 
@@ -1230,7 +1224,7 @@ export class Client {
     password: string,
     username?: string,
     vars?: Record<string, string>,
-  ): Promise<Session> {
+  ): Promise<ApiSession> {
     const request = {
       username: username,
       account: {
@@ -1243,15 +1237,15 @@ export class Client {
     return this.transport
       .authenticateEmail(this.serverkey, "", request, username)
       .then((apiSession: ApiSession) => {
-        return new Session(
-          apiSession.token || "",
-          apiSession.refresh_token || "",
-          apiSession.created || false,
-          apiSession.api_url || "",
-          apiSession.ws_url || "",
-          apiSession.id_token || "",
-          apiSession.is_remember || false,
-        );
+        return {
+          token: apiSession.token || "",
+          refresh_token: apiSession.refresh_token || "",
+          created: apiSession.created || false,
+          api_url: apiSession.api_url || "",
+          ws_url: apiSession.ws_url || "",
+          id_token: apiSession.id_token || "",
+          is_remember: apiSession.is_remember || false,
+        };
       });
   }
 
@@ -1268,7 +1262,7 @@ export class Client {
 
   /** Add users to a channel, or accept their join requests. */
   async addChannelUsers(
-    session: Session,
+    session: ApiSession,
     channelId: string,
     ids?: Array<string>,
   ): Promise<boolean> {
@@ -1288,7 +1282,7 @@ export class Client {
 
   /** Add friends by ID or username to a user's account. */
   async addFriends(
-    session: Session,
+    session: ApiSession,
     ids?: Array<string>,
     usernames?: Array<string>,
   ): Promise<ApiAddFriendsResponse> {
@@ -1304,7 +1298,7 @@ export class Client {
 
   /** Block one or more users by ID or username. */
   async blockFriends(
-    session: Session,
+    session: ApiSession,
     ids?: Array<string>,
     usernames?: Array<string>,
   ): Promise<boolean> {
@@ -1322,7 +1316,7 @@ export class Client {
 
   /** Block one or more users by ID or username. */
   async unblockFriends(
-    session: Session,
+    session: ApiSession,
     ids?: Array<string>,
     usernames?: Array<string>,
   ): Promise<boolean> {
@@ -1342,7 +1336,7 @@ export class Client {
 
   /** Create a new group with the current user as the creator and superadmin. */
   async uploadOauthFile(
-    session: Session,
+    session: ApiSession,
     request: ApiUploadAttachmentRequest,
   ): Promise<ApiUploadAttachment> {
     if (
@@ -1357,7 +1351,7 @@ export class Client {
 
   /** Create a new group with the current user as the creator and superadmin. */
   async uploadAttachmentFile(
-    session: Session,
+    session: ApiSession,
     request: ApiUploadAttachmentRequest,
   ): Promise<ApiUploadAttachment> {
     if (
@@ -1371,7 +1365,7 @@ export class Client {
   }
 
   async multipartUploadAttachmentFile(
-    session: Session,
+    session: ApiSession,
     request: ApiUploadAttachmentRequest,
   ): Promise<MultipartUploadAttachment> {
     if (
@@ -1385,7 +1379,7 @@ export class Client {
   }
 
   async multipartUploadAttachmentFileFinish(
-    session: Session,
+    session: ApiSession,
     request: MultipartUploadAttachmentFinishRequest,
   ): Promise<any> {
     if (
@@ -1395,14 +1389,12 @@ export class Client {
       await this.transport.setFallbackSession(session);
     }
 
-    return this.transport.multipartUploadAttachmentFileFinsih(
-      request,
-    );
+    return this.transport.multipartUploadAttachmentFileFinsih(request);
   }
 
   /** Create a channel within clan */
   async createChannelDesc(
-    session: Session,
+    session: ApiSession,
     request: ApiCreateChannelDescRequest,
   ): Promise<ApiChannelDescription> {
     if (
@@ -1421,7 +1413,7 @@ export class Client {
 
   /** Create a clan */
   async createClanDesc(
-    session: Session,
+    session: ApiSession,
     request: ApiCreateClanDescRequest,
   ): Promise<ApiClanDesc> {
     if (
@@ -1440,7 +1432,7 @@ export class Client {
 
   /** Check duplicate name/label  */
   async checkDuplicateName(
-    session: Session,
+    session: ApiSession,
     request: ApiCheckDuplicateNameRequest,
   ): Promise<ApiCheckDuplicateNameResponse> {
     if (
@@ -1455,7 +1447,7 @@ export class Client {
 
   /**  */
   async createCategoryDesc(
-    session: Session,
+    session: ApiSession,
     request: ApiCreateCategoryDescRequest,
   ): Promise<ApiCategoryDesc> {
     if (
@@ -1474,7 +1466,7 @@ export class Client {
 
   /** Create a new role for clan. */
   async createRole(
-    session: Session,
+    session: ApiSession,
     request: ApiCreateRoleRequest,
   ): Promise<ApiRole> {
     if (
@@ -1491,7 +1483,7 @@ export class Client {
 
   /** Create a new event for clan. */
   async createEvent(
-    session: Session,
+    session: ApiSession,
     request: ApiCreateEventRequest,
   ): Promise<ApiEventManagement> {
     if (
@@ -1510,7 +1502,7 @@ export class Client {
 
   /** add role for channel. */
   async addRolesChannelDesc(
-    session: Session,
+    session: ApiSession,
     request: ApiAddRoleChannelDescRequest,
   ): Promise<boolean> {
     if (
@@ -1529,7 +1521,7 @@ export class Client {
 
   /** Update action role when delete role */
   async deleteRoleChannelDesc(
-    session: Session,
+    session: ApiSession,
     request: ApiDeleteRoleRequest,
   ): Promise<boolean> {
     if (
@@ -1546,7 +1538,7 @@ export class Client {
       });
   }
 
-  async deleteApp(session: Session, appId: string): Promise<boolean> {
+  async deleteApp(session: ApiSession, appId: string): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -1561,7 +1553,7 @@ export class Client {
 
   /** Delete one or more users by ID or username. */
   async deleteFriends(
-    session: Session,
+    session: ApiSession,
     ids?: Array<string>,
     usernames?: Array<string>,
   ): Promise<boolean> {
@@ -1581,7 +1573,7 @@ export class Client {
 
   /** Delete a channel by ID. */
   async deleteChannelDesc(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     channelId: string,
   ): Promise<boolean> {
@@ -1600,7 +1592,10 @@ export class Client {
   }
 
   /** Delete a clan desc by ID. */
-  async deleteClanDesc(session: Session, clanDescId: string): Promise<boolean> {
+  async deleteClanDesc(
+    session: ApiSession,
+    clanDescId: string,
+  ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -1615,7 +1610,7 @@ export class Client {
 
   /** Delete a category by ID. */
   async deleteCategoryDesc(
-    session: Session,
+    session: ApiSession,
     categoryId: string,
     clanId: string,
     categoryLabel?: string,
@@ -1636,7 +1631,7 @@ export class Client {
 
   /** Delete one or more notifications */
   async deleteNotifications(
-    session: Session,
+    session: ApiSession,
     ids?: Array<string>,
     category?: number,
   ): Promise<boolean> {
@@ -1656,7 +1651,7 @@ export class Client {
 
   /** Delete a role by ID. */
   async deleteRole(
-    session: Session,
+    session: ApiSession,
     roleId: string,
     clanId: string,
     roleLabel?: string,
@@ -1677,7 +1672,7 @@ export class Client {
 
   /** Delete a event by ID. */
   async deleteEvent(
-    session: Session,
+    session: ApiSession,
     eventId: string,
     clanId: string,
     creatorId: string,
@@ -1700,7 +1695,7 @@ export class Client {
 
   /** update user a event by ID. */
   async updateEventUser(
-    session: Session,
+    session: ApiSession,
     request: ApiDeleteEventRequest,
   ): Promise<boolean> {
     if (
@@ -1716,7 +1711,7 @@ export class Client {
   }
 
   /** Submit an event for processing in the server's registered runtime custom events handler. */
-  async emitEvent(session: Session, request: ApiEvent): Promise<boolean> {
+  async emitEvent(session: ApiSession, request: ApiEvent): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -1730,7 +1725,7 @@ export class Client {
   }
 
   /** Fetch the current user's account. */
-  async getAccount(session: Session): Promise<ApiAccount> {
+  async getAccount(session: ApiSession): Promise<ApiAccount> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -1743,7 +1738,7 @@ export class Client {
 
   /** Kick a set of users from a clan. */
   async removeClanUsers(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     ids?: Array<string>,
   ): Promise<boolean> {
@@ -1760,7 +1755,7 @@ export class Client {
   }
 
   async listBannedUsers(
-    session: Session,
+    session: ApiSession,
     clanId?: string,
     channelId?: string,
   ): Promise<ApiBannedUserList> {
@@ -1780,7 +1775,7 @@ export class Client {
 
   /** Ban a set of users from a clan. */
   async unbanClanUsers(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     channelId?: string,
     userIds?: Array<string>,
@@ -1801,7 +1796,7 @@ export class Client {
 
   /** Ban a set of users from a clan. */
   async banClanUsers(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     channelId?: string,
     userIds?: Array<string>,
@@ -1823,7 +1818,7 @@ export class Client {
 
   /** Kick users from a channel, or decline their join requests. */
   async removeChannelUsers(
-    session: Session,
+    session: ApiSession,
     channelId: string,
     ids?: Array<string>,
   ): Promise<boolean> {
@@ -1843,7 +1838,7 @@ export class Client {
 
   /** List a channel's message history. */
   async listChannelMessages(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     channelId: string,
     messageId?: string,
@@ -1954,7 +1949,7 @@ export class Client {
 
   /** List a channel's users. */
   async listChannelVoiceUsers(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     limit?: number,
   ): Promise<ApiVoiceChannelUserList> {
@@ -1990,7 +1985,7 @@ export class Client {
 
   /** List a channel's users. */
   async listChannelUsers(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     channelId: string,
     channelType: number,
@@ -2037,7 +2032,7 @@ export class Client {
 
   /** List a channel's attachment. */
   async listChannelAttachments(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     channelId: string,
     fileType: string,
@@ -2092,7 +2087,7 @@ export class Client {
 
   /** List a channel's users. */
   async listClanUsers(
-    session: Session,
+    session: ApiSession,
     clanId: string,
   ): Promise<ApiClanUserList> {
     if (
@@ -2149,7 +2144,7 @@ export class Client {
 
   /** List clan members' custom status strings (user_status). */
   async listClanUsersStatus(
-    session: Session,
+    session: ApiSession,
     clanId: string,
   ): Promise<ApiClanUserStatusList> {
     if (
@@ -2179,7 +2174,7 @@ export class Client {
   }
 
   async listChannelDetail(
-    session: Session,
+    session: ApiSession,
     channelId: string,
   ): Promise<ApiChannelDescription> {
     if (
@@ -2198,7 +2193,7 @@ export class Client {
 
   /** List channels. */
   async listChannelDescs(
-    session: Session,
+    session: ApiSession,
     limit?: number,
     state?: number,
     page?: number,
@@ -2234,7 +2229,7 @@ export class Client {
 
   /** List clans */
   async listClanDescs(
-    session: Session,
+    session: ApiSession,
     limit?: number,
     state?: number,
     cursor?: string,
@@ -2264,7 +2259,7 @@ export class Client {
 
   /** Paged channel badge/unread list (HTTP). */
   async listChannelBadgeCount(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     limit?: number,
     page?: number,
@@ -2286,7 +2281,7 @@ export class Client {
 
   /** Paged online users in a clan (HTTP). */
   async listUserOnline(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     limit?: number,
     page?: number,
@@ -2308,7 +2303,7 @@ export class Client {
 
   /** List categories. */
   async listCategoryDescs(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     creatorId?: string,
     categoryName?: string,
@@ -2337,7 +2332,10 @@ export class Client {
   }
 
   /** List event */
-  async listEvents(session: Session, clanId?: string): Promise<ApiEventList> {
+  async listEvents(
+    session: ApiSession,
+    clanId?: string,
+  ): Promise<ApiEventList> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -2351,7 +2349,7 @@ export class Client {
   }
 
   /** List permission */
-  async getListPermission(session: Session): Promise<ApiPermissionList> {
+  async getListPermission(session: ApiSession): Promise<ApiPermissionList> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -2368,7 +2366,7 @@ export class Client {
 
   /** List user roles */
   async listRolePermissions(
-    session: Session,
+    session: ApiSession,
     roleId: string,
   ): Promise<ApiPermissionList> {
     if (
@@ -2387,7 +2385,7 @@ export class Client {
 
   /** List user roles */
   async listRoleUsers(
-    session: Session,
+    session: ApiSession,
     roleId: string,
     limit?: number,
     cursor?: string,
@@ -2407,7 +2405,7 @@ export class Client {
   }
 
   async registFCMDeviceToken(
-    session: Session,
+    session: ApiSession,
     tokenId: string,
     deviceId: string,
     platform: string,
@@ -2428,7 +2426,7 @@ export class Client {
   }
 
   async getUserProfileOnClan(
-    session: Session,
+    session: ApiSession,
     clanId: string,
   ): Promise<ApiClanProfile> {
     if (
@@ -2447,7 +2445,7 @@ export class Client {
 
   //
   async closeDirectMess(
-    session: Session,
+    session: ApiSession,
     request: ApiDeleteChannelDescRequest,
   ): Promise<boolean> {
     if (
@@ -2463,7 +2461,7 @@ export class Client {
   }
   //
   async openDirectMess(
-    session: Session,
+    session: ApiSession,
     request: ApiDeleteChannelDescRequest,
   ): Promise<boolean> {
     if (
@@ -2479,7 +2477,7 @@ export class Client {
   }
 
   async confirmLinkMezonOTP(
-    session: Session,
+    session: ApiSession,
     request: ApiLinkAccountConfirmRequest,
   ): Promise<ApiSession> {
     if (
@@ -2494,7 +2492,7 @@ export class Client {
 
   /** Add a custom ID to the social profiles on the current user's account. */
   async linkSMS(
-    session: Session,
+    session: ApiSession,
     request: ApiLinkAccountMezon,
   ): Promise<ApiLinkAccountConfirmRequest> {
     if (
@@ -2513,7 +2511,7 @@ export class Client {
 
   /** Add an email+password to the social profiles on the current user's account. */
   async linkEmail(
-    session: Session,
+    session: ApiSession,
     request: ApiAccountEmail,
   ): Promise<ApiLinkAccountConfirmRequest> {
     if (
@@ -2532,7 +2530,7 @@ export class Client {
 
   /** List all friends for the current user. */
   async listFriends(
-    session: Session,
+    session: ApiSession,
     state?: number,
     limit?: number,
     cursor?: string,
@@ -2588,7 +2586,7 @@ export class Client {
 
   /** Fetch list of notifications. */
   async listNotifications(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     limit?: number,
     notificationId?: string,
@@ -2632,7 +2630,7 @@ export class Client {
 
   /** Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user. */
   async sessionLogout(
-    session: Session,
+    session: ApiSession,
     token: string,
     refreshToken: string,
     deviceId: string,
@@ -2659,7 +2657,7 @@ export class Client {
 
   /** Remove an email+password from the social profiles on the current user's account. */
   async unlinkEmail(
-    session: Session,
+    session: ApiSession,
     request: ApiAccountEmail,
   ): Promise<boolean> {
     if (
@@ -2676,7 +2674,7 @@ export class Client {
 
   /** Update fields in the current user's account. */
   async updateUsername(
-    session: Session,
+    session: ApiSession,
     request: ApiUpdateUsernameRequest,
   ): Promise<ApiSession> {
     if (
@@ -2695,7 +2693,7 @@ export class Client {
 
   /** Update fields in the current user's account. */
   async updateAccount(
-    session: Session,
+    session: ApiSession,
     request: ApiUpdateAccountRequest,
   ): Promise<boolean> {
     if (
@@ -2712,7 +2710,7 @@ export class Client {
 
   /** Update fields in a given channel */
   async updateChannelDesc(
-    session: Session,
+    session: ApiSession,
     channelId: string,
     request: ApiUpdateChannelDescRequest,
   ): Promise<boolean> {
@@ -2732,7 +2730,7 @@ export class Client {
 
   /** Update fields in a given clan. */
   async updateClanDesc(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     request: MezonUpdateClanDescBody,
   ): Promise<boolean> {
@@ -2752,7 +2750,7 @@ export class Client {
 
   /** Update fields in a given category. */
   async updateCategory(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     request: ApiUpdateCategoryDescRequest,
   ): Promise<boolean> {
@@ -2771,7 +2769,7 @@ export class Client {
   }
 
   async updateUserProfileByClan(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     request: ApiUpdateClanProfileRequest,
   ): Promise<boolean> {
@@ -2791,7 +2789,7 @@ export class Client {
 
   /** Update fields in a given role. */
   async updateRole(
-    session: Session,
+    session: ApiSession,
     roleId: string,
     request: ApiUpdateRoleRequest,
   ): Promise<boolean> {
@@ -2809,7 +2807,7 @@ export class Client {
 
   /** Update fields in a given event. */
   async updateEvent(
-    session: Session,
+    session: ApiSession,
     roleId: string,
     request: MezonUpdateEventBody,
   ): Promise<boolean> {
@@ -2827,7 +2825,7 @@ export class Client {
 
   /** Update fields in a given event. */
   async updateApp(
-    session: Session,
+    session: ApiSession,
     roleId: string,
     request: MezonUpdateAppBody,
   ): Promise<ApiApp> {
@@ -2847,7 +2845,7 @@ export class Client {
 
   /** Update fields in a given clan profile. */
   async createLinkInviteUser(
-    session: Session,
+    session: ApiSession,
     request: ApiLinkInviteUserRequest,
   ): Promise<ApiLinkInviteUser> {
     if (
@@ -2875,7 +2873,7 @@ export class Client {
 
   /** Get permission of user in the clan */
   async GetRoleOfUserInTheClan(
-    session: Session,
+    session: ApiSession,
     clanId: string,
   ): Promise<ApiRoleList> {
     if (
@@ -2894,7 +2892,7 @@ export class Client {
 
   /** invite user */
   async inviteUser(
-    session: Session,
+    session: ApiSession,
     inviteId: string,
   ): Promise<ApiInviteUserRes> {
     if (
@@ -2913,7 +2911,7 @@ export class Client {
 
   /** Set default notification clan*/
   async setNotificationClan(
-    session: Session,
+    session: ApiSession,
     request: ApiSetDefaultNotificationRequest,
   ): Promise<boolean> {
     if (
@@ -2932,7 +2930,7 @@ export class Client {
 
   /** Set notification channel*/
   async setNotificationChannel(
-    session: Session,
+    session: ApiSession,
     request: ApiSetNotificationRequest,
   ): Promise<boolean> {
     if (
@@ -2951,7 +2949,7 @@ export class Client {
 
   /** Set notification category*/
   async setMuteCategory(
-    session: Session,
+    session: ApiSession,
     request: ApiSetMuteRequest,
   ): Promise<boolean> {
     if (
@@ -2968,7 +2966,7 @@ export class Client {
 
   /** Set notification channel*/
   async setMuteChannel(
-    session: Session,
+    session: ApiSession,
     request: ApiSetMuteRequest,
   ): Promise<boolean> {
     if (
@@ -2985,7 +2983,7 @@ export class Client {
 
   /** update channel private*/
   async updateChannelPrivate(
-    session: Session,
+    session: ApiSession,
     request: ApiChangeChannelPrivateRequest,
   ): Promise<boolean> {
     if (
@@ -3004,7 +3002,7 @@ export class Client {
 
   /** Set default notification category*/
   async setNotificationCategory(
-    session: Session,
+    session: ApiSession,
     request: ApiSetNotificationRequest,
   ): Promise<boolean> {
     if (
@@ -3022,7 +3020,7 @@ export class Client {
   }
 
   async deleteNotificationCategory(
-    session: Session,
+    session: ApiSession,
     category_id: string,
   ): Promise<boolean> {
     if (
@@ -3040,7 +3038,7 @@ export class Client {
   }
 
   async deleteNotificationChannel(
-    session: Session,
+    session: ApiSession,
     channel_id: string,
   ): Promise<boolean> {
     if (
@@ -3059,7 +3057,7 @@ export class Client {
 
   /** */
   async setNotificationReactMessage(
-    session: Session,
+    session: ApiSession,
     channel_id: string,
   ): Promise<boolean> {
     if (
@@ -3078,7 +3076,7 @@ export class Client {
 
   //** */
   async deleteNotiReactMessage(
-    session: Session,
+    session: ApiSession,
     channel_id: string,
   ): Promise<boolean> {
     if (
@@ -3097,7 +3095,7 @@ export class Client {
 
   /** query message in elasticsearch */
   async searchMessage(
-    session: Session,
+    session: ApiSession,
     request: ApiSearchMessageRequest,
   ): Promise<ApiSearchMessageResponse> {
     if (
@@ -3116,7 +3114,7 @@ export class Client {
 
   /** */
   async createMessage2Inbox(
-    session: Session,
+    session: ApiSession,
     request: ApiMessage2InboxRequest,
   ): Promise<ApiChannelMessageHeader> {
     if (
@@ -3135,7 +3133,7 @@ export class Client {
 
   /** */
   async createPinMessage(
-    session: Session,
+    session: ApiSession,
     request: ApiPinMessageRequest,
   ): Promise<ApiChannelMessageHeader> {
     if (
@@ -3153,7 +3151,7 @@ export class Client {
   }
 
   async pinMessagesList(
-    session: Session,
+    session: ApiSession,
     messageId: string,
     channelId: string,
     clanId: string,
@@ -3195,7 +3193,7 @@ export class Client {
 
   //** */
   async deletePinMessage(
-    session: Session,
+    session: ApiSession,
     id?: string,
     messageId?: string,
     channelId?: string,
@@ -3216,7 +3214,10 @@ export class Client {
   }
 
   /** create clan emoji */
-  async createClanEmoji(session: Session, request: ApiClanEmojiCreateRequest) {
+  async createClanEmoji(
+    session: ApiSession,
+    request: ApiClanEmojiCreateRequest,
+  ) {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -3231,7 +3232,7 @@ export class Client {
 
   //**update clan emoji by id */
   async updateClanEmojiById(
-    session: Session,
+    session: ApiSession,
     id: string,
     request: MezonUpdateClanEmojiByIdBody,
   ) {
@@ -3251,7 +3252,7 @@ export class Client {
 
   //**delete clan emoji by id */
   async deleteByIdClanEmoji(
-    session: Session,
+    session: ApiSession,
     id: string,
     clan_id: string,
     emojiLabel?: string,
@@ -3272,7 +3273,7 @@ export class Client {
 
   //**create webhook for chaneel */
   async generateWebhookLink(
-    session: Session,
+    session: ApiSession,
     request: ApiWebhookCreateRequest,
   ): Promise<ApiWebhookGenerateResponse> {
     if (
@@ -3289,7 +3290,7 @@ export class Client {
 
   //**list webhook belong to the channel */
   async listWebhookByChannelId(
-    session: Session,
+    session: ApiSession,
     channel_id: string,
     clan_id: string,
   ): Promise<ApiWebhookListResponse> {
@@ -3309,7 +3310,7 @@ export class Client {
 
   //**update webhook name by id */
   async updateWebhookById(
-    session: Session,
+    session: ApiSession,
     id: string,
     request: MezonUpdateWebhookByIdBody,
   ) {
@@ -3329,7 +3330,7 @@ export class Client {
 
   //**disabled webhook by id */
   async deleteWebhookById(
-    session: Session,
+    session: ApiSession,
     id: string,
     request: MezonDeleteWebhookByIdBody,
   ) {
@@ -3348,7 +3349,7 @@ export class Client {
   }
 
   //**Add a new sticker */
-  async addClanSticker(session: Session, request: ApiClanStickerAddRequest) {
+  async addClanSticker(session: ApiSession, request: ApiClanStickerAddRequest) {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -3363,7 +3364,7 @@ export class Client {
 
   //**Delete a sticker by ID*/
   async deleteClanStickerById(
-    session: Session,
+    session: ApiSession,
     id: string,
     clan_id: string,
     stickerLabel?: string,
@@ -3384,7 +3385,7 @@ export class Client {
 
   //**Update a sticker by ID*/
   async updateClanStickerById(
-    session: Session,
+    session: ApiSession,
     id: string,
     request: MezonUpdateClanStickerByIdBody,
   ) {
@@ -3404,7 +3405,7 @@ export class Client {
 
   //** update the category of a channel */
   async changeChannelCategory(
-    session: Session,
+    session: ApiSession,
     id: string,
     request: MezonChangeChannelCategoryBody,
   ) {
@@ -3424,7 +3425,7 @@ export class Client {
 
   /** */
   async setRoleChannelPermission(
-    session: Session,
+    session: ApiSession,
     request: ApiUpdateRoleChannelRequest,
   ): Promise<boolean> {
     if (
@@ -3441,7 +3442,10 @@ export class Client {
       });
   }
 
-  async addApp(session: Session, request: ApiAddAppRequest): Promise<ApiApp> {
+  async addApp(
+    session: ApiSession,
+    request: ApiAddAppRequest,
+  ): Promise<ApiApp> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -3454,7 +3458,7 @@ export class Client {
     });
   }
 
-  async getApp(session: Session, id: string): Promise<ApiApp> {
+  async getApp(session: ApiSession, id: string): Promise<ApiApp> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -3467,7 +3471,7 @@ export class Client {
     });
   }
 
-  async listApps(session: Session): Promise<ApiAppList> {
+  async listApps(session: ApiSession): Promise<ApiAppList> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -3482,7 +3486,7 @@ export class Client {
       });
   }
 
-  async addAppToClan(session: Session, appId: string, clanId: string) {
+  async addAppToClan(session: ApiSession, appId: string, clanId: string) {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -3498,7 +3502,7 @@ export class Client {
   }
 
   async getSystemMessagesList(
-    session: Session,
+    session: ApiSession,
   ): Promise<ApiSystemMessagesList> {
     if (
       this.autoFallbackHttp &&
@@ -3515,7 +3519,7 @@ export class Client {
   }
 
   async getSystemMessageByClanId(
-    session: Session,
+    session: ApiSession,
     clanId: string,
   ): Promise<ApiSystemMessage> {
     if (
@@ -3533,7 +3537,7 @@ export class Client {
   }
 
   async createSystemMessage(
-    session: Session,
+    session: ApiSession,
     request: ApiSystemMessageRequest,
   ): Promise<any> {
     if (
@@ -3549,7 +3553,7 @@ export class Client {
   }
 
   async updateSystemMessage(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     request: MezonUpdateSystemMessageBody,
   ): Promise<any> {
@@ -3567,7 +3571,7 @@ export class Client {
       });
   }
 
-  async deleteSystemMessage(session: Session, clanId: string): Promise<any> {
+  async deleteSystemMessage(session: ApiSession, clanId: string): Promise<any> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -3581,7 +3585,7 @@ export class Client {
   }
 
   async updateCategoryOrder(
-    session: Session,
+    session: ApiSession,
     request: ApiUpdateCategoryOrderRequest,
   ): Promise<any> {
     if (
@@ -3597,7 +3601,7 @@ export class Client {
   }
 
   async givecoffee(
-    session: Session,
+    session: ApiSession,
     request: ApiGiveCoffeeEvent,
   ): Promise<any> {
     if (
@@ -3612,7 +3616,10 @@ export class Client {
     });
   }
 
-  async sendToken(session: Session, request: ApiTokenSentEvent): Promise<any> {
+  async sendToken(
+    session: ApiSession,
+    request: ApiTokenSentEvent,
+  ): Promise<any> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -3627,7 +3634,7 @@ export class Client {
 
   /** List a channel's users. */
   async listStreamingChannelUsers(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     channelId: string,
     channelType: number,
@@ -3673,7 +3680,7 @@ export class Client {
   }
 
   async registerStreamingChannel(
-    session: Session,
+    session: ApiSession,
     request: ApiRegisterStreamingChannelRequest,
   ) {
     if (
@@ -3692,7 +3699,7 @@ export class Client {
 
   /** List a channel's users. */
   async listChannelApps(
-    session: Session,
+    session: ApiSession,
     clanId: string,
   ): Promise<ApiListChannelAppsResponse> {
     if (
@@ -3729,7 +3736,7 @@ export class Client {
   }
 
   async getChannelCategoryNotiSettingsList(
-    session: Session,
+    session: ApiSession,
     clanId: string,
   ): Promise<ApiNotificationChannelCategorySettingList> {
     if (
@@ -3747,7 +3754,7 @@ export class Client {
   }
 
   async getNotificationCategory(
-    session: Session,
+    session: ApiSession,
     categoryId: string,
   ): Promise<ApiNotificationUserChannel> {
     if (
@@ -3765,7 +3772,7 @@ export class Client {
   }
 
   async getNotificationChannel(
-    session: Session,
+    session: ApiSession,
     channelId: string,
   ): Promise<ApiNotificationUserChannel> {
     if (
@@ -3783,7 +3790,7 @@ export class Client {
   }
 
   async getNotificationClan(
-    session: Session,
+    session: ApiSession,
     clanId: string,
   ): Promise<ApiNotificationSetting> {
     if (
@@ -3801,7 +3808,7 @@ export class Client {
   }
 
   async getNotificationReactMessage(
-    session: Session,
+    session: ApiSession,
     channelId: string,
   ): Promise<ApiNotifiReactMessage> {
     if (
@@ -3818,7 +3825,7 @@ export class Client {
       });
   }
 
-  async listChannelByUserId(session: Session): Promise<ApiChannelDescList> {
+  async listChannelByUserId(session: ApiSession): Promise<ApiChannelDescList> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -3834,7 +3841,7 @@ export class Client {
   }
 
   async listChannelUsersUC(
-    session: Session,
+    session: ApiSession,
     channel_id: string,
     limit: number,
   ): Promise<ApiAllUsersAddChannelResponse> {
@@ -3853,7 +3860,7 @@ export class Client {
   }
 
   async getListEmojisByUserId(
-    session: Session,
+    session: ApiSession,
   ): Promise<ApiEmojiListedResponse> {
     if (
       this.autoFallbackHttp &&
@@ -3869,7 +3876,7 @@ export class Client {
       });
   }
 
-  async emojiRecentList(session: Session): Promise<ApiEmojiRecentList> {
+  async emojiRecentList(session: ApiSession): Promise<ApiEmojiRecentList> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -3885,7 +3892,7 @@ export class Client {
   }
 
   async getListStickersByUserId(
-    session: Session,
+    session: ApiSession,
   ): Promise<ApiStickerListedResponse> {
     if (
       this.autoFallbackHttp &&
@@ -3901,7 +3908,7 @@ export class Client {
       });
   }
 
-  async listUserClansByUserId(session: Session): Promise<ApiAllUserClans> {
+  async listUserClansByUserId(session: ApiSession): Promise<ApiAllUserClans> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -3917,7 +3924,7 @@ export class Client {
   }
 
   async listRoles(
-    session: Session,
+    session: ApiSession,
     clanId?: string,
     limit?: number,
     state?: number,
@@ -3943,7 +3950,7 @@ export class Client {
   }
 
   async listUserPermissionInChannel(
-    session: Session,
+    session: ApiSession,
     clanId?: string,
     channelId?: string,
   ): Promise<ApiUserPermissionInChannelListResponse> {
@@ -3968,7 +3975,7 @@ export class Client {
   }
 
   async getPermissionByRoleIdChannelId(
-    session: Session,
+    session: ApiSession,
     roleId?: string,
     channelId?: string,
     userId?: string,
@@ -3995,7 +4002,7 @@ export class Client {
   }
 
   async markAsRead(
-    session: Session,
+    session: ApiSession,
     request: ApiMarkAsReadRequest,
   ): Promise<any> {
     if (
@@ -4012,7 +4019,7 @@ export class Client {
 
   /** List Threads. */
   async listThreadDescs(
-    session: Session,
+    session: ApiSession,
     channelId: string,
     limit?: number,
     state?: number,
@@ -4044,7 +4051,7 @@ export class Client {
   }
 
   async listChannelTimeline(
-    session: Session,
+    session: ApiSession,
     request: ApiListChannelTimelineRequest,
   ): Promise<ApiListChannelTimelineResponse> {
     if (
@@ -4082,7 +4089,7 @@ export class Client {
   }
 
   async createChannelTimeline(
-    session: Session,
+    session: ApiSession,
     request: ApiCreateChannelTimelineRequest,
   ): Promise<ApiCreateChannelTimelineResponse> {
     if (
@@ -4134,7 +4141,7 @@ export class Client {
   }
 
   async updateChannelTimeline(
-    session: Session,
+    session: ApiSession,
     request: ApiUpdateChannelTimelineRequest,
   ): Promise<ApiUpdateChannelTimelineResponse> {
     if (
@@ -4186,7 +4193,7 @@ export class Client {
   }
 
   async detailChannelTimeline(
-    session: Session,
+    session: ApiSession,
     request: ApiDetailChannelTimelineRequest,
   ): Promise<ApiDetailChannelTimelineResponse> {
     if (
@@ -4238,7 +4245,7 @@ export class Client {
   }
 
   async leaveThread(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     channelId: string,
   ): Promise<any> {
@@ -4258,7 +4265,7 @@ export class Client {
 
   /** Archive a single channel/thread (active = 0). */
   async archiveChannel(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     channelId: string,
   ): Promise<any> {
@@ -4278,7 +4285,7 @@ export class Client {
 
   /** List archived top-level channels in a clan. */
   async listArchivedChannelDescs(
-    session: Session,
+    session: ApiSession,
     clanId: string,
   ): Promise<ApiChannelDescList> {
     if (
@@ -4296,7 +4303,7 @@ export class Client {
   }
 
   async getChannelSettingInClan(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     parentId?: string,
     categoryId?: string,
@@ -4334,7 +4341,7 @@ export class Client {
   }
 
   async getChannelCanvasList(
-    session: Session,
+    session: ApiSession,
     channelId: string,
     clanId?: string,
     limit?: number,
@@ -4367,7 +4374,7 @@ export class Client {
   }
 
   async getChannelCanvasDetail(
-    session: Session,
+    session: ApiSession,
     id: string,
     clanId?: string,
     channelId?: string,
@@ -4387,7 +4394,7 @@ export class Client {
   }
 
   async editChannelCanvases(
-    session: Session,
+    session: ApiSession,
     request: ApiEditChannelCanvasRequest,
   ): Promise<any> {
     if (
@@ -4404,7 +4411,7 @@ export class Client {
 
   //** */
   async deleteChannelCanvas(
-    session: Session,
+    session: ApiSession,
     canvasId: string,
     clanId?: string,
     channelId?: string,
@@ -4424,7 +4431,7 @@ export class Client {
   }
 
   async addFavoriteChannel(
-    session: Session,
+    session: ApiSession,
     channelId: string,
     clanId: string,
   ): Promise<ApiAddFavoriteChannelResponse> {
@@ -4446,7 +4453,7 @@ export class Client {
   }
 
   async removeFavoriteChannel(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     channelId: string,
   ): Promise<any> {
@@ -4464,7 +4471,10 @@ export class Client {
       });
   }
 
-  async getListFavoriteChannel(session: Session, clanId: string): Promise<any> {
+  async getListFavoriteChannel(
+    session: ApiSession,
+    clanId: string,
+  ): Promise<any> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -4479,7 +4489,7 @@ export class Client {
       });
   }
   /** List activity */
-  async listActivity(session: Session): Promise<ApiListUserActivity> {
+  async listActivity(session: ApiSession): Promise<ApiListUserActivity> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -4493,7 +4503,7 @@ export class Client {
   }
 
   async createActiviy(
-    session: Session,
+    session: ApiSession,
     request: ApiCreateActivityRequest,
   ): Promise<ApiUserActivity> {
     if (
@@ -4523,7 +4533,7 @@ export class Client {
 
   async checkLoginRequest(
     requet: ApiConfirmLoginRequest,
-  ): Promise<Session | null> {
+  ): Promise<ApiSession | null> {
     const apiSession = await this.transport.checkLoginRequest(
       this.serverkey,
       "",
@@ -4532,19 +4542,19 @@ export class Client {
     if (!apiSession?.token) {
       return null;
     }
-    return new Session(
-      apiSession.token || "",
-      apiSession.refresh_token || "",
-      apiSession.created || false,
-      apiSession.api_url || "",
-      apiSession.ws_url || "",
-      apiSession.id_token || "",
-      apiSession.is_remember || false,
-    );
+    return {
+      token: apiSession.token || "",
+      refresh_token: apiSession.refresh_token || "",
+      created: apiSession.created || false,
+      api_url: apiSession.api_url || "",
+      ws_url: apiSession.ws_url || "",
+      id_token: apiSession.id_token || "",
+      is_remember: apiSession.is_remember || false,
+    };
   }
 
   async confirmLogin(
-    session: Session,
+    session: ApiSession,
     basePath: string,
     body: ApiConfirmLoginRequest,
   ): Promise<any> {
@@ -4561,7 +4571,7 @@ export class Client {
   }
 
   async getChanEncryptionMethod(
-    session: Session,
+    session: ApiSession,
     channelId: string,
   ): Promise<ApiChanEncryptionMethod> {
     if (
@@ -4579,7 +4589,7 @@ export class Client {
   }
 
   async setChanEncryptionMethod(
-    session: Session,
+    session: ApiSession,
     channelId: string,
     method: string,
   ): Promise<any> {
@@ -4598,7 +4608,7 @@ export class Client {
   }
 
   async getPubKeys(
-    session: Session,
+    session: ApiSession,
     userIds: Array<string>,
   ): Promise<ApiGetPubKeysResponse> {
     if (
@@ -4616,7 +4626,7 @@ export class Client {
   }
 
   async pushPubKey(
-    session: Session,
+    session: ApiSession,
     PK: ApiPubKey,
   ): Promise<ApiGetPubKeysResponse> {
     if (
@@ -4633,7 +4643,7 @@ export class Client {
       });
   }
 
-  async getKeyServer(session: Session): Promise<ApiGetKeyServerResp> {
+  async getKeyServer(session: ApiSession): Promise<ApiGetKeyServerResp> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -4649,7 +4659,7 @@ export class Client {
   }
 
   async listAuditLog(
-    session: Session,
+    session: ApiSession,
     actionLog?: string,
     userId?: string,
     clanId?: string,
@@ -4670,7 +4680,7 @@ export class Client {
   }
 
   async listOnboarding(
-    session: Session,
+    session: ApiSession,
     clanId?: string,
     guideType?: number,
     limit?: number,
@@ -4691,7 +4701,7 @@ export class Client {
   }
 
   async getOnboardingDetail(
-    session: Session,
+    session: ApiSession,
     id: string,
     clanId?: string,
   ): Promise<ApiOnboardingItem> {
@@ -4710,7 +4720,7 @@ export class Client {
   }
 
   async createOnboarding(
-    session: Session,
+    session: ApiSession,
     request: ApiCreateOnboardingRequest,
   ): Promise<ApiListOnboardingResponse> {
     if (
@@ -4728,7 +4738,7 @@ export class Client {
   }
 
   async updateOnboarding(
-    session: Session,
+    session: ApiSession,
     id: string,
     request: MezonUpdateOnboardingBody,
   ) {
@@ -4747,7 +4757,7 @@ export class Client {
   }
 
   async deleteOnboarding(
-    session: Session,
+    session: ApiSession,
     id: string,
     clanId?: string,
   ): Promise<any> {
@@ -4765,7 +4775,7 @@ export class Client {
 
   //**create webhook for clan */
   async generateClanWebhook(
-    session: Session,
+    session: ApiSession,
     request: ApiGenerateClanWebhookRequest,
   ): Promise<ApiGenerateClanWebhookResponse> {
     if (
@@ -4782,7 +4792,7 @@ export class Client {
 
   //**list webhook belong to the clan */
   async listClanWebhook(
-    session: Session,
+    session: ApiSession,
     clan_id: string,
   ): Promise<ApiListClanWebhookResponse> {
     if (
@@ -4800,7 +4810,11 @@ export class Client {
   }
 
   //**disabled webhook by id */
-  async deleteClanWebhookById(session: Session, id: string, clan_id: string) {
+  async deleteClanWebhookById(
+    session: ApiSession,
+    id: string,
+    clan_id: string,
+  ) {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -4817,7 +4831,7 @@ export class Client {
 
   //**update webhook name by id */
   async updateClanWebhookById(
-    session: Session,
+    session: ApiSession,
     id: string,
     request: MezonUpdateClanWebhookByIdBody,
   ) {
@@ -4837,7 +4851,7 @@ export class Client {
 
   //**list onboarding step */
   async listOnboardingStep(
-    session: Session,
+    session: ApiSession,
     clan_id?: string,
     limit?: number,
     page?: number,
@@ -4858,7 +4872,7 @@ export class Client {
 
   //**update onboarding step by id */
   async updateOnboardingStepByClanId(
-    session: Session,
+    session: ApiSession,
     clan_id: string,
     request: MezonUpdateOnboardingStepByClanIdBody,
   ) {
@@ -4877,7 +4891,7 @@ export class Client {
   }
 
   //**update status */
-  async updateUserStatus(session: Session, request: ApiUserStatusUpdate) {
+  async updateUserStatus(session: ApiSession, request: ApiUserStatusUpdate) {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -4891,7 +4905,10 @@ export class Client {
   }
 
   /** Update user custom status (user_status). */
-  async updateUserCustomStatus(session: Session, request: ApiUserStatusUpdate) {
+  async updateUserCustomStatus(
+    session: ApiSession,
+    request: ApiUserStatusUpdate,
+  ) {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -4907,7 +4924,7 @@ export class Client {
   }
 
   //**get user status */
-  async getUserStatus(session: Session): Promise<ApiUserStatus> {
+  async getUserStatus(session: ApiSession): Promise<ApiUserStatus> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -4924,7 +4941,7 @@ export class Client {
 
   //**list sd topic */
   async listSdTopic(
-    session: Session,
+    session: ApiSession,
     clanId?: string,
     limit?: number,
   ): Promise<ApiSdTopicList> {
@@ -4944,7 +4961,7 @@ export class Client {
 
   //**post sd topic */
   async createSdTopic(
-    session: Session,
+    session: ApiSession,
     request: ApiSdTopicRequest,
   ): Promise<ApiSdTopic> {
     if (
@@ -4963,7 +4980,7 @@ export class Client {
 
   //**list sd topic */
   async getTopicDetail(
-    session: Session,
+    session: ApiSession,
     topicId?: string,
   ): Promise<ApiSdTopic> {
     if (
@@ -4982,7 +4999,7 @@ export class Client {
 
   //**create room channel apps */
   async createRoomChannelApps(
-    session: Session,
+    session: ApiSession,
     body: MezonapiCreateRoomChannelApps,
   ): Promise<MezonapiCreateRoomChannelApps> {
     if (
@@ -5001,7 +5018,7 @@ export class Client {
 
   /** Generate Meet Token */
   async generateMeetToken(
-    session: Session,
+    session: ApiSession,
     body: ApiGenerateMeetTokenRequest,
   ): Promise<ApiGenerateMeetTokenResponse> {
     if (
@@ -5020,7 +5037,7 @@ export class Client {
 
   //**list webhook belong to the clan */
   async listMezonOauthClient(
-    session: Session,
+    session: ApiSession,
   ): Promise<ApiMezonOauthClientList> {
     if (
       this.autoFallbackHttp &&
@@ -5037,7 +5054,7 @@ export class Client {
   }
 
   async getMezonOauthClient(
-    session: Session,
+    session: ApiSession,
     clientId?: string,
     clientName?: string,
   ): Promise<ApiMezonOauthClient> {
@@ -5056,7 +5073,7 @@ export class Client {
   }
 
   async updateMezonOauthClient(
-    session: Session,
+    session: ApiSession,
     body: ApiMezonOauthClient,
   ): Promise<ApiMezonOauthClient> {
     if (
@@ -5075,7 +5092,7 @@ export class Client {
 
   //**search thread */
   async searchThread(
-    session: Session,
+    session: ApiSession,
     clanId?: string,
     channelId?: string,
     label?: string,
@@ -5096,7 +5113,7 @@ export class Client {
 
   //**Generate Hash */
   async generateHashChannelApps(
-    session: Session,
+    session: ApiSession,
     appId?: string,
   ): Promise<ApiCreateHashChannelAppsResponse> {
     if (
@@ -5114,7 +5131,7 @@ export class Client {
   }
 
   async registrationPassword(
-    session: Session,
+    session: ApiSession,
     email?: string,
     password?: string,
     oldPassword?: string,
@@ -5139,7 +5156,7 @@ export class Client {
 
   /** Add user event */
   async addUserEvent(
-    session: Session,
+    session: ApiSession,
     request: ApiUserEventRequest,
   ): Promise<any> {
     if (
@@ -5156,7 +5173,7 @@ export class Client {
 
   /** Delete user event */
   async deleteUserEvent(
-    session: Session,
+    session: ApiSession,
     clanId?: string,
     eventId?: string,
   ): Promise<any> {
@@ -5175,7 +5192,7 @@ export class Client {
   }
 
   async updateRoleOrder(
-    session: Session,
+    session: ApiSession,
     request: ApiUpdateRoleOrderRequest,
   ): Promise<any> {
     if (
@@ -5190,7 +5207,7 @@ export class Client {
     });
   }
 
-  async deleteAccount(session: Session): Promise<any> {
+  async deleteAccount(session: ApiSession): Promise<any> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -5204,7 +5221,7 @@ export class Client {
   }
 
   async createExternalMezonMeet(
-    session: Session,
+    session: ApiSession,
   ): Promise<ApiGenerateMezonMeetResponse> {
     if (
       this.autoFallbackHttp &&
@@ -5228,20 +5245,14 @@ export class Client {
     isGuest?: boolean,
   ): Promise<ApiGenerateMeetTokenExternalResponse> {
     return this.transport
-      .generateMeetTokenExternal(
-        basePath,
-        token,
-        username,
-        metadata,
-        isGuest,
-      )
+      .generateMeetTokenExternal(basePath, token, username, metadata, isGuest)
       .then((response: ApiGenerateMeetTokenExternalResponse) => {
         return Promise.resolve(response);
       });
   }
 
   async removeMezonMeetParticipant(
-    session: Session,
+    session: ApiSession,
     request: ApiMeetParticipantRequest,
   ): Promise<any> {
     if (
@@ -5259,7 +5270,7 @@ export class Client {
   }
 
   async muteMezonMeetParticipant(
-    session: Session,
+    session: ApiSession,
     request: ApiMeetParticipantRequest,
   ): Promise<any> {
     if (
@@ -5278,7 +5289,7 @@ export class Client {
 
   /** Update clan order to view. */
   async updateClanOrder(
-    session: Session,
+    session: ApiSession,
     request: ApiUpdateClanOrderRequest,
   ): Promise<boolean> {
     if (
@@ -5306,7 +5317,7 @@ export class Client {
   }
 
   async listQuickMenuAccess(
-    session: Session,
+    session: ApiSession,
     botId: string,
     channelId: string,
     menuType: number,
@@ -5326,7 +5337,7 @@ export class Client {
   }
 
   async deleteQuickMenuAccess(
-    session: Session,
+    session: ApiSession,
     id: string,
     clanId: string,
   ): Promise<any> {
@@ -5345,7 +5356,7 @@ export class Client {
   }
 
   async addQuickMenuAccess(
-    session: Session,
+    session: ApiSession,
     request: ApiQuickMenuAccessRequest,
   ): Promise<any> {
     if (
@@ -5361,7 +5372,7 @@ export class Client {
   }
 
   async updateQuickMenuAccess(
-    session: Session,
+    session: ApiSession,
     request: ApiQuickMenuAccessRequest,
   ): Promise<any> {
     if (
@@ -5379,7 +5390,7 @@ export class Client {
   }
 
   async listForSaleItems(
-    session: Session,
+    session: ApiSession,
     page?: number,
   ): Promise<ApiForSaleItemList> {
     if (
@@ -5397,7 +5408,7 @@ export class Client {
   }
 
   async isFollower(
-    session: Session,
+    session: ApiSession,
     req: ApiIsFollowerRequest,
   ): Promise<ApiIsFollowerResponse> {
     if (
@@ -5415,7 +5426,7 @@ export class Client {
   }
 
   async transferOwnership(
-    session: Session,
+    session: ApiSession,
     req: ApiTransferOwnershipRequest,
   ): Promise<any> {
     if (
@@ -5431,7 +5442,7 @@ export class Client {
   }
 
   async isBanned(
-    session: Session,
+    session: ApiSession,
     channelId: string,
   ): Promise<ApiIsBannedResponse> {
     if (
@@ -5449,7 +5460,7 @@ export class Client {
   }
 
   async reportMessageAbuse(
-    session: Session,
+    session: ApiSession,
     messageId?: string,
     abuseType?: string,
   ): Promise<any> {
@@ -5468,7 +5479,7 @@ export class Client {
   }
 
   async updateMezonVoiceState(
-    session: Session,
+    session: ApiSession,
     clanId?: string,
     channelId?: string,
     displayName?: string,
@@ -5490,7 +5501,7 @@ export class Client {
   }
 
   async sendChannelMessage(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     channelId: string,
     mode: number,
@@ -5534,7 +5545,7 @@ export class Client {
   }
 
   async updateChannelMessage(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     channelId: string,
     mode: number,
@@ -5574,7 +5585,7 @@ export class Client {
   }
 
   async deleteChannelMessage(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     channelId: string,
     mode: number,
@@ -5610,7 +5621,7 @@ export class Client {
   }
 
   async messageButtonClick(
-    session: Session,
+    session: ApiSession,
     messageId?: string,
     channelId?: string,
     buttonId?: string,
@@ -5640,7 +5651,7 @@ export class Client {
   }
 
   async dropdownBoxSelected(
-    session: Session,
+    session: ApiSession,
     messageId?: string,
     channelId?: string,
     selectboxId?: string,
@@ -5670,7 +5681,7 @@ export class Client {
   }
 
   async activeArchivedThread(
-    session: Session,
+    session: ApiSession,
     clanId?: string,
     channelId?: string,
   ): Promise<any> {
@@ -5689,7 +5700,7 @@ export class Client {
   }
 
   async addAgentToChannel(
-    session: Session,
+    session: ApiSession,
     roomName?: string,
     channelId?: string,
   ): Promise<any> {
@@ -5708,7 +5719,7 @@ export class Client {
   }
 
   async disconnectAgent(
-    session: Session,
+    session: ApiSession,
     roomName?: string,
     channelId?: string,
   ): Promise<any> {
@@ -5727,7 +5738,7 @@ export class Client {
   }
 
   async listMutedChannel(
-    session: Session,
+    session: ApiSession,
     clanId: string,
   ): Promise<ApiMutedChannelList> {
     if (
@@ -5745,7 +5756,7 @@ export class Client {
   }
 
   async channelMessageReact(
-    session: Session,
+    session: ApiSession,
     clanId: string,
     channelId: string,
     mode: number,
@@ -5790,7 +5801,7 @@ export class Client {
 
   /** Create a poll in a channel. */
   async createPoll(
-    session: Session,
+    session: ApiSession,
     request: ApiCreatePollRequest,
   ): Promise<ApiCreatePollResponse> {
     if (
@@ -5804,7 +5815,7 @@ export class Client {
 
   /** Vote on a poll. */
   async votePoll(
-    session: Session,
+    session: ApiSession,
     request: ApiVotePollRequest,
   ): Promise<ApiVotePollResponse> {
     if (
@@ -5818,7 +5829,7 @@ export class Client {
 
   /** Close a poll (creator only). */
   async closePoll(
-    session: Session,
+    session: ApiSession,
     request: ApiClosePollRequest,
   ): Promise<any> {
     if (
@@ -5832,7 +5843,7 @@ export class Client {
 
   /** Get poll details. */
   async getPoll(
-    session: Session,
+    session: ApiSession,
     request: ApiGetPollRequest,
   ): Promise<ApiGetPollResponse> {
     if (
@@ -5844,7 +5855,7 @@ export class Client {
     return this.transport.getPoll(request);
   }
 
-  async followUsers(session: Session, userIds: string[]): Promise<Status> {
+  async followUsers(session: ApiSession, userIds: string[]): Promise<Status> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -5854,7 +5865,7 @@ export class Client {
     return this.transport.followUsers(userIds);
   }
 
-  async joinClanChat(session: Session, clan_id: string): Promise<ClanJoin> {
+  async joinClanChat(session: ApiSession, clan_id: string): Promise<ClanJoin> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -5864,7 +5875,7 @@ export class Client {
     return this.transport.joinClanChat(clan_id);
   }
 
-  async follower(session: Session): Promise<void> {
+  async follower(session: ApiSession): Promise<void> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -5875,7 +5886,7 @@ export class Client {
   }
 
   async joinChat(
-    session: Session,
+    session: ApiSession,
     clan_id: string,
     channel_id: string,
     channel_type: number,
@@ -5896,7 +5907,7 @@ export class Client {
   }
 
   async leaveChat(
-    session: Session,
+    session: ApiSession,
     clan_id: string,
     channel_id: string,
     channel_type: number,
@@ -5917,7 +5928,7 @@ export class Client {
   }
 
   async removeChatMessage(
-    session: Session,
+    session: ApiSession,
     clan_id: string,
     channel_id: string,
     mode: number,
@@ -5947,7 +5958,7 @@ export class Client {
     );
   }
 
-  async unfollowUsers(session: Session, user_ids: string[]): Promise<void> {
+  async unfollowUsers(session: ApiSession, user_ids: string[]): Promise<void> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -5958,7 +5969,7 @@ export class Client {
   }
 
   async updateChatMessage(
-    session: Session,
+    session: ApiSession,
     clan_id: string,
     channel_id: string,
     mode: number,
@@ -5992,7 +6003,7 @@ export class Client {
     );
   }
 
-  async updateStatus(session: Session, status?: string): Promise<void> {
+  async updateStatus(session: ApiSession, status?: string): Promise<void> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
@@ -6003,7 +6014,7 @@ export class Client {
   }
 
   async writeQuickMenuEvent(
-    session: Session,
+    session: ApiSession,
     menu_name: string,
     clan_id: string,
     channel_id: string,
@@ -6044,7 +6055,7 @@ export class Client {
   }
 
   async writeEphemeralMessage(
-    session: Session,
+    session: ApiSession,
     receiver_ids: string[],
     clan_id: string,
     channel_id: string,
@@ -6087,7 +6098,7 @@ export class Client {
   }
 
   async writeChatMessage(
-    session: Session,
+    session: ApiSession,
     clan_id: string,
     channel_id: string,
     mode: number,
@@ -6126,7 +6137,7 @@ export class Client {
   }
 
   async writeMessageReaction(
-    session: Session,
+    session: ApiSession,
     id: string,
     clan_id: string,
     channel_id: string,
@@ -6167,7 +6178,7 @@ export class Client {
   }
 
   async writeMessageTyping(
-    session: Session,
+    session: ApiSession,
     clan_id: string,
     channel_id: string,
     mode: number,
@@ -6192,7 +6203,7 @@ export class Client {
   }
 
   async writeLastSeenMessage(
-    session: Session,
+    session: ApiSession,
     clan_id: string,
     channel_id: string,
     mode: number,
@@ -6217,7 +6228,7 @@ export class Client {
   }
 
   async writeLastPinMessage(
-    session: Session,
+    session: ApiSession,
     clan_id: string,
     channel_id: string,
     mode: number,
@@ -6256,7 +6267,7 @@ export class Client {
   }
 
   async writeCustomStatus(
-    session: Session,
+    session: ApiSession,
     clan_id: string,
     status: string,
     time_reset: number,
@@ -6277,7 +6288,7 @@ export class Client {
   }
 
   async writeVoiceReaction(
-    session: Session,
+    session: ApiSession,
     emojis: Array<string>,
     channel_id: string,
   ): Promise<VoiceReactionSend> {
@@ -6291,7 +6302,7 @@ export class Client {
   }
 
   async forwardWebrtcSignaling(
-    session: Session,
+    session: ApiSession,
     receiver_id: string,
     data_type: number,
     json_data: string,
@@ -6314,7 +6325,7 @@ export class Client {
   }
 
   async makeCallPush(
-    session: Session,
+    session: ApiSession,
     receiver_id: string,
     json_data: string,
     channel_id: string,
@@ -6335,7 +6346,7 @@ export class Client {
   }
 
   async writeChannelAppEvent(
-    session: Session,
+    session: ApiSession,
     clan_id: string,
     channel_id: string,
     action: number,
@@ -6350,7 +6361,7 @@ export class Client {
   }
 
   async listDataSocket(
-    session: Session,
+    session: ApiSession,
     request: ListDataSocket,
   ): Promise<any> {
     if (
