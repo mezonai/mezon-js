@@ -307,7 +307,7 @@ export class Client {
   private _connectionState: ConnectionStateType;
   private _heartbeatTimer?: ReturnType<typeof setTimeout>;
   private _connectTimeoutTimer?: ReturnType<typeof setTimeout>;
-  private _connectPromise?: Promise<Session>;
+  private _connectPromise?: Promise<void>;
   private readonly transport: MezonTransport;
 
   host: string;
@@ -344,15 +344,16 @@ export class Client {
   }
 
   connect(
-    session: Session,
+    session_id: string,
+    url: string,
     createStatus = false,
     verbose = false,
     connectTimeoutMs: number = Client.DefaultConnectTimeoutMs,
-  ): Promise<Session> {
+  ): Promise<void> {
     this.verbose = verbose;
 
     if (this._connectionState === ConnectionState.CONNECTED) {
-      return Promise.resolve(session);
+      return Promise.resolve();
     }
 
     if (
@@ -366,7 +367,8 @@ export class Client {
     this._connectionState = ConnectionState.CONNECTING;
 
     this.transport.connect(
-      session,
+      session_id,
+      url,
       createStatus,
       verbose,
       async (_cid: number, message: any) => {
@@ -586,7 +588,7 @@ export class Client {
       },
     );
 
-    const connectPromise = new Promise<Session>((resolve, reject) => {
+    const connectPromise = new Promise<void>((resolve, reject) => {
       this.transport.setOnOpen((evt: Event) => {
         if (this.verbose && window && window.console) {
           console.log(evt);
@@ -600,7 +602,7 @@ export class Client {
         this.startHeartbeatLoop();
         this._connectPromise = undefined;
 
-        resolve(session);
+        resolve();
 
         if (isReconnect) {
           this.onreconnect(evt);

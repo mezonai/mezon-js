@@ -474,15 +474,16 @@ export class MezonTransport {
   }
 
   connect(
-    session: Session,
+    session_id: string,
+    url: string,
     createStatus = false,
     verbose = false,
     onMessage: tsproto.SocketMessageHandler,
     onDisconnected: tsproto.SocketCloseHandler,
     signal?: AbortSignal,
   ): void {
-    const [host, port] = session.ws_url.split(":");
-    this.adapter.connect(host, port, createStatus, session.token, signal);
+    const [host, port] = url.split(":");
+    this.adapter.connect(host, port, createStatus, session_id, signal);
 
     this.adapter.onClose = onDisconnected;
     this.adapter.onMessage = async (
