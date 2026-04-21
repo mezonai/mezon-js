@@ -28,6 +28,7 @@ import {
   PermissionUpdate,
   Role,
   Rpc,
+  Session,
   TokenSentEvent,
   UserActivity,
   Webhook,
@@ -411,7 +412,11 @@ export interface Envelope {
     | AIAgentEnabledEvent
     | undefined;
   /** Ban Channel User Event */
-  list_channel_users_banned_event?: ListChannelUsersBannedEvent | undefined;
+  list_channel_users_banned_event?:
+    | ListChannelUsersBannedEvent
+    | undefined;
+  /** Refresh session event */
+  refresh_session_event?: Session | undefined;
 }
 
 export interface ApiRequestEvent {
@@ -1814,6 +1819,7 @@ function createBaseEnvelope(): Envelope {
     clan_created_event: undefined,
     aiagent_enabled_event: undefined,
     list_channel_users_banned_event: undefined,
+    refresh_session_event: undefined,
   };
 }
 
@@ -2104,6 +2110,9 @@ export const Envelope = {
     }
     if (message.list_channel_users_banned_event !== undefined) {
       ListChannelUsersBannedEvent.encode(message.list_channel_users_banned_event, writer.uint32(762).fork()).ldelim();
+    }
+    if (message.refresh_session_event !== undefined) {
+      Session.encode(message.refresh_session_event, writer.uint32(770).fork()).ldelim();
     }
     return writer;
   },
@@ -2780,6 +2789,13 @@ export const Envelope = {
 
           message.list_channel_users_banned_event = ListChannelUsersBannedEvent.decode(reader, reader.uint32());
           continue;
+        case 96:
+          if (tag !== 770) {
+            break;
+          }
+
+          message.refresh_session_event = Session.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3009,6 +3025,9 @@ export const Envelope = {
         : undefined,
       list_channel_users_banned_event: isSet(object.list_channel_users_banned_event)
         ? ListChannelUsersBannedEvent.fromJSON(object.list_channel_users_banned_event)
+        : undefined,
+      refresh_session_event: isSet(object.refresh_session_event)
+        ? Session.fromJSON(object.refresh_session_event)
         : undefined,
     };
   },
@@ -3301,6 +3320,9 @@ export const Envelope = {
     }
     if (message.list_channel_users_banned_event !== undefined) {
       obj.list_channel_users_banned_event = ListChannelUsersBannedEvent.toJSON(message.list_channel_users_banned_event);
+    }
+    if (message.refresh_session_event !== undefined) {
+      obj.refresh_session_event = Session.toJSON(message.refresh_session_event);
     }
     return obj;
   },
@@ -3617,6 +3639,10 @@ export const Envelope = {
     message.list_channel_users_banned_event =
       (object.list_channel_users_banned_event !== undefined && object.list_channel_users_banned_event !== null)
         ? ListChannelUsersBannedEvent.fromPartial(object.list_channel_users_banned_event)
+        : undefined;
+    message.refresh_session_event =
+      (object.refresh_session_event !== undefined && object.refresh_session_event !== null)
+        ? Session.fromPartial(object.refresh_session_event)
         : undefined;
     return message;
   },
