@@ -411,8 +411,6 @@ enum ApiNameEnum {
   MultipartUploadAttachmentFileFinish,
 }
 
-import { Session } from "./session";
-
 export class MezonTransport {
   public static readonly DefaultSendTimeoutMs = 10000;
 
@@ -461,7 +459,7 @@ export class MezonTransport {
     this.adapter = transportAdapter;
   }
 
-  setFallbackSession(_session: Session) {}
+  setFallbackSession(_session: ApiSession) {}
 
   getApiFromPath(apiPath: string) {
     if (apiPath in ApiNameEnum) {

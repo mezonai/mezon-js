@@ -17,7 +17,6 @@
 import "whatwg-fetch";
 
 export * from "./client";
-export * from "./session";
 export * from "./utils"
 export * from "./types"
 
