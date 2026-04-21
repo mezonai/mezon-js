@@ -17,7 +17,6 @@
 import "whatwg-fetch";
 
 export * from "./client";
-export * from "./refresh_token_manager";
 export * from "./session";
 export * from "./utils"
 export * from "./types"

@@ -261,7 +261,6 @@ import {
   Status,
 } from "./types";
 import { Session } from "./session";
-import { RefreshTokenManager } from "./refresh_token_manager";
 
 import {
   decodeAttachments,
@@ -311,7 +310,6 @@ export class Client {
   private _connectPromise?: Promise<Session>;
   private readonly transport: MezonTransport;
 
-  private readonly refreshTokenManager = RefreshTokenManager.getInstance();
   host: string;
   port: string;
   useSSL: boolean;
@@ -567,6 +565,8 @@ export class Client {
             this.onaiagentenabled(
               <AiAgentEnabledEvent>message.aiagent_enabled_event,
             );
+          } else if (message.refresh_session_event) {
+            this.onrefreshsession(<ApiSession>message.refresh_session);
           } else if (message.pong) {
             if (this.verbose && window && window.console) {
               console.log("Pong message received: %o", message);
@@ -1117,7 +1117,7 @@ export class Client {
    * This is a placeholder method that subclasses or instances can override
    * to perform actions before or after the refresh logic.
    */
-  onRefreshSession(session: ApiSession): void {
+  onrefreshsession(session: ApiSession): void {
     console.log(`Token refresh occurred. Token: ${session.token}`);
   }
 
@@ -2712,62 +2712,6 @@ export class Client {
       .then((response: any) => {
         return response !== undefined;
       });
-  }
-
-  /** Refresh a user's session using a refresh token retrieved from a previous authentication request. */
-  async sessionRefresh(
-    session: Session,
-    vars: Record<string, string> = {},
-  ): Promise<Session> {
-    if (!session) {
-      console.error("Cannot refresh a null session.");
-      return session;
-    }
-
-    if (session.created && session.expires_at! - session.created_at < 70) {
-      console.warn(
-        "Session lifetime too short, please set '--session.token_expiry_sec' option. See the documentation for more info: https://mezon.vn/docs/mezon/getting-started/configuration/#session",
-      );
-    }
-
-    if (
-      session.created &&
-      session.refresh_expires_at! - session.created_at < 3700
-    ) {
-      console.warn(
-        "Session refresh lifetime too short, please set '--session.refresh_token_expiry_sec' option. See the documentation for more info: https://mezon.vn/docs/mezon/getting-started/configuration/#session",
-      );
-    }
-
-    const result = await this.refreshTokenManager.refresh(
-      session.refresh_token,
-      async () => {
-        try {
-          const apiSession = await this.transport.sessionRefresh(
-            this.serverkey,
-            "",
-            {
-              token: session.refresh_token,
-              vars: vars,
-              is_remember: session.is_remember,
-            },
-          );
-
-          return {
-            token: apiSession.token!,
-            refresh_token: apiSession.refresh_token!,
-            is_remember: apiSession.is_remember || false,
-          };
-        } catch (error) {
-          console.error("Session refresh failed:", error);
-          throw error;
-        }
-      },
-    );
-
-    session.update(result.token, result.refresh_token, result.is_remember);
-    this.onRefreshSession(result);
-    return session;
   }
 
   /** Remove an email+password from the social profiles on the current user's account. */
