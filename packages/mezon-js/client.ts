@@ -370,7 +370,7 @@ export class Client {
       url,
       createStatus,
       verbose,
-      async (_cid: number, message: any) => {
+      async (_cid: number, _code: number, message: any) => {
         if (!message.cid) {
           if (message.notifications) {
             message.notifications.notifications.forEach(
@@ -426,6 +426,7 @@ export class Client {
               <StatusPresenceEvent>message.status_presence_event,
             );
           } else if (message.channel_message) {
+            console.log("onchannelmessage", message.channel_message);
             const channelMessage = CreateChannelMessageFromEvent(message);
             this.onchannelmessage(channelMessage);
           } else if (message.message_typing_event) {
