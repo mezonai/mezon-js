@@ -396,6 +396,7 @@ enum ApiNameEnum {
   DeleteChannelMessage,
   ReportMessageAbuse,
   MessageButtonClick,
+  DropdownBoxSelected,
   ActiveArchivedThread,
   UpdateChannelTimeline,
   AddAgentToChannel,
