@@ -60,10 +60,16 @@ export class AbridgedTcpAdapter implements TransportAdapter {
     this._socket = client;
 
     client.on("secureConnect", () => {
-      // Send the abridged MTProto handshake: magic byte + auth token
-      const magicByte = Buffer.from([0xef]);
       const tokenBytes = Buffer.from(token, "utf-8");
-      client.write(Buffer.concat([magicByte, tokenBytes]));
+      // Ensure length is a multiple of 4 for Abridged protocol
+      const padding = (4 - (tokenBytes.length % 4)) % 4;
+      const finalToken = Buffer.concat([tokenBytes, Buffer.alloc(padding, 0)]);
+
+      const magicByte = Buffer.from([0xef]);
+      // The length byte: total bytes / 4
+      const lenHeader = Buffer.from([finalToken.length / 4]);
+
+      client.write(Buffer.concat([magicByte, lenHeader, finalToken]));
 
       this._onOpen?.(new Event("open") as Event);
     });
