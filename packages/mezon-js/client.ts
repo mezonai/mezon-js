@@ -426,7 +426,6 @@ export class Client {
               <StatusPresenceEvent>message.status_presence_event,
             );
           } else if (message.channel_message) {
-            console.log("onchannelmessage", message.channel_message);
             const channelMessage = CreateChannelMessageFromEvent(message);
             this.onchannelmessage(channelMessage);
           } else if (message.message_typing_event) {
