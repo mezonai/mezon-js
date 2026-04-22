@@ -1013,6 +1013,8 @@ export interface Session {
   id_token: string;
   /** ws_url */
   ws_url: string;
+  /** session id */
+  session_id: string;
 }
 
 /** Update username */
@@ -11052,6 +11054,7 @@ function createBaseSession(): Session {
     api_url: "",
     id_token: "",
     ws_url: "",
+    session_id: "",
   };
 }
 
@@ -11080,6 +11083,9 @@ export const Session = {
     }
     if (message.ws_url !== "") {
       writer.uint32(66).string(message.ws_url);
+    }
+    if (message.session_id !== "") {
+      writer.uint32(74).string(message.session_id);
     }
     return writer;
   },
@@ -11147,6 +11153,13 @@ export const Session = {
 
           message.ws_url = reader.string();
           continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.session_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -11166,6 +11179,7 @@ export const Session = {
       api_url: isSet(object.api_url) ? globalThis.String(object.api_url) : "",
       id_token: isSet(object.id_token) ? globalThis.String(object.id_token) : "",
       ws_url: isSet(object.ws_url) ? globalThis.String(object.ws_url) : "",
+      session_id: isSet(object.session_id) ? globalThis.String(object.session_id) : "",
     };
   },
 
@@ -11195,6 +11209,9 @@ export const Session = {
     if (message.ws_url !== "") {
       obj.ws_url = message.ws_url;
     }
+    if (message.session_id !== "") {
+      obj.session_id = message.session_id;
+    }
     return obj;
   },
 
@@ -11211,6 +11228,7 @@ export const Session = {
     message.api_url = object.api_url ?? "";
     message.id_token = object.id_token ?? "";
     message.ws_url = object.ws_url ?? "";
+    message.session_id = object.session_id ?? "";
     return message;
   },
 };
