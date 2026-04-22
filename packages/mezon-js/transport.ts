@@ -8471,12 +8471,21 @@ export class MezonTransport {
   }
 
   async joinClanChat(clan_id: string): Promise<ClanJoin> {
+    let fetchOptions;
     const urlPath = "";
-    const fetchOptions = {
-      clan_join: {
-        clan_id: clan_id,
-      },
-    } as any;
+
+    if (clan_id === "0") {
+      fetchOptions = {
+        clan_join: {
+        },
+      } as any;
+    } else {
+      fetchOptions = {
+        clan_join: {
+          clan_id: clan_id,
+        },
+      } as any;
+    }
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (_response) => {
         return {} as ClanJoin;
