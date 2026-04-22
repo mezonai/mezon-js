@@ -6,7 +6,7 @@ import {
   SocketOpenHandler,
   TransportAdapter,
 } from "./transport_adapter";
-import net from "node:net";
+import tls from "node:tls";
 
 // Strip the `this: WebSocket` constraint so we can call handlers freely
 type PlainFn<T extends (...args: any[]) => any> = T extends (
@@ -16,10 +16,10 @@ type PlainFn<T extends (...args: any[]) => any> = T extends (
   ? (...args: A) => R
   : never;
 
-const CODE_FIN = 0xFF;
+const CODE_FIN = 0xff;
 
 export class AbridgedTcpAdapter implements TransportAdapter {
-  private _socket?: net.Socket;
+  private _socket?: any;
   private _onClose: PlainFn<SocketCloseHandler> | null = null;
   private _onError: PlainFn<SocketErrorHandler> | null = null;
   private _onMessage: PlainFn<SocketMessageHandler> | null = null;
@@ -52,12 +52,14 @@ export class AbridgedTcpAdapter implements TransportAdapter {
     token: string,
     signal?: AbortSignal,
   ): void {
-    const client = net.createConnection({ host, port: parseInt(port) });
+    const client = tls.connect(parseInt(port), host, {
+      rejectUnauthorized: false,
+    });
 
     // Assign immediately so isOpen(), send(), and close() work right away
     this._socket = client;
 
-    client.on("connect", () => {
+    client.on("secureConnect", () => {
       // Send the abridged MTProto handshake: magic byte + auth token
       const magicByte = Buffer.from([0xef]);
       const tokenBytes = Buffer.from(token, "utf-8");
@@ -108,8 +110,8 @@ export class AbridgedTcpAdapter implements TransportAdapter {
         }
 
         const chunks = this._streams.get(cid)!;
-        const responseCode = (code >>> 16) & 0xFFFF;
-        const finFlag = code & 0xFFFF;
+        const responseCode = (code >>> 16) & 0xffff;
+        const finFlag = code & 0xffff;
 
         if (finFlag === CODE_FIN) {
           // If there's a final payload in the FIN packet, add it
