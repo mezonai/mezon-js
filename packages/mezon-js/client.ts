@@ -1155,6 +1155,7 @@ export class Client {
           ws_url: apiSession.ws_url || "",
           id_token: apiSession.id_token || "",
           is_remember: apiSession.is_remember || false,
+          session_id: apiSession.session_id || "",
         };
       });
   }
@@ -1215,6 +1216,7 @@ export class Client {
           ws_url: apiSession.ws_url || "",
           id_token: apiSession.id_token || "",
           is_remember: apiSession.is_remember || false,
+          session_id: apiSession.session_id || "",
         };
       });
   }
@@ -1246,6 +1248,7 @@ export class Client {
           ws_url: apiSession.ws_url || "",
           id_token: apiSession.id_token || "",
           is_remember: apiSession.is_remember || false,
+          session_id: apiSession.session_id || "",
         };
       });
   }
@@ -4551,6 +4554,7 @@ export class Client {
       ws_url: apiSession.ws_url || "",
       id_token: apiSession.id_token || "",
       is_remember: apiSession.is_remember || false,
+      session_id: apiSession.session_id || "",
     };
   }
 
