@@ -5,7 +5,7 @@ import {
   MultipartUploadAttachment,
   MultipartUploadAttachmentFinishRequest,
   TransportAdapter,
-  WebSocketAdapter,
+  MezonNetworkAdapter,
 } from "mezon-js-protobuf";
 import {
   ApiAccount,
@@ -424,18 +424,13 @@ export class MezonTransport {
   constructor(
     readonly serverKey: string,
     readonly timeoutMs: number,
-    adapter: TransportAdapter,
     basePath: string,
   ) {
     this.cIds = {};
     this.nextCid = 1;
 
     this.basePath = basePath;
-    if (!adapter) {
-      this.adapter = new WebSocketAdapter();
-    } else {
-      this.adapter = adapter;
-    }
+    this.adapter = new MezonNetworkAdapter();    
   }
 
   setOnOpen(onopen: (evt: Event) => void) {

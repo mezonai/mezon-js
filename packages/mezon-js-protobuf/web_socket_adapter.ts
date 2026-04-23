@@ -7,9 +7,9 @@ import {
   TransportAdapter,
 } from "./transport_adapter";
 
-const CODE_FIN = 0xFF;
+const CODE_FIN = 0xff;
 
-export class WebSocketAdapter implements TransportAdapter {
+export class MezonNetworkAdapter implements TransportAdapter {
   private _socket?: WebSocket;
 
   private _streams = new Map<number, Uint8Array[]>();
@@ -63,18 +63,25 @@ export class WebSocketAdapter implements TransportAdapter {
             this._streams.set(cid, []);
           }
 
-          const responseCode = (code >>> 16) & 0xFFFF;
-          const finFlag = code & 0xFFFF;
+          const responseCode = (code >>> 16) & 0xffff;
+          const finFlag = code & 0xffff;
 
           const chunks = this._streams.get(cid)!;
 
           if (finFlag === CODE_FIN) {
             // If there's a final payload in the FIN packet, add it
             if (payload.byteLength) {
-              const part = new Uint8Array(payload.buffer, payload.byteOffset, payload.byteLength);
+              const part = new Uint8Array(
+                payload.buffer,
+                payload.byteOffset,
+                payload.byteLength,
+              );
               chunks.push(part);
             }
-            const totalLength = chunks.reduce((acc, arr) => acc + arr.length, 0);
+            const totalLength = chunks.reduce(
+              (acc, arr) => acc + arr.length,
+              0,
+            );
             const completeBuffer = new Uint8Array(totalLength);
 
             let offset = 0;
