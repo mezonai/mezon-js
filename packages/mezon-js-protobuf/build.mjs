@@ -49,6 +49,7 @@ const config = {
   globalName: "mezonjsprotobuf",
   external,
   outdir: 'dist',
+  plugins: [protobufJsPlugin],
 };
 
 // Build CommonJS (minified)
