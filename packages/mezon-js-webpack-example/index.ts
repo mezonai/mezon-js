@@ -20,23 +20,27 @@ var useSSL = true; // Enable if server is run with an SSL certificate.
 var client = new Client("defaultkey", "dev-mezon.nccsoft.vn", "8088", useSSL);
 
 client.authenticateEmail("pocolomos@gmail.com", "xxxxxxxx").then(async session => {
-  const session2 = await client.connect(session.token, session.ws_url, true, true);
-  console.log("session 2", session2);
-  
+  console.log("session", session);
   client.onchannelmessage = function(event) {
     console.log("on channel message", event);
   }
 
+  const session2 = await client.connect(session.token || '', session.ws_url || '', true, true);
+  console.log("session 2", session2);
+  
   setTimeout(async () => {
     console.log("Socket State after 1s:");
-    client.listUserClansByUserId(session).then(message => {
-     console.log("message activity", message);
-    });
+    // client.listUserClansByUserId(session).then(message => {
+    //  console.log("message activity", message);
+    // });
     console.log(await client.joinClanChat(session, "2041858765849890816"));
     await client.writeChatMessage(session, "2041858765849890816", "2041858767636664320", 2, true, {t:"OK"}, [], [], [], false, false, "", 0);
-    client.listChannelDescs(session, 1000, 0, 1, "2041858765849890816", 1).then(message => {
-     console.log("response ", message);
-    });
+    // client.listChannelDescs(session, 1000, 0, 1, "0", 1).then(message => {
+    //  console.log("response ", message);
+    // });
+    // client.listChannelMessages(session, "2041858765849890816", "2041858767636664320").then(message => {
+    //   console.log("muted", message);
+    // });
   }, 1000);
 }).catch(e => {
   console.log("got error", e);

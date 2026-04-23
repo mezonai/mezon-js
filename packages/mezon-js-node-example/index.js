@@ -3,16 +3,12 @@ global.window = global;
 global.navigator = { userAgent: 'node' };
 
 const { Client } = require("mezon-js");
-const AbridgedTcpAdapter = require("mezon-js-protobuf/abridged_tcp_adapter").default;
-
-// Now you can instantiate it
-const adapter = new AbridgedTcpAdapter();
 
 var useSSL = true; // Enable if server is run with an SSL certificate.
-var client = new Client("defaultkey", "dev-mezon.nccsoft.vn", "8088", useSSL, adapter);
+var client = new Client("defaultkey", "dev-mezon.nccsoft.vn", "8088", useSSL);
 
 client.authenticateEmail("pocolomos@gmail.com", "xxxxx").then(async session => {
-  const session2 = await client.connect(session.token, session.ws_url, true, true);
+  const session2 = await client.connect(session.token || '', "dev-mezon.nccsoft.vn:7349", true, true);
   console.log("session 2", session);
   client.onchannelmessage = function(event) {
     console.log("on channel message", event);
