@@ -18,7 +18,7 @@ type PlainFn<T extends (...args: any[]) => any> = T extends (
 
 const CODE_FIN = 0xff;
 
-export class AbridgedTcpAdapter implements TransportAdapter {
+export class MezonNetworkAdapter implements TransportAdapter {
   private _socket?: any;
   private _onClose: PlainFn<SocketCloseHandler> | null = null;
   private _onError: PlainFn<SocketErrorHandler> | null = null;
@@ -233,4 +233,3 @@ export class AbridgedTcpAdapter implements TransportAdapter {
   }
 }
 
-export default AbridgedTcpAdapter;

@@ -9,14 +9,14 @@
     "./package.json": "./package.json",
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/mezon-js-protobuf.esm.mjs",
-      "require": "./dist/mezon-js-protobuf.cjs.js"
-    },
-    "./abridged_tcp_adapter": {
-      "types": "./dist/abridged_tcp_adapter.d.ts",
-      "import": "./dist/abridged_tcp_adapter.esm.mjs",
-      "require": "./dist/abridged_tcp_adapter.cjs.js"
+      "browser": "./dist/mezon-js-protobuf.esm.mjs",
+      "node": "./dist/mezon-js-protobuf-node.esm.mjs",
+      "default": "./dist/mezon-js-protobuf.esm.mjs"
     }
+  },
+  "browser": {
+    "./dist/abridged_tcp_adapter.esm.mjs": "./dist/mezon-js-protobuf.esm.mjs",
+    "./dist/abridged_tcp_adapter.cjs.js": "./dist/mezon-js-protobuf.cjs.js"
   },
   "files": [
     "dist"

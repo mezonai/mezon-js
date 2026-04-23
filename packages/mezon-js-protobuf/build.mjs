@@ -12,31 +12,41 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import esbuild from 'esbuild';
+import esbuild from "esbuild";
 
 // External packages to avoid bundling runtime dependencies
 const external = [
-  'protobufjs',
-  'protobufjs/minimal',
-  'long',
-  'node:net',
-  'net'
+  "protobufjs",
+  "protobufjs/minimal",
+  "long",
+  "node:net",
+  "net",
 ];
 
 const entryPoints = {
-  'mezon-js-protobuf': './index.ts',
-  'abridged_tcp_adapter': './abridged_tcp_adapter.ts'
+  "mezon-js-protobuf": "./index.ts",
+  abridged_tcp_adapter: "./abridged_tcp_adapter.ts",
+  "mezon-js-protobuf-node": "./index.node.ts",
+};
+
+const protobufJsPlugin = {
+  name: "protobufjs-fix",
+  setup(build) {
+    build.onResolve({ filter: /^protobufjs\/minimal$/ }, (args) => {
+      return { path: "protobufjs/minimal.js", external: true };
+    });
+  },
 };
 
 // Shared esbuild config
 const config = {
-  logLevel: 'info',
+  logLevel: "info",
   entryPoints: entryPoints,
   bundle: true,
-  target: 'es6',
-  platform: 'node',
+  target: "es6",
+  platform: "node",
   treeShaking: true,
-  globalName: 'mezonjsprotobuf',
+  globalName: "mezonjsprotobuf",
   external,
   outdir: 'dist',
 };
@@ -44,20 +54,19 @@ const config = {
 // Build CommonJS (minified)
 await esbuild.build({
   ...config,
-  format: 'cjs',
+  format: "cjs",
   minify: true,
-  outExtension: { '.js': '.cjs.js' },
+  outExtension: { ".js": ".cjs.js" },
   minifyWhitespace: true,
   minifyIdentifiers: true,
   minifySyntax: true,
-  external: ['node:net']
 });
 
 // Build ESM (minified)
 await esbuild.build({
   ...config,
-  format: 'esm',
-  outExtension: { '.js': '.esm.mjs' },
+  format: "esm",
+  outExtension: { ".js": ".esm.mjs" },
   minify: true,
   minifyWhitespace: true,
   minifyIdentifiers: true,
@@ -67,14 +76,14 @@ await esbuild.build({
 // Build IIFE (minified) - for direct browser script tag usage
 await esbuild.build({
   ...config,
-  format: 'iife',
-  entryPoints: ['./index.ts'],
+  format: "iife",
+  entryPoints: ["./index.ts"],
   outdir: undefined,
-  outfile: 'dist/mezon-js-protobuf.iife.js',
+  outfile: "dist/mezon-js-protobuf.iife.js",
   minify: true,
   minifyWhitespace: true,
   minifyIdentifiers: true,
   minifySyntax: true,
 });
 
-console.log('Build completed successfully!');
+console.log("Build completed successfully!");

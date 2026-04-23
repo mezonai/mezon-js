@@ -276,7 +276,6 @@ import {
   MessageButtonClicked,
   MultipartUploadAttachment,
   MultipartUploadAttachmentFinishRequest,
-  TransportAdapter,
 } from "mezon-js-protobuf";
 import { MezonTransport } from "./transport";
 
@@ -318,7 +317,6 @@ export class Client {
     host = DEFAULT_HOST,
     port = DEFAULT_PORT,
     useSSL = false,
-    adapter: any = null,
     readonly timeout = DEFAULT_TIMEOUT_MS,
     readonly autoFallbackHttp = true,
   ) {
@@ -331,15 +329,11 @@ export class Client {
     this._heartbeatTimeoutMs = Client.DefaultHeartbeatTimeoutMs;
     this._connectionState = ConnectionState.DISCONNECTED;
 
-    this.transport = new MezonTransport(serverkey, timeout, adapter, basePath);
+    this.transport = new MezonTransport(serverkey, timeout, basePath);
   }
 
   isOpen(): boolean {
     return this._connectionState === ConnectionState.CONNECTED;
-  }
-
-  setTransportAdapter(transportAdapter: TransportAdapter) {
-    this.transport.setTransportAdapter(transportAdapter);
   }
 
   connect(
