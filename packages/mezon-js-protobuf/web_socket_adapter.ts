@@ -111,7 +111,7 @@ export class MezonNetworkAdapter implements TransportAdapter {
           }
         }
 
-        value!(Number(envelope.cid), 0, envelope);
+        value!(envelope.cid, 0, envelope);
       };
     } else {
       value = null;

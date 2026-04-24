@@ -556,7 +556,7 @@ export class MezonTransport {
           }, sendTimeout);
         }
 
-        untypedMessage.cid = cid.toString();
+        untypedMessage.cid = cid;
         this.adapter.send(untypedMessage);
       }
     });

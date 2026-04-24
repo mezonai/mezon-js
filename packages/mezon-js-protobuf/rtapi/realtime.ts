@@ -41,7 +41,7 @@ export const protobufPackage = "mezon.realtime";
 
 /** An envelope for a realtime message. */
 export interface Envelope {
-  cid: string;
+  cid: number;
   /** A response from a channel join operation. */
   channel?:
     | Channel
@@ -1724,7 +1724,7 @@ export interface GotifyMessage_ExtrasEntry {
 
 function createBaseEnvelope(): Envelope {
   return {
-    cid: "",
+    cid: 0,
     channel: undefined,
     clan_join: undefined,
     channel_join: undefined,
@@ -1825,8 +1825,8 @@ function createBaseEnvelope(): Envelope {
 
 export const Envelope = {
   encode(message: Envelope, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.cid !== "") {
-      writer.uint32(10).string(message.cid);
+    if (message.cid !== 0) {
+      writer.uint32(8).int32(message.cid);
     }
     if (message.channel !== undefined) {
       Channel.encode(message.channel, writer.uint32(18).fork()).ldelim();
@@ -2125,11 +2125,11 @@ export const Envelope = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.cid = reader.string();
+          message.cid = reader.int32();
           continue;
         case 2:
           if (tag !== 18) {
@@ -2807,7 +2807,7 @@ export const Envelope = {
 
   fromJSON(object: any): Envelope {
     return {
-      cid: isSet(object.cid) ? globalThis.String(object.cid) : "",
+      cid: isSet(object.cid) ? globalThis.Number(object.cid) : 0,
       channel: isSet(object.channel) ? Channel.fromJSON(object.channel) : undefined,
       clan_join: isSet(object.clan_join) ? ClanJoin.fromJSON(object.clan_join) : undefined,
       channel_join: isSet(object.channel_join) ? ChannelJoin.fromJSON(object.channel_join) : undefined,
@@ -3034,8 +3034,8 @@ export const Envelope = {
 
   toJSON(message: Envelope): unknown {
     const obj: any = {};
-    if (message.cid !== "") {
-      obj.cid = message.cid;
+    if (message.cid !== 0) {
+      obj.cid = Math.round(message.cid);
     }
     if (message.channel !== undefined) {
       obj.channel = Channel.toJSON(message.channel);
@@ -3332,7 +3332,7 @@ export const Envelope = {
   },
   fromPartial<I extends Exact<DeepPartial<Envelope>, I>>(object: I): Envelope {
     const message = createBaseEnvelope();
-    message.cid = object.cid ?? "";
+    message.cid = object.cid ?? 0;
     message.channel = (object.channel !== undefined && object.channel !== null)
       ? Channel.fromPartial(object.channel)
       : undefined;
