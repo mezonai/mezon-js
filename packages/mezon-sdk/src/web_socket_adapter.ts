@@ -16,67 +16,24 @@
 
 import { decode, encode } from "base64-arraybuffer";
 import { btoa } from "js-base64"
-import WebSocket, { CloseEvent, MessageEvent } from 'ws';
+import WebSocket, { MessageEvent } from 'ws';
+import {
+    SocketCloseHandler,
+    SocketErrorHandler,
+    SocketMessageHandler,
+    SocketOpenHandler,
+    TransportAdapter,
+} from "./transport_adapter";
 
-/**
- * An interface used by Mezon's web socket to determine the payload protocol.
- */
-export interface WebSocketAdapter {
+export {
+    SocketCloseHandler,
+    SocketErrorHandler,
+    SocketMessageHandler,
+    SocketOpenHandler,
+    TransportAdapter,
+} from "./transport_adapter";
 
-    /**
-     * Dispatched when the web socket closes.
-     */
-    onClose: SocketCloseHandler | null;
-
-    /**
-     * Dispatched when the web socket receives an error.
-     */
-    onError: ((event: WebSocket.ErrorEvent) => void) | null;
-
-    /**
-     * Dispatched when the web socket receives a normal message.
-     */
-    onMessage: SocketMessageHandler | null;
-
-    /**
-     * Dispatched when the web socket opens.
-     */
-    onOpen: ((event: WebSocket.Event) => void) | null;
-
-    isOpen(): boolean;
-    close() : void;
-    connect(scheme: string, ws_url: string, createStatus: boolean, token : string) : void;
-    send(message: any) : void;
-}
-
-/**
- * SocketCloseHandler defines a lambda that handles WebSocket close events.
- */
-export interface SocketCloseHandler {
-    (this: WebSocket, evt: CloseEvent): void;
-}
-
-/**
- * SocketErrorHandler defines a lambda that handles responses from the server via WebSocket
- * that indicate an error.
- */
-export interface SocketErrorHandler {
-    (this: WebSocket, evt: Event): void;
-}
-
-/**
- * SocketMessageHandler defines a lambda that handles valid WebSocket messages.
- */
-export interface SocketMessageHandler {
-    (message: any): void;
-}
-
-/**
- * SocketOpenHandler defines a lambda that handles WebSocket open events.
- */
-export interface SocketOpenHandler {
-    (this: WebSocket, evt: Event): void
-}
+export type WebSocketAdapter = TransportAdapter;
 
 /**
  * A text-based socket adapter that accepts and transmits payloads over UTF-8.
@@ -92,16 +49,16 @@ export class WebSocketAdapterText implements WebSocketAdapter {
         this._socket!.onclose = value;
     }
 
-    get onError(): ((event: WebSocket.ErrorEvent) => void) | null {
+    get onError(): SocketErrorHandler | null {
         return this._socket!.onerror;
     }
 
-    set onError(value: ((event: WebSocket.ErrorEvent) => void) | null) {
+    set onError(value: SocketErrorHandler | null) {
         this._socket!.onerror = value;
     }
 
     get onMessage(): SocketMessageHandler | null {
-        return this._socket!.onmessage;
+        return null;
     }
 
     set onMessage(value: SocketMessageHandler | null) {
@@ -113,7 +70,7 @@ export class WebSocketAdapterText implements WebSocketAdapter {
                     message.party_data.data = new Uint8Array(decode(message.party_data.data));
                 }
 
-                value!(message);
+                value!(Number(message.cid || 0), 0, message);
             };
         }
         else {
@@ -121,11 +78,11 @@ export class WebSocketAdapterText implements WebSocketAdapter {
         }
     }
 
-    get onOpen(): ((event: WebSocket.Event) => void) | null {
+    get onOpen(): SocketOpenHandler | null {
         return this._socket!.onopen;
     }
 
-    set onOpen(value: ((event: WebSocket.Event) => void) | null) {
+    set onOpen(value: SocketOpenHandler | null) {
         this._socket!.onopen = value;
     }
 
@@ -133,8 +90,14 @@ export class WebSocketAdapterText implements WebSocketAdapter {
         return this._socket?.readyState == WebSocket.OPEN;
     }
 
-    connect(scheme: string, ws_url: string, createStatus: boolean, token: string): void {
-        const url = `${scheme}${ws_url}/ws?lang=en&status=${encodeURIComponent(createStatus.toString())}&token=${encodeURIComponent(token)}`;
+    connect(host: string, port: string, createStatus: boolean, token: string, signal?: AbortSignal): void {
+        if (signal) {
+            signal.addEventListener('abort', () => {
+                this.close();
+            });
+        }
+        const portPart = port ? `:${port}` : "";
+        const url = `wss://${host}${portPart}/ws?lang=en&status=${encodeURIComponent(createStatus.toString())}&token=${encodeURIComponent(token)}`;
         this._socket = new WebSocket(url);
     }
 

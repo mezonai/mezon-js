@@ -88,7 +88,7 @@ export class Message {
           content: JSON.stringify(this.content),
         },
       ];
-
+      console.log('this.channel.clan.id', this.channel.clan.id)
       const dataReply: ReplyMessageData = {
         clan_id: this.channel.clan.id,
         mode: convertChanneltypeToChannelMode(this.channel.channel_type!),

@@ -8,7 +8,7 @@ import { SocketManager } from "../manager/socket_manager";
 import { SessionManager } from "../manager/session_manager";
 import { EventManager } from "../manager/event_manager";
 import { EventSourceManager } from "../manager/sse_manager";
-import { WebSocketAdapterPb } from "../../web_socket_adapter_pb";
+import { AbridgedTcpAdapter } from "../../abridged_tcp_adapter";
 import {
   AIAgentSessionStartedEvent,
   AIAgentSessionEndedEvent,
@@ -138,7 +138,7 @@ export class MezonClientCore extends EventEmitter {
       this.host,
       this.port,
       this.useSSL,
-      new WebSocketAdapterPb(),
+      new AbridgedTcpAdapter(),
       this.apiClient,
       this.messageQueue,
       this,

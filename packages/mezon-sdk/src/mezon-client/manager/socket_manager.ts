@@ -2,8 +2,8 @@ import { ErrorEvent, CloseEvent } from "ws";
 import { MezonApi } from "../../api";
 import { Events } from "../../constants";
 import { DefaultSocket } from "../../socket";
-import { WebSocketAdapter } from "../../web_socket_adapter";
-import { WebSocketAdapterPb } from "../../web_socket_adapter_pb";
+import { TransportAdapter } from "../../transport_adapter";
+import { AbridgedTcpAdapter } from "../../abridged_tcp_adapter";
 import { Socket } from "../../interfaces/socket";
 import { Session } from "../../session";
 import { Clan } from "../structures/Clan";
@@ -29,7 +29,7 @@ export class SocketManager {
     private host: string,
     private port: string,
     private useSSL: boolean,
-    private adapter: WebSocketAdapter,
+    private adapter: TransportAdapter,
     private apiClient: MezonApi,
     private messageQueue: AsyncThrottleQueue,
     private client: MezonClientCore,
@@ -47,7 +47,7 @@ export class SocketManager {
   }
 
   createSocket() {
-    this.adapter = new WebSocketAdapterPb();
+    this.adapter = new AbridgedTcpAdapter();
     this.socket = new DefaultSocket(
       this.ws_url,
       this.host,
@@ -99,9 +99,16 @@ export class SocketManager {
     try {
       const clans = await this.apiClient.listClanDescs(sessionToken);
       const clanList = clans?.clandesc ?? [];
-      clanList.push({ clan_id: "0", clan_name: "" });
+      console.log('clanList', clanList)
+      clanList.push({ clan_id: "-1", clan_name: "" });
       for (const clan of clanList) {
-        await this.socket.joinClanChat(clan.clan_id || "");
+        console.log('join clan: ',clan.clan_id)
+        try {
+          await this.socket.joinClanChat(clan.clan_id || "");
+        } catch (error) {
+          console.log('error', error)
+  
+        }
         await sleep(50);
         if (!this.client.clans.get(clan.clan_id!)) {
           const clanObj = new Clan(

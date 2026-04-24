@@ -9,6 +9,13 @@ import {
 } from "./client";
 import { Session } from "../session";
 import { EventEmitter } from "stream";
+import {
+  ChannelAppEvent,
+  IncomingCallPush,
+  ListDataSocket,
+  VoiceReactionSend,
+  WebrtcSignalingFwd,
+} from "../rtapi/realtime";
 
 /** An object which represents a connected user in the server. */
 export interface Presence {
@@ -919,6 +926,12 @@ export interface Socket {
   /** Join clan chat */
   joinClanChat(clan_id: string): Promise<ClanJoin>;
 
+  /** Start receiving status updates for users. */
+  followUsers(userIds: string[]): Promise<Status>;
+
+  /** Start receiving follower events. */
+  follower(): Promise<void>;
+
   /** Join a chat channel on the server. */
   joinChat(
     clan_id: string,
@@ -943,7 +956,13 @@ export interface Socket {
     is_public: boolean,    
     message_id: string,
     topic_id?: string,
+    has_attachment?: boolean,
+    mentions?: string,
+    references?: string,
   ): Promise<ChannelMessageAck>;
+
+  /** Stop receiving status updates for users. */
+  unfollowUsers(user_ids: string[]): Promise<void>;
 
   /** Update a chat message on a chat channel in the server. */
   updateChatMessage(
@@ -962,6 +981,24 @@ export interface Socket {
 
   /** Update the status for the current user online. */
   updateStatus(status?: string): Promise<void>;
+
+  /** Send a quick menu event. */
+  writeQuickMenuEvent(
+    menu_name: string,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    content?: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymous_message?: boolean,
+    mention_everyone?: boolean,
+    avatar?: string,
+    code?: number,
+    topic_id?: string,
+  ): Promise<QuickMenuEvent>;
 
   /** Send a chat message to a chat channel on the server. */
   writeEphemeralMessage(
@@ -1019,8 +1056,44 @@ export interface Socket {
     emoji: string,
     count: number,
     message_sender_id: string,
-    action_delete: boolean
+    action_delete: boolean,
+    topic_id?: string,
+    emoji_recent_id?: string,
+    sender_name?: string,
   ): Promise<ApiMessageReaction>;
+
+  /** Send voice reaction. */
+  writeVoiceReaction(
+    emojis: Array<string>,
+    channel_id: string,
+  ): Promise<VoiceReactionSend>;
+
+  /** Forward WebRTC signaling data. */
+  forwardWebrtcSignaling(
+    receiver_id: string,
+    data_type: number,
+    json_data: string,
+    channel_id: string,
+    caller_id: string,
+  ): Promise<WebrtcSignalingFwd>;
+
+  /** Push incoming call data. */
+  makeCallPush(
+    receiver_id: string,
+    json_data: string,
+    channel_id: string,
+    caller_id: string,
+  ): Promise<IncomingCallPush>;
+
+  /** Send channel app event. */
+  writeChannelAppEvent(
+    clan_id: string,
+    channel_id: string,
+    action: number,
+  ): Promise<ChannelAppEvent>;
+
+  /** Request list data over socket. */
+  listDataSocket(request: ListDataSocket): Promise<any>;
 
   /** Handle disconnect events received from the socket. */
   ondisconnect: (evt: CloseEvent) => void;
