@@ -561,7 +561,7 @@ export class Client {
               <AiAgentEnabledEvent>message.aiagent_enabled_event,
             );
           } else if (message.refresh_session_event) {
-            this.onrefreshsession(<ApiSession>message.refresh_session);
+            this.onrefreshsession(<ApiSession>message.refresh_session_event);
           } else if (message.pong) {
             if (this.verbose && window && window.console) {
               console.log("Pong message received: %o", message);
