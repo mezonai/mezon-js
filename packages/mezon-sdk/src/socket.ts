@@ -15,56 +15,14 @@
  */
 
 import WebSocket, { CloseEvent, ErrorEvent } from "ws";
-import {
-  ApiMessageAttachment,
-  ApiMessageMention,
-  ApiMessageReaction,
-  ApiMessageRef,
-  Channel,
-  ChannelDescListEvent,
-  ChannelJoin,
-  ChannelLeave,
-  ChannelMessageAck,
-  ChannelMessageRemove,
-  ChannelMessageSend,
-  ChannelMessageUpdate,
-  ClanJoin,
-  ClanNameExistedEvent,
-  CustomStatusEvent,
-  DropdownBoxSelected,
-  EmojiListedEvent,
-  HashtagDmListEvent,
-  LastPinMessageEvent,
-  LastSeenMessageEvent,
-  MessageTypingEvent,
-  NotificationCategorySettingEvent,
-  NotificationChannelSettingEvent,
-  NotificationClanSettingEvent,
-  NotifiReactMessageEvent,
-  Ping,
-  Rpc,
-  Socket,
-  SocketError,
-  StatusFollow,
-  StatusUnfollow,
-  StatusUpdate,
-  StrickerListedEvent,
-  TokenSentEvent,
-  VoiceJoinedEvent,
-  VoiceLeavedEvent,
-} from "./interfaces";
-import { Session } from "./session";
-import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
+import { ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, Channel, ChannelDescListEvent, ChannelMessageAck, ClanJoin, ClanNameExistedEvent, CustomStatusEvent, EmojiListedEvent, HashtagDmListEvent, LastPinMessageEvent, LastSeenMessageEvent, MessageTypingEvent, NotificationCategorySettingEvent, NotificationChannelSettingEvent, NotificationClanSettingEvent, NotifiReactMessageEvent, QuickMenuEvent, Socket, SocketError, Status, StrickerListedEvent, TokenSentEvent, VoiceJoinedEvent, VoiceLeavedEvent } from "./interfaces";
+import {Session} from "./session";
+import { WebSocketAdapterText } from "./web_socket_adapter";
+import { TransportAdapter } from "./transport_adapter";
 import { InternalEventsSocket } from "./constants";
 import { EventEmitter } from "stream";
-import HandleEvent from "./message-socket-events";
-import {
-  WebrtcSignalingFwd,
-  IncomingCallPush,
-  MessageButtonClicked,
-  ChannelAppEvent,
-  EphemeralMessageSend,
-} from "./rtapi/realtime";
+import HandleEvent from './message-socket-events';
+import { WebrtcSignalingFwd, IncomingCallPush, ChannelAppEvent, ListDataSocket, VoiceReactionSend } from "./rtapi/realtime";
 import { decodeAttachments, decodeMentions, decodeReactions, decodeRefs, safeJSONParse } from "./utils";
 
 export interface ChannelMessage {
@@ -130,6 +88,7 @@ export interface ChannelMessage {
 interface PromiseExecutor {
   resolve: (value?: any) => void;
   reject: (reason?: any) => void;
+  timeout?: ReturnType<typeof setTimeout>;
 }
 
 function CreateChannelMessageFromEvent(message: any) {
@@ -205,6 +164,208 @@ const ConnectionState = {
 
 type ConnectionState = (typeof ConnectionState)[keyof typeof ConnectionState];
 
+enum ApiNameEnum {
+  // HOT PATH
+  ListChannelDescs,
+  GetAccount,
+  ListClanDescs,
+  ListClanUsers,
+  ListRoles,
+  ListEvents,
+  GetRoleOfUserInTheClan,
+  GetListPermission,
+  ListUserPermissionInChannel,
+  GetNotificationClan,
+  ListMutedChannel,
+  ListStreamingChannelUsers,
+  ListQuickMenuAccess,
+  GetNotificationChannel,
+  ListFriends,
+  EmojiRecentList,
+  GetListEmojisByUserId,
+  ListChannelBadgeCount,
+  ListClanUsersStatus,
+  ListChannelApps,
+  GetListFavoriteChannel,
+  ListCategoryDescs,
+  ListOnboarding,
+  GetListStickersByUserId,
+  GetSystemMessageByClanId,
+  GetPinMessagesList,
+  GetChannelCanvasList,
+  ListChannelTimeline,
+  ListChannelMessages,
+  ListActivity,
+  ListChannelByUserId,
+  ListUserClansByUserId,
+  GetUserProfileOnClan,
+  RegistFCMDeviceToken,
+  IsBanned,
+  ListThreadDescs,
+  ListArchivedChannelDescs,
+  ListChannelDetail,
+  GetChannelCategoryNotiSettingsList,
+  ListRoleUsers,
+  ListChannelUsers,
+  ListChannelAttachment,
+  ListChannelVoiceUsers,
+  ListUserOnline,
+  ListNotifications,
+  ListChannelUsersUC,
+  ListWebhookByChannelId,
+  GetPermissionByRoleIdChannelId,
+  ListChannelSetting,
+  ListApps,
+  GetApp,
+  ListForSaleItems,
+  ListClanWebhook,
+  GetUserStatus,
+  ListSdTopic,
+  // COLD PATH
+  AddFriends,
+  AddChannelUsers,
+  RegistrationEmail,
+  BlockFriends,
+  UnblockFriends,
+  UploadAttachmentFile,
+  UploadOauthFile,
+  AddRolesChannelDesc,
+  CreateCategoryDesc,
+  CreateChannelDesc,
+  CreateRole,
+  CreateEvent,
+  DeleteRole,
+  DeleteEvent,
+  DeleteRoleChannelDesc,
+  DeleteChannelDesc,
+  CloseDMByChannelId,
+  OpenDMByChannelId,
+  DeleteAccount,
+  DeleteFriends,
+  DeleteCategoryDesc,
+  DeleteNotifications,
+  DeleteClanDesc,
+  UpdateUser,
+  UpdateUserProfileByClan,
+  UpdateClanOrder,
+  RemoveChannelUsers,
+  LeaveThread,
+  ArchiveChannel,
+  LinkSMS,
+  ConfirmLinkMezonOTP,
+  LinkEmail,
+  CreateClanDesc,
+  RemoveClanUsers,
+  BanClanUsers,
+  CreateLinkInviteUser,
+  InviteUser,
+  SetRoleChannelPermission,
+  SetNotificationChannelSetting,
+  SetMuteChannel,
+  SetMuteCategory,
+  SetNotificationClanSetting,
+  SetNotificationCategorySetting,
+  DeleteNotificationCategorySetting,
+  DeleteNotificationChannel,
+  CreatePinMessage,
+  CreateMessage2Inbox,
+  UnlinkMezon,
+  UnlinkEmail,
+  UpdateAccount,
+  UpdateUsername,
+  UpdateCategory,
+  UpdateCategoryOrder,
+  UpdateRoleOrder,
+  UpdateClanDesc,
+  UpdateChannelDesc,
+  UpdateChannelPrivate,
+  UpdateRole,
+  UpdateEvent,
+  SearchMessage,
+  CreateClanEmoji,
+  DeleteByIdClanEmoji,
+  UpdateClanEmojiById,
+  GenerateWebhook,
+  HandleWebhook,
+  UpdateWebhookById,
+  DeleteWebhookById,
+  AddClanSticker,
+  UpdateClanStickerById,
+  DeleteClanStickerById,
+  ChangeChannelCategory,
+  CheckDuplicateName,
+  AddApp,
+  DeleteApp,
+  UpdateApp,
+  AddAppToClan,
+  CreateSystemMessage,
+  UpdateSystemMessage,
+  DeleteSystemMessage,
+  StreamingServerCallback,
+  EditChannelCanvases,
+  GetChannelCanvasDetail,
+  DeleteChannelCanvas,
+  AddChannelFavorite,
+  RemoveChannelFavorite,
+  CreateActiviy,
+  GetPubKeys,
+  PushPubKey,
+  GetChanEncryptionMethod,
+  SetChanEncryptionMethod,
+  GetKeyServer,
+  ListAuditLog,
+  GetOnboardingDetail,
+  CreateOnboarding,
+  UpdateOnboarding,
+  DeleteOnboarding,
+  ListOnboardingStep,
+  UpdateOnboardingStep,
+  GenerateClanWebhook,
+  UpdateClanWebhookById,
+  DeleteClanWebhookById,
+  HandleClanWebhook,
+  UpdateUserStatus,
+  UpdateUserCustomStatus,
+  GetTopicDetail,
+  CreateSdTopic,
+  DeleteSdTopic,
+  CreateExternalMezonMeet,
+  GenerateMeetToken,
+  RemoveParticipantMezonMeet,
+  MuteParticipantMezonMeet,
+  CreateRoomChannelApps,
+  GetMezonOauthClient,
+  DeleteMezonOauthClient,
+  UpdateMezonOauthClient,
+  SearchThread,
+  GenerateHashChannelApps,
+  DeleteUserEvent,
+  AddUserEvent,
+  DeleteQuickMenuAccess,
+  AddQuickMenuAccess,
+  UpdateQuickMenuAccess,
+  TransferOwnership,
+  SendChannelMessage,
+  UpdateChannelMessage,
+  DeleteChannelMessage,
+  ReportMessageAbuse,
+  MessageButtonClick,
+  DropdownBoxSelected,
+  ActiveArchivedThread,
+  UpdateChannelTimeline,
+  AddAgentToChannel,
+  DisconnectAgent,
+  CreateChannelTimeline,
+  DetailChannelTimeline,
+  CreatePoll,
+  VotePoll,
+  ClosePoll,
+  GetPoll,
+  ReactChannelMessage,
+  MultipartUploadAttachmentFileStart,
+  MultipartUploadAttachmentFileFinish,
+}
+
 /** A socket connection to Mezon server implemented with the DOM's WebSocket API. */
 export class DefaultSocket implements Socket {
   public static readonly DefaultHeartbeatTimeoutMs = 10000;
@@ -219,8 +380,9 @@ export class DefaultSocket implements Socket {
   private _connectPromise?: Promise<Session>;
   private _heartbeatTimer?: ReturnType<typeof setTimeout>;
   private _hasConnectedOnce: boolean = false;
+  private _internalSocketEventsBound: boolean = false;
 
-  public socketEvents: EventEmitter = new EventEmitter();
+  public socketEvents : EventEmitter = new EventEmitter();
 
   public session: Session | undefined;
 
@@ -230,7 +392,7 @@ export class DefaultSocket implements Socket {
     readonly port: string,
     readonly useSSL: boolean = false,
     public verbose: boolean = false,
-    readonly adapter: WebSocketAdapter = new WebSocketAdapterText(),
+    readonly adapter: TransportAdapter = new WebSocketAdapterText(),
     readonly sendTimeoutMs: number = DefaultSocket.DefaultSendTimeoutMs,
   ) {
     this.cIds = {};
@@ -240,7 +402,13 @@ export class DefaultSocket implements Socket {
 
   generatecid(): number {
     const cid = this.nextCid;
-    ++this.nextCid;
+
+    if (this.nextCid >= 65535) {
+      this.nextCid = 1;
+    } else {
+      ++this.nextCid;
+    }
+
     return cid;
   }
 
@@ -261,11 +429,7 @@ export class DefaultSocket implements Socket {
     },
   };
 
-  connect(
-    session: Session,
-    createStatus: boolean = false,
-    connectTimeoutMs: number = DefaultSocket.DefaultConnectTimeoutMs,
-  ): Promise<Session> {
+  connect(session: Session, createStatus: boolean = false, connectTimeoutMs: number = DefaultSocket.DefaultConnectTimeoutMs, signal?: AbortSignal): Promise<Session> {
     this.session = session;
 
     if (this._connectionState === ConnectionState.CONNECTED && this.adapter.isOpen()) {
@@ -279,63 +443,22 @@ export class DefaultSocket implements Socket {
     this.clearConnectTimeout();
     this._connectionState = ConnectionState.CONNECTING;
 
-    const scheme = this.useSSL ? "wss://" : "ws://";
-    this.adapter.connect(scheme, this.ws_url, createStatus, session.token);
+    const { host, port } = this.resolveSocketAddress(session);
+    this.adapter.connect(host, port, createStatus, session.token, signal);
 
-    this.adapter.onClose = (evt: CloseEvent) => {
-      this.markDisconnected(evt);
-    };
-
-    this.adapter.onError = (evt: ErrorEvent) => {
-      this.markDisconnected(<CloseEvent>{}, false);
-      this.onerror(evt);
-    };
-
-    HandleEvent.forEach((cl) => {
-      const instance = new cl(this);
-      instance.excute();
-    });
-
-    this.adapter.onMessage = (message: any) => {
-      if (this.verbose) {
-        console.log("Response: %o", JSON.stringify(message));
-      }
-
-      /** Inbound message from server. */
-      if (!message.cid) {
-        for (const event in InternalEventsSocket) {
-          const fieldName = InternalEventsSocket[event as keyof typeof InternalEventsSocket];
-          if (
-            Object.prototype.toString.call(message) === "[object Object]" &&
-            message.hasOwnProperty(fieldName) &&
-            message[fieldName]
-          ) {
-            const input = this.formatFunction[fieldName]
-              ? this.formatFunction[fieldName]!(message)
-              : message[fieldName];
-
-            this.socketEvents.emit(fieldName, input);
-          }
-        }
-      } else {
-        const executor = this.cIds[message.cid];
-        if (!executor) {
-          if (this.verbose) {
-            console.error("No promise executor for message: %o", message);
-          }
-          return;
-        }
-        delete this.cIds[message.cid];
-
-        if (message.error) {
-          executor.reject(<SocketError>message.error);
-        } else {
-          executor.resolve(message);
-        }
-      }
-    };
+    this.bindInternalSocketEvents();
+    this.adapter.onMessage = (cid: number, code: number, message: any) =>
+      this.handleSocketMessage(cid, code, message);
 
     const connectPromise = new Promise<Session>((resolve, reject) => {
+      this.adapter.onClose = (evt: CloseEvent) => {
+        const wasConnecting = this._connectionState === ConnectionState.CONNECTING;
+        this.handleSocketClose(evt);
+        if (wasConnecting) {
+          reject(evt);
+        }
+      };
+
       this.adapter.onOpen = (evt: WebSocket.Event) => {
         if (this.verbose) {
           console.log(evt);
@@ -355,18 +478,18 @@ export class DefaultSocket implements Socket {
           this.onreconnect(evt);
         }
       };
-      const baseOnErrorHandler = this.adapter.onError;
-      this.adapter.onError = (evt: WebSocket.Event) => {
-        baseOnErrorHandler?.(evt as ErrorEvent);
-        if (this._connectionState === ConnectionState.CONNECTING) {
-          reject(evt);
-          this.adapter.close();
-        }
+
+      this.adapter.onError = (evt: ErrorEvent) => {
+        this.handleSocketError(evt);
+        reject(evt);
+        this.adapter.close();
       };
 
       this._connectTimeoutTimer = setTimeout(() => {
-        this.markDisconnected(<CloseEvent>{}, false);
+        this._connectionState = ConnectionState.DISCONNECTED;
+        this.stopHeartbeatLoop();
         this.adapter.close();
+        this._connectPromise = undefined;
         reject("The socket timed out when trying to connect.");
         this._connectTimeoutTimer = undefined;
       }, connectTimeoutMs);
@@ -376,8 +499,121 @@ export class DefaultSocket implements Socket {
     return this._connectPromise;
   }
 
+  private bindInternalSocketEvents(): void {
+    if (this._internalSocketEventsBound) return;
+
+    HandleEvent.forEach((cl) => {
+      const instance = new cl(this);
+      instance.excute();
+    });
+
+    this._internalSocketEventsBound = true;
+  }
+
+  private resolveSocketAddress(session: Session): { host: string; port: string } {
+    const socketUrl = session.ws_url || this.ws_url || `${this.host}:${this.port}`;
+    return this.parseSocketAddress(socketUrl);
+  }
+
+  private parseSocketAddress(socketUrl: string): { host: string; port: string } {
+    const defaultPort = this.port || (this.useSSL ? "443" : "80");
+
+    if (!socketUrl) {
+      return { host: this.host, port: defaultPort };
+    }
+
+    try {
+      const parsedUrl = new URL(socketUrl.includes("://") ? socketUrl : `tcp://${socketUrl}`);
+      return {
+        host: parsedUrl.hostname || this.host,
+        port: parsedUrl.port || defaultPort,
+      };
+    } catch {
+      const [host, port] = socketUrl.split(":");
+      return {
+        host: host || this.host,
+        port: port || defaultPort,
+      };
+    }
+  }
+
+  private handleSocketClose(evt: CloseEvent): void {
+    this._connectionState = ConnectionState.DISCONNECTED;
+    this.stopHeartbeatLoop();
+    this.clearConnectTimeout();
+    this._connectPromise = undefined;
+    this.ondisconnect(evt);
+  }
+
+  private handleSocketError(evt: ErrorEvent): void {
+    this._connectionState = ConnectionState.DISCONNECTED;
+    this.stopHeartbeatLoop();
+    this.clearConnectTimeout();
+    this._connectPromise = undefined;
+    this.onerror(evt);
+  }
+
+  private handleSocketMessage(cid: number, code: number, message: any): void {
+    if (this.verbose) {
+      console.log("Response: %o", message);
+    }
+
+    if (cid !== 0) {
+      this.resolveSocketResponse(cid, code, message);
+      return;
+    }
+
+    this.emitSocketEvents(message);
+  }
+
+  private resolveSocketResponse(cid: number, code: number, message: any): void {
+    const executor = this.cIds[cid];
+
+    if (!executor) {
+      if (this.verbose) {
+        console.error("No promise executor for message: %o", message);
+      }
+      return;
+    }
+
+    delete this.cIds[cid];
+    if (executor.timeout) {
+      clearTimeout(executor.timeout);
+    }
+
+    if (message?.error) {
+      executor.reject({
+        code,
+        error: <SocketError>message.error,
+      });
+      return;
+    }
+
+    executor.resolve({ code, message });
+  }
+
+  private emitSocketEvents(message: any): void {
+    if (!message || Object.prototype.toString.call(message) !== "[object Object]") {
+      return;
+    }
+
+    for (const fieldName of Object.values(InternalEventsSocket)) {
+      if (!Object.prototype.hasOwnProperty.call(message, fieldName) || !message[fieldName]) {
+        continue;
+      }
+
+      const input = this.formatFunction[fieldName]
+        ? this.formatFunction[fieldName]!(message)
+        : message[fieldName];
+
+      this.socketEvents.emit(fieldName, input);
+    }
+  }
+
   disconnect(fireDisconnectEvent: boolean = true) {
-    this.markDisconnected(<CloseEvent>{}, false);
+    this._connectionState = ConnectionState.DISCONNECTED;
+    this.stopHeartbeatLoop();
+    this.clearConnectTimeout();
     if (this.adapter.isOpen()) {
       this.adapter.close();
     }
@@ -386,11 +622,11 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  setHeartbeatTimeoutMs(ms: number) {
+  setHeartbeatTimeoutMs(ms : number) {
     this._heartbeatTimeoutMs = ms;
   }
 
-  getHeartbeatTimeoutMs(): number {
+  getHeartbeatTimeoutMs() :  number {
     return this._heartbeatTimeoutMs;
   }
 
@@ -418,85 +654,146 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  send(
-    message:
-      | ChannelJoin
-      | ChannelLeave
-      | ChannelMessageSend
-      | ChannelMessageUpdate
-      | CustomStatusEvent
-      | ChannelMessageRemove
-      | MessageTypingEvent
-      | LastSeenMessageEvent
-      | Rpc
-      | StatusFollow
-      | StatusUnfollow
-      | StatusUpdate
-      | Ping
-      | WebrtcSignalingFwd
-      | IncomingCallPush
-      | MessageButtonClicked
-      | DropdownBoxSelected
-      | ChannelAppEvent
-      | EphemeralMessageSend,
-    sendTimeout = DefaultSocket.DefaultSendTimeoutMs,
-  ): Promise<any> {
-    const untypedMessage = message as any;
+
+  getApiFromPath(apiPath: string) {
+    if (apiPath in ApiNameEnum) {
+      return ApiNameEnum[apiPath as keyof typeof ApiNameEnum];
+    }
+
+    return undefined;
+  }
+
+  send(data: any, sendTimeout = this.sendTimeoutMs): Promise<any> {
+    const { urlPath, fetchOptions } = data;
+    let untypedMessage = fetchOptions as any;
+
+    if (urlPath?.includes("/mezon.api.Mezon/")) {
+      const apiName = urlPath.substring(17);
+      untypedMessage = {
+        api_request_event: {
+          api_index: this.getApiFromPath(apiName),
+          api_name: apiName,
+          body: fetchOptions.body,
+        },
+      };
+    }
 
     return new Promise<void>((resolve, reject) => {
       if (!this.adapter.isOpen()) {
         reject("Socket connection has not been established yet.");
-      } else {
-        if (untypedMessage.channel_message_send) {
-          untypedMessage.channel_message_send.content = JSON.stringify(untypedMessage.channel_message_send.content);
-        } else if (untypedMessage.channel_message_update) {
-          untypedMessage.channel_message_update.content = JSON.stringify(untypedMessage.channel_message_update.content);
-        } else if (untypedMessage.ephemeral_message_send) {
-          untypedMessage.ephemeral_message_send.message.content = JSON.stringify(
-            untypedMessage.ephemeral_message_send.message?.content,
-          );
-        }
+        return;
+      }
 
-        const cid = this.generatecid();
-        this.cIds[cid] = { resolve, reject };
-        setTimeout(() => {
+      if (untypedMessage.channel_message_send) {
+        untypedMessage.channel_message_send.content = JSON.stringify(
+          untypedMessage.channel_message_send.content
+        );
+      } else if (untypedMessage.channel_message_update) {
+        untypedMessage.channel_message_update.content = JSON.stringify(
+          untypedMessage.channel_message_update.content
+        );
+      } else if (untypedMessage.ephemeral_message_send) {
+        untypedMessage.ephemeral_message_send.message.content =
+          JSON.stringify(
+            untypedMessage.ephemeral_message_send.message?.content
+          );
+      } else if (untypedMessage.quick_menu_event) {
+        untypedMessage.quick_menu_event.message.content = JSON.stringify(
+          untypedMessage.quick_menu_event.message?.content,
+        );
+      }
+
+      const cid = this.generatecid();
+      this.cIds[cid] = { resolve, reject };
+
+      if (sendTimeout !== Infinity && sendTimeout > 0) {
+        this.cIds[cid].timeout = setTimeout(() => {
+          delete this.cIds[cid];
           reject("The socket timed out while waiting for a response.");
         }, sendTimeout);
+      }
 
-        /** Add id for promise executor. */
-        untypedMessage.cid = cid;
+      untypedMessage.cid = cid;
+
+      try {
         this.adapter.send(untypedMessage);
+      } catch (error) {
+        if (this.cIds[cid]?.timeout) {
+          clearTimeout(this.cIds[cid].timeout);
+        }
+        delete this.cIds[cid];
+        reject(error);
       }
     });
   }
 
+  private sendRealtime<T>(fetchOptions: any, fallback: T): Promise<T> {
+    const urlPath = "";
+
+    return Promise.race([
+      this.send({ urlPath, fetchOptions }).then(async (_response) => fallback),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.sendTimeoutMs,
+        ),
+      ),
+    ]);
+  }
+
+
+  async followUsers(userIds: string[]): Promise<Status> {
+    const fetchOptions = {
+      status_follow: {
+        user_ids: userIds,
+      },
+    } as any;
+
+    return this.sendRealtime(fetchOptions, {} as Status);
+  }
+
   async joinClanChat(clan_id: string): Promise<ClanJoin> {
-    const response = await this.send({
+    const fetchOptions = {
       clan_join: {
         clan_id: clan_id,
       },
-    });
+    } as any;
 
-    return response.clan_join;
+    return this.sendRealtime(fetchOptions, {} as ClanJoin);
+  }
+
+  async follower(): Promise<void> {
+    const fetchOptions = {
+      follow_event: {},
+    } as any;
+
+    return this.sendRealtime(fetchOptions, {} as unknown as void);
   }
 
   async joinChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<Channel> {
-    const response = await this.send({
+    const fetchOptions = {
       channel_join: {
         clan_id: clan_id,
         channel_id: channel_id,
         channel_type: channel_type,
         is_public: is_public,
       },
-    });
+    } as any;
 
-    return response.channel;
+    return this.sendRealtime(fetchOptions, {} as Channel);
   }
 
   leaveChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<void> {
-    return this.send({
-      channel_leave: { clan_id: clan_id, channel_id: channel_id, channel_type: channel_type, is_public: is_public },
-    });
+    const fetchOptions = {
+      channel_leave: {
+        clan_id: clan_id,
+        channel_id: channel_id,
+        channel_type: channel_type,
+        is_public: is_public,
+      },
+    } as any;
+
+    return this.sendRealtime(fetchOptions, {} as unknown as void);
   }
 
   async removeChatMessage(
@@ -506,36 +803,39 @@ export class DefaultSocket implements Socket {
     is_public: boolean,
     message_id: string,
     topic_id?: string,
+    has_attachment?: boolean,
+    mentions?: string,
+    references?: string,
   ): Promise<ChannelMessageAck> {
-    const response = await this.send({
+    const fetchOptions = {
       channel_message_remove: {
         clan_id: clan_id,
         channel_id: channel_id,
         mode: mode,
         message_id: message_id,
         is_public: is_public,
+        has_attachment: has_attachment,
         topic_id: topic_id,
+        mentions: mentions,
+        references: references,
       },
-    });
+    } as any;
 
-    return response.channel_message_ack;
+    return this.sendRealtime(fetchOptions, {} as ChannelMessageAck);
   }
 
-  async updateChatMessage(
-    clan_id: string,
-    channel_id: string,
-    mode: number,
-    is_public: boolean,
-    message_id: string,
-    content: any,
-    mentions?: Array<ApiMessageMention>,
-    attachments?: Array<ApiMessageAttachment>,
-    create_time_seconds?: number,
-    hideEditted?: boolean,
-    topic_id?: string,
-    is_update_msg_topic?: boolean,
-  ): Promise<ChannelMessageAck> {
-    const response = await this.send({
+  unfollowUsers(user_ids: string[]): Promise<void> {
+    const fetchOptions = {
+      status_unfollow: {
+        user_ids: user_ids,
+      },
+    } as any;
+
+    return this.sendRealtime(fetchOptions, {} as unknown as void);
+  }
+
+  async updateChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, hideEditted?: boolean, topic_id?: string, is_update_msg_topic?: boolean): Promise<ChannelMessageAck> {
+    const fetchOptions = {
       channel_message_update: {
         clan_id: clan_id,
         channel_id: channel_id,
@@ -543,19 +843,65 @@ export class DefaultSocket implements Socket {
         content: content,
         mentions: mentions,
         attachments: attachments,
-        create_time_seconds: create_time_seconds,
         mode: mode,
         is_public: is_public,
         hide_editted: hideEditted,
         topic_id: topic_id,
         is_update_msg_topic: is_update_msg_topic,
       },
-    });
-    return response.channel_message_ack;
+    } as any;
+
+    return this.sendRealtime(fetchOptions, {} as ChannelMessageAck);
   }
 
   updateStatus(status?: string): Promise<void> {
-    return this.send({ status_update: { status: status } });
+    const fetchOptions = {
+      status_update: {
+        status: status,
+      },
+    } as any;
+
+    return this.sendRealtime(fetchOptions, {} as unknown as void);
+  }
+
+  async writeQuickMenuEvent(
+    menu_name: string,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymous_message?: boolean,
+    mention_everyone?: boolean,
+    avatar?: string,
+    code?: number,
+    topic_id?: string,
+  ): Promise<QuickMenuEvent> {
+    const fetchOptions = {
+      quick_menu_event: {
+        menu_name: menu_name,
+        message: {
+          clan_id: clan_id,
+          channel_id: channel_id,
+          mode: mode,
+          is_public: is_public,
+          content: content,
+          mentions: mentions,
+          attachments: attachments,
+          references: references,
+          anonymous_message: anonymous_message,
+          mention_everyone: mention_everyone,
+          avatar: avatar,
+          code: code,
+          topic_id: topic_id,
+        },
+      },
+    } as any;
+
+    return this.sendRealtime(fetchOptions, {} as QuickMenuEvent);
   }
 
   async writeEphemeralMessage(
@@ -573,54 +919,36 @@ export class DefaultSocket implements Socket {
     avatar?: string,
     code?: number,
     topic_id?: string,
-    message_id?: string,
+    message_id?: string
   ): Promise<ChannelMessageAck> {
-    try {
-      const receiverIds = Array.isArray(receiver_id) ? receiver_id : [receiver_id];
-      const response = await this.send({
-        ephemeral_message_send: {
-          receiver_ids: receiverIds,
-          message: {
-            clan_id: clan_id,
-            channel_id: channel_id,
-            mode: mode,
-            is_public: is_public,
-            content: content,
-            mentions: mentions ?? [],
-            attachments: attachments ?? [],
-            references: references ?? [],
-            anonymous_message: anonymous_message,
-            mention_everyone: mention_everyone,
-            avatar: avatar,
-            code: code,
-            topic_id: topic_id,
-            id: message_id,
-          },
-        },
-      });
-      return response.channel_message;
-    } catch (error) {
-      console.log("writeEphemeralMessage", error);
-      throw error;
-    }
+    const receiverIds = Array.isArray(receiver_id) ? receiver_id : [receiver_id];
+    const fetchOptions = {
+      ephemeral_message_send: {
+        receiver_ids: receiverIds,
+        message: {
+          clan_id: clan_id,
+          channel_id: channel_id,
+          mode: mode,
+          is_public: is_public,
+          content: content,
+          mentions: mentions ?? [],
+          attachments: attachments ?? [],
+          references: references ?? [],
+          anonymous_message: anonymous_message,
+          mention_everyone: mention_everyone,
+          avatar: avatar,
+          code: code,
+          topic_id: topic_id,
+          id: message_id
+        }
+      }
+    } as any;
+
+    return this.sendRealtime(fetchOptions, {} as ChannelMessageAck);
   }
 
-  async writeChatMessage(
-    clan_id: string,
-    channel_id: string,
-    mode: number,
-    is_public: boolean,
-    content: any,
-    mentions?: Array<ApiMessageMention>,
-    attachments?: Array<ApiMessageAttachment>,
-    references?: Array<ApiMessageRef>,
-    anonymous_message?: boolean,
-    mention_everyone?: boolean,
-    avatar?: string,
-    code?: number,
-    topic_id?: string,
-  ): Promise<ChannelMessageAck> {
-    const response = await this.send({
+  async writeChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?: boolean, avatar?: string, code?: number, topic_id?: string): Promise<ChannelMessageAck> {
+    const fetchOptions = {
       channel_message_send: {
         clan_id: clan_id,
         channel_id: channel_id,
@@ -633,11 +961,12 @@ export class DefaultSocket implements Socket {
         anonymous_message: anonymous_message,
         mention_everyone: mention_everyone,
         avatar: avatar,
-        code,
-        topic_id,
+        code: code,
+        topic_id: topic_id,
       },
-    });
-    return response.channel_message_ack;
+    } as any;
+
+    return this.sendRealtime(fetchOptions, {} as ChannelMessageAck);
   }
 
   async writeMessageReaction(
@@ -652,8 +981,11 @@ export class DefaultSocket implements Socket {
     count: number,
     message_sender_id: string,
     action_delete: boolean,
+    topic_id?: string,
+    emoji_recent_id?: string,
+    sender_name?: string,
   ): Promise<ApiMessageReaction> {
-    const response = await this.send({
+    const fetchOptions = {
       message_reaction_event: {
         id: id,
         clan_id: clan_id,
@@ -666,9 +998,13 @@ export class DefaultSocket implements Socket {
         count: count,
         message_sender_id: message_sender_id,
         action: action_delete,
+        topic_id: topic_id,
+        emoji_recent_id: emoji_recent_id,
+        sender_name: sender_name,
       },
-    });
-    return response.message_reaction_event;
+    } as any;
+
+    return this.sendRealtime(fetchOptions, {} as ApiMessageReaction);
   }
 
   async writeMessageTyping(
@@ -676,11 +1012,21 @@ export class DefaultSocket implements Socket {
     channel_id: string,
     mode: number,
     is_public: boolean,
+    sender_display_name?: string,
+    topic_id?: string,
   ): Promise<MessageTypingEvent> {
-    const response = await this.send({
-      message_typing_event: { clan_id: clan_id, channel_id: channel_id, mode: mode, is_public: is_public },
-    });
-    return response.message_typing_event;
+    const fetchOptions = {
+      message_typing_event: {
+        clan_id: clan_id,
+        channel_id: channel_id,
+        mode: mode,
+        is_public: is_public,
+        sender_display_name: sender_display_name,
+        topic_id: topic_id,
+      },
+    } as any;
+
+    return this.sendRealtime(fetchOptions, {} as MessageTypingEvent);
   }
 
   async writeLastSeenMessage(
@@ -689,17 +1035,20 @@ export class DefaultSocket implements Socket {
     mode: number,
     message_id: string,
     timestamp_seconds: number,
+    badge_count?: number,
   ): Promise<LastSeenMessageEvent> {
-    const response = await this.send({
+    const fetchOptions = {
       last_seen_message_event: {
         clan_id: clan_id,
         channel_id: channel_id,
         mode: mode,
         message_id: message_id,
         timestamp_seconds: timestamp_seconds,
+        badge_count: badge_count,
       },
-    });
-    return response.last_seen_message_event;
+    } as any;
+
+    return this.sendRealtime(fetchOptions, {} as LastSeenMessageEvent);
   }
 
   async writeLastPinMessage(
@@ -710,8 +1059,14 @@ export class DefaultSocket implements Socket {
     message_id: string,
     timestamp_seconds: number,
     operation: number,
+    message_sender_avatar?: string,
+    message_sender_id?: string,
+    message_sender_username?: string,
+    message_content?: string,
+    message_attachment?: string,
+    message_created_time?: string,
   ): Promise<LastPinMessageEvent> {
-    const response = await this.send({
+    const fetchOptions = {
       last_pin_message_event: {
         clan_id: clan_id,
         channel_id: channel_id,
@@ -720,21 +1075,20 @@ export class DefaultSocket implements Socket {
         message_id: message_id,
         timestamp_seconds: timestamp_seconds,
         operation: operation,
+        message_sender_avatar: message_sender_avatar,
+        message_sender_id: message_sender_id,
+        message_sender_username: message_sender_username,
+        message_content: message_content,
+        message_attachment: message_attachment,
+        message_created_time: message_created_time,
       },
-    });
-    return response.last_pin_message_event;
+    } as any;
+
+    return this.sendRealtime(fetchOptions, {} as LastPinMessageEvent);
   }
 
-  async writeVoiceJoined(
-    id: string,
-    clanId: string,
-    clanName: string,
-    voiceChannelId: string,
-    voiceChannelLabel: string,
-    participant: string,
-    lastScreenshot: string,
-  ): Promise<VoiceJoinedEvent> {
-    const response = await this.send({
+  async writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string): Promise<VoiceJoinedEvent> {
+    const fetchOptions = {
       voice_joined_event: {
         clan_id: clanId,
         clan_name: clanName,
@@ -744,70 +1098,161 @@ export class DefaultSocket implements Socket {
         voice_channel_label: voiceChannelLabel,
         last_screenshot: lastScreenshot,
       },
-    });
-    return response.voice_joined_event;
+    } as any;
+
+    return this.sendRealtime(fetchOptions, {} as VoiceJoinedEvent);
   }
 
-  async writeVoiceLeaved(
-    id: string,
-    clanId: string,
-    voiceChannelId: string,
-    voiceUserId: string,
-  ): Promise<VoiceLeavedEvent> {
-    const response = await this.send({
-      voice_leaved_event: { id: id, clan_id: clanId, voice_channel_id: voiceChannelId, voice_user_id: voiceUserId },
-    });
-    return response.voice_leaved_event;
+  async writeVoiceLeaved(id: string, clanId: string, voiceChannelId: string, voiceUserId: string): Promise<VoiceLeavedEvent> {
+    const fetchOptions = {
+      voice_leaved_event: {
+        id: id,
+        clan_id: clanId,
+        voice_channel_id: voiceChannelId,
+        voice_user_id: voiceUserId,
+      },
+    } as any;
+
+    return this.sendRealtime(fetchOptions, {} as VoiceLeavedEvent);
   }
 
-  async writeCustomStatus(clan_id: string, status: string): Promise<CustomStatusEvent> {
-    const response = await this.send({ custom_status_event: { clan_id: clan_id, status: status } });
-    return response.custom_status_event;
+  async writeCustomStatus(
+    clan_id: string,
+    status: string,
+    time_reset?: number,
+    no_clear?: boolean,
+  ): Promise<CustomStatusEvent> {
+    const fetchOptions = {
+      custom_status_event: {
+        clan_id: clan_id,
+        status: status,
+        time_reset: time_reset,
+        no_clear: no_clear,
+      },
+    } as any;
+
+    return this.sendRealtime(fetchOptions, {} as CustomStatusEvent);
   }
 
   async checkDuplicateClanName(clan_name: string): Promise<ClanNameExistedEvent> {
-    const response = await this.send({ clan_name_existed_event: { clan_name: clan_name } });
-    return response.clan_name_existed_event;
+    const fetchOptions = { clan_name_existed_event: { clan_name: clan_name } } as any;
+    return this.sendRealtime(fetchOptions, {} as ClanNameExistedEvent);
   }
 
   async listClanEmojiByClanId(clan_id: string): Promise<EmojiListedEvent> {
-    const response = await this.send({ emojis_listed_event: { clan_id: clan_id } });
-    return response.emojis_listed_event;
+    const fetchOptions = { emojis_listed_event: { clan_id: clan_id } } as any;
+    return this.sendRealtime(fetchOptions, {} as EmojiListedEvent);
   }
 
   async ListChannelByUserId(): Promise<ChannelDescListEvent> {
-    const response = await this.send({ channel_desc_list_event: {} });
-    return response.channel_desc_list_event;
+    const fetchOptions = { channel_desc_list_event: {} } as any;
+    return this.sendRealtime(fetchOptions, {} as ChannelDescListEvent);
   }
 
   async hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent> {
-    const response = await this.send({ hashtag_dm_list_event: { user_id: user_id, limit: limit } });
-    return response.hashtag_dm_list_event;
+    const fetchOptions = { hashtag_dm_list_event: { user_id: user_id, limit: limit } } as any;
+    return this.sendRealtime(fetchOptions, {} as HashtagDmListEvent);
   }
 
   async listClanStickersByClanId(clan_id: string): Promise<StrickerListedEvent> {
-    const response = await this.send({ sticker_listed_event: { clan_id: clan_id } });
-    return response.sticker_listed_event;
+    const fetchOptions = { sticker_listed_event: { clan_id: clan_id } } as any;
+    return this.sendRealtime(fetchOptions, {} as StrickerListedEvent);
   }
 
-  async getNotificationChannelSetting(channel_id: string): Promise<NotificationChannelSettingEvent> {
-    const response = await this.send({ notification_channel_setting_event: { channel_id: channel_id } });
-    return response.notification_channel_setting_event;
+  async  getNotificationChannelSetting(channel_id: string): Promise<NotificationChannelSettingEvent> {
+    const fetchOptions = { notification_channel_setting_event: { channel_id: channel_id } } as any;
+    return this.sendRealtime(fetchOptions, {} as NotificationChannelSettingEvent);
   }
 
   async getNotificationCategorySetting(category_id: string): Promise<NotificationCategorySettingEvent> {
-    const response = await this.send({ notification_category_setting_event: { category_id: category_id } });
-    return response.notification_category_setting_event;
+    const fetchOptions = { notification_category_setting_event: { category_id: category_id } } as any;
+    return this.sendRealtime(fetchOptions, {} as NotificationCategorySettingEvent);
   }
 
   async getNotificationClanSetting(clan_id: string): Promise<NotificationClanSettingEvent> {
-    const response = await this.send({ notification_clan_setting_event: { clan_id: clan_id } });
-    return response.notification_clan_setting_event;
+    const fetchOptions = { notification_clan_setting_event: { clan_id: clan_id } } as any;
+    return this.sendRealtime(fetchOptions, {} as NotificationClanSettingEvent);
   }
 
   async getNotificationReactMessage(channel_id: string): Promise<NotifiReactMessageEvent> {
-    const response = await this.send({ notifi_react_message_event: { channel_id: channel_id } });
-    return response.notifi_react_message_event;
+    const fetchOptions = { notifi_react_message_event: { channel_id: channel_id } } as any;
+    return this.sendRealtime(fetchOptions, {} as NotifiReactMessageEvent);
+  }
+
+  async writeVoiceReaction(
+    emojis: Array<string>,
+    channel_id: string,
+  ): Promise<VoiceReactionSend> {
+    const fetchOptions = {
+      voice_reaction_send: {
+        emojis: emojis,
+        channel_id: channel_id,
+      },
+    } as any;
+
+    return this.sendRealtime(fetchOptions, {} as VoiceReactionSend);
+  }
+
+  async forwardWebrtcSignaling(
+    receiver_id: string,
+    data_type: number,
+    json_data: string,
+    channel_id: string,
+    caller_id: string,
+  ): Promise<WebrtcSignalingFwd> {
+    const fetchOptions = {
+      webrtc_signaling_fwd: {
+        receiver_id: receiver_id,
+        data_type: data_type,
+        json_data: json_data,
+        channel_id: channel_id,
+        caller_id: caller_id,
+      },
+    } as any;
+
+    return this.sendRealtime(fetchOptions, {} as WebrtcSignalingFwd);
+  }
+
+  async makeCallPush(
+    receiver_id: string,
+    json_data: string,
+    channel_id: string,
+    caller_id: string,
+  ): Promise<IncomingCallPush> {
+    const fetchOptions = {
+      incoming_call_push: {
+        receiver_id: receiver_id,
+        json_data: json_data,
+        channel_id: channel_id,
+        caller_id: caller_id,
+      },
+    } as any;
+
+    return this.sendRealtime(fetchOptions, {} as IncomingCallPush);
+  }
+
+  async writeChannelAppEvent(
+    clan_id: string,
+    channel_id: string,
+    action: number,
+  ): Promise<ChannelAppEvent> {
+    const fetchOptions = {
+      channel_app_event: {
+        clan_id: clan_id,
+        channel_id: channel_id,
+        action: action,
+      },
+    } as any;
+
+    return this.sendRealtime(fetchOptions, {} as ChannelAppEvent);
+  }
+
+  async listDataSocket(request: ListDataSocket): Promise<any> {
+    const fetchOptions = {
+      list_data_socket: request,
+    } as any;
+
+    return this.sendRealtime(fetchOptions, {} as any);
   }
 
   private startHeartbeatLoop(): void {
@@ -829,46 +1274,41 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  private markDisconnected(evt: CloseEvent = <CloseEvent>{}, fireDisconnectEvent: boolean = true): boolean {
-    const wasAlreadyDisconnected = this._connectionState === ConnectionState.DISCONNECTED;
-    this._connectionState = ConnectionState.DISCONNECTED;
-    this.stopHeartbeatLoop();
-    this.clearConnectTimeout();
-    this._connectPromise = undefined;
-
-    if (fireDisconnectEvent && !wasAlreadyDisconnected) {
-      this.ondisconnect(evt);
-    }
-
-    return !wasAlreadyDisconnected;
-  }
-
   private async pingPong(): Promise<void> {
     if (!this.adapter.isOpen()) {
-      return;
+        return;
     }
 
     try {
-      await this.send({ ping: {} }, this._heartbeatTimeoutMs);
+        await this.send(
+          {
+            urlPath: "",
+            fetchOptions: { ping: {} },
+          },
+          this._heartbeatTimeoutMs,
+        );
     } catch {
-      if (this.verbose) {
-        console.error("Server unreachable from heartbeat222.");
-      }
-      this.onheartbeattimeout();
+        if (this.adapter.isOpen()) {
+            if (this.verbose) {
+                console.error("Server unreachable from heartbeat.");
+            }
+            this.onheartbeattimeout();
+            this.adapter.close();
+        }
 
-      if (this.adapter.isOpen()) {
-        this.adapter.close();
-      } else {
-        this.markDisconnected();
-      }
-
-      return;
+        return;
     }
     this._heartbeatTimer = setTimeout(() => this.pingPong(), this._heartbeatTimeoutMs);
   }
 
-  async sendToken(receiver_id: string, amount: number): Promise<TokenSentEvent> {
-    const response = await this.send({ token_sent_event: { receiver_id: receiver_id, amount: amount } });
-    return response.token_sent_event;
+  async sendToken(receiver_id: string, amount: number) : Promise<TokenSentEvent> {
+    const fetchOptions = {
+      token_sent_event: {
+        receiver_id: receiver_id,
+        amount: amount,
+      },
+    } as any;
+
+    return this.sendRealtime(fetchOptions, {} as TokenSentEvent);
   }
-}
+};
