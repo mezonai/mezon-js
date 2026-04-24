@@ -155,7 +155,7 @@ export class MezonNetworkAdapter implements TransportAdapter {
         const uintBuffer = new Uint8Array(payload);
         const envelope = tsproto.Envelope.decode(uintBuffer);
 
-        this._onMessage(Number(envelope.cid), 0, envelope);
+        this._onMessage(envelope.cid, 0, envelope);
       } catch (err) {
         console.error("TCP Protobuf Decode Error:", err);
       }

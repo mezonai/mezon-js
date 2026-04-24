@@ -430,7 +430,7 @@ export class MezonTransport {
     this.nextCid = 1;
 
     this.basePath = basePath;
-    this.adapter = new MezonNetworkAdapter();    
+    this.adapter = new MezonNetworkAdapter();
   }
 
   setOnOpen(onopen: (evt: Event) => void) {
@@ -498,7 +498,7 @@ export class MezonTransport {
         }
         delete this.cIds[cid];
         if (message.error) {
-          executor.reject(message.error);
+          executor.reject({ code: code, error: message.error });
         } else {
           executor.resolve({ code, message });
         }
@@ -556,7 +556,7 @@ export class MezonTransport {
           }, sendTimeout);
         }
 
-        untypedMessage.cid = cid.toString();
+        untypedMessage.cid = cid;
         this.adapter.send(untypedMessage);
       }
     });
@@ -2932,9 +2932,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        if (response.status >= 200 && response.status < 300) {
+        if (response.code == 0) {
           return tsproto.CheckDuplicateNameResponse.decode(
-            response,
+            response.message,
           ) as ApiCheckDuplicateNameResponse;
         } else {
           throw response;
@@ -8378,10 +8378,7 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then((response) => {
-        if (
-          response.status == 204 ||
-          (response.status >= 200 && response.status < 300)
-        ) {
+        if (response.code == 0) {
           return {};
         } else {
           throw response;
