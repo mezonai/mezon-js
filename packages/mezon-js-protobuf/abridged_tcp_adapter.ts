@@ -105,6 +105,10 @@ export class MezonNetworkAdapter implements TransportAdapter {
       if (prefix === PREFIX_RAW) {
         const cid = data.readUInt16BE(1); // Bytes 1-2
         const code = data.readInt32BE(CODE_LENGTH); // Bytes 3-6 (e.g. 3,4,5,6)
+        if (data.length < RAW_HEADER_LENGTH + 4) {
+          this._onMessage!(cid, code, []);
+          return;
+        }
         const payloadLen = data.readInt32BE(RAW_HEADER_LENGTH); // Bytes 7-10
         const payload = data.subarray(
           PAYLOAD_LENGTH,
@@ -232,4 +236,3 @@ export class MezonNetworkAdapter implements TransportAdapter {
     this._socket = undefined;
   }
 }
-
