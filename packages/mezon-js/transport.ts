@@ -447,7 +447,13 @@ export class MezonTransport {
 
   generatecid(): number {
     const cid = this.nextCid;
-    ++this.nextCid;
+
+    if (this.nextCid >= 65535) {
+      this.nextCid = 1;
+    } else {
+      ++this.nextCid;
+    }
+
     return cid;
   }
 
