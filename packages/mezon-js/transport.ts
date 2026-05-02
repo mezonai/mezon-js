@@ -96,6 +96,7 @@ import {
   ApiListChannelBadgeCountResponse,
   ApiListChannelTimelineRequest,
   ApiListChannelTimelineResponse,
+  ApiListClanBadgeCountResponse,
   ApiListClanDiscover,
   ApiListClanWebhookResponse,
   ApiListFavoriteChannelResponse,
@@ -2472,6 +2473,29 @@ export class MezonTransport {
         ),
       ),
     ]);
+  }
+
+  listClanBadgeCount(): Promise<ApiListClanBadgeCountResponse> {
+    const urlPath = "/mezon.api.Mezon/ListClanBadgeCount";
+
+    const fetchOptions = {}
+
+    return Promise.race([
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          return {} as ApiListClanBadgeCountResponse;
+        }
+        return tsproto.ListClanBadgeCountResponse.decode(
+          response.message,
+        ) as ApiListClanBadgeCountResponse;
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs,
+        ),
+      ),
+    ]);  
   }
 
   /** Paged list of channel unread/badge metadata (HTTP counterpart to socket ListChannelBadgeCount). */
