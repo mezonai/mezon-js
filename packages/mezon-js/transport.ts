@@ -8317,7 +8317,11 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        const decoded = tsproto.CreatePollResponse.decode(response);
+        if (response.code != 0) {
+          return {} as ApiCreatePollResponse;
+        }
+        
+        const decoded = tsproto.CreatePollResponse.decode(response.message);
         return {
           poll_id: decoded.poll_id,
           message_id: decoded.message_id,
