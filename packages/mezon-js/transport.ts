@@ -9124,7 +9124,12 @@ export class MezonTransport {
     } as any;
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return response as any;
+        if (response.code != 0) {
+          return {} as tsproto.LogedDeviceList;
+        }
+        return tsproto.LogedDeviceList.decode(
+          response.message,
+        ) as tsproto.LogedDeviceList;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
