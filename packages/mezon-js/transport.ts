@@ -183,7 +183,6 @@ import {
   IncomingCallPush,
   LastPinMessageEvent,
   LastSeenMessageEvent,
-  ListDataSocket,
   MessageTypingEvent,
   MezonapiCreateRoomChannelApps,
   MezonapiListAuditLog,
@@ -6979,6 +6978,7 @@ export class MezonTransport {
       ),
     ]);
   }
+  
   /**  */
   generateHashChannelApps(
     appId?: string,
@@ -9118,10 +9118,9 @@ export class MezonTransport {
     ]);
   }
 
-  async listDataSocket(request: ListDataSocket): Promise<any> {
-    const urlPath = "";
+  async listLogedDevice(): Promise<tsproto.LogedDeviceList> {
+    const urlPath = "/mezon.api.Mezon/ListLogedDevice";
     const fetchOptions = {
-      list_data_socket: request,
     } as any;
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {

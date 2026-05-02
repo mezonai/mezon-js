@@ -254,7 +254,6 @@ import {
   ApiUpdateChannelDescRequest,
   ApiUpdateClanProfileRequest,
   ApiUpdateRoleRequest,
-  ListDataSocket,
   IncomingCallPush,
   Channel,
   ClanJoin,
@@ -273,6 +272,7 @@ import {
 import {
   ChannelMessageAck,
   DropdownBoxSelected,
+  LogedDeviceList,
   MessageButtonClicked,
   MultipartUploadAttachment,
   MultipartUploadAttachmentFinishRequest,
@@ -6358,16 +6358,15 @@ export class Client {
     return this.transport.writeChannelAppEvent(clan_id, channel_id, action);
   }
 
-  async listDataSocket(
-    session: ApiSession,
-    request: ListDataSocket,
-  ): Promise<any> {
+  async listLogedDevice(
+    session: ApiSession
+  ): Promise<LogedDeviceList> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
     ) {
       await this.transport.setFallbackSession(session);
     }
-    return this.transport.listDataSocket(request);
+    return this.transport.listLogedDevice();
   }
 }
