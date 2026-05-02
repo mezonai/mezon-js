@@ -248,7 +248,6 @@ export class MezonClientCore extends EventEmitter {
           await this.socketManager.connectSocket(sessionConnected.token);
           await this.channelManager.initAllDmChannels(sessionConnected.token);
         }
-        this._connectMezonAgentSSE();
         this.emit("ready");
         return JSON.stringify(sessionApi ?? {});
       } finally {
@@ -621,7 +620,7 @@ export class MezonClientCore extends EventEmitter {
     clan.channels.set(e.channel_id!, channelObj);
   }
 
-  protected _connectMezonAgentSSE(): void {
+  connectMezonAgentSSE(): void {
     if (!this._agentManager) {
       return;
     }
