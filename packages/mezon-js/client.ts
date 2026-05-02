@@ -258,6 +258,7 @@ import {
   Channel,
   ClanJoin,
   Status,
+  ApiListClanBadgeCountResponse,
 } from "./types";
 
 import {
@@ -2252,6 +2253,23 @@ export class Client {
         result.clandesc = response.clandesc;
         return Promise.resolve(result);
       });
+  }
+
+  async listClanBadgeCount(
+    session: ApiSession
+  ): Promise<ApiListClanBadgeCountResponse> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport
+      .listClanBadgeCount()
+      .then((response: ApiListClanBadgeCountResponse) => ({
+        list_badge: response.list_badge ?? [],
+      }));
   }
 
   /** Paged channel badge/unread list (HTTP). */
