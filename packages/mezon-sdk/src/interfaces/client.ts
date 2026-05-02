@@ -18,9 +18,7 @@ export interface ApiChannelDescription {
   /** The category name */
   category_name: string;
   /** The channel type. */
-  type:
-    | number
-    | undefined;
+  type: number | undefined;
   /** creator ID. */
   creator_id: string;
   /** The channel lable */
@@ -32,13 +30,9 @@ export interface ApiChannelDescription {
   /** List DM user ids */
   user_ids: string[];
   /** last message id */
-  last_sent_message:
-    | ChannelMessageHeader
-    | undefined;
+  last_sent_message: ChannelMessageHeader | undefined;
   /** last seen message id */
-  last_seen_message:
-    | ChannelMessageHeader
-    | undefined;
+  last_seen_message: ChannelMessageHeader | undefined;
   /** DM status */
   onlines: boolean[];
   /** meeting code */
@@ -137,7 +131,7 @@ export interface EphemeralMessageData {
   avatar?: string;
   code?: number;
   topic_id?: string;
-  message_id?: string
+  message_id?: string;
 }
 
 export interface ReplyMessageData {
@@ -954,17 +948,17 @@ export interface RoomMetadataEvent {
 
 /** Session started event - Room starts */
 export interface AIAgentSessionStartedEvent extends RoomMetadataEvent {
-  event_type: 'room_started';
+  event_type: "room_started";
 }
 
 /** Session ended event - Room ends */
 export interface AIAgentSessionEndedEvent extends RoomMetadataEvent {
-  event_type: 'room_ended';
+  event_type: "room_ended";
 }
 
 /** Session summary done event - Room summary completed */
 export interface AIAgentSessionSummaryDoneEvent extends RoomMetadataEvent {
-  event_type: 'room_summary_done';
+  event_type: "room_summary_done";
 }
 
 export interface Client {
@@ -977,7 +971,7 @@ export interface Client {
     msg: ChannelMessageContent,
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
-    ref?: Array<ApiMessageRef>
+    ref?: Array<ApiMessageRef>,
   ) => Promise<ChannelMessageAck>;
   on: (event: Events, func: Function) => void;
   remove: (event: string, func: (...args: any[]) => void) => void;
@@ -986,6 +980,6 @@ export interface Client {
     msg: string,
     messOptions: { [x: string]: any },
     attachments: Array<ApiMessageAttachment>,
-    refs: Array<ApiMessageRef>
+    refs: Array<ApiMessageRef>,
   ) => Promise<ChannelMessageAck>;
 }
