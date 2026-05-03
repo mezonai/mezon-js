@@ -1014,8 +1014,7 @@ export interface Session {
   /** ws_url */
   ws_url: string;
   /** session id */
-  session_id: string;
-  /** abridged url */
+  session_id: string;  /** abridged url */
   tcp_url: string;
 }
 
