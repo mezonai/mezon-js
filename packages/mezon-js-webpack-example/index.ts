@@ -20,7 +20,7 @@ var useSSL = true; // Enable if server is run with an SSL certificate.
 var client = new Client("defaultkey", "dev-mezon.nccsoft.vn", "8088", useSSL);
 
 client
-    .authenticateEmail("nguyentran@ncc.asia", "C0nandoiner123$")
+    .authenticateEmail("nguyentran@ncc.asia", "xxxxxxxxxx")
     .then(async session => {
         console.log("session", session);
 
