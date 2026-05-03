@@ -294,7 +294,39 @@ export const ConnectionState = {
 export type ConnectionStateType =
   (typeof ConnectionState)[keyof typeof ConnectionState];
 
-let __hasConnectedOnce = false;
+
+function createEvent(type: string): Event {
+  if (typeof Event === "function") {
+    return new Event(type);
+  }
+  return {
+    type,
+    target: null,
+    currentTarget: null,
+    bubbles: false,
+    cancelable: false,
+    defaultPrevented: false,
+    timeStamp: Date.now(),
+    preventDefault: () => {},
+    stopPropagation: () => {},
+    stopImmediatePropagation: () => {},
+  } as unknown as Event;
+}
+
+export interface AutoReconnectOptions {
+  enabled?: boolean;
+  maxAttempts?: number;
+  baseDelayMs?: number;
+  maxDelayMs?: number;
+}
+
+interface LastConnectArgs {
+  session_id: string;
+  url: string;
+  createStatus: boolean;
+  verbose: boolean;
+  connectTimeoutMs: number;
+}
 
 /** A client for Mezon server. */
 export class Client {
@@ -307,7 +339,18 @@ export class Client {
   private _heartbeatTimer?: ReturnType<typeof setTimeout>;
   private _connectTimeoutTimer?: ReturnType<typeof setTimeout>;
   private _connectPromise?: Promise<void>;
+  private _connectReject?: (reason?: any) => void;
+  private _hasConnectedOnce: boolean = false;
   private readonly transport: MezonTransport;
+
+  private _autoReconnect: boolean = true;
+  private _maxReconnectAttempts: number = Infinity;
+  private _reconnectBaseDelayMs: number = 1000;
+  private _reconnectMaxDelayMs: number = 30000;
+  private _reconnectAttempts: number = 0;
+  private _reconnectTimer?: ReturnType<typeof setTimeout>;
+  private _lastConnectArgs?: LastConnectArgs;
+  private _intentionallyClosed: boolean = false;
 
   host: string;
   port: string;
@@ -346,21 +389,52 @@ export class Client {
   ): Promise<void> {
     this.verbose = verbose;
 
-    if (this._connectionState === ConnectionState.CONNECTED) {
+    const sameTarget =
+      this._lastConnectArgs?.session_id === session_id &&
+      this._lastConnectArgs?.url === url;
+
+    // Idempotent: already connected to the same target with a live socket.
+    if (
+      this._connectionState === ConnectionState.CONNECTED &&
+      this.transport.adapter.isOpen() &&
+      sameTarget
+    ) {
       return Promise.resolve();
     }
 
+    // Currently connecting to the same target -> share the in-flight promise.
     if (
       this._connectionState === ConnectionState.CONNECTING &&
-      this._connectPromise
+      this._connectPromise &&
+      sameTarget
     ) {
       return this._connectPromise;
     }
 
-    this.clearConnectTimeout();
-    this._connectionState = ConnectionState.CONNECTING;
+    // Connected/connecting to a DIFFERENT target (e.g. session refreshed,
+    // url changed) OR connection state is stale (state says CONNECTED but
+    if (
+      this._connectionState === ConnectionState.CONNECTED ||
+      this._connectionState === ConnectionState.CONNECTING
+    ) {
+      this.transport.close();
+      this.markDisconnected(createEvent("close"), false);
+    }
 
-    this.transport.connect(
+    this.clearConnectTimeout();
+    this.clearReconnectTimer();
+    this._intentionallyClosed = false;
+    this._connectionState = ConnectionState.CONNECTING;
+    this._lastConnectArgs = {
+      session_id,
+      url,
+      createStatus,
+      verbose,
+      connectTimeoutMs,
+    };
+
+    try {
+      this.transport.connect(
       session_id,
       url,
       createStatus,
@@ -575,51 +649,72 @@ export class Client {
         }
       },
       async (evt: Event) => {
-        this._connectionState = ConnectionState.DISCONNECTED;
-        this.stopHeartbeatLoop();
-        this.clearConnectTimeout();
-        this.ondisconnect(evt);
+        const wasConnecting =
+          this._connectionState === ConnectionState.CONNECTING;
+        this.markDisconnected(evt);
+        if (wasConnecting && this._connectReject) {
+          const reject = this._connectReject;
+          this._connectReject = undefined;
+          reject(
+            new Error("Socket closed before connection was established."),
+          );
+        }
+        this.scheduleReconnect();
       },
     );
+    } catch (err) {
+      console.log(err, 'err socket');
+      const errEvent = createEvent("error");
+      this.onerror(errEvent);
+      this.markDisconnected(errEvent);
+      this.scheduleReconnect();
+      return Promise.reject(
+        err instanceof Error ? err : new Error(String(err)),
+      );
+    }
 
     const connectPromise = new Promise<void>((resolve, reject) => {
+      this._connectReject = reject;
+
       this.transport.setOnOpen((evt: Event) => {
-        if (this.verbose && window && window.console) {
+        if (this.verbose && typeof console !== "undefined") {
           console.log(evt);
         }
 
-        const isReconnect = __hasConnectedOnce;
-        __hasConnectedOnce = true;
+        const isReconnect = this._hasConnectedOnce;
+        this._hasConnectedOnce = true;
 
         this.clearConnectTimeout();
+        this._reconnectAttempts = 0;
         this._connectionState = ConnectionState.CONNECTED;
         this.startHeartbeatLoop();
         this._connectPromise = undefined;
-
+        this._connectReject = undefined;
         resolve();
-
         if (isReconnect) {
           this.onreconnect(evt);
         }
+        else {
+          this.onconnect(evt);
+        }
       });
       this.transport.setOnError((evt: Event) => {
-        this._connectionState = ConnectionState.DISCONNECTED;
-        this.stopHeartbeatLoop();
-        this.clearConnectTimeout();
         this.onerror(evt);
-        this._connectPromise = undefined;
-        this.transport.close();
+        this.markDisconnected(createEvent("error"));
+        this._connectReject = undefined;
         reject(evt);
+        this.transport.close();
+        this.scheduleReconnect();
       });
 
       this._connectTimeoutTimer = setTimeout(() => {
         // if promise has resolved by now, the reject() is a no-op
-        this._connectionState = ConnectionState.DISCONNECTED;
-        this.stopHeartbeatLoop();
+        this.markDisconnected(createEvent("timeout"));
         this.transport.close();
-        this._connectPromise = undefined;
-        reject("The socket timed out when trying to connect.");
+        this._connectReject = undefined;
+        reject(new Error("The socket timed out when trying to connect."));
         this._connectTimeoutTimer = undefined;
+        this.scheduleReconnect();
       }, connectTimeoutMs);
     });
 
@@ -627,10 +722,76 @@ export class Client {
     return this._connectPromise;
   }
 
+  
+  setAutoReconnect(options: AutoReconnectOptions): void {
+    if (options.enabled !== undefined) {
+      this._autoReconnect = options.enabled;
+      if (!options.enabled) {
+        this.clearReconnectTimer();
+      }
+    }
+    if (options.maxAttempts !== undefined) {
+      this._maxReconnectAttempts = options.maxAttempts;
+    }
+    if (options.baseDelayMs !== undefined) {
+      this._reconnectBaseDelayMs = options.baseDelayMs;
+    }
+    if (options.maxDelayMs !== undefined) {
+      this._reconnectMaxDelayMs = options.maxDelayMs;
+    }
+  }
+
+ 
+  disconnect(fireDisconnectEvent: boolean = true): void {
+    this._intentionallyClosed = true;
+    this.clearReconnectTimer();
+    this._reconnectAttempts = 0;
+    this._lastConnectArgs = undefined;
+    this.markDisconnected(createEvent("close"), fireDisconnectEvent);
+    this.transport.close();
+  }
+
+  private scheduleReconnect(): void {
+    if (!this._autoReconnect) return;
+    if (this._intentionallyClosed) return;
+    if (!this._lastConnectArgs) return;
+    if (this._reconnectTimer !== undefined) return;
+    if (this._reconnectAttempts >= this._maxReconnectAttempts) return;
+    if (this._connectionState !== ConnectionState.DISCONNECTED) return;
+
+    const attempt = this._reconnectAttempts++;
+    const delay = Math.min(
+      this._reconnectBaseDelayMs * Math.pow(2, attempt),
+      this._reconnectMaxDelayMs,
+    );
+
+    this._reconnectTimer = setTimeout(() => {
+      this._reconnectTimer = undefined;
+      const args = this._lastConnectArgs;
+      if (!args) return;
+      if (this._intentionallyClosed) return;
+      this.connect(
+        args.session_id,
+        args.url,
+        args.createStatus,
+        args.verbose,
+        args.connectTimeoutMs,
+      ).catch(() => {
+        // failure path already triggers another scheduleReconnect via
+        // setOnError/timeout/onClose handlers, so swallow here.
+      });
+    }, delay);
+  }
+
+  private clearReconnectTimer(): void {
+    if (this._reconnectTimer !== undefined) {
+      clearTimeout(this._reconnectTimer);
+      this._reconnectTimer = undefined;
+    }
+  }
+
   private async pingPong(): Promise<void> {
     if (!this.isOpen()) {
-      this._connectionState = ConnectionState.DISCONNECTED;
-      this.stopHeartbeatLoop();
       return;
     }
 
@@ -642,16 +803,18 @@ export class Client {
         this._heartbeatTimeoutMs,
       );
     } catch {
-      this._connectionState = ConnectionState.DISCONNECTED;
-      this.stopHeartbeatLoop();
-      if (this.isOpen()) {
-        if (window && window.console) {
-          console.error("Server unreachable from heartbeat.");
-        }
-        this.onheartbeattimeout();
+      if (this.verbose && typeof console !== "undefined") {
+        console.error("Server unreachable from heartbeat.");
+      }
+      this.onheartbeattimeout();
+
+      if (this.transport.adapter.isOpen()) {
         this.transport.close();
+      } else {
+        this.markDisconnected(createEvent("close"));
       }
 
+      this.scheduleReconnect();
       return;
     }
 
@@ -680,22 +843,44 @@ export class Client {
     }
   }
 
+  private markDisconnected(
+    evt: Event = createEvent("close"),
+    fireDisconnectEvent = true,
+  ): void {
+    const wasAlreadyDisconnected =
+      this._connectionState === ConnectionState.DISCONNECTED;
+    this._connectionState = ConnectionState.DISCONNECTED;
+    this.stopHeartbeatLoop();
+    this.clearConnectTimeout();
+    this._connectPromise = undefined;
+    this._connectReject = undefined;
+
+    if (fireDisconnectEvent && !wasAlreadyDisconnected) {
+      this.ondisconnect(evt);
+    }
+  }
+
+  onconnect(evt: Event) {
+    if (this.verbose && typeof console !== "undefined") {
+      console.log(evt);
+    }
+  }
+
+
   onreconnect(evt: Event) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(evt);
     }
   }
 
   ondisconnect(evt: Event) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(evt);
     }
   }
 
   onerror(evt: Event) {
-    this._connectionState = ConnectionState.DISCONNECTED;
-    this.stopHeartbeatLoop();
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(evt);
     }
   }

@@ -483,7 +483,13 @@ export class MezonTransport {
     signal?: AbortSignal,
   ): void {
     const [host, port] = url.split(":");
-    this.adapter.connect(host, port, createStatus, session_id, signal);
+
+    try {
+      this.adapter.connect(host, port, createStatus, session_id, signal);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      throw new Error(`Failed to open WebSocket: ${message}`);
+    }
 
     this.adapter.onClose = onDisconnected;
     this.adapter.onMessage = async (
@@ -491,7 +497,7 @@ export class MezonTransport {
       code: number,
       message: any,
     ) => {
-      if (verbose && window && window.console) {
+      if (verbose && typeof console !== "undefined") {
         console.log(
           "incomming message with cid %o and message %o",
           cid,
@@ -501,7 +507,9 @@ export class MezonTransport {
       if (cid != 0) {
         const executor = this.cIds[cid];
         if (!executor) {
-          console.error("No promise executor for message: %o", message);
+          if (verbose && typeof console !== "undefined") {
+            console.error("No promise executor for message: %o", message);
+          }
           return;
         }
         delete this.cIds[cid];
@@ -515,6 +523,7 @@ export class MezonTransport {
       }
     };
   }
+
 
   send(
     data: any,
