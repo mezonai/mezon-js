@@ -142,17 +142,29 @@ export class MezonNetworkAdapter implements TransportAdapter {
     token: string,
     signal?: AbortSignal,
   ): void {
+    if (signal?.aborted) {
+      throw new Error("Connect aborted before start.");
+    }
     if (signal) {
       signal.addEventListener("abort", () => {
         this.close();
       });
     }
+    if (!host) {
+      throw new Error("Missing host for WebSocket connection.");
+    }
     const portPart = port ? `:${port}` : "";
     const url = `wss://${host}${portPart}/ws?lang=en&status=${encodeURIComponent(
       createStatus.toString(),
     )}&token=${encodeURIComponent(token)}`;
-    this._socket = new WebSocket(url);
-    this._socket.binaryType = "arraybuffer";
+    try {
+      this._socket = new WebSocket(url);
+      this._socket.binaryType = "arraybuffer";
+    } catch (err) {
+      this._socket = undefined;
+      const message = err instanceof Error ? err.message : String(err);
+      throw new Error(`WebSocket construction failed: ${message}`);
+    }
   }
 
   send(msg: any): void {

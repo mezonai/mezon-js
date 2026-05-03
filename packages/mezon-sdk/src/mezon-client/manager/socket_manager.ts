@@ -96,6 +96,23 @@ export class SocketManager {
   }
 
   async connectSocket(sessionToken: string) {
+    if (!this.eventsBound) {
+      ["ondisconnect", "onerror", "onheartbeattimeout"].forEach((event) => {
+        this.socket[event] = (this[event as keyof this] as Function).bind(
+          this,
+        );
+      });
+
+      for (const event in Events) {
+        const key = Events[event as keyof typeof Events].toString();
+        this.socket.socketEvents.on(key, (...args: any[]) => {
+          this.client.emit(key, ...args);
+        });
+      }
+
+      this.eventsBound = true;
+    }
+
     try {
       const clans = await this.apiClient.listClanDescs(sessionToken);
       const clanList = clans?.clandesc ?? [];
@@ -120,23 +137,6 @@ export class SocketManager {
           );
           this.client.clans.set(clan.clan_id!, clanObj);
         }
-      }
-
-      if (!this.eventsBound) {
-        ["ondisconnect", "onerror", "onheartbeattimeout"].forEach((event) => {
-          this.socket[event] = (this[event as keyof this] as Function).bind(
-            this,
-          );
-        });
-
-        for (const event in Events) {
-          const key = Events[event as keyof typeof Events].toString();
-          this.socket.socketEvents.on(key, (...args: any[]) => {
-            this.client.emit(key, ...args);
-          });
-        }
-
-        this.eventsBound = true;
       }
     } catch (error) {
       throw error;

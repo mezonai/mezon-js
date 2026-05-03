@@ -283,18 +283,11 @@ export class DefaultSocket implements Socket {
     this.adapter.connect(scheme, this.ws_url, createStatus, session.token);
 
     this.adapter.onClose = (evt: CloseEvent) => {
-      this._connectionState = ConnectionState.DISCONNECTED;
-      this.stopHeartbeatLoop();
-      this.clearConnectTimeout();
-      this._connectPromise = undefined;
-      this.ondisconnect(evt);
+      this.markDisconnected(evt);
     };
 
     this.adapter.onError = (evt: ErrorEvent) => {
-      this._connectionState = ConnectionState.DISCONNECTED;
-      this.stopHeartbeatLoop();
-      this.clearConnectTimeout();
-      this._connectPromise = undefined;
+      this.markDisconnected(<CloseEvent>{}, false);
       this.onerror(evt);
     };
 
@@ -362,20 +355,18 @@ export class DefaultSocket implements Socket {
           this.onreconnect(evt);
         }
       };
+      const baseOnErrorHandler = this.adapter.onError;
       this.adapter.onError = (evt: WebSocket.Event) => {
-        this._connectionState = ConnectionState.DISCONNECTED;
-        this.stopHeartbeatLoop();
-        this.clearConnectTimeout();
-        this._connectPromise = undefined;
-        reject(evt);
-        this.adapter.close();
+        baseOnErrorHandler?.(evt as ErrorEvent);
+        if (this._connectionState === ConnectionState.CONNECTING) {
+          reject(evt);
+          this.adapter.close();
+        }
       };
 
       this._connectTimeoutTimer = setTimeout(() => {
-        this._connectionState = ConnectionState.DISCONNECTED;
-        this.stopHeartbeatLoop();
+        this.markDisconnected(<CloseEvent>{}, false);
         this.adapter.close();
-        this._connectPromise = undefined;
         reject("The socket timed out when trying to connect.");
         this._connectTimeoutTimer = undefined;
       }, connectTimeoutMs);
@@ -386,9 +377,7 @@ export class DefaultSocket implements Socket {
   }
 
   disconnect(fireDisconnectEvent: boolean = true) {
-    this._connectionState = ConnectionState.DISCONNECTED;
-    this.stopHeartbeatLoop();
-    this.clearConnectTimeout();
+    this.markDisconnected(<CloseEvent>{}, false);
     if (this.adapter.isOpen()) {
       this.adapter.close();
     }
@@ -838,6 +827,20 @@ export class DefaultSocket implements Socket {
     }
   }
 
+  private markDisconnected(evt: CloseEvent = <CloseEvent>{}, fireDisconnectEvent: boolean = true): boolean {
+    const wasAlreadyDisconnected = this._connectionState === ConnectionState.DISCONNECTED;
+    this._connectionState = ConnectionState.DISCONNECTED;
+    this.stopHeartbeatLoop();
+    this.clearConnectTimeout();
+    this._connectPromise = undefined;
+
+    if (fireDisconnectEvent && !wasAlreadyDisconnected) {
+      this.ondisconnect(evt);
+    }
+
+    return !wasAlreadyDisconnected;
+  }
+
   private async pingPong(): Promise<void> {
     if (!this.adapter.isOpen()) {
       return;
@@ -846,12 +849,15 @@ export class DefaultSocket implements Socket {
     try {
       await this.send({ ping: {} }, this._heartbeatTimeoutMs);
     } catch {
+      if (this.verbose) {
+        console.error("Server unreachable from heartbeat222.");
+      }
+      this.onheartbeattimeout();
+
       if (this.adapter.isOpen()) {
-        if (this.verbose) {
-          console.error("Server unreachable from heartbeat.");
-        }
-        this.onheartbeattimeout();
         this.adapter.close();
+      } else {
+        this.markDisconnected();
       }
 
       return;
