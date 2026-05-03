@@ -131,8 +131,18 @@ export class MezonNetworkAdapter implements TransportAdapter {
   }
 
   close() {
-    this._socket?.close();
+    const socket = this._socket;
     this._socket = undefined;
+    if (!socket) return;
+    socket.onopen = null;
+    socket.onclose = null;
+    socket.onerror = null;
+    socket.onmessage = null;
+    try {
+      socket.close();
+    } catch (err) {
+      console.log(err, 'err close socket');
+    }
   }
 
   connect(
