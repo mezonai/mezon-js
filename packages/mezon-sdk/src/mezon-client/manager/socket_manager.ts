@@ -1,6 +1,6 @@
 import { ErrorEvent, CloseEvent } from "ws";
 import { MezonApi } from "../../api";
-import { Events } from "../../constants";
+import { ChannelType, Events } from "../../constants";
 import { DefaultSocket } from "../../socket";
 import { WebSocketAdapter } from "../../web_socket_adapter";
 import { WebSocketAdapterPb } from "../../web_socket_adapter_pb";
@@ -120,6 +120,10 @@ export class SocketManager {
           );
           this.client.clans.set(clan.clan_id!, clanObj);
         }
+
+        if (clan.clan_id && clan.clan_id !== "0") {
+          await this.joinClanNonPublicChannels(sessionToken, clan.clan_id);
+        }
       }
 
       if (!this.eventsBound) {
@@ -140,6 +144,54 @@ export class SocketManager {
       }
     } catch (error) {
       throw error;
+    }
+  }
+
+  async joinClanNonPublicChannels(
+    sessionToken: string,
+    clanId: string,
+  ): Promise<void> {
+    try {
+      const channels = await this.apiClient.listChannelDescs(
+        sessionToken,
+        undefined,
+        clanId,
+      );
+      const channelList = channels?.channeldesc ?? [];
+      for (const channel of channelList) {
+        if (!channel?.channel_id || channel.type == null) continue;
+        if (!this.needsExplicitJoin(channel.type, channel.channel_private))
+          continue;
+
+        await this.socket.joinChat(
+          clanId,
+          channel.channel_id,
+          channel.type,
+          false,
+        );
+        await sleep(50);
+      }
+    } catch (error) {
+      console.log(`Failed to join channels for clan ${clanId}:`, error);
+    }
+  }
+
+  private needsExplicitJoin(
+    type: number,
+    channelPrivate: number,
+  ): boolean {
+    switch (type) {
+      case ChannelType.CHANNEL_TYPE_THREAD:
+      case ChannelType.CHANNEL_TYPE_GROUP:
+        return true;
+
+      case ChannelType.CHANNEL_TYPE_CHANNEL:
+      case ChannelType.CHANNEL_TYPE_APP:
+      case ChannelType.CHANNEL_TYPE_MEZON_VOICE:
+        return channelPrivate !== 0;
+
+      default:
+        return false;
     }
   }
 
