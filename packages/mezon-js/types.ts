@@ -3882,6 +3882,8 @@ export interface ApiSession {
   id_token?: string;
   // session id
   session_id?: string;
+  // abridged url
+  tcp_url?: string;
 }
 
 /** Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user. */
