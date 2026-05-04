@@ -1673,7 +1673,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.AddFavoriteChannelResponse.decode(response);
+        if (response.code != 0) {
+          return {} as any;
+        }
+        return tsproto.AddFavoriteChannelResponse.decode(response.message);
       }),
       new Promise((_, reject) =>
         setTimeout(reject, this.timeoutMs, "Request timed out."),
@@ -6152,7 +6155,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        return tsproto.WebhookGenerateResponse.decode(response);
+        if (response.code != 0) {
+          return {} as any;
+        }
+        return tsproto.WebhookGenerateResponse.decode(response.message);
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8384,8 +8390,8 @@ export class MezonTransport {
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
         const decoded =
-          response.length > 0
-            ? tsproto.VotePollResponse.decode(response)
+          response.code == 0
+            ? tsproto.VotePollResponse.decode(response.message)
             : { my_answer_indices: [] };
         return {
           my_answer_indices: Array.from(decoded.my_answer_indices ?? []),
@@ -8461,7 +8467,10 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
-        const decoded = tsproto.GetPollResponse.decode(response);
+        if (response.code != 0) {
+          return {} as ApiGetPollResponse;
+        }
+        const decoded = tsproto.GetPollResponse.decode(response.message);
         return {
           poll_id: decoded.poll_id,
           message_id: decoded.message_id,
