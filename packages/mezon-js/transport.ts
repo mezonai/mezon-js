@@ -412,6 +412,16 @@ enum ApiNameEnum {
   ReactChannelMessage,
   MultipartUploadAttachmentFileStart,
   MultipartUploadAttachmentFileFinish,
+  SessionRefresh,
+  SessionLogout,
+  Healthcheck,
+  UnbanClanUsers,
+  ListBannedUsers,
+  GetNotificationCategory,
+  ListRolePermissions,
+  IsFollower,
+  DeletePinMessage,
+  MarkAsRead,
 }
 
 export class MezonTransport {
@@ -523,7 +533,6 @@ export class MezonTransport {
       }
     };
   }
-
 
   send(
     data: any,
