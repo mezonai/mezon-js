@@ -402,7 +402,13 @@ export class DefaultSocket implements Socket {
 
   generatecid(): number {
     const cid = this.nextCid;
-    ++this.nextCid;
+
+    if (this.nextCid >= 65535) {
+      this.nextCid = 1;
+    } else {
+      ++this.nextCid;
+    }
+
     return cid;
   }
 
@@ -1281,7 +1287,15 @@ export class DefaultSocket implements Socket {
       list_data_socket: request,
     } as any;
 
-    return this.sendRealtime(fetchOptions, {} as any);
+    return Promise.race([
+      this.send({ urlPath: "", fetchOptions }).then(async (response) => response as any),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.sendTimeoutMs,
+        ),
+      ),
+    ]);
   }
 
   private startHeartbeatLoop(): void {

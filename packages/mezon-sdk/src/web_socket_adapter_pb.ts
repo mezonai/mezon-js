@@ -73,6 +73,12 @@ export class WebSocketAdapterPb implements TransportAdapter {
                             const dataView = new DataView(buffer);
                             const cid = dataView.getUint16(1, false);
                             const code = dataView.getUint32(CODE_LENGTH, false);
+
+                            if (uintBuffer.length < RAW_HEADER_LENGTH + 4) {
+                                value!(cid, code, []);
+                                return;
+                            }
+
                             const payload = uintBuffer.subarray(RAW_HEADER_LENGTH);
 
                             if (!this._streams.has(cid)) {
