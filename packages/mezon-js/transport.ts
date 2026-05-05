@@ -675,6 +675,9 @@ export class MezonTransport {
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+        }
         const buffer = await response.arrayBuffer();
         return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
       }),
@@ -752,6 +755,9 @@ export class MezonTransport {
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+        }
         const buffer = await response.arrayBuffer();
         return tsproto.LoginIDResponse.decode(
           new Uint8Array(buffer),
@@ -795,6 +801,9 @@ export class MezonTransport {
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+        }
         const buffer = await response.arrayBuffer();
         return tsproto.LinkAccountConfirmRequest.decode(
           new Uint8Array(buffer),
@@ -838,6 +847,9 @@ export class MezonTransport {
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+        }
         const buffer = await response.arrayBuffer();
         return tsproto.LinkAccountConfirmRequest.decode(
           new Uint8Array(buffer),
@@ -881,6 +893,9 @@ export class MezonTransport {
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+        }
         const buffer = await response.arrayBuffer();
         return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
       }),
@@ -927,6 +942,9 @@ export class MezonTransport {
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+        }
         const buffer = await response.arrayBuffer();
         return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
       }),
@@ -1079,6 +1097,9 @@ export class MezonTransport {
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+        }
         const buffer = await response.arrayBuffer();
         return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
       }),
@@ -4037,6 +4058,9 @@ export class MezonTransport {
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+        }
         const buffer = await response.arrayBuffer();
         return tsproto.InviteUserRes.decode(
           new Uint8Array(buffer),
@@ -7195,6 +7219,9 @@ export class MezonTransport {
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+        }
         const buffer = await response.arrayBuffer();
         return tsproto.GenerateMeetTokenExternalResponse.decode(
           new Uint8Array(buffer),
@@ -7501,6 +7528,9 @@ export class MezonTransport {
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+        }
         const buffer = await response.arrayBuffer();
         return tsproto.ListClanDiscover.decode(
           new Uint8Array(buffer),
