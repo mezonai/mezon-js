@@ -7546,6 +7546,7 @@ export class MezonTransport {
       ),
     ]);
   }
+  
   /**  */
   deleteQuickMenuAccess(
     id?: string,
