@@ -1432,17 +1432,6 @@ export class Client {
       });
   }
 
-  /** set base path */
-  setBasePath(host: string, port: string, useSSL: boolean) {
-    this.host = host;
-    this.port = port;
-    this.useSSL = useSSL;
-
-    const scheme = useSSL ? "https://" : "http://";
-    const basePath = `${scheme}${host}:${port}`;
-    return this.transport.setBasePath(basePath);
-  }
-
   /** Add users to a channel, or accept their join requests. */
   async addChannelUsers(
     session: ApiSession,
@@ -4756,7 +4745,6 @@ export class Client {
 
   async confirmLogin(
     session: ApiSession,
-    basePath: string,
     body: ApiConfirmLoginRequest,
   ): Promise<any> {
     if (
@@ -4766,7 +4754,7 @@ export class Client {
       await this.transport.setFallbackSession(session);
     }
 
-    return this.transport.confirmLogin(basePath, body).then((response: any) => {
+    return this.transport.confirmLogin(body).then((response: any) => {
       return response;
     });
   }
@@ -5439,14 +5427,13 @@ export class Client {
   }
 
   async generateMeetTokenExternal(
-    basePath: string,
     token: string,
     username?: string,
     metadata?: string,
     isGuest?: boolean,
   ): Promise<ApiGenerateMeetTokenExternalResponse> {
     return this.transport
-      .generateMeetTokenExternal(basePath, token, username, metadata, isGuest)
+      .generateMeetTokenExternal(token, username, metadata, isGuest)
       .then((response: ApiGenerateMeetTokenExternalResponse) => {
         return Promise.resolve(response);
       });
@@ -5507,11 +5494,10 @@ export class Client {
 
   /** list clan discover. */
   async listClanDiscover(
-    basePath: string,
     request: ApiClanDiscoverRequest,
   ): Promise<ApiListClanDiscover> {
     return this.transport
-      .clanDiscover(this.serverkey, "", basePath, request)
+      .clanDiscover(this.serverkey, "", request)
       .then((response: ApiListClanDiscover) => {
         return Promise.resolve(response);
       });
