@@ -431,7 +431,7 @@ export class MezonTransport {
   private nextCid: number;
 
   adapter: TransportAdapter;
-  private basePath: string;
+  private readonly basePath: string;
 
   constructor(
     readonly serverKey: string,
@@ -588,10 +588,6 @@ export class MezonTransport {
     });
   }
 
-  setBasePath(basePath: string) {
-    this.basePath = basePath;
-  }
-
   /** Delete the current user's account. */
   deleteAccount(options = {}): Promise<any> {
     const urlPath = "/mezon.api.Mezon/DeleteAccount";
@@ -685,7 +681,7 @@ export class MezonTransport {
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
         if (!response.ok) {
-          throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+          throw response;
         }
         const buffer = await response.arrayBuffer();
         return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
@@ -701,7 +697,6 @@ export class MezonTransport {
 
   /**  */
   confirmLogin(
-    basePath: string,
     body: ApiConfirmLoginRequest,
     options = {},
   ): Promise<any> {
@@ -716,7 +711,7 @@ export class MezonTransport {
     let bodyJson = "";
     bodyJson = JSON.stringify(body || {});
 
-    const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
 
     fetchOptions.headers["Accept"] = "application/x-protobuf";
@@ -765,7 +760,7 @@ export class MezonTransport {
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
         if (!response.ok) {
-          throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+          throw response;
         }
         const buffer = await response.arrayBuffer();
         return tsproto.LoginIDResponse.decode(
@@ -811,7 +806,7 @@ export class MezonTransport {
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
         if (!response.ok) {
-          throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+          throw response;
         }
         const buffer = await response.arrayBuffer();
         return tsproto.LinkAccountConfirmRequest.decode(
@@ -857,7 +852,7 @@ export class MezonTransport {
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
         if (!response.ok) {
-          throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+          throw response;
         }
         const buffer = await response.arrayBuffer();
         return tsproto.LinkAccountConfirmRequest.decode(
@@ -903,7 +898,7 @@ export class MezonTransport {
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
         if (!response.ok) {
-          throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+          throw response;
         }
         const buffer = await response.arrayBuffer();
         return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
@@ -952,7 +947,7 @@ export class MezonTransport {
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
         if (!response.ok) {
-          throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+          throw response;
         }
         const buffer = await response.arrayBuffer();
         return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
@@ -1107,7 +1102,7 @@ export class MezonTransport {
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
         if (!response.ok) {
-          throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+          throw response;
         }
         const buffer = await response.arrayBuffer();
         return tsproto.Session.decode(new Uint8Array(buffer)) as ApiSession;
@@ -4068,7 +4063,7 @@ export class MezonTransport {
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
         if (!response.ok) {
-          throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+          throw response;
         }
         const buffer = await response.arrayBuffer();
         return tsproto.InviteUserRes.decode(
@@ -7197,7 +7192,6 @@ export class MezonTransport {
 
   /** handler external mezon meet */
   generateMeetTokenExternal(
-    basePath: string,
     token: string,
     username?: string,
     metadata?: string,
@@ -7220,7 +7214,7 @@ export class MezonTransport {
 
     const bodyJson = "";
 
-    const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
 
     fetchOptions.headers["Accept"] = "application/x-protobuf";
@@ -7229,7 +7223,7 @@ export class MezonTransport {
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
         if (!response.ok) {
-          throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+          throw response;
         }
         const buffer = await response.arrayBuffer();
         return tsproto.GenerateMeetTokenExternalResponse.decode(
@@ -7511,7 +7505,6 @@ export class MezonTransport {
   clanDiscover(
     basicAuthUsername: string,
     basicAuthPassword: string,
-    basePath: string,
     body: ApiClanDiscoverRequest,
     options = {},
   ): Promise<ApiListClanDiscover> {
@@ -7526,7 +7519,7 @@ export class MezonTransport {
     let bodyJson = "";
     bodyJson = JSON.stringify(body || {});
 
-    const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (basicAuthUsername) {
       fetchOptions.headers["Authorization"] =
@@ -7538,7 +7531,7 @@ export class MezonTransport {
     return Promise.race([
       fetch(fullUrl, fetchOptions).then(async (response) => {
         if (!response.ok) {
-          throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+          throw response;
         }
         const buffer = await response.arrayBuffer();
         return tsproto.ListClanDiscover.decode(
