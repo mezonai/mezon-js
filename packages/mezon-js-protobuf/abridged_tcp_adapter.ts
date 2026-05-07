@@ -232,7 +232,16 @@ export class MezonNetworkAdapter implements TransportAdapter {
   }
 
   close(): void {
-    this._socket?.destroy();
-    this._socket = undefined;
+    if (!this._socket) return;
+    this._socket.onOpen = null;
+    this._socket.onClose = null;
+    this._socket.onError = null;
+    this._socket.onMessage = null;
+    try {
+      this._socket.destroy();
+      this._socket = undefined;
+    } catch (err) {
+      console.log(err, 'err close socket');
+    }
   }
 }
