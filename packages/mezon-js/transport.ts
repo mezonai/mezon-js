@@ -424,6 +424,13 @@ enum ApiNameEnum {
   MarkAsRead,
 }
 
+export interface MezonTransportHandlers {
+  onOpen: (evt: Event) => void;
+  onClose: tsproto.SocketCloseHandler;
+  onError: (evt: Event) => void;
+  onMessage: tsproto.SocketMessageHandler;
+}
+
 export class MezonTransport {
   public static readonly DefaultSendTimeoutMs = 10000;
 
@@ -443,14 +450,6 @@ export class MezonTransport {
 
     this.basePath = basePath;
     this.adapter = new MezonNetworkAdapter();
-  }
-
-  setOnOpen(onopen: (evt: Event) => void) {
-    this.adapter.onOpen = onopen;
-  }
-
-  setOnError(onerror: (evt: Event) => void) {
-    this.adapter.onError = onerror;
   }
 
   close() {
@@ -486,22 +485,17 @@ export class MezonTransport {
   connect(
     session_id: string,
     url: string,
-    createStatus = false,
-    verbose = false,
-    onMessage: tsproto.SocketMessageHandler,
-    onDisconnected: tsproto.SocketCloseHandler,
+    createStatus: boolean,
+    verbose: boolean,
+    handlers: MezonTransportHandlers,
     signal?: AbortSignal,
   ): void {
     const [host, port] = url.split(":");
-
-    try {
-      this.adapter.connect(host, port, createStatus, session_id, signal);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      throw new Error(`Failed to open WebSocket: ${message}`);
-    }
-
-    this.adapter.onClose = onDisconnected;
+    this.adapter.connect(host, port, createStatus, session_id, signal);
+    console.log('Connect');
+    this.adapter.onOpen = handlers.onOpen;
+    this.adapter.onError = handlers.onError;
+    this.adapter.onClose = handlers.onClose;
     this.adapter.onMessage = async (
       cid: number,
       code: number,
@@ -529,7 +523,7 @@ export class MezonTransport {
           executor.resolve({ code, message });
         }
       } else {
-        await onMessage(0, 0, message);
+        await handlers.onMessage(0, 0, message);
       }
     };
   }

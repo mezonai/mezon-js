@@ -294,6 +294,15 @@ export const ConnectionState = {
 export type ConnectionStateType =
   (typeof ConnectionState)[keyof typeof ConnectionState];
 
+/** Labels which code path invoked markDisconnected (verbose logging). */
+type DisconnectSource =
+  | "connect_superseded"
+  | "connect_timeout"
+  | "transport_on_close"
+  | "transport_on_error"
+  | "connect_sync_throw"
+  | "client_disconnect"
+  | "heartbeat_unreachable";
 
 function createEvent(type: string): Event {
   if (typeof Event === "function") {
@@ -332,6 +341,7 @@ interface LastConnectArgs {
 export class Client {
   public static readonly DefaultHeartbeatTimeoutMs = 10000;
   public static readonly DefaultConnectTimeoutMs = 30000;
+  public static readonly DefaultServerDisconnectStreakLogoutThreshold = 3;
 
   public verbose: boolean = false;
   private _heartbeatTimeoutMs: number;
@@ -341,6 +351,9 @@ export class Client {
   private _connectPromise?: Promise<void>;
   private _connectReject?: (reason?: any) => void;
   private _hasConnectedOnce: boolean = false;
+  private _connectAttemptSeq = 0;
+  private _heartbeatSuspended = false;
+  private _serverDisconnectStreak = 0;
   private readonly transport: MezonTransport;
 
   private _lastConnectArgs?: LastConnectArgs;
@@ -348,6 +361,9 @@ export class Client {
   host: string;
   port: string;
   useSSL: boolean;
+
+
+  serverDisconnectStreakLogoutThreshold: number;
 
   constructor(
     readonly serverkey = DEFAULT_SERVER_KEY,
@@ -365,8 +381,18 @@ export class Client {
 
     this._heartbeatTimeoutMs = Client.DefaultHeartbeatTimeoutMs;
     this._connectionState = ConnectionState.DISCONNECTED;
+    this.serverDisconnectStreakLogoutThreshold =
+      Client.DefaultServerDisconnectStreakLogoutThreshold;
 
     this.transport = new MezonTransport(serverkey, timeout, basePath);
+  }
+
+  private failConnect(reason: Error): void {
+    const reject = this._connectReject;
+    this._connectReject = undefined;
+    if (reject) {
+      reject(reason);
+    }
   }
 
   isOpen(): boolean {
@@ -382,6 +408,9 @@ export class Client {
   ): Promise<void> {
     this.verbose = verbose;
 
+
+    console.log('conntect');
+    
     const sameTarget =
       this._lastConnectArgs?.session_id === session_id &&
       this._lastConnectArgs?.url === url;
@@ -410,12 +439,19 @@ export class Client {
       this._connectionState === ConnectionState.CONNECTED ||
       this._connectionState === ConnectionState.CONNECTING
     ) {
+      this.failConnect(new Error("Connect superseded by new connect()."));
       this.transport.close();
-      this.markDisconnected(createEvent("close"), false);
+      this.markDisconnected(
+        "connect_superseded",
+        createEvent("close"),
+        false,
+        false,
+      );
     }
 
     this.clearConnectTimeout();
     this._connectionState = ConnectionState.CONNECTING;
+    this._connectAttemptSeq += 1;
     this._lastConnectArgs = {
       session_id,
       url,
@@ -424,13 +460,32 @@ export class Client {
       connectTimeoutMs,
     };
 
+    let resolveConnect!: () => void;
+    let rejectConnect!: (reason?: any) => void;
+    const connectPromise = new Promise<void>((resolve, reject) => {
+      resolveConnect = resolve;
+      rejectConnect = reject;
+    });
+    this._connectPromise = connectPromise;
+    this._connectReject = rejectConnect;
+
+    this._connectTimeoutTimer = setTimeout(() => {
+      if (this._connectionState !== ConnectionState.CONNECTING) return;
+      this.markDisconnected("connect_timeout", createEvent("timeout"), true, false);
+      this.transport.close();
+      this.failConnect(
+        new Error("The socket timed out when trying to connect."),
+      );
+    }, connectTimeoutMs);
+
     try {
       this.transport.connect(
       session_id,
       url,
       createStatus,
       verbose,
-      async (_cid: number, _code: number, message: any) => {
+      {
+      onMessage: async (_cid: number, _code: number, message: any) => {
         if (!message.cid) {
           if (message.notifications) {
             message.notifications.notifications.forEach(
@@ -639,73 +694,57 @@ export class Client {
           }
         }
       },
-      async (evt: Event) => {
+      onClose: (evt: Event) => {
         const wasConnecting =
           this._connectionState === ConnectionState.CONNECTING;
-        this.markDisconnected(evt);
-        if (wasConnecting && this._connectReject) {
-          const reject = this._connectReject;
-          this._connectReject = undefined;
-          reject(
+        this.markDisconnected("transport_on_close", evt, true, true);
+        if (wasConnecting) {
+          this.failConnect(
             new Error("Socket closed before connection was established."),
           );
         }
       },
+      onOpen: (evt: Event) => {
+        if (this.verbose && typeof console !== "undefined") {
+          console.log(evt);
+        }
+        const isReconnect = this._hasConnectedOnce;
+        this._hasConnectedOnce = true;
+        this.clearConnectTimeout();
+        this._serverDisconnectStreak = 0;
+        this._connectionState = ConnectionState.CONNECTED;
+        this.startHeartbeatLoop();
+        this._connectPromise = undefined;
+        resolveConnect();
+        this._connectReject = undefined;
+        if (isReconnect) {
+          this.onreconnect(evt);
+        } else {
+          this.onconnect(evt);
+        }
+      },
+      onError: (evt: Event) => {
+        this.onerror(evt);
+        this.markDisconnected("transport_on_error", evt, true, false);
+        this.failConnect(
+          evt instanceof Error
+            ? evt
+            : new Error("Socket error during connect."),
+        );
+        this.transport.close();
+      },
+    },
     );
     } catch (err) {
-      console.log(err, 'err socket');
       const errEvent = createEvent("error");
       this.onerror(errEvent);
-      this.markDisconnected(errEvent);
-      return Promise.reject(
+      this.markDisconnected("connect_sync_throw", errEvent, true, false);
+      this.failConnect(
         err instanceof Error ? err : new Error(String(err)),
       );
     }
 
-    const connectPromise = new Promise<void>((resolve, reject) => {
-      this._connectReject = reject;
-
-      this.transport.setOnOpen((evt: Event) => {
-        if (this.verbose && typeof console !== "undefined") {
-          console.log(evt);
-        }
-
-        const isReconnect = this._hasConnectedOnce;
-        this._hasConnectedOnce = true;
-
-        this.clearConnectTimeout();
-        this._connectionState = ConnectionState.CONNECTED;
-        this.startHeartbeatLoop();
-        this._connectPromise = undefined;
-        this._connectReject = undefined;
-        resolve();
-        if (isReconnect) {
-          this.onreconnect(evt);
-        }
-        else {
-          this.onconnect(evt);
-        }
-      });
-      this.transport.setOnError((evt: Event) => {
-        this.onerror(evt);
-        this.markDisconnected(createEvent("error"));
-        this._connectReject = undefined;
-        reject(evt);
-        this.transport.close();
-      });
-
-      this._connectTimeoutTimer = setTimeout(() => {
-        // if promise has resolved by now, the reject() is a no-op
-        this.markDisconnected(createEvent("timeout"));
-        this.transport.close();
-        this._connectReject = undefined;
-        reject(new Error("The socket timed out when trying to connect."));
-        this._connectTimeoutTimer = undefined;
-      }, connectTimeoutMs);
-    });
-
-    this._connectPromise = connectPromise;
-    return this._connectPromise;
+    return connectPromise;
   }
 
   /**
@@ -717,7 +756,13 @@ export class Client {
 
   disconnect(fireDisconnectEvent: boolean = true): void {
     this._lastConnectArgs = undefined;
-    this.markDisconnected(createEvent("close"), fireDisconnectEvent);
+    this.failConnect(new Error("Client disconnected."));
+    this.markDisconnected(
+      "client_disconnect",
+      createEvent("close"),
+      fireDisconnectEvent,
+      false,
+    );
     this.transport.close();
   }
 
@@ -734,17 +779,22 @@ export class Client {
         this._heartbeatTimeoutMs,
       );
     } catch {
+      if (this._connectionState !== ConnectionState.CONNECTED) {
+        return;
+      }
       if (this.verbose && typeof console !== "undefined") {
         console.error("Server unreachable from heartbeat.");
       }
       this.onheartbeattimeout();
-
+      this.markDisconnected(
+        "heartbeat_unreachable",
+        createEvent("close"),
+        true,
+        false,
+      );
       if (this.transport.adapter.isOpen()) {
         this.transport.close();
-      } else {
-        this.markDisconnected(createEvent("close"));
       }
-
       return;
     }
 
@@ -752,6 +802,9 @@ export class Client {
   }
 
   private startHeartbeatLoop() {
+    if (this._heartbeatSuspended) {
+      return;
+    }
     this.stopHeartbeatLoop();
     this._heartbeatTimer = setTimeout(
       () => this.pingPong(),
@@ -774,8 +827,10 @@ export class Client {
   }
 
   private markDisconnected(
+    source: DisconnectSource,
     evt: Event = createEvent("close"),
     fireDisconnectEvent = true,
+    incrementServerDisconnectStreak = false,
   ): void {
     const wasAlreadyDisconnected =
       this._connectionState === ConnectionState.DISCONNECTED;
@@ -783,10 +838,27 @@ export class Client {
     this.stopHeartbeatLoop();
     this.clearConnectTimeout();
     this._connectPromise = undefined;
-    this._connectReject = undefined;
 
-    if (fireDisconnectEvent && !wasAlreadyDisconnected) {
-      this.ondisconnect(evt);
+    if (!wasAlreadyDisconnected) {
+      if (fireDisconnectEvent) {
+        this.ondisconnect(evt);
+      }
+    }
+
+    if (
+      incrementServerDisconnectStreak &&
+      !wasAlreadyDisconnected &&
+      this.serverDisconnectStreakLogoutThreshold > 0
+    ) {
+      this._serverDisconnectStreak += 1;
+      if (
+        this._serverDisconnectStreak >=
+        this.serverDisconnectStreakLogoutThreshold
+      ) {
+        const streak = this._serverDisconnectStreak;
+        this._serverDisconnectStreak = 0;
+        this.onserverdisconnectstreaklogout(evt, streak);
+      }
     }
   }
 
@@ -806,6 +878,13 @@ export class Client {
   ondisconnect(evt: Event) {
     if (this.verbose && typeof console !== "undefined") {
       console.log(evt);
+    }
+  }
+
+
+  onserverdisconnectstreaklogout(evt: Event, streak: number) {
+    if (this.verbose && typeof console !== "undefined") {
+      console.log("Server disconnect streak reached: %o", streak, evt);
     }
   }
 
