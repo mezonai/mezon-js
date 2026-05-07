@@ -343,14 +343,7 @@ export class Client {
   private _hasConnectedOnce: boolean = false;
   private readonly transport: MezonTransport;
 
-  private _autoReconnect: boolean = true;
-  private _maxReconnectAttempts: number = Infinity;
-  private _reconnectBaseDelayMs: number = 1000;
-  private _reconnectMaxDelayMs: number = 30000;
-  private _reconnectAttempts: number = 0;
-  private _reconnectTimer?: ReturnType<typeof setTimeout>;
   private _lastConnectArgs?: LastConnectArgs;
-  private _intentionallyClosed: boolean = false;
 
   host: string;
   port: string;
@@ -422,8 +415,6 @@ export class Client {
     }
 
     this.clearConnectTimeout();
-    this.clearReconnectTimer();
-    this._intentionallyClosed = false;
     this._connectionState = ConnectionState.CONNECTING;
     this._lastConnectArgs = {
       session_id,
@@ -659,7 +650,6 @@ export class Client {
             new Error("Socket closed before connection was established."),
           );
         }
-        this.scheduleReconnect();
       },
     );
     } catch (err) {
@@ -667,7 +657,6 @@ export class Client {
       const errEvent = createEvent("error");
       this.onerror(errEvent);
       this.markDisconnected(errEvent);
-      this.scheduleReconnect();
       return Promise.reject(
         err instanceof Error ? err : new Error(String(err)),
       );
@@ -685,7 +674,6 @@ export class Client {
         this._hasConnectedOnce = true;
 
         this.clearConnectTimeout();
-        this._reconnectAttempts = 0;
         this._connectionState = ConnectionState.CONNECTED;
         this.startHeartbeatLoop();
         this._connectPromise = undefined;
@@ -704,7 +692,6 @@ export class Client {
         this._connectReject = undefined;
         reject(evt);
         this.transport.close();
-        this.scheduleReconnect();
       });
 
       this._connectTimeoutTimer = setTimeout(() => {
@@ -714,7 +701,6 @@ export class Client {
         this._connectReject = undefined;
         reject(new Error("The socket timed out when trying to connect."));
         this._connectTimeoutTimer = undefined;
-        this.scheduleReconnect();
       }, connectTimeoutMs);
     });
 
@@ -722,72 +708,17 @@ export class Client {
     return this._connectPromise;
   }
 
-  
+  /**
+   * Kept for API compatibility. Automatic reconnect is not implemented.
+   */
   setAutoReconnect(options: AutoReconnectOptions): void {
-    if (options.enabled !== undefined) {
-      this._autoReconnect = options.enabled;
-      if (!options.enabled) {
-        this.clearReconnectTimer();
-      }
-    }
-    if (options.maxAttempts !== undefined) {
-      this._maxReconnectAttempts = options.maxAttempts;
-    }
-    if (options.baseDelayMs !== undefined) {
-      this._reconnectBaseDelayMs = options.baseDelayMs;
-    }
-    if (options.maxDelayMs !== undefined) {
-      this._reconnectMaxDelayMs = options.maxDelayMs;
-    }
+    void options;
   }
 
- 
   disconnect(fireDisconnectEvent: boolean = true): void {
-    this._intentionallyClosed = true;
-    this.clearReconnectTimer();
-    this._reconnectAttempts = 0;
     this._lastConnectArgs = undefined;
     this.markDisconnected(createEvent("close"), fireDisconnectEvent);
     this.transport.close();
-  }
-
-  private scheduleReconnect(): void {
-    if (!this._autoReconnect) return;
-    if (this._intentionallyClosed) return;
-    if (!this._lastConnectArgs) return;
-    if (this._reconnectTimer !== undefined) return;
-    if (this._reconnectAttempts >= this._maxReconnectAttempts) return;
-    if (this._connectionState !== ConnectionState.DISCONNECTED) return;
-
-    const attempt = this._reconnectAttempts++;
-    const delay = Math.min(
-      this._reconnectBaseDelayMs * Math.pow(2, attempt),
-      this._reconnectMaxDelayMs,
-    );
-
-    this._reconnectTimer = setTimeout(() => {
-      this._reconnectTimer = undefined;
-      const args = this._lastConnectArgs;
-      if (!args) return;
-      if (this._intentionallyClosed) return;
-      this.connect(
-        args.session_id,
-        args.url,
-        args.createStatus,
-        args.verbose,
-        args.connectTimeoutMs,
-      ).catch(() => {
-        // failure path already triggers another scheduleReconnect via
-        // setOnError/timeout/onClose handlers, so swallow here.
-      });
-    }, delay);
-  }
-
-  private clearReconnectTimer(): void {
-    if (this._reconnectTimer !== undefined) {
-      clearTimeout(this._reconnectTimer);
-      this._reconnectTimer = undefined;
-    }
   }
 
   private async pingPong(): Promise<void> {
@@ -814,7 +745,6 @@ export class Client {
         this.markDisconnected(createEvent("close"));
       }
 
-      this.scheduleReconnect();
       return;
     }
 
