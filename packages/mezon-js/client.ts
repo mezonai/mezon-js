@@ -294,15 +294,6 @@ export const ConnectionState = {
 export type ConnectionStateType =
   (typeof ConnectionState)[keyof typeof ConnectionState];
 
-/** Labels which code path invoked markDisconnected (verbose logging). */
-type DisconnectSource =
-  | "connect_superseded"
-  | "connect_timeout"
-  | "transport_on_close"
-  | "transport_on_error"
-  | "connect_sync_throw"
-  | "client_disconnect"
-  | "heartbeat_unreachable";
 
 function createEvent(type: string): Event {
   if (typeof Event === "function") {
@@ -827,11 +818,17 @@ export class Client {
   }
 
   private markDisconnected(
-    source: DisconnectSource,
+    source: string,
     evt: Event = createEvent("close"),
     fireDisconnectEvent = true,
     incrementServerDisconnectStreak = false,
   ): void {
+
+
+    if (this.verbose && typeof console !== "undefined") {
+      console.log(source);
+    }
+
     const wasAlreadyDisconnected =
       this._connectionState === ConnectionState.DISCONNECTED;
     this._connectionState = ConnectionState.DISCONNECTED;
