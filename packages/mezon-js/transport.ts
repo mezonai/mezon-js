@@ -492,7 +492,6 @@ export class MezonTransport {
   ): void {
     const [host, port] = url.split(":");
     this.adapter.connect(host, port, createStatus, session_id, signal);
-    console.log('Connect');
     this.adapter.onOpen = handlers.onOpen;
     this.adapter.onError = handlers.onError;
     this.adapter.onClose = handlers.onClose;

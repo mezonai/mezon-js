@@ -398,9 +398,6 @@ export class Client {
     connectTimeoutMs: number = Client.DefaultConnectTimeoutMs,
   ): Promise<void> {
     this.verbose = verbose;
-
-
-    console.log('conntect');
     
     const sameTarget =
       this._lastConnectArgs?.session_id === session_id &&
