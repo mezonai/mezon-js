@@ -167,7 +167,7 @@ export class DefaultSocket implements Socket {
   public static readonly DefaultSendTimeoutMs = 10000;
   public static readonly DefaultConnectTimeoutMs = 30000;
 
-  private readonly cIds: { [key: string]: PromiseExecutor };
+  private readonly cIds: { [key: number]: PromiseExecutor };
   private nextCid: number;
   private _heartbeatTimeoutMs: number;
   private _connectionState: ConnectionStateType;
@@ -189,8 +189,8 @@ export class DefaultSocket implements Socket {
     this._connectionState = ConnectionState.DISCONNECTED;
   }
 
-  generatecid(): string {
-    const cid = this.nextCid.toString();
+  generatecid(): number {
+    const cid = this.nextCid;
     ++this.nextCid;
     return cid;
   }
