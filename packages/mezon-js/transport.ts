@@ -83,7 +83,6 @@ import {
   ApiGetPollRequest,
   ApiGetPollResponse,
   ApiGetPubKeysResponse,
-  ApiGiveCoffeeEvent,
   ApiInviteUserRes,
   ApiIsBannedResponse,
   ApiIsFollowerRequest,
@@ -153,7 +152,6 @@ import {
   ApiSystemMessage,
   ApiSystemMessageRequest,
   ApiSystemMessagesList,
-  ApiTokenSentEvent,
   ApiTransferOwnershipRequest,
   ApiUpdateAccountRequest,
   ApiUpdateCategoryOrderRequest,
@@ -2735,7 +2733,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -2813,7 +2814,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -2854,7 +2858,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -3042,7 +3049,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {};
       }),
       new Promise((_, reject) =>
@@ -3112,7 +3122,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -3144,7 +3157,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -3173,7 +3189,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -3210,7 +3229,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -3251,7 +3273,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -3461,8 +3486,11 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
-        return {} as any;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return {}
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3504,8 +3532,11 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
-        return {} as any;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3542,8 +3573,11 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
-        return {} as any;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -3899,35 +3933,6 @@ export class MezonTransport {
     ]);
   }
 
-  /** Give a coffee */
-  giveMeACoffee(body: ApiGiveCoffeeEvent, options = {}): Promise<any> {
-    if (body === null || body === undefined) {
-      throw new Error(
-        "'body' is a required parameter but is null or undefined.",
-      );
-    }
-    const urlPath = "/mezon.api.Mezon/GiveMeACoffee";
-    const bodyWriter = tsproto.GiveCoffeeEvent.encode(
-      tsproto.GiveCoffeeEvent.fromPartial(body),
-    );
-    const encodedBody = bodyWriter.finish();
-
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-
-    return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
-        return {} as any;
-      }),
-      new Promise<never>((_, reject) =>
-        setTimeout(
-          () => reject(new Error("Request timed out.")),
-          this.timeoutMs,
-        ),
-      ),
-    ]);
-  }
-
   /** get key server */
   getKeyServer(options = {}): Promise<ApiGetKeyServerResp> {
     const urlPath = "/mezon.api.Mezon/GetKeyServer";
@@ -4113,8 +4118,11 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
-        return {} as any;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4166,8 +4174,11 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
-        return {} as any;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -4195,8 +4206,11 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
-        return {} as any;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return {};
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -5196,35 +5210,6 @@ export class MezonTransport {
     ]);
   }
 
-  /** UpdateWallets */
-  sendToken(body: ApiTokenSentEvent, options = {}): Promise<any> {
-    if (body === null || body === undefined) {
-      throw new Error(
-        "'body' is a required parameter but is null or undefined.",
-      );
-    }
-    const urlPath = "/mezon.api.Mezon/SendToken";
-    const bodyWriter = tsproto.TokenSentEvent.encode(
-      tsproto.TokenSentEvent.fromPartial(body),
-    );
-    const encodedBody = bodyWriter.finish();
-
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-
-    return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
-        return {};
-      }),
-      new Promise<never>((_, reject) =>
-        setTimeout(
-          () => reject(new Error("Request timed out.")),
-          this.timeoutMs,
-        ),
-      ),
-    ]);
-  }
-
   /** Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user. */
   sessionLogout(body: ApiSessionLogoutRequest, options = {}): Promise<any> {
     if (body === null || body === undefined) {
@@ -5268,7 +5253,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -5305,7 +5293,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -5342,7 +5333,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -5504,7 +5498,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -5601,7 +5598,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -5678,7 +5678,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -5769,7 +5772,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -5801,7 +5807,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -5843,7 +5852,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {};
       }),
       new Promise<never>((_, reject) =>
@@ -8530,7 +8542,10 @@ export class MezonTransport {
     const urlPath = "";
     const fetchOptions = { status_follow: { user_ids: userIds } } as any;
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {} as Status;
       }),
       new Promise<never>((_, reject) =>
@@ -8550,7 +8565,10 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {} as ClanJoin;
       }),
       new Promise<never>((_, reject) =>
@@ -8568,8 +8586,11 @@ export class MezonTransport {
       follow_event: {},
     } as any;
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
-        return {} as unknown as void;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return {} as any;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8596,7 +8617,10 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {} as Channel;
       }),
       new Promise<never>((_, reject) =>
@@ -8624,8 +8648,11 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
-        return {} as unknown as void;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return {} as any;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8662,7 +8689,10 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {} as tsproto.ChannelMessageAck;
       }),
       new Promise<never>((_, reject) =>
@@ -8678,8 +8708,11 @@ export class MezonTransport {
     const urlPath = "";
     const fetchOptions = { status_unfollow: { user_ids: user_ids } } as any;
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
-        return {} as unknown as void;
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return {} as any;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
@@ -8720,7 +8753,10 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {} as tsproto.ChannelMessageAck;
       }),
       new Promise<never>((_, reject) =>
@@ -8736,7 +8772,10 @@ export class MezonTransport {
     const urlPath = "";
     const fetchOptions = { status_update: { status: status } } as any;
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {} as unknown as void;
       }),
       new Promise<never>((_, reject) =>
@@ -8786,7 +8825,10 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {} as QuickMenuEvent;
       }),
       new Promise<never>((_, reject) =>
@@ -8838,7 +8880,10 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {} as tsproto.ChannelMessageAck;
       }),
       new Promise<never>((_, reject) =>
@@ -8884,7 +8929,10 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {} as tsproto.ChannelMessageAck;
       }),
       new Promise<never>((_, reject) =>
@@ -8932,7 +8980,10 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {} as ApiMessageReaction;
       }),
       new Promise<never>((_, reject) =>
@@ -8964,7 +9015,10 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {} as MessageTypingEvent;
       }),
       new Promise<never>((_, reject) =>
@@ -8996,7 +9050,10 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {} as LastSeenMessageEvent;
       }),
       new Promise<never>((_, reject) =>
@@ -9042,7 +9099,10 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {} as LastPinMessageEvent;
       }),
       new Promise<never>((_, reject) =>
@@ -9070,7 +9130,10 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {} as CustomStatusEvent;
       }),
       new Promise<never>((_, reject) =>
@@ -9094,7 +9157,10 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {} as VoiceReactionSend;
       }),
       new Promise<never>((_, reject) =>
@@ -9124,7 +9190,10 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {} as WebrtcSignalingFwd;
       }),
       new Promise<never>((_, reject) =>
@@ -9152,7 +9221,10 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {} as IncomingCallPush;
       }),
       new Promise<never>((_, reject) =>
@@ -9178,7 +9250,10 @@ export class MezonTransport {
       },
     } as any;
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return {} as ChannelAppEvent;
       }),
       new Promise<never>((_, reject) =>
