@@ -3792,38 +3792,6 @@ export class Client {
     });
   }
 
-  async givecoffee(
-    session: ApiSession,
-    request: ApiGiveCoffeeEvent,
-  ): Promise<any> {
-    if (
-      this.autoFallbackHttp &&
-      this._connectionState !== ConnectionState.CONNECTED
-    ) {
-      await this.transport.setFallbackSession(session);
-    }
-
-    return this.transport.giveMeACoffee(request).then((response: any) => {
-      return response !== undefined;
-    });
-  }
-
-  async sendToken(
-    session: ApiSession,
-    request: ApiTokenSentEvent,
-  ): Promise<any> {
-    if (
-      this.autoFallbackHttp &&
-      this._connectionState !== ConnectionState.CONNECTED
-    ) {
-      await this.transport.setFallbackSession(session);
-    }
-
-    return this.transport.sendToken(request).then((response: any) => {
-      return response !== undefined;
-    });
-  }
-
   /** List a channel's users. */
   async listStreamingChannelUsers(
     session: ApiSession,
