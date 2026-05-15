@@ -21,7 +21,7 @@ export const protobufPackage = "mezon.realtime";
 /** The realtime protocol for Mezon server. */
 /** An envelope for a realtime message. */
 export interface Envelope {
-  cid: string;
+  cid: number;
   /** A response from a channel join operation. */
   channel?: Channel | undefined;
   /** Join a realtime chat channel. */
@@ -85,7 +85,7 @@ export interface UserPresence {
   /** The user this presence belongs to. */
   user_id: string;
   /** A unique session ID identifying the particular connection, because the user may have many. */
-  session_id: string;
+  session_id: number;
   /** The username for display purposes. */
   username: string;
   /** A user-set status message for this stream, if applicable. */
@@ -275,7 +275,7 @@ export interface Pong {}
 
 function createBaseEnvelope(): Envelope {
   return {
-    cid: "",
+    cid: 0,
     channel: undefined,
     channel_join: undefined,
     channel_leave: undefined,
@@ -290,8 +290,8 @@ function createBaseEnvelope(): Envelope {
 
 export const Envelope = {
   encode(message: Envelope, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.cid !== "") {
-      writer.uint32(10).string(message.cid);
+    if (message.cid !== 0) {
+      writer.uint32(8).int32(message.cid);
     }
     if (message.channel !== undefined) {
       Channel.encode(message.channel, writer.uint32(18).fork()).ldelim();
@@ -331,11 +331,11 @@ export const Envelope = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) { 
             break;
           }
 
-          message.cid = reader.string();
+          message.cid = reader.int32();
           continue;
         case 2:
           if (tag !== 18) {
@@ -411,7 +411,7 @@ export const Envelope = {
 
   fromJSON(object: any): Envelope {
     return {
-      cid: isSet(object.cid) ? globalThis.String(object.cid) : "",
+      cid: isSet(object.cid) ? globalThis.Number(object.cid) : 0,
       channel: isSet(object.channel) ? Channel.fromJSON(object.channel) : undefined,
       channel_join: isSet(object.channel_join) ? ChannelJoin.fromJSON(object.channel_join) : undefined,
       channel_leave: isSet(object.channel_leave) ? ChannelLeave.fromJSON(object.channel_leave) : undefined,
@@ -430,8 +430,8 @@ export const Envelope = {
 
   toJSON(message: Envelope): unknown {
     const obj: any = {};
-    if (message.cid !== "") {
-      obj.cid = message.cid;
+    if (message.cid !== 0) {
+      obj.cid = Math.round(message.cid);
     }
     if (message.channel !== undefined) {
       obj.channel = Channel.toJSON(message.channel);
@@ -468,7 +468,7 @@ export const Envelope = {
   },
   fromPartial<I extends Exact<DeepPartial<Envelope>, I>>(object: I): Envelope {
     const message = createBaseEnvelope();
-    message.cid = object.cid ?? "";
+    message.cid = object.cid ?? 0;
     message.channel =
       object.channel !== undefined && object.channel !== null ? Channel.fromPartial(object.channel) : undefined;
     message.channel_join =
@@ -1770,7 +1770,7 @@ export const Pong = {
 };
 
 function createBaseUserPresence(): UserPresence {
-  return { user_id: "0", session_id: "", username: "", status: undefined, is_mobile: false, user_status: "" };
+  return { user_id: "0", session_id: 0, username: "", status: undefined, is_mobile: false, user_status: "" };
 }
 
 export const UserPresence = {
@@ -1778,8 +1778,8 @@ export const UserPresence = {
     if (message.user_id !== "0") {
       writer.uint32(8).int64(message.user_id);
     }
-    if (message.session_id !== "") {
-      writer.uint32(18).string(message.session_id);
+    if (message.session_id !== 0) {
+      writer.uint32(16).int32(message.session_id);
     }
     if (message.username !== "") {
       writer.uint32(26).string(message.username);
@@ -1815,7 +1815,7 @@ export const UserPresence = {
             break;
           }
 
-          message.session_id = reader.string();
+          message.session_id = reader.int32();
           continue;
         case 3:
           if (tag !== 26) {
@@ -1857,7 +1857,7 @@ export const UserPresence = {
   fromJSON(object: any): UserPresence {
     return {
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
-      session_id: isSet(object.session_id) ? globalThis.String(object.session_id) : "",
+      session_id: isSet(object.session_id) ? globalThis.Number(object.session_id) : 0,
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       status: isSet(object.status) ? String(object.status) : undefined,
       is_mobile: isSet(object.is_mobile) ? globalThis.Boolean(object.is_mobile) : false,
@@ -1870,8 +1870,8 @@ export const UserPresence = {
     if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
-    if (message.session_id !== "") {
-      obj.session_id = message.session_id;
+    if (message.session_id !== 0) {
+      obj.session_id = Math.round(message.session_id);
     }
     if (message.username !== "") {
       obj.username = message.username;
@@ -1894,7 +1894,7 @@ export const UserPresence = {
   fromPartial<I extends Exact<DeepPartial<UserPresence>, I>>(object: I): UserPresence {
     const message = createBaseUserPresence();
     message.user_id = object.user_id ?? "0";
-    message.session_id = object.session_id ?? "";
+    message.session_id = object.session_id ?? 0;
     message.username = object.username ?? "";
     message.status = object.status ?? undefined;
     message.is_mobile = object.is_mobile ?? false;
