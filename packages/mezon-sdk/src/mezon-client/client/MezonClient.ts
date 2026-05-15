@@ -215,9 +215,27 @@ export class MezonClient extends MezonClientCore {
   }
 
   private async _onChannelUpdatedInternal(e: ChannelUpdatedEvent) {
-    if (e.channel_type === ChannelType.CHANNEL_TYPE_THREAD && e.status === 1) {
+    const isChannelOrThread =
+      e.channel_type === ChannelType.CHANNEL_TYPE_THREAD ||
+      e.channel_type === ChannelType.CHANNEL_TYPE_CHANNEL;
+    if (isChannelOrThread && e.status === 1 && e.clan_id && e.channel_id) {
       const socket = this.socketManager.getSocket();
-      await socket.joinChat(e.clan_id, e.channel_id, e.channel_type, false);
+      const isPublic = !e.channel_private;
+      if (e.active === 1) {
+        await socket.joinChat(
+          e.clan_id,
+          e.channel_id,
+          e.channel_type!,
+          isPublic,
+        );
+      } else if (e.active === 0) {
+        await socket.leaveChat(
+          e.clan_id,
+          e.channel_id,
+          e.channel_type!,
+          isPublic,
+        );
+      }
     }
     this._updateCacheChannel(e);
   }
