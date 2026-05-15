@@ -1,6 +1,6 @@
 {
   "name": "mezon-light-sdk",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "lightweight SDK for mezon chat.",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.mjs",
@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "js-base64": "^3.7.8",
-    "protobufjs": "^8.0.0"
+    "protobufjs": "^8.0.2"
   },
   "peerDependencies": {
     "long": "^5.0.0"
