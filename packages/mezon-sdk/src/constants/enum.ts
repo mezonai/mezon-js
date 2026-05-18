@@ -10,6 +10,7 @@ export enum InternalEventsSocket {
   ChannelCreatedEvent = "channel_created_event",
   ChannelDeletedEvent = "channel_deleted_event",
   ChannelUpdatedEvent = "channel_updated_event",
+  ChannelArchiveEvent = "channel_archive_event",
   ClanProfileUpdatedEvent = "clan_profile_updated_event",
   ClanUpdatedEvent = "clan_updated_event",
   StatusPresenceEvent = "status_presence_event",
@@ -71,6 +72,9 @@ export enum Events {
 
   /** Listen to channel updated */
   ChannelUpdated = InternalEventsSocket.ChannelUpdatedEvent,
+
+  /** Listen to channel archive / unarchive (active=0 archived, active=1 active) */
+  ChannelArchive = InternalEventsSocket.ChannelArchiveEvent,
 
   /** Listen to clan create new role */
   RoleEvent = InternalEventsSocket.RoleEvent,

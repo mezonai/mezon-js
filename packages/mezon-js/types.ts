@@ -593,6 +593,50 @@ export interface ChannelUpdatedEvent {
   channel_avatar: string;
 }
 
+// Emitted when a channel/thread is archived or activated from archive.
+export interface ChannelArchiveEvent {
+  // clan id
+  clan_id: string;
+  // category
+  category_id: string;
+  // creator
+  creator_id: string;
+  // parent_id
+  parent_id: string;
+  // channel id
+  channel_id: string;
+  // channel label
+  channel_label: string;
+  // channel type
+  channel_type: number;
+  // status
+  status: number;
+  // meeting code
+  meeting_code: string;
+  // channel private
+  channel_private: number;
+  // is error
+  is_error: boolean;
+  // app url
+  app_id: string;
+  // e2ee
+  e2ee: number;
+  //
+  topic: string;
+  //
+  age_restricted: number;
+  // 0 = archived, 1 = active
+  active: number;
+  //
+  count_mess_unread: number;
+  //
+  role_ids?: Array<string>;
+  // The users to add.
+  user_ids?: Array<string>;
+  // channel avatar
+  channel_avatar: string;
+}
+
 export interface DeleteAccountEvent {
   // user id
   user_id: string;

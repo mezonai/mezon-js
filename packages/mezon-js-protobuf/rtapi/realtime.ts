@@ -416,7 +416,11 @@ export interface Envelope {
     | ListChannelUsersBannedEvent
     | undefined;
   /** Refresh session event */
-  refresh_session_event?: Session | undefined;
+  refresh_session_event?:
+    | Session
+    | undefined;
+  /** Channel archive / unarchive event */
+  channel_archive_event?: ChannelArchiveEvent | undefined;
 }
 
 export interface ApiRequestEvent {
@@ -1257,6 +1261,50 @@ export interface ChannelUpdatedEvent {
   channel_avatar: string;
 }
 
+/** Emitted when a channel/thread is archived or activated from archive. */
+export interface ChannelArchiveEvent {
+  /** clan id */
+  clan_id: string;
+  /** category */
+  category_id: string;
+  /** creator */
+  creator_id: string;
+  /** parent id */
+  parent_id: string;
+  /** channel id */
+  channel_id: string;
+  /** channel label */
+  channel_label: string;
+  /** channel type */
+  channel_type: number;
+  /** status */
+  status: number;
+  /** meeting code */
+  meeting_code: string;
+  /** error */
+  is_error: boolean;
+  /** channel private */
+  channel_private: boolean;
+  /** app url */
+  app_id: string;
+  /** e2ee */
+  e2ee: number;
+  /** topic */
+  topic: string;
+  /**  */
+  age_restricted: number;
+  /** 0 = archived, 1 = active */
+  active: number;
+  /** count message unread */
+  count_mess_unread: number;
+  /** The users to add. */
+  user_ids: string[];
+  /** This is the role that needs to be added to the channel */
+  role_ids: string[];
+  /**  */
+  channel_avatar: string;
+}
+
 /** Stop receiving status updates for some set of users. */
 export interface StatusUnfollow {
   /** Users to unfollow. */
@@ -1820,6 +1868,7 @@ function createBaseEnvelope(): Envelope {
     aiagent_enabled_event: undefined,
     list_channel_users_banned_event: undefined,
     refresh_session_event: undefined,
+    channel_archive_event: undefined,
   };
 }
 
@@ -2113,6 +2162,9 @@ export const Envelope = {
     }
     if (message.refresh_session_event !== undefined) {
       Session.encode(message.refresh_session_event, writer.uint32(770).fork()).ldelim();
+    }
+    if (message.channel_archive_event !== undefined) {
+      ChannelArchiveEvent.encode(message.channel_archive_event, writer.uint32(778).fork()).ldelim();
     }
     return writer;
   },
@@ -2796,6 +2848,13 @@ export const Envelope = {
 
           message.refresh_session_event = Session.decode(reader, reader.uint32());
           continue;
+        case 97:
+          if (tag !== 778) {
+            break;
+          }
+
+          message.channel_archive_event = ChannelArchiveEvent.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3028,6 +3087,9 @@ export const Envelope = {
         : undefined,
       refresh_session_event: isSet(object.refresh_session_event)
         ? Session.fromJSON(object.refresh_session_event)
+        : undefined,
+      channel_archive_event: isSet(object.channel_archive_event)
+        ? ChannelArchiveEvent.fromJSON(object.channel_archive_event)
         : undefined,
     };
   },
@@ -3323,6 +3385,9 @@ export const Envelope = {
     }
     if (message.refresh_session_event !== undefined) {
       obj.refresh_session_event = Session.toJSON(message.refresh_session_event);
+    }
+    if (message.channel_archive_event !== undefined) {
+      obj.channel_archive_event = ChannelArchiveEvent.toJSON(message.channel_archive_event);
     }
     return obj;
   },
@@ -3643,6 +3708,10 @@ export const Envelope = {
     message.refresh_session_event =
       (object.refresh_session_event !== undefined && object.refresh_session_event !== null)
         ? Session.fromPartial(object.refresh_session_event)
+        : undefined;
+    message.channel_archive_event =
+      (object.channel_archive_event !== undefined && object.channel_archive_event !== null)
+        ? ChannelArchiveEvent.fromPartial(object.channel_archive_event)
         : undefined;
     return message;
   },
@@ -10956,6 +11025,395 @@ export const ChannelUpdatedEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<ChannelUpdatedEvent>, I>>(object: I): ChannelUpdatedEvent {
     const message = createBaseChannelUpdatedEvent();
+    message.clan_id = object.clan_id ?? "0";
+    message.category_id = object.category_id ?? "0";
+    message.creator_id = object.creator_id ?? "0";
+    message.parent_id = object.parent_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.channel_label = object.channel_label ?? "";
+    message.channel_type = object.channel_type ?? 0;
+    message.status = object.status ?? 0;
+    message.meeting_code = object.meeting_code ?? "";
+    message.is_error = object.is_error ?? false;
+    message.channel_private = object.channel_private ?? false;
+    message.app_id = object.app_id ?? "0";
+    message.e2ee = object.e2ee ?? 0;
+    message.topic = object.topic ?? "";
+    message.age_restricted = object.age_restricted ?? 0;
+    message.active = object.active ?? 0;
+    message.count_mess_unread = object.count_mess_unread ?? 0;
+    message.user_ids = object.user_ids?.map((e) => e) || [];
+    message.role_ids = object.role_ids?.map((e) => e) || [];
+    message.channel_avatar = object.channel_avatar ?? "";
+    return message;
+  },
+};
+
+function createBaseChannelArchiveEvent(): ChannelArchiveEvent {
+  return {
+    clan_id: "0",
+    category_id: "0",
+    creator_id: "0",
+    parent_id: "0",
+    channel_id: "0",
+    channel_label: "",
+    channel_type: 0,
+    status: 0,
+    meeting_code: "",
+    is_error: false,
+    channel_private: false,
+    app_id: "0",
+    e2ee: 0,
+    topic: "",
+    age_restricted: 0,
+    active: 0,
+    count_mess_unread: 0,
+    user_ids: [],
+    role_ids: [],
+    channel_avatar: "",
+  };
+}
+
+export const ChannelArchiveEvent = {
+  encode(message: ChannelArchiveEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
+    }
+    if (message.category_id !== "0") {
+      writer.uint32(16).int64(message.category_id);
+    }
+    if (message.creator_id !== "0") {
+      writer.uint32(24).int64(message.creator_id);
+    }
+    if (message.parent_id !== "0") {
+      writer.uint32(32).int64(message.parent_id);
+    }
+    if (message.channel_id !== "0") {
+      writer.uint32(40).int64(message.channel_id);
+    }
+    if (message.channel_label !== "") {
+      writer.uint32(50).string(message.channel_label);
+    }
+    if (message.channel_type !== 0) {
+      writer.uint32(56).int32(message.channel_type);
+    }
+    if (message.status !== 0) {
+      writer.uint32(64).int32(message.status);
+    }
+    if (message.meeting_code !== "") {
+      writer.uint32(74).string(message.meeting_code);
+    }
+    if (message.is_error !== false) {
+      writer.uint32(80).bool(message.is_error);
+    }
+    if (message.channel_private !== false) {
+      writer.uint32(88).bool(message.channel_private);
+    }
+    if (message.app_id !== "0") {
+      writer.uint32(96).int64(message.app_id);
+    }
+    if (message.e2ee !== 0) {
+      writer.uint32(104).int32(message.e2ee);
+    }
+    if (message.topic !== "") {
+      writer.uint32(114).string(message.topic);
+    }
+    if (message.age_restricted !== 0) {
+      writer.uint32(120).int32(message.age_restricted);
+    }
+    if (message.active !== 0) {
+      writer.uint32(128).int32(message.active);
+    }
+    if (message.count_mess_unread !== 0) {
+      writer.uint32(136).int32(message.count_mess_unread);
+    }
+    writer.uint32(146).fork();
+    for (const v of message.user_ids) {
+      writer.int64(v);
+    }
+    writer.ldelim();
+    writer.uint32(154).fork();
+    for (const v of message.role_ids) {
+      writer.int64(v);
+    }
+    writer.ldelim();
+    if (message.channel_avatar !== "") {
+      writer.uint32(162).string(message.channel_avatar);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelArchiveEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelArchiveEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.clan_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.category_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.creator_id = longToString(reader.int64() as Long);
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.parent_id = longToString(reader.int64() as Long);
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.channel_label = reader.string();
+          continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.channel_type = reader.int32();
+          continue;
+        case 8:
+          if (tag !== 64) {
+            break;
+          }
+
+          message.status = reader.int32();
+          continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.meeting_code = reader.string();
+          continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.is_error = reader.bool();
+          continue;
+        case 11:
+          if (tag !== 88) {
+            break;
+          }
+
+          message.channel_private = reader.bool();
+          continue;
+        case 12:
+          if (tag !== 96) {
+            break;
+          }
+
+          message.app_id = longToString(reader.int64() as Long);
+          continue;
+        case 13:
+          if (tag !== 104) {
+            break;
+          }
+
+          message.e2ee = reader.int32();
+          continue;
+        case 14:
+          if (tag !== 114) {
+            break;
+          }
+
+          message.topic = reader.string();
+          continue;
+        case 15:
+          if (tag !== 120) {
+            break;
+          }
+
+          message.age_restricted = reader.int32();
+          continue;
+        case 16:
+          if (tag !== 128) {
+            break;
+          }
+
+          message.active = reader.int32();
+          continue;
+        case 17:
+          if (tag !== 136) {
+            break;
+          }
+
+          message.count_mess_unread = reader.int32();
+          continue;
+        case 18:
+          if (tag === 144) {
+            message.user_ids.push(longToString(reader.int64() as Long));
+
+            continue;
+          }
+
+          if (tag === 146) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
+        case 19:
+          if (tag === 152) {
+            message.role_ids.push(longToString(reader.int64() as Long));
+
+            continue;
+          }
+
+          if (tag === 154) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.role_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
+        case 20:
+          if (tag !== 162) {
+            break;
+          }
+
+          message.channel_avatar = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelArchiveEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "0",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "0",
+      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
+      channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
+      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
+      meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
+      is_error: isSet(object.is_error) ? globalThis.Boolean(object.is_error) : false,
+      channel_private: isSet(object.channel_private) ? globalThis.Boolean(object.channel_private) : false,
+      app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "0",
+      e2ee: isSet(object.e2ee) ? globalThis.Number(object.e2ee) : 0,
+      topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
+      age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
+      active: isSet(object.active) ? globalThis.Number(object.active) : 0,
+      count_mess_unread: isSet(object.count_mess_unread) ? globalThis.Number(object.count_mess_unread) : 0,
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      role_ids: globalThis.Array.isArray(object?.role_ids) ? object.role_ids.map((e: any) => globalThis.String(e)) : [],
+      channel_avatar: isSet(object.channel_avatar) ? globalThis.String(object.channel_avatar) : "",
+    };
+  },
+
+  toJSON(message: ChannelArchiveEvent): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "0") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.category_id !== "0") {
+      obj.category_id = message.category_id;
+    }
+    if (message.creator_id !== "0") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.parent_id !== "0") {
+      obj.parent_id = message.parent_id;
+    }
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.channel_label !== "") {
+      obj.channel_label = message.channel_label;
+    }
+    if (message.channel_type !== 0) {
+      obj.channel_type = Math.round(message.channel_type);
+    }
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
+    }
+    if (message.meeting_code !== "") {
+      obj.meeting_code = message.meeting_code;
+    }
+    if (message.is_error !== false) {
+      obj.is_error = message.is_error;
+    }
+    if (message.channel_private !== false) {
+      obj.channel_private = message.channel_private;
+    }
+    if (message.app_id !== "0") {
+      obj.app_id = message.app_id;
+    }
+    if (message.e2ee !== 0) {
+      obj.e2ee = Math.round(message.e2ee);
+    }
+    if (message.topic !== "") {
+      obj.topic = message.topic;
+    }
+    if (message.age_restricted !== 0) {
+      obj.age_restricted = Math.round(message.age_restricted);
+    }
+    if (message.active !== 0) {
+      obj.active = Math.round(message.active);
+    }
+    if (message.count_mess_unread !== 0) {
+      obj.count_mess_unread = Math.round(message.count_mess_unread);
+    }
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
+    }
+    if (message.role_ids?.length) {
+      obj.role_ids = message.role_ids;
+    }
+    if (message.channel_avatar !== "") {
+      obj.channel_avatar = message.channel_avatar;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelArchiveEvent>, I>>(base?: I): ChannelArchiveEvent {
+    return ChannelArchiveEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ChannelArchiveEvent>, I>>(object: I): ChannelArchiveEvent {
+    const message = createBaseChannelArchiveEvent();
     message.clan_id = object.clan_id ?? "0";
     message.category_id = object.category_id ?? "0";
     message.creator_id = object.creator_id ?? "0";
