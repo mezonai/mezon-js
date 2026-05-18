@@ -199,6 +199,7 @@ import {
   BlockFriend,
   CategoryEvent,
   ChannelAppEvent,
+  ChannelArchiveEvent,
   ChannelCanvas,
   ChannelCreatedEvent,
   ChannelDeletedEvent,
@@ -516,6 +517,8 @@ export class Client {
             this.onstickerdeleted(message.sticker_delete_event);
           } else if (message.channel_updated_event) {
             this.onchannelupdated(message.channel_updated_event);
+          } else if (message.channel_archive_event) {
+            this.onchannelarchive(message.channel_archive_event);
           } else if (message.delete_account_event) {
             this.ondeleteaccount(message.delete_account_event);
           } else if (message.clan_profile_updated_event) {
@@ -1077,6 +1080,12 @@ export class Client {
   onchannelupdated(channelUpdated: ChannelUpdatedEvent) {
     if (this.verbose && window && window.console) {
       console.log(channelUpdated);
+    }
+  }
+
+  onchannelarchive(channelArchive: ChannelArchiveEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(channelArchive);
     }
   }
 
