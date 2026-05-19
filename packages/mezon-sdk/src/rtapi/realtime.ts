@@ -659,6 +659,7 @@ export interface QuickMenuDataEvent {
     | ChannelMessageSend
     | undefined;
   sender_id: string;
+  message_sender_id: string;
 }
 
 export interface VoiceReactionSend {
@@ -6027,7 +6028,7 @@ export const EphemeralMessageSend = {
 };
 
 function createBaseQuickMenuDataEvent(): QuickMenuDataEvent {
-  return { menu_name: "", message: undefined, sender_id: "0" };
+  return { menu_name: "", message: undefined, sender_id: "0", message_sender_id: "0" };
 }
 
 export const QuickMenuDataEvent = {
@@ -6040,6 +6041,9 @@ export const QuickMenuDataEvent = {
     }
     if (message.sender_id !== "0") {
       writer.uint32(24).int64(message.sender_id);
+    }
+    if (message.message_sender_id !== "0") {
+      writer.uint32(32).int64(message.message_sender_id);
     }
     return writer;
   },
@@ -6072,6 +6076,13 @@ export const QuickMenuDataEvent = {
 
           message.sender_id = longToString(reader.int64() as Long);
           continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.message_sender_id = longToString(reader.int64() as Long);
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -6086,6 +6097,7 @@ export const QuickMenuDataEvent = {
       menu_name: isSet(object.menu_name) ? globalThis.String(object.menu_name) : "",
       message: isSet(object.message) ? ChannelMessageSend.fromJSON(object.message) : undefined,
       sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "0",
+      message_sender_id: isSet(object.message_sender_id) ? globalThis.String(object.message_sender_id) : "0",
     };
   },
 
@@ -6100,6 +6112,9 @@ export const QuickMenuDataEvent = {
     if (message.sender_id !== "0") {
       obj.sender_id = message.sender_id;
     }
+    if (message.message_sender_id !== "0") {
+      obj.message_sender_id = message.message_sender_id;
+    }
     return obj;
   },
 
@@ -6113,6 +6128,7 @@ export const QuickMenuDataEvent = {
       ? ChannelMessageSend.fromPartial(object.message)
       : undefined;
     message.sender_id = object.sender_id ?? "0";
+    message.message_sender_id = object.message_sender_id ?? "0";
     return message;
   },
 };

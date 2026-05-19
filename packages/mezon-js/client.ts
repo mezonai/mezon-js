@@ -6196,8 +6196,8 @@ export class Client {
     avatar?: string,
     code?: number,
     topic_id?: string,
-    target_message_id?: string,
-    sender_id?: string,
+    message_id?: string,
+    message_sender_id?: string,
   ): Promise<QuickMenuEvent> {
     if (
       this.autoFallbackHttp &&
@@ -6220,8 +6220,8 @@ export class Client {
       avatar,
       code,
       topic_id,
-      target_message_id,
-      sender_id,
+      message_id,
+      message_sender_id,
     );
   }
 

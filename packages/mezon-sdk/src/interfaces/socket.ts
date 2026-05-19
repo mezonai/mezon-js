@@ -811,6 +811,7 @@ export interface QuickMenuEvent {
   quick_menu_event: {
     menu_name: string;
     sender_id?: string;
+    message_sender_id?: string;
     message: {
       /** Clan Id */
       clan_id: string;

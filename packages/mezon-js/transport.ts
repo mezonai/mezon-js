@@ -8802,8 +8802,8 @@ export class MezonTransport {
     avatar?: string,
     code?: number,
     topic_id?: string,
-    target_message_id?: string,
-    sender_id?: string,
+    message_id?: string,
+    message_sender_id?: string,
   ): Promise<QuickMenuEvent> {
     const urlPath = "";
     const message: Record<string, unknown> = {
@@ -8822,23 +8822,23 @@ export class MezonTransport {
       topic_id: topic_id,
     };
     if (
-      target_message_id !== undefined &&
-      target_message_id !== null &&
-      String(target_message_id).length > 0
+      message_id !== undefined &&
+      message_id !== null &&
+      String(message_id).length > 0
     ) {
-      message.id = target_message_id;
+      message.id = message_id;
     }
     const qm: Record<string, unknown> = {
       menu_name: menu_name,
       message,
     };
     if (
-      sender_id !== undefined &&
-      sender_id !== null &&
-      String(sender_id).length > 0 &&
-      String(sender_id) !== "0"
+      message_sender_id !== undefined &&
+      message_sender_id !== null &&
+      String(message_sender_id).length > 0 &&
+      String(message_sender_id) !== "0"
     ) {
-      qm.sender_id = sender_id;
+      qm.message_sender_id = message_sender_id;
     }
     const fetchOptions = {
       quick_menu_event: qm,
