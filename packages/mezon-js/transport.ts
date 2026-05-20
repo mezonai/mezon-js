@@ -8802,27 +8802,46 @@ export class MezonTransport {
     avatar?: string,
     code?: number,
     topic_id?: string,
+    message_id?: string,
+    message_sender_id?: string,
   ): Promise<QuickMenuEvent> {
     const urlPath = "";
+    const message: Record<string, unknown> = {
+      clan_id: clan_id,
+      channel_id: channel_id,
+      mode: mode,
+      is_public: is_public,
+      content: content,
+      mentions: mentions,
+      attachments: attachments,
+      references: references,
+      anonymous_message: anonymous_message,
+      mention_everyone: mention_everyone,
+      avatar: avatar,
+      code: code,
+      topic_id: topic_id,
+    };
+    if (
+      message_id !== undefined &&
+      message_id !== null &&
+      String(message_id).length > 0
+    ) {
+      message.id = message_id;
+    }
+    const qm: Record<string, unknown> = {
+      menu_name: menu_name,
+      message,
+    };
+    if (
+      message_sender_id !== undefined &&
+      message_sender_id !== null &&
+      String(message_sender_id).length > 0 &&
+      String(message_sender_id) !== "0"
+    ) {
+      qm.message_sender_id = message_sender_id;
+    }
     const fetchOptions = {
-      quick_menu_event: {
-        menu_name: menu_name,
-        message: {
-          clan_id: clan_id,
-          channel_id: channel_id,
-          mode: mode,
-          is_public: is_public,
-          content: content,
-          mentions: mentions,
-          attachments: attachments,
-          references: references,
-          anonymous_message: anonymous_message,
-          mention_everyone: mention_everyone,
-          avatar: avatar,
-          code: code,
-          topic_id: topic_id,
-        },
-      },
+      quick_menu_event: qm,
     } as any;
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {

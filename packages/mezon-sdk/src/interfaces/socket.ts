@@ -809,7 +809,9 @@ export interface AddClanUserEvent {
 
 export interface QuickMenuEvent {
   quick_menu_event: {
-    menu_name: string,
+    menu_name: string;
+    sender_id?: string;
+    message_sender_id?: string;
     message: {
       /** Clan Id */
       clan_id: string;
@@ -837,8 +839,10 @@ export interface QuickMenuEvent {
       code: number;
       //
       topic_id?: string;
-    }
-  }
+      /** Target message id when quick menu targets a message. */
+      id?: string;
+    };
+  };
 }
 
 /** Quick Menu Access Request*/
