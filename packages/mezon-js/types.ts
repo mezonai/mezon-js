@@ -1,5 +1,11 @@
 import { ClanBadgeCount, DirectFcmProto } from "mezon-js-protobuf";
-import { safeJSONParse, decodeReactions, decodeMentions, decodeAttachments, decodeRefs } from "./utils";
+import {
+  safeJSONParse,
+  decodeReactions,
+  decodeMentions,
+  decodeAttachments,
+  decodeRefs,
+} from "./utils";
 
 export interface PromiseExecutor {
   resolve: (value?: any) => void;
@@ -4865,7 +4871,6 @@ export interface ApiDirectFcmProto {
   message_id: string;
 }
 
-
 export enum ChannelType {
   CHANNEL_TYPE_CHANNEL = 1,
   CHANNEL_TYPE_GROUP = 2,
@@ -5055,6 +5060,12 @@ export interface ApiUpdateRoleRequest {
   description?: string | undefined;
   display_online?: number | undefined;
   allow_mention?: number | undefined;
+}
+
+export interface ListMessageTopicEvent {
+  message_id: string;
+  rpl: number;
+  lsnt: string;
 }
 
 export function CreateChannelMessageFromEvent(message: any) {

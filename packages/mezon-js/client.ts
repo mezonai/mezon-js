@@ -259,6 +259,7 @@ import {
   ClanJoin,
   Status,
   ApiListClanBadgeCountResponse,
+  ListMessageTopicEvent,
 } from "./types";
 
 import {
@@ -293,7 +294,6 @@ export const ConnectionState = {
 
 export type ConnectionStateType =
   (typeof ConnectionState)[keyof typeof ConnectionState];
-
 
 function createEvent(type: string): Event {
   if (typeof Event === "function") {
@@ -353,7 +353,6 @@ export class Client {
   port: string;
   useSSL: boolean;
 
-
   serverDisconnectStreakLogoutThreshold: number;
 
   constructor(
@@ -362,7 +361,7 @@ export class Client {
     port = DEFAULT_PORT,
     useSSL = false,
     readonly timeout = DEFAULT_TIMEOUT_MS,
-    readonly autoFallbackHttp = true,
+    readonly autoFallbackHttp = true
   ) {
     this.host = host;
     this.port = port;
@@ -395,10 +394,10 @@ export class Client {
     url: string,
     createStatus = false,
     verbose = false,
-    connectTimeoutMs: number = Client.DefaultConnectTimeoutMs,
+    connectTimeoutMs: number = Client.DefaultConnectTimeoutMs
   ): Promise<void> {
     this.verbose = verbose;
-    
+
     const sameTarget =
       this._lastConnectArgs?.session_id === session_id &&
       this._lastConnectArgs?.url === url;
@@ -433,7 +432,7 @@ export class Client {
         "connect_superseded",
         createEvent("close"),
         false,
-        false,
+        false
       );
     }
 
@@ -459,277 +458,286 @@ export class Client {
 
     this._connectTimeoutTimer = setTimeout(() => {
       if (this._connectionState !== ConnectionState.CONNECTING) return;
-      this.markDisconnected("connect_timeout", createEvent("timeout"), true, false);
+      this.markDisconnected(
+        "connect_timeout",
+        createEvent("timeout"),
+        true,
+        false
+      );
       this.transport.close();
       this.failConnect(
-        new Error("The socket timed out when trying to connect."),
+        new Error("The socket timed out when trying to connect.")
       );
     }, connectTimeoutMs);
 
     try {
-      this.transport.connect(
-      session_id,
-      url,
-      createStatus,
-      verbose,
-      {
-      onMessage: async (_cid: number, _code: number, message: any) => {
-        if (!message.cid) {
-          if (message.notifications) {
-            message.notifications.notifications.forEach(
-              (n: ApiNotification) => {
-                n.content = n.content
-                  ? decodeNotificationFcm(n.content)
-                  : undefined;
-                this.onnotification(n);
-              },
-            );
-          } else if (message.voice_started_event) {
-            this.onvoicestarted(message.voice_started_event);
-          } else if (message.voice_ended_event) {
-            this.onvoiceended(message.voice_ended_event);
-          } else if (message.voice_joined_event) {
-            this.onvoicejoined(message.voice_joined_event);
-          } else if (message.voice_leaved_event) {
-            this.onvoiceleaved(message.voice_leaved_event);
-          } else if (message.channel_created_event) {
-            this.onchannelcreated(message.channel_created_event);
-          } else if (message.category_event) {
-            this.oncategoryevent(message.category_event);
-          } else if (message.role_event) {
-            this.onroleevent(message.role_event);
-          } else if (message.event_emoji) {
-            this.oneventemoji(message.event_emoji);
-          } else if (message.noti_user_channel) {
-            this.oneventnotiuserchannel(message.noti_user_channel);
-          } else if (message.webhook_event) {
-            this.oneventwebhook(message.webhook_event);
-          } else if (message.channel_deleted_event) {
-            this.onchanneldeleted(message.channel_deleted_event);
-          } else if (message.clan_deleted_event) {
-            this.onclandeleted(message.clan_deleted_event);
-          } else if (message.sticker_create_event) {
-            this.onstickercreated(message.sticker_create_event);
-          } else if (message.sticker_update_event) {
-            this.onstickerupdated(message.sticker_update_event);
-          } else if (message.sticker_delete_event) {
-            this.onstickerdeleted(message.sticker_delete_event);
-          } else if (message.channel_updated_event) {
-            this.onchannelupdated(message.channel_updated_event);
-          } else if (message.delete_account_event) {
-            this.ondeleteaccount(message.delete_account_event);
-          } else if (message.clan_profile_updated_event) {
-            this.onclanprofileupdated(message.clan_profile_updated_event);
-          } else if (message.clan_updated_event) {
-            this.onclanupdated(message.clan_updated_event);
-          } else if (message.last_seen_message_event) {
-            this.onlastseenupdated(message.last_seen_message_event);
-          } else if (message.status_presence_event) {
-            this.onstatuspresence(
-              <StatusPresenceEvent>message.status_presence_event,
-            );
-          } else if (message.channel_message) {
-            const channelMessage = CreateChannelMessageFromEvent(message);
-            this.onchannelmessage(channelMessage);
-          } else if (message.message_typing_event) {
-            this.onmessagetyping(
-              <MessageTypingEvent>message.message_typing_event,
-            );
-          } else if (message.message_reaction_event) {
-            this.onmessagereaction(
-              <ApiMessageReaction>message.message_reaction_event,
-            );
-          } else if (message.channel_presence_event) {
-            this.onchannelpresence(
-              <ChannelPresenceEvent>message.channel_presence_event,
-            );
-          } else if (message.last_pin_message_event) {
-            this.onpinmessage(
-              <LastPinMessageEvent>message.last_pin_message_event,
-            );
-          } else if (message.custom_status_event) {
-            this.oncustomstatus(<CustomStatusEvent>message.custom_status_event);
-          } else if (message.canvas_event) {
-            this.oncanvasevent(<ChannelCanvas>message.canvas_event);
-          } else if (message.user_channel_added_event) {
-            this.onuserchanneladded(
-              <UserChannelAddedEvent>message.user_channel_added_event,
-            );
-          } else if (message.add_clan_user_event) {
-            this.onuserclanadded(<AddClanUserEvent>message.add_clan_user_event);
-          } else if (message.user_profile_updated_event) {
-            this.onuserprofileupdate(
-              <UserProfileUpdatedEvent>message.user_profile_updated_event,
-            );
-          } else if (message.user_channel_removed_event) {
-            this.onuserchannelremoved(
-              <UserChannelRemovedEvent>message.user_channel_removed_event,
-            );
-          } else if (message.block_friend) {
-            this.onblockfriend(<BlockFriend>message.block_friend);
-          } else if (message.un_block_friend) {
-            this.onunblockfriend(<UnblockFriend>message.un_block_friend);
-          } else if (message.add_friend) {
-            this.onaddfriend(<AddFriend>message.add_friend);
-          } else if (message.remove_friend) {
-            this.onremovefriend(<RemoveFriend>message.remove_friend);
-          } else if (message.user_clan_removed_event) {
-            this.onuserclanremoved(
-              <UserClanRemovedEvent>message.user_clan_removed_event,
-            );
-          } else if (message.clan_event_created) {
-            this.oneventcreated(message.clan_event_created);
-          } else if (message.give_coffee_event) {
-            this.oncoffeegiven(<ApiGiveCoffeeEvent>message.give_coffee_event);
-          } else if (message.role_assign_event) {
-            this.onroleassign(<RoleAssignedEvent>message.role_assign_event);
-          } else if (message.streaming_started_event) {
-            this.onstreamingchannelstarted(
-              <StreamingStartedEvent>message.streaming_started_event,
-            );
-          } else if (message.streaming_ended_event) {
-            this.onstreamingchannelended(
-              <StreamingEndedEvent>message.streaming_ended_event,
-            );
-          } else if (message.streaming_joined_event) {
-            this.onstreamingchanneljoined(
-              <StreamingJoinedEvent>message.streaming_joined_event,
-            );
-          } else if (message.streaming_leaved_event) {
-            this.onstreamingchannelleaved(
-              <StreamingLeavedEvent>message.streaming_leaved_event,
-            );
-          } else if (message.permission_set_event) {
-            this.onpermissionset(<PermissionSet>message.permission_set_event);
-          } else if (message.permission_changed_event) {
-            this.onpermissionchanged(
-              <PermissionChangedEvent>message.permission_changed_event,
-            );
-          } else if (message.unmute_event) {
-            this.onunmuteevent(<UnmuteEvent>message.unmute_event);
-          } else if (message.token_sent_event) {
-            this.ontokensent(<ApiTokenSentEvent>message.token_sent_event);
-          } else if (message.message_button_clicked) {
-            this.onmessagebuttonclicked(
-              <MessageButtonClicked>message.message_button_clicked,
-            );
-          } else if (message.dropdown_box_selected) {
-            this.onmessagedropdownboxselected(
-              <DropdownBoxSelected>message.dropdown_box_selected,
-            );
-          } else if (message.mark_as_read) {
-            this.onmarkasread(<MarkAsRead>message.mark_as_read);
-          } else if (message.voice_reaction_send) {
-            this.onvoicereactionmessage(
-              <VoiceReactionSend>message.voice_reaction_send,
-            );
-          } else if (message.webrtc_signaling_fwd) {
-            this.onwebrtcsignalingfwd(
-              <WebrtcSignalingFwd>message.webrtc_signaling_fwd,
-            );
-          } else if (message.list_activity) {
-            this.onactivityupdated(<ListActivity>message.list_activity);
-          } else if (message.sd_topic_event) {
-            this.onsdtopicevent(<SdTopicEvent>message.sd_topic_event);
-          } else if (message.channel_app_event) {
-            this.onchannelappevent(<ChannelAppEvent>message.channel_app_event);
-          } else if (message.user_status_event) {
-            this.onuserstatusevent(<UserStatusEvent>message.user_status_event);
-          } else if (message.join_channel_app_data) {
-            this.onjoinchannelappevent(
-              <JoinChannelAppData>message.join_channel_app_data,
-            );
-          } else if (message.unpin_message_event) {
-            this.onunpinmessageevent(
-              <UnpinMessageEvent>message.unpin_message_event,
-            );
-          } else if (message.quick_menu_event) {
-            this.onquickmenuevent(<QuickMenuEvent>message.quick_menu_event);
-          } else if (message.meet_participant_event) {
-            this.onmeetparticipantevent(
-              <MeetParticipantEvent>message.meet_participant_event,
-            );
-          } else if (message.transfer_ownership_event) {
-            this.ontransferownership(
-              <TransferOwnershipEvent>message.transfer_ownership_event,
-            );
-          } else if (message.ban_user_event) {
-            this.onbanneduser(<BannedUserEvent>message.ban_user_event);
-          } else if (message.list_channel_users_banned_event) {
-            this.onlistchannelusersbanned(
-              <ListChannelUsersBannedEvent>(
-                message.list_channel_users_banned_event
-              ),
-            );
-          } else if (message.allow_anonymous_event) {
-            this.onallowanonymousevent(
-              <AllowAnonymousEvent>message.allow_anonymous_event,
-            );
-          } else if (message.aiagent_enabled_event) {
-            this.onaiagentenabled(
-              <AiAgentEnabledEvent>message.aiagent_enabled_event,
-            );
-          } else if (message.refresh_session_event) {
-            this.onrefreshsession(<ApiSession>message.refresh_session_event);
-          } else if (message.pong) {
-            if (this.verbose && window && window.console) {
-              console.log("Pong message received: %o", message);
-            }
-          } else {
-            if (this.verbose && window && window.console) {
-              console.log("Unrecognized message received: %o", message);
+      this.transport.connect(session_id, url, createStatus, verbose, {
+        onMessage: async (_cid: number, _code: number, message: any) => {
+          if (!message.cid) {
+            if (message.notifications) {
+              message.notifications.notifications.forEach(
+                (n: ApiNotification) => {
+                  n.content = n.content
+                    ? decodeNotificationFcm(n.content)
+                    : undefined;
+                  this.onnotification(n);
+                }
+              );
+            } else if (message.voice_started_event) {
+              this.onvoicestarted(message.voice_started_event);
+            } else if (message.voice_ended_event) {
+              this.onvoiceended(message.voice_ended_event);
+            } else if (message.voice_joined_event) {
+              this.onvoicejoined(message.voice_joined_event);
+            } else if (message.voice_leaved_event) {
+              this.onvoiceleaved(message.voice_leaved_event);
+            } else if (message.channel_created_event) {
+              this.onchannelcreated(message.channel_created_event);
+            } else if (message.category_event) {
+              this.oncategoryevent(message.category_event);
+            } else if (message.role_event) {
+              this.onroleevent(message.role_event);
+            } else if (message.event_emoji) {
+              this.oneventemoji(message.event_emoji);
+            } else if (message.noti_user_channel) {
+              this.oneventnotiuserchannel(message.noti_user_channel);
+            } else if (message.webhook_event) {
+              this.oneventwebhook(message.webhook_event);
+            } else if (message.channel_deleted_event) {
+              this.onchanneldeleted(message.channel_deleted_event);
+            } else if (message.clan_deleted_event) {
+              this.onclandeleted(message.clan_deleted_event);
+            } else if (message.sticker_create_event) {
+              this.onstickercreated(message.sticker_create_event);
+            } else if (message.sticker_update_event) {
+              this.onstickerupdated(message.sticker_update_event);
+            } else if (message.sticker_delete_event) {
+              this.onstickerdeleted(message.sticker_delete_event);
+            } else if (message.channel_updated_event) {
+              this.onchannelupdated(message.channel_updated_event);
+            } else if (message.delete_account_event) {
+              this.ondeleteaccount(message.delete_account_event);
+            } else if (message.clan_profile_updated_event) {
+              this.onclanprofileupdated(message.clan_profile_updated_event);
+            } else if (message.clan_updated_event) {
+              this.onclanupdated(message.clan_updated_event);
+            } else if (message.last_seen_message_event) {
+              this.onlastseenupdated(message.last_seen_message_event);
+            } else if (message.status_presence_event) {
+              this.onstatuspresence(
+                <StatusPresenceEvent>message.status_presence_event
+              );
+            } else if (message.channel_message) {
+              const channelMessage = CreateChannelMessageFromEvent(message);
+              this.onchannelmessage(channelMessage);
+            } else if (message.message_typing_event) {
+              this.onmessagetyping(
+                <MessageTypingEvent>message.message_typing_event
+              );
+            } else if (message.message_reaction_event) {
+              this.onmessagereaction(
+                <ApiMessageReaction>message.message_reaction_event
+              );
+            } else if (message.channel_presence_event) {
+              this.onchannelpresence(
+                <ChannelPresenceEvent>message.channel_presence_event
+              );
+            } else if (message.last_pin_message_event) {
+              this.onpinmessage(
+                <LastPinMessageEvent>message.last_pin_message_event
+              );
+            } else if (message.custom_status_event) {
+              this.oncustomstatus(
+                <CustomStatusEvent>message.custom_status_event
+              );
+            } else if (message.canvas_event) {
+              this.oncanvasevent(<ChannelCanvas>message.canvas_event);
+            } else if (message.user_channel_added_event) {
+              this.onuserchanneladded(
+                <UserChannelAddedEvent>message.user_channel_added_event
+              );
+            } else if (message.add_clan_user_event) {
+              this.onuserclanadded(
+                <AddClanUserEvent>message.add_clan_user_event
+              );
+            } else if (message.user_profile_updated_event) {
+              this.onuserprofileupdate(
+                <UserProfileUpdatedEvent>message.user_profile_updated_event
+              );
+            } else if (message.user_channel_removed_event) {
+              this.onuserchannelremoved(
+                <UserChannelRemovedEvent>message.user_channel_removed_event
+              );
+            } else if (message.block_friend) {
+              this.onblockfriend(<BlockFriend>message.block_friend);
+            } else if (message.un_block_friend) {
+              this.onunblockfriend(<UnblockFriend>message.un_block_friend);
+            } else if (message.add_friend) {
+              this.onaddfriend(<AddFriend>message.add_friend);
+            } else if (message.remove_friend) {
+              this.onremovefriend(<RemoveFriend>message.remove_friend);
+            } else if (message.user_clan_removed_event) {
+              this.onuserclanremoved(
+                <UserClanRemovedEvent>message.user_clan_removed_event
+              );
+            } else if (message.clan_event_created) {
+              this.oneventcreated(message.clan_event_created);
+            } else if (message.give_coffee_event) {
+              this.oncoffeegiven(<ApiGiveCoffeeEvent>message.give_coffee_event);
+            } else if (message.role_assign_event) {
+              this.onroleassign(<RoleAssignedEvent>message.role_assign_event);
+            } else if (message.streaming_started_event) {
+              this.onstreamingchannelstarted(
+                <StreamingStartedEvent>message.streaming_started_event
+              );
+            } else if (message.streaming_ended_event) {
+              this.onstreamingchannelended(
+                <StreamingEndedEvent>message.streaming_ended_event
+              );
+            } else if (message.streaming_joined_event) {
+              this.onstreamingchanneljoined(
+                <StreamingJoinedEvent>message.streaming_joined_event
+              );
+            } else if (message.streaming_leaved_event) {
+              this.onstreamingchannelleaved(
+                <StreamingLeavedEvent>message.streaming_leaved_event
+              );
+            } else if (message.permission_set_event) {
+              this.onpermissionset(<PermissionSet>message.permission_set_event);
+            } else if (message.permission_changed_event) {
+              this.onpermissionchanged(
+                <PermissionChangedEvent>message.permission_changed_event
+              );
+            } else if (message.unmute_event) {
+              this.onunmuteevent(<UnmuteEvent>message.unmute_event);
+            } else if (message.token_sent_event) {
+              this.ontokensent(<ApiTokenSentEvent>message.token_sent_event);
+            } else if (message.message_button_clicked) {
+              this.onmessagebuttonclicked(
+                <MessageButtonClicked>message.message_button_clicked
+              );
+            } else if (message.dropdown_box_selected) {
+              this.onmessagedropdownboxselected(
+                <DropdownBoxSelected>message.dropdown_box_selected
+              );
+            } else if (message.mark_as_read) {
+              this.onmarkasread(<MarkAsRead>message.mark_as_read);
+            } else if (message.voice_reaction_send) {
+              this.onvoicereactionmessage(
+                <VoiceReactionSend>message.voice_reaction_send
+              );
+            } else if (message.webrtc_signaling_fwd) {
+              this.onwebrtcsignalingfwd(
+                <WebrtcSignalingFwd>message.webrtc_signaling_fwd
+              );
+            } else if (message.list_activity) {
+              this.onactivityupdated(<ListActivity>message.list_activity);
+            } else if (message.sd_topic_event) {
+              this.onsdtopicevent(<SdTopicEvent>message.sd_topic_event);
+            } else if (message.channel_app_event) {
+              this.onchannelappevent(
+                <ChannelAppEvent>message.channel_app_event
+              );
+            } else if (message.user_status_event) {
+              this.onuserstatusevent(
+                <UserStatusEvent>message.user_status_event
+              );
+            } else if (message.join_channel_app_data) {
+              this.onjoinchannelappevent(
+                <JoinChannelAppData>message.join_channel_app_data
+              );
+            } else if (message.unpin_message_event) {
+              this.onunpinmessageevent(
+                <UnpinMessageEvent>message.unpin_message_event
+              );
+            } else if (message.quick_menu_event) {
+              this.onquickmenuevent(<QuickMenuEvent>message.quick_menu_event);
+            } else if (message.meet_participant_event) {
+              this.onmeetparticipantevent(
+                <MeetParticipantEvent>message.meet_participant_event
+              );
+            } else if (message.transfer_ownership_event) {
+              this.ontransferownership(
+                <TransferOwnershipEvent>message.transfer_ownership_event
+              );
+            } else if (message.ban_user_event) {
+              this.onbanneduser(<BannedUserEvent>message.ban_user_event);
+            } else if (message.list_channel_users_banned_event) {
+              this.onlistchannelusersbanned(
+                <ListChannelUsersBannedEvent>(
+                  message.list_channel_users_banned_event
+                )
+              );
+            } else if (message.allow_anonymous_event) {
+              this.onallowanonymousevent(
+                <AllowAnonymousEvent>message.allow_anonymous_event
+              );
+            } else if (message.aiagent_enabled_event) {
+              this.onaiagentenabled(
+                <AiAgentEnabledEvent>message.aiagent_enabled_event
+              );
+            } else if (message.refresh_session_event) {
+              this.onrefreshsession(<ApiSession>message.refresh_session_event);
+            } else if (message.list_message_topic_event) {
+              this.onlistmessagetopic(
+                <ListMessageTopicEvent>message.list_message_topic_event
+              );
+            } else if (message.pong) {
+              if (this.verbose && window && window.console) {
+                console.log("Pong message received: %o", message);
+              }
+            } else {
+              if (this.verbose && window && window.console) {
+                console.log("Unrecognized message received: %o", message);
+              }
             }
           }
-        }
-      },
-      onClose: (evt: Event) => {
-        const wasConnecting =
-          this._connectionState === ConnectionState.CONNECTING;
-        this.markDisconnected("transport_on_close", evt, true, true);
-        if (wasConnecting) {
+        },
+        onClose: (evt: Event) => {
+          const wasConnecting =
+            this._connectionState === ConnectionState.CONNECTING;
+          this.markDisconnected("transport_on_close", evt, true, true);
+          if (wasConnecting) {
+            this.failConnect(
+              new Error("Socket closed before connection was established.")
+            );
+          }
+        },
+        onOpen: (evt: Event) => {
+          if (this.verbose && typeof console !== "undefined") {
+            console.log(evt);
+          }
+          const isReconnect = this._hasConnectedOnce;
+          this._hasConnectedOnce = true;
+          this.clearConnectTimeout();
+          this._serverDisconnectStreak = 0;
+          this._connectionState = ConnectionState.CONNECTED;
+          this.startHeartbeatLoop();
+          this._connectPromise = undefined;
+          resolveConnect();
+          this._connectReject = undefined;
+          if (isReconnect) {
+            this.onreconnect(evt);
+          } else {
+            this.onconnect(evt);
+          }
+        },
+        onError: (evt: Event) => {
+          this.onerror(evt);
+          this.markDisconnected("transport_on_error", evt, true, false);
           this.failConnect(
-            new Error("Socket closed before connection was established."),
+            evt instanceof Error
+              ? evt
+              : new Error("Socket error during connect.")
           );
-        }
-      },
-      onOpen: (evt: Event) => {
-        if (this.verbose && typeof console !== "undefined") {
-          console.log(evt);
-        }
-        const isReconnect = this._hasConnectedOnce;
-        this._hasConnectedOnce = true;
-        this.clearConnectTimeout();
-        this._serverDisconnectStreak = 0;
-        this._connectionState = ConnectionState.CONNECTED;
-        this.startHeartbeatLoop();
-        this._connectPromise = undefined;
-        resolveConnect();
-        this._connectReject = undefined;
-        if (isReconnect) {
-          this.onreconnect(evt);
-        } else {
-          this.onconnect(evt);
-        }
-      },
-      onError: (evt: Event) => {
-        this.onerror(evt);
-        this.markDisconnected("transport_on_error", evt, true, false);
-        this.failConnect(
-          evt instanceof Error
-            ? evt
-            : new Error("Socket error during connect."),
-        );
-        this.transport.close();
-      },
-    },
-    );
+          this.transport.close();
+        },
+      });
     } catch (err) {
       const errEvent = createEvent("error");
       this.onerror(errEvent);
       this.markDisconnected("connect_sync_throw", errEvent, true, false);
-      this.failConnect(
-        err instanceof Error ? err : new Error(String(err)),
-      );
+      this.failConnect(err instanceof Error ? err : new Error(String(err)));
     }
 
     return connectPromise;
@@ -749,7 +757,7 @@ export class Client {
       "client_disconnect",
       createEvent("close"),
       fireDisconnectEvent,
-      false,
+      false
     );
     this.transport.close();
   }
@@ -764,7 +772,7 @@ export class Client {
       const fetchOptions = { ping: {} };
       await this.transport.send(
         { urlPath, fetchOptions },
-        this._heartbeatTimeoutMs,
+        this._heartbeatTimeoutMs
       );
     } catch {
       if (this._connectionState !== ConnectionState.CONNECTED) {
@@ -778,7 +786,7 @@ export class Client {
         "heartbeat_unreachable",
         createEvent("close"),
         true,
-        false,
+        false
       );
       if (this.transport.adapter.isOpen()) {
         this.transport.close();
@@ -796,7 +804,7 @@ export class Client {
     this.stopHeartbeatLoop();
     this._heartbeatTimer = setTimeout(
       () => this.pingPong(),
-      this._heartbeatTimeoutMs,
+      this._heartbeatTimeoutMs
     );
   }
 
@@ -818,10 +826,8 @@ export class Client {
     source: string,
     evt: Event = createEvent("close"),
     fireDisconnectEvent = true,
-    incrementServerDisconnectStreak = false,
+    incrementServerDisconnectStreak = false
   ): void {
-
-
     if (this.verbose && typeof console !== "undefined") {
       console.log(source);
     }
@@ -862,7 +868,6 @@ export class Client {
     }
   }
 
-
   onreconnect(evt: Event) {
     if (this.verbose && typeof console !== "undefined") {
       console.log(evt);
@@ -874,7 +879,6 @@ export class Client {
       console.log(evt);
     }
   }
-
 
   onserverdisconnectstreaklogout(evt: Event, streak: number) {
     if (this.verbose && typeof console !== "undefined") {
@@ -1305,6 +1309,12 @@ export class Client {
     console.log(`Token refresh occurred. Token: ${session.token}`);
   }
 
+  onlistmessagetopic(event: ListMessageTopicEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
   /** Authenticate a user with a custom id against the server. */
   authenticateMezon(
     token: string,
@@ -1312,7 +1322,7 @@ export class Client {
     username?: string,
     isRemember?: boolean,
     vars: Record<string, string> = {},
-    options: any = {},
+    options: any = {}
   ): Promise<ApiSession> {
     const request = {
       token: token,
@@ -1326,7 +1336,7 @@ export class Client {
         create,
         username,
         isRemember,
-        options,
+        options
       )
       .then((apiSession: ApiSession) => {
         return {
@@ -1346,7 +1356,7 @@ export class Client {
   authenticateSMSOTPRequest(
     phoneno: string,
     username?: string,
-    vars?: Record<string, string>,
+    vars?: Record<string, string>
   ): Promise<ApiLinkAccountConfirmRequest> {
     const request = {
       username: username,
@@ -1367,7 +1377,7 @@ export class Client {
   authenticateEmailOTPRequest(
     email: string,
     username?: string,
-    vars?: Record<string, string>,
+    vars?: Record<string, string>
   ): Promise<ApiLinkAccountConfirmRequest> {
     const request = {
       username: username,
@@ -1385,7 +1395,7 @@ export class Client {
   }
 
   async confirmAuthenticateOTP(
-    request: ApiLinkAccountConfirmRequest,
+    request: ApiLinkAccountConfirmRequest
   ): Promise<ApiSession> {
     return this.transport
       .confirmAuthenticateOTP(this.serverkey, "", request)
@@ -1408,7 +1418,7 @@ export class Client {
     email: string,
     password: string,
     username?: string,
-    vars?: Record<string, string>,
+    vars?: Record<string, string>
   ): Promise<ApiSession> {
     const request = {
       username: username,
@@ -1439,7 +1449,7 @@ export class Client {
   async addChannelUsers(
     session: ApiSession,
     channelId: string,
-    ids?: Array<string>,
+    ids?: Array<string>
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -1459,7 +1469,7 @@ export class Client {
   async addFriends(
     session: ApiSession,
     ids?: Array<string>,
-    usernames?: Array<string>,
+    usernames?: Array<string>
   ): Promise<ApiAddFriendsResponse> {
     if (
       this.autoFallbackHttp &&
@@ -1475,7 +1485,7 @@ export class Client {
   async blockFriends(
     session: ApiSession,
     ids?: Array<string>,
-    usernames?: Array<string>,
+    usernames?: Array<string>
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -1493,7 +1503,7 @@ export class Client {
   async unblockFriends(
     session: ApiSession,
     ids?: Array<string>,
-    usernames?: Array<string>,
+    usernames?: Array<string>
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -1512,7 +1522,7 @@ export class Client {
   /** Create a new group with the current user as the creator and superadmin. */
   async uploadOauthFile(
     session: ApiSession,
-    request: ApiUploadAttachmentRequest,
+    request: ApiUploadAttachmentRequest
   ): Promise<ApiUploadAttachment> {
     if (
       this.autoFallbackHttp &&
@@ -1527,7 +1537,7 @@ export class Client {
   /** Create a new group with the current user as the creator and superadmin. */
   async uploadAttachmentFile(
     session: ApiSession,
-    request: ApiUploadAttachmentRequest,
+    request: ApiUploadAttachmentRequest
   ): Promise<ApiUploadAttachment> {
     if (
       this.autoFallbackHttp &&
@@ -1541,7 +1551,7 @@ export class Client {
 
   async multipartUploadAttachmentFile(
     session: ApiSession,
-    request: ApiUploadAttachmentRequest,
+    request: ApiUploadAttachmentRequest
   ): Promise<MultipartUploadAttachment> {
     if (
       this.autoFallbackHttp &&
@@ -1555,7 +1565,7 @@ export class Client {
 
   async multipartUploadAttachmentFileFinish(
     session: ApiSession,
-    request: MultipartUploadAttachmentFinishRequest,
+    request: MultipartUploadAttachmentFinishRequest
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -1570,7 +1580,7 @@ export class Client {
   /** Create a channel within clan */
   async createChannelDesc(
     session: ApiSession,
-    request: ApiCreateChannelDescRequest,
+    request: ApiCreateChannelDescRequest
   ): Promise<ApiChannelDescription> {
     if (
       this.autoFallbackHttp &&
@@ -1589,7 +1599,7 @@ export class Client {
   /** Create a clan */
   async createClanDesc(
     session: ApiSession,
-    request: ApiCreateClanDescRequest,
+    request: ApiCreateClanDescRequest
   ): Promise<ApiClanDesc> {
     if (
       this.autoFallbackHttp &&
@@ -1608,7 +1618,7 @@ export class Client {
   /** Check duplicate name/label  */
   async checkDuplicateName(
     session: ApiSession,
-    request: ApiCheckDuplicateNameRequest,
+    request: ApiCheckDuplicateNameRequest
   ): Promise<ApiCheckDuplicateNameResponse> {
     if (
       this.autoFallbackHttp &&
@@ -1623,7 +1633,7 @@ export class Client {
   /**  */
   async createCategoryDesc(
     session: ApiSession,
-    request: ApiCreateCategoryDescRequest,
+    request: ApiCreateCategoryDescRequest
   ): Promise<ApiCategoryDesc> {
     if (
       this.autoFallbackHttp &&
@@ -1642,7 +1652,7 @@ export class Client {
   /** Create a new role for clan. */
   async createRole(
     session: ApiSession,
-    request: ApiCreateRoleRequest,
+    request: ApiCreateRoleRequest
   ): Promise<ApiRole> {
     if (
       this.autoFallbackHttp &&
@@ -1659,7 +1669,7 @@ export class Client {
   /** Create a new event for clan. */
   async createEvent(
     session: ApiSession,
-    request: ApiCreateEventRequest,
+    request: ApiCreateEventRequest
   ): Promise<ApiEventManagement> {
     if (
       this.autoFallbackHttp &&
@@ -1678,7 +1688,7 @@ export class Client {
   /** add role for channel. */
   async addRolesChannelDesc(
     session: ApiSession,
-    request: ApiAddRoleChannelDescRequest,
+    request: ApiAddRoleChannelDescRequest
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -1697,7 +1707,7 @@ export class Client {
   /** Update action role when delete role */
   async deleteRoleChannelDesc(
     session: ApiSession,
-    request: ApiDeleteRoleRequest,
+    request: ApiDeleteRoleRequest
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -1730,7 +1740,7 @@ export class Client {
   async deleteFriends(
     session: ApiSession,
     ids?: Array<string>,
-    usernames?: Array<string>,
+    usernames?: Array<string>
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -1750,7 +1760,7 @@ export class Client {
   async deleteChannelDesc(
     session: ApiSession,
     clanId: string,
-    channelId: string,
+    channelId: string
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -1769,7 +1779,7 @@ export class Client {
   /** Delete a clan desc by ID. */
   async deleteClanDesc(
     session: ApiSession,
-    clanDescId: string,
+    clanDescId: string
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -1788,7 +1798,7 @@ export class Client {
     session: ApiSession,
     categoryId: string,
     clanId: string,
-    categoryLabel?: string,
+    categoryLabel?: string
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -1808,7 +1818,7 @@ export class Client {
   async deleteNotifications(
     session: ApiSession,
     ids?: Array<string>,
-    category?: number,
+    category?: number
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -1829,7 +1839,7 @@ export class Client {
     session: ApiSession,
     roleId: string,
     clanId: string,
-    roleLabel?: string,
+    roleLabel?: string
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -1852,7 +1862,7 @@ export class Client {
     clanId: string,
     creatorId: string,
     eventLabel?: string,
-    channelId?: string,
+    channelId?: string
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -1871,7 +1881,7 @@ export class Client {
   /** update user a event by ID. */
   async updateEventUser(
     session: ApiSession,
-    request: ApiDeleteEventRequest,
+    request: ApiDeleteEventRequest
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -1915,7 +1925,7 @@ export class Client {
   async removeClanUsers(
     session: ApiSession,
     clanId: string,
-    ids?: Array<string>,
+    ids?: Array<string>
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -1932,7 +1942,7 @@ export class Client {
   async listBannedUsers(
     session: ApiSession,
     clanId?: string,
-    channelId?: string,
+    channelId?: string
   ): Promise<ApiBannedUserList> {
     if (
       this.autoFallbackHttp &&
@@ -1953,7 +1963,7 @@ export class Client {
     session: ApiSession,
     clanId: string,
     channelId?: string,
-    userIds?: Array<string>,
+    userIds?: Array<string>
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -1975,7 +1985,7 @@ export class Client {
     clanId: string,
     channelId?: string,
     userIds?: Array<string>,
-    banTime?: number,
+    banTime?: number
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -1995,7 +2005,7 @@ export class Client {
   async removeChannelUsers(
     session: ApiSession,
     channelId: string,
-    ids?: Array<string>,
+    ids?: Array<string>
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -2019,7 +2029,7 @@ export class Client {
     messageId?: string,
     direction?: number,
     limit?: number,
-    topicId?: string,
+    topicId?: string
   ): Promise<ChannelMessageList> {
     if (
       this.autoFallbackHttp &&
@@ -2035,7 +2045,7 @@ export class Client {
         messageId,
         direction,
         limit,
-        topicId,
+        topicId
       )
       .then((response: ApiChannelMessageList) => {
         const result: ChannelMessageList = {
@@ -2126,7 +2136,7 @@ export class Client {
   async listChannelVoiceUsers(
     session: ApiSession,
     clanId: string,
-    limit?: number,
+    limit?: number
   ): Promise<ApiVoiceChannelUserList> {
     if (
       this.autoFallbackHttp &&
@@ -2166,7 +2176,7 @@ export class Client {
     channelType: number,
     state?: number,
     limit?: number,
-    cursor?: string,
+    cursor?: string
   ): Promise<ApiChannelUserList> {
     if (
       this.autoFallbackHttp &&
@@ -2214,7 +2224,7 @@ export class Client {
     state?: number,
     limit?: number,
     before?: number,
-    after?: number,
+    after?: number
   ): Promise<ApiChannelAttachmentList> {
     if (
       this.autoFallbackHttp &&
@@ -2231,7 +2241,7 @@ export class Client {
         limit,
         state,
         before,
-        after,
+        after
       )
       .then((response: ApiChannelAttachmentList) => {
         const result: ApiChannelAttachmentList = {
@@ -2263,7 +2273,7 @@ export class Client {
   /** List a channel's users. */
   async listClanUsers(
     session: ApiSession,
-    clanId: string,
+    clanId: string
   ): Promise<ApiClanUserList> {
     if (
       this.autoFallbackHttp &&
@@ -2320,7 +2330,7 @@ export class Client {
   /** List clan members' custom status strings (user_status). */
   async listClanUsersStatus(
     session: ApiSession,
-    clanId: string,
+    clanId: string
   ): Promise<ApiClanUserStatusList> {
     if (
       this.autoFallbackHttp &&
@@ -2350,7 +2360,7 @@ export class Client {
 
   async listChannelDetail(
     session: ApiSession,
-    channelId: string,
+    channelId: string
   ): Promise<ApiChannelDescription> {
     if (
       this.autoFallbackHttp &&
@@ -2374,7 +2384,7 @@ export class Client {
     page?: number,
     clanId?: string,
     channelType?: number,
-    isMobile?: boolean,
+    isMobile?: boolean
   ): Promise<ApiChannelDescList> {
     if (
       this.autoFallbackHttp &&
@@ -2407,7 +2417,7 @@ export class Client {
     session: ApiSession,
     limit?: number,
     state?: number,
-    cursor?: string,
+    cursor?: string
   ): Promise<ApiClanDescList> {
     if (
       this.autoFallbackHttp &&
@@ -2454,7 +2464,7 @@ export class Client {
     session: ApiSession,
     clanId: string,
     limit?: number,
-    page?: number,
+    page?: number
   ): Promise<ApiListChannelBadgeCountResponse> {
     if (
       this.autoFallbackHttp &&
@@ -2476,7 +2486,7 @@ export class Client {
     session: ApiSession,
     clanId: string,
     limit?: number,
-    page?: number,
+    page?: number
   ): Promise<ApiListUserOnlineResponse> {
     if (
       this.autoFallbackHttp &&
@@ -2498,7 +2508,7 @@ export class Client {
     session: ApiSession,
     clanId: string,
     creatorId?: string,
-    categoryName?: string,
+    categoryName?: string
   ): Promise<ApiCategoryDescList> {
     if (
       this.autoFallbackHttp &&
@@ -2526,7 +2536,7 @@ export class Client {
   /** List event */
   async listEvents(
     session: ApiSession,
-    clanId?: string,
+    clanId?: string
   ): Promise<ApiEventList> {
     if (
       this.autoFallbackHttp &&
@@ -2559,7 +2569,7 @@ export class Client {
   /** List user roles */
   async listRolePermissions(
     session: ApiSession,
-    roleId: string,
+    roleId: string
   ): Promise<ApiPermissionList> {
     if (
       this.autoFallbackHttp &&
@@ -2580,7 +2590,7 @@ export class Client {
     session: ApiSession,
     roleId: string,
     limit?: number,
-    cursor?: string,
+    cursor?: string
   ): Promise<ApiRoleUserList> {
     if (
       this.autoFallbackHttp &&
@@ -2601,7 +2611,7 @@ export class Client {
     tokenId: string,
     deviceId: string,
     platform: string,
-    voipToken?: string,
+    voipToken?: string
   ): Promise<ApiRegistFcmDeviceTokenResponse> {
     if (
       this.autoFallbackHttp &&
@@ -2619,7 +2629,7 @@ export class Client {
 
   async getUserProfileOnClan(
     session: ApiSession,
-    clanId: string,
+    clanId: string
   ): Promise<ApiClanProfile> {
     if (
       this.autoFallbackHttp &&
@@ -2638,7 +2648,7 @@ export class Client {
   //
   async closeDirectMess(
     session: ApiSession,
-    request: ApiDeleteChannelDescRequest,
+    request: ApiDeleteChannelDescRequest
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -2654,7 +2664,7 @@ export class Client {
   //
   async openDirectMess(
     session: ApiSession,
-    request: ApiDeleteChannelDescRequest,
+    request: ApiDeleteChannelDescRequest
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -2670,7 +2680,7 @@ export class Client {
 
   async confirmLinkMezonOTP(
     session: ApiSession,
-    request: ApiLinkAccountConfirmRequest,
+    request: ApiLinkAccountConfirmRequest
   ): Promise<ApiSession> {
     if (
       this.autoFallbackHttp &&
@@ -2685,7 +2695,7 @@ export class Client {
   /** Add a custom ID to the social profiles on the current user's account. */
   async linkSMS(
     session: ApiSession,
-    request: ApiLinkAccountMezon,
+    request: ApiLinkAccountMezon
   ): Promise<ApiLinkAccountConfirmRequest> {
     if (
       this.autoFallbackHttp &&
@@ -2704,7 +2714,7 @@ export class Client {
   /** Add an email+password to the social profiles on the current user's account. */
   async linkEmail(
     session: ApiSession,
-    request: ApiAccountEmail,
+    request: ApiAccountEmail
   ): Promise<ApiLinkAccountConfirmRequest> {
     if (
       this.autoFallbackHttp &&
@@ -2725,7 +2735,7 @@ export class Client {
     session: ApiSession,
     state?: number,
     limit?: number,
-    cursor?: string,
+    cursor?: string
   ): Promise<Friends> {
     if (
       this.autoFallbackHttp &&
@@ -2783,7 +2793,7 @@ export class Client {
     limit?: number,
     notificationId?: string,
     category?: number,
-    direction?: number,
+    direction?: number
   ): Promise<ApiNotificationList> {
     if (
       this.autoFallbackHttp &&
@@ -2826,7 +2836,7 @@ export class Client {
     token: string,
     refreshToken: string,
     deviceId: string,
-    platform: string,
+    platform: string
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -2850,7 +2860,7 @@ export class Client {
   /** Remove an email+password from the social profiles on the current user's account. */
   async unlinkEmail(
     session: ApiSession,
-    request: ApiAccountEmail,
+    request: ApiAccountEmail
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -2867,7 +2877,7 @@ export class Client {
   /** Update fields in the current user's account. */
   async updateUsername(
     session: ApiSession,
-    request: ApiUpdateUsernameRequest,
+    request: ApiUpdateUsernameRequest
   ): Promise<ApiSession> {
     if (
       this.autoFallbackHttp &&
@@ -2886,7 +2896,7 @@ export class Client {
   /** Update fields in the current user's account. */
   async updateAccount(
     session: ApiSession,
-    request: ApiUpdateAccountRequest,
+    request: ApiUpdateAccountRequest
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -2904,7 +2914,7 @@ export class Client {
   async updateChannelDesc(
     session: ApiSession,
     channelId: string,
-    request: ApiUpdateChannelDescRequest,
+    request: ApiUpdateChannelDescRequest
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -2924,7 +2934,7 @@ export class Client {
   async updateClanDesc(
     session: ApiSession,
     clanId: string,
-    request: MezonUpdateClanDescBody,
+    request: MezonUpdateClanDescBody
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -2944,7 +2954,7 @@ export class Client {
   async updateCategory(
     session: ApiSession,
     clanId: string,
-    request: ApiUpdateCategoryDescRequest,
+    request: ApiUpdateCategoryDescRequest
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -2963,7 +2973,7 @@ export class Client {
   async updateUserProfileByClan(
     session: ApiSession,
     clanId: string,
-    request: ApiUpdateClanProfileRequest,
+    request: ApiUpdateClanProfileRequest
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -2983,7 +2993,7 @@ export class Client {
   async updateRole(
     session: ApiSession,
     roleId: string,
-    request: ApiUpdateRoleRequest,
+    request: ApiUpdateRoleRequest
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -3001,7 +3011,7 @@ export class Client {
   async updateEvent(
     session: ApiSession,
     roleId: string,
-    request: MezonUpdateEventBody,
+    request: MezonUpdateEventBody
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -3019,7 +3029,7 @@ export class Client {
   async updateApp(
     session: ApiSession,
     roleId: string,
-    request: MezonUpdateAppBody,
+    request: MezonUpdateAppBody
   ): Promise<ApiApp> {
     if (
       this.autoFallbackHttp &&
@@ -3038,7 +3048,7 @@ export class Client {
   /** Update fields in a given clan profile. */
   async createLinkInviteUser(
     session: ApiSession,
-    request: ApiLinkInviteUserRequest,
+    request: ApiLinkInviteUserRequest
   ): Promise<ApiLinkInviteUser> {
     if (
       this.autoFallbackHttp &&
@@ -3066,7 +3076,7 @@ export class Client {
   /** Get permission of user in the clan */
   async GetRoleOfUserInTheClan(
     session: ApiSession,
-    clanId: string,
+    clanId: string
   ): Promise<ApiRoleList> {
     if (
       this.autoFallbackHttp &&
@@ -3085,7 +3095,7 @@ export class Client {
   /** invite user */
   async inviteUser(
     session: ApiSession,
-    inviteId: string,
+    inviteId: string
   ): Promise<ApiInviteUserRes> {
     if (
       this.autoFallbackHttp &&
@@ -3104,7 +3114,7 @@ export class Client {
   /** Set default notification clan*/
   async setNotificationClan(
     session: ApiSession,
-    request: ApiSetDefaultNotificationRequest,
+    request: ApiSetDefaultNotificationRequest
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -3123,7 +3133,7 @@ export class Client {
   /** Set notification channel*/
   async setNotificationChannel(
     session: ApiSession,
-    request: ApiSetNotificationRequest,
+    request: ApiSetNotificationRequest
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -3142,7 +3152,7 @@ export class Client {
   /** Set notification category*/
   async setMuteCategory(
     session: ApiSession,
-    request: ApiSetMuteRequest,
+    request: ApiSetMuteRequest
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -3159,7 +3169,7 @@ export class Client {
   /** Set notification channel*/
   async setMuteChannel(
     session: ApiSession,
-    request: ApiSetMuteRequest,
+    request: ApiSetMuteRequest
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -3176,7 +3186,7 @@ export class Client {
   /** update channel private*/
   async updateChannelPrivate(
     session: ApiSession,
-    request: ApiChangeChannelPrivateRequest,
+    request: ApiChangeChannelPrivateRequest
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -3195,7 +3205,7 @@ export class Client {
   /** Set default notification category*/
   async setNotificationCategory(
     session: ApiSession,
-    request: ApiSetNotificationRequest,
+    request: ApiSetNotificationRequest
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -3213,7 +3223,7 @@ export class Client {
 
   async deleteNotificationCategory(
     session: ApiSession,
-    category_id: string,
+    category_id: string
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -3231,7 +3241,7 @@ export class Client {
 
   async deleteNotificationChannel(
     session: ApiSession,
-    channel_id: string,
+    channel_id: string
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -3250,7 +3260,7 @@ export class Client {
   /** */
   async setNotificationReactMessage(
     session: ApiSession,
-    channel_id: string,
+    channel_id: string
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -3269,7 +3279,7 @@ export class Client {
   //** */
   async deleteNotiReactMessage(
     session: ApiSession,
-    channel_id: string,
+    channel_id: string
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -3288,7 +3298,7 @@ export class Client {
   /** query message in elasticsearch */
   async searchMessage(
     session: ApiSession,
-    request: ApiSearchMessageRequest,
+    request: ApiSearchMessageRequest
   ): Promise<ApiSearchMessageResponse> {
     if (
       this.autoFallbackHttp &&
@@ -3307,7 +3317,7 @@ export class Client {
   /** */
   async createMessage2Inbox(
     session: ApiSession,
-    request: ApiMessage2InboxRequest,
+    request: ApiMessage2InboxRequest
   ): Promise<ApiChannelMessageHeader> {
     if (
       this.autoFallbackHttp &&
@@ -3326,7 +3336,7 @@ export class Client {
   /** */
   async createPinMessage(
     session: ApiSession,
-    request: ApiPinMessageRequest,
+    request: ApiPinMessageRequest
   ): Promise<ApiChannelMessageHeader> {
     if (
       this.autoFallbackHttp &&
@@ -3346,7 +3356,7 @@ export class Client {
     session: ApiSession,
     messageId: string,
     channelId: string,
-    clanId: string,
+    clanId: string
   ): Promise<ApiPinMessagesList> {
     if (
       this.autoFallbackHttp &&
@@ -3389,7 +3399,7 @@ export class Client {
     id?: string,
     messageId?: string,
     channelId?: string,
-    clanId?: string,
+    clanId?: string
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -3408,7 +3418,7 @@ export class Client {
   /** create clan emoji */
   async createClanEmoji(
     session: ApiSession,
-    request: ApiClanEmojiCreateRequest,
+    request: ApiClanEmojiCreateRequest
   ) {
     if (
       this.autoFallbackHttp &&
@@ -3426,7 +3436,7 @@ export class Client {
   async updateClanEmojiById(
     session: ApiSession,
     id: string,
-    request: MezonUpdateClanEmojiByIdBody,
+    request: MezonUpdateClanEmojiByIdBody
   ) {
     if (
       this.autoFallbackHttp &&
@@ -3447,7 +3457,7 @@ export class Client {
     session: ApiSession,
     id: string,
     clan_id: string,
-    emojiLabel?: string,
+    emojiLabel?: string
   ) {
     if (
       this.autoFallbackHttp &&
@@ -3466,7 +3476,7 @@ export class Client {
   //**create webhook for chaneel */
   async generateWebhookLink(
     session: ApiSession,
-    request: ApiWebhookCreateRequest,
+    request: ApiWebhookCreateRequest
   ): Promise<ApiWebhookGenerateResponse> {
     if (
       this.autoFallbackHttp &&
@@ -3484,7 +3494,7 @@ export class Client {
   async listWebhookByChannelId(
     session: ApiSession,
     channel_id: string,
-    clan_id: string,
+    clan_id: string
   ): Promise<ApiWebhookListResponse> {
     if (
       this.autoFallbackHttp &&
@@ -3504,7 +3514,7 @@ export class Client {
   async updateWebhookById(
     session: ApiSession,
     id: string,
-    request: MezonUpdateWebhookByIdBody,
+    request: MezonUpdateWebhookByIdBody
   ) {
     if (
       this.autoFallbackHttp &&
@@ -3524,7 +3534,7 @@ export class Client {
   async deleteWebhookById(
     session: ApiSession,
     id: string,
-    request: MezonDeleteWebhookByIdBody,
+    request: MezonDeleteWebhookByIdBody
   ) {
     if (
       this.autoFallbackHttp &&
@@ -3559,7 +3569,7 @@ export class Client {
     session: ApiSession,
     id: string,
     clan_id: string,
-    stickerLabel?: string,
+    stickerLabel?: string
   ) {
     if (
       this.autoFallbackHttp &&
@@ -3579,7 +3589,7 @@ export class Client {
   async updateClanStickerById(
     session: ApiSession,
     id: string,
-    request: MezonUpdateClanStickerByIdBody,
+    request: MezonUpdateClanStickerByIdBody
   ) {
     if (
       this.autoFallbackHttp &&
@@ -3599,7 +3609,7 @@ export class Client {
   async changeChannelCategory(
     session: ApiSession,
     id: string,
-    request: MezonChangeChannelCategoryBody,
+    request: MezonChangeChannelCategoryBody
   ) {
     if (
       this.autoFallbackHttp &&
@@ -3618,7 +3628,7 @@ export class Client {
   /** */
   async setRoleChannelPermission(
     session: ApiSession,
-    request: ApiUpdateRoleChannelRequest,
+    request: ApiUpdateRoleChannelRequest
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -3636,7 +3646,7 @@ export class Client {
 
   async addApp(
     session: ApiSession,
-    request: ApiAddAppRequest,
+    request: ApiAddAppRequest
   ): Promise<ApiApp> {
     if (
       this.autoFallbackHttp &&
@@ -3694,7 +3704,7 @@ export class Client {
   }
 
   async getSystemMessagesList(
-    session: ApiSession,
+    session: ApiSession
   ): Promise<ApiSystemMessagesList> {
     if (
       this.autoFallbackHttp &&
@@ -3712,7 +3722,7 @@ export class Client {
 
   async getSystemMessageByClanId(
     session: ApiSession,
-    clanId: string,
+    clanId: string
   ): Promise<ApiSystemMessage> {
     if (
       this.autoFallbackHttp &&
@@ -3730,7 +3740,7 @@ export class Client {
 
   async createSystemMessage(
     session: ApiSession,
-    request: ApiSystemMessageRequest,
+    request: ApiSystemMessageRequest
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -3747,7 +3757,7 @@ export class Client {
   async updateSystemMessage(
     session: ApiSession,
     clanId: string,
-    request: MezonUpdateSystemMessageBody,
+    request: MezonUpdateSystemMessageBody
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -3778,7 +3788,7 @@ export class Client {
 
   async updateCategoryOrder(
     session: ApiSession,
-    request: ApiUpdateCategoryOrderRequest,
+    request: ApiUpdateCategoryOrderRequest
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -3800,7 +3810,7 @@ export class Client {
     channelType: number,
     state?: number,
     limit?: number,
-    cursor?: string,
+    cursor?: string
   ): Promise<ApiStreamingChannelUserList> {
     if (
       this.autoFallbackHttp &&
@@ -3816,7 +3826,7 @@ export class Client {
         channelType,
         limit,
         state,
-        cursor,
+        cursor
       )
       .then((response: ApiStreamingChannelUserList) => {
         const result: ApiStreamingChannelUserList = {
@@ -3841,7 +3851,7 @@ export class Client {
 
   async registerStreamingChannel(
     session: ApiSession,
-    request: ApiRegisterStreamingChannelRequest,
+    request: ApiRegisterStreamingChannelRequest
   ) {
     if (
       this.autoFallbackHttp &&
@@ -3860,7 +3870,7 @@ export class Client {
   /** List a channel's users. */
   async listChannelApps(
     session: ApiSession,
-    clanId: string,
+    clanId: string
   ): Promise<ApiListChannelAppsResponse> {
     if (
       this.autoFallbackHttp &&
@@ -3897,7 +3907,7 @@ export class Client {
 
   async getChannelCategoryNotiSettingsList(
     session: ApiSession,
-    clanId: string,
+    clanId: string
   ): Promise<ApiNotificationChannelCategorySettingList> {
     if (
       this.autoFallbackHttp &&
@@ -3915,7 +3925,7 @@ export class Client {
 
   async getNotificationCategory(
     session: ApiSession,
-    categoryId: string,
+    categoryId: string
   ): Promise<ApiNotificationUserChannel> {
     if (
       this.autoFallbackHttp &&
@@ -3933,7 +3943,7 @@ export class Client {
 
   async getNotificationChannel(
     session: ApiSession,
-    channelId: string,
+    channelId: string
   ): Promise<ApiNotificationUserChannel> {
     if (
       this.autoFallbackHttp &&
@@ -3951,7 +3961,7 @@ export class Client {
 
   async getNotificationClan(
     session: ApiSession,
-    clanId: string,
+    clanId: string
   ): Promise<ApiNotificationSetting> {
     if (
       this.autoFallbackHttp &&
@@ -3969,7 +3979,7 @@ export class Client {
 
   async getNotificationReactMessage(
     session: ApiSession,
-    channelId: string,
+    channelId: string
   ): Promise<ApiNotifiReactMessage> {
     if (
       this.autoFallbackHttp &&
@@ -4003,7 +4013,7 @@ export class Client {
   async listChannelUsersUC(
     session: ApiSession,
     channel_id: string,
-    limit: number,
+    limit: number
   ): Promise<ApiAllUsersAddChannelResponse> {
     if (
       this.autoFallbackHttp &&
@@ -4020,7 +4030,7 @@ export class Client {
   }
 
   async getListEmojisByUserId(
-    session: ApiSession,
+    session: ApiSession
   ): Promise<ApiEmojiListedResponse> {
     if (
       this.autoFallbackHttp &&
@@ -4052,7 +4062,7 @@ export class Client {
   }
 
   async getListStickersByUserId(
-    session: ApiSession,
+    session: ApiSession
   ): Promise<ApiStickerListedResponse> {
     if (
       this.autoFallbackHttp &&
@@ -4088,7 +4098,7 @@ export class Client {
     clanId?: string,
     limit?: number,
     state?: number,
-    cursor?: string,
+    cursor?: string
   ): Promise<ApiRoleListEventResponse> {
     if (
       this.autoFallbackHttp &&
@@ -4112,7 +4122,7 @@ export class Client {
   async listUserPermissionInChannel(
     session: ApiSession,
     clanId?: string,
-    channelId?: string,
+    channelId?: string
   ): Promise<ApiUserPermissionInChannelListResponse> {
     if (
       this.autoFallbackHttp &&
@@ -4138,7 +4148,7 @@ export class Client {
     session: ApiSession,
     roleId?: string,
     channelId?: string,
-    userId?: string,
+    userId?: string
   ): Promise<ApiPermissionRoleChannelListEventResponse> {
     if (
       this.autoFallbackHttp &&
@@ -4163,7 +4173,7 @@ export class Client {
 
   async markAsRead(
     session: ApiSession,
-    request: ApiMarkAsReadRequest,
+    request: ApiMarkAsReadRequest
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -4185,7 +4195,7 @@ export class Client {
     state?: number,
     clanId?: string,
     threadId?: string,
-    page?: number,
+    page?: number
   ): Promise<ApiChannelDescList> {
     if (
       this.autoFallbackHttp &&
@@ -4212,7 +4222,7 @@ export class Client {
 
   async listChannelTimeline(
     session: ApiSession,
-    request: ApiListChannelTimelineRequest,
+    request: ApiListChannelTimelineRequest
   ): Promise<ApiListChannelTimelineResponse> {
     if (
       this.autoFallbackHttp &&
@@ -4229,7 +4239,7 @@ export class Client {
           let previewImgs;
           try {
             const decodedAttachments = decodeChannelTimelineAttachments(
-              event.preview_imgs,
+              event.preview_imgs
             );
             previewImgs =
               decodedAttachments?.attachments ||
@@ -4250,7 +4260,7 @@ export class Client {
 
   async createChannelTimeline(
     session: ApiSession,
-    request: ApiCreateChannelTimelineRequest,
+    request: ApiCreateChannelTimelineRequest
   ): Promise<ApiCreateChannelTimelineResponse> {
     if (
       this.autoFallbackHttp &&
@@ -4268,10 +4278,10 @@ export class Client {
           let previewImgs;
           try {
             const decodedAttachments = decodeChannelTimelineAttachments(
-              event.attachments,
+              event.attachments
             );
             const decodedPreviewImgs = decodeChannelTimelineAttachments(
-              event.preview_imgs,
+              event.preview_imgs
             );
             attachments =
               decodedAttachments?.attachments ||
@@ -4302,7 +4312,7 @@ export class Client {
 
   async updateChannelTimeline(
     session: ApiSession,
-    request: ApiUpdateChannelTimelineRequest,
+    request: ApiUpdateChannelTimelineRequest
   ): Promise<ApiUpdateChannelTimelineResponse> {
     if (
       this.autoFallbackHttp &&
@@ -4320,10 +4330,10 @@ export class Client {
           let previewImgs;
           try {
             const decodedAttachments = decodeChannelTimelineAttachments(
-              event.attachments,
+              event.attachments
             );
             const decodedPreviewImgs = decodeChannelTimelineAttachments(
-              event.preview_imgs,
+              event.preview_imgs
             );
             attachments =
               decodedAttachments?.attachments ||
@@ -4354,7 +4364,7 @@ export class Client {
 
   async detailChannelTimeline(
     session: ApiSession,
-    request: ApiDetailChannelTimelineRequest,
+    request: ApiDetailChannelTimelineRequest
   ): Promise<ApiDetailChannelTimelineResponse> {
     if (
       this.autoFallbackHttp &&
@@ -4372,10 +4382,10 @@ export class Client {
           let previewImgs;
           try {
             const decodedAttachments = decodeChannelTimelineAttachments(
-              event.attachments,
+              event.attachments
             );
             const decodedPreviewImgs = decodeChannelTimelineAttachments(
-              event.preview_imgs,
+              event.preview_imgs
             );
             attachments =
               decodedAttachments?.attachments ||
@@ -4407,7 +4417,7 @@ export class Client {
   async leaveThread(
     session: ApiSession,
     clanId: string,
-    channelId: string,
+    channelId: string
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -4427,7 +4437,7 @@ export class Client {
   async archiveChannel(
     session: ApiSession,
     clanId: string,
-    channelId: string,
+    channelId: string
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -4446,7 +4456,7 @@ export class Client {
   /** List archived top-level channels in a clan. */
   async listArchivedChannelDescs(
     session: ApiSession,
-    clanId: string,
+    clanId: string
   ): Promise<ApiChannelDescList> {
     if (
       this.autoFallbackHttp &&
@@ -4473,7 +4483,7 @@ export class Client {
     type?: number,
     limit?: number,
     page?: number,
-    channelLabel?: string,
+    channelLabel?: string
   ): Promise<ApiChannelSettingListResponse> {
     if (
       this.autoFallbackHttp &&
@@ -4493,7 +4503,7 @@ export class Client {
         type,
         limit,
         page,
-        channelLabel,
+        channelLabel
       )
       .then((response: any) => {
         return Promise.resolve(response);
@@ -4505,7 +4515,7 @@ export class Client {
     channelId: string,
     clanId?: string,
     limit?: number,
-    page?: number,
+    page?: number
   ): Promise<ApiChannelCanvasListResponse> {
     if (
       this.autoFallbackHttp &&
@@ -4537,7 +4547,7 @@ export class Client {
     session: ApiSession,
     id: string,
     clanId?: string,
-    channelId?: string,
+    channelId?: string
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -4555,7 +4565,7 @@ export class Client {
 
   async editChannelCanvases(
     session: ApiSession,
-    request: ApiEditChannelCanvasRequest,
+    request: ApiEditChannelCanvasRequest
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -4574,7 +4584,7 @@ export class Client {
     session: ApiSession,
     canvasId: string,
     clanId?: string,
-    channelId?: string,
+    channelId?: string
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -4593,7 +4603,7 @@ export class Client {
   async addFavoriteChannel(
     session: ApiSession,
     channelId: string,
-    clanId: string,
+    clanId: string
   ): Promise<ApiAddFavoriteChannelResponse> {
     if (
       this.autoFallbackHttp &&
@@ -4615,7 +4625,7 @@ export class Client {
   async removeFavoriteChannel(
     session: ApiSession,
     clanId: string,
-    channelId: string,
+    channelId: string
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -4633,7 +4643,7 @@ export class Client {
 
   async getListFavoriteChannel(
     session: ApiSession,
-    clanId: string,
+    clanId: string
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -4664,7 +4674,7 @@ export class Client {
 
   async createActiviy(
     session: ApiSession,
-    request: ApiCreateActivityRequest,
+    request: ApiCreateActivityRequest
   ): Promise<ApiUserActivity> {
     if (
       this.autoFallbackHttp &&
@@ -4682,7 +4692,7 @@ export class Client {
     const apiSession = await this.transport.createQRLogin(
       this.serverkey,
       "",
-      requet,
+      requet
     );
     const response = {
       login_id: apiSession.login_id,
@@ -4692,12 +4702,12 @@ export class Client {
   }
 
   async checkLoginRequest(
-    requet: ApiConfirmLoginRequest,
+    requet: ApiConfirmLoginRequest
   ): Promise<ApiSession | null> {
     const apiSession = await this.transport.checkLoginRequest(
       this.serverkey,
       "",
-      requet,
+      requet
     );
     if (!apiSession?.token) {
       return null;
@@ -4716,7 +4726,7 @@ export class Client {
 
   async confirmLogin(
     session: ApiSession,
-    body: ApiConfirmLoginRequest,
+    body: ApiConfirmLoginRequest
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -4732,7 +4742,7 @@ export class Client {
 
   async getChanEncryptionMethod(
     session: ApiSession,
-    channelId: string,
+    channelId: string
   ): Promise<ApiChanEncryptionMethod> {
     if (
       this.autoFallbackHttp &&
@@ -4751,7 +4761,7 @@ export class Client {
   async setChanEncryptionMethod(
     session: ApiSession,
     channelId: string,
-    method: string,
+    method: string
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -4769,7 +4779,7 @@ export class Client {
 
   async getPubKeys(
     session: ApiSession,
-    userIds: Array<string>,
+    userIds: Array<string>
   ): Promise<ApiGetPubKeysResponse> {
     if (
       this.autoFallbackHttp &&
@@ -4787,7 +4797,7 @@ export class Client {
 
   async pushPubKey(
     session: ApiSession,
-    PK: ApiPubKey,
+    PK: ApiPubKey
   ): Promise<ApiGetPubKeysResponse> {
     if (
       this.autoFallbackHttp &&
@@ -4823,7 +4833,7 @@ export class Client {
     actionLog?: string,
     userId?: string,
     clanId?: string,
-    date_log?: string,
+    date_log?: string
   ): Promise<MezonapiListAuditLog> {
     if (
       this.autoFallbackHttp &&
@@ -4844,7 +4854,7 @@ export class Client {
     clanId?: string,
     guideType?: number,
     limit?: number,
-    page?: number,
+    page?: number
   ): Promise<ApiListOnboardingResponse> {
     if (
       this.autoFallbackHttp &&
@@ -4863,7 +4873,7 @@ export class Client {
   async getOnboardingDetail(
     session: ApiSession,
     id: string,
-    clanId?: string,
+    clanId?: string
   ): Promise<ApiOnboardingItem> {
     if (
       this.autoFallbackHttp &&
@@ -4881,7 +4891,7 @@ export class Client {
 
   async createOnboarding(
     session: ApiSession,
-    request: ApiCreateOnboardingRequest,
+    request: ApiCreateOnboardingRequest
   ): Promise<ApiListOnboardingResponse> {
     if (
       this.autoFallbackHttp &&
@@ -4900,7 +4910,7 @@ export class Client {
   async updateOnboarding(
     session: ApiSession,
     id: string,
-    request: MezonUpdateOnboardingBody,
+    request: MezonUpdateOnboardingBody
   ) {
     if (
       this.autoFallbackHttp &&
@@ -4919,7 +4929,7 @@ export class Client {
   async deleteOnboarding(
     session: ApiSession,
     id: string,
-    clanId?: string,
+    clanId?: string
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -4936,7 +4946,7 @@ export class Client {
   //**create webhook for clan */
   async generateClanWebhook(
     session: ApiSession,
-    request: ApiGenerateClanWebhookRequest,
+    request: ApiGenerateClanWebhookRequest
   ): Promise<ApiGenerateClanWebhookResponse> {
     if (
       this.autoFallbackHttp &&
@@ -4953,7 +4963,7 @@ export class Client {
   //**list webhook belong to the clan */
   async listClanWebhook(
     session: ApiSession,
-    clan_id: string,
+    clan_id: string
   ): Promise<ApiListClanWebhookResponse> {
     if (
       this.autoFallbackHttp &&
@@ -4973,7 +4983,7 @@ export class Client {
   async deleteClanWebhookById(
     session: ApiSession,
     id: string,
-    clan_id: string,
+    clan_id: string
   ) {
     if (
       this.autoFallbackHttp &&
@@ -4993,7 +5003,7 @@ export class Client {
   async updateClanWebhookById(
     session: ApiSession,
     id: string,
-    request: MezonUpdateClanWebhookByIdBody,
+    request: MezonUpdateClanWebhookByIdBody
   ) {
     if (
       this.autoFallbackHttp &&
@@ -5014,7 +5024,7 @@ export class Client {
     session: ApiSession,
     clan_id?: string,
     limit?: number,
-    page?: number,
+    page?: number
   ): Promise<ApiListOnboardingStepResponse> {
     if (
       this.autoFallbackHttp &&
@@ -5034,7 +5044,7 @@ export class Client {
   async updateOnboardingStepByClanId(
     session: ApiSession,
     clan_id: string,
-    request: MezonUpdateOnboardingStepByClanIdBody,
+    request: MezonUpdateOnboardingStepByClanIdBody
   ) {
     if (
       this.autoFallbackHttp &&
@@ -5067,7 +5077,7 @@ export class Client {
   /** Update user custom status (user_status). */
   async updateUserCustomStatus(
     session: ApiSession,
-    request: ApiUserStatusUpdate,
+    request: ApiUserStatusUpdate
   ) {
     if (
       this.autoFallbackHttp &&
@@ -5103,7 +5113,7 @@ export class Client {
   async listSdTopic(
     session: ApiSession,
     clanId?: string,
-    limit?: number,
+    limit?: number
   ): Promise<ApiSdTopicList> {
     if (
       this.autoFallbackHttp &&
@@ -5122,7 +5132,7 @@ export class Client {
   //**post sd topic */
   async createSdTopic(
     session: ApiSession,
-    request: ApiSdTopicRequest,
+    request: ApiSdTopicRequest
   ): Promise<ApiSdTopic> {
     if (
       this.autoFallbackHttp &&
@@ -5141,7 +5151,7 @@ export class Client {
   //**list sd topic */
   async getTopicDetail(
     session: ApiSession,
-    topicId?: string,
+    topicId?: string
   ): Promise<ApiSdTopic> {
     if (
       this.autoFallbackHttp &&
@@ -5160,7 +5170,7 @@ export class Client {
   //**create room channel apps */
   async createRoomChannelApps(
     session: ApiSession,
-    body: MezonapiCreateRoomChannelApps,
+    body: MezonapiCreateRoomChannelApps
   ): Promise<MezonapiCreateRoomChannelApps> {
     if (
       this.autoFallbackHttp &&
@@ -5179,7 +5189,7 @@ export class Client {
   /** Generate Meet Token */
   async generateMeetToken(
     session: ApiSession,
-    body: ApiGenerateMeetTokenRequest,
+    body: ApiGenerateMeetTokenRequest
   ): Promise<ApiGenerateMeetTokenResponse> {
     if (
       this.autoFallbackHttp &&
@@ -5197,7 +5207,7 @@ export class Client {
 
   //**list webhook belong to the clan */
   async listMezonOauthClient(
-    session: ApiSession,
+    session: ApiSession
   ): Promise<ApiMezonOauthClientList> {
     if (
       this.autoFallbackHttp &&
@@ -5216,7 +5226,7 @@ export class Client {
   async getMezonOauthClient(
     session: ApiSession,
     clientId?: string,
-    clientName?: string,
+    clientName?: string
   ): Promise<ApiMezonOauthClient> {
     if (
       this.autoFallbackHttp &&
@@ -5234,7 +5244,7 @@ export class Client {
 
   async updateMezonOauthClient(
     session: ApiSession,
-    body: ApiMezonOauthClient,
+    body: ApiMezonOauthClient
   ): Promise<ApiMezonOauthClient> {
     if (
       this.autoFallbackHttp &&
@@ -5255,7 +5265,7 @@ export class Client {
     session: ApiSession,
     clanId?: string,
     channelId?: string,
-    label?: string,
+    label?: string
   ): Promise<ApiChannelDescList> {
     if (
       this.autoFallbackHttp &&
@@ -5274,7 +5284,7 @@ export class Client {
   //**Generate Hash */
   async generateHashChannelApps(
     session: ApiSession,
-    appId?: string,
+    appId?: string
   ): Promise<ApiCreateHashChannelAppsResponse> {
     if (
       this.autoFallbackHttp &&
@@ -5294,7 +5304,7 @@ export class Client {
     session: ApiSession,
     email?: string,
     password?: string,
-    oldPassword?: string,
+    oldPassword?: string
   ): Promise<ApiSession> {
     if (
       this.autoFallbackHttp &&
@@ -5317,7 +5327,7 @@ export class Client {
   /** Add user event */
   async addUserEvent(
     session: ApiSession,
-    request: ApiUserEventRequest,
+    request: ApiUserEventRequest
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -5335,7 +5345,7 @@ export class Client {
   async deleteUserEvent(
     session: ApiSession,
     clanId?: string,
-    eventId?: string,
+    eventId?: string
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -5353,7 +5363,7 @@ export class Client {
 
   async updateRoleOrder(
     session: ApiSession,
-    request: ApiUpdateRoleOrderRequest,
+    request: ApiUpdateRoleOrderRequest
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -5381,7 +5391,7 @@ export class Client {
   }
 
   async createExternalMezonMeet(
-    session: ApiSession,
+    session: ApiSession
   ): Promise<ApiGenerateMezonMeetResponse> {
     if (
       this.autoFallbackHttp &&
@@ -5401,7 +5411,7 @@ export class Client {
     token: string,
     username?: string,
     metadata?: string,
-    isGuest?: boolean,
+    isGuest?: boolean
   ): Promise<ApiGenerateMeetTokenExternalResponse> {
     return this.transport
       .generateMeetTokenExternal(token, username, metadata, isGuest)
@@ -5412,7 +5422,7 @@ export class Client {
 
   async removeMezonMeetParticipant(
     session: ApiSession,
-    request: ApiMeetParticipantRequest,
+    request: ApiMeetParticipantRequest
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -5430,7 +5440,7 @@ export class Client {
 
   async muteMezonMeetParticipant(
     session: ApiSession,
-    request: ApiMeetParticipantRequest,
+    request: ApiMeetParticipantRequest
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -5449,7 +5459,7 @@ export class Client {
   /** Update clan order to view. */
   async updateClanOrder(
     session: ApiSession,
-    request: ApiUpdateClanOrderRequest,
+    request: ApiUpdateClanOrderRequest
   ): Promise<boolean> {
     if (
       this.autoFallbackHttp &&
@@ -5465,7 +5475,7 @@ export class Client {
 
   /** list clan discover. */
   async listClanDiscover(
-    request: ApiClanDiscoverRequest,
+    request: ApiClanDiscoverRequest
   ): Promise<ApiListClanDiscover> {
     return this.transport
       .clanDiscover(this.serverkey, "", request)
@@ -5478,7 +5488,7 @@ export class Client {
     session: ApiSession,
     botId: string,
     channelId: string,
-    menuType: number,
+    menuType: number
   ): Promise<ApiQuickMenuAccessList> {
     if (
       this.autoFallbackHttp &&
@@ -5497,7 +5507,7 @@ export class Client {
   async deleteQuickMenuAccess(
     session: ApiSession,
     id: string,
-    clanId: string,
+    clanId: string
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -5515,7 +5525,7 @@ export class Client {
 
   async addQuickMenuAccess(
     session: ApiSession,
-    request: ApiQuickMenuAccessRequest,
+    request: ApiQuickMenuAccessRequest
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -5531,7 +5541,7 @@ export class Client {
 
   async updateQuickMenuAccess(
     session: ApiSession,
-    request: ApiQuickMenuAccessRequest,
+    request: ApiQuickMenuAccessRequest
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -5549,7 +5559,7 @@ export class Client {
 
   async listForSaleItems(
     session: ApiSession,
-    page?: number,
+    page?: number
   ): Promise<ApiForSaleItemList> {
     if (
       this.autoFallbackHttp &&
@@ -5567,7 +5577,7 @@ export class Client {
 
   async isFollower(
     session: ApiSession,
-    req: ApiIsFollowerRequest,
+    req: ApiIsFollowerRequest
   ): Promise<ApiIsFollowerResponse> {
     if (
       this.autoFallbackHttp &&
@@ -5585,7 +5595,7 @@ export class Client {
 
   async transferOwnership(
     session: ApiSession,
-    req: ApiTransferOwnershipRequest,
+    req: ApiTransferOwnershipRequest
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -5601,7 +5611,7 @@ export class Client {
 
   async isBanned(
     session: ApiSession,
-    channelId: string,
+    channelId: string
   ): Promise<ApiIsBannedResponse> {
     if (
       this.autoFallbackHttp &&
@@ -5620,7 +5630,7 @@ export class Client {
   async reportMessageAbuse(
     session: ApiSession,
     messageId?: string,
-    abuseType?: string,
+    abuseType?: string
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -5642,7 +5652,7 @@ export class Client {
     channelId?: string,
     displayName?: string,
     roomName?: string,
-    state?: number,
+    state?: number
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -5672,7 +5682,7 @@ export class Client {
     mentionEveryone?: boolean,
     avatar?: string,
     code?: number,
-    topicId?: string,
+    topicId?: string
   ): Promise<ChannelMessageAck> {
     if (
       this.autoFallbackHttp &&
@@ -5695,7 +5705,7 @@ export class Client {
         mentionEveryone,
         avatar,
         code,
-        topicId,
+        topicId
       )
       .then((response: ChannelMessageAck) => {
         return Promise.resolve(response);
@@ -5714,7 +5724,7 @@ export class Client {
     attachments?: Array<ApiMessageAttachment>,
     hideEditted?: boolean,
     topicId?: string,
-    isUpdateMsgTopic?: boolean,
+    isUpdateMsgTopic?: boolean
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -5735,7 +5745,7 @@ export class Client {
         attachments,
         hideEditted,
         topicId,
-        isUpdateMsgTopic,
+        isUpdateMsgTopic
       )
       .then((response: any) => {
         return Promise.resolve(response);
@@ -5752,7 +5762,7 @@ export class Client {
     hasAttachment?: boolean,
     topicId?: string,
     mentions?: Uint8Array,
-    references?: Uint8Array,
+    references?: Uint8Array
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -5771,7 +5781,7 @@ export class Client {
         hasAttachment,
         topicId,
         mentions,
-        references,
+        references
       )
       .then((response: any) => {
         return Promise.resolve(response);
@@ -5785,7 +5795,7 @@ export class Client {
     buttonId?: string,
     senderId?: string,
     userId?: string,
-    extraData?: string,
+    extraData?: string
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -5801,7 +5811,7 @@ export class Client {
         buttonId,
         senderId,
         userId,
-        extraData,
+        extraData
       )
       .then((response: any) => {
         return Promise.resolve(response);
@@ -5815,7 +5825,7 @@ export class Client {
     selectboxId?: string,
     senderId?: string,
     userId?: string,
-    values?: string[],
+    values?: string[]
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -5831,7 +5841,7 @@ export class Client {
         selectboxId,
         senderId,
         userId,
-        values,
+        values
       )
       .then((response: any) => {
         return Promise.resolve(response);
@@ -5841,7 +5851,7 @@ export class Client {
   async activeArchivedThread(
     session: ApiSession,
     clanId?: string,
-    channelId?: string,
+    channelId?: string
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -5860,7 +5870,7 @@ export class Client {
   async addAgentToChannel(
     session: ApiSession,
     roomName?: string,
-    channelId?: string,
+    channelId?: string
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -5879,7 +5889,7 @@ export class Client {
   async disconnectAgent(
     session: ApiSession,
     roomName?: string,
-    channelId?: string,
+    channelId?: string
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -5897,7 +5907,7 @@ export class Client {
 
   async listMutedChannel(
     session: ApiSession,
-    clanId: string,
+    clanId: string
   ): Promise<ApiMutedChannelList> {
     if (
       this.autoFallbackHttp &&
@@ -5927,7 +5937,7 @@ export class Client {
     actionDelete: boolean,
     topicId?: string,
     emojiRecentId?: string,
-    senderName?: string,
+    senderName?: string
   ): Promise<ChannelMessageAck> {
     if (
       this.autoFallbackHttp &&
@@ -5950,7 +5960,7 @@ export class Client {
         actionDelete,
         topicId,
         emojiRecentId,
-        senderName,
+        senderName
       )
       .then((response: ChannelMessageAck) => {
         return Promise.resolve(response);
@@ -5960,7 +5970,7 @@ export class Client {
   /** Create a poll in a channel. */
   async createPoll(
     session: ApiSession,
-    request: ApiCreatePollRequest,
+    request: ApiCreatePollRequest
   ): Promise<ApiCreatePollResponse> {
     if (
       this.autoFallbackHttp &&
@@ -5974,7 +5984,7 @@ export class Client {
   /** Vote on a poll. */
   async votePoll(
     session: ApiSession,
-    request: ApiVotePollRequest,
+    request: ApiVotePollRequest
   ): Promise<ApiVotePollResponse> {
     if (
       this.autoFallbackHttp &&
@@ -5988,7 +5998,7 @@ export class Client {
   /** Close a poll (creator only). */
   async closePoll(
     session: ApiSession,
-    request: ApiClosePollRequest,
+    request: ApiClosePollRequest
   ): Promise<any> {
     if (
       this.autoFallbackHttp &&
@@ -6002,7 +6012,7 @@ export class Client {
   /** Get poll details. */
   async getPoll(
     session: ApiSession,
-    request: ApiGetPollRequest,
+    request: ApiGetPollRequest
   ): Promise<ApiGetPollResponse> {
     if (
       this.autoFallbackHttp &&
@@ -6048,7 +6058,7 @@ export class Client {
     clan_id: string,
     channel_id: string,
     channel_type: number,
-    is_public: boolean,
+    is_public: boolean
   ): Promise<Channel> {
     if (
       this.autoFallbackHttp &&
@@ -6060,7 +6070,7 @@ export class Client {
       clan_id,
       channel_id,
       channel_type,
-      is_public,
+      is_public
     );
   }
 
@@ -6069,7 +6079,7 @@ export class Client {
     clan_id: string,
     channel_id: string,
     channel_type: number,
-    is_public: boolean,
+    is_public: boolean
   ): Promise<void> {
     if (
       this.autoFallbackHttp &&
@@ -6081,7 +6091,7 @@ export class Client {
       clan_id,
       channel_id,
       channel_type,
-      is_public,
+      is_public
     );
   }
 
@@ -6095,7 +6105,7 @@ export class Client {
     has_attachment?: boolean,
     topic_id?: string,
     mentions?: string,
-    references?: string,
+    references?: string
   ): Promise<ChannelMessageAck> {
     if (
       this.autoFallbackHttp &&
@@ -6112,7 +6122,7 @@ export class Client {
       has_attachment,
       topic_id,
       mentions,
-      references,
+      references
     );
   }
 
@@ -6138,7 +6148,7 @@ export class Client {
     attachments?: Array<ApiMessageAttachment>,
     hideEditted?: boolean,
     topic_id?: string,
-    is_update_msg_topic?: boolean,
+    is_update_msg_topic?: boolean
   ): Promise<ChannelMessageAck> {
     if (
       this.autoFallbackHttp &&
@@ -6157,7 +6167,7 @@ export class Client {
       attachments,
       hideEditted,
       topic_id,
-      is_update_msg_topic,
+      is_update_msg_topic
     );
   }
 
@@ -6186,7 +6196,7 @@ export class Client {
     mention_everyone?: boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string,
+    topic_id?: string
   ): Promise<QuickMenuEvent> {
     if (
       this.autoFallbackHttp &&
@@ -6208,7 +6218,7 @@ export class Client {
       mention_everyone,
       avatar,
       code,
-      topic_id,
+      topic_id
     );
   }
 
@@ -6228,7 +6238,7 @@ export class Client {
     avatar?: string,
     code?: number,
     topic_id?: string,
-    id?: string,
+    id?: string
   ): Promise<ChannelMessageAck> {
     if (
       this.autoFallbackHttp &&
@@ -6251,7 +6261,7 @@ export class Client {
       avatar,
       code,
       topic_id,
-      id,
+      id
     );
   }
 
@@ -6269,7 +6279,7 @@ export class Client {
     mention_everyone?: boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string,
+    topic_id?: string
   ): Promise<ChannelMessageAck> {
     if (
       this.autoFallbackHttp &&
@@ -6290,7 +6300,7 @@ export class Client {
       mention_everyone,
       avatar,
       code,
-      topic_id,
+      topic_id
     );
   }
 
@@ -6309,7 +6319,7 @@ export class Client {
     action_delete: boolean,
     topic_id?: string,
     emoji_recent_id?: string,
-    sender_name?: string,
+    sender_name?: string
   ): Promise<ApiMessageReaction> {
     if (
       this.autoFallbackHttp &&
@@ -6331,7 +6341,7 @@ export class Client {
       action_delete,
       topic_id,
       emoji_recent_id,
-      sender_name,
+      sender_name
     );
   }
 
@@ -6342,7 +6352,7 @@ export class Client {
     mode: number,
     is_public: boolean,
     sender_display_name: string,
-    topic_id?: string,
+    topic_id?: string
   ): Promise<MessageTypingEvent> {
     if (
       this.autoFallbackHttp &&
@@ -6356,7 +6366,7 @@ export class Client {
       mode,
       is_public,
       sender_display_name,
-      topic_id,
+      topic_id
     );
   }
 
@@ -6367,7 +6377,7 @@ export class Client {
     mode: number,
     message_id: string,
     timestamp_seconds: number,
-    badge_count: number,
+    badge_count: number
   ): Promise<LastSeenMessageEvent> {
     if (
       this.autoFallbackHttp &&
@@ -6381,7 +6391,7 @@ export class Client {
       mode,
       message_id,
       timestamp_seconds,
-      badge_count,
+      badge_count
     );
   }
 
@@ -6399,7 +6409,7 @@ export class Client {
     message_sender_username: string,
     message_content: string,
     message_attachment: string,
-    message_created_time: string,
+    message_created_time: string
   ): Promise<ApiGetPollResponse> {
     if (
       this.autoFallbackHttp &&
@@ -6420,7 +6430,7 @@ export class Client {
       message_sender_username,
       message_content,
       message_attachment,
-      message_created_time,
+      message_created_time
     );
   }
 
@@ -6429,7 +6439,7 @@ export class Client {
     clan_id: string,
     status: string,
     time_reset: number,
-    no_clear: boolean,
+    no_clear: boolean
   ): Promise<CustomStatusEvent> {
     if (
       this.autoFallbackHttp &&
@@ -6441,14 +6451,14 @@ export class Client {
       clan_id,
       status,
       time_reset,
-      no_clear,
+      no_clear
     );
   }
 
   async writeVoiceReaction(
     session: ApiSession,
     emojis: Array<string>,
-    channel_id: string,
+    channel_id: string
   ): Promise<VoiceReactionSend> {
     if (
       this.autoFallbackHttp &&
@@ -6465,7 +6475,7 @@ export class Client {
     data_type: number,
     json_data: string,
     channel_id: string,
-    caller_id: string,
+    caller_id: string
   ): Promise<WebrtcSignalingFwd> {
     if (
       this.autoFallbackHttp &&
@@ -6478,7 +6488,7 @@ export class Client {
       data_type,
       json_data,
       channel_id,
-      caller_id,
+      caller_id
     );
   }
 
@@ -6487,7 +6497,7 @@ export class Client {
     receiver_id: string,
     json_data: string,
     channel_id: string,
-    caller_id: string,
+    caller_id: string
   ): Promise<IncomingCallPush> {
     if (
       this.autoFallbackHttp &&
@@ -6499,7 +6509,7 @@ export class Client {
       receiver_id,
       json_data,
       channel_id,
-      caller_id,
+      caller_id
     );
   }
 
@@ -6507,7 +6517,7 @@ export class Client {
     session: ApiSession,
     clan_id: string,
     channel_id: string,
-    action: number,
+    action: number
   ): Promise<ChannelAppEvent> {
     if (
       this.autoFallbackHttp &&
@@ -6518,9 +6528,7 @@ export class Client {
     return this.transport.writeChannelAppEvent(clan_id, channel_id, action);
   }
 
-  async listLogedDevice(
-    session: ApiSession
-  ): Promise<LogedDeviceList> {
+  async listLogedDevice(session: ApiSession): Promise<LogedDeviceList> {
     if (
       this.autoFallbackHttp &&
       this._connectionState !== ConnectionState.CONNECTED
