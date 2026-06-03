@@ -2235,6 +2235,7 @@ export interface MultipartUploadAttachmentPart {
 export interface MultipartUploadAttachmentFinishRequest {
   upload_id: string;
   parts: MultipartUploadAttachmentPart[];
+  filename: string;
 }
 
 export interface SearchMessageRequest {
@@ -23209,7 +23210,7 @@ export const MultipartUploadAttachmentPart = {
 };
 
 function createBaseMultipartUploadAttachmentFinishRequest(): MultipartUploadAttachmentFinishRequest {
-  return { upload_id: "", parts: [] };
+  return { upload_id: "", parts: [], filename: "" };
 }
 
 export const MultipartUploadAttachmentFinishRequest = {
@@ -23219,6 +23220,9 @@ export const MultipartUploadAttachmentFinishRequest = {
     }
     for (const v of message.parts) {
       MultipartUploadAttachmentPart.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.filename !== "") {
+      writer.uint32(26).string(message.filename);
     }
     return writer;
   },
@@ -23244,6 +23248,13 @@ export const MultipartUploadAttachmentFinishRequest = {
 
           message.parts.push(MultipartUploadAttachmentPart.decode(reader, reader.uint32()));
           continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.filename = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -23259,6 +23270,7 @@ export const MultipartUploadAttachmentFinishRequest = {
       parts: globalThis.Array.isArray(object?.parts)
         ? object.parts.map((e: any) => MultipartUploadAttachmentPart.fromJSON(e))
         : [],
+      filename: isSet(object.filename) ? globalThis.String(object.filename) : "",
     };
   },
 
@@ -23269,6 +23281,9 @@ export const MultipartUploadAttachmentFinishRequest = {
     }
     if (message.parts?.length) {
       obj.parts = message.parts.map((e) => MultipartUploadAttachmentPart.toJSON(e));
+    }
+    if (message.filename !== "") {
+      obj.filename = message.filename;
     }
     return obj;
   },
@@ -23284,6 +23299,7 @@ export const MultipartUploadAttachmentFinishRequest = {
     const message = createBaseMultipartUploadAttachmentFinishRequest();
     message.upload_id = object.upload_id ?? "";
     message.parts = object.parts?.map((e) => MultipartUploadAttachmentPart.fromPartial(e)) || [];
+    message.filename = object.filename ?? "";
     return message;
   },
 };
