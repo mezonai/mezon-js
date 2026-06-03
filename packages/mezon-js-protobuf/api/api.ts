@@ -2198,6 +2198,8 @@ export interface UploadAttachmentRequest {
   width: number;
   /** Height */
   height: number;
+  /** part count */
+  part_count: number;
 }
 
 export interface ListMessageMentionRequest {
@@ -22745,7 +22747,7 @@ export const PermissionUpdate = {
 };
 
 function createBaseUploadAttachmentRequest(): UploadAttachmentRequest {
-  return { filename: "", filetype: "", size: 0, width: 0, height: 0 };
+  return { filename: "", filetype: "", size: 0, width: 0, height: 0, part_count: 0 };
 }
 
 export const UploadAttachmentRequest = {
@@ -22764,6 +22766,9 @@ export const UploadAttachmentRequest = {
     }
     if (message.height !== 0) {
       writer.uint32(40).int32(message.height);
+    }
+    if (message.part_count !== 0) {
+      writer.uint32(48).int32(message.part_count);
     }
     return writer;
   },
@@ -22810,6 +22815,13 @@ export const UploadAttachmentRequest = {
 
           message.height = reader.int32();
           continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.part_count = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -22826,6 +22838,7 @@ export const UploadAttachmentRequest = {
       size: isSet(object.size) ? globalThis.Number(object.size) : 0,
       width: isSet(object.width) ? globalThis.Number(object.width) : 0,
       height: isSet(object.height) ? globalThis.Number(object.height) : 0,
+      part_count: isSet(object.part_count) ? globalThis.Number(object.part_count) : 0,
     };
   },
 
@@ -22846,6 +22859,9 @@ export const UploadAttachmentRequest = {
     if (message.height !== 0) {
       obj.height = Math.round(message.height);
     }
+    if (message.part_count !== 0) {
+      obj.part_count = Math.round(message.part_count);
+    }
     return obj;
   },
 
@@ -22859,6 +22875,7 @@ export const UploadAttachmentRequest = {
     message.size = object.size ?? 0;
     message.width = object.width ?? 0;
     message.height = object.height ?? 0;
+    message.part_count = object.part_count ?? 0;
     return message;
   },
 };

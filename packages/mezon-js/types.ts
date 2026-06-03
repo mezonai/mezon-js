@@ -4209,6 +4209,8 @@ export interface ApiUploadAttachmentRequest {
   size?: number;
   //
   width?: number;
+  //
+  part_count?: number;
 }
 
 /** A user in the server. */
