@@ -159,6 +159,7 @@ export interface UpdateMessageData {
   content: any;
   mentions?: Array<ApiMessageMention>;
   attachments?: Array<ApiMessageAttachment>;
+  create_time_seconds?: number;
   hideEditted?: boolean;
   topic_id?: string;
   is_update_msg_topic?: boolean;

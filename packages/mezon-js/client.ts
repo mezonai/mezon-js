@@ -5733,6 +5733,7 @@ export class Client {
     content: any,
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
+    createTimeSeconds?: number,
     hideEditted?: boolean,
     topicId?: string,
     isUpdateMsgTopic?: boolean
@@ -5754,6 +5755,7 @@ export class Client {
         content,
         mentions,
         attachments,
+        createTimeSeconds,
         hideEditted,
         topicId,
         isUpdateMsgTopic
@@ -6157,6 +6159,7 @@ export class Client {
     content: any,
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
+    createTimeSeconds?: number,
     hideEditted?: boolean,
     topic_id?: string,
     is_update_msg_topic?: boolean
@@ -6176,6 +6179,7 @@ export class Client {
       content,
       mentions,
       attachments,
+      createTimeSeconds,
       hideEditted,
       topic_id,
       is_update_msg_topic

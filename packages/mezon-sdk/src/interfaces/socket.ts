@@ -292,6 +292,8 @@ export interface ChannelMessageUpdate {
     mentions?: Array<ApiMessageMention>;
     /** attachments */
     attachments?: Array<ApiMessageAttachment>;
+    /** original message create time (seconds) */
+    create_time_seconds?: number;
     /** The mode payload. */
     mode: number;
     // Is public
@@ -959,6 +961,7 @@ export interface Socket {
     content: any,
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
+    create_time_seconds?: number,
     hideEditted?: boolean,
     topic_id?: string,
     is_update_msg_topic?: boolean
