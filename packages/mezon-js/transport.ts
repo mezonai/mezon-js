@@ -5006,11 +5006,17 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out."),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs,
+        ),
       ),
     ]);
   }
@@ -5042,11 +5048,17 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out."),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs,
+        ),
       ),
     ]);
   }
