@@ -2187,6 +2187,14 @@ export interface PermissionUpdate {
   type: number;
 }
 
+export interface UploadBatchAttachmentRequest {
+  upload_files: UploadAttachmentRequest[];
+}
+
+export interface UploadAttachmentBatch {
+  uploaded_files: UploadAttachment[];
+}
+
 export interface UploadAttachmentRequest {
   /** The name of file that need to upload */
   filename: string;
@@ -22743,6 +22751,128 @@ export const PermissionUpdate = {
     message.permission_id = object.permission_id ?? "0";
     message.slug = object.slug ?? "";
     message.type = object.type ?? 0;
+    return message;
+  },
+};
+
+function createBaseUploadBatchAttachmentRequest(): UploadBatchAttachmentRequest {
+  return { upload_files: [] };
+}
+
+export const UploadBatchAttachmentRequest = {
+  encode(message: UploadBatchAttachmentRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.upload_files) {
+      UploadAttachmentRequest.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UploadBatchAttachmentRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUploadBatchAttachmentRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.upload_files.push(UploadAttachmentRequest.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UploadBatchAttachmentRequest {
+    return {
+      upload_files: globalThis.Array.isArray(object?.upload_files)
+        ? object.upload_files.map((e: any) => UploadAttachmentRequest.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: UploadBatchAttachmentRequest): unknown {
+    const obj: any = {};
+    if (message.upload_files?.length) {
+      obj.upload_files = message.upload_files.map((e) => UploadAttachmentRequest.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UploadBatchAttachmentRequest>, I>>(base?: I): UploadBatchAttachmentRequest {
+    return UploadBatchAttachmentRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UploadBatchAttachmentRequest>, I>>(object: I): UploadBatchAttachmentRequest {
+    const message = createBaseUploadBatchAttachmentRequest();
+    message.upload_files = object.upload_files?.map((e) => UploadAttachmentRequest.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseUploadAttachmentBatch(): UploadAttachmentBatch {
+  return { uploaded_files: [] };
+}
+
+export const UploadAttachmentBatch = {
+  encode(message: UploadAttachmentBatch, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.uploaded_files) {
+      UploadAttachment.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UploadAttachmentBatch {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUploadAttachmentBatch();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.uploaded_files.push(UploadAttachment.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UploadAttachmentBatch {
+    return {
+      uploaded_files: globalThis.Array.isArray(object?.uploaded_files)
+        ? object.uploaded_files.map((e: any) => UploadAttachment.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: UploadAttachmentBatch): unknown {
+    const obj: any = {};
+    if (message.uploaded_files?.length) {
+      obj.uploaded_files = message.uploaded_files.map((e) => UploadAttachment.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UploadAttachmentBatch>, I>>(base?: I): UploadAttachmentBatch {
+    return UploadAttachmentBatch.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UploadAttachmentBatch>, I>>(object: I): UploadAttachmentBatch {
+    const message = createBaseUploadAttachmentBatch();
+    message.uploaded_files = object.uploaded_files?.map((e) => UploadAttachment.fromPartial(e)) || [];
     return message;
   },
 };
