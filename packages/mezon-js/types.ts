@@ -435,6 +435,8 @@ export interface ChannelMessageUpdate {
     mentions?: Array<ApiMessageMention>;
     /** attachments */
     attachments?: Array<ApiMessageAttachment>;
+    /** original message create time (seconds) */
+    create_time_seconds?: number;
     /** The mode payload. */
     mode: number;
     // Is public

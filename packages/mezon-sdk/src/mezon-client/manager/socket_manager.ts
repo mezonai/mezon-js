@@ -246,6 +246,7 @@ export class SocketManager {
       dataUpdateMessage.content,
       dataUpdateMessage?.mentions ?? [],
       dataUpdateMessage?.attachments ?? [],
+      dataUpdateMessage?.create_time_seconds,
       dataUpdateMessage?.hideEditted ?? false,
       dataUpdateMessage?.topic_id,
       dataUpdateMessage?.is_update_msg_topic,
