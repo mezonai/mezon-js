@@ -431,6 +431,7 @@ export interface TopicInMessageEvent {
   message_id: string;
   rpl: number;
   lsnt: string;
+  tp_id: string;
 }
 
 export interface ApiRequestEvent {
@@ -3753,7 +3754,7 @@ export const Envelope = {
 };
 
 function createBaseTopicInMessageEvent(): TopicInMessageEvent {
-  return { message_id: "0", rpl: 0, lsnt: "0" };
+  return { message_id: "0", rpl: 0, lsnt: "0", tp_id: "" };
 }
 
 export const TopicInMessageEvent = {
@@ -3766,6 +3767,9 @@ export const TopicInMessageEvent = {
     }
     if (message.lsnt !== "0") {
       writer.uint32(24).int64(message.lsnt);
+    }
+    if (message.tp_id !== "") {
+      writer.uint32(34).string(message.tp_id);
     }
     return writer;
   },
@@ -3798,6 +3802,13 @@ export const TopicInMessageEvent = {
 
           message.lsnt = longToString(reader.int64() as Long);
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.tp_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3812,6 +3823,7 @@ export const TopicInMessageEvent = {
       message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "0",
       rpl: isSet(object.rpl) ? globalThis.Number(object.rpl) : 0,
       lsnt: isSet(object.lsnt) ? globalThis.String(object.lsnt) : "0",
+      tp_id: isSet(object.tp_id) ? globalThis.String(object.tp_id) : "",
     };
   },
 
@@ -3826,6 +3838,9 @@ export const TopicInMessageEvent = {
     if (message.lsnt !== "0") {
       obj.lsnt = message.lsnt;
     }
+    if (message.tp_id !== "") {
+      obj.tp_id = message.tp_id;
+    }
     return obj;
   },
 
@@ -3837,6 +3852,7 @@ export const TopicInMessageEvent = {
     message.message_id = object.message_id ?? "0";
     message.rpl = object.rpl ?? 0;
     message.lsnt = object.lsnt ?? "0";
+    message.tp_id = object.tp_id ?? "";
     return message;
   },
 };
