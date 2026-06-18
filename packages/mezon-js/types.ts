@@ -5124,6 +5124,7 @@ export interface TopicInMessageEvent {
   message_id: string;
   rpl: number;
   lsnt: string;
+  tp_id: string;
 }
 
 export function CreateChannelMessageFromEvent(message: any) {
