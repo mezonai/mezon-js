@@ -5006,7 +5006,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -5042,7 +5045,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -7996,6 +8002,7 @@ export class MezonTransport {
     content: any,
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
+    create_time_seconds?: number,
     hideEditted?: boolean,
     topic_id?: string,
     is_update_msg_topic?: boolean
@@ -8012,6 +8019,7 @@ export class MezonTransport {
         content: content,
         mentions: mentions,
         attachments: attachments,
+        create_time_seconds: create_time_seconds,
         hide_editted: hideEditted,
         topic_id: topic_id,
         is_update_msg_topic: is_update_msg_topic,
@@ -8768,6 +8776,7 @@ export class MezonTransport {
     content: any,
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
+    create_time_seconds?: number,
     hideEditted?: boolean,
     topic_id?: string,
     is_update_msg_topic?: boolean
@@ -8781,6 +8790,7 @@ export class MezonTransport {
         content: content,
         mentions: mentions,
         attachments: attachments,
+        create_time_seconds: create_time_seconds,
         mode: mode,
         is_public: is_public,
         hide_editted: hideEditted,

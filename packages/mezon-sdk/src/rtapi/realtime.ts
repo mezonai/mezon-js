@@ -738,6 +738,8 @@ export interface ChannelMessageUpdate {
   topic_id: string;
   /** update message topic */
   is_update_msg_topic: boolean;
+  /** original message create time (seconds) */
+  create_time_seconds: number;
 }
 
 /** Remove a message previously sent to a realtime channel. */
@@ -6614,6 +6616,7 @@ function createBaseChannelMessageUpdate(): ChannelMessageUpdate {
     hide_editted: false,
     topic_id: "0",
     is_update_msg_topic: false,
+    create_time_seconds: 0,
   };
 }
 
@@ -6651,6 +6654,9 @@ export const ChannelMessageUpdate = {
     }
     if (message.is_update_msg_topic !== false) {
       writer.uint32(88).bool(message.is_update_msg_topic);
+    }
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(96).uint32(message.create_time_seconds);
     }
     return writer;
   },
@@ -6739,6 +6745,13 @@ export const ChannelMessageUpdate = {
 
           message.is_update_msg_topic = reader.bool();
           continue;
+        case 12:
+          if (tag !== 96) {
+            break;
+          }
+
+          message.create_time_seconds = reader.uint32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -6765,6 +6778,7 @@ export const ChannelMessageUpdate = {
       hide_editted: isSet(object.hide_editted) ? globalThis.Boolean(object.hide_editted) : false,
       topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "0",
       is_update_msg_topic: isSet(object.is_update_msg_topic) ? globalThis.Boolean(object.is_update_msg_topic) : false,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
     };
   },
 
@@ -6803,6 +6817,9 @@ export const ChannelMessageUpdate = {
     if (message.is_update_msg_topic !== false) {
       obj.is_update_msg_topic = message.is_update_msg_topic;
     }
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
+    }
     return obj;
   },
 
@@ -6822,6 +6839,7 @@ export const ChannelMessageUpdate = {
     message.hide_editted = object.hide_editted ?? false;
     message.topic_id = object.topic_id ?? "0";
     message.is_update_msg_topic = object.is_update_msg_topic ?? false;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
     return message;
   },
 };
