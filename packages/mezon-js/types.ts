@@ -4215,6 +4215,14 @@ export interface ApiUploadAttachmentRequest {
   part_count?: number;
 }
 
+export interface ApiUploadBatchAttachmentRequest {
+  upload_files: ApiUploadAttachmentRequest[];
+}
+
+export interface ApiUploadBatchAttachment {
+  uploaded_files: ApiUploadAttachment[];
+}
+
 /** A user in the server. */
 export interface ApiUser {
   //
@@ -5118,6 +5126,7 @@ export interface TopicInMessageEvent {
   message_id: string;
   rpl: number;
   lsnt: string;
+  tp_id: string;
 }
 
 export function CreateChannelMessageFromEvent(message: any) {

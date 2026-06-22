@@ -261,6 +261,8 @@ import {
   Status,
   ApiListClanBadgeCountResponse,
   TopicInMessageEvent,
+  ApiUploadBatchAttachment,
+  ApiUploadBatchAttachmentRequest,
 } from "./types";
 
 import {
@@ -1558,6 +1560,20 @@ export class Client {
     }
 
     return this.transport.uploadAttachmentFile(request);
+  }
+
+  async uploadBatchAttachmentFile(
+    session: ApiSession,
+    request: ApiUploadBatchAttachmentRequest
+  ): Promise<ApiUploadBatchAttachment> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport.uploadBatchAttachmentFile(request);
   }
 
   async multipartUploadAttachmentFile(
