@@ -123,6 +123,9 @@ export class Message {
         content,
         mentions,
         attachments,
+        create_time_seconds: this.create_time_seconds
+          ? Number(this.create_time_seconds)
+          : undefined,
         topic_id: this.topic_id || "0",
         is_update_msg_topic: !!this.topic_id,
       };

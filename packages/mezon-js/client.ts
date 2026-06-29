@@ -1877,9 +1877,7 @@ export class Client {
 
     return this.transport
       .deleteRole(roleId, "0", clanId, roleLabel)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+      .then(() => true);
   }
 
   /** Delete a event by ID. */
@@ -3029,9 +3027,7 @@ export class Client {
       await this.transport.setFallbackSession(session);
     }
 
-    return this.transport.updateRole(roleId, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.transport.updateRole(roleId, request).then(() => true);
   }
 
   /** Update fields in a given event. */
@@ -5749,6 +5745,7 @@ export class Client {
     content: any,
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
+    createTimeSeconds?: number,
     hideEditted?: boolean,
     topicId?: string,
     isUpdateMsgTopic?: boolean
@@ -5770,6 +5767,7 @@ export class Client {
         content,
         mentions,
         attachments,
+        createTimeSeconds,
         hideEditted,
         topicId,
         isUpdateMsgTopic
@@ -6173,6 +6171,7 @@ export class Client {
     content: any,
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
+    createTimeSeconds?: number,
     hideEditted?: boolean,
     topic_id?: string,
     is_update_msg_topic?: boolean
@@ -6192,6 +6191,7 @@ export class Client {
       content,
       mentions,
       attachments,
+      createTimeSeconds,
       hideEditted,
       topic_id,
       is_update_msg_topic
