@@ -9,7 +9,8 @@ import { SessionManager } from "./session_manager";
 import { SocketManager } from "./socket_manager";
 
 export class ChannelManager {
-  private allDmChannels: any;
+  private allDmChannels: any = {};
+  private allDmChannelDescs: ApiChannelDescription[] = [];
   constructor(
     private apiClient: MezonApi,
     private socketManager: SocketManager,
@@ -23,8 +24,20 @@ export class ChannelManager {
       ChannelType.CHANNEL_TYPE_DM,
     );
 
-    if (!channels?.channeldesc || !channels?.channeldesc?.length) return;
-    this.allDmChannels = channels?.channeldesc
+    if (!channels?.channeldesc || !channels?.channeldesc?.length) {
+      this.allDmChannels = {};
+      this.allDmChannelDescs = [];
+      return;
+    }
+
+    this.allDmChannelDescs = channels.channeldesc.filter(
+      (channel) =>
+        !!channel?.channel_id &&
+        !!channel?.user_ids?.length &&
+        channel?.type === ChannelType.CHANNEL_TYPE_DM,
+    );
+
+    this.allDmChannels = this.allDmChannelDescs
       .map(
         (channel: {
           user_ids: string | string[];
@@ -47,6 +60,10 @@ export class ChannelManager {
 
   public getAllDmChannels() {
     return this.allDmChannels;
+  }
+
+  public getAllDmChannelDescs() {
+    return this.allDmChannelDescs;
   }
 
   /** Create DM channel with user */

@@ -1,8 +1,14 @@
-import { ChannelStreamMode } from "../../constants";
-import { ApiMessageAttachment, ChannelMessageContent } from "../../interfaces";
+import { ChannelStreamMode, ChannelType } from "../../constants";
+import {
+  ApiChannelDescription,
+  ApiMessageAttachment,
+  ChannelMessageContent,
+  ReplyMessageData,
+} from "../../interfaces";
 import { ChannelManager } from "../manager/channel_manager";
 import { SocketManager } from "../manager/socket_manager";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
+import { TextChannel } from "./TextChannel";
 
 export interface UserInitData {
   id: string;
@@ -18,6 +24,8 @@ type UserDeps = {
   socketManager: SocketManager;
   messageQueue: AsyncThrottleQueue;
   channelManager: ChannelManager;
+  cacheDmChannel: (channel: ApiChannelDescription) => TextChannel | undefined;
+  getChannel: (channelId: string) => Promise<TextChannel>;
 };
 
 export class User {
@@ -32,6 +40,8 @@ export class User {
   private readonly socketManager: SocketManager;
   private readonly messageQueue: AsyncThrottleQueue;
   private readonly channelManager: ChannelManager;
+  private readonly cacheDmChannel: (channel: ApiChannelDescription) => TextChannel | undefined;
+  private readonly getChannel: (channelId: string) => Promise<TextChannel>;
 
   constructor(initUserData: UserInitData, deps: UserDeps) {
     this.id = initUserData.id;
@@ -45,6 +55,8 @@ export class User {
     this.socketManager = deps.socketManager;
     this.messageQueue = deps.messageQueue;
     this.channelManager = deps.channelManager;
+    this.cacheDmChannel = deps.cacheDmChannel;
+    this.getChannel = deps.getChannel;
   }
 
   private async createDmChannel() {
@@ -66,22 +78,28 @@ export class User {
       if (!this.dmChannelId) {
         const dmChannel = await this.createDmChannel();
         this.dmChannelId = dmChannel?.channel_id ?? "";
+        if (dmChannel) {
+          this.cacheDmChannel(dmChannel);
+        }
       }
 
       if (!this.dmChannelId) {
         throw Error(`Can not get dmChannelId for this user ${this.id}!`);
       }
 
-      const dataSendDm = {
+      const dataSendDm: ReplyMessageData = {
         clan_id: "0",
         channel_id: this.dmChannelId,
+        channel_type: ChannelType.CHANNEL_TYPE_DM,
         mode: ChannelStreamMode.STREAM_MODE_DM,
         is_public: false,
         content,
         attachments,
         code,
       };
-      return this.socketManager.writeChatMessage(dataSendDm);
+      const ack = await this.socketManager.writeChatMessage(dataSendDm);
+      const channel = await this.getChannel(this.dmChannelId);
+      return channel.createMessageFromAck(ack, dataSendDm);
     });
   }
 }

@@ -14,6 +14,7 @@ import {
   AIAgentSessionEndedEvent,
   AIAgentSessionSummaryDoneEvent,
   ApiGetZkProofRequest,
+  ApiChannelDescription,
   ApiQuickMenuAccessPayload,
   ApiQuickMenuAccessRequest,
   APISentTokenRequest,
@@ -247,6 +248,7 @@ export class MezonClientCore extends EventEmitter {
         if (sessionConnected?.token) {
           await this.socketManager.connectSocket(sessionConnected.token);
           await this.channelManager.initAllDmChannels(sessionConnected.token);
+          this._initDmChannelCache();
         }
         this.emit("ready");
         return JSON.stringify(sessionApi ?? {});
@@ -452,6 +454,9 @@ export class MezonClientCore extends EventEmitter {
     try {
       const session = this.sessionManager.getSession()!;
       const channelDetail = await this.apiClient.listChannelDetail(session.token, id);
+      if (!channelDetail?.channel_id || channelDetail.channel_id === "0") {
+        throw Error(`Invalid channel detail response for ${id}`);
+      }
       const clanId = channelDetail?.clan_id ?? "0";
 
       const clan = this.clans.get(clanId)!;
@@ -460,7 +465,7 @@ export class MezonClientCore extends EventEmitter {
       clan?.channels.set(channel.id!, channel);
       return channel;
     } catch (error) {
-      throw Error(`Can not find channel ${id}!`);
+      throw Error(`Can not find channel ${id}! ${error}`);
     }
   }
 
@@ -473,20 +478,51 @@ export class MezonClientCore extends EventEmitter {
     if (!dmChannel || !dmChannel.channel_id) {
       throw Error(`User ${id} not found or can not create DM channel!`);
     }
+    this._cacheDmChannel(dmChannel);
 
     const userRaw: UserInitData = {
       id,
       dmChannelId: dmChannel.channel_id,
     };
 
-    const user = new User(userRaw, {
-      socketManager: this.socketManager,
-      messageQueue: this.messageQueue,
-      channelManager: this.channelManager,
-    });
+    const user = new User(userRaw, this._getUserDeps());
 
     this.users.set(id, user);
     return user;
+  }
+
+  protected _initDmChannelCache() {
+    const dmChannels = this.channelManager.getAllDmChannelDescs();
+    for (const channel of dmChannels) {
+      this._cacheDmChannel(channel);
+    }
+  }
+
+  protected _cacheDmChannel(channel: ApiChannelDescription) {
+    if (!channel?.channel_id) return;
+    const dmClan = this.clans.get("0");
+    if (!dmClan) return;
+
+    const channelObj = new TextChannel(
+      { ...channel, type: channel?.type },
+      dmClan,
+      this.socketManager,
+      this.messageQueue,
+      this.messageDB,
+    );
+    this.channels.set(channel.channel_id, channelObj);
+    dmClan.channels.set(channel.channel_id, channelObj);
+    return channelObj;
+  }
+
+  protected _getUserDeps() {
+    return {
+      socketManager: this.socketManager,
+      messageQueue: this.messageQueue,
+      channelManager: this.channelManager,
+      cacheDmChannel: this._cacheDmChannel.bind(this),
+      getChannel: (channelId: string) => this.channels.fetch(channelId),
+    };
   }
 
   protected async _initChannelMessageCache(e: ChannelMessage) {
@@ -560,11 +596,7 @@ export class MezonClientCore extends EventEmitter {
 
         const user = new User(
           { id, dmChannelId: allDmChannels?.[id] ?? "" },
-          {
-            socketManager: this.socketManager,
-            messageQueue: this.messageQueue,
-            channelManager: this.channelManager,
-          },
+          this._getUserDeps(),
         );
 
         this.users.set(id, user);
@@ -584,11 +616,7 @@ export class MezonClientCore extends EventEmitter {
     let user = this.users.get(sender_id!);
 
     if (!user) {
-      user = new User(userRaw, {
-        socketManager: this.socketManager,
-        messageQueue: this.messageQueue,
-        channelManager: this.channelManager,
-      });
+      user = new User(userRaw, this._getUserDeps());
       this.users.set(sender_id!, user);
     } else {
       user.username = userRaw.username ?? user.username;
