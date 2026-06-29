@@ -91,6 +91,7 @@ export class Message {
 
       const dataReply: ReplyMessageData = {
         clan_id: this.channel.clan.id,
+        channel_type: this.channel.channel_type,
         mode: convertChanneltypeToChannelMode(this.channel.channel_type!),
         is_public: !this.channel.is_private,
         channel_id: this.channel.id!,
@@ -117,6 +118,7 @@ export class Message {
       const dataUpdate: UpdateMessageData = {
         clan_id: this.channel.clan.id,
         channel_id: this.channel.id!,
+        channel_type: this.channel.channel_type,
         mode: convertChanneltypeToChannelMode(this.channel.channel_type!),
         is_public: !this.channel.is_private,
         message_id: this.id,
@@ -139,6 +141,7 @@ export class Message {
         id: dataReactMessage?.id ?? "",
         clan_id: this.channel.clan.id,
         channel_id: this.channel.id!,
+        channel_type: this.channel.channel_type,
         mode: convertChanneltypeToChannelMode(this.channel.channel_type!),
         is_public: !this.channel.is_private,
         message_id: this.id,
@@ -157,6 +160,7 @@ export class Message {
       const dataRemove: RemoveMessageData = {
         clan_id: this.channel.clan.id,
         channel_id: this.channel.id!,
+        channel_type: this.channel.channel_type,
         mode: convertChanneltypeToChannelMode(this.channel.channel_type!),
         is_public: !this.channel.is_private,
         message_id: this.id,

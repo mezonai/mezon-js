@@ -1,6 +1,6 @@
 import { ErrorEvent, CloseEvent } from "ws";
 import { MezonApi } from "../../api";
-import { Events } from "../../constants";
+import { ChannelStreamMode, ChannelType, Events } from "../../constants";
 import { DefaultSocket } from "../../socket";
 import { WebSocketAdapter } from "../../web_socket_adapter";
 import { WebSocketAdapterPb } from "../../web_socket_adapter_pb";
@@ -172,6 +172,44 @@ export class SocketManager {
     setTimeout(retry, retryInterval);
   }
 
+  private isMustJoinChannelError(error: any): boolean {
+    return (
+      error?.code === 3 ||
+      `${error?.message ?? error ?? ""}`.includes(
+        "Must join channel before sending messages",
+      )
+    );
+  }
+
+  private getChannelTypeFromMode(mode: number): number {
+    switch (mode) {
+      case ChannelStreamMode.STREAM_MODE_DM:
+        return ChannelType.CHANNEL_TYPE_DM;
+      case ChannelStreamMode.STREAM_MODE_GROUP:
+        return ChannelType.CHANNEL_TYPE_GROUP;
+      case ChannelStreamMode.STREAM_MODE_THREAD:
+        return ChannelType.CHANNEL_TYPE_THREAD;
+      case ChannelStreamMode.STREAM_MODE_CHANNEL:
+      default:
+        return ChannelType.CHANNEL_TYPE_CHANNEL;
+    }
+  }
+
+  private async joinChannelBeforeRetry(data: {
+    clan_id: string;
+    channel_id: string;
+    channel_type?: number;
+    mode: number;
+    is_public: boolean;
+  }) {
+    await this.socket.joinChat(
+      data.clan_id,
+      data.channel_id,
+      data.channel_type ?? this.getChannelTypeFromMode(data.mode),
+      data.is_public,
+    );
+  }
+
   async writeChatMessage(dataWriteMessage: ReplyMessageData) {
     const currentContentLength = JSON.stringify(
       dataWriteMessage.content ?? {},
@@ -181,22 +219,30 @@ export class SocketManager {
         `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`,
       );
 
-    const msgACK = await this.socket.writeChatMessage(
-      dataWriteMessage.clan_id,
-      dataWriteMessage.channel_id,
-      dataWriteMessage.mode,
-      dataWriteMessage.is_public,
-      dataWriteMessage.content,
-      dataWriteMessage?.mentions ?? [],
-      dataWriteMessage?.attachments ?? [],
-      dataWriteMessage?.references ?? [],
-      dataWriteMessage?.anonymous_message,
-      dataWriteMessage?.mention_everyone,
-      dataWriteMessage?.avatar,
-      dataWriteMessage?.code,
-      dataWriteMessage?.topic_id,
-    );
-    return msgACK;
+    const send = () =>
+      this.socket.writeChatMessage(
+        dataWriteMessage.clan_id,
+        dataWriteMessage.channel_id,
+        dataWriteMessage.mode,
+        dataWriteMessage.is_public,
+        dataWriteMessage.content,
+        dataWriteMessage?.mentions ?? [],
+        dataWriteMessage?.attachments ?? [],
+        dataWriteMessage?.references ?? [],
+        dataWriteMessage?.anonymous_message,
+        dataWriteMessage?.mention_everyone,
+        dataWriteMessage?.avatar,
+        dataWriteMessage?.code,
+        dataWriteMessage?.topic_id,
+      );
+
+    try {
+      return await send();
+    } catch (error) {
+      if (!this.isMustJoinChannelError(error)) throw error;
+      await this.joinChannelBeforeRetry(dataWriteMessage);
+      return send();
+    }
   }
 
   async writeEphemeralMessage(dataWriteMessage: EphemeralMessageData) {
@@ -208,24 +254,32 @@ export class SocketManager {
         `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`,
       );
 
-    const msgACK = await this.socket.writeEphemeralMessage(
-      dataWriteMessage.receiver_id,
-      dataWriteMessage.clan_id,
-      dataWriteMessage.channel_id,
-      dataWriteMessage.mode,
-      dataWriteMessage.is_public,
-      dataWriteMessage.content,
-      dataWriteMessage?.mentions ?? [],
-      dataWriteMessage?.attachments ?? [],
-      dataWriteMessage?.references ?? [],
-      dataWriteMessage?.anonymous_message,
-      dataWriteMessage?.mention_everyone,
-      dataWriteMessage?.avatar,
-      dataWriteMessage?.code,
-      dataWriteMessage?.topic_id,
-      dataWriteMessage?.message_id,
-    );
-    return msgACK;
+    const send = () =>
+      this.socket.writeEphemeralMessage(
+        dataWriteMessage.receiver_id,
+        dataWriteMessage.clan_id,
+        dataWriteMessage.channel_id,
+        dataWriteMessage.mode,
+        dataWriteMessage.is_public,
+        dataWriteMessage.content,
+        dataWriteMessage?.mentions ?? [],
+        dataWriteMessage?.attachments ?? [],
+        dataWriteMessage?.references ?? [],
+        dataWriteMessage?.anonymous_message,
+        dataWriteMessage?.mention_everyone,
+        dataWriteMessage?.avatar,
+        dataWriteMessage?.code,
+        dataWriteMessage?.topic_id,
+        dataWriteMessage?.message_id,
+      );
+
+    try {
+      return await send();
+    } catch (error) {
+      if (!this.isMustJoinChannelError(error)) throw error;
+      await this.joinChannelBeforeRetry(dataWriteMessage);
+      return send();
+    }
   }
 
   async updateChatMessage(dataUpdateMessage: UpdateMessageData) {

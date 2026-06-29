@@ -83,6 +83,7 @@ export class TextChannel {
       const dataSend: ReplyMessageData = {
         clan_id: this.clan.id,
         channel_id: this.id!,
+        channel_type: this.channel_type,
         mode: convertChanneltypeToChannelMode(this.channel_type!),
         is_public: !this.is_private,
         content,
@@ -124,6 +125,7 @@ export class TextChannel {
       receiver_id,
       clan_id: this.clan.id,
       channel_id: this.id!,
+      channel_type: this.channel_type,
       mode: convertChanneltypeToChannelMode(this.channel_type!),
       is_public: !this.is_private,
     };

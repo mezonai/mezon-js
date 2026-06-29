@@ -1,4 +1,4 @@
-import { ChannelStreamMode } from "../../constants";
+import { ChannelStreamMode, ChannelType } from "../../constants";
 import { ApiMessageAttachment, ChannelMessageContent } from "../../interfaces";
 import { ChannelManager } from "../manager/channel_manager";
 import { SocketManager } from "../manager/socket_manager";
@@ -75,6 +75,7 @@ export class User {
       const dataSendDm = {
         clan_id: "0",
         channel_id: this.dmChannelId,
+        channel_type: ChannelType.CHANNEL_TYPE_DM,
         mode: ChannelStreamMode.STREAM_MODE_DM,
         is_public: false,
         content,

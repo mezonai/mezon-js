@@ -120,6 +120,7 @@ export interface EphemeralMessageData {
   receiver_id: string | string[];
   clan_id: string;
   channel_id: string;
+  channel_type?: number;
   mode: number;
   is_public: boolean;
   content: any;
@@ -137,6 +138,7 @@ export interface EphemeralMessageData {
 export interface ReplyMessageData {
   clan_id: string;
   channel_id: string;
+  channel_type?: number;
   mode: number;
   is_public: boolean;
   content: ChannelMessageContent;
@@ -153,6 +155,7 @@ export interface ReplyMessageData {
 export interface UpdateMessageData {
   clan_id: string;
   channel_id: string;
+  channel_type?: number;
   mode: number;
   is_public: boolean;
   message_id: string;
@@ -177,6 +180,7 @@ export interface ReactMessageData {
   id?: string;
   clan_id: string;
   channel_id: string;
+  channel_type?: number;
   mode: number;
   is_public: boolean;
   message_id: string;
@@ -190,6 +194,7 @@ export interface ReactMessageData {
 export interface RemoveMessageData {
   clan_id: string;
   channel_id: string;
+  channel_type?: number;
   mode: number;
   is_public: boolean;
   message_id: string;
