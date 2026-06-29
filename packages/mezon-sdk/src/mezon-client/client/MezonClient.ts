@@ -255,8 +255,8 @@ export class MezonClient extends MezonClientCore {
           this.messageQueue,
           this.messageDB,
         );
-        await clanObj.loadChannels();
         this.clans.set(e.clan_id, clanObj);
+        await clanObj.loadChannels();
       }
     } else {
       const userRaw: UserInitData = {

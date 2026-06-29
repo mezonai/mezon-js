@@ -57,6 +57,12 @@ export class MezonApi {
       emptyAs?: T;
     },
   ): Promise<T> {
+    if (!response.ok) {
+      throw new Error(
+        `Request failed with status ${response.status} ${response.statusText}`,
+      );
+    }
+
     if (response.status === 204) {
       return (opts?.emptyAs ?? ({} as any)) as T;
     }
