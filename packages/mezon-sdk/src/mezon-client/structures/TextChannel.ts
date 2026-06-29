@@ -1,6 +1,7 @@
 import { TypeMessage } from "../../constants";
 import {
   ApiChannelDescription,
+  ChannelMessageAck,
   ApiMessageAttachment,
   ApiMessageMention,
   ApiMessageRef,
@@ -94,8 +95,58 @@ export class TextChannel {
         code,
         topic_id,
       };
-      return await this.socketManager.writeChatMessage(dataSend);
+      const ack = await this.socketManager.writeChatMessage(dataSend);
+      return this.createMessageFromAck(ack, dataSend);
     });
+  }
+
+  createMessageFromAck(
+    ack: ChannelMessageAck & {
+      create_time_seconds?: number;
+      update_time_seconds?: number;
+      persistent?: boolean;
+      persistence?: boolean;
+    },
+    data: ReplyMessageData,
+  ) {
+    const createTimeSeconds =
+      ack.create_time_seconds ??
+      (ack.create_time ? Number(ack.create_time) : undefined);
+    const updateTimeSeconds =
+      ack.update_time_seconds ??
+      (ack.update_time ? Number(ack.update_time) : undefined);
+    const messageRaw = {
+      id: ack.message_id,
+      clan_id: data.clan_id,
+      channel_id: ack.channel_id || data.channel_id,
+      sender_id: this.clan.getClient().clientId,
+      content: data.content,
+      mentions: data.mentions,
+      attachments: data.attachments,
+      references: data.references,
+      topic_id: data.topic_id,
+      create_time_seconds: Number.isNaN(createTimeSeconds)
+        ? undefined
+        : createTimeSeconds,
+      update_time_seconds: Number.isNaN(updateTimeSeconds)
+        ? undefined
+        : updateTimeSeconds,
+      code: ack.code,
+      username: ack.username,
+      create_time: ack.create_time,
+      update_time: ack.update_time,
+      persistent: ack.persistent ?? ack.persistence,
+      persistence: ack.persistence ?? ack.persistent ?? false,
+      mode: ack.mode,
+    };
+    const message = new Message(
+      messageRaw,
+      this,
+      this.socketManager,
+      this.messageQueue,
+    );
+    this.messages.set(message.id, message);
+    return message;
   }
 
   private async _buildEphemeralReferences(

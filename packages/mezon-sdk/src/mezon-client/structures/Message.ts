@@ -27,10 +27,20 @@ export interface MessageInitData {
   references?: ApiMessageRef[];
   topic_id?: string;
   create_time_seconds?: number;
+  update_time_seconds?: number;
+  code?: number;
+  username?: string;
+  create_time?: string;
+  update_time?: string;
+  persistent?: boolean;
+  persistence?: boolean;
+  mode?: number;
 }
 
 export class Message {
   public id: string;
+  public clan_id: string;
+  public channel_id: string;
   public sender_id: string;
   public content: ChannelMessageContent;
   public mentions: ApiMessageMention[] | undefined;
@@ -39,6 +49,14 @@ export class Message {
   public references: ApiMessageRef[] | undefined;
   public topic_id: string | undefined;
   public create_time_seconds: number | undefined;
+  public update_time_seconds: number | undefined;
+  public code: number;
+  public username: string;
+  public create_time: string;
+  public update_time: string;
+  public persistent: boolean | undefined;
+  public persistence: boolean;
+  public mode: number;
   public channel: TextChannel;
 
   private readonly socketManager: SocketManager;
@@ -51,6 +69,8 @@ export class Message {
     messageQueue: AsyncThrottleQueue,
   ) {
     this.id = initMessageData.id;
+    this.clan_id = initMessageData.clan_id;
+    this.channel_id = initMessageData.channel_id;
     this.sender_id = initMessageData.sender_id;
     this.content = initMessageData.content;
     this.references = initMessageData?.references;
@@ -60,9 +80,21 @@ export class Message {
     this.references = initMessageData?.references;
     this.topic_id = initMessageData?.topic_id;
     this.create_time_seconds = initMessageData?.create_time_seconds;
+    this.update_time_seconds = initMessageData?.update_time_seconds;
+    this.code = initMessageData?.code ?? 0;
+    this.username = initMessageData?.username ?? "";
+    this.create_time = initMessageData?.create_time ?? "";
+    this.update_time = initMessageData?.update_time ?? "";
+    this.persistent = initMessageData?.persistent;
+    this.persistence = initMessageData?.persistence ?? false;
+    this.mode = initMessageData?.mode ?? 0;
     this.channel = channel;
     this.socketManager = socketManager;
     this.messageQueue = messageQueue;
+  }
+
+  get message_id() {
+    return this.id;
   }
 
   async reply(
@@ -105,7 +137,8 @@ export class Message {
         topic_id: topic_id || this.topic_id,
       };
 
-      return this.socketManager.writeChatMessage(dataReply);
+      const ack = await this.socketManager.writeChatMessage(dataReply);
+      return this.channel.createMessageFromAck(ack, dataReply);
     });
   }
 
@@ -114,7 +147,7 @@ export class Message {
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
   ) {
-    return await this.messageQueue.enqueue(() => {
+    return await this.messageQueue.enqueue(async () => {
       const dataUpdate: UpdateMessageData = {
         clan_id: this.channel.clan.id,
         channel_id: this.channel.id!,
@@ -131,17 +164,21 @@ export class Message {
         topic_id: this.topic_id || "0",
         is_update_msg_topic: !!this.topic_id,
       };
-      return this.socketManager.updateChatMessage(dataUpdate);
+      await this.socketManager.updateChatMessage(dataUpdate);
+      this.content = content;
+      if (mentions) this.mentions = mentions;
+      if (attachments) this.attachments = attachments;
+      this.channel.messages.set(this.id, this);
+      return this;
     });
   }
 
   async react(dataReactMessage: ReactMessagePayload) {
     return await this.messageQueue.enqueue(() => {
       const dataReact: ReactMessageData = {
-        id: dataReactMessage?.id ?? "",
+        id: dataReactMessage?.id || "0",
         clan_id: this.channel.clan.id,
         channel_id: this.channel.id!,
-        channel_type: this.channel.channel_type,
         mode: convertChanneltypeToChannelMode(this.channel.channel_type!),
         is_public: !this.channel.is_private,
         message_id: this.id,

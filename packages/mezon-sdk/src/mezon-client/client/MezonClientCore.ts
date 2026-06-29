@@ -485,11 +485,7 @@ export class MezonClientCore extends EventEmitter {
       dmChannelId: dmChannel.channel_id,
     };
 
-    const user = new User(userRaw, {
-      socketManager: this.socketManager,
-      messageQueue: this.messageQueue,
-      channelManager: this.channelManager,
-    });
+    const user = new User(userRaw, this._getUserDeps());
 
     this.users.set(id, user);
     return user;
@@ -516,6 +512,17 @@ export class MezonClientCore extends EventEmitter {
     );
     this.channels.set(channel.channel_id, channelObj);
     dmClan.channels.set(channel.channel_id, channelObj);
+    return channelObj;
+  }
+
+  protected _getUserDeps() {
+    return {
+      socketManager: this.socketManager,
+      messageQueue: this.messageQueue,
+      channelManager: this.channelManager,
+      cacheDmChannel: this._cacheDmChannel.bind(this),
+      getChannel: (channelId: string) => this.channels.fetch(channelId),
+    };
   }
 
   protected async _initChannelMessageCache(e: ChannelMessage) {
@@ -589,11 +596,7 @@ export class MezonClientCore extends EventEmitter {
 
         const user = new User(
           { id, dmChannelId: allDmChannels?.[id] ?? "" },
-          {
-            socketManager: this.socketManager,
-            messageQueue: this.messageQueue,
-            channelManager: this.channelManager,
-          },
+          this._getUserDeps(),
         );
 
         this.users.set(id, user);
@@ -613,11 +616,7 @@ export class MezonClientCore extends EventEmitter {
     let user = this.users.get(sender_id!);
 
     if (!user) {
-      user = new User(userRaw, {
-        socketManager: this.socketManager,
-        messageQueue: this.messageQueue,
-        channelManager: this.channelManager,
-      });
+      user = new User(userRaw, this._getUserDeps());
       this.users.set(sender_id!, user);
     } else {
       user.username = userRaw.username ?? user.username;

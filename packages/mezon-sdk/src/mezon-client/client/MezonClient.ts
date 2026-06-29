@@ -272,11 +272,7 @@ export class MezonClient extends MezonClientCore {
       let user = this.users.get(e.user.user_id!);
 
       if (!user) {
-        user = new User(userRaw, {
-          socketManager: this.socketManager,
-          messageQueue: this.messageQueue,
-          channelManager: this.channelManager,
-        });
+        user = new User(userRaw, this._getUserDeps());
         this.users.set(e.user.user_id!, user);
       } else {
         user.username = userRaw.username ?? user.username;
