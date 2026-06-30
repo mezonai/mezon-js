@@ -4374,9 +4374,11 @@ export interface ApiVoiceChannelUser {
   //
   channel_id?: string;
   //
-  participant?: string;
+  room_name?: string;
   //User for a channel.
   user_ids?: Array<string>;
+  //share screen list.
+  share_screen_ids?: Array<string>;
 }
 
 /** A list of users belonging to a channel, along with their role. */

@@ -2186,7 +2186,8 @@ export class Client {
             id: gu.id,
             channel_id: gu.channel_id,
             user_ids: gu.user_ids,
-            participant: gu.participant,
+            room_name: gu.room_name,
+            share_screen_ids: gu.share_screen_ids,
           });
         });
         return Promise.resolve(result);

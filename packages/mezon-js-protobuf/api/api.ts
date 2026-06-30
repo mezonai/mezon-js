@@ -163,6 +163,45 @@ export function operatorToJSON(object: Operator): string {
   }
 }
 
+export enum TrackType {
+  AUDIO = 0,
+  VIDEO = 1,
+  DATA = 2,
+  UNRECOGNIZED = -1,
+}
+
+export function trackTypeFromJSON(object: any): TrackType {
+  switch (object) {
+    case 0:
+    case "AUDIO":
+      return TrackType.AUDIO;
+    case 1:
+    case "VIDEO":
+      return TrackType.VIDEO;
+    case 2:
+    case "DATA":
+      return TrackType.DATA;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return TrackType.UNRECOGNIZED;
+  }
+}
+
+export function trackTypeToJSON(object: TrackType): string {
+  switch (object) {
+    case TrackType.AUDIO:
+      return "AUDIO";
+    case TrackType.VIDEO:
+      return "VIDEO";
+    case TrackType.DATA:
+      return "DATA";
+    case TrackType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
 /** Poll type: SINGLE = one choice, MULTIPLE = multiple choices. */
 export enum PollType {
   SINGLE = 0,
@@ -689,6 +728,8 @@ export interface VoiceChannelUser {
   channel_id: string;
   /** room name */
   room_name: string;
+  /** share screen user */
+  share_screen_ids: string[];
 }
 
 /** A list of users belonging to a channel, along with their role. */
@@ -3824,10 +3865,16 @@ export interface UpdateAIAgentRequest {
   room_name: string;
 }
 
+export interface TrackInfo {
+  sid: string;
+  type: TrackType;
+}
+
 export interface ParticipantInfo {
   sid: string;
   identity: string;
   state: ParticipantInfo_State;
+  tracks: TrackInfo[];
   is_publisher: boolean;
   kind: ParticipantInfo_Kind;
 }
@@ -8236,7 +8283,7 @@ export const ChannelUserList_ChannelUser = {
 };
 
 function createBaseVoiceChannelUser(): VoiceChannelUser {
-  return { user_ids: [], channel_id: "0", room_name: "" };
+  return { user_ids: [], channel_id: "0", room_name: "", share_screen_ids: [] };
 }
 
 export const VoiceChannelUser = {
@@ -8249,6 +8296,9 @@ export const VoiceChannelUser = {
     }
     if (message.room_name !== "") {
       writer.uint32(26).string(message.room_name);
+    }
+    for (const v of message.share_screen_ids) {
+      writer.uint32(34).string(v!);
     }
     return writer;
   },
@@ -8281,6 +8331,13 @@ export const VoiceChannelUser = {
 
           message.room_name = reader.string();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.share_screen_ids.push(reader.string());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -8295,6 +8352,9 @@ export const VoiceChannelUser = {
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
+      share_screen_ids: globalThis.Array.isArray(object?.share_screen_ids)
+        ? object.share_screen_ids.map((e: any) => globalThis.String(e))
+        : [],
     };
   },
 
@@ -8309,6 +8369,9 @@ export const VoiceChannelUser = {
     if (message.room_name !== "") {
       obj.room_name = message.room_name;
     }
+    if (message.share_screen_ids?.length) {
+      obj.share_screen_ids = message.share_screen_ids;
+    }
     return obj;
   },
 
@@ -8320,6 +8383,7 @@ export const VoiceChannelUser = {
     message.user_ids = object.user_ids?.map((e) => e) || [];
     message.channel_id = object.channel_id ?? "0";
     message.room_name = object.room_name ?? "";
+    message.share_screen_ids = object.share_screen_ids?.map((e) => e) || [];
     return message;
   },
 };
@@ -42111,8 +42175,82 @@ export const UpdateAIAgentRequest = {
   },
 };
 
+function createBaseTrackInfo(): TrackInfo {
+  return { sid: "", type: 0 };
+}
+
+export const TrackInfo = {
+  encode(message: TrackInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.sid !== "") {
+      writer.uint32(10).string(message.sid);
+    }
+    if (message.type !== 0) {
+      writer.uint32(16).int32(message.type);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): TrackInfo {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTrackInfo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.sid = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.type = reader.int32() as any;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): TrackInfo {
+    return {
+      sid: isSet(object.sid) ? globalThis.String(object.sid) : "",
+      type: isSet(object.type) ? trackTypeFromJSON(object.type) : 0,
+    };
+  },
+
+  toJSON(message: TrackInfo): unknown {
+    const obj: any = {};
+    if (message.sid !== "") {
+      obj.sid = message.sid;
+    }
+    if (message.type !== 0) {
+      obj.type = trackTypeToJSON(message.type);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<TrackInfo>, I>>(base?: I): TrackInfo {
+    return TrackInfo.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<TrackInfo>, I>>(object: I): TrackInfo {
+    const message = createBaseTrackInfo();
+    message.sid = object.sid ?? "";
+    message.type = object.type ?? 0;
+    return message;
+  },
+};
+
 function createBaseParticipantInfo(): ParticipantInfo {
-  return { sid: "", identity: "", state: 0, is_publisher: false, kind: 0 };
+  return { sid: "", identity: "", state: 0, tracks: [], is_publisher: false, kind: 0 };
 }
 
 export const ParticipantInfo = {
@@ -42125,6 +42263,9 @@ export const ParticipantInfo = {
     }
     if (message.state !== 0) {
       writer.uint32(24).int32(message.state);
+    }
+    for (const v of message.tracks) {
+      TrackInfo.encode(v!, writer.uint32(34).fork()).ldelim();
     }
     if (message.is_publisher !== false) {
       writer.uint32(104).bool(message.is_publisher);
@@ -42163,6 +42304,13 @@ export const ParticipantInfo = {
 
           message.state = reader.int32() as any;
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.tracks.push(TrackInfo.decode(reader, reader.uint32()));
+          continue;
         case 13:
           if (tag !== 104) {
             break;
@@ -42191,6 +42339,7 @@ export const ParticipantInfo = {
       sid: isSet(object.sid) ? globalThis.String(object.sid) : "",
       identity: isSet(object.identity) ? globalThis.String(object.identity) : "",
       state: isSet(object.state) ? participantInfo_StateFromJSON(object.state) : 0,
+      tracks: globalThis.Array.isArray(object?.tracks) ? object.tracks.map((e: any) => TrackInfo.fromJSON(e)) : [],
       is_publisher: isSet(object.is_publisher) ? globalThis.Boolean(object.is_publisher) : false,
       kind: isSet(object.kind) ? participantInfo_KindFromJSON(object.kind) : 0,
     };
@@ -42206,6 +42355,9 @@ export const ParticipantInfo = {
     }
     if (message.state !== 0) {
       obj.state = participantInfo_StateToJSON(message.state);
+    }
+    if (message.tracks?.length) {
+      obj.tracks = message.tracks.map((e) => TrackInfo.toJSON(e));
     }
     if (message.is_publisher !== false) {
       obj.is_publisher = message.is_publisher;
@@ -42224,6 +42376,7 @@ export const ParticipantInfo = {
     message.sid = object.sid ?? "";
     message.identity = object.identity ?? "";
     message.state = object.state ?? 0;
+    message.tracks = object.tracks?.map((e) => TrackInfo.fromPartial(e)) || [];
     message.is_publisher = object.is_publisher ?? false;
     message.kind = object.kind ?? 0;
     return message;
