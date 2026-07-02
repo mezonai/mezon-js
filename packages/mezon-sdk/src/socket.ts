@@ -834,7 +834,20 @@ export class DefaultSocket implements Socket {
     return this.sendRealtime(fetchOptions, {} as unknown as void);
   }
 
-  async updateChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, hideEditted?: boolean, topic_id?: string, is_update_msg_topic?: boolean): Promise<ChannelMessageAck> {
+  async updateChatMessage(
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    message_id: string,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    hideEditted?: boolean,
+    topic_id?: string,
+    is_update_msg_topic?: boolean,
+    create_time_seconds?: number,
+  ): Promise<ChannelMessageAck> {
     const fetchOptions = {
       channel_message_update: {
         clan_id: clan_id,
@@ -843,6 +856,7 @@ export class DefaultSocket implements Socket {
         content: content,
         mentions: mentions,
         attachments: attachments,
+        create_time_seconds: create_time_seconds,
         mode: mode,
         is_public: is_public,
         hide_editted: hideEditted,

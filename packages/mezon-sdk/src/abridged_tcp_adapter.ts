@@ -1,4 +1,4 @@
-import net from "node:net";
+import tls from "node:tls";
 import WebSocket, { CloseEvent, ErrorEvent } from "ws";
 import * as tsproto from "./rtapi/realtime";
 import {
@@ -19,11 +19,12 @@ type PlainFn<T extends (...args: any[]) => any> = T extends (
 const CODE_FIN = 0xff;
 
 export class AbridgedTcpAdapter implements TransportAdapter {
-  private _socket?: net.Socket;
+  private _socket?: tls.TLSSocket;
   private _onClose: PlainFn<SocketCloseHandler> | null = null;
   private _onError: PlainFn<SocketErrorHandler> | null = null;
   private _onMessage: PlainFn<SocketMessageHandler> | null = null;
   private _onOpen: PlainFn<SocketOpenHandler> | null = null;
+  private _receiveBuffer = Buffer.alloc(0);
   private _streams = new Map<number, Buffer[]>();
 
   get onClose(): SocketCloseHandler | null {
@@ -48,6 +49,9 @@ export class AbridgedTcpAdapter implements TransportAdapter {
 
   set onMessage(value: SocketMessageHandler | null) {
     this._onMessage = value as PlainFn<SocketMessageHandler> | null;
+    if (this._onMessage && this._receiveBuffer.length > 0) {
+      this.handleData(Buffer.alloc(0));
+    }
   }
 
   get onOpen(): SocketOpenHandler | null {
@@ -65,40 +69,95 @@ export class AbridgedTcpAdapter implements TransportAdapter {
     token: string,
     signal?: AbortSignal,
   ): void {
-    port = '7349'
-    const client = net.createConnection({ host, port: parseInt(port, 10) });
-    this._socket = client;
+    const parsedPort = parseInt(port, 10);
+    console.log("[tcp] connect:start", {
+      host,
+      port,
+      parsedPort,
+      hasToken: Boolean(token),
+      tokenLength: token?.length ?? 0,
+      hasSignal: Boolean(signal),
+    });
 
-    client.on("connect", () => {
-      const magicByte = Buffer.from([0xef]);
+    const client = tls.connect(parsedPort, host, {
+      rejectUnauthorized: false,
+    });
+    this._socket = client;
+    console.log("[tcp] socket:created", {
+      destroyed: client.destroyed,
+      connecting: client.connecting,
+    });
+
+    client.on("secureConnect", () => {
+      console.log('token', token)
       const tokenBytes = Buffer.from(token, "utf-8");
-      client.write(Buffer.concat([magicByte, tokenBytes]));
+      const padding = (4 - (tokenBytes.length % 4)) % 4;
+      const finalToken = Buffer.concat([tokenBytes, Buffer.alloc(padding, 0)]);
+
+      const magicByte = Buffer.from([0xef]);
+      const lenHeader = Buffer.from([finalToken.length / 4]);
+      const handshake = Buffer.concat([magicByte, lenHeader, finalToken]);
+
+      console.log("[tcp] secureConnect", {
+        authorized: client.authorized,
+        authorizationError: client.authorizationError,
+        tokenBytes: tokenBytes.length,
+        padding,
+        finalTokenBytes: finalToken.length,
+        lenHeader: lenHeader[0],
+        handshakeBytes: handshake.length,
+      });
+
+      client.write(handshake);
+      console.log("[tcp] handshake:sent");
       this._onOpen?.({ type: "open" } as WebSocket.Event);
     });
 
     client.on("data", (data: Buffer) => {
+      console.log("[tcp] data", {
+        bytes: data.length,
+        prefix: data[0],
+      });
       this.handleData(data);
     });
 
     client.on("error", (err) => {
-      this._onError?.({
+      console.log("[tcp] error", {
+        name: err.name,
+        message: err.message,
+        code: (err as NodeJS.ErrnoException).code,
+      });
+      const errorEvent = {
         type: "error",
         error: err,
         message: err.message,
-      } as ErrorEvent);
+      } as ErrorEvent;
+      if (this._onError) {
+        this._onError(errorEvent);
+      }
     });
 
     client.on("close", (hadError) => {
-      this._onClose?.({
+      console.log("[tcp] close", {
+        hadError,
+        destroyed: client.destroyed,
+      });
+      const closeEvent = {
         type: "close",
         wasClean: !hadError,
         code: hadError ? 1006 : 1000,
         reason: "",
-      } as CloseEvent);
+      } as CloseEvent;
+      if (this._onClose) {
+        this._onClose(closeEvent);
+      }
     });
 
     if (signal) {
-      signal.addEventListener("abort", () => this.close());
+      signal.addEventListener("abort", () => {
+        console.log("[tcp] abort");
+        this.close();
+      });
     }
   }
 
@@ -139,6 +198,7 @@ export class AbridgedTcpAdapter implements TransportAdapter {
   close(): void {
     this._socket?.destroy();
     this._socket = undefined;
+    this._receiveBuffer = Buffer.alloc(0);
     this._streams.clear();
   }
 
@@ -150,43 +210,63 @@ export class AbridgedTcpAdapter implements TransportAdapter {
   }
 
   private handleData(data: Buffer): void {
-    if (!this._onMessage || data.length < 1) return;
+    this._receiveBuffer = Buffer.concat([this._receiveBuffer, data]);
+    if (!this._onMessage) return;
 
-    const prefix = data[0];
+    while (this._receiveBuffer.length > 0) {
+      const prefix = this._receiveBuffer[0];
 
-    if (prefix === 0x00) {
-      if (data.length < 3) return;
-      const cid = data.readUInt16BE(1);
-      this._onMessage(cid, 0, { pong: {} });
-      return;
-    }
+      if (prefix === 0x00) {
+        if (this._receiveBuffer.length < 3) return;
+        const cid = this._receiveBuffer.readUInt16BE(1);
+        this._onMessage(cid, 0, { pong: {} });
+        this._receiveBuffer = this._receiveBuffer.subarray(3);
+        continue;
+      }
 
-    if (prefix === 0xff) {
-      this.handleRawPacket(data);
-      return;
-    }
+      if (prefix === 0xff) {
+        const rawHeaderLength = 7;
+        const payloadHeaderLength = 11;
+        if (this._receiveBuffer.length < payloadHeaderLength) return;
 
-    let headerSize = 0;
-    let payloadLength = 0;
-    if (prefix < 127) {
-      headerSize = 1;
-      payloadLength = prefix * 4;
-    } else if (prefix === 0x7f) {
-      if (data.length < 4) return;
-      headerSize = 4;
-      payloadLength = data.readUIntLE(1, 3) * 4;
-    } else {
-      console.warn("Received unexpected first byte:", prefix);
-      return;
-    }
+        const payloadLen = this._receiveBuffer.readInt32BE(rawHeaderLength);
+        const frameLength = payloadHeaderLength + payloadLen;
+        if (this._receiveBuffer.length < frameLength) return;
 
-    const payload = data.subarray(headerSize, headerSize + payloadLength);
-    try {
-      const envelope = tsproto.Envelope.decode(new Uint8Array(payload));
-      this.normalizeEnvelope(envelope);
-      this._onMessage(envelope.cid, 0, envelope);
-    } catch (err) {
-      console.error("TCP Protobuf Decode Error:", err);
+        const frame = this._receiveBuffer.subarray(0, frameLength);
+        this.handleRawPacket(frame);
+        this._receiveBuffer = this._receiveBuffer.subarray(frameLength);
+        continue;
+      }
+
+      let headerSize = 0;
+      let payloadLength = 0;
+      if (prefix < 127) {
+        headerSize = 1;
+        payloadLength = prefix * 4;
+      } else if (prefix === 0x7f) {
+        if (this._receiveBuffer.length < 4) return;
+        headerSize = 4;
+        payloadLength = this._receiveBuffer.readUIntLE(1, 3) * 4;
+      } else {
+        console.warn("Received unexpected first byte:", prefix);
+        this._receiveBuffer = this._receiveBuffer.subarray(1);
+        continue;
+      }
+
+      const frameLength = headerSize + payloadLength;
+      if (this._receiveBuffer.length < frameLength) return;
+
+      const payload = this._receiveBuffer.subarray(headerSize, frameLength);
+      try {
+        const envelope = tsproto.Envelope.decode(new Uint8Array(payload));
+        this.normalizeEnvelope(envelope);
+        this._onMessage(envelope.cid, 0, envelope);
+      } catch (err) {
+        console.error("TCP Protobuf Decode Error:", err);
+      }
+
+      this._receiveBuffer = this._receiveBuffer.subarray(frameLength);
     }
   }
 

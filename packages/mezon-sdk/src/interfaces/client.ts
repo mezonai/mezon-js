@@ -189,6 +189,9 @@ export interface ReactMessageData {
   count: number;
   message_sender_id: string;
   action_delete?: boolean;
+  topic_id?: string;
+  emoji_recent_id?: string;
+  sender_name?: string;
 }
 
 export interface RemoveMessageData {
@@ -199,6 +202,9 @@ export interface RemoveMessageData {
   is_public: boolean;
   message_id: string;
   topic_id?: string;
+  has_attachment?: boolean;
+  mentions?: string;
+  references?: string;
 }
 
 export interface SendTokenData {

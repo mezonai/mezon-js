@@ -116,7 +116,6 @@ export class SocketManager {
     try {
       const clans = await this.apiClient.listClanDescs(sessionToken);
       const clanList = clans?.clandesc ?? [];
-      console.log('clanList', clanList)
       clanList.push({ clan_id: "-1", clan_name: "" });
       for (const clan of clanList) {
         console.log('join clan: ',clan.clan_id)
@@ -307,10 +306,10 @@ export class SocketManager {
       dataUpdateMessage.content,
       dataUpdateMessage?.mentions ?? [],
       dataUpdateMessage?.attachments ?? [],
-      dataUpdateMessage?.create_time_seconds,
       dataUpdateMessage?.hideEditted ?? false,
       dataUpdateMessage?.topic_id,
       dataUpdateMessage?.is_update_msg_topic,
+      dataUpdateMessage?.create_time_seconds,
     );
     return msgACK;
   }
@@ -329,6 +328,9 @@ export class SocketManager {
         dataReactionMessage.count,
         dataReactionMessage.message_sender_id,
         dataReactionMessage?.action_delete ?? false,
+        dataReactionMessage?.topic_id,
+        dataReactionMessage?.emoji_recent_id,
+        dataReactionMessage?.sender_name,
       );
       return msgACK;
     } catch (error) {
@@ -345,6 +347,9 @@ export class SocketManager {
         dataRemoveMessage.is_public,
         dataRemoveMessage.message_id,
         dataRemoveMessage.topic_id,
+        dataRemoveMessage.has_attachment,
+        dataRemoveMessage.mentions,
+        dataRemoveMessage.references,
       );
       return msgACK;
     } catch (error) {

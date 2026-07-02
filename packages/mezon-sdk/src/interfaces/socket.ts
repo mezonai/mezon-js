@@ -959,7 +959,7 @@ export interface Socket {
     clan_id: string,
     channel_id: string,
     mode: number,
-    is_public: boolean,    
+    is_public: boolean,
     message_id: string,
     topic_id?: string,
     has_attachment?: boolean,
@@ -980,10 +980,10 @@ export interface Socket {
     content: any,
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
-    create_time_seconds?: number,
     hideEditted?: boolean,
     topic_id?: string,
-    is_update_msg_topic?: boolean
+    is_update_msg_topic?: boolean,
+    create_time_seconds?: number
   ): Promise<ChannelMessageAck>;
 
   /** Update the status for the current user online. */
@@ -1049,6 +1049,8 @@ export interface Socket {
     channel_id: string,
     mode: number,
     is_public: boolean,
+    sender_display_name?: string,
+    topic_id?: string,
   ): Promise<MessageTypingEvent>;
 
   /** Send message reaction */
@@ -1068,6 +1070,98 @@ export interface Socket {
     emoji_recent_id?: string,
     sender_name?: string,
   ): Promise<ApiMessageReaction>;
+
+  /** Send last seen marker. */
+  writeLastSeenMessage(
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    message_id: string,
+    timestamp_seconds: number,
+    badge_count?: number,
+  ): Promise<LastSeenMessageEvent>;
+
+  /** Send last pin marker. */
+  writeLastPinMessage(
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    message_id: string,
+    timestamp_seconds: number,
+    operation: number,
+    message_sender_avatar?: string,
+    message_sender_id?: string,
+    message_sender_username?: string,
+    message_content?: string,
+    message_attachment?: string,
+    message_created_time?: string,
+  ): Promise<LastPinMessageEvent>;
+
+  /** Send voice joined event. */
+  writeVoiceJoined(
+    id: string,
+    clanId: string,
+    clanName: string,
+    voiceChannelId: string,
+    voiceChannelLabel: string,
+    participant: string,
+    lastScreenshot: string,
+  ): Promise<VoiceJoinedEvent>;
+
+  /** Send voice left event. */
+  writeVoiceLeaved(
+    id: string,
+    clanId: string,
+    voiceChannelId: string,
+    voiceUserId: string,
+  ): Promise<VoiceLeavedEvent>;
+
+  /** Send custom status. */
+  writeCustomStatus(
+    clan_id: string,
+    status: string,
+    time_reset?: number,
+    no_clear?: boolean,
+  ): Promise<CustomStatusEvent>;
+
+  /** Check duplicate clan name. */
+  checkDuplicateClanName(clan_name: string): Promise<ClanNameExistedEvent>;
+
+  /** List clan emojis by clan id. */
+  listClanEmojiByClanId(clan_id: string): Promise<EmojiListedEvent>;
+
+  /** List channels for current user. */
+  ListChannelByUserId(): Promise<ChannelDescListEvent>;
+
+  /** List hashtag DMs. */
+  hashtagDMList(
+    user_id: Array<string>,
+    limit: number,
+  ): Promise<HashtagDmListEvent>;
+
+  /** List clan stickers by clan id. */
+  listClanStickersByClanId(clan_id: string): Promise<StrickerListedEvent>;
+
+  /** Get notification channel setting. */
+  getNotificationChannelSetting(
+    channel_id: string,
+  ): Promise<NotificationChannelSettingEvent>;
+
+  /** Get notification category setting. */
+  getNotificationCategorySetting(
+    category_id: string,
+  ): Promise<NotificationCategorySettingEvent>;
+
+  /** Get notification clan setting. */
+  getNotificationClanSetting(
+    clan_id: string,
+  ): Promise<NotificationClanSettingEvent>;
+
+  /** Get notification reaction setting. */
+  getNotificationReactMessage(
+    channel_id: string,
+  ): Promise<NotifiReactMessageEvent>;
 
   /** Send voice reaction. */
   writeVoiceReaction(
