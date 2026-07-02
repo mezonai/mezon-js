@@ -283,6 +283,7 @@ import {
   MultipartUploadAttachmentFinishRequest,
 } from "mezon-js-protobuf";
 import { MezonTransport } from "./transport";
+import { ScreenShareEvent } from "packages/mezon-js-protobuf/rtapi/realtime";
 
 const DEFAULT_HOST = "127.0.0.1";
 const DEFAULT_PORT = "7350";
@@ -687,6 +688,8 @@ export class Client {
               this.ontopicinmessage(
                 <TopicInMessageEvent>message.topic_in_message_event
               );
+            } else if (message.screen_share_event) {
+              this.onscreenshare(<ScreenShareEvent>message.screen_share_event);
             } else if (message.pong) {
               if (this.verbose && window && window.console) {
                 console.log("Pong message received: %o", message);
@@ -1323,6 +1326,12 @@ export class Client {
   }
 
   ontopicinmessage(event: TopicInMessageEvent): void {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onscreenshare(event: ScreenShareEvent): void {
     if (this.verbose && window && window.console) {
       console.log(event);
     }
