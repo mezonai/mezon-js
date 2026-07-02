@@ -230,3 +230,6 @@ package-lock.json
 yarn.lock
 
 # End of https://www.gitignore.io/api/node,linux,macos,windows,sublimetext,webstorm+all
+
+# Mezon cache
+/mezon-cache
