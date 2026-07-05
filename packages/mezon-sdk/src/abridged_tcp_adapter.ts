@@ -70,26 +70,12 @@ export class AbridgedTcpAdapter implements TransportAdapter {
     signal?: AbortSignal,
   ): void {
     const parsedPort = parseInt(port, 10);
-    console.log("[tcp] connect:start", {
-      host,
-      port,
-      parsedPort,
-      hasToken: Boolean(token),
-      tokenLength: token?.length ?? 0,
-      hasSignal: Boolean(signal),
-    });
-
     const client = tls.connect(parsedPort, host, {
       rejectUnauthorized: false,
     });
     this._socket = client;
-    console.log("[tcp] socket:created", {
-      destroyed: client.destroyed,
-      connecting: client.connecting,
-    });
 
     client.on("secureConnect", () => {
-      console.log('token', token)
       const tokenBytes = Buffer.from(token, "utf-8");
       const padding = (4 - (tokenBytes.length % 4)) % 4;
       const finalToken = Buffer.concat([tokenBytes, Buffer.alloc(padding, 0)]);
@@ -98,66 +84,33 @@ export class AbridgedTcpAdapter implements TransportAdapter {
       const lenHeader = Buffer.from([finalToken.length / 4]);
       const handshake = Buffer.concat([magicByte, lenHeader, finalToken]);
 
-      console.log("[tcp] secureConnect", {
-        authorized: client.authorized,
-        authorizationError: client.authorizationError,
-        tokenBytes: tokenBytes.length,
-        padding,
-        finalTokenBytes: finalToken.length,
-        lenHeader: lenHeader[0],
-        handshakeBytes: handshake.length,
-      });
-
       client.write(handshake);
-      console.log("[tcp] handshake:sent");
       this._onOpen?.({ type: "open" } as WebSocket.Event);
     });
 
     client.on("data", (data: Buffer) => {
-      console.log("[tcp] data", {
-        bytes: data.length,
-        prefix: data[0],
-      });
       this.handleData(data);
     });
 
     client.on("error", (err) => {
-      console.log("[tcp] error", {
-        name: err.name,
-        message: err.message,
-        code: (err as NodeJS.ErrnoException).code,
-      });
-      const errorEvent = {
+      this._onError?.({
         type: "error",
         error: err,
         message: err.message,
-      } as ErrorEvent;
-      if (this._onError) {
-        this._onError(errorEvent);
-      }
+      } as ErrorEvent);
     });
 
     client.on("close", (hadError) => {
-      console.log("[tcp] close", {
-        hadError,
-        destroyed: client.destroyed,
-      });
-      const closeEvent = {
+      this._onClose?.({
         type: "close",
         wasClean: !hadError,
         code: hadError ? 1006 : 1000,
         reason: "",
-      } as CloseEvent;
-      if (this._onClose) {
-        this._onClose(closeEvent);
-      }
+      } as CloseEvent);
     });
 
     if (signal) {
-      signal.addEventListener("abort", () => {
-        console.log("[tcp] abort");
-        this.close();
-      });
+      signal.addEventListener("abort", () => this.close());
     }
   }
 
@@ -249,7 +202,6 @@ export class AbridgedTcpAdapter implements TransportAdapter {
         headerSize = 4;
         payloadLength = this._receiveBuffer.readUIntLE(1, 3) * 4;
       } else {
-        console.warn("Received unexpected first byte:", prefix);
         this._receiveBuffer = this._receiveBuffer.subarray(1);
         continue;
       }

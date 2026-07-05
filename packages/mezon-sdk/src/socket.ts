@@ -17,7 +17,7 @@
 import WebSocket, { CloseEvent, ErrorEvent } from "ws";
 import { ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, Channel, ChannelDescListEvent, ChannelMessageAck, ClanJoin, ClanNameExistedEvent, CustomStatusEvent, EmojiListedEvent, HashtagDmListEvent, LastPinMessageEvent, LastSeenMessageEvent, MessageTypingEvent, NotificationCategorySettingEvent, NotificationChannelSettingEvent, NotificationClanSettingEvent, NotifiReactMessageEvent, QuickMenuEvent, Socket, SocketError, Status, StrickerListedEvent, TokenSentEvent, VoiceJoinedEvent, VoiceLeavedEvent } from "./interfaces";
 import {Session} from "./session";
-import { WebSocketAdapterText } from "./web_socket_adapter";
+import { AbridgedTcpAdapter } from "./abridged_tcp_adapter";
 import { TransportAdapter } from "./transport_adapter";
 import { InternalEventsSocket } from "./constants";
 import { EventEmitter } from "stream";
@@ -89,6 +89,20 @@ interface PromiseExecutor {
   resolve: (value?: any) => void;
   reject: (reason?: any) => void;
   timeout?: ReturnType<typeof setTimeout>;
+}
+
+interface LastConnectArgs {
+  session_id: string;
+  url: string;
+  createStatus: boolean;
+  connectTimeoutMs: number;
+}
+
+interface MezonTransportHandlers {
+  onOpen: (evt: WebSocket.Event) => void;
+  onClose: (evt: CloseEvent) => void;
+  onError: (evt: ErrorEvent) => void;
+  onMessage: (cid: number, code: number, message: any) => void;
 }
 
 function CreateChannelMessageFromEvent(message: any) {
@@ -378,6 +392,9 @@ export class DefaultSocket implements Socket {
   private _connectionState: ConnectionState = ConnectionState.DISCONNECTED;
   private _connectTimeoutTimer?: ReturnType<typeof setTimeout>;
   private _connectPromise?: Promise<Session>;
+  private _connectReject?: (reason?: any) => void;
+  private _lastConnectArgs?: LastConnectArgs;
+  private _connectAttemptSeq = 0;
   private _heartbeatTimer?: ReturnType<typeof setTimeout>;
   private _hasConnectedOnce: boolean = false;
   private _internalSocketEventsBound: boolean = false;
@@ -392,7 +409,7 @@ export class DefaultSocket implements Socket {
     readonly port: string,
     readonly useSSL: boolean = false,
     public verbose: boolean = false,
-    readonly adapter: TransportAdapter = new WebSocketAdapterText(),
+    readonly adapter: TransportAdapter = new AbridgedTcpAdapter(),
     readonly sendTimeoutMs: number = DefaultSocket.DefaultSendTimeoutMs,
   ) {
     this.cIds = {};
@@ -416,6 +433,14 @@ export class DefaultSocket implements Socket {
     return this._connectionState === ConnectionState.CONNECTED && this.adapter.isOpen();
   }
 
+  private failConnect(reason: Error): void {
+    const reject = this._connectReject;
+    this._connectReject = undefined;
+    if (reject) {
+      reject(reason);
+    }
+  }
+
   close() {
     this._connectionState = ConnectionState.DISCONNECTED;
     this.stopHeartbeatLoop();
@@ -432,71 +457,158 @@ export class DefaultSocket implements Socket {
   connect(session: Session, createStatus: boolean = false, connectTimeoutMs: number = DefaultSocket.DefaultConnectTimeoutMs, signal?: AbortSignal): Promise<Session> {
     this.session = session;
 
-    if (this._connectionState === ConnectionState.CONNECTED && this.adapter.isOpen()) {
+    const session_id = session.token;
+    const url = this.resolveConnectUrl(session);
+
+    const sameTarget =
+      this._lastConnectArgs?.session_id === session_id &&
+      this._lastConnectArgs?.url === url;
+
+    if (
+      this._connectionState === ConnectionState.CONNECTED &&
+      this.adapter.isOpen() &&
+      sameTarget
+    ) {
       return Promise.resolve(session);
     }
 
-    if (this._connectionState === ConnectionState.CONNECTING && this._connectPromise) {
+    if (
+      this._connectionState === ConnectionState.CONNECTING &&
+      this._connectPromise &&
+      sameTarget
+    ) {
       return this._connectPromise;
+    }
+
+    if (
+      this._connectionState === ConnectionState.CONNECTED ||
+      this._connectionState === ConnectionState.CONNECTING
+    ) {
+      this.failConnect(new Error("Connect superseded by new connect()."));
+      this.close();
+      this.markDisconnected("connect_superseded", false);
     }
 
     this.clearConnectTimeout();
     this._connectionState = ConnectionState.CONNECTING;
+    this._connectAttemptSeq += 1;
+    this._lastConnectArgs = {
+      session_id,
+      url,
+      createStatus,
+      connectTimeoutMs,
+    };
 
-    const { host, port } = this.resolveSocketAddress(session);
-    this.adapter.connect(host, port, createStatus, session.token, signal);
+    let resolveConnect!: (value: Session) => void;
+    let rejectConnect!: (reason?: any) => void;
+    const connectPromise = new Promise<Session>((resolve, reject) => {
+      resolveConnect = resolve;
+      rejectConnect = reject;
+    });
+    this._connectPromise = connectPromise;
+    this._connectReject = rejectConnect;
+
+    this._connectTimeoutTimer = setTimeout(() => {
+      if (this._connectionState !== ConnectionState.CONNECTING) return;
+      this.markDisconnected("connect_timeout", true);
+      this.adapter.close();
+      this.failConnect(new Error("The socket timed out when trying to connect."));
+    }, connectTimeoutMs);
 
     this.bindInternalSocketEvents();
+
+    try {
+      this.connectTransport(session_id, url, createStatus, {
+        onMessage: (cid: number, code: number, message: any) =>
+          this.handleSocketMessage(cid, code, message),
+        onClose: (_evt: CloseEvent) => {
+          const wasConnecting = this._connectionState === ConnectionState.CONNECTING;
+          this.markDisconnected("transport_on_close", true);
+          if (wasConnecting) {
+            this.failConnect(
+              new Error("Socket closed before connection was established."),
+            );
+          }
+        },
+        onOpen: (evt: WebSocket.Event) => {
+          if (this.verbose) {
+            console.log(evt);
+          }
+
+          const isReconnect = this._hasConnectedOnce;
+          this._hasConnectedOnce = true;
+
+          this.clearConnectTimeout();
+          this._connectionState = ConnectionState.CONNECTED;
+          this.startHeartbeatLoop();
+          this._connectPromise = undefined;
+          this._connectReject = undefined;
+
+          resolveConnect(session);
+
+          if (isReconnect) {
+            this.onreconnect(evt);
+          } else {
+            this.onconnect(evt);
+          }
+        },
+        onError: (evt: ErrorEvent) => {
+          this.onerror(evt);
+          this.markDisconnected("transport_on_error", false);
+          this.failConnect(
+            evt instanceof Error
+              ? evt
+              : new Error("Socket error during connect."),
+          );
+          this.adapter.close();
+        },
+      }, signal);
+    } catch (err) {
+      this.onerror(<ErrorEvent>{ type: "error", message: String(err) });
+      this.markDisconnected("connect_sync_throw", false);
+      this.failConnect(err instanceof Error ? err : new Error(String(err)));
+    }
+
+    return connectPromise;
+  }
+
+  /** Mirrors mezon-js MezonTransport.connect — split url as "host:port". */
+  private connectTransport(
+    session_id: string,
+    url: string,
+    createStatus: boolean,
+    handlers: MezonTransportHandlers,
+    signal?: AbortSignal,
+  ): void {
+    const [host, port] = url.split(":");
+    this.adapter.connect(host, port, createStatus, session_id, signal);
+    this.adapter.onOpen = handlers.onOpen;
+    this.adapter.onError = handlers.onError;
+    this.adapter.onClose = handlers.onClose;
     this.adapter.onMessage = (cid: number, code: number, message: any) =>
-      this.handleSocketMessage(cid, code, message);
+      handlers.onMessage(cid, code, message);
+  }
 
-    const connectPromise = new Promise<Session>((resolve, reject) => {
-      this.adapter.onClose = (evt: CloseEvent) => {
-        const wasConnecting = this._connectionState === ConnectionState.CONNECTING;
-        this.handleSocketClose(evt);
-        if (wasConnecting) {
-          reject(evt);
-        }
-      };
+  /** Resolve socket url — mezon-js expects plain "host:port" passed to connect(). */
+  private resolveConnectUrl(session: Session): string {
+    return session.ws_url || this.ws_url || `${this.host}:${this.port}`;
+  }
 
-      this.adapter.onOpen = (evt: WebSocket.Event) => {
-        if (this.verbose) {
-          console.log(evt);
-        }
+  private markDisconnected(source: string, fireDisconnectEvent = true): void {
+    if (this.verbose) {
+      console.log(source);
+    }
 
-        const isReconnect = this._hasConnectedOnce;
-        this._hasConnectedOnce = true;
+    const wasAlreadyDisconnected =
+      this._connectionState === ConnectionState.DISCONNECTED;
+    this._connectionState = ConnectionState.DISCONNECTED;
+    this.stopHeartbeatLoop();
+    this.clearConnectTimeout();
+    this._connectPromise = undefined;
 
-        this.clearConnectTimeout();
-        this._connectionState = ConnectionState.CONNECTED;
-        this.startHeartbeatLoop();
-        this._connectPromise = undefined;
-
-        resolve(session);
-
-        if (isReconnect) {
-          this.onreconnect(evt);
-        }
-      };
-
-      this.adapter.onError = (evt: ErrorEvent) => {
-        this.handleSocketError(evt);
-        reject(evt);
-        this.adapter.close();
-      };
-
-      this._connectTimeoutTimer = setTimeout(() => {
-        this._connectionState = ConnectionState.DISCONNECTED;
-        this.stopHeartbeatLoop();
-        this.adapter.close();
-        this._connectPromise = undefined;
-        reject("The socket timed out when trying to connect.");
-        this._connectTimeoutTimer = undefined;
-      }, connectTimeoutMs);
-    });
-
-    this._connectPromise = connectPromise;
-    return this._connectPromise;
+    if (!wasAlreadyDisconnected && fireDisconnectEvent) {
+      this.ondisconnect(<CloseEvent>{});
+    }
   }
 
   private bindInternalSocketEvents(): void {
@@ -508,49 +620,6 @@ export class DefaultSocket implements Socket {
     });
 
     this._internalSocketEventsBound = true;
-  }
-
-  private resolveSocketAddress(session: Session): { host: string; port: string } {
-    const socketUrl = session.ws_url || this.ws_url || `${this.host}:${this.port}`;
-    return this.parseSocketAddress(socketUrl);
-  }
-
-  private parseSocketAddress(socketUrl: string): { host: string; port: string } {
-    const defaultPort = this.port || (this.useSSL ? "443" : "80");
-
-    if (!socketUrl) {
-      return { host: this.host, port: defaultPort };
-    }
-
-    try {
-      const parsedUrl = new URL(socketUrl.includes("://") ? socketUrl : `tcp://${socketUrl}`);
-      return {
-        host: parsedUrl.hostname || this.host,
-        port: parsedUrl.port || defaultPort,
-      };
-    } catch {
-      const [host, port] = socketUrl.split(":");
-      return {
-        host: host || this.host,
-        port: port || defaultPort,
-      };
-    }
-  }
-
-  private handleSocketClose(evt: CloseEvent): void {
-    this._connectionState = ConnectionState.DISCONNECTED;
-    this.stopHeartbeatLoop();
-    this.clearConnectTimeout();
-    this._connectPromise = undefined;
-    this.ondisconnect(evt);
-  }
-
-  private handleSocketError(evt: ErrorEvent): void {
-    this._connectionState = ConnectionState.DISCONNECTED;
-    this.stopHeartbeatLoop();
-    this.clearConnectTimeout();
-    this._connectPromise = undefined;
-    this.onerror(evt);
   }
 
   private handleSocketMessage(cid: number, code: number, message: any): void {
@@ -611,15 +680,10 @@ export class DefaultSocket implements Socket {
   }
 
   disconnect(fireDisconnectEvent: boolean = true) {
-    this._connectionState = ConnectionState.DISCONNECTED;
-    this.stopHeartbeatLoop();
-    this.clearConnectTimeout();
-    if (this.adapter.isOpen()) {
-      this.adapter.close();
-    }
-    if (fireDisconnectEvent) {
-      this.ondisconnect(<CloseEvent>{});
-    }
+    this._lastConnectArgs = undefined;
+    this.failConnect(new Error("Client disconnected."));
+    this.markDisconnected("client_disconnect", fireDisconnectEvent);
+    this.adapter.close();
   }
 
   setHeartbeatTimeoutMs(ms : number) {
@@ -633,6 +697,12 @@ export class DefaultSocket implements Socket {
   ondisconnect(evt: CloseEvent) {
     if (this.verbose) {
       console.log(evt);
+    }
+  }
+
+  onconnect(evt: WebSocket.Event) {
+    if (this.verbose) {
+      console.log("Socket connected.", evt);
     }
   }
 
@@ -1279,7 +1349,7 @@ export class DefaultSocket implements Socket {
 
   private startHeartbeatLoop(): void {
     this.stopHeartbeatLoop();
-    void this.pingPong();
+    this._heartbeatTimer = setTimeout(() => this.pingPong(), this._heartbeatTimeoutMs);
   }
 
   private stopHeartbeatLoop(): void {
@@ -1297,30 +1367,34 @@ export class DefaultSocket implements Socket {
   }
 
   private async pingPong(): Promise<void> {
-    if (!this.adapter.isOpen()) {
-        return;
+    if (!this.isOpen()) {
+      return;
     }
 
     try {
-        await this.send(
-          {
-            urlPath: "",
-            fetchOptions: { ping: {} },
-          },
-          this._heartbeatTimeoutMs,
-        );
+      await this.send(
+        {
+          urlPath: "",
+          fetchOptions: { ping: {} },
+        },
+        this._heartbeatTimeoutMs,
+      );
     } catch {
-        if (this.adapter.isOpen()) {
-            if (this.verbose) {
-                console.error("Server unreachable from heartbeat.");
-            }
-            this.onheartbeattimeout();
-            this.adapter.close();
-        }
-
+      if (this._connectionState !== ConnectionState.CONNECTED) {
         return;
+      }
+      if (this.verbose) {
+        console.error("Server unreachable from heartbeat.");
+      }
+      this.onheartbeattimeout();
+      this.markDisconnected("heartbeat_unreachable", true);
+      if (this.adapter.isOpen()) {
+        this.adapter.close();
+      }
+      return;
     }
-    this._heartbeatTimer = setTimeout(() => this.pingPong(), this._heartbeatTimeoutMs);
+
+    this.startHeartbeatLoop();
   }
 
   async sendToken(receiver_id: string, amount: number) : Promise<TokenSentEvent> {

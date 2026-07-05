@@ -65,7 +65,7 @@ export class SocketManager {
 
   async connect(sockSession: Session) {
     this.isHardDisconnect = false;
-    if (this.socket.isOpen()) return sockSession;
+    this.bindSocketEvents();
     const session = await this.socket.connect(sockSession, true);
     return session;
   }
@@ -96,22 +96,7 @@ export class SocketManager {
   }
 
   async connectSocket(sessionToken: string) {
-    if (!this.eventsBound) {
-      ["ondisconnect", "onerror", "onheartbeattimeout"].forEach((event) => {
-        this.socket[event] = (this[event as keyof this] as Function).bind(
-          this,
-        );
-      });
-
-      for (const event in Events) {
-        const key = Events[event as keyof typeof Events].toString();
-        this.socket.socketEvents.on(key, (...args: any[]) => {
-          this.client.emit(key, ...args);
-        });
-      }
-
-      this.eventsBound = true;
-    }
+    this.bindSocketEvents();
 
     try {
       const clans = await this.apiClient.listClanDescs(sessionToken);
@@ -160,6 +145,8 @@ export class SocketManager {
       this.isRetrying = true;
 
       try {
+        this.createSocket();
+        this.bindSocketEvents();
         await this.client.handleReconnectSocket();
 
         this.isRetrying = false;
@@ -176,6 +163,23 @@ export class SocketManager {
     };
 
     setTimeout(retry, retryInterval);
+  }
+
+  private bindSocketEvents() {
+    if (this.eventsBound) return;
+
+    ["ondisconnect", "onerror", "onheartbeattimeout"].forEach((event) => {
+      this.socket[event] = (this[event as keyof this] as Function).bind(this);
+    });
+
+    for (const event in Events) {
+      const key = Events[event as keyof typeof Events].toString();
+      this.socket.socketEvents.on(key, (...args: any[]) => {
+        this.client.emit(key, ...args);
+      });
+    }
+
+    this.eventsBound = true;
   }
 
   private isMustJoinChannelError(error: any): boolean {
