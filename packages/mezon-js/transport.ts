@@ -5523,6 +5523,7 @@ export class MezonTransport {
   listSdTopic(
     clanId?: string,
     limit?: number,
+    page?: number,
     options = {}
   ): Promise<ApiSdTopicList> {
     const urlPath = "/mezon.api.Mezon/ListSdTopic";
@@ -5531,6 +5532,7 @@ export class MezonTransport {
       tsproto.ListSdTopicRequest.fromPartial({
         clan_id: clanId,
         limit: limit,
+        page: page,
       })
     );
     const encodedBody = bodyWriter.finish();
