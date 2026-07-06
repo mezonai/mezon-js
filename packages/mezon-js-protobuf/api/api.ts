@@ -3529,6 +3529,7 @@ export interface SdTopicList {
 export interface ListSdTopicRequest {
   clan_id: string;
   limit: number;
+  page: number;
 }
 
 export interface SdTopicDetailRequest {
@@ -36966,7 +36967,7 @@ export const SdTopicList = {
 };
 
 function createBaseListSdTopicRequest(): ListSdTopicRequest {
-  return { clan_id: "0", limit: 0 };
+  return { clan_id: "0", limit: 0, page: 0 };
 }
 
 export const ListSdTopicRequest = {
@@ -36976,6 +36977,9 @@ export const ListSdTopicRequest = {
     }
     if (message.limit !== 0) {
       writer.uint32(16).int32(message.limit);
+    }
+    if (message.page !== 0) {
+      writer.uint32(24).int32(message.page);
     }
     return writer;
   },
@@ -37001,6 +37005,13 @@ export const ListSdTopicRequest = {
 
           message.limit = reader.int32();
           continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.page = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -37014,6 +37025,7 @@ export const ListSdTopicRequest = {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
     };
   },
 
@@ -37025,6 +37037,9 @@ export const ListSdTopicRequest = {
     if (message.limit !== 0) {
       obj.limit = Math.round(message.limit);
     }
+    if (message.page !== 0) {
+      obj.page = Math.round(message.page);
+    }
     return obj;
   },
 
@@ -37035,6 +37050,7 @@ export const ListSdTopicRequest = {
     const message = createBaseListSdTopicRequest();
     message.clan_id = object.clan_id ?? "0";
     message.limit = object.limit ?? 0;
+    message.page = object.page ?? 0;
     return message;
   },
 };
