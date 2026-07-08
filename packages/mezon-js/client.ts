@@ -5146,7 +5146,8 @@ export class Client {
   async listSdTopic(
     session: ApiSession,
     clanId?: string,
-    limit?: number
+    limit?: number,
+    page?: number
   ): Promise<ApiSdTopicList> {
     if (
       this.autoFallbackHttp &&
@@ -5156,7 +5157,7 @@ export class Client {
     }
 
     return this.transport
-      .listSdTopic(clanId, limit)
+      .listSdTopic(clanId, limit, page)
       .then((response: ApiSdTopicList) => {
         return Promise.resolve(response);
       });
