@@ -22,6 +22,7 @@ import { sleep } from "../../utils/helper";
 export class SocketManager {
   [key: string]: any;
   private socket: Socket;
+  private sessionToken = "";
   private isHardDisconnect: boolean | undefined;
   private isRetrying = false;
   private eventsBound = false;
@@ -96,6 +97,7 @@ export class SocketManager {
   }
 
   async connectSocket(sessionToken: string) {
+    this.sessionToken = sessionToken;
     if (!this.eventsBound) {
       ["ondisconnect", "onerror", "onheartbeattimeout"].forEach((event) => {
         this.socket[event] = (this[event as keyof this] as Function).bind(
@@ -210,6 +212,18 @@ export class SocketManager {
     );
   }
 
+  private requireSessionToken(): string {
+    if (this.sessionToken) {
+      return this.sessionToken;
+    }
+    const token = this.client.getSessionToken();
+    if (token) {
+      this.sessionToken = token;
+      return token;
+    }
+    throw new Error("Session token is not available.");
+  }
+
   async writeChatMessage(dataWriteMessage: ReplyMessageData) {
     const currentContentLength = JSON.stringify(
       dataWriteMessage.content ?? {},
@@ -291,7 +305,8 @@ export class SocketManager {
         `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`,
       );
 
-    const msgACK = await this.socket.updateChatMessage(
+    return this.apiClient.updateChannelMessage(
+      this.requireSessionToken(),
       dataUpdateMessage.clan_id,
       dataUpdateMessage.channel_id,
       dataUpdateMessage.mode,
@@ -305,7 +320,6 @@ export class SocketManager {
       dataUpdateMessage?.topic_id,
       dataUpdateMessage?.is_update_msg_topic,
     );
-    return msgACK;
   }
 
   async writeMessageReaction(dataReactionMessage: ReactMessageData) {
@@ -330,18 +344,15 @@ export class SocketManager {
   }
 
   async removeChatMessage(dataRemoveMessage: RemoveMessageData) {
-    try {
-      const msgACK = await this.socket.removeChatMessage(
-        dataRemoveMessage.clan_id,
-        dataRemoveMessage.channel_id,
-        dataRemoveMessage.mode,
-        dataRemoveMessage.is_public,
-        dataRemoveMessage.message_id,
-        dataRemoveMessage.topic_id,
-      );
-      return msgACK;
-    } catch (error) {
-      throw error;
-    }
+    return this.apiClient.deleteChannelMessage(
+      this.requireSessionToken(),
+      dataRemoveMessage.clan_id,
+      dataRemoveMessage.channel_id,
+      dataRemoveMessage.mode,
+      dataRemoveMessage.is_public,
+      dataRemoveMessage.message_id,
+      undefined,
+      dataRemoveMessage.topic_id,
+    );
   }
 }

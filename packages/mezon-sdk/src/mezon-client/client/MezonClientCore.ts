@@ -127,6 +127,10 @@ export class MezonClientCore extends EventEmitter {
     return this._agentManager;
   }
 
+  public getSessionToken(): string | undefined {
+    return this.sessionManager?.getSession()?.token;
+  }
+
   public initManager(basePath: string, sessionApi?: Session) {
     this.eventManager = new EventManager();
     this.clans = new CacheManager(this._fetchClanFromAPI.bind(this));
