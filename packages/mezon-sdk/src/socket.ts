@@ -801,7 +801,12 @@ export class DefaultSocket implements Socket {
     const urlPath = "";
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then(async (_response) => fallback),
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return fallback;
+      }),
       new Promise<never>((_, reject) =>
         setTimeout(
           () => reject(new Error("Request timed out.")),
