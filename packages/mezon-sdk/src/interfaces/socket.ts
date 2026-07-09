@@ -967,6 +967,33 @@ export interface Socket {
     is_update_msg_topic?: boolean
   ): Promise<ChannelMessageAck>;
 
+  /** Update a chat message via API over socket. */
+  updateChannelMessage(
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    message_id: string,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    create_time_seconds?: number,
+    hideEditted?: boolean,
+    topic_id?: string,
+    is_update_msg_topic?: boolean
+  ): Promise<ChannelMessageAck>;
+
+  /** Delete a chat message via API over socket. */
+  deleteChannelMessage(
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    message_id: string,
+    has_attachment?: boolean,
+    topic_id?: string
+  ): Promise<ChannelMessageAck>;
+
   /** Update the status for the current user online. */
   updateStatus(status?: string): Promise<void>;
 

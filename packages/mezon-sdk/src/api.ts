@@ -7,6 +7,9 @@ import {
   ApiChannelDescription,
   ApiClanDescList,
   ApiCreateChannelDescRequest,
+  ApiMessageAttachment,
+  ApiMessageMention,
+  ApiMessageRef,
   ApiQuickMenuAccessList,
   ApiQuickMenuAccessRequest,
   ApiRoleListEventResponse,
@@ -14,10 +17,12 @@ import {
   ApiVoiceChannelUserList,
   MezonUpdateRoleBody,
 } from "./interfaces";
+import { ChannelMessageAck } from "./interfaces/socket";
 import { buildFetchOptions } from "./utils";
 import { encode } from "js-base64";
 import { RateLimiter } from "./mezon-client/manager/rate-limit_manager";
 import * as tsproto from "./api/api";
+import * as rtproto from "./rtapi/realtime";
 
 const GLOBAL_LIMITER = new RateLimiter(1024);
 type ProtoDecoder<T> = (bytes: Uint8Array) => T;
@@ -497,6 +502,210 @@ export class MezonApi {
       decode: (bytes) =>
         tsproto.QuickMenuAccessList.decode(bytes) as ApiQuickMenuAccessList,
     });
+  }
+
+  private stringifyMessageContent(content: unknown): string {
+    if (typeof content === "string") {
+      return content;
+    }
+    return JSON.stringify(content ?? {});
+  }
+
+  private toChannelMessageAck(
+    ack: rtproto.ChannelMessageAck,
+    mode: number,
+  ): ChannelMessageAck {
+    return {
+      channel_id: ack.channel_id,
+      mode,
+      message_id: ack.message_id,
+      code: ack.code,
+      username: ack.username,
+      create_time: String(ack.create_time_seconds ?? ""),
+      update_time: String(ack.update_time_seconds ?? ""),
+      persistence: ack.persistent ?? false,
+    };
+  }
+
+  /** Send a message to a channel. */
+  async sendChannelMessage(
+    bearerToken: string,
+    clanId: string,
+    channelId: string,
+    mode: number,
+    isPublic: boolean,
+    content: unknown,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymousMessage?: boolean,
+    mentionEveryone?: boolean,
+    avatar?: string,
+    code?: number,
+    topicId?: string,
+    options: any = {},
+  ): Promise<ChannelMessageAck & rtproto.ChannelMessageAck> {
+    const urlPath = "/mezon.api.Mezon/SendChannelMessage";
+    const queryParams = new Map<string, any>();
+
+    const encodedBody = rtproto.ChannelMessageSend.encode(
+      rtproto.ChannelMessageSend.fromPartial({
+        clan_id: clanId,
+        channel_id: channelId,
+        mode,
+        is_public: isPublic,
+        content: this.stringifyMessageContent(content),
+        mentions,
+        attachments,
+        references,
+        anonymous_message: anonymousMessage,
+        mention_everyone: mentionEveryone,
+        avatar,
+        code,
+        topic_id: topicId,
+      }),
+    ).finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    const res = await this.rateLimitFetch(fullUrl, fetchOptions);
+    const ack = await this.handleResponse<rtproto.ChannelMessageAck>(res, {
+      emptyAs: {} as rtproto.ChannelMessageAck,
+      decode: (bytes) => rtproto.ChannelMessageAck.decode(bytes),
+    });
+
+    return {
+      ...ack,
+      ...this.toChannelMessageAck(ack, mode),
+    };
+  }
+
+  /** Update a message in a channel. */
+  async updateChannelMessage(
+    bearerToken: string,
+    clanId: string,
+    channelId: string,
+    mode: number,
+    isPublic: boolean,
+    messageId: string,
+    content: unknown,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    createTimeSeconds?: number,
+    hideEditted?: boolean,
+    topicId?: string,
+    isUpdateMsgTopic?: boolean,
+    options: any = {},
+  ): Promise<ChannelMessageAck & rtproto.ChannelMessageUpdate> {
+    const urlPath = "/mezon.api.Mezon/UpdateChannelMessage";
+    const queryParams = new Map<string, any>();
+
+    const encodedBody = rtproto.ChannelMessageUpdate.encode(
+      rtproto.ChannelMessageUpdate.fromPartial({
+        clan_id: clanId,
+        channel_id: channelId,
+        message_id: messageId,
+        mode,
+        is_public: isPublic,
+        content: this.stringifyMessageContent(content),
+        mentions,
+        attachments,
+        create_time_seconds: createTimeSeconds,
+        hide_editted: hideEditted,
+        topic_id: topicId,
+        is_update_msg_topic: isUpdateMsgTopic,
+      }),
+    ).finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    const res = await this.rateLimitFetch(fullUrl, fetchOptions);
+    const updated = await this.handleResponse<rtproto.ChannelMessageUpdate>(res, {
+      emptyAs: {} as rtproto.ChannelMessageUpdate,
+      decode: (bytes) => rtproto.ChannelMessageUpdate.decode(bytes),
+    });
+
+    return {
+      ...updated,
+      channel_id: channelId || updated.channel_id,
+      mode,
+      message_id: messageId || updated.message_id,
+      code: 0,
+      username: "",
+      create_time: "",
+      update_time: "",
+      persistence: false,
+    };
+  }
+
+  /** Delete a message from a channel. */
+  async deleteChannelMessage(
+    bearerToken: string,
+    clanId: string,
+    channelId: string,
+    mode: number,
+    isPublic: boolean,
+    messageId: string,
+    hasAttachment?: boolean,
+    topicId?: string,
+    mentions?: Uint8Array,
+    references?: Uint8Array,
+    options: any = {},
+  ): Promise<ChannelMessageAck & rtproto.ChannelMessageRemove> {
+    const urlPath = "/mezon.api.Mezon/DeleteChannelMessage";
+    const queryParams = new Map<string, any>();
+
+    const encodedBody = rtproto.ChannelMessageRemove.encode(
+      rtproto.ChannelMessageRemove.fromPartial({
+        clan_id: clanId,
+        channel_id: channelId,
+        message_id: messageId,
+        mode,
+        is_public: isPublic,
+        has_attachment: hasAttachment,
+        topic_id: topicId,
+        mentions,
+        references,
+      }),
+    ).finish();
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    const res = await this.rateLimitFetch(fullUrl, fetchOptions);
+    const removed = await this.handleResponse<rtproto.ChannelMessageRemove>(res, {
+      emptyAs: {} as rtproto.ChannelMessageRemove,
+      decode: (bytes) => rtproto.ChannelMessageRemove.decode(bytes),
+    });
+
+    return {
+      ...removed,
+      channel_id: removed.channel_id || channelId,
+      mode,
+      message_id: removed.message_id || messageId,
+      code: 0,
+      username: "",
+      create_time: "",
+      update_time: "",
+      persistence: false,
+    };
   }
 
   async playMedia(

@@ -116,6 +116,7 @@ export class SocketManager {
     try {
       const clans = await this.apiClient.listClanDescs(sessionToken);
       const clanList = clans?.clandesc ?? [];
+      await sleep(1000);
       clanList.push({ clan_id: "0", clan_name: "" });
       for (const clan of clanList) {
         await this.socket.joinClanChat(clan.clan_id || "");
@@ -291,7 +292,7 @@ export class SocketManager {
         `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`,
       );
 
-    const msgACK = await this.socket.updateChatMessage(
+    return this.socket.updateChannelMessage(
       dataUpdateMessage.clan_id,
       dataUpdateMessage.channel_id,
       dataUpdateMessage.mode,
@@ -305,7 +306,6 @@ export class SocketManager {
       dataUpdateMessage?.topic_id,
       dataUpdateMessage?.is_update_msg_topic,
     );
-    return msgACK;
   }
 
   async writeMessageReaction(dataReactionMessage: ReactMessageData) {
@@ -330,18 +330,14 @@ export class SocketManager {
   }
 
   async removeChatMessage(dataRemoveMessage: RemoveMessageData) {
-    try {
-      const msgACK = await this.socket.removeChatMessage(
-        dataRemoveMessage.clan_id,
-        dataRemoveMessage.channel_id,
-        dataRemoveMessage.mode,
-        dataRemoveMessage.is_public,
-        dataRemoveMessage.message_id,
-        dataRemoveMessage.topic_id,
-      );
-      return msgACK;
-    } catch (error) {
-      throw error;
-    }
+    return this.socket.deleteChannelMessage(
+      dataRemoveMessage.clan_id,
+      dataRemoveMessage.channel_id,
+      dataRemoveMessage.mode,
+      dataRemoveMessage.is_public,
+      dataRemoveMessage.message_id,
+      undefined,
+      dataRemoveMessage.topic_id,
+    );
   }
 }

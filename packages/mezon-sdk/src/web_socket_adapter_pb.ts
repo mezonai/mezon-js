@@ -18,12 +18,18 @@ import { WebSocketAdapter, SocketCloseHandler, SocketMessageHandler } from "./we
 import * as tsproto from "./rtapi/realtime"
 import WebSocket, { MessageEvent } from "ws";
 
+const PREFIX_RAW = 0xff;
+const RAW_HEADER_LENGTH = 7;
+const CODE_LENGTH = 3;
+const CODE_FIN = 0xff;
+
 /**
  * A protocol buffer socket adapter that accepts and transmits payloads using the protobuf binary wire format.
  */
 export class WebSocketAdapterPb implements WebSocketAdapter {
 
     private _socket?: WebSocket;
+    private _streams = new Map<number, Uint8Array[]>();
 
     constructor() {
     }
@@ -55,6 +61,63 @@ export class WebSocketAdapterPb implements WebSocketAdapter {
                     try {
                         const buffer: ArrayBuffer = evt.data as ArrayBuffer;
                         const uintBuffer: Uint8Array = new Uint8Array(buffer);
+
+                        if (uintBuffer.length < 1) {
+                            console.error("Packet too small to contain headers");
+                            return;
+                        }
+
+                        const prefix = uintBuffer[0];
+                        if (prefix === PREFIX_RAW) {
+                            const dataView = new DataView(buffer);
+                            const cid = dataView.getUint16(1, false);
+                            const code = dataView.getUint32(CODE_LENGTH, false);
+                            const payload = uintBuffer.subarray(RAW_HEADER_LENGTH);
+
+                            if (!this._streams.has(cid)) {
+                                this._streams.set(cid, []);
+                            }
+
+                            const responseCode = (code >>> 16) & 0xffff;
+                            const finFlag = code & 0xffff;
+                            const chunks = this._streams.get(cid)!;
+
+                            if (finFlag === CODE_FIN) {
+                                if (payload.byteLength) {
+                                    chunks.push(new Uint8Array(
+                                        payload.buffer,
+                                        payload.byteOffset,
+                                        payload.byteLength,
+                                    ));
+                                }
+
+                                const totalLength = chunks.reduce(
+                                    (acc, arr) => acc + arr.length,
+                                    0,
+                                );
+                                const completeBuffer = new Uint8Array(totalLength);
+
+                                let offset = 0;
+                                for (const arr of chunks) {
+                                    completeBuffer.set(arr, offset);
+                                    offset += arr.length;
+                                }
+
+                                value!({
+                                    cid,
+                                    api_response: true,
+                                    code: responseCode,
+                                    api_response_body: completeBuffer,
+                                });
+
+                                this._streams.delete(cid);
+                                return;
+                            }
+
+                            chunks.push(new Uint8Array(payload));
+                            return;
+                        }
+
                         const envelope = tsproto.Envelope.decode(uintBuffer);
 
                         if (envelope.channel_message) {
@@ -92,6 +155,7 @@ export class WebSocketAdapterPb implements WebSocketAdapter {
     close() {
         this._socket?.close();
         this._socket = undefined;
+        this._streams.clear();
     }
 
     connect(scheme: string, ws_url: string, createStatus: boolean, token: string, signal?: AbortSignal): void {
