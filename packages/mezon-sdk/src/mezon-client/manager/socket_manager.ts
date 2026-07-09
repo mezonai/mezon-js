@@ -22,7 +22,6 @@ import { sleep } from "../../utils/helper";
 export class SocketManager {
   [key: string]: any;
   private socket: Socket;
-  private sessionToken = "";
   private isHardDisconnect: boolean | undefined;
   private isRetrying = false;
   private eventsBound = false;
@@ -97,7 +96,6 @@ export class SocketManager {
   }
 
   async connectSocket(sessionToken: string) {
-    this.sessionToken = sessionToken;
     if (!this.eventsBound) {
       ["ondisconnect", "onerror", "onheartbeattimeout"].forEach((event) => {
         this.socket[event] = (this[event as keyof this] as Function).bind(
@@ -118,6 +116,7 @@ export class SocketManager {
     try {
       const clans = await this.apiClient.listClanDescs(sessionToken);
       const clanList = clans?.clandesc ?? [];
+      await sleep(1000);
       clanList.push({ clan_id: "0", clan_name: "" });
       for (const clan of clanList) {
         await this.socket.joinClanChat(clan.clan_id || "");
@@ -212,18 +211,6 @@ export class SocketManager {
     );
   }
 
-  private requireSessionToken(): string {
-    if (this.sessionToken) {
-      return this.sessionToken;
-    }
-    const token = this.client.getSessionToken();
-    if (token) {
-      this.sessionToken = token;
-      return token;
-    }
-    throw new Error("Session token is not available.");
-  }
-
   async writeChatMessage(dataWriteMessage: ReplyMessageData) {
     const currentContentLength = JSON.stringify(
       dataWriteMessage.content ?? {},
@@ -305,8 +292,7 @@ export class SocketManager {
         `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`,
       );
 
-    return this.apiClient.updateChannelMessage(
-      this.requireSessionToken(),
+    return this.socket.updateChannelMessage(
       dataUpdateMessage.clan_id,
       dataUpdateMessage.channel_id,
       dataUpdateMessage.mode,
@@ -344,8 +330,7 @@ export class SocketManager {
   }
 
   async removeChatMessage(dataRemoveMessage: RemoveMessageData) {
-    return this.apiClient.deleteChannelMessage(
-      this.requireSessionToken(),
+    return this.socket.deleteChannelMessage(
       dataRemoveMessage.clan_id,
       dataRemoveMessage.channel_id,
       dataRemoveMessage.mode,

@@ -56,6 +56,7 @@ import {
 import { Session } from "./session";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
 import { InternalEventsSocket } from "./constants";
+import { getApiFromPath } from "./constants/api_name_enum";
 import { EventEmitter } from "stream";
 import HandleEvent from "./message-socket-events";
 import {
@@ -65,6 +66,7 @@ import {
   ChannelAppEvent,
   EphemeralMessageSend,
 } from "./rtapi/realtime";
+import * as rtproto from "./rtapi/realtime";
 import { decodeAttachments, decodeMentions, decodeReactions, decodeRefs, safeJSONParse } from "./utils";
 
 export interface ChannelMessage {
@@ -299,6 +301,27 @@ export class DefaultSocket implements Socket {
     this.adapter.onMessage = (message: any) => {
       if (this.verbose) {
         console.log("Response: %o", JSON.stringify(message));
+      }
+
+      if (message.api_response) {
+        const executor = this.cIds[message.cid];
+        if (!executor) {
+          if (this.verbose) {
+            console.error("No promise executor for API response: %o", message);
+          }
+          return;
+        }
+        delete this.cIds[message.cid];
+
+        if (message.code != 0) {
+          executor.reject({ code: message.code, error: "API request failed" });
+        } else {
+          executor.resolve({
+            code: message.code,
+            message: message.api_response_body,
+          });
+        }
+        return;
       }
 
       /** Inbound message from server. */
@@ -552,6 +575,125 @@ export class DefaultSocket implements Socket {
       },
     });
     return response.channel_message_ack;
+  }
+
+  private stringifyMessageContent(content: unknown): string {
+    if (typeof content === "string") {
+      return content;
+    }
+    return JSON.stringify(content ?? {});
+  }
+
+  private async sendApiRequest(
+    apiName: string,
+    body: Uint8Array,
+  ): Promise<Uint8Array> {
+    const apiIndex = getApiFromPath(apiName);
+    if (apiIndex === undefined) {
+      throw new Error(`Unknown API: ${apiName}`);
+    }
+
+    const response = await this.send({
+      api_request_event: {
+        api_index: apiIndex,
+        api_name: apiName,
+        body,
+      },
+    } as any);
+
+    if (response.code != 0) {
+      throw response;
+    }
+
+    return response.message;
+  }
+
+  async updateChannelMessage(
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    message_id: string,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    create_time_seconds?: number,
+    hideEditted?: boolean,
+    topic_id?: string,
+    is_update_msg_topic?: boolean,
+  ): Promise<ChannelMessageAck> {
+    const encodedBody = rtproto.ChannelMessageUpdate.encode(
+      rtproto.ChannelMessageUpdate.fromPartial({
+        clan_id,
+        channel_id,
+        message_id,
+        mode,
+        is_public,
+        content: this.stringifyMessageContent(content),
+        mentions,
+        attachments,
+        create_time_seconds,
+        hide_editted: hideEditted,
+        topic_id,
+        is_update_msg_topic,
+      }),
+    ).finish();
+
+    const responseBody = await this.sendApiRequest(
+      "UpdateChannelMessage",
+      encodedBody,
+    );
+    const updated = rtproto.ChannelMessageUpdate.decode(responseBody);
+
+    return {
+      channel_id: channel_id || updated.channel_id,
+      mode,
+      message_id: message_id || updated.message_id,
+      code: 1,
+      username: "",
+      create_time: "",
+      update_time: "",
+      persistence: false,
+    };
+  }
+
+  async deleteChannelMessage(
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    message_id: string,
+    has_attachment?: boolean,
+    topic_id?: string,
+  ): Promise<ChannelMessageAck> {
+    const encodedBody = rtproto.ChannelMessageRemove.encode(
+      rtproto.ChannelMessageRemove.fromPartial({
+        clan_id,
+        channel_id,
+        message_id,
+        mode,
+        is_public,
+        has_attachment,
+        topic_id,
+      }),
+    ).finish();
+
+    const responseBody = await this.sendApiRequest(
+      "DeleteChannelMessage",
+      encodedBody,
+    );
+    const removed = rtproto.ChannelMessageRemove.decode(responseBody);
+
+    return {
+      channel_id: channel_id || removed.channel_id,
+      mode,
+      message_id: message_id || removed.message_id,
+      code: 2,
+      username: "",
+      create_time: "",
+      update_time: "",
+      persistence: false,
+    };
   }
 
   updateStatus(status?: string): Promise<void> {
