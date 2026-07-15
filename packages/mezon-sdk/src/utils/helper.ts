@@ -79,6 +79,35 @@ export function generateSnowflakeId(): string {
   return snowflakeId.toString();
 }
 
+export function formatErrorMessage(error: unknown): string {
+  if (error == null) return "Unknown error";
+  if (typeof error === "string") return error;
+
+  const err = error as Record<string, unknown>;
+  const candidates = [
+    err.errorMsg,
+    err.error_msg,
+    err.message,
+    err.error,
+    err.reason,
+  ];
+
+  for (const candidate of candidates) {
+    if (typeof candidate === "string" && candidate.trim()) return candidate;
+  }
+
+  if (error instanceof Error && error.message) return error.message;
+
+  try {
+    const serialized = JSON.stringify(error);
+    if (serialized && serialized !== "{}") return serialized;
+  } catch {
+    // ignore
+  }
+
+  return String(error);
+}
+
 export async function waitFor2nTimeout<T>(
   action: () => Promise<T>,
   maxAttempts = 10
@@ -102,7 +131,9 @@ export async function waitFor2nTimeout<T>(
         throw error;
       }
 
-      console.warn(`Attempt ${attempt} failed at ${new Date().toLocaleString()}: ${JSON.stringify(error??{})}\nAttempt ${attempt+1} is running...`);
+      console.warn(
+        `Attempt ${attempt} failed at ${new Date().toLocaleString()}: ${formatErrorMessage(error)}\nAttempt ${attempt + 1} is running...`,
+      );
 
       delay = Math.min(delay * 2, maxDelay);
       attempt++;

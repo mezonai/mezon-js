@@ -1,5 +1,9 @@
 import { ErrorEvent, CloseEvent } from "ws";
-import { MezonApi } from "../../api";
+import {
+  DEFAULT_API_QUEUE_DELAY_MS,
+  setApiQueueDelay,
+  MezonApi,
+} from "../../api";
 import { ChannelStreamMode, ChannelType, Events } from "../../constants";
 import { DefaultSocket } from "../../socket";
 import { WebSocketAdapter } from "../../web_socket_adapter";
@@ -8,6 +12,7 @@ import { Socket } from "../../interfaces/socket";
 import { Session } from "../../session";
 import { Clan } from "../structures/Clan";
 import {
+  ApiClanDesc,
   EphemeralMessageData,
   ReactMessageData,
   RemoveMessageData,
@@ -17,7 +22,7 @@ import {
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 import { MessageDatabase } from "../../sqlite/MessageDatabase";
 import { MezonClientCore } from "../client/MezonClientCore";
-import { sleep } from "../../utils/helper";
+import { formatErrorMessage, sleep } from "../../utils/helper";
 
 export class SocketManager {
   [key: string]: any;
@@ -113,34 +118,90 @@ export class SocketManager {
       this.eventsBound = true;
     }
 
+    await this.runClanInitPipeline(sessionToken);
+  }
+
+  private async runClanInitPipeline(sessionToken: string) {
+    let clanList: ApiClanDesc[] = [];
+
     try {
-      const clans = await this.apiClient.listClanDescs(sessionToken);
-      const clanList = clans?.clandesc ?? [];
-      await sleep(1000);
-      clanList.push({ clan_id: "0", clan_name: "" });
-      for (const clan of clanList) {
-        await this.socket.joinClanChat(clan.clan_id || "");
-        await sleep(50);
-        if (!this.client.clans.get(clan.clan_id!)) {
-          const clanObj = new Clan(
-            {
-              id: clan.clan_id!,
-              name: clan?.clan_name ?? "unknown",
-              welcome_channel_id: clan?.welcome_channel_id ?? "",
-              clan_name: clan.clan_name ?? "",
-            },
-            this.client,
-            this.apiClient,
-            this,
-            sessionToken,
-            this.messageQueue,
-            this.messageDB,
-          );
-          this.client.clans.set(clan.clan_id!, clanObj);
-        }
-      }
+      clanList = await this.fetchClanList(sessionToken);
     } catch (error) {
-      throw error;
+      throw new Error(
+        `listClanDescs failed: ${formatErrorMessage(error)}`,
+      );
+    }
+    await sleep(1000);
+    this.ensureClanObjects(clanList, sessionToken);
+    console.log("[mezon-sdk] waiting for initing data channel clans...");
+    const failedClanInits: ApiClanDesc[] = [];
+    for (const clan of clanList) {
+      const success = await this.initClanChannelsAndJoin(clan);
+      if (!success) failedClanInits.push(clan);
+    }
+
+    let pendingRetries = failedClanInits;
+    for (let attempt = 1; attempt <= 5 && pendingRetries.length > 0; attempt++) {
+      setApiQueueDelay(DEFAULT_API_QUEUE_DELAY_MS + 500 * attempt);
+      const stillFailed: ApiClanDesc[] = [];
+      for (const clan of pendingRetries) {
+        const success = await this.initClanChannelsAndJoin(clan);
+        if (!success) stillFailed.push(clan);
+      }
+      pendingRetries = stillFailed;
+    }
+  }
+
+  private async fetchClanList(sessionToken: string): Promise<ApiClanDesc[]> {
+    const clans = await this.apiClient.listClanDescs(sessionToken);
+    const clanList = [...(clans?.clandesc ?? [])];
+    clanList.unshift({ clan_id: "0", clan_name: "" });
+    return clanList;
+  }
+
+  private ensureClanObjects(
+    clanList: ApiClanDesc[],
+    sessionToken: string,
+  ): void {
+    for (const clan of clanList) {
+      if (!clan.clan_id || this.client.clans.get(clan.clan_id)) continue;
+
+      const clanObj = new Clan(
+        {
+          id: clan.clan_id,
+          name: clan?.clan_name ?? "unknown",
+          welcome_channel_id: clan?.welcome_channel_id ?? "",
+          clan_name: clan.clan_name ?? "",
+        },
+        this.client,
+        this.apiClient,
+        this,
+        sessionToken,
+        this.messageQueue,
+        this.messageDB,
+      );
+      this.client.clans.set(clan.clan_id, clanObj);
+    }
+  }
+
+  private async initClanChannelsAndJoin(clan: ApiClanDesc): Promise<boolean> {
+    if (!clan.clan_id) return true;
+
+    try {
+      if (clan.clan_id === "0") {
+        await this.socket.joinClanChat(clan.clan_id);
+        return true;
+      }
+
+      const clanObj = this.client.clans.get(clan.clan_id);
+      if (!clanObj) return false;
+
+      await clanObj.loadChannels();
+      await sleep(50);
+      await this.socket.joinClanChat(clan.clan_id);
+      return true;
+    } catch (error) {
+      return false;
     }
   }
 

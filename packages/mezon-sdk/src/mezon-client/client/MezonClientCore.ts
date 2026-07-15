@@ -24,7 +24,7 @@ import {
   RoomMetadataEvent,
   SSEMessage,
 } from "../../interfaces";
-import { generateSnowflakeId, parseUrlToHostAndSSL, waitFor2nTimeout } from "../../utils/helper";
+import { generateSnowflakeId, parseUrlToHostAndSSL, formatErrorMessage, waitFor2nTimeout } from "../../utils/helper";
 import { ChannelManager } from "../manager/channel_manager";
 import { User, UserInitData } from "../structures/User";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
@@ -266,7 +266,7 @@ export class MezonClientCore extends EventEmitter {
     } catch (error) {
       this.socketManager?.closeSocket();
       this._disconnectMezonAgentSSE();
-      throw new Error(JSON.stringify(error ?? {}));
+      throw new Error(formatErrorMessage(error));
     }
   }
 
