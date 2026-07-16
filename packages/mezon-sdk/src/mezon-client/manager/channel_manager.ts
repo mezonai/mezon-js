@@ -1,4 +1,4 @@
-import { MezonApi } from "../../api";
+import { DEFAULT_API_QUEUE_DELAY_MS, MezonApi, setApiQueueDelay } from "../../api";
 import { ChannelType } from "../../constants";
 import {
   ApiChannelDescription,
@@ -15,47 +15,51 @@ export class ChannelManager {
     private apiClient: MezonApi,
     private socketManager: SocketManager,
     private sessionManager: SessionManager,
-  ) {}
+  ) { }
 
   public async initAllDmChannels(sessionToken: string) {
     if (!sessionToken) return;
-    const channels = await this.apiClient.listChannelDescs(
-      sessionToken,
-      ChannelType.CHANNEL_TYPE_DM,
-    );
+    try {
+      const channels = await this.apiClient.listChannelDescs(
+        sessionToken,
+        ChannelType.CHANNEL_TYPE_DM,
+      );
 
-    if (!channels?.channeldesc || !channels?.channeldesc?.length) {
-      this.allDmChannels = {};
-      this.allDmChannelDescs = [];
-      return;
+      if (!channels?.channeldesc || !channels?.channeldesc?.length) {
+        this.allDmChannels = {};
+        this.allDmChannelDescs = [];
+        return;
+      }
+
+      this.allDmChannelDescs = channels.channeldesc.filter(
+        (channel) =>
+          !!channel?.channel_id &&
+          !!channel?.user_ids?.length &&
+          channel?.type === ChannelType.CHANNEL_TYPE_DM,
+      );
+
+      this.allDmChannels = this.allDmChannelDescs
+        .map(
+          (channel: {
+            user_ids: string | string[];
+            channel_id: string;
+            type?: number;
+          }) => {
+            if (
+              !channel?.user_ids?.length ||
+              channel?.type !== ChannelType.CHANNEL_TYPE_DM
+            )
+              return;
+            return {
+              [channel.user_ids[0]]: channel.channel_id,
+            };
+          },
+        )
+        .filter(Boolean)
+        .reduce((acc: any, curr: any) => Object.assign(acc, curr), {});
+    } catch (error) {} finally {
+      setApiQueueDelay(DEFAULT_API_QUEUE_DELAY_MS);
     }
-
-    this.allDmChannelDescs = channels.channeldesc.filter(
-      (channel) =>
-        !!channel?.channel_id &&
-        !!channel?.user_ids?.length &&
-        channel?.type === ChannelType.CHANNEL_TYPE_DM,
-    );
-
-    this.allDmChannels = this.allDmChannelDescs
-      .map(
-        (channel: {
-          user_ids: string | string[];
-          channel_id: string;
-          type?: number;
-        }) => {
-          if (
-            !channel?.user_ids?.length ||
-            channel?.type !== ChannelType.CHANNEL_TYPE_DM
-          )
-            return;
-          return {
-            [channel.user_ids[0]]: channel.channel_id,
-          };
-        },
-      )
-      .filter(Boolean)
-      .reduce((acc: any, curr: any) => Object.assign(acc, curr), {});
   }
 
   public getAllDmChannels() {

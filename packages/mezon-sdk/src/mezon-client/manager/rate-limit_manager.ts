@@ -1,7 +1,7 @@
 type AsyncFn<T> = () => Promise<T>;
 
 export class RateLimiter {
-  public readonly minTimeMs: number;
+  private minTimeMs: number;
   private queue: Array<{
     fn: AsyncFn<any>;
     resolve: (value: any) => void;
@@ -12,6 +12,10 @@ export class RateLimiter {
 
   constructor(minTimeMs = 1000) {
     this.minTimeMs = minTimeMs;
+  }
+
+  setMinTime(minTimeMs: number): void {
+    if (minTimeMs > 0) this.minTimeMs = minTimeMs;
   }
 
   schedule<T>(fn: AsyncFn<T>): Promise<T> {

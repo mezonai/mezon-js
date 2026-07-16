@@ -24,7 +24,15 @@ import { RateLimiter } from "./mezon-client/manager/rate-limit_manager";
 import * as tsproto from "./api/api";
 import * as rtproto from "./rtapi/realtime";
 
-const GLOBAL_LIMITER = new RateLimiter(1024);
+const DEFAULT_API_QUEUE_DELAY_MS = 1024;
+const GLOBAL_LIMITER = new RateLimiter(DEFAULT_API_QUEUE_DELAY_MS);
+
+export function setApiQueueDelay(minTimeMs: number): void {
+  GLOBAL_LIMITER.setMinTime(minTimeMs);
+}
+
+export { DEFAULT_API_QUEUE_DELAY_MS };
+
 type ProtoDecoder<T> = (bytes: Uint8Array) => T;
 export class MezonApi {
   constructor(

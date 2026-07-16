@@ -73,29 +73,34 @@ export class Clan {
     if (this._loadingPromise) return this._loadingPromise;
 
     this._loadingPromise = (async () => {
-      const channels = await this.apiClient.listChannelDescs(
-        this.sessionToken,
-        ChannelType.CHANNEL_TYPE_CHANNEL,
-        this.id,
-      );
-
-      const validChannels =
-        channels?.channeldesc?.filter((c: any) => Object.keys(c).length > 0) ??
-        [];
-      for (const channel of validChannels) {
-        if (!channel?.channel_id) continue;
-        const channelObj = new TextChannel(
-          { ...channel, type: channel?.type },
-          this,
-          this.socketManager,
-          this.messageQueue,
-          this.messageDB,
+      try {
+        const channels = await this.apiClient.listChannelDescs(
+          this.sessionToken,
+          ChannelType.CHANNEL_TYPE_CHANNEL,
+          this.id,
         );
-        this.channels.set(channel.channel_id!, channelObj);
-        this.client.channels.set(channel.channel_id!, channelObj);
-      }
 
-      this._channelsLoaded = true;
+        const validChannels =
+          channels?.channeldesc?.filter((c: any) => Object.keys(c).length > 0) ??
+          [];
+        for (const channel of validChannels) {
+          if (!channel?.channel_id) continue;
+          const channelObj = new TextChannel(
+            { ...channel, type: channel?.type },
+            this,
+            this.socketManager,
+            this.messageQueue,
+            this.messageDB,
+          );
+          this.channels.set(channel.channel_id!, channelObj);
+          this.client.channels.set(channel.channel_id!, channelObj);
+        }
+
+        this._channelsLoaded = true;
+      } catch (error) {
+        this._loadingPromise = null;
+        throw error;
+      }
     })();
 
     return this._loadingPromise;
