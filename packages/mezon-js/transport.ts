@@ -9000,7 +9000,7 @@ export class MezonTransport {
         if (response.code != 0) {
           throw response;
         }
-        return {} as tsproto.ChannelMessageAck;
+        return response as tsproto.ChannelMessageAck;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
