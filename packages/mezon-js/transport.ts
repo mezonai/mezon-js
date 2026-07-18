@@ -7994,6 +7994,76 @@ export class MezonTransport {
     ]);
   }
 
+  sendChannelMessageApi(
+    session: ApiSession,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymous_message?: boolean,
+    mention_everyone?: boolean,
+    avatar?: string,
+    code?: number,
+    topic_id?: string,
+    options = {}
+  ): Promise<tsproto.ChannelMessageAck> {
+    const urlPath = "/mezon.api.Mezon/SendChannelMessage";
+    const queryParams = new Map<string, any>();
+    const contentStr =
+      typeof content === "string" ? content : JSON.stringify(content ?? {});
+
+    const bodyWriter = tsproto.ChannelMessageSend.encode(
+      tsproto.ChannelMessageSend.fromPartial({
+        clan_id: clan_id,
+        channel_id: channel_id,
+        mode: mode,
+        is_public: is_public,
+        content: contentStr,
+        mentions: mentions,
+        attachments: attachments,
+        references: references,
+        anonymous_message: anonymous_message,
+        mention_everyone: mention_everyone as boolean,
+        avatar: avatar,
+        code: code,
+        topic_id: topic_id,
+      })
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fullUrl = this.buildFullUrl(session.api_url ?? "", urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+    if (session.token) {
+      fetchOptions.headers["Authorization"] = "Bearer " + session.token;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then(async (response) => {
+        if (!response.ok) {
+          throw response;
+        }
+        if (response.status === 204) {
+          return {} as tsproto.ChannelMessageAck;
+        }
+        const buffer = await response.arrayBuffer();
+        return tsproto.ChannelMessageAck.decode(
+          new Uint8Array(buffer)
+        ) as unknown as tsproto.ChannelMessageAck;
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs
+        )
+      ),
+    ]);
+  }
+
   /**  */
   updateChannelMessage(
     clan_id: string,

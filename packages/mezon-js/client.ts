@@ -5746,6 +5746,44 @@ export class Client {
       });
   }
 
+  async sendChannelMessageApi(
+    session: ApiSession,
+    clanId: string,
+    channelId: string,
+    mode: number,
+    isPublic: boolean,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymousMessage?: boolean,
+    mentionEveryone?: boolean,
+    avatar?: string,
+    code?: number,
+    topicId?: string
+  ): Promise<ChannelMessageAck> {
+    return this.transport
+      .sendChannelMessageApi(
+        session,
+        clanId,
+        channelId,
+        mode,
+        isPublic,
+        content,
+        mentions,
+        attachments,
+        references,
+        anonymousMessage,
+        mentionEveryone,
+        avatar,
+        code,
+        topicId
+      )
+      .then((response: ChannelMessageAck) => {
+        return Promise.resolve(response);
+      });
+  }
+
   async updateChannelMessage(
     session: ApiSession,
     clanId: string,
