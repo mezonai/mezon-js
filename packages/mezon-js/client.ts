@@ -334,11 +334,13 @@ interface LastConnectArgs {
 
 /** A client for Mezon server. */
 export class Client {
+  public static readonly DefaultHeartbeatIntervalMs = 10000;
   public static readonly DefaultHeartbeatTimeoutMs = 10000;
   public static readonly DefaultConnectTimeoutMs = 30000;
   public static readonly DefaultServerDisconnectStreakLogoutThreshold = 3;
 
   public verbose: boolean = false;
+  private _heartbeatIntervalMs: number;
   private _heartbeatTimeoutMs: number;
   private _connectionState: ConnectionStateType;
   private _heartbeatTimer?: ReturnType<typeof setTimeout>;
@@ -373,6 +375,7 @@ export class Client {
     const scheme = useSSL ? "https://" : "http://";
     const basePath = `${scheme}${host}:${port}`;
 
+    this._heartbeatIntervalMs = Client.DefaultHeartbeatIntervalMs;
     this._heartbeatTimeoutMs = Client.DefaultHeartbeatTimeoutMs;
     this._connectionState = ConnectionState.DISCONNECTED;
     this.serverDisconnectStreakLogoutThreshold =
@@ -732,13 +735,18 @@ export class Client {
         },
         onError: (evt: Event) => {
           this.onerror(evt);
-          this.markDisconnected("transport_on_error", evt, true, false);
+          // Finish tearing this attempt down BEFORE markDisconnected fires
+          // ondisconnect: a consumer that reconnects from that callback installs
+          // a new socket on this same shared adapter, and the close() below
+          // would then tear down the new connection instead of this one.
+          this._connectAttemptSeq += 1;
           this.failConnect(
             evt instanceof Error
               ? evt
               : new Error("Socket error during connect.")
           );
           this.transport.close();
+          this.markDisconnected("transport_on_error", evt, true, false);
         },
       });
     } catch (err) {
@@ -775,6 +783,8 @@ export class Client {
       return;
     }
 
+    const attemptSeq = this._connectAttemptSeq;
+
     try {
       const urlPath = "";
       const fetchOptions = { ping: {} };
@@ -783,6 +793,9 @@ export class Client {
         this._heartbeatTimeoutMs
       );
     } catch {
+      if (attemptSeq !== this._connectAttemptSeq) {
+        return;
+      }
       if (this._connectionState !== ConnectionState.CONNECTED) {
         return;
       }
@@ -790,18 +803,22 @@ export class Client {
         console.error("Server unreachable from heartbeat.");
       }
       this.onheartbeattimeout();
+      this._connectAttemptSeq += 1;
+      if (this.transport.adapter.isOpen()) {
+        this.transport.close();
+      }
       this.markDisconnected(
         "heartbeat_unreachable",
         createEvent("close"),
         true,
         false
       );
-      if (this.transport.adapter.isOpen()) {
-        this.transport.close();
-      }
       return;
     }
 
+    if (attemptSeq !== this._connectAttemptSeq) {
+      return;
+    }
     this.startHeartbeatLoop();
   }
 
@@ -812,7 +829,7 @@ export class Client {
     this.stopHeartbeatLoop();
     this._heartbeatTimer = setTimeout(
       () => this.pingPong(),
-      this._heartbeatTimeoutMs
+      this._heartbeatIntervalMs
     );
   }
 
