@@ -285,6 +285,8 @@ export class MezonClientCore extends EventEmitter {
       throw new Error("Missing session token after connect.");
     }
     await this.socketManager.connectSocket(token);
+    await this.channelManager.initAllDmChannels(token);
+    this._initDmChannelCache();
     return JSON.stringify(session ?? {});
   }
 
@@ -502,6 +504,13 @@ export class MezonClientCore extends EventEmitter {
     if (!channel?.channel_id) return;
     const dmClan = this.clans.get("0");
     if (!dmClan) return;
+
+    const existing = this.channels.get(channel.channel_id);
+    if (existing) {
+      existing.updateFromDesc({ ...channel, type: channel?.type });
+      dmClan.channels.set(channel.channel_id, existing);
+      return existing;
+    }
 
     const channelObj = new TextChannel(
       { ...channel, type: channel?.type },

@@ -64,6 +64,17 @@ export class Clan {
     });
   }
 
+  updateFromDesc(desc: { clan_name?: string; welcome_channel_id?: string }, sessionToken: string): void {
+    if (desc.clan_name !== undefined) {
+      this.name = desc.clan_name;
+      this.clan_name = desc.clan_name;
+    }
+    if (desc.welcome_channel_id !== undefined) {
+      this.welcome_channel_id = desc.welcome_channel_id;
+    }
+    this.sessionToken = sessionToken;
+  }
+
   getClient() {
     return this.client;
   }
@@ -71,39 +82,55 @@ export class Clan {
   async loadChannels(): Promise<void> {
     if (this._channelsLoaded) return;
     if (this._loadingPromise) return this._loadingPromise;
+    return this.reloadChannels();
+  }
 
-    this._loadingPromise = (async () => {
-      try {
-        const channels = await this.apiClient.listChannelDescs(
-          this.sessionToken,
-          ChannelType.CHANNEL_TYPE_CHANNEL,
-          this.id,
-        );
-
-        const validChannels =
-          channels?.channeldesc?.filter((c: any) => Object.keys(c).length > 0) ??
-          [];
-        for (const channel of validChannels) {
-          if (!channel?.channel_id) continue;
-          const channelObj = new TextChannel(
-            { ...channel, type: channel?.type },
-            this,
-            this.socketManager,
-            this.messageQueue,
-            this.messageDB,
-          );
-          this.channels.set(channel.channel_id!, channelObj);
-          this.client.channels.set(channel.channel_id!, channelObj);
-        }
-
-        this._channelsLoaded = true;
-      } catch (error) {
+  async reloadChannels(): Promise<void> {
+    const promise = this.fetchAndMergeChannels().catch((error) => {
+      if (this._loadingPromise === promise) {
         this._loadingPromise = null;
-        throw error;
       }
-    })();
+      throw error;
+    });
+    this._loadingPromise = promise;
+    return promise;
+  }
 
-    return this._loadingPromise;
+  private async fetchAndMergeChannels(): Promise<void> {
+    const channels = await this.apiClient.listChannelDescs(
+      this.sessionToken,
+      ChannelType.CHANNEL_TYPE_CHANNEL,
+      this.id,
+    );
+
+    const validChannels =
+      channels?.channeldesc?.filter((c: any) => Object.keys(c).length > 0) ??
+      [];
+    for (const channel of validChannels) {
+      if (!channel?.channel_id) continue;
+
+      const existing =
+        this.channels.get(channel.channel_id) ??
+        this.client.channels.get(channel.channel_id);
+      if (existing) {
+        existing.updateFromDesc({ ...channel, type: channel?.type });
+        this.channels.set(channel.channel_id, existing);
+        this.client.channels.set(channel.channel_id, existing);
+        continue;
+      }
+
+      const channelObj = new TextChannel(
+        { ...channel, type: channel?.type },
+        this,
+        this.socketManager,
+        this.messageQueue,
+        this.messageDB,
+      );
+      this.channels.set(channel.channel_id!, channelObj);
+      this.client.channels.set(channel.channel_id!, channelObj);
+    }
+
+    this._channelsLoaded = true;
   }
 
   async listChannelVoiceUsers(limit: number = 500) {

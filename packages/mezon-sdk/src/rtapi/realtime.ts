@@ -624,7 +624,6 @@ export interface Channel {
 export interface ClanJoin {
   /** The id of channel or group */
   clan_id: string;
-  is_last_field: boolean;
 }
 
 /** Join operation for a realtime chat channel. */
@@ -5825,16 +5824,13 @@ export const Channel = {
 };
 
 function createBaseClanJoin(): ClanJoin {
-  return { clan_id: "0", is_last_field: false };
+  return { clan_id: "0" };
 }
 
 export const ClanJoin = {
   encode(message: ClanJoin, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.clan_id !== "0") {
       writer.uint32(8).int64(message.clan_id);
-    }
-    if (message.is_last_field !== false) {
-      writer.uint32(16).bool(message.is_last_field);
     }
     return writer;
   },
@@ -5853,13 +5849,6 @@ export const ClanJoin = {
 
           message.clan_id = longToString(reader.int64() as Long);
           continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.is_last_field = reader.bool();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -5870,19 +5859,13 @@ export const ClanJoin = {
   },
 
   fromJSON(object: any): ClanJoin {
-    return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
-      is_last_field: isSet(object.is_last_field) ? globalThis.Boolean(object.is_last_field) : false,
-    };
+    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0" };
   },
 
   toJSON(message: ClanJoin): unknown {
     const obj: any = {};
     if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
-    }
-    if (message.is_last_field !== false) {
-      obj.is_last_field = message.is_last_field;
     }
     return obj;
   },
@@ -5893,7 +5876,6 @@ export const ClanJoin = {
   fromPartial<I extends Exact<DeepPartial<ClanJoin>, I>>(object: I): ClanJoin {
     const message = createBaseClanJoin();
     message.clan_id = object.clan_id ?? "0";
-    message.is_last_field = object.is_last_field ?? false;
     return message;
   },
 };

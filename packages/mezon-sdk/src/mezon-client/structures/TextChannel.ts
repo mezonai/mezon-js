@@ -71,6 +71,16 @@ export class TextChannel {
     }, 200);
   }
 
+  updateFromDesc(initChannelData: ApiChannelDescription): void {
+    this.name = initChannelData.channel_label;
+    this.channel_type = initChannelData?.type;
+    this.is_private = !!initChannelData?.channel_private;
+    this.category_id = initChannelData?.category_id ?? "0";
+    this.category_name = initChannelData?.category_name ?? "";
+    this.parent_id = initChannelData?.parent_id ?? "0";
+    this.meeting_code = initChannelData?.meeting_code ?? "";
+  }
+
   async send(
     content: ChannelMessageContent,
     mentions?: Array<ApiMessageMention>,
