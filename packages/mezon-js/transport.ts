@@ -455,6 +455,24 @@ export class MezonTransport {
 
   close() {
     this.adapter.close();
+    this.rejectPending("Socket closed before a response was received.");
+  }
+
+  /**
+   * The same MezonTransport instance is reused for every reconnect, so cIds
+   * outlives the socket that the requests were sent on. Anything still waiting
+   * when a socket goes away has to be settled here -- otherwise the entry sits
+   * in the map forever and a later request that wraps around to the same cid
+   * finds it occupied.
+   */
+  private rejectPending(reason: string) {
+    const pending = Object.values(this.cIds);
+    for (const key of Object.keys(this.cIds)) {
+      delete this.cIds[Number(key)];
+    }
+    for (const executor of pending) {
+      executor.reject(reason);
+    }
   }
 
   generatecid(): number {
@@ -569,10 +587,29 @@ export class MezonTransport {
         }
 
         const cid = this.generatecid();
-        this.cIds[cid] = { resolve, reject };
+        let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+        // Settling has to drop the cIds entry and cancel the timer, not just
+        // resolve the promise: a request abandoned by timeout used to stay in
+        // the map for the lifetime of the client.
+        const settle =
+          (settleFn: (arg?: any) => void) =>
+          (arg?: any) => {
+            if (timeoutId !== undefined) {
+              clearTimeout(timeoutId);
+              timeoutId = undefined;
+            }
+            delete this.cIds[cid];
+            settleFn(arg);
+          };
+
+        this.cIds[cid] = { resolve: settle(resolve), reject: settle(reject) };
+
         if (sendTimeout !== Infinity && sendTimeout > 0) {
-          setTimeout(() => {
-            reject("The socket timed out while waiting for a response.");
+          timeoutId = setTimeout(() => {
+            this.cIds[cid]?.reject(
+              "The socket timed out while waiting for a response."
+            );
           }, sendTimeout);
         }
 

@@ -131,6 +131,12 @@ export class MezonNetworkAdapter implements TransportAdapter {
   }
 
   close() {
+    // Chunks are keyed by cid, and this adapter is reused across reconnects.
+    // A response cut off mid-stream would otherwise stay buffered and get
+    // prepended to whatever later response reuses that cid, handing a corrupt
+    // buffer to Envelope.decode.
+    this._streams.clear();
+
     const socket = this._socket;
     this._socket = undefined;
     if (!socket) return;

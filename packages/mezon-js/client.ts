@@ -335,7 +335,11 @@ interface LastConnectArgs {
 /** A client for Mezon server. */
 export class Client {
   public static readonly DefaultHeartbeatIntervalMs = 10000;
-  public static readonly DefaultHeartbeatTimeoutMs = 10000;
+  // How long to wait for a pong before declaring the server unreachable. The
+  // gateway's own read deadline is 60s, so anything much stricter than this
+  // makes the client the first to give up on a connection the server still
+  // considers healthy, and a single slow pong costs a full reconnect.
+  public static readonly DefaultHeartbeatTimeoutMs = 30000;
   public static readonly DefaultConnectTimeoutMs = 30000;
   public static readonly DefaultServerDisconnectStreakLogoutThreshold = 3;
 
@@ -349,7 +353,6 @@ export class Client {
   private _connectReject?: (reason?: any) => void;
   private _hasConnectedOnce: boolean = false;
   private _connectAttemptSeq = 0;
-  private _heartbeatSuspended = false;
   private _serverDisconnectStreak = 0;
   private readonly transport: MezonTransport;
 
@@ -393,7 +396,13 @@ export class Client {
   }
 
   isOpen(): boolean {
-    return this._connectionState === ConnectionState.CONNECTED;
+    // The socket has to be checked too, not just the state flag: callers gate
+    // every request on this, and a state flag that outlived its socket sends
+    // them into a dead connection.
+    return (
+      this._connectionState === ConnectionState.CONNECTED &&
+      this.transport.adapter.isOpen()
+    );
   }
 
   connect(
@@ -405,9 +414,11 @@ export class Client {
   ): Promise<void> {
     this.verbose = verbose;
 
-    const sameTarget =
-      this._lastConnectArgs?.session_id === session_id &&
-      this._lastConnectArgs?.url === url;
+    // Only the endpoint decides whether a live socket can be reused. session_id
+    // is deliberately excluded: it changes every time the session is refreshed,
+    // and counting a refreshed session as a different target made connect()
+    // tear down a perfectly healthy connection.
+    const sameTarget = this._lastConnectArgs?.url === url;
 
     // Idempotent: already connected to the same target with a live socket.
     if (
@@ -790,7 +801,22 @@ export class Client {
   }
 
   private async pingPong(): Promise<void> {
-    if (!this.isOpen()) {
+    if (this._connectionState !== ConnectionState.CONNECTED) {
+      return;
+    }
+
+    if (!this.transport.adapter.isOpen()) {
+      // State says connected but the socket is gone: no close event ever
+      // arrived, or it belonged to a superseded attempt and was ignored.
+      // Report it instead of silently returning, which would leave the client
+      // wedged as CONNECTED with no heartbeat and nothing to recover it.
+      this._connectAttemptSeq += 1;
+      this.markDisconnected(
+        "heartbeat_socket_gone",
+        createEvent("close"),
+        true,
+        false
+      );
       return;
     }
 
@@ -830,13 +856,19 @@ export class Client {
     if (attemptSeq !== this._connectAttemptSeq) {
       return;
     }
-    this.startHeartbeatLoop();
+    this.scheduleNextHeartbeat();
   }
 
+  /**
+   * Pings straight away rather than after a full interval, so a socket that
+   * came up dead is caught at t=0 instead of going unnoticed for 10s.
+   */
   private startHeartbeatLoop() {
-    if (this._heartbeatSuspended) {
-      return;
-    }
+    this.stopHeartbeatLoop();
+    void this.pingPong();
+  }
+
+  private scheduleNextHeartbeat() {
     this.stopHeartbeatLoop();
     this._heartbeatTimer = setTimeout(
       () => this.pingPong(),
