@@ -164,7 +164,13 @@ export class SocketManager {
     sessionToken: string,
   ): void {
     for (const clan of clanList) {
-      if (!clan.clan_id || this.client.clans.get(clan.clan_id)) continue;
+      if (!clan.clan_id) continue;
+
+      const existingClan = this.client.clans.get(clan.clan_id);
+      if (existingClan) {
+        existingClan.updateFromDesc(clan, sessionToken);
+        continue;
+      }
 
       const clanObj = new Clan(
         {
@@ -196,7 +202,7 @@ export class SocketManager {
       const clanObj = this.client.clans.get(clan.clan_id);
       if (!clanObj) return false;
 
-      await clanObj.loadChannels();
+      await clanObj.reloadChannels();
       await sleep(50);
       await this.socket.joinClanChat(clan.clan_id);
       return true;
