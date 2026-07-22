@@ -434,7 +434,6 @@ export class Client {
       this._connectionState === ConnectionState.CONNECTING
     ) {
       this.failConnect(new Error("Connect superseded by new connect()."));
-      this.transport.close();
       this.markDisconnected(
         "connect_superseded",
         createEvent("close"),
@@ -443,9 +442,12 @@ export class Client {
       );
     }
 
+    this.transport.close();
+
     this.clearConnectTimeout();
     this._connectionState = ConnectionState.CONNECTING;
     this._connectAttemptSeq += 1;
+    const attemptSeq = this._connectAttemptSeq;
     this._lastConnectArgs = {
       session_id,
       url,
@@ -705,6 +707,9 @@ export class Client {
           }
         },
         onClose: (evt: Event) => {
+          if (attemptSeq !== this._connectAttemptSeq) {
+            return;
+          }
           const wasConnecting =
             this._connectionState === ConnectionState.CONNECTING;
           this.markDisconnected("transport_on_close", evt, true, true);
@@ -715,6 +720,9 @@ export class Client {
           }
         },
         onOpen: (evt: Event) => {
+          if (attemptSeq !== this._connectAttemptSeq) {
+            return;
+          }
           if (this.verbose && typeof console !== "undefined") {
             console.log(evt);
           }
@@ -734,6 +742,9 @@ export class Client {
           }
         },
         onError: (evt: Event) => {
+          if (attemptSeq !== this._connectAttemptSeq) {
+            return;
+          }
           this.onerror(evt);
           // Finish tearing this attempt down BEFORE markDisconnected fires
           // ondisconnect: a consumer that reconnects from that callback installs
