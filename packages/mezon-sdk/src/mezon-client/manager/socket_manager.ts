@@ -282,9 +282,9 @@ export class SocketManager {
     const currentContentLength = JSON.stringify(
       dataWriteMessage.content ?? {},
     ).length;
-    if (currentContentLength > 8000)
+    if (currentContentLength > 4000)
       throw new Error(
-        `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`,
+        `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 4000 characters. Current length: ${currentContentLength}!`,
       );
 
     const send = () =>
@@ -317,9 +317,9 @@ export class SocketManager {
     const currentContentLength = JSON.stringify(
       dataWriteMessage.content ?? {},
     ).length;
-    if (currentContentLength > 8000)
+    if (currentContentLength > 4000)
       throw new Error(
-        `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`,
+        `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 4000 characters. Current length: ${currentContentLength}!`,
       );
 
     const send = () =>
@@ -354,9 +354,9 @@ export class SocketManager {
     const currentContentLength = JSON.stringify(
       dataUpdateMessage.content ?? {},
     ).length;
-    if (currentContentLength > 8000)
+    if (currentContentLength > 4000)
       throw new Error(
-        `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 8000 characters. Current length: ${currentContentLength}!`,
+        `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 4000 characters. Current length: ${currentContentLength}!`,
       );
 
     return this.socket.updateChannelMessage(
