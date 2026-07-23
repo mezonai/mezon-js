@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import WebSocket, { CloseEvent, ErrorEvent } from "ws";
+import { CloseEvent, ErrorEvent } from "ws";
+import { MezonNetworkAdapter } from "./transport/abridged_tcp_adapter";
+import { trimAbridgedPadding } from "./transport/protobuf_decode";
+import { TransportAdapter } from "./transport/transport_adapter";
 import {
   ApiMessageAttachment,
   ApiMessageMention,
@@ -22,16 +25,10 @@ import {
   ApiMessageRef,
   Channel,
   ChannelDescListEvent,
-  ChannelJoin,
-  ChannelLeave,
   ChannelMessageAck,
-  ChannelMessageRemove,
-  ChannelMessageSend,
-  ChannelMessageUpdate,
   ClanJoin,
   ClanNameExistedEvent,
   CustomStatusEvent,
-  DropdownBoxSelected,
   EmojiListedEvent,
   HashtagDmListEvent,
   LastPinMessageEvent,
@@ -41,31 +38,18 @@ import {
   NotificationChannelSettingEvent,
   NotificationClanSettingEvent,
   NotifiReactMessageEvent,
-  Ping,
-  Rpc,
   Socket,
   SocketError,
-  StatusFollow,
-  StatusUnfollow,
-  StatusUpdate,
   StrickerListedEvent,
   TokenSentEvent,
   VoiceJoinedEvent,
   VoiceLeavedEvent,
 } from "./interfaces";
 import { Session } from "./session";
-import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
 import { InternalEventsSocket } from "./constants";
 import { getApiFromPath } from "./constants/api_name_enum";
 import { EventEmitter } from "stream";
 import HandleEvent from "./message-socket-events";
-import {
-  WebrtcSignalingFwd,
-  IncomingCallPush,
-  MessageButtonClicked,
-  ChannelAppEvent,
-  EphemeralMessageSend,
-} from "./rtapi/realtime";
 import * as rtproto from "./rtapi/realtime";
 import { decodeAttachments, decodeMentions, decodeReactions, decodeRefs, safeJSONParse } from "./utils";
 
@@ -208,7 +192,9 @@ const ConnectionState = {
 type ConnectionState = (typeof ConnectionState)[keyof typeof ConnectionState];
 
 /** A socket connection to Mezon server implemented with the DOM's WebSocket API. */
-export class DefaultSocket implements Socket {
+export class MezonTransport implements Socket {
+  [key: string]: any;
+
   public static readonly DefaultHeartbeatTimeoutMs = 10000;
   public static readonly DefaultSendTimeoutMs = 10000;
   public static readonly DefaultConnectTimeoutMs = 30000;
@@ -227,23 +213,44 @@ export class DefaultSocket implements Socket {
   public session: Session | undefined;
 
   constructor(
-    readonly ws_url: string,
     readonly host: string,
     readonly port: string,
-    readonly useSSL: boolean = false,
     public verbose: boolean = false,
-    readonly adapter: WebSocketAdapter = new WebSocketAdapterText(),
-    readonly sendTimeoutMs: number = DefaultSocket.DefaultSendTimeoutMs,
+    readonly adapter: TransportAdapter = new MezonNetworkAdapter(),
+    readonly sendTimeoutMs: number = MezonTransport.DefaultSendTimeoutMs,
   ) {
     this.cIds = {};
     this.nextCid = 1;
-    this._heartbeatTimeoutMs = DefaultSocket.DefaultHeartbeatTimeoutMs;
+    this._heartbeatTimeoutMs = MezonTransport.DefaultHeartbeatTimeoutMs;
   }
 
   generatecid(): number {
     const cid = this.nextCid;
-    ++this.nextCid;
+
+    if (this.nextCid >= 65535) {
+      this.nextCid = 1;
+    } else {
+      ++this.nextCid;
+    }
+
     return cid;
+  }
+
+  private dispatchInboundEvents(message: Record<string, unknown>): void {
+    for (const event in InternalEventsSocket) {
+      const fieldName = InternalEventsSocket[event as keyof typeof InternalEventsSocket];
+      if (
+        Object.prototype.toString.call(message) === "[object Object]" &&
+        Object.prototype.hasOwnProperty.call(message, fieldName) &&
+        message[fieldName]
+      ) {
+        const input = this.formatFunction[fieldName]
+          ? this.formatFunction[fieldName]!(message)
+          : message[fieldName];
+
+        this.socketEvents.emit(fieldName, input);
+      }
+    }
   }
 
   isOpen(): boolean {
@@ -266,7 +273,8 @@ export class DefaultSocket implements Socket {
   connect(
     session: Session,
     createStatus: boolean = false,
-    connectTimeoutMs: number = DefaultSocket.DefaultConnectTimeoutMs,
+    connectTimeoutMs: number = MezonTransport.DefaultConnectTimeoutMs,
+    signal?: AbortSignal,
   ): Promise<Session> {
     this.session = session;
 
@@ -280,17 +288,15 @@ export class DefaultSocket implements Socket {
 
     this.clearConnectTimeout();
     this._connectionState = ConnectionState.CONNECTING;
-
-    const scheme = this.useSSL ? "wss://" : "ws://";
-    this.adapter.connect(scheme, this.ws_url, createStatus, session.token);
+    this.adapter.connect(this.host, this.port, createStatus, session.token, signal);
 
     this.adapter.onClose = (evt: CloseEvent) => {
       this.markDisconnected(evt);
     };
 
-    this.adapter.onError = (evt: ErrorEvent) => {
+    this.adapter.onError = (evt: Event) => {
       this.markDisconnected(<CloseEvent>{}, false);
-      this.onerror(evt);
+      this.onerror(evt as unknown as ErrorEvent);
     };
 
     HandleEvent.forEach((cl) => {
@@ -298,68 +304,35 @@ export class DefaultSocket implements Socket {
       instance.excute();
     });
 
-    this.adapter.onMessage = (message: any) => {
+    this.adapter.onMessage = (cid: number, code: number, message: any) => {
       if (this.verbose) {
-        console.log("Response: %o", JSON.stringify(message));
+        console.log("Response cid=%o code=%o message=%o", cid, code, message);
       }
 
-      if (message.api_response) {
-        const executor = this.cIds[message.cid];
+      if (cid !== 0) {
+        const executor = this.cIds[cid];
         if (!executor) {
           if (this.verbose) {
-            console.error("No promise executor for API response: %o", message);
+            console.error("No promise executor for message: cid=%o", cid);
           }
           return;
         }
-        delete this.cIds[message.cid];
+        delete this.cIds[cid];
 
-        if (message.code != 0) {
-          executor.reject({ code: message.code, error: "API request failed" });
+        if (message?.error) {
+          executor.reject({ code, error: message.error });
         } else {
-          executor.resolve({
-            code: message.code,
-            message: message.api_response_body,
-          });
+          executor.resolve({ code, message });
         }
         return;
       }
 
       /** Inbound message from server. */
-      if (!message.cid) {
-        for (const event in InternalEventsSocket) {
-          const fieldName = InternalEventsSocket[event as keyof typeof InternalEventsSocket];
-          if (
-            Object.prototype.toString.call(message) === "[object Object]" &&
-            message.hasOwnProperty(fieldName) &&
-            message[fieldName]
-          ) {
-            const input = this.formatFunction[fieldName]
-              ? this.formatFunction[fieldName]!(message)
-              : message[fieldName];
-
-            this.socketEvents.emit(fieldName, input);
-          }
-        }
-      } else {
-        const executor = this.cIds[message.cid];
-        if (!executor) {
-          if (this.verbose) {
-            console.error("No promise executor for message: %o", message);
-          }
-          return;
-        }
-        delete this.cIds[message.cid];
-
-        if (message.error) {
-          executor.reject(<SocketError>message.error);
-        } else {
-          executor.resolve(message);
-        }
-      }
+      this.dispatchInboundEvents(message);
     };
 
     const connectPromise = new Promise<Session>((resolve, reject) => {
-      this.adapter.onOpen = (evt: WebSocket.Event) => {
+      this.adapter.onOpen = (evt: Event) => {
         if (this.verbose) {
           console.log(evt);
         }
@@ -379,8 +352,8 @@ export class DefaultSocket implements Socket {
         }
       };
       const baseOnErrorHandler = this.adapter.onError;
-      this.adapter.onError = (evt: WebSocket.Event) => {
-        baseOnErrorHandler?.(evt as ErrorEvent);
+      this.adapter.onError = (evt: Event) => {
+        baseOnErrorHandler?.(evt);
         if (this._connectionState === ConnectionState.CONNECTING) {
           reject(evt);
           this.adapter.close();
@@ -423,7 +396,7 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  onreconnect(evt: WebSocket.Event) {
+  onreconnect(evt: Event) {
     if (this.verbose) {
       console.log("Socket reconnected.", evt);
     }
@@ -441,60 +414,141 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  send(
-    message:
-      | ChannelJoin
-      | ChannelLeave
-      | ChannelMessageSend
-      | ChannelMessageUpdate
-      | CustomStatusEvent
-      | ChannelMessageRemove
-      | MessageTypingEvent
-      | LastSeenMessageEvent
-      | Rpc
-      | StatusFollow
-      | StatusUnfollow
-      | StatusUpdate
-      | Ping
-      | WebrtcSignalingFwd
-      | IncomingCallPush
-      | MessageButtonClicked
-      | DropdownBoxSelected
-      | ChannelAppEvent
-      | EphemeralMessageSend,
-    sendTimeout = DefaultSocket.DefaultSendTimeoutMs,
-  ): Promise<any> {
-    const untypedMessage = message as any;
+  send(data: any, sendTimeout = MezonTransport.DefaultSendTimeoutMs): Promise<any> {
+    const { urlPath, fetchOptions } = data;
+    let untypedMessage: any;
+
+    if (urlPath?.includes("/mezon.api.Mezon/")) {
+      const apiName = urlPath.substring(17);
+      const apiIndex = getApiFromPath(apiName);
+      if (apiIndex === undefined) {
+        return Promise.reject(new Error(`Unknown API: ${apiName}`));
+      }
+      untypedMessage = {
+        api_request_event: {
+          api_index: apiIndex,
+          api_name: apiName,
+          body: fetchOptions.body,
+        },
+      };
+    } else if (fetchOptions !== undefined) {
+      untypedMessage = fetchOptions;
+    } else {
+      untypedMessage = data;
+    }
 
     return new Promise<void>((resolve, reject) => {
       if (!this.adapter.isOpen()) {
         reject("Socket connection has not been established yet.");
       } else {
         if (untypedMessage.channel_message_send) {
-          untypedMessage.channel_message_send.content = JSON.stringify(untypedMessage.channel_message_send.content);
+          untypedMessage.channel_message_send.content = JSON.stringify(
+            untypedMessage.channel_message_send.content,
+          );
         } else if (untypedMessage.channel_message_update) {
-          untypedMessage.channel_message_update.content = JSON.stringify(untypedMessage.channel_message_update.content);
+          untypedMessage.channel_message_update.content = JSON.stringify(
+            untypedMessage.channel_message_update.content,
+          );
         } else if (untypedMessage.ephemeral_message_send) {
           untypedMessage.ephemeral_message_send.message.content = JSON.stringify(
             untypedMessage.ephemeral_message_send.message?.content,
+          );
+        } else if (untypedMessage.quick_menu_event) {
+          untypedMessage.quick_menu_event.message.content = JSON.stringify(
+            untypedMessage.quick_menu_event.message?.content,
           );
         }
 
         const cid = this.generatecid();
         this.cIds[cid] = { resolve, reject };
-        setTimeout(() => {
-          reject("The socket timed out while waiting for a response.");
-        }, sendTimeout);
+        if (sendTimeout !== Infinity && sendTimeout > 0) {
+          setTimeout(() => {
+            if (this.cIds[cid]) {
+              delete this.cIds[cid];
+              const adapter = this.adapter as MezonNetworkAdapter;
+              console.warn("[mezon-tcp] send timeout", {
+                cid,
+                urlPath: urlPath ?? "",
+                keys: Object.keys(untypedMessage).filter((k) => k !== "cid"),
+                pendingCids: Object.keys(this.cIds).map(Number),
+                readBuffer: adapter.getReadBufferState?.(),
+              });
+              reject("The socket timed out while waiting for a response.");
+            }
+          }, sendTimeout);
+        }
 
-        /** Add id for promise executor. */
         untypedMessage.cid = cid;
+
+        if (process.env.MEZON_TCP_DEBUG === "1") {
+          console.log("[mezon-tcp] socket.send", {
+            cid,
+            urlPath: urlPath ?? "",
+            keys: Object.keys(untypedMessage).filter((k) => k !== "cid"),
+          });
+        }
+
         this.adapter.send(untypedMessage);
       }
     });
   }
 
-  async joinClanChat(clan_id: string): Promise<ClanJoin> {
+  private async sendEvent(data: any, sendTimeout?: number): Promise<any> {
+    const response = await this.send(data, sendTimeout);
+    if (response.code != 0) {
+      throw response;
+    }
+    const message = response.message;
+    if (message?.error) {
+      throw message.error as SocketError;
+    }
+    return message;
+  }
+
+  private async sendMezonApi(urlPath: string, encodedBody: Uint8Array): Promise<Uint8Array> {
+    const apiName = urlPath.substring("/mezon.api.Mezon/".length);
+    return this.sendApiRequest(apiName, encodedBody);
+  }
+
+  private async sendApiRequest(
+    apiName: string,
+    body: Uint8Array,
+  ): Promise<Uint8Array> {
+    const apiIndex = getApiFromPath(apiName);
+    if (apiIndex === undefined) {
+      throw new Error(`Unknown API: ${apiName}`);
+    }
+
     const response = await this.send({
+      api_request_event: {
+        api_index: apiIndex,
+        api_name: apiName,
+        body,
+      },
+    });
+
+    if (response.code != 0) {
+      throw response;
+    }
+
+    return trimAbridgedPadding(response.message);
+  }
+
+  private toChannelMessageAck(ack: rtproto.ChannelMessageAck, mode: number): ChannelMessageAck {
+    return {
+      channel_id: ack.channel_id,
+      mode,
+      message_id: ack.message_id,
+      code: ack.code,
+      username: ack.username,
+      create_time: String(ack.create_time_seconds ?? ""),
+      update_time: String(ack.update_time_seconds ?? ""),
+      persistence: ack.persistent ?? false,
+    };
+  }
+
+  async joinClanChat(clan_id: string): Promise<ClanJoin> {
+    const response = await this.sendEvent({
       clan_join: {
         clan_id: clan_id,
       },
@@ -504,7 +558,7 @@ export class DefaultSocket implements Socket {
   }
 
   async joinChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<Channel> {
-    const response = await this.send({
+    const response = await this.sendEvent({
       channel_join: {
         clan_id: clan_id,
         channel_id: channel_id,
@@ -517,7 +571,7 @@ export class DefaultSocket implements Socket {
   }
 
   leaveChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<void> {
-    return this.send({
+    return this.sendEvent({
       channel_leave: { clan_id: clan_id, channel_id: channel_id, channel_type: channel_type, is_public: is_public },
     });
   }
@@ -530,7 +584,7 @@ export class DefaultSocket implements Socket {
     message_id: string,
     topic_id?: string,
   ): Promise<ChannelMessageAck> {
-    const response = await this.send({
+    const response = await this.sendEvent({
       channel_message_remove: {
         clan_id: clan_id,
         channel_id: channel_id,
@@ -558,7 +612,7 @@ export class DefaultSocket implements Socket {
     topic_id?: string,
     is_update_msg_topic?: boolean,
   ): Promise<ChannelMessageAck> {
-    const response = await this.send({
+    const response = await this.sendEvent({
       channel_message_update: {
         clan_id: clan_id,
         channel_id: channel_id,
@@ -574,7 +628,13 @@ export class DefaultSocket implements Socket {
         is_update_msg_topic: is_update_msg_topic,
       },
     });
-    return response.channel_message_ack;
+    return (
+      response.channel_message_ack ??
+      this.toChannelMessageAck(
+        rtproto.ChannelMessageAck.fromPartial({ message_id, channel_id }),
+        mode,
+      )
+    );
   }
 
   private stringifyMessageContent(content: unknown): string {
@@ -584,28 +644,45 @@ export class DefaultSocket implements Socket {
     return JSON.stringify(content ?? {});
   }
 
-  private async sendApiRequest(
-    apiName: string,
-    body: Uint8Array,
-  ): Promise<Uint8Array> {
-    const apiIndex = getApiFromPath(apiName);
-    if (apiIndex === undefined) {
-      throw new Error(`Unknown API: ${apiName}`);
-    }
+  async sendChannelMessage(
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymous_message?: boolean,
+    mention_everyone?: boolean,
+    avatar?: string,
+    code?: number,
+    topic_id?: string,
+  ): Promise<ChannelMessageAck> {
+    const encodedBody = rtproto.ChannelMessageSend.encode(
+      rtproto.ChannelMessageSend.fromPartial({
+        clan_id,
+        channel_id,
+        mode,
+        is_public,
+        content: this.stringifyMessageContent(content),
+        mentions,
+        attachments,
+        references,
+        anonymous_message,
+        mention_everyone,
+        avatar,
+        code,
+        topic_id,
+      }),
+    ).finish();
 
-    const response = await this.send({
-      api_request_event: {
-        api_index: apiIndex,
-        api_name: apiName,
-        body,
-      },
-    } as any);
-
-    if (response.code != 0) {
-      throw response;
-    }
-
-    return response.message;
+    const responseBody = await this.sendMezonApi(
+      "/mezon.api.Mezon/SendChannelMessage",
+      encodedBody,
+    );
+    const ack = rtproto.ChannelMessageAck.decode(trimAbridgedPadding(responseBody));
+    return this.toChannelMessageAck(ack, mode);
   }
 
   async updateChannelMessage(
@@ -697,7 +774,7 @@ export class DefaultSocket implements Socket {
   }
 
   updateStatus(status?: string): Promise<void> {
-    return this.send({ status_update: { status: status } });
+    return this.sendEvent({ status_update: { status: status } });
   }
 
   async writeEphemeralMessage(
@@ -719,7 +796,7 @@ export class DefaultSocket implements Socket {
   ): Promise<ChannelMessageAck> {
     try {
       const receiverIds = Array.isArray(receiver_id) ? receiver_id : [receiver_id];
-      const response = await this.send({
+      const response = await this.sendEvent({
         ephemeral_message_send: {
           receiver_ids: receiverIds,
           message: {
@@ -762,7 +839,7 @@ export class DefaultSocket implements Socket {
     code?: number,
     topic_id?: string,
   ): Promise<ChannelMessageAck> {
-    const response = await this.send({
+    const response = await this.sendEvent({
       channel_message_send: {
         clan_id: clan_id,
         channel_id: channel_id,
@@ -779,7 +856,7 @@ export class DefaultSocket implements Socket {
         topic_id,
       },
     });
-    return response.channel_message_ack;
+    return this.toChannelMessageAck(response.channel_message_ack, mode);
   }
 
   async writeMessageReaction(
@@ -795,7 +872,7 @@ export class DefaultSocket implements Socket {
     message_sender_id: string,
     action_delete: boolean,
   ): Promise<ApiMessageReaction> {
-    const response = await this.send({
+    const response = await this.sendEvent({
       message_reaction_event: {
         id: id,
         clan_id: clan_id,
@@ -819,7 +896,7 @@ export class DefaultSocket implements Socket {
     mode: number,
     is_public: boolean,
   ): Promise<MessageTypingEvent> {
-    const response = await this.send({
+    const response = await this.sendEvent({
       message_typing_event: { clan_id: clan_id, channel_id: channel_id, mode: mode, is_public: is_public },
     });
     return response.message_typing_event;
@@ -832,7 +909,7 @@ export class DefaultSocket implements Socket {
     message_id: string,
     timestamp_seconds: number,
   ): Promise<LastSeenMessageEvent> {
-    const response = await this.send({
+    const response = await this.sendEvent({
       last_seen_message_event: {
         clan_id: clan_id,
         channel_id: channel_id,
@@ -853,7 +930,7 @@ export class DefaultSocket implements Socket {
     timestamp_seconds: number,
     operation: number,
   ): Promise<LastPinMessageEvent> {
-    const response = await this.send({
+    const response = await this.sendEvent({
       last_pin_message_event: {
         clan_id: clan_id,
         channel_id: channel_id,
@@ -876,7 +953,7 @@ export class DefaultSocket implements Socket {
     participant: string,
     lastScreenshot: string,
   ): Promise<VoiceJoinedEvent> {
-    const response = await this.send({
+    const response = await this.sendEvent({
       voice_joined_event: {
         clan_id: clanId,
         clan_name: clanName,
@@ -896,59 +973,59 @@ export class DefaultSocket implements Socket {
     voiceChannelId: string,
     voiceUserId: string,
   ): Promise<VoiceLeavedEvent> {
-    const response = await this.send({
+    const response = await this.sendEvent({
       voice_leaved_event: { id: id, clan_id: clanId, voice_channel_id: voiceChannelId, voice_user_id: voiceUserId },
     });
     return response.voice_leaved_event;
   }
 
   async writeCustomStatus(clan_id: string, status: string): Promise<CustomStatusEvent> {
-    const response = await this.send({ custom_status_event: { clan_id: clan_id, status: status } });
+    const response = await this.sendEvent({ custom_status_event: { clan_id: clan_id, status: status } });
     return response.custom_status_event;
   }
 
   async checkDuplicateClanName(clan_name: string): Promise<ClanNameExistedEvent> {
-    const response = await this.send({ clan_name_existed_event: { clan_name: clan_name } });
+    const response = await this.sendEvent({ clan_name_existed_event: { clan_name: clan_name } });
     return response.clan_name_existed_event;
   }
 
   async listClanEmojiByClanId(clan_id: string): Promise<EmojiListedEvent> {
-    const response = await this.send({ emojis_listed_event: { clan_id: clan_id } });
+    const response = await this.sendEvent({ emojis_listed_event: { clan_id: clan_id } });
     return response.emojis_listed_event;
   }
 
   async ListChannelByUserId(): Promise<ChannelDescListEvent> {
-    const response = await this.send({ channel_desc_list_event: {} });
+    const response = await this.sendEvent({ channel_desc_list_event: {} });
     return response.channel_desc_list_event;
   }
 
   async hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent> {
-    const response = await this.send({ hashtag_dm_list_event: { user_id: user_id, limit: limit } });
+    const response = await this.sendEvent({ hashtag_dm_list_event: { user_id: user_id, limit: limit } });
     return response.hashtag_dm_list_event;
   }
 
   async listClanStickersByClanId(clan_id: string): Promise<StrickerListedEvent> {
-    const response = await this.send({ sticker_listed_event: { clan_id: clan_id } });
+    const response = await this.sendEvent({ sticker_listed_event: { clan_id: clan_id } });
     return response.sticker_listed_event;
   }
 
   async getNotificationChannelSetting(channel_id: string): Promise<NotificationChannelSettingEvent> {
-    const response = await this.send({ notification_channel_setting_event: { channel_id: channel_id } });
+    const response = await this.sendEvent({ notification_channel_setting_event: { channel_id: channel_id } });
     return response.notification_channel_setting_event;
   }
 
   async getNotificationCategorySetting(category_id: string): Promise<NotificationCategorySettingEvent> {
-    const response = await this.send({ notification_category_setting_event: { category_id: category_id } });
+    const response = await this.sendEvent({ notification_category_setting_event: { category_id: category_id } });
     return response.notification_category_setting_event;
   }
 
   async getNotificationClanSetting(clan_id: string): Promise<NotificationClanSettingEvent> {
-    const response = await this.send({ notification_clan_setting_event: { clan_id: clan_id } });
+    const response = await this.sendEvent({ notification_clan_setting_event: { clan_id: clan_id } });
     return response.notification_clan_setting_event;
   }
 
   async getNotificationReactMessage(channel_id: string): Promise<NotifiReactMessageEvent> {
-    const response = await this.send({ notifi_react_message_event: { channel_id: channel_id } });
+    const response = await this.sendEvent({ notifi_react_message_event: { channel_id: channel_id } });
     return response.notifi_react_message_event;
   }
 
@@ -989,9 +1066,8 @@ export class DefaultSocket implements Socket {
     if (!this.adapter.isOpen()) {
       return;
     }
-
     try {
-      await this.send({ ping: {} }, this._heartbeatTimeoutMs);
+      await this.sendEvent({ ping: {} }, this._heartbeatTimeoutMs);
     } catch {
       if (this.verbose) {
         console.error("Server unreachable from heartbeat222.");
@@ -1010,7 +1086,7 @@ export class DefaultSocket implements Socket {
   }
 
   async sendToken(receiver_id: string, amount: number): Promise<TokenSentEvent> {
-    const response = await this.send({ token_sent_event: { receiver_id: receiver_id, amount: amount } });
+    const response = await this.sendEvent({ token_sent_event: { receiver_id: receiver_id, amount: amount } });
     return response.token_sent_event;
   }
 }

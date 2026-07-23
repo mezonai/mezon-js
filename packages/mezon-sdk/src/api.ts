@@ -21,8 +21,10 @@ import { ChannelMessageAck } from "./interfaces/socket";
 import { buildFetchOptions } from "./utils";
 import { encode } from "js-base64";
 import { RateLimiter } from "./mezon-client/manager/rate-limit_manager";
+import type { MezonTransport } from "./socket";
 import * as tsproto from "./api/api";
 import * as rtproto from "./rtapi/realtime";
+import { trimAbridgedPadding } from "./transport/protobuf_decode";
 
 const DEFAULT_API_QUEUE_DELAY_MS = 1024;
 const GLOBAL_LIMITER = new RateLimiter(DEFAULT_API_QUEUE_DELAY_MS);
@@ -35,11 +37,64 @@ export { DEFAULT_API_QUEUE_DELAY_MS };
 
 type ProtoDecoder<T> = (bytes: Uint8Array) => T;
 export class MezonApi {
+  private transport?: Pick<MezonTransport, "isOpen" | "send">;
+
   constructor(
     readonly apiKey: string,
     readonly basePath: string,
     readonly timeoutMs: number,
   ) {}
+
+  setTransport(transport: Pick<MezonTransport, "isOpen" | "send">) {
+    this.transport = transport;
+  }
+
+  private async invokeMezonApi<T>(
+    urlPath: string,
+    encodedBody: Uint8Array,
+    opts?: {
+      decode?: ProtoDecoder<T>;
+      emptyAs?: T;
+    },
+  ): Promise<T> {
+    if (!this.transport?.isOpen()) {
+      throw new Error("Socket connection has not been established yet.");
+    }
+
+    const fetchOptions = buildFetchOptions("POST", {}, "");
+    fetchOptions.body = encodedBody;
+
+    if (process.env.MEZON_TCP_DEBUG === "1") {
+      console.log("[mezon-tcp] invokeMezonApi", { urlPath, bodyBytes: encodedBody.byteLength });
+    }
+
+    const response = await this.transport.send(
+      { urlPath, fetchOptions },
+      this.timeoutMs,
+    );
+
+    if (process.env.MEZON_TCP_DEBUG === "1") {
+      const message = response.message;
+      console.log("[mezon-tcp] invokeMezonApi response", {
+        urlPath,
+        code: response.code,
+        messageBytes: message?.byteLength ?? message?.length,
+      });
+    }
+
+    if (response.code != 0) {
+      throw response;
+    }
+
+    const body = trimAbridgedPadding(response.message as Uint8Array);
+    if (!body.byteLength) {
+      return (opts?.emptyAs ?? ({} as T));
+    }
+    if (opts?.decode) {
+      return opts.decode(body);
+    }
+    return body as unknown as T;
+  }
 
   private rateLimitFetch(
     fullUrl: string,
@@ -149,23 +204,16 @@ export class MezonApi {
       );
     }
 
+    void bearerToken;
+    void options;
+
     const urlPath = "/mezon.api.Mezon/CreateChannelDesc";
-    const queryParams = new Map<string, any>();
 
     const encodedBody = tsproto.CreateChannelDescRequest.encode(
       tsproto.CreateChannelDescRequest.fromPartial(body),
     ).finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    const res = await this.rateLimitFetch(fullUrl, fetchOptions);
-    return this.handleResponse<ApiChannelDescription>(res, {
+    return this.invokeMezonApi(urlPath, encodedBody, {
       emptyAs: {} as ApiChannelDescription,
       decode: (bytes) =>
         tsproto.ChannelDescription.decode(bytes) as ApiChannelDescription,
@@ -180,23 +228,16 @@ export class MezonApi {
     cursor?: string,
     options: any = {},
   ): Promise<ApiClanDescList> {
+    void bearerToken;
+    void options;
+
     const urlPath = "/mezon.api.Mezon/ListClanDescs";
-    const queryParams = new Map<string, any>();
 
     const encodedBody = tsproto.ListClanDescRequest.encode(
       tsproto.ListClanDescRequest.fromPartial({ limit, state, cursor }),
     ).finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    const res = await this.rateLimitFetch(fullUrl, fetchOptions);
-    return this.handleResponse<ApiClanDescList>(res, {
+    return this.invokeMezonApi(urlPath, encodedBody, {
       emptyAs: {} as ApiClanDescList,
       decode: (bytes) => tsproto.ClanDescList.decode(bytes) as ApiClanDescList,
     });
@@ -214,23 +255,16 @@ export class MezonApi {
       );
     }
 
+    void bearerToken;
+    void options;
+
     const urlPath = "/mezon.api.Mezon/ListChannelDetail";
-    const queryParams = new Map<string, any>();
 
     const encodedBody = tsproto.ListChannelDetailRequest.encode(
       tsproto.ListChannelDetailRequest.fromPartial({ channel_id: channelId }),
     ).finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    const res = await this.rateLimitFetch(fullUrl, fetchOptions);
-    return this.handleResponse<ApiChannelDescription>(res, {
+    return this.invokeMezonApi(urlPath, encodedBody, {
       emptyAs: {} as ApiChannelDescription,
       decode: (bytes) =>
         tsproto.ChannelDescription.decode(bytes) as ApiChannelDescription,
@@ -272,8 +306,10 @@ export class MezonApi {
     isMobile?: boolean,
     options: any = {},
   ): Promise<ApiChannelDescList> {
+    void bearerToken;
+    void options;
+
     const urlPath = "/mezon.api.Mezon/ListChannelDescs";
-    const queryParams = new Map<string, any>();
 
     const encodedBody = tsproto.ListChannelDescsRequest.encode(
       tsproto.ListChannelDescsRequest.fromPartial({
@@ -286,16 +322,7 @@ export class MezonApi {
       }),
     ).finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    const res = await this.rateLimitFetch(fullUrl, fetchOptions);
-    return this.handleResponse<ApiChannelDescList>(res, {
+    return this.invokeMezonApi(urlPath, encodedBody, {
       emptyAs: {} as ApiChannelDescList,
       decode: (bytes) =>
         tsproto.ChannelDescList.decode(bytes) as ApiChannelDescList,
@@ -309,8 +336,10 @@ export class MezonApi {
     limit?: number,
     options = {}
   ): Promise<ApiVoiceChannelUserList> {
+    void bearerToken;
+    void options;
+
     const urlPath = "/mezon.api.Mezon/ListChannelVoiceUsers";
-    const queryParams = new Map<string, any>();
 
     const encodedBody = tsproto.ListChannelUsersRequest.encode(
       tsproto.ListChannelUsersRequest.fromPartial({
@@ -319,16 +348,7 @@ export class MezonApi {
       }),
     ).finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    const res = await this.rateLimitFetch(fullUrl, fetchOptions);
-    return this.handleResponse<ApiVoiceChannelUserList>(res, {
+    return this.invokeMezonApi(urlPath, encodedBody, {
       emptyAs: {} as ApiVoiceChannelUserList,
       decode: (bytes) =>
         tsproto.VoiceChannelUserList.decode(bytes) as ApiVoiceChannelUserList,
@@ -353,23 +373,16 @@ export class MezonApi {
       );
     }
 
+    void bearerToken;
+    void options;
+
     const urlPath = "/mezon.api.Mezon/UpdateRole";
-    const queryParams = new Map<string, any>();
 
     const encodedBody = tsproto.UpdateRoleRequest.encode(
       tsproto.UpdateRoleRequest.fromPartial({ ...body, role_id: roleId }),
     ).finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    const res = await this.rateLimitFetch(fullUrl, fetchOptions);
-    return this.handleResponse<any>(res, { emptyAs: {} as any });
+    return this.invokeMezonApi(urlPath, encodedBody, { emptyAs: {} as any });
   }
 
   /** ListRoles */
@@ -381,8 +394,10 @@ export class MezonApi {
     cursor?: string,
     options: any = {},
   ): Promise<ApiRoleListEventResponse> {
+    void bearerToken;
+    void options;
+
     const urlPath = "/mezon.api.Mezon/ListRoles";
-    const queryParams = new Map<string, any>();
 
     const encodedBody = tsproto.RoleListEventRequest.encode(
       tsproto.RoleListEventRequest.fromPartial({
@@ -393,16 +408,7 @@ export class MezonApi {
       }),
     ).finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    const res = await this.rateLimitFetch(fullUrl, fetchOptions);
-    return this.handleResponse<ApiRoleListEventResponse>(res, {
+    return this.invokeMezonApi(urlPath, encodedBody, {
       emptyAs: {} as ApiRoleListEventResponse,
       decode: (bytes) =>
         tsproto.RoleListEventResponse.decode(bytes) as ApiRoleListEventResponse,
@@ -421,23 +427,16 @@ export class MezonApi {
       );
     }
 
+    void bearerToken;
+    void options;
+
     const urlPath = "/mezon.api.Mezon/AddQuickMenuAccess";
-    const queryParams = new Map<string, any>();
 
     const encodedBody = tsproto.QuickMenuAccess.encode(
       tsproto.QuickMenuAccess.fromPartial(body),
     ).finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    const res = await this.rateLimitFetch(fullUrl, fetchOptions);
-    return this.handleResponse<any>(res, { emptyAs: {} as any });
+    return this.invokeMezonApi(urlPath, encodedBody, { emptyAs: {} as any });
   }
 
   /** DeleteQuickMenuAccess */
@@ -451,8 +450,10 @@ export class MezonApi {
     actionMsg?: string,
     options: any = {},
   ): Promise<any> {
+    void bearerToken;
+    void options;
+
     const urlPath = "/mezon.api.Mezon/DeleteQuickMenuAccess";
-    const queryParams = new Map<string, any>();
 
     const encodedBody = tsproto.QuickMenuAccess.encode(
       tsproto.QuickMenuAccess.fromPartial({
@@ -465,16 +466,7 @@ export class MezonApi {
       }),
     ).finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    const res = await this.rateLimitFetch(fullUrl, fetchOptions);
-    return this.handleResponse<any>(res, { emptyAs: {} as any });
+    return this.invokeMezonApi(urlPath, encodedBody, { emptyAs: {} as any });
   }
 
   /** ListQuickMenuAccess */
@@ -485,8 +477,10 @@ export class MezonApi {
     menuType?: number,
     options: any = {},
   ): Promise<ApiQuickMenuAccessList> {
+    void bearerToken;
+    void options;
+
     const urlPath = "/mezon.api.Mezon/ListQuickMenuAccess";
-    const queryParams = new Map<string, any>();
 
     const encodedBody = tsproto.ListQuickMenuAccessRequest.encode(
       tsproto.ListQuickMenuAccessRequest.fromPartial({
@@ -496,16 +490,7 @@ export class MezonApi {
       }),
     ).finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    const res = await this.rateLimitFetch(fullUrl, fetchOptions);
-    return this.handleResponse<ApiQuickMenuAccessList>(res, {
+    return this.invokeMezonApi(urlPath, encodedBody, {
       emptyAs: {} as ApiQuickMenuAccessList,
       decode: (bytes) =>
         tsproto.QuickMenuAccessList.decode(bytes) as ApiQuickMenuAccessList,
@@ -553,8 +538,10 @@ export class MezonApi {
     topicId?: string,
     options: any = {},
   ): Promise<ChannelMessageAck & rtproto.ChannelMessageAck> {
+    void bearerToken;
+    void options;
+
     const urlPath = "/mezon.api.Mezon/SendChannelMessage";
-    const queryParams = new Map<string, any>();
 
     const encodedBody = rtproto.ChannelMessageSend.encode(
       rtproto.ChannelMessageSend.fromPartial({
@@ -574,16 +561,7 @@ export class MezonApi {
       }),
     ).finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    const res = await this.rateLimitFetch(fullUrl, fetchOptions);
-    const ack = await this.handleResponse<rtproto.ChannelMessageAck>(res, {
+    const ack = await this.invokeMezonApi(urlPath, encodedBody, {
       emptyAs: {} as rtproto.ChannelMessageAck,
       decode: (bytes) => rtproto.ChannelMessageAck.decode(bytes),
     });
@@ -611,8 +589,10 @@ export class MezonApi {
     isUpdateMsgTopic?: boolean,
     options: any = {},
   ): Promise<ChannelMessageAck & rtproto.ChannelMessageUpdate> {
+    void bearerToken;
+    void options;
+
     const urlPath = "/mezon.api.Mezon/UpdateChannelMessage";
-    const queryParams = new Map<string, any>();
 
     const encodedBody = rtproto.ChannelMessageUpdate.encode(
       rtproto.ChannelMessageUpdate.fromPartial({
@@ -631,16 +611,7 @@ export class MezonApi {
       }),
     ).finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    const res = await this.rateLimitFetch(fullUrl, fetchOptions);
-    const updated = await this.handleResponse<rtproto.ChannelMessageUpdate>(res, {
+    const updated = await this.invokeMezonApi(urlPath, encodedBody, {
       emptyAs: {} as rtproto.ChannelMessageUpdate,
       decode: (bytes) => rtproto.ChannelMessageUpdate.decode(bytes),
     });
@@ -672,8 +643,10 @@ export class MezonApi {
     references?: Uint8Array,
     options: any = {},
   ): Promise<ChannelMessageAck & rtproto.ChannelMessageRemove> {
+    void bearerToken;
+    void options;
+
     const urlPath = "/mezon.api.Mezon/DeleteChannelMessage";
-    const queryParams = new Map<string, any>();
 
     const encodedBody = rtproto.ChannelMessageRemove.encode(
       rtproto.ChannelMessageRemove.fromPartial({
@@ -689,16 +662,7 @@ export class MezonApi {
       }),
     ).finish();
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, "");
-    fetchOptions.body = encodedBody;
-
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    const res = await this.rateLimitFetch(fullUrl, fetchOptions);
-    const removed = await this.handleResponse<rtproto.ChannelMessageRemove>(res, {
+    const removed = await this.invokeMezonApi(urlPath, encodedBody, {
       emptyAs: {} as rtproto.ChannelMessageRemove,
       decode: (bytes) => rtproto.ChannelMessageRemove.decode(bytes),
     });

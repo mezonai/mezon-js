@@ -5,10 +5,8 @@ import {
   MezonApi,
 } from "../../api";
 import { ChannelStreamMode, ChannelType, Events } from "../../constants";
-import { DefaultSocket } from "../../socket";
-import { WebSocketAdapter } from "../../web_socket_adapter";
-import { WebSocketAdapterPb } from "../../web_socket_adapter_pb";
-import { Socket } from "../../interfaces/socket";
+import { MezonTransport } from "../../socket";
+import { MezonNetworkAdapter } from "../../transport/abridged_tcp_adapter";
 import { Session } from "../../session";
 import { Clan } from "../structures/Clan";
 import {
@@ -22,45 +20,38 @@ import {
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 import { MessageDatabase } from "../../sqlite/MessageDatabase";
 import { MezonClientCore } from "../client/MezonClientCore";
-import { formatErrorMessage, sleep } from "../../utils/helper";
+import { formatErrorMessage, parseTcpUrl, sleep } from "../../utils/helper";
 
 export class SocketManager {
   [key: string]: any;
-  private socket: Socket;
+  private socket: MezonTransport;
   private isHardDisconnect: boolean | undefined;
   private isRetrying = false;
   private eventsBound = false;
   constructor(
-    private host: string,
-    private port: string,
-    private useSSL: boolean,
-    private adapter: WebSocketAdapter,
     private apiClient: MezonApi,
     private messageQueue: AsyncThrottleQueue,
     private client: MezonClientCore,
     private messageDB: MessageDatabase,
-    private ws_url: string = "",
+    private tcp_url: string = "",
   ) {
-    this.socket = new DefaultSocket(
-      this.ws_url,
-      this.host,
-      this.port,
-      this.useSSL,
-      false,
-      this.adapter,
-    );
+    this.socket = this.createTransport();
+    this.apiClient.setTransport(this.socket);
+  }
+
+  private createTransport() {
+    const { host, port } = parseTcpUrl(this.tcp_url);
+    if (!host) {
+      throw new Error(
+        `Invalid tcp_url "${this.tcp_url}": missing host. Expected "host:port" or hostname.`,
+      );
+    }
+    return new MezonTransport(host, port, false, new MezonNetworkAdapter());
   }
 
   createSocket() {
-    this.adapter = new WebSocketAdapterPb();
-    this.socket = new DefaultSocket(
-      this.ws_url,
-      this.host,
-      this.port,
-      this.useSSL,
-      false,
-      this.adapter,
-    );
+    this.socket = this.createTransport();
+    this.apiClient.setTransport(this.socket);
     this.eventsBound = false;
   }
 
@@ -155,7 +146,6 @@ export class SocketManager {
   private async fetchClanList(sessionToken: string): Promise<ApiClanDesc[]> {
     const clans = await this.apiClient.listClanDescs(sessionToken);
     const clanList = [...(clans?.clandesc ?? [])];
-    clanList.unshift({ clan_id: "0", clan_name: "" });
     return clanList;
   }
 
@@ -359,7 +349,7 @@ export class SocketManager {
         `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 4000 characters. Current length: ${currentContentLength}!`,
       );
 
-    return this.socket.updateChannelMessage(
+    return this.socket.updateChatMessage(
       dataUpdateMessage.clan_id,
       dataUpdateMessage.channel_id,
       dataUpdateMessage.mode,
@@ -370,7 +360,7 @@ export class SocketManager {
       dataUpdateMessage?.attachments ?? [],
       dataUpdateMessage?.create_time_seconds,
       dataUpdateMessage?.hideEditted ?? false,
-      dataUpdateMessage?.topic_id,
+      dataUpdateMessage.topic_id,
       dataUpdateMessage?.is_update_msg_topic,
     );
   }

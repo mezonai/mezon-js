@@ -8,7 +8,6 @@ import { SocketManager } from "../manager/socket_manager";
 import { SessionManager } from "../manager/session_manager";
 import { EventManager } from "../manager/event_manager";
 import { EventSourceManager } from "../manager/sse_manager";
-import { WebSocketAdapterPb } from "../../web_socket_adapter_pb";
 import {
   AIAgentSessionStartedEvent,
   AIAgentSessionEndedEvent,
@@ -136,15 +135,11 @@ export class MezonClientCore extends EventEmitter {
     this.apiClient = new MezonApi(this.token, basePath, this.timeout);
     this.sessionManager = new SessionManager(this.apiClient, sessionApi);
     this.socketManager = new SocketManager(
-      this.host,
-      this.port,
-      this.useSSL,
-      new WebSocketAdapterPb(),
       this.apiClient,
       this.messageQueue,
       this,
       this.messageDB,
-      sessionApi?.ws_url,
+      sessionApi?.tcp_url ?? sessionApi?.ws_url ?? "",
     );
     this.channelManager = new ChannelManager(this.apiClient, this.socketManager, this.sessionManager);
     if (this.mmnApiUrl) {
@@ -215,6 +210,7 @@ export class MezonClientCore extends EventEmitter {
         let sessionApi = null;
         try {
           sessionApi = await tempSessionManager.authenticate(this.clientId, this.token);
+          console.log('sessionApi, sessionApi', sessionApi)
         } catch (error) {
           this.socketManager?.closeSocket();
           this._disconnectMezonAgentSSE();
@@ -271,15 +267,18 @@ export class MezonClientCore extends EventEmitter {
   }
 
   async handleReconnectSocket() {
-    if (!this.sessionManager || !this.socketManager || !this.channelManager) {
-      this.initManager(this.loginBasePath!, undefined);
+    const session = this.sessionManager?.getSession();
+    if (!this.sessionManager || !this.channelManager) {
+      this.initManager(this.loginBasePath!, session ?? undefined);
+    } else if (!this.socketManager) {
+      this.initManager(this.loginBasePath!, session ?? undefined);
     }
 
-    const session = this.sessionManager.getSession();
-    if (!session) {
+    const activeSession = this.sessionManager.getSession();
+    if (!activeSession) {
       return this.login();
     }
-    const sessionConnected = await this.socketManager.connect(session);
+    const sessionConnected = await this.socketManager.connect(activeSession);
     const token = sessionConnected?.token;
     if (!token) {
       throw new Error("Missing session token after connect.");
@@ -287,7 +286,7 @@ export class MezonClientCore extends EventEmitter {
     await this.socketManager.connectSocket(token);
     await this.channelManager.initAllDmChannels(token);
     this._initDmChannelCache();
-    return JSON.stringify(session ?? {});
+    return JSON.stringify(activeSession ?? {});
   }
 
   async getEphemeralKeyPair() {

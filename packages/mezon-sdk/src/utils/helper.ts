@@ -43,6 +43,44 @@ export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+export function parseTcpUrl(
+  tcpUrl: string,
+  defaultPort = "443",
+): { host: string; port: string } {
+  const raw = tcpUrl.trim();
+  if (!raw) {
+    return { host: "", port: "" };
+  }
+
+  if (raw.includes("://")) {
+    const url = new URL(raw);
+    const port =
+      url.port ||
+      (url.protocol === "http:" || url.protocol === "ws:"
+        ? "80"
+        : defaultPort);
+    return {
+      host: url.hostname,
+      port,
+    };
+  }
+
+  const withoutPath = raw.split("/")[0];
+  const colonIndex = withoutPath.lastIndexOf(":");
+
+  if (colonIndex === -1) {
+    return { host: withoutPath, port: defaultPort };
+  }
+
+  const host = withoutPath.slice(0, colonIndex);
+  const port = withoutPath.slice(colonIndex + 1);
+
+  return {
+    host,
+    port: port || defaultPort,
+  };
+}
+
 export function parseUrlToHostAndSSL(urlStr: string): {
   host: string;
   port: string;
