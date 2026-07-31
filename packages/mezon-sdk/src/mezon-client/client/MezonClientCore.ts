@@ -210,7 +210,6 @@ export class MezonClientCore extends EventEmitter {
         let sessionApi = null;
         try {
           sessionApi = await tempSessionManager.authenticate(this.clientId, this.token);
-          console.log('sessionApi, sessionApi', sessionApi)
         } catch (error) {
           this.socketManager?.closeSocket();
           this._disconnectMezonAgentSSE();

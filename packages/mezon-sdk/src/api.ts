@@ -64,23 +64,10 @@ export class MezonApi {
     const fetchOptions = buildFetchOptions("POST", {}, "");
     fetchOptions.body = encodedBody;
 
-    if (process.env.MEZON_TCP_DEBUG === "1") {
-      console.log("[mezon-tcp] invokeMezonApi", { urlPath, bodyBytes: encodedBody.byteLength });
-    }
-
     const response = await this.transport.send(
       { urlPath, fetchOptions },
       this.timeoutMs,
     );
-
-    if (process.env.MEZON_TCP_DEBUG === "1") {
-      const message = response.message;
-      console.log("[mezon-tcp] invokeMezonApi response", {
-        urlPath,
-        code: response.code,
-        messageBytes: message?.byteLength ?? message?.length,
-      });
-    }
 
     if (response.code != 0) {
       throw response;

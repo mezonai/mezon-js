@@ -16,7 +16,6 @@ export class SessionManager {
           token: apiKey,
         },
       });
-      console.log('apiSession', apiSession)
       this.session = new Session(apiSession);
       return this.session;
     } catch (error) {

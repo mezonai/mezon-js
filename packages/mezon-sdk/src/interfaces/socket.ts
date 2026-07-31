@@ -923,7 +923,7 @@ export interface Socket {
   disconnect(fireDisconnectEvent: boolean): void;
 
   /** Join clan chat */
-  joinClanChat(clan_id: string): Promise<ClanJoin>;
+  joinClanChat(clan_id: string, is_last_field: boolean): Promise<ClanJoin>;
 
   /** Join a chat channel on the server. */
   joinChat(

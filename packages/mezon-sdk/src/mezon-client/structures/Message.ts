@@ -134,7 +134,7 @@ export class Message {
         anonymous_message,
         mention_everyone,
         code,
-        topic_id: topic_id || this.topic_id,
+        topic_id: this.topic_id || topic_id,
       };
 
       const ack = await this.socketManager.writeChatMessage(dataReply);
@@ -148,6 +148,14 @@ export class Message {
     attachments?: Array<ApiMessageAttachment>,
   ) {
     return await this.messageQueue.enqueue(async () => {
+      const cached = this.channel.messages.get(this.id);
+      if (cached?.create_time_seconds != null) {
+        this.create_time_seconds = cached.create_time_seconds;
+      }
+      if (cached?.update_time_seconds != null) {
+        this.update_time_seconds = cached.update_time_seconds;
+      }
+
       const dataUpdate: UpdateMessageData = {
         clan_id: this.channel.clan.id,
         channel_id: this.channel.id!,
@@ -158,13 +166,26 @@ export class Message {
         content,
         mentions,
         attachments,
-        create_time_seconds: this.create_time_seconds
-          ? Number(this.create_time_seconds)
-          : undefined,
+        create_time_seconds:
+          this.create_time_seconds != null
+            ? Number(this.create_time_seconds)
+            : undefined,
         topic_id: this.topic_id || "0",
         is_update_msg_topic: !!this.topic_id,
       };
-      await this.socketManager.updateChatMessage(dataUpdate);
+      const ack = await this.socketManager.updateChatMessage(dataUpdate);
+      const createTimeSeconds = ack.create_time
+        ? Number(ack.create_time)
+        : undefined;
+      const updateTimeSeconds = ack.update_time
+        ? Number(ack.update_time)
+        : undefined;
+      if (createTimeSeconds != null && !Number.isNaN(createTimeSeconds)) {
+        this.create_time_seconds = createTimeSeconds;
+      }
+      if (updateTimeSeconds != null && !Number.isNaN(updateTimeSeconds)) {
+        this.update_time_seconds = updateTimeSeconds;
+      }
       this.content = content;
       if (mentions) this.mentions = mentions;
       if (attachments) this.attachments = attachments;

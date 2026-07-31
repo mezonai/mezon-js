@@ -20,7 +20,11 @@ import {
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 import { MessageDatabase } from "../../sqlite/MessageDatabase";
 import { MezonClientCore } from "../client/MezonClientCore";
-import { formatErrorMessage, parseTcpUrl, sleep } from "../../utils/helper";
+import {
+  formatErrorMessage,
+  parseTcpUrl,
+  sleep,
+} from "../../utils/helper";
 
 export class SocketManager {
   [key: string]: any;
@@ -82,11 +86,11 @@ export class SocketManager {
   }
 
   onheartbeattimeout() {
-    console.log("Heartbeat timeout.");
+    console.log("[mezon-sdk] Heartbeat timeout.");
   }
 
   ondisconnect(e: CloseEvent) {
-    console.log("Disconnected!", e?.reason);
+    console.log("[mezon-sdk] Disconnected!", e?.reason);
     if (this.isHardDisconnect) return;
     this.retriesConnect();
   }
@@ -119,12 +123,12 @@ export class SocketManager {
       clanList = await this.fetchClanList(sessionToken);
     } catch (error) {
       throw new Error(
-        `listClanDescs failed: ${formatErrorMessage(error)}`,
+        `[mezon-sdk] listClanDescs failed: ${formatErrorMessage(error)}`,
       );
     }
     await sleep(1000);
     this.ensureClanObjects(clanList, sessionToken);
-    console.log("[mezon-sdk] waiting for initing data channel clans...");
+    console.log("[mezon-sdk] Waiting for initing data channel clans...");
     const failedClanInits: ApiClanDesc[] = [];
     for (const clan of clanList) {
       const success = await this.initClanChannelsAndJoin(clan);
@@ -146,6 +150,7 @@ export class SocketManager {
   private async fetchClanList(sessionToken: string): Promise<ApiClanDesc[]> {
     const clans = await this.apiClient.listClanDescs(sessionToken);
     const clanList = [...(clans?.clandesc ?? [])];
+    clanList.unshift({ clan_id: "0", clan_name: "" });
     return clanList;
   }
 
@@ -185,7 +190,7 @@ export class SocketManager {
 
     try {
       if (clan.clan_id === "0") {
-        await this.socket.joinClanChat(clan.clan_id);
+        await this.socket.joinClanChat(clan.clan_id, true);
         return true;
       }
 
@@ -194,7 +199,12 @@ export class SocketManager {
 
       await clanObj.reloadChannels();
       await sleep(50);
-      await this.socket.joinClanChat(clan.clan_id);
+      try {
+        await this.socket.joinClanChat(clan.clan_id);
+      } catch (error) {
+        console.log("[mezon-sdk] joinClanChat failed!", error);
+        return false;
+      }
       return true;
     } catch (error) {
       return false;
@@ -205,7 +215,7 @@ export class SocketManager {
     let retryInterval = 5000;
     const maxRetryInterval = 60000;
 
-    console.log("Reconnecting...");
+    console.log("[mezon-sdk] Reconnecting...");
 
     const retry = async () => {
       if (this.isRetrying || this.isHardDisconnect) return;
@@ -216,12 +226,12 @@ export class SocketManager {
 
         this.isRetrying = false;
         retryInterval = 5000;
-        console.log("Connected successfully!");
+        console.log("[mezon-sdk] Connected successfully!");
       } catch (e) {
-        console.log("Connection failed!", e);
+        console.log("[mezon-sdk] Connection failed!", e);
         this.isRetrying = false;
         retryInterval = Math.min(retryInterval * 2, maxRetryInterval);
-        console.log(`Retrying in ${retryInterval / 1000} seconds...`);
+        console.log(`[mezon-sdk] Retrying in ${retryInterval / 1000} seconds...`);
 
         setTimeout(retry, retryInterval);
       }
@@ -349,7 +359,7 @@ export class SocketManager {
         `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 4000 characters. Current length: ${currentContentLength}!`,
       );
 
-    return this.socket.updateChatMessage(
+    return this.socket.updateChannelMessage(
       dataUpdateMessage.clan_id,
       dataUpdateMessage.channel_id,
       dataUpdateMessage.mode,

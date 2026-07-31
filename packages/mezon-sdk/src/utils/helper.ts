@@ -161,16 +161,16 @@ export async function waitFor2nTimeout<T>(
       }
 
       const result = await action();
-      console.log("Action successful!");
+      console.log("[mezon-sdk] Action successful!");
       return result;
     } catch (error: any) {
       if (attempt >= maxAttempts) {
-        console.error("Max attempts reached.");
+        console.error("[mezon-sdk] Max attempts reached.");
         throw error;
       }
 
       console.warn(
-        `Attempt ${attempt} failed at ${new Date().toLocaleString()}: ${formatErrorMessage(error)}\nAttempt ${attempt + 1} is running...`,
+        `[mezon-sdk] Attempt ${attempt} failed at ${new Date().toLocaleString()}: ${formatErrorMessage(error)}\nAttempt ${attempt + 1} is running...`,
       );
 
       delay = Math.min(delay * 2, maxDelay);
@@ -179,4 +179,12 @@ export async function waitFor2nTimeout<T>(
   }
 
   throw new Error("Unreachable");
+}
+
+export function getEnvelopeEventKeys(
+  message: Record<string, unknown>,
+): string[] {
+  return Object.keys(message).filter(
+    (key) => key !== "cid" && message[key] != null && message[key] !== undefined,
+  );
 }

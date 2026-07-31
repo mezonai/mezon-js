@@ -16,7 +16,7 @@
 
 import { CloseEvent, ErrorEvent } from "ws";
 import { MezonNetworkAdapter } from "./transport/abridged_tcp_adapter";
-import { trimAbridgedPadding } from "./transport/protobuf_decode";
+import { trimAbridgedPadding, decodeEnvelopePayload } from "./transport/protobuf_decode";
 import { TransportAdapter } from "./transport/transport_adapter";
 import {
   ApiMessageAttachment,
@@ -116,6 +116,7 @@ export interface ChannelMessage {
 interface PromiseExecutor {
   resolve: (value?: any) => void;
   reject: (reason?: any) => void;
+  awaitingUpdate?: { message_id: string; channel_id: string };
 }
 
 function CreateChannelMessageFromEvent(message: any) {
@@ -123,32 +124,32 @@ function CreateChannelMessageFromEvent(message: any) {
   try {
     content = safeJSONParse(message.channel_message.content);
   } catch (e) {
-    console.log("content is invalid", e);
+    console.log("[mezon-sdk] Content is invalid", e);
   }
   try {
     reactions = decodeReactions(message.channel_message.reactions);
   } catch (e) {
-    console.log("reactions is invalid", e);
+    console.log("[mezon-sdk] Reactions is invalid", e);
   }
   try {
     mentions = decodeMentions(message.channel_message.mentions);
   } catch (e) {
-    console.log("mentions is invalid", e);
+    console.log("[mezon-sdk] Mentions is invalid", e);
   }
   try {
     attachments = decodeAttachments(message.channel_message.attachments);
   } catch (e) {
-    console.log("attachments is invalid", e);
+    console.log("[mezon-sdk] Attachments is invalid", e);
   }
   try {
     references = decodeRefs(message.channel_message.references);
   } catch (e) {
-    console.log("references is invalid", e);
+    console.log("[mezon-sdk] References is invalid", e);
   }
   try {
     referencedMessags = message.channel_message.referenced_message;
   } catch (e) {
-    console.log("referenced messages is invalid", e);
+    console.log("[mezon-sdk] Referenced messages is invalid", e);
   }
   var e: ChannelMessage = {
     id: message.id || message.channel_message.message_id,
@@ -195,7 +196,7 @@ type ConnectionState = (typeof ConnectionState)[keyof typeof ConnectionState];
 export class MezonTransport implements Socket {
   [key: string]: any;
 
-  public static readonly DefaultHeartbeatTimeoutMs = 10000;
+  public static readonly DefaultHeartbeatTimeoutMs = 15000;
   public static readonly DefaultSendTimeoutMs = 10000;
   public static readonly DefaultConnectTimeoutMs = 30000;
 
@@ -236,6 +237,229 @@ export class MezonTransport implements Socket {
     return cid;
   }
 
+  private normalizeInboundMessage(message: unknown): Record<string, unknown> | null {
+    if (
+      message &&
+      typeof message === "object" &&
+      !Buffer.isBuffer(message) &&
+      !(message instanceof Uint8Array)
+    ) {
+      return message as Record<string, unknown>;
+    }
+
+    if (Buffer.isBuffer(message) || message instanceof Uint8Array) {
+      try {
+        return decodeEnvelopePayload(message) as unknown as Record<string, unknown>;
+      } catch {
+        return null;
+      }
+    }
+
+    return null;
+  }
+
+  private getAwaitingUpdateMeta(untypedMessage: any): PromiseExecutor["awaitingUpdate"] {
+    if (untypedMessage.channel_message_update) {
+      return {
+        message_id: String(untypedMessage.channel_message_update.message_id ?? ""),
+        channel_id: String(untypedMessage.channel_message_update.channel_id ?? ""),
+      };
+    }
+
+    const apiEvent = untypedMessage.api_request_event;
+    if (apiEvent?.api_name === "UpdateChannelMessage" && apiEvent.body) {
+      try {
+        const body =
+          apiEvent.body instanceof Uint8Array
+            ? apiEvent.body
+            : Uint8Array.from(apiEvent.body);
+        const update = rtproto.ChannelMessageUpdate.decode(body);
+        if (update.message_id) {
+          return {
+            message_id: String(update.message_id),
+            channel_id: String(update.channel_id ?? ""),
+          };
+        }
+      } catch {
+        // ignore malformed update body
+      }
+    }
+
+    return undefined;
+  }
+
+  private ackFromUpdateResponse(
+    responseMessage: unknown,
+    channel_id: string,
+    message_id: string,
+    mode: number,
+  ): ChannelMessageAck {
+    if (Buffer.isBuffer(responseMessage) || responseMessage instanceof Uint8Array) {
+      const updated = rtproto.ChannelMessageUpdate.decode(
+        trimAbridgedPadding(responseMessage),
+      );
+      return this.toChannelMessageAck(
+        rtproto.ChannelMessageAck.fromPartial({
+          channel_id: channel_id || updated.channel_id,
+          message_id: message_id || updated.message_id,
+          create_time_seconds: updated.create_time_seconds,
+          code: 1,
+        }),
+        mode,
+      );
+    }
+
+    const envelope = responseMessage as rtproto.Envelope | undefined;
+    if (envelope?.channel_message_ack) {
+      return this.toChannelMessageAck(envelope.channel_message_ack, mode);
+    }
+
+    const pushed = envelope?.channel_message;
+    if (pushed) {
+      return this.toChannelMessageAck(
+        rtproto.ChannelMessageAck.fromPartial({
+          channel_id: pushed.channel_id || channel_id,
+          message_id: pushed.message_id || message_id,
+          create_time_seconds: pushed.create_time_seconds,
+          update_time_seconds: pushed.update_time_seconds,
+          code: pushed.code ?? 1,
+        }),
+        mode,
+      );
+    }
+
+    return this.toChannelMessageAck(
+      rtproto.ChannelMessageAck.fromPartial({ message_id, channel_id, code: 1 }),
+      mode,
+    );
+  }
+
+  private normalizeAwaitingId(id: string | number | undefined | null): string | undefined {
+    if (id == null) {
+      return undefined;
+    }
+    const normalized = String(id);
+    if (normalized === "" || normalized === "0") {
+      return undefined;
+    }
+    return normalized;
+  }
+
+  private collectPendingUpdates(): Array<{ cid: number; executor: PromiseExecutor }> {
+    const pendingUpdates: Array<{ cid: number; executor: PromiseExecutor }> = [];
+    for (const cidKey of Object.keys(this.cIds)) {
+      const cid = Number(cidKey);
+      const executor = this.cIds[cid];
+      if (executor?.awaitingUpdate) {
+        pendingUpdates.push({ cid, executor });
+      }
+    }
+    return pendingUpdates;
+  }
+
+  private tryResolvePendingUpdateForMessageId(
+    pushMessageId: string,
+    pushChannelId: string | undefined,
+    message: Record<string, unknown>,
+  ): boolean {
+    const pendingUpdates = this.collectPendingUpdates();
+    if (pendingUpdates.length === 0) {
+      return false;
+    }
+
+    const normalizedPushMessageId = this.normalizeAwaitingId(pushMessageId);
+    if (!normalizedPushMessageId) {
+      return false;
+    }
+
+    const normalizedPushChannelId = this.normalizeAwaitingId(pushChannelId);
+
+    for (const { cid, executor } of pendingUpdates) {
+      const { message_id, channel_id } = executor.awaitingUpdate!;
+      const normalizedPendingMessageId = this.normalizeAwaitingId(message_id);
+      if (normalizedPendingMessageId !== normalizedPushMessageId) {
+        continue;
+      }
+
+      const normalizedPendingChannelId = this.normalizeAwaitingId(channel_id);
+      if (
+        normalizedPendingChannelId != null &&
+        normalizedPushChannelId != null &&
+        normalizedPendingChannelId !== normalizedPushChannelId
+      ) {
+        continue;
+      }
+
+      delete this.cIds[cid];
+      executor.resolve({ code: 0, message });
+      return true;
+    }
+
+    if (pendingUpdates.length === 1) {
+      const { cid, executor } = pendingUpdates[0];
+      const normalizedPendingMessageId = this.normalizeAwaitingId(
+        executor.awaitingUpdate!.message_id,
+      );
+      if (normalizedPendingMessageId === normalizedPushMessageId) {
+        delete this.cIds[cid];
+        executor.resolve({ code: 0, message });
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private extractChannelMessageId(
+    channelMessage: Record<string, unknown> | undefined,
+  ): string | undefined {
+    if (!channelMessage) {
+      return undefined;
+    }
+    return this.normalizeAwaitingId(
+      (channelMessage.message_id as string | number | undefined) ??
+        (channelMessage.id as string | number | undefined),
+    );
+  }
+
+  private tryResolvePendingUpdate(message: Record<string, unknown>): boolean {
+    type UpdateMatchFields = Record<string, unknown>;
+
+    const channelMessage = message.channel_message as UpdateMatchFields | undefined;
+    const channelMessageId = this.extractChannelMessageId(channelMessage);
+    if (channelMessageId) {
+      const pushChannelId =
+        channelMessage?.channel_id != null ? String(channelMessage.channel_id) : undefined;
+      if (
+        this.tryResolvePendingUpdateForMessageId(
+          channelMessageId,
+          pushChannelId,
+          message,
+        )
+      ) {
+        return true;
+      }
+    }
+
+    const channelMessageAck = message.channel_message_ack as UpdateMatchFields | undefined;
+    const ackMessageId = this.normalizeAwaitingId(
+      channelMessageAck?.message_id as string | number | undefined,
+    );
+    if (ackMessageId) {
+      const ackChannelId =
+        channelMessageAck?.channel_id != null
+          ? String(channelMessageAck.channel_id)
+          : undefined;
+      if (
+        this.tryResolvePendingUpdateForMessageId(ackMessageId, ackChannelId, message)
+      ) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   private dispatchInboundEvents(message: Record<string, unknown>): void {
     for (const event in InternalEventsSocket) {
       const fieldName = InternalEventsSocket[event as keyof typeof InternalEventsSocket];
@@ -258,9 +482,7 @@ export class MezonTransport implements Socket {
   }
 
   close() {
-    this._connectionState = ConnectionState.DISCONNECTED;
-    this.stopHeartbeatLoop();
-    this.clearConnectTimeout();
+    this.markDisconnected(<CloseEvent>{}, false);
     this.adapter.close();
   }
 
@@ -288,14 +510,12 @@ export class MezonTransport implements Socket {
 
     this.clearConnectTimeout();
     this._connectionState = ConnectionState.CONNECTING;
-    this.adapter.connect(this.host, this.port, createStatus, session.token, signal);
 
     this.adapter.onClose = (evt: CloseEvent) => {
       this.markDisconnected(evt);
     };
 
     this.adapter.onError = (evt: Event) => {
-      this.markDisconnected(<CloseEvent>{}, false);
       this.onerror(evt as unknown as ErrorEvent);
     };
 
@@ -306,17 +526,27 @@ export class MezonTransport implements Socket {
 
     this.adapter.onMessage = (cid: number, code: number, message: any) => {
       if (this.verbose) {
-        console.log("Response cid=%o code=%o message=%o", cid, code, message);
+        console.log("[mezon-sdk] Response cid=%o code=%o message=%o", cid, code, message);
       }
 
-      if (cid !== 0) {
-        const executor = this.cIds[cid];
-        if (!executor) {
-          if (this.verbose) {
-            console.error("No promise executor for message: cid=%o", cid);
-          }
-          return;
+      if (message?.pong) {
+        const pingExecutor = this.cIds[cid];
+        if (pingExecutor) {
+          delete this.cIds[cid];
+          pingExecutor.resolve({ code: 0, message });
         }
+        return;
+      }
+
+      const executor = cid !== 0 ? this.cIds[cid] : undefined;
+
+      const inbound = this.normalizeInboundMessage(message);
+      if (inbound && this.tryResolvePendingUpdate(inbound)) {
+        this.dispatchInboundEvents(inbound);
+        return;
+      }
+
+      if (executor) {
         delete this.cIds[cid];
 
         if (message?.error) {
@@ -327,8 +557,11 @@ export class MezonTransport implements Socket {
         return;
       }
 
-      /** Inbound message from server. */
-      this.dispatchInboundEvents(message);
+      if (inbound) {
+        this.dispatchInboundEvents(inbound);
+        return;
+      }
+
     };
 
     const connectPromise = new Promise<Session>((resolve, reject) => {
@@ -355,6 +588,7 @@ export class MezonTransport implements Socket {
       this.adapter.onError = (evt: Event) => {
         baseOnErrorHandler?.(evt);
         if (this._connectionState === ConnectionState.CONNECTING) {
+          this.markDisconnected(<CloseEvent>{}, false);
           reject(evt);
           this.adapter.close();
         }
@@ -366,6 +600,8 @@ export class MezonTransport implements Socket {
         reject("The socket timed out when trying to connect.");
         this._connectTimeoutTimer = undefined;
       }, connectTimeoutMs);
+
+      this.adapter.connect(this.host, this.port, createStatus, session.token, signal);
     });
 
     this._connectPromise = connectPromise;
@@ -374,9 +610,7 @@ export class MezonTransport implements Socket {
 
   disconnect(fireDisconnectEvent: boolean = true) {
     this.markDisconnected(<CloseEvent>{}, false);
-    if (this.adapter.isOpen()) {
-      this.adapter.close();
-    }
+    this.adapter.close();
     if (fireDisconnectEvent) {
       this.ondisconnect(<CloseEvent>{});
     }
@@ -398,7 +632,7 @@ export class MezonTransport implements Socket {
 
   onreconnect(evt: Event) {
     if (this.verbose) {
-      console.log("Socket reconnected.", evt);
+      console.log("[mezon-sdk] Socket reconnected.", evt);
     }
   }
 
@@ -410,7 +644,7 @@ export class MezonTransport implements Socket {
 
   onheartbeattimeout() {
     if (this.verbose) {
-      console.log("Heartbeat timeout.");
+      console.log("[mezon-sdk] Heartbeat timeout.");
     }
   }
 
@@ -460,35 +694,24 @@ export class MezonTransport implements Socket {
         }
 
         const cid = this.generatecid();
-        this.cIds[cid] = { resolve, reject };
+        const awaitingUpdate = this.getAwaitingUpdateMeta(untypedMessage);
+        this.cIds[cid] = { resolve, reject, awaitingUpdate };
         if (sendTimeout !== Infinity && sendTimeout > 0) {
           setTimeout(() => {
             if (this.cIds[cid]) {
               delete this.cIds[cid];
-              const adapter = this.adapter as MezonNetworkAdapter;
-              console.warn("[mezon-tcp] send timeout", {
-                cid,
-                urlPath: urlPath ?? "",
-                keys: Object.keys(untypedMessage).filter((k) => k !== "cid"),
-                pendingCids: Object.keys(this.cIds).map(Number),
-                readBuffer: adapter.getReadBufferState?.(),
-              });
               reject("The socket timed out while waiting for a response.");
             }
           }, sendTimeout);
         }
 
         untypedMessage.cid = cid;
-
-        if (process.env.MEZON_TCP_DEBUG === "1") {
-          console.log("[mezon-tcp] socket.send", {
-            cid,
-            urlPath: urlPath ?? "",
-            keys: Object.keys(untypedMessage).filter((k) => k !== "cid"),
-          });
+        try {
+          this.adapter.send(untypedMessage);
+        } catch (error) {
+          delete this.cIds[cid];
+          reject(error);
         }
-
-        this.adapter.send(untypedMessage);
       }
     });
   }
@@ -547,10 +770,11 @@ export class MezonTransport implements Socket {
     };
   }
 
-  async joinClanChat(clan_id: string): Promise<ClanJoin> {
+  async joinClanChat(clan_id: string, is_last_field: boolean = false): Promise<ClanJoin> {
     const response = await this.sendEvent({
       clan_join: {
         clan_id: clan_id,
+        is_last_field: is_last_field,
       },
     });
 
@@ -595,7 +819,13 @@ export class MezonTransport implements Socket {
       },
     });
 
-    return response.channel_message_ack;
+    return (
+      response.channel_message_ack ??
+      this.toChannelMessageAck(
+        rtproto.ChannelMessageAck.fromPartial({ message_id, channel_id }),
+        mode,
+      )
+    );
   }
 
   async updateChatMessage(
@@ -628,13 +858,8 @@ export class MezonTransport implements Socket {
         is_update_msg_topic: is_update_msg_topic,
       },
     });
-    return (
-      response.channel_message_ack ??
-      this.toChannelMessageAck(
-        rtproto.ChannelMessageAck.fromPartial({ message_id, channel_id }),
-        mode,
-      )
-    );
+
+    return this.ackFromUpdateResponse(response, channel_id, message_id, mode);
   }
 
   private stringifyMessageContent(content: unknown): string {
@@ -716,22 +941,35 @@ export class MezonTransport implements Socket {
       }),
     ).finish();
 
-    const responseBody = await this.sendApiRequest(
-      "UpdateChannelMessage",
-      encodedBody,
-    );
-    const updated = rtproto.ChannelMessageUpdate.decode(responseBody);
+    const apiIndex = getApiFromPath("UpdateChannelMessage");
+    if (apiIndex === undefined) {
+      throw new Error("Unknown API: UpdateChannelMessage");
+    }
 
-    return {
-      channel_id: channel_id || updated.channel_id,
+    const sendTimeout =
+      encodedBody.length > 1500 ? 30000 : MezonTransport.DefaultSendTimeoutMs;
+
+    const response = await this.send(
+      {
+        api_request_event: {
+          api_index: apiIndex,
+          api_name: "UpdateChannelMessage",
+          body: encodedBody,
+        },
+      },
+      sendTimeout,
+    );
+
+    if (response.code != 0) {
+      throw response;
+    }
+
+    return this.ackFromUpdateResponse(
+      response.message,
+      channel_id,
+      message_id,
       mode,
-      message_id: message_id || updated.message_id,
-      code: 1,
-      username: "",
-      create_time: "",
-      update_time: "",
-      persistence: false,
-    };
+    );
   }
 
   async deleteChannelMessage(
@@ -817,9 +1055,17 @@ export class MezonTransport implements Socket {
           },
         },
       });
-      return response.channel_message;
+      return (
+        this.toChannelMessageAck(
+          response.channel_message_ack ??
+            rtproto.ChannelMessageAck.fromPartial({
+              channel_id: channel_id,
+            }),
+          mode,
+        )
+      );
     } catch (error) {
-      console.log("writeEphemeralMessage", error);
+      console.log("[mezon-sdk] writeEphemeralMessage", error);
       throw error;
     }
   }
@@ -1055,6 +1301,15 @@ export class MezonTransport implements Socket {
     this.clearConnectTimeout();
     this._connectPromise = undefined;
 
+    if (!wasAlreadyDisconnected) {
+      for (const cidKey of Object.keys(this.cIds)) {
+        const cid = Number(cidKey);
+        const executor = this.cIds[cid];
+        delete this.cIds[cid];
+        executor?.reject("The socket disconnected before receiving a response.");
+      }
+    }
+
     if (fireDisconnectEvent && !wasAlreadyDisconnected) {
       this.ondisconnect(evt);
     }
@@ -1069,8 +1324,13 @@ export class MezonTransport implements Socket {
     try {
       await this.sendEvent({ ping: {} }, this._heartbeatTimeoutMs);
     } catch {
+      if (!this.adapter.isOpen()) {
+        this.markDisconnected();
+        return;
+      }
+
       if (this.verbose) {
-        console.error("Server unreachable from heartbeat222.");
+        console.error("Server unreachable from heartbeat.");
       }
       this.onheartbeattimeout();
 
