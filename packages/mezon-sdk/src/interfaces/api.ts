@@ -42,6 +42,8 @@ export interface ApiClanDescList {
     api_url?: string;
     // socket url
     ws_url?: string;
+    // tcp url for socket transport
+    tcp_url?: string;
     // id token for zklogin
     id_token?: string;
   }

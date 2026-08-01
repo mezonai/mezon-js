@@ -43,6 +43,44 @@ export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+export function parseTcpUrl(
+  tcpUrl: string,
+  defaultPort = "443",
+): { host: string; port: string } {
+  const raw = tcpUrl.trim();
+  if (!raw) {
+    return { host: "", port: "" };
+  }
+
+  if (raw.includes("://")) {
+    const url = new URL(raw);
+    const port =
+      url.port ||
+      (url.protocol === "http:" || url.protocol === "ws:"
+        ? "80"
+        : defaultPort);
+    return {
+      host: url.hostname,
+      port,
+    };
+  }
+
+  const withoutPath = raw.split("/")[0];
+  const colonIndex = withoutPath.lastIndexOf(":");
+
+  if (colonIndex === -1) {
+    return { host: withoutPath, port: defaultPort };
+  }
+
+  const host = withoutPath.slice(0, colonIndex);
+  const port = withoutPath.slice(colonIndex + 1);
+
+  return {
+    host,
+    port: port || defaultPort,
+  };
+}
+
 export function parseUrlToHostAndSSL(urlStr: string): {
   host: string;
   port: string;
@@ -123,16 +161,16 @@ export async function waitFor2nTimeout<T>(
       }
 
       const result = await action();
-      console.log("Action successful!");
+      console.log("[mezon-sdk] Action successful!");
       return result;
     } catch (error: any) {
       if (attempt >= maxAttempts) {
-        console.error("Max attempts reached.");
+        console.error("[mezon-sdk] Max attempts reached.");
         throw error;
       }
 
       console.warn(
-        `Attempt ${attempt} failed at ${new Date().toLocaleString()}: ${formatErrorMessage(error)}\nAttempt ${attempt + 1} is running...`,
+        `[mezon-sdk] Attempt ${attempt} failed at ${new Date().toLocaleString()}: ${formatErrorMessage(error)}\nAttempt ${attempt + 1} is running...`,
       );
 
       delay = Math.min(delay * 2, maxDelay);
@@ -141,4 +179,12 @@ export async function waitFor2nTimeout<T>(
   }
 
   throw new Error("Unreachable");
+}
+
+export function getEnvelopeEventKeys(
+  message: Record<string, unknown>,
+): string[] {
+  return Object.keys(message).filter(
+    (key) => key !== "cid" && message[key] != null && message[key] !== undefined,
+  );
 }

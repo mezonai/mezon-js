@@ -5,10 +5,8 @@ import {
   MezonApi,
 } from "../../api";
 import { ChannelStreamMode, ChannelType, Events } from "../../constants";
-import { DefaultSocket } from "../../socket";
-import { WebSocketAdapter } from "../../web_socket_adapter";
-import { WebSocketAdapterPb } from "../../web_socket_adapter_pb";
-import { Socket } from "../../interfaces/socket";
+import { MezonTransport } from "../../socket";
+import { MezonNetworkAdapter } from "../../transport/abridged_tcp_adapter";
 import { Session } from "../../session";
 import { Clan } from "../structures/Clan";
 import {
@@ -22,45 +20,42 @@ import {
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 import { MessageDatabase } from "../../sqlite/MessageDatabase";
 import { MezonClientCore } from "../client/MezonClientCore";
-import { formatErrorMessage, sleep } from "../../utils/helper";
+import {
+  formatErrorMessage,
+  parseTcpUrl,
+  sleep,
+} from "../../utils/helper";
 
 export class SocketManager {
   [key: string]: any;
-  private socket: Socket;
+  private socket: MezonTransport;
   private isHardDisconnect: boolean | undefined;
   private isRetrying = false;
   private eventsBound = false;
   constructor(
-    private host: string,
-    private port: string,
-    private useSSL: boolean,
-    private adapter: WebSocketAdapter,
     private apiClient: MezonApi,
     private messageQueue: AsyncThrottleQueue,
     private client: MezonClientCore,
     private messageDB: MessageDatabase,
-    private ws_url: string = "",
+    private tcp_url: string = "",
   ) {
-    this.socket = new DefaultSocket(
-      this.ws_url,
-      this.host,
-      this.port,
-      this.useSSL,
-      false,
-      this.adapter,
-    );
+    this.socket = this.createTransport();
+    this.apiClient.setTransport(this.socket);
+  }
+
+  private createTransport() {
+    const { host, port } = parseTcpUrl(this.tcp_url);
+    if (!host) {
+      throw new Error(
+        `Invalid tcp_url "${this.tcp_url}": missing host. Expected "host:port" or hostname.`,
+      );
+    }
+    return new MezonTransport(host, port, false, new MezonNetworkAdapter());
   }
 
   createSocket() {
-    this.adapter = new WebSocketAdapterPb();
-    this.socket = new DefaultSocket(
-      this.ws_url,
-      this.host,
-      this.port,
-      this.useSSL,
-      false,
-      this.adapter,
-    );
+    this.socket = this.createTransport();
+    this.apiClient.setTransport(this.socket);
     this.eventsBound = false;
   }
 
@@ -91,11 +86,11 @@ export class SocketManager {
   }
 
   onheartbeattimeout() {
-    console.log("Heartbeat timeout.");
+    console.log("[mezon-sdk] Heartbeat timeout.");
   }
 
   ondisconnect(e: CloseEvent) {
-    console.log("Disconnected!", e?.reason);
+    console.log("[mezon-sdk] Disconnected!", e?.reason);
     if (this.isHardDisconnect) return;
     this.retriesConnect();
   }
@@ -128,12 +123,12 @@ export class SocketManager {
       clanList = await this.fetchClanList(sessionToken);
     } catch (error) {
       throw new Error(
-        `listClanDescs failed: ${formatErrorMessage(error)}`,
+        `[mezon-sdk] listClanDescs failed: ${formatErrorMessage(error)}`,
       );
     }
     await sleep(1000);
     this.ensureClanObjects(clanList, sessionToken);
-    console.log("[mezon-sdk] waiting for initing data channel clans...");
+    console.log("[mezon-sdk] Waiting for initing data channel clans...");
     const failedClanInits: ApiClanDesc[] = [];
     for (const clan of clanList) {
       const success = await this.initClanChannelsAndJoin(clan);
@@ -195,7 +190,7 @@ export class SocketManager {
 
     try {
       if (clan.clan_id === "0") {
-        await this.socket.joinClanChat(clan.clan_id);
+        await this.socket.joinClanChat(clan.clan_id, true);
         return true;
       }
 
@@ -204,7 +199,12 @@ export class SocketManager {
 
       await clanObj.reloadChannels();
       await sleep(50);
-      await this.socket.joinClanChat(clan.clan_id);
+      try {
+        await this.socket.joinClanChat(clan.clan_id);
+      } catch (error) {
+        console.log("[mezon-sdk] joinClanChat failed!", error);
+        return false;
+      }
       return true;
     } catch (error) {
       return false;
@@ -215,7 +215,7 @@ export class SocketManager {
     let retryInterval = 5000;
     const maxRetryInterval = 60000;
 
-    console.log("Reconnecting...");
+    console.log("[mezon-sdk] Reconnecting...");
 
     const retry = async () => {
       if (this.isRetrying || this.isHardDisconnect) return;
@@ -226,12 +226,12 @@ export class SocketManager {
 
         this.isRetrying = false;
         retryInterval = 5000;
-        console.log("Connected successfully!");
+        console.log("[mezon-sdk] Connected successfully!");
       } catch (e) {
-        console.log("Connection failed!", e);
+        console.log("[mezon-sdk] Connection failed!", e);
         this.isRetrying = false;
         retryInterval = Math.min(retryInterval * 2, maxRetryInterval);
-        console.log(`Retrying in ${retryInterval / 1000} seconds...`);
+        console.log(`[mezon-sdk] Retrying in ${retryInterval / 1000} seconds...`);
 
         setTimeout(retry, retryInterval);
       }
@@ -370,7 +370,7 @@ export class SocketManager {
       dataUpdateMessage?.attachments ?? [],
       dataUpdateMessage?.create_time_seconds,
       dataUpdateMessage?.hideEditted ?? false,
-      dataUpdateMessage?.topic_id,
+      dataUpdateMessage.topic_id,
       dataUpdateMessage?.is_update_msg_topic,
     );
   }

@@ -107,17 +107,6 @@ export class Clan {
       channels?.channeldesc?.filter((c: any) => Object.keys(c).length > 0) ??
       [];
     for (const channel of validChannels) {
-      if (!channel?.channel_id) continue;
-
-      const existing =
-        this.channels.get(channel.channel_id) ??
-        this.client.channels.get(channel.channel_id);
-      if (existing) {
-        existing.updateFromDesc({ ...channel, type: channel?.type });
-        this.channels.set(channel.channel_id, existing);
-        this.client.channels.set(channel.channel_id, existing);
-        continue;
-      }
 
       const channelObj = new TextChannel(
         { ...channel, type: channel?.type },

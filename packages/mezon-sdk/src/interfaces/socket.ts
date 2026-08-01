@@ -923,7 +923,7 @@ export interface Socket {
   disconnect(fireDisconnectEvent: boolean): void;
 
   /** Join clan chat */
-  joinClanChat(clan_id: string): Promise<ClanJoin>;
+  joinClanChat(clan_id: string, is_last_field: boolean): Promise<ClanJoin>;
 
   /** Join a chat channel on the server. */
   joinChat(
@@ -1014,6 +1014,23 @@ export interface Socket {
     code?: number,
     topic_id?: string,
     message_id?: string
+  ): Promise<ChannelMessageAck>;
+
+  /** Send a chat message to a chat channel on the server. */
+  sendChannelMessage(
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    content?: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymous_message?: boolean,
+    mention_everyone?: boolean,
+    avatar?: string,
+    code?: number,
+    topic_id?: string,
   ): Promise<ChannelMessageAck>;
 
   /** Send a chat message to a chat channel on the server. */

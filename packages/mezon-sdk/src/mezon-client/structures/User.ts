@@ -64,7 +64,7 @@ export class User {
       const dmChannel = await this.channelManager.createDMchannel(this.id);
       return dmChannel;
     } catch (error) {
-      console.log("Error createDmChannel User", error);
+      console.log("[mezon-sdk] Error createDmChannel User", error);
       return null;
     }
   }
