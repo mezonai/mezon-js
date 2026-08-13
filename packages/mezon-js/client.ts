@@ -263,6 +263,7 @@ import {
   TopicInMessageEvent,
   ApiUploadBatchAttachment,
   ApiUploadBatchAttachmentRequest,
+  ApiSessionRefreshRequest,
 } from "./types";
 
 import {
@@ -6633,5 +6634,24 @@ export class Client {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.listLogedDevice();
+  }
+
+  async refreshSession(
+    request: ApiSessionRefreshRequest
+  ): Promise<ApiSession> {
+    return this.transport
+      .sessionRefresh(this.serverkey, "", request)
+      .then((apiSession: ApiSession) => {
+        return {
+          token: apiSession.token || "",
+          refresh_token: apiSession.refresh_token || "",
+          created: apiSession.created || false,
+          api_url: apiSession.api_url || "",
+          ws_url: apiSession.ws_url || "",
+          id_token: apiSession.id_token || "",
+          is_remember: apiSession.is_remember || false,
+          session_id: apiSession.session_id || "",
+        };
+      });
   }
 }
