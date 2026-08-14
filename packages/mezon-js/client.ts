@@ -261,6 +261,7 @@ import {
   Status,
   ApiListClanBadgeCountResponse,
   TopicInMessageEvent,
+  VoiceInteractiveEvent,
   ApiUploadBatchAttachment,
   ApiUploadBatchAttachmentRequest,
   ApiSessionRefreshRequest,
@@ -694,6 +695,10 @@ export class Client {
               );
             } else if (message.screen_share_event) {
               this.onscreenshare(<ScreenShareEvent>message.screen_share_event);
+            } else if (message.voice_interactive_event) {
+              this.onvoiceinteractiveevent(
+                <VoiceInteractiveEvent>message.voice_interactive_event
+              );
             } else if (message.pong) {
               if (this.verbose && window && window.console) {
                 console.log("Pong message received: %o", message);
@@ -1350,6 +1355,12 @@ export class Client {
   }
 
   onscreenshare(event: ScreenShareEvent): void {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onvoiceinteractiveevent(event: VoiceInteractiveEvent): void {
     if (this.verbose && window && window.console) {
       console.log(event);
     }
@@ -6565,6 +6576,27 @@ export class Client {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.writeVoiceReaction(emojis, channel_id);
+  }
+
+  async writeVoiceInteractiveEvent(
+    session: ApiSession,
+    clan_id: string,
+    voice_channel_id: string,
+    event_type: number,
+    params: string
+  ): Promise<VoiceInteractiveEvent> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+    return this.transport.writeVoiceInteractiveEvent(
+      clan_id,
+      voice_channel_id,
+      event_type,
+      params
+    );
   }
 
   async forwardWebrtcSignaling(

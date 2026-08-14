@@ -5131,6 +5131,14 @@ export interface TopicInMessageEvent {
   tp_id: string;
 }
 
+export interface VoiceInteractiveEvent {
+  clan_id: string;
+  voice_channel_id: string;
+  user_id: string;
+  event_type: number;
+  params: string;
+}
+
 export function CreateChannelMessageFromEvent(message: any) {
   let content, reactions, mentions, attachments, references, referencedMessags;
   try {

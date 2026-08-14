@@ -206,6 +206,7 @@ import {
   PromiseExecutor,
   QuickMenuEvent,
   Status,
+  VoiceInteractiveEvent,
   VoiceReactionSend,
   WebrtcSignalingFwd,
 } from "./types";
@@ -9299,6 +9300,37 @@ export class MezonTransport {
           throw response;
         }
         return {} as VoiceReactionSend;
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs
+        )
+      ),
+    ]);
+  }
+
+  async writeVoiceInteractiveEvent(
+    clan_id: string,
+    voice_channel_id: string,
+    event_type: number,
+    params: string
+  ): Promise<VoiceInteractiveEvent> {
+    const urlPath = "";
+    const fetchOptions = {
+      voice_interactive_event: {
+        clan_id: clan_id,
+        voice_channel_id: voice_channel_id,
+        event_type: event_type,
+        params: params,
+      },
+    } as any;
+    return Promise.race([
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return {} as VoiceInteractiveEvent;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
