@@ -5134,7 +5134,8 @@ export interface TopicInMessageEvent {
 export interface VoiceInteractiveEvent {
   clan_id: string;
   voice_channel_id: string;
-  user_id: string;
+  sender_id: string;
+  receiver_id: string;
   event_type: number;
   params: string;
 }

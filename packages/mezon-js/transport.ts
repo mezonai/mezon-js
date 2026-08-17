@@ -9313,6 +9313,8 @@ export class MezonTransport {
   async writeVoiceInteractiveEvent(
     clan_id: string,
     voice_channel_id: string,
+    sender_id: string,
+    receiver_id: string,
     event_type: number,
     params: string
   ): Promise<VoiceInteractiveEvent> {
@@ -9321,6 +9323,8 @@ export class MezonTransport {
       voice_interactive_event: {
         clan_id: clan_id,
         voice_channel_id: voice_channel_id,
+        sender_id: sender_id,
+        receiver_id: receiver_id,
         event_type: event_type,
         params: params,
       },
