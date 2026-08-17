@@ -9314,6 +9314,7 @@ export class MezonTransport {
     clan_id: string,
     voice_channel_id: string,
     event_type: number,
+    user_id: string,
     params: string
   ): Promise<VoiceInteractiveEvent> {
     const urlPath = "";
@@ -9321,6 +9322,7 @@ export class MezonTransport {
       voice_interactive_event: {
         clan_id: clan_id,
         voice_channel_id: voice_channel_id,
+        user_id: user_id,
         event_type: event_type,
         params: params,
       },

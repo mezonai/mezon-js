@@ -6582,6 +6582,7 @@ export class Client {
     session: ApiSession,
     clan_id: string,
     voice_channel_id: string,
+    user_id:string,
     event_type: number,
     params: string
   ): Promise<VoiceInteractiveEvent> {
@@ -6595,6 +6596,7 @@ export class Client {
       clan_id,
       voice_channel_id,
       event_type,
+      user_id,
       params
     );
   }
