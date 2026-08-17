@@ -6582,6 +6582,8 @@ export class Client {
     session: ApiSession,
     clan_id: string,
     voice_channel_id: string,
+    sender_id: string,
+    receiver_id: string,
     event_type: number,
     params: string
   ): Promise<VoiceInteractiveEvent> {
@@ -6594,6 +6596,8 @@ export class Client {
     return this.transport.writeVoiceInteractiveEvent(
       clan_id,
       voice_channel_id,
+      sender_id,
+      receiver_id,
       event_type,
       params
     );
