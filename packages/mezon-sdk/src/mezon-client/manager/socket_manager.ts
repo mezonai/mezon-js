@@ -46,9 +46,7 @@ export class SocketManager {
   private createTransport() {
     const { host, port } = parseTcpUrl(this.tcp_url);
     if (!host) {
-      throw new Error(
-        `Invalid tcp_url "${this.tcp_url}": missing host. Expected "host:port" or hostname.`,
-      );
+      throw new Error(`Invalid tcp_url "${this.tcp_url}": missing host. Expected "host:port" or hostname.`);
     }
     return new MezonTransport(host, port, false, new MezonNetworkAdapter());
   }
@@ -98,9 +96,7 @@ export class SocketManager {
   async connectSocket(sessionToken: string) {
     if (!this.eventsBound) {
       ["ondisconnect", "onerror", "onheartbeattimeout"].forEach((event) => {
-        this.socket[event] = (this[event as keyof this] as Function).bind(
-          this,
-        );
+        this.socket[event] = (this[event as keyof this] as Function).bind(this);
       });
 
       for (const event in Events) {
@@ -122,9 +118,7 @@ export class SocketManager {
     try {
       clanList = await this.fetchClanList(sessionToken);
     } catch (error) {
-      throw new Error(
-        `[mezon-sdk] listClanDescs failed: ${formatErrorMessage(error)}`,
-      );
+      throw new Error(`[mezon-sdk] listClanDescs failed: ${formatErrorMessage(error)}`);
     }
     await sleep(1000);
     this.ensureClanObjects(clanList, sessionToken);
@@ -154,10 +148,7 @@ export class SocketManager {
     return clanList;
   }
 
-  private ensureClanObjects(
-    clanList: ApiClanDesc[],
-    sessionToken: string,
-  ): void {
+  private ensureClanObjects(clanList: ApiClanDesc[], sessionToken: string): void {
     for (const clan of clanList) {
       if (!clan.clan_id) continue;
 
@@ -241,11 +232,14 @@ export class SocketManager {
   }
 
   private isMustJoinChannelError(error: any): boolean {
+    const nestedError = error?.error;
+    const mustJoinMessage = "Must join channel before sending messages";
+
     return (
       error?.code === 3 ||
-      `${error?.message ?? error ?? ""}`.includes(
-        "Must join channel before sending messages",
-      )
+      nestedError?.code === 3 ||
+      `${error?.message ?? error ?? ""}`.includes(mustJoinMessage) ||
+      `${nestedError?.message ?? ""}`.includes(mustJoinMessage)
     );
   }
 
@@ -263,25 +257,12 @@ export class SocketManager {
     }
   }
 
-  private async joinChannelBeforeRetry(data: {
-    clan_id: string;
-    channel_id: string;
-    channel_type?: number;
-    mode: number;
-    is_public: boolean;
-  }) {
-    await this.socket.joinChat(
-      data.clan_id,
-      data.channel_id,
-      data.channel_type ?? this.getChannelTypeFromMode(data.mode),
-      data.is_public,
-    );
+  private async joinChannelBeforeRetry(data: { clan_id: string; channel_id: string; channel_type?: number; mode: number; is_public: boolean }) {
+    await this.socket.joinChat(data.clan_id, data.channel_id, data.channel_type ?? this.getChannelTypeFromMode(data.mode), data.is_public);
   }
 
   async writeChatMessage(dataWriteMessage: ReplyMessageData) {
-    const currentContentLength = JSON.stringify(
-      dataWriteMessage.content ?? {},
-    ).length;
+    const currentContentLength = JSON.stringify(dataWriteMessage.content ?? {}).length;
     if (currentContentLength > 4000)
       throw new Error(
         `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 4000 characters. Current length: ${currentContentLength}!`,
@@ -314,9 +295,7 @@ export class SocketManager {
   }
 
   async writeEphemeralMessage(dataWriteMessage: EphemeralMessageData) {
-    const currentContentLength = JSON.stringify(
-      dataWriteMessage.content ?? {},
-    ).length;
+    const currentContentLength = JSON.stringify(dataWriteMessage.content ?? {}).length;
     if (currentContentLength > 4000)
       throw new Error(
         `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 4000 characters. Current length: ${currentContentLength}!`,
@@ -351,9 +330,7 @@ export class SocketManager {
   }
 
   async updateChatMessage(dataUpdateMessage: UpdateMessageData) {
-    const currentContentLength = JSON.stringify(
-      dataUpdateMessage.content ?? {},
-    ).length;
+    const currentContentLength = JSON.stringify(dataUpdateMessage.content ?? {}).length;
     if (currentContentLength > 4000)
       throw new Error(
         `message.content exceeds the allowed length! Content exceeds allowed length. Maximum total of 4000 characters. Current length: ${currentContentLength}!`,

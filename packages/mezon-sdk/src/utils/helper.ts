@@ -22,6 +22,7 @@ export function convertChanneltypeToChannelMode(channelType: string | number) {
     case ChannelType.CHANNEL_TYPE_CHANNEL:
     case ChannelType.CHANNEL_TYPE_APP:
     case ChannelType.CHANNEL_TYPE_MEZON_VOICE:
+    case ChannelType.CHANNEL_TYPE_STREAMING:
       return ChannelStreamMode.STREAM_MODE_CHANNEL;
     case ChannelType.CHANNEL_TYPE_THREAD:
       return ChannelStreamMode.STREAM_MODE_THREAD;
