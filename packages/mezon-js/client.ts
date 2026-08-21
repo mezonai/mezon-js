@@ -62,6 +62,8 @@ import {
   ApiSetMuteRequest,
   ApiSearchMessageRequest,
   ApiSearchMessageResponse,
+  ApiSearchCtrlKRequest,
+  ApiSearchCtrlKResponse,
   ApiPinMessageRequest,
   ApiPinMessagesList,
   ApiDeleteChannelDescRequest,
@@ -3372,6 +3374,25 @@ export class Client {
     return this.transport
       .searchMessage(request)
       .then((response: ApiSearchMessageResponse) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  /** Search users and channels for Ctrl+K. */
+  async searchCtrlK(
+    session: ApiSession,
+    request: ApiSearchCtrlKRequest
+  ): Promise<ApiSearchCtrlKResponse> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport
+      .searchCtrlK(request)
+      .then((response: ApiSearchCtrlKResponse) => {
         return Promise.resolve(response);
       });
   }
