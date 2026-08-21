@@ -141,6 +141,8 @@ import {
   ApiSdTopicRequest,
   ApiSearchMessageRequest,
   ApiSearchMessageResponse,
+  ApiSearchCtrlKRequest,
+  ApiSearchCtrlKResponse,
   ApiSession,
   ApiSessionLogoutRequest,
   ApiSessionRefreshRequest,
@@ -424,6 +426,7 @@ enum ApiNameEnum {
   DeletePinMessage,
   MarkAsRead,
   UploadBatchAttachmentFile,
+  SearchCtrlK,
 }
 
 export interface MezonTransportHandlers {
@@ -3364,6 +3367,43 @@ export class MezonTransport {
         return tsproto.SearchMessageResponse.decode(
           response.message
         ) as ApiSearchMessageResponse;
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs
+        )
+      ),
+    ]);
+  }
+
+  /** Search users and channels for Ctrl+K. */
+  searchCtrlK(
+    body: ApiSearchCtrlKRequest,
+    options = {}
+  ): Promise<ApiSearchCtrlKResponse> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/SearchCtrlK";
+    const bodyWriter = tsproto.SearchCtrlKRequest.encode(
+      tsproto.SearchCtrlKRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+
+    return Promise.race([
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return tsproto.SearchCtrlKResponse.decode(
+          response.message
+        ) as ApiSearchCtrlKResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(

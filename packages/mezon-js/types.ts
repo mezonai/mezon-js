@@ -785,7 +785,7 @@ export interface ClanProfileUpdatedEvent {
 }
 
 export interface MeetParticipantEvent {
-  username: string;
+  user_id: string;
   room_name: string;
   channel_id: string;
   clan_id: string;
@@ -2990,9 +2990,7 @@ export interface ApiGenerateMeetTokenExternalResponse {
 /**  */
 export interface ApiMeetParticipantRequest {
   //
-  room_name?: string;
-  //
-  username?: string;
+  user_id?: string;
   //
   channel_id?: string;
   //
@@ -3132,6 +3130,8 @@ export interface ApiMessage2InboxRequest {
   attachments?: Array<ApiMessageAttachment>;
   //
   references?: Array<ApiMessageRef>;
+  //
+  topic_id?: string;
 }
 
 /**  */
@@ -3918,6 +3918,26 @@ export interface ApiSearchMessageResponse {
   messages?: Array<ApiSearchMessageDocument>;
   //The total number of messages.
   total?: number;
+}
+
+/**  */
+export interface ApiSearchCtrlKRequest {
+  //
+  text?: string;
+  /**
+   * Search mode:
+   * - 0: support @ (user) and # (channel)
+   * - 1: only support @ (user)
+   */
+  type?: number;
+}
+
+/**  */
+export interface ApiSearchCtrlKResponse {
+  //
+  users?: Array<ApiUser>;
+  //
+  channels?: Array<ApiChannelDescription>;
 }
 
 /** A user's session used to authenticate messages. */
@@ -4931,6 +4951,7 @@ export interface ApiDirectFcmProto {
   has_more_attachment: boolean;
   is_mention_role: boolean[];
   message_id: string;
+  topic_id: string;
 }
 
 export enum ChannelType {

@@ -209,6 +209,7 @@ export enum ApiNameEnum {
   DeletePinMessage,
   MarkAsRead,
   UploadBatchAttachmentFile,
+  SearchCtrlK,
 }
 
 export function getApiFromPath(apiPath: string): number | undefined {
