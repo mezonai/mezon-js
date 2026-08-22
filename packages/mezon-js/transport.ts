@@ -7047,9 +7047,11 @@ export class MezonTransport {
         if (response.code != 0) {
           throw response;
         }
-        return tsproto.GenerateMeetTokenResponse.decode(
-          response.message
-        ) as ApiGenerateMeetTokenResponse;
+        const decoder = new TextDecoder('utf-8');
+        const jwtToken = decoder.decode(new Uint8Array(response.message));
+        return {
+          token: jwtToken
+        } as ApiGenerateMeetTokenResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
