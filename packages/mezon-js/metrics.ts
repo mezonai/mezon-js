@@ -1,11 +1,11 @@
+export const CHECK_HEALTHY = "CHECK_HEALTHY";
 export class MetricsLatencyApi {
     private readonly maxAllowedFailures = 3;
-
     private readonly minAllowedFastRate = 0.95;
     private readonly maxAllowedLatencyMs = 1000;
 
     private readonly metricsWindowMs = 60_000;
-    private readonly minRequests = 10;
+    private readonly minRequests = 20;
 
     private windowStartTime = 0;
 
@@ -20,7 +20,6 @@ export class MetricsLatencyApi {
     }
 
     public end(requestId: number, isError = false): void {
-
         const startTime = this.requests.get(requestId);
 
         if (startTime === undefined) {
@@ -28,6 +27,7 @@ export class MetricsLatencyApi {
         }
 
         const now = performance.now();
+
         if (
             this.windowStartTime !== 0 &&
             startTime - this.windowStartTime >= this.metricsWindowMs
@@ -54,13 +54,31 @@ export class MetricsLatencyApi {
             console.warn(
                 `RATE ENDPOINT ${requestId}`,
                 durationMs,
-                'TOTAL :', this.totalRequests,
-                'SLOW :', this.slowCount,
-                'RATE :', fastRate
+                "TOTAL:",
+                this.totalRequests,
+                "SLOW:",
+                this.slowCount,
+                "RATE:",
+                fastRate
             );
-        }
-        this.requests.delete(requestId);
 
+            if (fastRate < this.minAllowedFastRate) {
+                window.dispatchEvent(
+                    new CustomEvent(CHECK_HEALTHY, {
+                        detail: {
+                            requestId,
+                            fastRate,
+                            totalRequests: this.totalRequests,
+                            slowCount: this.slowCount,
+                        },
+                    })
+                );
+                this.reset();
+                this.windowStartTime = performance.now();
+            }
+        }
+
+        this.requests.delete(requestId);
     }
 
     public get shouldSwitch(): boolean {
