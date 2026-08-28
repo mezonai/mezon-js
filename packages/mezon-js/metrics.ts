@@ -1,23 +1,43 @@
+export const CHECK_HEALTHY = "CHECK_HEALTHY";
 export class MetricsLatencyApi {
     private readonly maxAllowedFailures = 3;
-
-    // 95% request phải <= 1s
     private readonly minAllowedFastRate = 0.95;
-
     private readonly maxAllowedLatencyMs = 1000;
 
-    private startTime = 0;
+    private readonly metricsWindowMs = 60_000;
+    private readonly minRequests = 20;
+
+    private windowStartTime = 0;
 
     private totalRequests = 0;
     private failed = 0;
     private slowCount = 0;
 
-    public start(): void {
-        this.startTime = performance.now();
+    private readonly requests = new Map<number, number>();
+
+    public start(requestId: number): void {
+        this.requests.set(requestId, performance.now());
     }
 
-    public end(isError = false): void {
-        const durationMs = performance.now() - this.startTime;
+    public end(requestId: number, isError = false): void {
+        const startTime = this.requests.get(requestId);
+
+        if (startTime === undefined) {
+            return;
+        }
+
+        const now = performance.now();
+
+        if (
+            this.windowStartTime !== 0 &&
+            startTime - this.windowStartTime >= this.metricsWindowMs
+        ) {
+            this.reset();
+            this.windowStartTime = startTime;
+        }
+
+        const durationMs = now - startTime;
+
         this.totalRequests++;
 
         if (isError) {
@@ -26,26 +46,67 @@ export class MetricsLatencyApi {
             this.slowCount++;
         }
 
-        if (this.totalRequests >= 10) {
-            const fastRate = (this.totalRequests - this.slowCount) / this.totalRequests;
-            console.warn("RATE ENDPOINT",durationMs,this.totalRequests , this.slowCount,fastRate);
+        if (this.totalRequests >= this.minRequests) {
+            const fastRate =
+                (this.totalRequests - this.slowCount) /
+                this.totalRequests;
+
+            console.warn(
+                `RATE ENDPOINT ${requestId}`,
+                durationMs,
+                "TOTAL:",
+                this.totalRequests,
+                "SLOW:",
+                this.slowCount,
+                "RATE:",
+                fastRate
+            );
+
+            if (fastRate < this.minAllowedFastRate) {
+                window.dispatchEvent(
+                    new CustomEvent(CHECK_HEALTHY, {
+                        detail: {
+                            requestId,
+                            fastRate,
+                            totalRequests: this.totalRequests,
+                            slowCount: this.slowCount,
+                        },
+                    })
+                );
+                this.reset();
+                this.windowStartTime = performance.now();
+            }
         }
+
+        this.requests.delete(requestId);
     }
 
     public get shouldSwitch(): boolean {
-        if (this.totalRequests <= 10) {
+        if (this.totalRequests < this.minRequests) {
             return false;
         }
 
-        const fastRate = (this.totalRequests - this.slowCount) / this.totalRequests;
+        const fastRate =
+            (this.totalRequests - this.slowCount) /
+            this.totalRequests;
 
-        return this.failed >= this.maxAllowedFailures || fastRate < this.minAllowedFastRate;
+        return (
+            this.failed >= this.maxAllowedFailures ||
+            fastRate < this.minAllowedFastRate
+        );
     }
 
     public get stats() {
-        const slowRate = this.totalRequests > 0 ? this.slowCount / this.totalRequests : 0;
+        const slowRate =
+            this.totalRequests > 0
+                ? this.slowCount / this.totalRequests
+                : 0;
 
-        const fastRate = this.totalRequests > 0 ? (this.totalRequests - this.slowCount) / this.totalRequests : 0;
+        const fastRate =
+            this.totalRequests > 0
+                ? (this.totalRequests - this.slowCount) /
+                  this.totalRequests
+                : 0;
 
         return {
             totalRequests: this.totalRequests,
@@ -58,9 +119,10 @@ export class MetricsLatencyApi {
     }
 
     public reset(): void {
-        this.startTime = 0;
+        this.windowStartTime = 0;
         this.totalRequests = 0;
         this.failed = 0;
         this.slowCount = 0;
+        this.requests.clear();
     }
 }
