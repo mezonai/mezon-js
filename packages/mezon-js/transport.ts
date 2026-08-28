@@ -457,7 +457,7 @@ export class MezonTransport {
 
     this.basePath = basePath;
     this.adapter = new MezonNetworkAdapter();
-    this.metricLatency = new MetricsLatencyApi;
+    this.metricLatency = new MetricsLatencyApi();
   }
 
   close() {
@@ -526,10 +526,10 @@ export class MezonTransport {
         delete this.cIds[cid];
         if (message.error) {
           executor.reject({ code: code, error: message.error });
-          this.metricLatency.end(true);
+          this.metricLatency.end(cid,true);
         } else {
           executor.resolve({ code, message });
-          this.metricLatency.end();
+          this.metricLatency.end(cid);
         }
       } else {
         await handlers.onMessage(0, 0, message);
@@ -553,9 +553,8 @@ export class MezonTransport {
         },
       };
     }
-    this.metricLatency.start();
 
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<void>(async (resolve, reject) => {
       if (!this.adapter.isOpen()) {
         reject("Socket connection has not been established yet.");
       } else {
@@ -579,10 +578,11 @@ export class MezonTransport {
         }
 
         const cid = this.generatecid();
+        this.metricLatency.start(cid);
         this.cIds[cid] = { resolve, reject };
         if (sendTimeout !== Infinity && sendTimeout > 0) {
-          this.metricLatency.end(true);
           setTimeout(() => {
+            this.metricLatency.end(cid, true);
             reject("The socket timed out while waiting for a response.");
           }, sendTimeout);
         }
