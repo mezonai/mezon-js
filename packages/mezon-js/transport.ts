@@ -212,6 +212,7 @@ import {
   VoiceReactionSend,
   WebrtcSignalingFwd,
 } from "./types";
+import { MetricsLatencyApi } from "./metrics";
 
 enum ApiNameEnum {
   // HOT PATH
@@ -444,6 +445,7 @@ export class MezonTransport {
 
   adapter: TransportAdapter;
   private readonly basePath: string;
+  metricLatency: MetricsLatencyApi;
 
   constructor(
     readonly serverKey: string,
@@ -455,6 +457,7 @@ export class MezonTransport {
 
     this.basePath = basePath;
     this.adapter = new MezonNetworkAdapter();
+    this.metricLatency = new MetricsLatencyApi;
   }
 
   close() {
@@ -523,8 +526,10 @@ export class MezonTransport {
         delete this.cIds[cid];
         if (message.error) {
           executor.reject({ code: code, error: message.error });
+          this.metricLatency.end(true);
         } else {
           executor.resolve({ code, message });
+          this.metricLatency.end();
         }
       } else {
         await handlers.onMessage(0, 0, message);
@@ -548,6 +553,7 @@ export class MezonTransport {
         },
       };
     }
+    this.metricLatency.start();
 
     return new Promise<void>((resolve, reject) => {
       if (!this.adapter.isOpen()) {
@@ -575,6 +581,7 @@ export class MezonTransport {
         const cid = this.generatecid();
         this.cIds[cid] = { resolve, reject };
         if (sendTimeout !== Infinity && sendTimeout > 0) {
+          this.metricLatency.end(true);
           setTimeout(() => {
             reject("The socket timed out while waiting for a response.");
           }, sendTimeout);
