@@ -267,6 +267,7 @@ import {
   ApiUploadBatchAttachment,
   ApiUploadBatchAttachmentRequest,
   ApiSessionRefreshRequest,
+  E_CONNECT_ERROR,
 } from "./types";
 
 import {
@@ -477,10 +478,12 @@ export class Client {
       );
       this.transport.close();
       this.failConnect(
-        new Error("The socket timed out when trying to connect.")
+        new Error(E_CONNECT_ERROR.TIME_OUT)
       );
-    }, connectTimeoutMs);
-
+    }, 5000);
+      this.failConnect(
+        new Error(E_CONNECT_ERROR.TIME_OUT)
+      );
     try {
       this.transport.connect(session_id, url, createStatus, verbose, {
         onMessage: async (_cid: number, _code: number, message: any) => {
@@ -718,7 +721,7 @@ export class Client {
           this.markDisconnected("transport_on_close", evt, true, true);
           if (wasConnecting) {
             this.failConnect(
-              new Error("Socket closed before connection was established.")
+              new Error(E_CONNECT_ERROR.SOCKET_CLOSED_BEFORE_ESTABLISH)
             );
           }
         },

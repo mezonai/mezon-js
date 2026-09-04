@@ -5226,3 +5226,8 @@ export function CreateChannelMessageFromEvent(message: any) {
 
   return e;
 }
+
+export enum E_CONNECT_ERROR {
+  TIME_OUT = "TIME_OUT",
+  SOCKET_CLOSED_BEFORE_ESTABLISH = "SOCKET_CLOSED_BEFORE_ESTABLISH"
+}
