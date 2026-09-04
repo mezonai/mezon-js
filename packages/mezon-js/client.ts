@@ -480,10 +480,7 @@ export class Client {
       this.failConnect(
         new Error(E_CONNECT_ERROR.TIME_OUT)
       );
-    }, 5000);
-      this.failConnect(
-        new Error(E_CONNECT_ERROR.TIME_OUT)
-      );
+    }, connectTimeoutMs);
     try {
       this.transport.connect(session_id, url, createStatus, verbose, {
         onMessage: async (_cid: number, _code: number, message: any) => {
