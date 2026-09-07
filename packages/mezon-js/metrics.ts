@@ -51,17 +51,6 @@ export class MetricsLatencyApi {
                 (this.totalRequests - this.slowCount) /
                 this.totalRequests;
 
-            console.warn(
-                `RATE ENDPOINT ${requestId}`,
-                durationMs,
-                "TOTAL:",
-                this.totalRequests,
-                "SLOW:",
-                this.slowCount,
-                "RATE:",
-                fastRate
-            );
-
             if (fastRate < this.minAllowedFastRate) {
                 window.dispatchEvent(
                     new CustomEvent(CHECK_HEALTHY, {
