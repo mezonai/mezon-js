@@ -767,10 +767,20 @@ export interface ClanUpdatedEvent {
   welcome_channel_id: string;
   // onboarding_banner.
   onboarding_banner: string;
+  // community banner
+  community_banner?: string;
+  // is community
+  is_community?: boolean;
   // about
   about: string;
+  // description
+  description?: string;
   // prevent anonymous
   prevent_anonymous: boolean;
+  // comma-separated clan hashtags
+  hashtags?: string;
+  // community vanity short url (clan_discover)
+  short_url?: string;
 }
 
 export interface ClanProfileUpdatedEvent {
@@ -1714,6 +1724,8 @@ export interface MezonUpdateClanDescBody {
   about?: string;
   // short url for community
   short_url?: string;
+  // comma-separated clan hashtags (clan_discover)
+  hashtags?: string;
   // prevent anonymous
   prevent_anonymous?: boolean;
 }
@@ -2478,6 +2490,8 @@ export interface ApiClanDesc {
   about?: string;
   // short url for community
   short_url?: string;
+  // comma-separated clan hashtags (clan_discover)
+  hashtags?: string;
   // prevent anonymous
   prevent_anonymous?: boolean;
   // has unread message
@@ -4857,6 +4871,8 @@ export interface ApiClanDiscover {
   short_url?: string;
   //
   create_time_seconds?: number;
+  // comma-separated clan hashtags
+  hashtags?: string;
 }
 
 /**  */

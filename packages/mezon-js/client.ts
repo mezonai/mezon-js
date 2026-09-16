@@ -278,6 +278,7 @@ import {
   decodeRefs,
   safeJSONParse,
   decodeChannelTimelineAttachments,
+  normalizeClanHashtags,
 } from "./utils";
 import {
   ChannelMessageAck,
@@ -3009,8 +3010,13 @@ export class Client {
       await this.transport.setFallbackSession(session);
     }
 
+    const body = { ...request };
+    if (body.hashtags !== undefined) {
+      body.hashtags = normalizeClanHashtags(body.hashtags);
+    }
+
     return this.transport
-      .updateClanDesc(clanId, request)
+      .updateClanDesc(clanId, body)
       .then((response: any) => {
         return response !== undefined;
       });

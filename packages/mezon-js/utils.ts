@@ -45,6 +45,24 @@ export function b64DecodeUnicode(str: string) {
   );
 }
 
+const MAX_CLAN_HASHTAGS_LEN = 512;
+
+export function normalizeClanHashtags(raw: string): string {
+  const trimmed = raw.trim();
+  if (!trimmed) {
+    return "";
+  }
+  const tags = trimmed
+    .split(",")
+    .map((part) => part.trim())
+    .filter((tag) => tag.length > 0);
+  const normalized = tags.join(",");
+  if ([...normalized].length > MAX_CLAN_HASHTAGS_LEN) {
+    throw new Error("clan hashtags too long");
+  }
+  return normalized;
+}
+
 export function safeJSONParse(raw: any): any {
   if (raw === null || raw === undefined) return { t: raw };
 
