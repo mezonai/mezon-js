@@ -19,7 +19,6 @@ import {
   ListUserOnlineRequest,
   ListUserOnlineResponse,
   LogedDeviceList,
-  Memo,
   MessageAttachment,
   MessageMention,
   MessageReaction,
@@ -433,19 +432,7 @@ export interface Envelope {
     | ScreenShareEvent
     | undefined;
   /** VoiceInteractiveEvent */
-  voice_interactive_event?:
-    | VoiceInteractiveEvent
-    | undefined;
-  /** Metric Message Event */
-  metric_message_event?:
-    | MetricMessageEvent
-    | undefined;
-  /** Memo created event */
-  memo_created_event?:
-    | MemoCreatedEvent
-    | undefined;
-  /** Memo deleted event */
-  memo_deleted_event?: MemoDeletedEvent | undefined;
+  voice_interactive_event?: VoiceInteractiveEvent | undefined;
 }
 
 export interface VoiceInteractiveEvent {
@@ -1827,23 +1814,6 @@ export interface GotifyMessage_ExtrasEntry {
   value: string;
 }
 
-export interface MetricMessageEvent {
-  request_id: string;
-  sessions_active: number;
-  sessions_peak: number;
-  sessions_created_total: string;
-  sessions_closed_total: string;
-}
-
-export interface MemoCreatedEvent {
-  memo: Memo | undefined;
-}
-
-export interface MemoDeletedEvent {
-  creator_id: string;
-  memo_id: string;
-}
-
 function createBaseEnvelope(): Envelope {
   return {
     cid: 0,
@@ -1946,9 +1916,6 @@ function createBaseEnvelope(): Envelope {
     topic_in_message_event: undefined,
     screen_share_event: undefined,
     voice_interactive_event: undefined,
-    metric_message_event: undefined,
-    memo_created_event: undefined,
-    memo_deleted_event: undefined,
   };
 }
 
@@ -2254,15 +2221,6 @@ export const Envelope = {
     }
     if (message.voice_interactive_event !== undefined) {
       VoiceInteractiveEvent.encode(message.voice_interactive_event, writer.uint32(802).fork()).ldelim();
-    }
-    if (message.metric_message_event !== undefined) {
-      MetricMessageEvent.encode(message.metric_message_event, writer.uint32(810).fork()).ldelim();
-    }
-    if (message.memo_created_event !== undefined) {
-      MemoCreatedEvent.encode(message.memo_created_event, writer.uint32(818).fork()).ldelim();
-    }
-    if (message.memo_deleted_event !== undefined) {
-      MemoDeletedEvent.encode(message.memo_deleted_event, writer.uint32(826).fork()).ldelim();
     }
     return writer;
   },
@@ -2974,27 +2932,6 @@ export const Envelope = {
 
           message.voice_interactive_event = VoiceInteractiveEvent.decode(reader, reader.uint32());
           continue;
-        case 101:
-          if (tag !== 810) {
-            break;
-          }
-
-          message.metric_message_event = MetricMessageEvent.decode(reader, reader.uint32());
-          continue;
-        case 102:
-          if (tag !== 818) {
-            break;
-          }
-
-          message.memo_created_event = MemoCreatedEvent.decode(reader, reader.uint32());
-          continue;
-        case 103:
-          if (tag !== 826) {
-            break;
-          }
-
-          message.memo_deleted_event = MemoDeletedEvent.decode(reader, reader.uint32());
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3239,15 +3176,6 @@ export const Envelope = {
         : undefined,
       voice_interactive_event: isSet(object.voice_interactive_event)
         ? VoiceInteractiveEvent.fromJSON(object.voice_interactive_event)
-        : undefined,
-      metric_message_event: isSet(object.metric_message_event)
-        ? MetricMessageEvent.fromJSON(object.metric_message_event)
-        : undefined,
-      memo_created_event: isSet(object.memo_created_event)
-        ? MemoCreatedEvent.fromJSON(object.memo_created_event)
-        : undefined,
-      memo_deleted_event: isSet(object.memo_deleted_event)
-        ? MemoDeletedEvent.fromJSON(object.memo_deleted_event)
         : undefined,
     };
   },
@@ -3555,15 +3483,6 @@ export const Envelope = {
     }
     if (message.voice_interactive_event !== undefined) {
       obj.voice_interactive_event = VoiceInteractiveEvent.toJSON(message.voice_interactive_event);
-    }
-    if (message.metric_message_event !== undefined) {
-      obj.metric_message_event = MetricMessageEvent.toJSON(message.metric_message_event);
-    }
-    if (message.memo_created_event !== undefined) {
-      obj.memo_created_event = MemoCreatedEvent.toJSON(message.memo_created_event);
-    }
-    if (message.memo_deleted_event !== undefined) {
-      obj.memo_deleted_event = MemoDeletedEvent.toJSON(message.memo_deleted_event);
     }
     return obj;
   },
@@ -3900,15 +3819,6 @@ export const Envelope = {
       (object.voice_interactive_event !== undefined && object.voice_interactive_event !== null)
         ? VoiceInteractiveEvent.fromPartial(object.voice_interactive_event)
         : undefined;
-    message.metric_message_event = (object.metric_message_event !== undefined && object.metric_message_event !== null)
-      ? MetricMessageEvent.fromPartial(object.metric_message_event)
-      : undefined;
-    message.memo_created_event = (object.memo_created_event !== undefined && object.memo_created_event !== null)
-      ? MemoCreatedEvent.fromPartial(object.memo_created_event)
-      : undefined;
-    message.memo_deleted_event = (object.memo_deleted_event !== undefined && object.memo_deleted_event !== null)
-      ? MemoDeletedEvent.fromPartial(object.memo_deleted_event)
-      : undefined;
     return message;
   },
 };
@@ -17326,266 +17236,6 @@ export const GotifyMessage_ExtrasEntry = {
     const message = createBaseGotifyMessage_ExtrasEntry();
     message.key = object.key ?? "";
     message.value = object.value ?? "";
-    return message;
-  },
-};
-
-function createBaseMetricMessageEvent(): MetricMessageEvent {
-  return {
-    request_id: "",
-    sessions_active: 0,
-    sessions_peak: 0,
-    sessions_created_total: "0",
-    sessions_closed_total: "0",
-  };
-}
-
-export const MetricMessageEvent = {
-  encode(message: MetricMessageEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.request_id !== "") {
-      writer.uint32(10).string(message.request_id);
-    }
-    if (message.sessions_active !== 0) {
-      writer.uint32(16).int32(message.sessions_active);
-    }
-    if (message.sessions_peak !== 0) {
-      writer.uint32(24).int32(message.sessions_peak);
-    }
-    if (message.sessions_created_total !== "0") {
-      writer.uint32(32).int64(message.sessions_created_total);
-    }
-    if (message.sessions_closed_total !== "0") {
-      writer.uint32(40).int64(message.sessions_closed_total);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MetricMessageEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMetricMessageEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.request_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.sessions_active = reader.int32();
-          continue;
-        case 3:
-          if (tag !== 24) {
-            break;
-          }
-
-          message.sessions_peak = reader.int32();
-          continue;
-        case 4:
-          if (tag !== 32) {
-            break;
-          }
-
-          message.sessions_created_total = longToString(reader.int64() as Long);
-          continue;
-        case 5:
-          if (tag !== 40) {
-            break;
-          }
-
-          message.sessions_closed_total = longToString(reader.int64() as Long);
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MetricMessageEvent {
-    return {
-      request_id: isSet(object.request_id) ? globalThis.String(object.request_id) : "",
-      sessions_active: isSet(object.sessions_active) ? globalThis.Number(object.sessions_active) : 0,
-      sessions_peak: isSet(object.sessions_peak) ? globalThis.Number(object.sessions_peak) : 0,
-      sessions_created_total: isSet(object.sessions_created_total)
-        ? globalThis.String(object.sessions_created_total)
-        : "0",
-      sessions_closed_total: isSet(object.sessions_closed_total)
-        ? globalThis.String(object.sessions_closed_total)
-        : "0",
-    };
-  },
-
-  toJSON(message: MetricMessageEvent): unknown {
-    const obj: any = {};
-    if (message.request_id !== "") {
-      obj.request_id = message.request_id;
-    }
-    if (message.sessions_active !== 0) {
-      obj.sessions_active = Math.round(message.sessions_active);
-    }
-    if (message.sessions_peak !== 0) {
-      obj.sessions_peak = Math.round(message.sessions_peak);
-    }
-    if (message.sessions_created_total !== "0") {
-      obj.sessions_created_total = message.sessions_created_total;
-    }
-    if (message.sessions_closed_total !== "0") {
-      obj.sessions_closed_total = message.sessions_closed_total;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MetricMessageEvent>, I>>(base?: I): MetricMessageEvent {
-    return MetricMessageEvent.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<MetricMessageEvent>, I>>(object: I): MetricMessageEvent {
-    const message = createBaseMetricMessageEvent();
-    message.request_id = object.request_id ?? "";
-    message.sessions_active = object.sessions_active ?? 0;
-    message.sessions_peak = object.sessions_peak ?? 0;
-    message.sessions_created_total = object.sessions_created_total ?? "0";
-    message.sessions_closed_total = object.sessions_closed_total ?? "0";
-    return message;
-  },
-};
-
-function createBaseMemoCreatedEvent(): MemoCreatedEvent {
-  return { memo: undefined };
-}
-
-export const MemoCreatedEvent = {
-  encode(message: MemoCreatedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.memo !== undefined) {
-      Memo.encode(message.memo, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MemoCreatedEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMemoCreatedEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.memo = Memo.decode(reader, reader.uint32());
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MemoCreatedEvent {
-    return { memo: isSet(object.memo) ? Memo.fromJSON(object.memo) : undefined };
-  },
-
-  toJSON(message: MemoCreatedEvent): unknown {
-    const obj: any = {};
-    if (message.memo !== undefined) {
-      obj.memo = Memo.toJSON(message.memo);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MemoCreatedEvent>, I>>(base?: I): MemoCreatedEvent {
-    return MemoCreatedEvent.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<MemoCreatedEvent>, I>>(object: I): MemoCreatedEvent {
-    const message = createBaseMemoCreatedEvent();
-    message.memo = (object.memo !== undefined && object.memo !== null) ? Memo.fromPartial(object.memo) : undefined;
-    return message;
-  },
-};
-
-function createBaseMemoDeletedEvent(): MemoDeletedEvent {
-  return { creator_id: "0", memo_id: "0" };
-}
-
-export const MemoDeletedEvent = {
-  encode(message: MemoDeletedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.creator_id !== "0") {
-      writer.uint32(8).int64(message.creator_id);
-    }
-    if (message.memo_id !== "0") {
-      writer.uint32(16).int64(message.memo_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MemoDeletedEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMemoDeletedEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 8) {
-            break;
-          }
-
-          message.creator_id = longToString(reader.int64() as Long);
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.memo_id = longToString(reader.int64() as Long);
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MemoDeletedEvent {
-    return {
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "0",
-      memo_id: isSet(object.memo_id) ? globalThis.String(object.memo_id) : "0",
-    };
-  },
-
-  toJSON(message: MemoDeletedEvent): unknown {
-    const obj: any = {};
-    if (message.creator_id !== "0") {
-      obj.creator_id = message.creator_id;
-    }
-    if (message.memo_id !== "0") {
-      obj.memo_id = message.memo_id;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MemoDeletedEvent>, I>>(base?: I): MemoDeletedEvent {
-    return MemoDeletedEvent.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<MemoDeletedEvent>, I>>(object: I): MemoDeletedEvent {
-    const message = createBaseMemoDeletedEvent();
-    message.creator_id = object.creator_id ?? "0";
-    message.memo_id = object.memo_id ?? "0";
     return message;
   },
 };
