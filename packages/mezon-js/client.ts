@@ -5567,8 +5567,12 @@ export class Client {
   async listClanDiscover(
     request: ApiClanDiscoverRequest
   ): Promise<ApiListClanDiscover> {
+    const body: ApiClanDiscoverRequest = { ...request };
+    if (body.hashtags !== undefined) {
+      body.hashtags = normalizeClanHashtags(body.hashtags);
+    }
     return this.transport
-      .clanDiscover(this.serverkey, "", request)
+      .clanDiscover(this.serverkey, "", body)
       .then((response: ApiListClanDiscover) => {
         return Promise.resolve(response);
       });

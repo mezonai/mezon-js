@@ -4913,6 +4913,8 @@ export interface ApiClanDiscoverRequest {
   item_per_page?: number;
   //
   page_number?: number;
+  //
+  hashtags?: string;
 }
 
 /**  */
