@@ -600,7 +600,10 @@ export class MezonTransport {
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -648,7 +651,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -1212,7 +1218,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -1376,6 +1385,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -1403,6 +1415,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -1509,6 +1524,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return tsproto.ListAuditLog.decode(
           response.message
         ) as unknown as MezonapiListAuditLog;
@@ -1542,6 +1560,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -1737,6 +1758,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -1819,6 +1843,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return tsproto.ChannelMessageList.decode(
           response.message
         ) as unknown as ApiChannelMessageList;
@@ -1858,6 +1885,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -1993,6 +2023,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -2023,6 +2056,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -2062,6 +2098,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -2136,6 +2175,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -2338,7 +2380,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -2377,7 +2422,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -2673,7 +2721,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -2710,7 +2761,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -3443,7 +3497,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -3653,7 +3710,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -3746,7 +3806,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -3772,7 +3835,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -4289,7 +4355,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -4325,6 +4394,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return tsproto.NotificationList.decode(
           response.message
         ) as unknown as ApiNotificationList;
@@ -4358,7 +4430,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -4387,7 +4462,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -4416,7 +4494,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -4443,7 +4524,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -4465,7 +4549,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -4487,7 +4574,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -4516,7 +4606,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -4545,7 +4638,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -4641,7 +4737,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -4673,6 +4772,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return tsproto.PinMessagesList.decode(
           response.message
         ) as unknown as tsproto.PinMessagesList;
@@ -4810,7 +4912,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -4839,7 +4944,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -4878,7 +4986,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -4907,7 +5018,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -5016,7 +5130,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -5281,7 +5398,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -6089,6 +6209,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise<never>((_, reject) =>
@@ -6117,7 +6240,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -6224,7 +6350,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -6253,7 +6382,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -6322,7 +6454,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -6401,7 +6536,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -6540,7 +6678,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -6646,7 +6787,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -6723,7 +6867,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -6834,7 +6981,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -6873,7 +7023,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -6987,7 +7140,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -7017,6 +7173,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return tsproto.CreateRoomChannelApps.decode(
           response.message
         ) as unknown as MezonapiCreateRoomChannelApps;
@@ -7199,7 +7358,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -7230,7 +7392,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -7256,7 +7421,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -7358,7 +7526,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -7387,7 +7558,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -7459,6 +7633,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return tsproto.ListChannelTimelineResponse.decode(
           response.message
         ) as unknown as ApiListChannelTimelineResponse;
@@ -7493,6 +7670,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return tsproto.CreateChannelTimelineResponse.decode(
           response.message
         ) as unknown as ApiCreateChannelTimelineResponse;
@@ -7527,6 +7707,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return tsproto.UpdateChannelTimelineResponse.decode(
           response.message
         ) as unknown as ApiUpdateChannelTimelineResponse;
@@ -7561,6 +7744,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return tsproto.ChannelTimelineDetailResponse.decode(
           response.message
         ) as unknown as ApiDetailChannelTimelineResponse;
@@ -7591,7 +7777,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -7676,7 +7865,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -7746,7 +7938,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -7775,7 +7970,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -7875,7 +8073,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -7980,7 +8181,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -8031,6 +8235,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return tsproto.ChannelMessageAck.decode(
           response.message
         ) as unknown as tsproto.ChannelMessageAck;
@@ -8244,7 +8451,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -8283,7 +8493,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -8322,7 +8535,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -8352,7 +8568,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -8382,7 +8601,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -8412,7 +8634,10 @@ export class MezonTransport {
     fetchOptions.body = encodedBody;
 
     return Promise.race([
-      this.send({ urlPath, fetchOptions }).then((response) => {
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return response;
       }),
       new Promise((_, reject) =>
@@ -8440,6 +8665,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return tsproto.MutedChannelList.decode(
           response.message
         ) as unknown as ApiMutedChannelList;
@@ -8494,6 +8722,9 @@ export class MezonTransport {
 
     return Promise.race([
       this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
         return tsproto.ChannelMessageSend.decode(
           response.message
         ) as unknown as tsproto.ChannelMessageAck;
