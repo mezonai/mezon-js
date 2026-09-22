@@ -14,6 +14,11 @@ import {
   AIAgentSessionSummaryDoneEvent,
   ApiGetZkProofRequest,
   ApiChannelDescription,
+  ApiClosePollRequest,
+  ApiCreatePollRequest,
+  ApiCreatePollResponse,
+  ApiGetPollRequest,
+  ApiGetPollResponse,
   ApiQuickMenuAccessPayload,
   ApiQuickMenuAccessRequest,
   APISentTokenRequest,
@@ -435,6 +440,24 @@ export class MezonClientCore extends EventEmitter {
     } catch (error) {
       throw error;
     }
+  }
+
+  async createPoll(body: ApiCreatePollRequest): Promise<ApiCreatePollResponse | undefined> {
+    const sessionToken = this.sessionManager.getSession();
+    if (!sessionToken) return;
+    return this.apiClient.createPoll(sessionToken.token, body);
+  }
+
+  async closePoll(body: ApiClosePollRequest): Promise<void | undefined> {
+    const sessionToken = this.sessionManager.getSession();
+    if (!sessionToken) return;
+    return this.apiClient.closePoll(sessionToken.token, body);
+  }
+
+  async getPoll(body: ApiGetPollRequest): Promise<ApiGetPollResponse | undefined> {
+    const sessionToken = this.sessionManager.getSession();
+    if (!sessionToken) return;
+    return this.apiClient.getPoll(sessionToken.token, body);
   }
 
   public closeSocket() {

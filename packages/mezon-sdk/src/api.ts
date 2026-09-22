@@ -6,7 +6,12 @@ import {
   ApiChannelDescList,
   ApiChannelDescription,
   ApiClanDescList,
+  ApiClosePollRequest,
+  ApiCreatePollRequest,
+  ApiCreatePollResponse,
   ApiCreateChannelDescRequest,
+  ApiGetPollRequest,
+  ApiGetPollResponse,
   ApiMessageAttachment,
   ApiMessageMention,
   ApiMessageRef,
@@ -665,6 +670,134 @@ export class MezonApi {
       update_time: "",
       persistence: false,
     };
+  }
+
+  /** Create a poll in a channel. */
+  async createPoll(
+    bearerToken: string,
+    body: ApiCreatePollRequest,
+    options: any = {},
+  ): Promise<ApiCreatePollResponse> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined.",
+      );
+    }
+
+    void bearerToken;
+    void options;
+
+    const urlPath = "/mezon.api.Mezon/CreatePoll";
+    const encodedBody = tsproto.CreatePollRequest.encode(
+      tsproto.CreatePollRequest.fromPartial({
+        channel_id: body.channel_id ?? "0",
+        clan_id: body.clan_id ?? "0",
+        question: body.question ?? "",
+        answers: body.answers ?? [],
+        expire_hours: body.expire_hours ?? 0,
+        type: (body.type ?? 0) as tsproto.PollType,
+      }),
+    ).finish();
+
+    return this.invokeMezonApi(urlPath, encodedBody, {
+      emptyAs: {} as ApiCreatePollResponse,
+      decode: (bytes) => {
+        const decoded = tsproto.CreatePollResponse.decode(bytes);
+        return {
+          poll_id: decoded.poll_id,
+          message_id: decoded.message_id,
+          question: decoded.question,
+          answers: decoded.answers.map((answer) => ({
+            index: answer.index,
+            label: answer.label,
+          })),
+          answer_counts: decoded.answer_counts,
+          exp: decoded.exp,
+          is_closed: decoded.is_closed,
+          creator_id: decoded.creator_id,
+          type: decoded.type,
+          total_votes: decoded.total_votes,
+        };
+      },
+    });
+  }
+
+  /** Close a poll (creator only). */
+  async closePoll(
+    bearerToken: string,
+    body: ApiClosePollRequest,
+    options: any = {},
+  ): Promise<void> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined.",
+      );
+    }
+
+    void bearerToken;
+    void options;
+
+    const urlPath = "/mezon.api.Mezon/ClosePoll";
+    const encodedBody = tsproto.ClosePollRequest.encode(
+      tsproto.ClosePollRequest.fromPartial({
+        poll_id: body.poll_id ?? "0",
+        message_id: body.message_id ?? "0",
+        channel_id: body.channel_id ?? "0",
+      }),
+    ).finish();
+
+    await this.invokeMezonApi(urlPath, encodedBody);
+  }
+
+  /** Get poll details and current results. */
+  async getPoll(
+    bearerToken: string,
+    body: ApiGetPollRequest,
+    options: any = {},
+  ): Promise<ApiGetPollResponse> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined.",
+      );
+    }
+
+    void bearerToken;
+    void options;
+
+    const urlPath = "/mezon.api.Mezon/GetPoll";
+    const encodedBody = tsproto.GetPollRequest.encode(
+      tsproto.GetPollRequest.fromPartial({
+        poll_id: body.poll_id ?? "0",
+        message_id: body.message_id ?? "0",
+        channel_id: body.channel_id ?? "0",
+      }),
+    ).finish();
+
+    return this.invokeMezonApi(urlPath, encodedBody, {
+      emptyAs: {} as ApiGetPollResponse,
+      decode: (bytes) => {
+        const decoded = tsproto.GetPollResponse.decode(bytes);
+        return {
+          poll_id: decoded.poll_id,
+          message_id: decoded.message_id,
+          question: decoded.question,
+          answers: decoded.answers.map((answer) => ({
+            index: answer.index,
+            label: answer.label,
+          })),
+          answer_counts: decoded.answer_counts,
+          exp: decoded.exp,
+          is_closed: decoded.is_closed,
+          creator_id: decoded.creator_id,
+          type: decoded.type,
+          total_votes: decoded.total_votes,
+          voter_details: decoded.voter_details.map((voter) => ({
+            answer_index: voter.answer_index,
+            user_ids: voter.user_ids,
+          })),
+        };
+      },
+    });
   }
 
   async playMedia(
