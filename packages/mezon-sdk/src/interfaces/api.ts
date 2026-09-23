@@ -91,4 +91,58 @@ export interface ApiClanDescList {
     //The time the message was read at the client.
     read_time?: string;
   }
-  
+
+  /** Create a poll in a channel. */
+  export interface ApiCreatePollRequest {
+    channel_id?: string;
+    clan_id?: string;
+    question?: string;
+    answers?: string[];
+    expire_hours?: number;
+    type?: number;
+  }
+
+  /** A poll answer option. */
+  export interface ApiPollAnswer {
+    index?: number;
+    label?: string;
+  }
+
+  /** Voters grouped by answer option. */
+  export interface ApiPollVoterDetail {
+    answer_index?: number;
+    user_ids?: string[];
+  }
+
+  /** Poll data returned after creation. */
+  export interface ApiCreatePollResponse {
+    poll_id?: string;
+    message_id?: string;
+    question?: string;
+    answers?: ApiPollAnswer[];
+    answer_counts?: number[];
+    exp?: string;
+    is_closed?: boolean;
+    creator_id?: string;
+    type?: number;
+    total_votes?: number;
+  }
+
+  /** Locate a poll by id or by its message and channel. */
+  export interface ApiGetPollRequest {
+    poll_id?: string;
+    message_id?: string;
+    channel_id?: string;
+  }
+
+  /** Close a poll (creator only). */
+  export interface ApiClosePollRequest {
+    poll_id?: string;
+    message_id?: string;
+    channel_id?: string;
+  }
+
+  /** Poll data including the current result and voter details. */
+  export interface ApiGetPollResponse extends ApiCreatePollResponse {
+    voter_details?: ApiPollVoterDetail[];
+  }
