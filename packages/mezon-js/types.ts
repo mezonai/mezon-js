@@ -4711,6 +4711,8 @@ export interface ApiGenerateMeetTokenRequest {
   channel_id?: string;
   //
   room_name?: string;
+  //
+  metadata?: string;
 }
 
 /**  */

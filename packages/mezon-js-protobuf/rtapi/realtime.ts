@@ -1061,6 +1061,8 @@ export interface VoiceLeavedEvent {
   voice_channel_id: string;
   /** voice user_id */
   voice_user_id: string;
+  /** peer id */
+  peer_id: number;
 }
 
 /** Voice Joined event */
@@ -1081,6 +1083,8 @@ export interface VoiceJoinedEvent {
   voice_channel_id: string;
   /** last screenshot */
   last_screenshot: string;
+  /** peer id */
+  peer_id: number;
 }
 
 /** Voice start event */
@@ -1753,7 +1757,6 @@ export interface MeetParticipantEvent {
   room_name: string;
   channel_id: string;
   clan_id: string;
-  action: number;
 }
 
 export interface TransferOwnershipEvent {
@@ -9178,7 +9181,7 @@ export const MessageTypingEvent = {
 };
 
 function createBaseVoiceLeavedEvent(): VoiceLeavedEvent {
-  return { id: "", clan_id: "0", voice_channel_id: "0", voice_user_id: "0" };
+  return { id: "", clan_id: "0", voice_channel_id: "0", voice_user_id: "0", peer_id: 0 };
 }
 
 export const VoiceLeavedEvent = {
@@ -9194,6 +9197,9 @@ export const VoiceLeavedEvent = {
     }
     if (message.voice_user_id !== "0") {
       writer.uint32(32).int64(message.voice_user_id);
+    }
+    if (message.peer_id !== 0) {
+      writer.uint32(40).int32(message.peer_id);
     }
     return writer;
   },
@@ -9233,6 +9239,13 @@ export const VoiceLeavedEvent = {
 
           message.voice_user_id = longToString(reader.int64() as Long);
           continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.peer_id = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -9248,6 +9261,7 @@ export const VoiceLeavedEvent = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       voice_channel_id: isSet(object.voice_channel_id) ? globalThis.String(object.voice_channel_id) : "0",
       voice_user_id: isSet(object.voice_user_id) ? globalThis.String(object.voice_user_id) : "0",
+      peer_id: isSet(object.peer_id) ? globalThis.Number(object.peer_id) : 0,
     };
   },
 
@@ -9265,6 +9279,9 @@ export const VoiceLeavedEvent = {
     if (message.voice_user_id !== "0") {
       obj.voice_user_id = message.voice_user_id;
     }
+    if (message.peer_id !== 0) {
+      obj.peer_id = Math.round(message.peer_id);
+    }
     return obj;
   },
 
@@ -9277,6 +9294,7 @@ export const VoiceLeavedEvent = {
     message.clan_id = object.clan_id ?? "0";
     message.voice_channel_id = object.voice_channel_id ?? "0";
     message.voice_user_id = object.voice_user_id ?? "0";
+    message.peer_id = object.peer_id ?? 0;
     return message;
   },
 };
@@ -9291,6 +9309,7 @@ function createBaseVoiceJoinedEvent(): VoiceJoinedEvent {
     voice_channel_label: "",
     voice_channel_id: "0",
     last_screenshot: "",
+    peer_id: 0,
   };
 }
 
@@ -9319,6 +9338,9 @@ export const VoiceJoinedEvent = {
     }
     if (message.last_screenshot !== "") {
       writer.uint32(66).string(message.last_screenshot);
+    }
+    if (message.peer_id !== 0) {
+      writer.uint32(72).int32(message.peer_id);
     }
     return writer;
   },
@@ -9386,6 +9408,13 @@ export const VoiceJoinedEvent = {
 
           message.last_screenshot = reader.string();
           continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.peer_id = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -9405,6 +9434,7 @@ export const VoiceJoinedEvent = {
       voice_channel_label: isSet(object.voice_channel_label) ? globalThis.String(object.voice_channel_label) : "",
       voice_channel_id: isSet(object.voice_channel_id) ? globalThis.String(object.voice_channel_id) : "0",
       last_screenshot: isSet(object.last_screenshot) ? globalThis.String(object.last_screenshot) : "",
+      peer_id: isSet(object.peer_id) ? globalThis.Number(object.peer_id) : 0,
     };
   },
 
@@ -9434,6 +9464,9 @@ export const VoiceJoinedEvent = {
     if (message.last_screenshot !== "") {
       obj.last_screenshot = message.last_screenshot;
     }
+    if (message.peer_id !== 0) {
+      obj.peer_id = Math.round(message.peer_id);
+    }
     return obj;
   },
 
@@ -9450,6 +9483,7 @@ export const VoiceJoinedEvent = {
     message.voice_channel_label = object.voice_channel_label ?? "";
     message.voice_channel_id = object.voice_channel_id ?? "0";
     message.last_screenshot = object.last_screenshot ?? "";
+    message.peer_id = object.peer_id ?? 0;
     return message;
   },
 };
@@ -16178,7 +16212,7 @@ export const ListDataSocket = {
 };
 
 function createBaseMeetParticipantEvent(): MeetParticipantEvent {
-  return { user_id: "0", room_name: "", channel_id: "0", clan_id: "0", action: 0 };
+  return { user_id: "0", room_name: "", channel_id: "0", clan_id: "0" };
 }
 
 export const MeetParticipantEvent = {
@@ -16194,9 +16228,6 @@ export const MeetParticipantEvent = {
     }
     if (message.clan_id !== "0") {
       writer.uint32(32).int64(message.clan_id);
-    }
-    if (message.action !== 0) {
-      writer.uint32(40).int32(message.action);
     }
     return writer;
   },
@@ -16236,13 +16267,6 @@ export const MeetParticipantEvent = {
 
           message.clan_id = longToString(reader.int64() as Long);
           continue;
-        case 5:
-          if (tag !== 40) {
-            break;
-          }
-
-          message.action = reader.int32();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -16258,7 +16282,6 @@ export const MeetParticipantEvent = {
       room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
-      action: isSet(object.action) ? globalThis.Number(object.action) : 0,
     };
   },
 
@@ -16276,9 +16299,6 @@ export const MeetParticipantEvent = {
     if (message.clan_id !== "0") {
       obj.clan_id = message.clan_id;
     }
-    if (message.action !== 0) {
-      obj.action = Math.round(message.action);
-    }
     return obj;
   },
 
@@ -16291,7 +16311,6 @@ export const MeetParticipantEvent = {
     message.room_name = object.room_name ?? "";
     message.channel_id = object.channel_id ?? "0";
     message.clan_id = object.clan_id ?? "0";
-    message.action = object.action ?? 0;
     return message;
   },
 };
