@@ -29,7 +29,10 @@ import { RateLimiter } from "./mezon-client/manager/rate-limit_manager";
 import type { MezonTransport } from "./socket";
 import * as tsproto from "./api/api";
 import * as rtproto from "./rtapi/realtime";
-import { trimAbridgedPadding } from "./transport/protobuf_decode";
+import {
+  protobufMessageLength,
+  trimAbridgedPadding,
+} from "./transport/protobuf_decode";
 
 const DEFAULT_API_QUEUE_DELAY_MS = 1024;
 const GLOBAL_LIMITER = new RateLimiter(DEFAULT_API_QUEUE_DELAY_MS);
@@ -59,6 +62,7 @@ export class MezonApi {
     encodedBody: Uint8Array,
     opts?: {
       decode?: ProtoDecoder<T>;
+      decodeRaw?: ProtoDecoder<T>;
       emptyAs?: T;
     },
   ): Promise<T> {
@@ -78,7 +82,19 @@ export class MezonApi {
       throw response;
     }
 
-    const body = trimAbridgedPadding(response.message as Uint8Array);
+    const responseBody = response.message as Uint8Array;
+    if (opts?.decodeRaw) {
+      return opts.decodeRaw(trimAbridgedPadding(responseBody));
+    }
+
+    const messageLength = protobufMessageLength(
+      responseBody,
+      responseBody.byteLength,
+    );
+    const body =
+      messageLength === null
+        ? responseBody
+        : responseBody.subarray(0, messageLength);
     if (!body.byteLength) {
       return (opts?.emptyAs ?? ({} as T));
     }
@@ -670,6 +686,32 @@ export class MezonApi {
       update_time: "",
       persistence: false,
     };
+  }
+
+  /** Generate an SFU access token for a voice channel. */
+  async generateMeetToken(
+    bearerToken: string,
+    body: tsproto.GenerateMeetTokenRequest,
+    options: any = {},
+  ): Promise<tsproto.GenerateMeetTokenResponse> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined.",
+      );
+    }
+
+    void bearerToken;
+    void options;
+
+    const urlPath = "/mezon.api.Mezon/GenerateMeetToken";
+    const encodedBody = tsproto.GenerateMeetTokenRequest.encode(body).finish();
+
+    return this.invokeMezonApi(urlPath, encodedBody, {
+      emptyAs: { token: "" },
+      decodeRaw: (bytes) => ({
+        token: new TextDecoder("utf-8").decode(bytes),
+      }),
+    });
   }
 
   /** Create a poll in a channel. */

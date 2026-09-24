@@ -4,6 +4,10 @@ import { Clan } from "../structures/Clan";
 import { TextChannel } from "../structures/TextChannel";
 import { Message, MessageInitData } from "../structures/Message";
 import { MezonApi } from "../../api";
+import {
+  GenerateMeetTokenRequest,
+  GenerateMeetTokenResponse,
+} from "../../api/api";
 import { SocketManager } from "../manager/socket_manager";
 import { SessionManager } from "../manager/session_manager";
 import { EventManager } from "../manager/event_manager";
@@ -446,6 +450,14 @@ export class MezonClientCore extends EventEmitter {
     const sessionToken = this.sessionManager.getSession();
     if (!sessionToken) return;
     return this.apiClient.createPoll(sessionToken.token, body);
+  }
+
+  async generateMeetToken(
+    body: GenerateMeetTokenRequest,
+  ): Promise<GenerateMeetTokenResponse | undefined> {
+    const sessionToken = this.sessionManager.getSession();
+    if (!sessionToken) return;
+    return this.apiClient.generateMeetToken(sessionToken.token, body);
   }
 
   async closePoll(body: ApiClosePollRequest): Promise<void | undefined> {
