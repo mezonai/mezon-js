@@ -730,6 +730,8 @@ export interface VoiceChannelUser {
   room_name: string;
   /** share screen user */
   share_screen_ids: string[];
+  /** peer id */
+  peer_ids: number[];
 }
 
 /** A list of users belonging to a channel, along with their role. */
@@ -3549,6 +3551,7 @@ export interface DeleteSdTopicRequest {
 export interface GenerateMeetTokenRequest {
   channel_id: string;
   room_name: string;
+  metadata: string;
 }
 
 export interface MeetParticipantRequest {
@@ -8302,7 +8305,7 @@ export const ChannelUserList_ChannelUser = {
 };
 
 function createBaseVoiceChannelUser(): VoiceChannelUser {
-  return { user_ids: [], channel_id: "0", room_name: "", share_screen_ids: [] };
+  return { user_ids: [], channel_id: "0", room_name: "", share_screen_ids: [], peer_ids: [] };
 }
 
 export const VoiceChannelUser = {
@@ -8319,6 +8322,11 @@ export const VoiceChannelUser = {
     for (const v of message.share_screen_ids) {
       writer.uint32(34).string(v!);
     }
+    writer.uint32(42).fork();
+    for (const v of message.peer_ids) {
+      writer.int32(v);
+    }
+    writer.ldelim();
     return writer;
   },
 
@@ -8357,6 +8365,23 @@ export const VoiceChannelUser = {
 
           message.share_screen_ids.push(reader.string());
           continue;
+        case 5:
+          if (tag === 40) {
+            message.peer_ids.push(reader.int32());
+
+            continue;
+          }
+
+          if (tag === 42) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.peer_ids.push(reader.int32());
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -8374,6 +8399,7 @@ export const VoiceChannelUser = {
       share_screen_ids: globalThis.Array.isArray(object?.share_screen_ids)
         ? object.share_screen_ids.map((e: any) => globalThis.String(e))
         : [],
+      peer_ids: globalThis.Array.isArray(object?.peer_ids) ? object.peer_ids.map((e: any) => globalThis.Number(e)) : [],
     };
   },
 
@@ -8391,6 +8417,9 @@ export const VoiceChannelUser = {
     if (message.share_screen_ids?.length) {
       obj.share_screen_ids = message.share_screen_ids;
     }
+    if (message.peer_ids?.length) {
+      obj.peer_ids = message.peer_ids.map((e) => Math.round(e));
+    }
     return obj;
   },
 
@@ -8403,6 +8432,7 @@ export const VoiceChannelUser = {
     message.channel_id = object.channel_id ?? "0";
     message.room_name = object.room_name ?? "";
     message.share_screen_ids = object.share_screen_ids?.map((e) => e) || [];
+    message.peer_ids = object.peer_ids?.map((e) => e) || [];
     return message;
   },
 };
@@ -37250,7 +37280,7 @@ export const DeleteSdTopicRequest = {
 };
 
 function createBaseGenerateMeetTokenRequest(): GenerateMeetTokenRequest {
-  return { channel_id: "0", room_name: "" };
+  return { channel_id: "0", room_name: "", metadata: "" };
 }
 
 export const GenerateMeetTokenRequest = {
@@ -37260,6 +37290,9 @@ export const GenerateMeetTokenRequest = {
     }
     if (message.room_name !== "") {
       writer.uint32(18).string(message.room_name);
+    }
+    if (message.metadata !== "") {
+      writer.uint32(26).string(message.metadata);
     }
     return writer;
   },
@@ -37285,6 +37318,13 @@ export const GenerateMeetTokenRequest = {
 
           message.room_name = reader.string();
           continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.metadata = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -37298,6 +37338,7 @@ export const GenerateMeetTokenRequest = {
     return {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
+      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
     };
   },
 
@@ -37309,6 +37350,9 @@ export const GenerateMeetTokenRequest = {
     if (message.room_name !== "") {
       obj.room_name = message.room_name;
     }
+    if (message.metadata !== "") {
+      obj.metadata = message.metadata;
+    }
     return obj;
   },
 
@@ -37319,6 +37363,7 @@ export const GenerateMeetTokenRequest = {
     const message = createBaseGenerateMeetTokenRequest();
     message.channel_id = object.channel_id ?? "0";
     message.room_name = object.room_name ?? "";
+    message.metadata = object.metadata ?? "";
     return message;
   },
 };
