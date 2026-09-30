@@ -1,5 +1,28 @@
 import { encode, decode } from "js-base64";
 import * as tsproto from "mezon-js-protobuf";
+import type { ApiGenerateMeetTokenResponse } from "./types";
+
+export function decodeGenerateMeetTokenResponse(
+  message: Uint8Array
+): ApiGenerateMeetTokenResponse {
+  const firstByte = message[0];
+  const isGenerateMeetTokenResponseProto =
+    message.length === 0 || firstByte === 0x0a || firstByte === 0x12;
+
+  if (isGenerateMeetTokenResponseProto) {
+    try {
+      return tsproto.GenerateMeetTokenResponse.decode(
+        message
+      ) as ApiGenerateMeetTokenResponse;
+    } catch {
+      // Older servers return the raw JWT instead of a protobuf response.
+    }
+  }
+
+  return {
+    token: new TextDecoder("utf-8").decode(message),
+  };
+}
 
 export function buildFetchOptions(method: string, options: any, bodyJson: string) {
   const fetchOptions = { ...{ method: method }, ...options };
