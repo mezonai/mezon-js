@@ -1,4 +1,7 @@
-import { buildFetchOptions } from "./utils";
+import {
+  buildFetchOptions,
+  decodeGenerateMeetTokenResponse,
+} from "./utils";
 import { encode } from "js-base64";
 import * as tsproto from "mezon-js-protobuf";
 import {
@@ -7213,11 +7216,10 @@ export class MezonTransport {
         if (response.code != 0) {
           throw response;
         }
-        const decoder = new TextDecoder('utf-8');
-        const jwtToken = decoder.decode(new Uint8Array(response.message));
-        return {
-          token: jwtToken
-        } as ApiGenerateMeetTokenResponse;
+        console.log(response.message);
+        return decodeGenerateMeetTokenResponse(
+          new Uint8Array(response.message)
+        );
       }),
       new Promise<never>((_, reject) =>
         setTimeout(

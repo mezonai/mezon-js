@@ -3562,6 +3562,7 @@ export interface MeetParticipantRequest {
 
 export interface GenerateMeetTokenResponse {
   token: string;
+  url: string;
 }
 
 export interface GenerateMezonMeetResponse {
@@ -37458,13 +37459,16 @@ export const MeetParticipantRequest = {
 };
 
 function createBaseGenerateMeetTokenResponse(): GenerateMeetTokenResponse {
-  return { token: "" };
+  return { token: "", url: "" };
 }
 
 export const GenerateMeetTokenResponse = {
   encode(message: GenerateMeetTokenResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.token !== "") {
       writer.uint32(10).string(message.token);
+    }
+    if (message.url !== "") {
+      writer.uint32(18).string(message.url);
     }
     return writer;
   },
@@ -37483,6 +37487,13 @@ export const GenerateMeetTokenResponse = {
 
           message.token = reader.string();
           continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.url = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -37493,13 +37504,19 @@ export const GenerateMeetTokenResponse = {
   },
 
   fromJSON(object: any): GenerateMeetTokenResponse {
-    return { token: isSet(object.token) ? globalThis.String(object.token) : "" };
+    return {
+      token: isSet(object.token) ? globalThis.String(object.token) : "",
+      url: isSet(object.url) ? globalThis.String(object.url) : "",
+    };
   },
 
   toJSON(message: GenerateMeetTokenResponse): unknown {
     const obj: any = {};
     if (message.token !== "") {
       obj.token = message.token;
+    }
+    if (message.url !== "") {
+      obj.url = message.url;
     }
     return obj;
   },
@@ -37510,6 +37527,7 @@ export const GenerateMeetTokenResponse = {
   fromPartial<I extends Exact<DeepPartial<GenerateMeetTokenResponse>, I>>(object: I): GenerateMeetTokenResponse {
     const message = createBaseGenerateMeetTokenResponse();
     message.token = object.token ?? "";
+    message.url = object.url ?? "";
     return message;
   },
 };

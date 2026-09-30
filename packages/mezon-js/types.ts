@@ -4719,6 +4719,8 @@ export interface ApiGenerateMeetTokenRequest {
 export interface ApiGenerateMeetTokenResponse {
   //
   token?: string;
+  //
+  url?: string;
 }
 
 /**  */
