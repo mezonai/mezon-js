@@ -3954,6 +3954,38 @@ export interface ApiSearchCtrlKResponse {
   channels?: Array<ApiChannelDescription>;
 }
 
+/**  */
+export interface ApiSearchMentionUsersRequest {
+  //
+  clan_id?: string;
+  //
+  channel_id?: string;
+  //
+  text?: string;
+}
+
+/**  */
+export interface ApiMentionUser {
+  //
+  id?: string;
+  //
+  username?: string;
+  //
+  display_name?: string;
+  //
+  avatar_url?: string;
+  //
+  clan_nick?: string;
+  //
+  clan_avatar?: string;
+}
+
+/**  */
+export interface ApiSearchMentionUsersResponse {
+  //
+  users?: Array<ApiMentionUser>;
+}
+
 /** A user's session used to authenticate messages. */
 export interface ApiSession {
   //True if the corresponding account was just created, false otherwise.
