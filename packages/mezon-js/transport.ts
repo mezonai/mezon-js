@@ -146,6 +146,8 @@ import {
   ApiSearchMessageResponse,
   ApiSearchCtrlKRequest,
   ApiSearchCtrlKResponse,
+  ApiSearchMentionUsersRequest,
+  ApiSearchMentionUsersResponse,
   ApiSession,
   ApiSessionLogoutRequest,
   ApiSessionRefreshRequest,
@@ -431,6 +433,7 @@ enum ApiNameEnum {
   MarkAsRead,
   UploadBatchAttachmentFile,
   SearchCtrlK,
+  SearchMentionUsers,
 }
 
 export interface MezonTransportHandlers {
@@ -3468,6 +3471,43 @@ export class MezonTransport {
         return tsproto.SearchCtrlKResponse.decode(
           response.message
         ) as ApiSearchCtrlKResponse;
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs
+        )
+      ),
+    ]);
+  }
+
+  /** Search clan/channel members for @ mention picker. */
+  searchMentionUsers(
+    body: ApiSearchMentionUsersRequest,
+    options = {}
+  ): Promise<ApiSearchMentionUsersResponse> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/SearchMentionUsers";
+    const bodyWriter = tsproto.SearchMentionUsersRequest.encode(
+      tsproto.SearchMentionUsersRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+
+    return Promise.race([
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return tsproto.SearchMentionUsersResponse.decode(
+          response.message
+        ) as ApiSearchMentionUsersResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(

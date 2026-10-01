@@ -4268,6 +4268,25 @@ export interface SearchCtrlKResponse {
   channels: ChannelDescription[];
 }
 
+export interface SearchMentionUsersRequest {
+  clan_id: string;
+  channel_id: string;
+  text: string;
+}
+
+export interface MentionUser {
+  id: string;
+  username: string;
+  display_name: string;
+  avatar_url: string;
+  clan_nick: string;
+  clan_avatar: string;
+}
+
+export interface SearchMentionUsersResponse {
+  users: MentionUser[];
+}
+
 export interface NoParams {
 }
 
@@ -45697,6 +45716,288 @@ export const SearchCtrlKResponse = {
     const message = createBaseSearchCtrlKResponse();
     message.users = object.users?.map((e) => User.fromPartial(e)) || [];
     message.channels = object.channels?.map((e) => ChannelDescription.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseSearchMentionUsersRequest(): SearchMentionUsersRequest {
+  return { clan_id: "0", channel_id: "0", text: "" };
+}
+
+export const SearchMentionUsersRequest = {
+  encode(message: SearchMentionUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
+    }
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
+    }
+    if (message.text !== "") {
+      writer.uint32(26).string(message.text);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SearchMentionUsersRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSearchMentionUsersRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.clan_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.text = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SearchMentionUsersRequest {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      text: isSet(object.text) ? globalThis.String(object.text) : "",
+    };
+  },
+
+  toJSON(message: SearchMentionUsersRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "0") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.text !== "") {
+      obj.text = message.text;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SearchMentionUsersRequest>, I>>(base?: I): SearchMentionUsersRequest {
+    return SearchMentionUsersRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SearchMentionUsersRequest>, I>>(object: I): SearchMentionUsersRequest {
+    const message = createBaseSearchMentionUsersRequest();
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.text = object.text ?? "";
+    return message;
+  },
+};
+
+function createBaseMentionUser(): MentionUser {
+  return { id: "0", username: "", display_name: "", avatar_url: "", clan_nick: "", clan_avatar: "" };
+}
+
+export const MentionUser = {
+  encode(message: MentionUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "0") {
+      writer.uint32(8).int64(message.id);
+    }
+    if (message.username !== "") {
+      writer.uint32(18).string(message.username);
+    }
+    if (message.display_name !== "") {
+      writer.uint32(26).string(message.display_name);
+    }
+    if (message.avatar_url !== "") {
+      writer.uint32(34).string(message.avatar_url);
+    }
+    if (message.clan_nick !== "") {
+      writer.uint32(42).string(message.clan_nick);
+    }
+    if (message.clan_avatar !== "") {
+      writer.uint32(50).string(message.clan_avatar);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MentionUser {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMentionUser();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.username = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.display_name = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.avatar_url = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.clan_nick = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.clan_avatar = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MentionUser {
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "0",
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
+      avatar_url: isSet(object.avatar_url) ? globalThis.String(object.avatar_url) : "",
+      clan_nick: isSet(object.clan_nick) ? globalThis.String(object.clan_nick) : "",
+      clan_avatar: isSet(object.clan_avatar) ? globalThis.String(object.clan_avatar) : "",
+    };
+  },
+
+  toJSON(message: MentionUser): unknown {
+    const obj: any = {};
+    if (message.id !== "0") {
+      obj.id = message.id;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.display_name !== "") {
+      obj.display_name = message.display_name;
+    }
+    if (message.avatar_url !== "") {
+      obj.avatar_url = message.avatar_url;
+    }
+    if (message.clan_nick !== "") {
+      obj.clan_nick = message.clan_nick;
+    }
+    if (message.clan_avatar !== "") {
+      obj.clan_avatar = message.clan_avatar;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MentionUser>, I>>(base?: I): MentionUser {
+    return MentionUser.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MentionUser>, I>>(object: I): MentionUser {
+    const message = createBaseMentionUser();
+    message.id = object.id ?? "0";
+    message.username = object.username ?? "";
+    message.display_name = object.display_name ?? "";
+    message.avatar_url = object.avatar_url ?? "";
+    message.clan_nick = object.clan_nick ?? "";
+    message.clan_avatar = object.clan_avatar ?? "";
+    return message;
+  },
+};
+
+function createBaseSearchMentionUsersResponse(): SearchMentionUsersResponse {
+  return { users: [] };
+}
+
+export const SearchMentionUsersResponse = {
+  encode(message: SearchMentionUsersResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.users) {
+      MentionUser.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SearchMentionUsersResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSearchMentionUsersResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.users.push(MentionUser.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SearchMentionUsersResponse {
+    return {
+      users: globalThis.Array.isArray(object?.users) ? object.users.map((e: any) => MentionUser.fromJSON(e)) : [],
+    };
+  },
+
+  toJSON(message: SearchMentionUsersResponse): unknown {
+    const obj: any = {};
+    if (message.users?.length) {
+      obj.users = message.users.map((e) => MentionUser.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SearchMentionUsersResponse>, I>>(base?: I): SearchMentionUsersResponse {
+    return SearchMentionUsersResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SearchMentionUsersResponse>, I>>(object: I): SearchMentionUsersResponse {
+    const message = createBaseSearchMentionUsersResponse();
+    message.users = object.users?.map((e) => MentionUser.fromPartial(e)) || [];
     return message;
   },
 };

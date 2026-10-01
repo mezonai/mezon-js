@@ -64,6 +64,8 @@ import {
   ApiSearchMessageResponse,
   ApiSearchCtrlKRequest,
   ApiSearchCtrlKResponse,
+  ApiSearchMentionUsersRequest,
+  ApiSearchMentionUsersResponse,
   ApiPinMessageRequest,
   ApiPinMessagesList,
   ApiDeleteChannelDescRequest,
@@ -3399,6 +3401,25 @@ export class Client {
     return this.transport
       .searchCtrlK(request)
       .then((response: ApiSearchCtrlKResponse) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  /** Search clan/channel members for @ mention picker. */
+  async searchMentionUsers(
+    session: ApiSession,
+    request: ApiSearchMentionUsersRequest
+  ): Promise<ApiSearchMentionUsersResponse> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport
+      .searchMentionUsers(request)
+      .then((response: ApiSearchMentionUsersResponse) => {
         return Promise.resolve(response);
       });
   }
