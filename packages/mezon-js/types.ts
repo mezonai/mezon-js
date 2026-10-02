@@ -3986,6 +3986,18 @@ export interface ApiSearchMentionUsersResponse {
   users?: Array<ApiMentionUser>;
 }
 
+/**  */
+export interface ApiGenerateCDNSignatureRequest {
+  //
+  channel_id?: string;
+}
+
+/**  */
+export interface ApiGenerateCDNSignatureResponse {
+  //
+  signature?: string;
+}
+
 /** A user's session used to authenticate messages. */
 export interface ApiSession {
   //True if the corresponding account was just created, false otherwise.
@@ -4279,6 +4291,8 @@ export interface ApiUploadAttachmentRequest {
   width?: number;
   //
   part_count?: number;
+  //
+  channel_id?: string;
 }
 
 export interface ApiUploadBatchAttachmentRequest {

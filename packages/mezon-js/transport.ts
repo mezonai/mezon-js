@@ -76,6 +76,8 @@ import {
   ApiEventManagement,
   ApiForSaleItemList,
   ApiFriendList,
+  ApiGenerateCDNSignatureRequest,
+  ApiGenerateCDNSignatureResponse,
   ApiGenerateClanWebhookRequest,
   ApiGenerateClanWebhookResponse,
   ApiGenerateMeetTokenExternalResponse,
@@ -3508,6 +3510,43 @@ export class MezonTransport {
         return tsproto.SearchMentionUsersResponse.decode(
           response.message
         ) as ApiSearchMentionUsersResponse;
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs
+        )
+      ),
+    ]);
+  }
+
+  /** Generate a CDN signature for a channel. */
+  generateCDNSignature(
+    body: ApiGenerateCDNSignatureRequest,
+    options = {}
+  ): Promise<ApiGenerateCDNSignatureResponse> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/GenerateCDNSignature";
+    const bodyWriter = tsproto.GenerateCDNSignatureRequest.encode(
+      tsproto.GenerateCDNSignatureRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+
+    return Promise.race([
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return tsproto.GenerateCDNSignatureResponse.decode(
+          response.message
+        ) as ApiGenerateCDNSignatureResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
