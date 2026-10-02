@@ -2257,6 +2257,8 @@ export interface UploadAttachmentRequest {
   height: number;
   /** part count */
   part_count: number;
+  /** channel id */
+  channel_id: string;
 }
 
 export interface ListMessageMentionRequest {
@@ -4285,6 +4287,14 @@ export interface MentionUser {
 
 export interface SearchMentionUsersResponse {
   users: MentionUser[];
+}
+
+export interface GenerateCDNSignatureRequest {
+  channel_id: string;
+}
+
+export interface GenerateCDNSignatureResponse {
+  signature: string;
 }
 
 export interface NoParams {
@@ -23059,7 +23069,7 @@ export const UploadAttachmentBatch = {
 };
 
 function createBaseUploadAttachmentRequest(): UploadAttachmentRequest {
-  return { filename: "", filetype: "", size: 0, width: 0, height: 0, part_count: 0 };
+  return { filename: "", filetype: "", size: 0, width: 0, height: 0, part_count: 0, channel_id: "0" };
 }
 
 export const UploadAttachmentRequest = {
@@ -23081,6 +23091,9 @@ export const UploadAttachmentRequest = {
     }
     if (message.part_count !== 0) {
       writer.uint32(48).int32(message.part_count);
+    }
+    if (message.channel_id !== "0") {
+      writer.uint32(56).int64(message.channel_id);
     }
     return writer;
   },
@@ -23134,6 +23147,13 @@ export const UploadAttachmentRequest = {
 
           message.part_count = reader.int32();
           continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -23151,6 +23171,7 @@ export const UploadAttachmentRequest = {
       width: isSet(object.width) ? globalThis.Number(object.width) : 0,
       height: isSet(object.height) ? globalThis.Number(object.height) : 0,
       part_count: isSet(object.part_count) ? globalThis.Number(object.part_count) : 0,
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
     };
   },
 
@@ -23174,6 +23195,9 @@ export const UploadAttachmentRequest = {
     if (message.part_count !== 0) {
       obj.part_count = Math.round(message.part_count);
     }
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
     return obj;
   },
 
@@ -23188,6 +23212,7 @@ export const UploadAttachmentRequest = {
     message.width = object.width ?? 0;
     message.height = object.height ?? 0;
     message.part_count = object.part_count ?? 0;
+    message.channel_id = object.channel_id ?? "0";
     return message;
   },
 };
@@ -45998,6 +46023,120 @@ export const SearchMentionUsersResponse = {
   fromPartial<I extends Exact<DeepPartial<SearchMentionUsersResponse>, I>>(object: I): SearchMentionUsersResponse {
     const message = createBaseSearchMentionUsersResponse();
     message.users = object.users?.map((e) => MentionUser.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseGenerateCDNSignatureRequest(): GenerateCDNSignatureRequest {
+  return { channel_id: "0" };
+}
+
+export const GenerateCDNSignatureRequest = {
+  encode(message: GenerateCDNSignatureRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "0") {
+      writer.uint32(8).int64(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): GenerateCDNSignatureRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGenerateCDNSignatureRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GenerateCDNSignatureRequest {
+    return { channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0" };
+  },
+
+  toJSON(message: GenerateCDNSignatureRequest): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GenerateCDNSignatureRequest>, I>>(base?: I): GenerateCDNSignatureRequest {
+    return GenerateCDNSignatureRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<GenerateCDNSignatureRequest>, I>>(object: I): GenerateCDNSignatureRequest {
+    const message = createBaseGenerateCDNSignatureRequest();
+    message.channel_id = object.channel_id ?? "0";
+    return message;
+  },
+};
+
+function createBaseGenerateCDNSignatureResponse(): GenerateCDNSignatureResponse {
+  return { signature: "" };
+}
+
+export const GenerateCDNSignatureResponse = {
+  encode(message: GenerateCDNSignatureResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.signature !== "") {
+      writer.uint32(10).string(message.signature);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): GenerateCDNSignatureResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGenerateCDNSignatureResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.signature = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GenerateCDNSignatureResponse {
+    return { signature: isSet(object.signature) ? globalThis.String(object.signature) : "" };
+  },
+
+  toJSON(message: GenerateCDNSignatureResponse): unknown {
+    const obj: any = {};
+    if (message.signature !== "") {
+      obj.signature = message.signature;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GenerateCDNSignatureResponse>, I>>(base?: I): GenerateCDNSignatureResponse {
+    return GenerateCDNSignatureResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<GenerateCDNSignatureResponse>, I>>(object: I): GenerateCDNSignatureResponse {
+    const message = createBaseGenerateCDNSignatureResponse();
+    message.signature = object.signature ?? "";
     return message;
   },
 };

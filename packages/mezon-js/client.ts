@@ -66,6 +66,8 @@ import {
   ApiSearchCtrlKResponse,
   ApiSearchMentionUsersRequest,
   ApiSearchMentionUsersResponse,
+  ApiGenerateCDNSignatureRequest,
+  ApiGenerateCDNSignatureResponse,
   ApiPinMessageRequest,
   ApiPinMessagesList,
   ApiDeleteChannelDescRequest,
@@ -3420,6 +3422,25 @@ export class Client {
     return this.transport
       .searchMentionUsers(request)
       .then((response: ApiSearchMentionUsersResponse) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  /** Generate a CDN signature for a channel. */
+  async generateCDNSignature(
+    session: ApiSession,
+    request: ApiGenerateCDNSignatureRequest
+  ): Promise<ApiGenerateCDNSignatureResponse> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport
+      .generateCDNSignature(request)
+      .then((response: ApiGenerateCDNSignatureResponse) => {
         return Promise.resolve(response);
       });
   }
