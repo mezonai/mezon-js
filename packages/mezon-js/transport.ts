@@ -436,6 +436,7 @@ enum ApiNameEnum {
   UploadBatchAttachmentFile,
   SearchCtrlK,
   SearchMentionUsers,
+  GenerateCDNSignature,
 }
 
 export interface MezonTransportHandlers {
