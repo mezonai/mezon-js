@@ -4275,6 +4275,8 @@ export interface ApiUploadAttachment {
   filename?: string;
   //
   url?: string;
+  // CDN type
+  type_cdn?: number;
 }
 
 /**  */
@@ -4293,6 +4295,8 @@ export interface ApiUploadAttachmentRequest {
   part_count?: number;
   //
   channel_id?: string;
+  // need to transcode
+  transcode_hls?: boolean;
 }
 
 export interface ApiUploadBatchAttachmentRequest {
