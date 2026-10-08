@@ -44,6 +44,26 @@ export function setApiQueueDelay(minTimeMs: number): void {
 export { DEFAULT_API_QUEUE_DELAY_MS };
 
 type ProtoDecoder<T> = (bytes: Uint8Array) => T;
+
+function decodeGenerateMeetTokenResponse(
+  message: Uint8Array
+): tsproto.GenerateMeetTokenResponse {
+  const firstByte = message[0];
+  const isGenerateMeetTokenResponseProto =
+    message.length === 0 || firstByte === 0x0a || firstByte === 0x12;
+
+  if (isGenerateMeetTokenResponseProto) {
+    try {
+      return tsproto.GenerateMeetTokenResponse.decode(message);
+    } catch { }
+  }
+
+  return {
+    token: new TextDecoder("utf-8").decode(message),
+    url: "",
+  };
+}
+
 export class MezonApi {
   private transport?: Pick<MezonTransport, "isOpen" | "send">;
 
@@ -51,7 +71,7 @@ export class MezonApi {
     readonly apiKey: string,
     readonly basePath: string,
     readonly timeoutMs: number,
-  ) {}
+  ) { }
 
   setTransport(transport: Pick<MezonTransport, "isOpen" | "send">) {
     this.transport = transport;
@@ -707,10 +727,8 @@ export class MezonApi {
     const encodedBody = tsproto.GenerateMeetTokenRequest.encode(body).finish();
 
     return this.invokeMezonApi(urlPath, encodedBody, {
-      emptyAs: { token: "" },
-      decodeRaw: (bytes) => ({
-        token: new TextDecoder("utf-8").decode(bytes),
-      }),
+      emptyAs: { token: "", url: "" },
+      decodeRaw: decodeGenerateMeetTokenResponse,
     });
   }
 
