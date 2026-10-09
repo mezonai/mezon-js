@@ -3868,6 +3868,7 @@ export interface GenerateMeetTokenExternalResponse {
   token: string;
   guest_user_id: string;
   guest_access_token: string;
+  url:string;
 }
 
 export interface KafkaActionMsg {
@@ -42114,7 +42115,7 @@ export const ListClanDiscover = {
 };
 
 function createBaseGenerateMeetTokenExternalResponse(): GenerateMeetTokenExternalResponse {
-  return { token: "", guest_user_id: "0", guest_access_token: "" };
+  return { token: "", guest_user_id: "0", guest_access_token: "", url: "" };
 }
 
 export const GenerateMeetTokenExternalResponse = {
@@ -42127,6 +42128,9 @@ export const GenerateMeetTokenExternalResponse = {
     }
     if (message.guest_access_token !== "") {
       writer.uint32(26).string(message.guest_access_token);
+    }
+    if (message.url !== "") {
+      writer.uint32(34).string(message.url);
     }
     return writer;
   },
@@ -42159,6 +42163,13 @@ export const GenerateMeetTokenExternalResponse = {
 
           message.guest_access_token = reader.string();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.url = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -42173,6 +42184,7 @@ export const GenerateMeetTokenExternalResponse = {
       token: isSet(object.token) ? globalThis.String(object.token) : "",
       guest_user_id: isSet(object.guest_user_id) ? globalThis.String(object.guest_user_id) : "0",
       guest_access_token: isSet(object.guest_access_token) ? globalThis.String(object.guest_access_token) : "",
+      url: isSet(object.url) ? globalThis.String(object.url) : "",
     };
   },
 
@@ -42186,6 +42198,9 @@ export const GenerateMeetTokenExternalResponse = {
     }
     if (message.guest_access_token !== "") {
       obj.guest_access_token = message.guest_access_token;
+    }
+    if (message.url !== "") {
+      obj.url = message.url;
     }
     return obj;
   },
@@ -42202,6 +42217,7 @@ export const GenerateMeetTokenExternalResponse = {
     message.token = object.token ?? "";
     message.guest_user_id = object.guest_user_id ?? "0";
     message.guest_access_token = object.guest_access_token ?? "";
+    message.url = object.url ?? "";
     return message;
   },
 };
