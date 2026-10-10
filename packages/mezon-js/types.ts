@@ -2999,6 +2999,8 @@ export interface ApiGenerateMeetTokenExternalResponse {
   token?: string;
   //
   guest_access_token?: string;
+  //
+  url?: string;
 }
 
 /**  */
