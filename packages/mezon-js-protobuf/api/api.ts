@@ -2288,6 +2288,8 @@ export interface MultipartUploadAttachment {
   urls: string[];
   /** the upload id */
   upload_id: string;
+  /** CDN type */
+  type_cdn: number;
 }
 
 export interface MultipartUploadAttachmentPart {
@@ -3868,6 +3870,7 @@ export interface GenerateMeetTokenExternalResponse {
   token: string;
   guest_user_id: string;
   guest_access_token: string;
+  url: string;
 }
 
 export interface KafkaActionMsg {
@@ -23424,7 +23427,7 @@ export const UploadAttachment = {
 };
 
 function createBaseMultipartUploadAttachment(): MultipartUploadAttachment {
-  return { filename: "", urls: [], upload_id: "" };
+  return { filename: "", urls: [], upload_id: "", type_cdn: 0 };
 }
 
 export const MultipartUploadAttachment = {
@@ -23437,6 +23440,9 @@ export const MultipartUploadAttachment = {
     }
     if (message.upload_id !== "") {
       writer.uint32(26).string(message.upload_id);
+    }
+    if (message.type_cdn !== 0) {
+      writer.uint32(32).int32(message.type_cdn);
     }
     return writer;
   },
@@ -23469,6 +23475,13 @@ export const MultipartUploadAttachment = {
 
           message.upload_id = reader.string();
           continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.type_cdn = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -23483,6 +23496,7 @@ export const MultipartUploadAttachment = {
       filename: isSet(object.filename) ? globalThis.String(object.filename) : "",
       urls: globalThis.Array.isArray(object?.urls) ? object.urls.map((e: any) => globalThis.String(e)) : [],
       upload_id: isSet(object.upload_id) ? globalThis.String(object.upload_id) : "",
+      type_cdn: isSet(object.type_cdn) ? globalThis.Number(object.type_cdn) : 0,
     };
   },
 
@@ -23497,6 +23511,9 @@ export const MultipartUploadAttachment = {
     if (message.upload_id !== "") {
       obj.upload_id = message.upload_id;
     }
+    if (message.type_cdn !== 0) {
+      obj.type_cdn = Math.round(message.type_cdn);
+    }
     return obj;
   },
 
@@ -23508,6 +23525,7 @@ export const MultipartUploadAttachment = {
     message.filename = object.filename ?? "";
     message.urls = object.urls?.map((e) => e) || [];
     message.upload_id = object.upload_id ?? "";
+    message.type_cdn = object.type_cdn ?? 0;
     return message;
   },
 };
@@ -42114,7 +42132,7 @@ export const ListClanDiscover = {
 };
 
 function createBaseGenerateMeetTokenExternalResponse(): GenerateMeetTokenExternalResponse {
-  return { token: "", guest_user_id: "0", guest_access_token: "" };
+  return { token: "", guest_user_id: "0", guest_access_token: "", url: "" };
 }
 
 export const GenerateMeetTokenExternalResponse = {
@@ -42127,6 +42145,9 @@ export const GenerateMeetTokenExternalResponse = {
     }
     if (message.guest_access_token !== "") {
       writer.uint32(26).string(message.guest_access_token);
+    }
+    if (message.url !== "") {
+      writer.uint32(34).string(message.url);
     }
     return writer;
   },
@@ -42159,6 +42180,13 @@ export const GenerateMeetTokenExternalResponse = {
 
           message.guest_access_token = reader.string();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.url = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -42173,6 +42201,7 @@ export const GenerateMeetTokenExternalResponse = {
       token: isSet(object.token) ? globalThis.String(object.token) : "",
       guest_user_id: isSet(object.guest_user_id) ? globalThis.String(object.guest_user_id) : "0",
       guest_access_token: isSet(object.guest_access_token) ? globalThis.String(object.guest_access_token) : "",
+      url: isSet(object.url) ? globalThis.String(object.url) : "",
     };
   },
 
@@ -42186,6 +42215,9 @@ export const GenerateMeetTokenExternalResponse = {
     }
     if (message.guest_access_token !== "") {
       obj.guest_access_token = message.guest_access_token;
+    }
+    if (message.url !== "") {
+      obj.url = message.url;
     }
     return obj;
   },
@@ -42202,6 +42234,7 @@ export const GenerateMeetTokenExternalResponse = {
     message.token = object.token ?? "";
     message.guest_user_id = object.guest_user_id ?? "0";
     message.guest_access_token = object.guest_access_token ?? "";
+    message.url = object.url ?? "";
     return message;
   },
 };
