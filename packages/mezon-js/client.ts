@@ -68,6 +68,8 @@ import {
   ApiSearchMentionUsersResponse,
   ApiGenerateCDNSignatureRequest,
   ApiGenerateCDNSignatureResponse,
+  ApiGetStreamPlaybackRequest,
+  ApiGetStreamPlaybackResponse,
   ApiPinMessageRequest,
   ApiPinMessagesList,
   ApiDeleteChannelDescRequest,
@@ -239,6 +241,7 @@ import {
   StreamingEndedEvent,
   StreamingJoinedEvent,
   StreamingLeavedEvent,
+  StreamingViewerCountEvent,
   StreamingStartedEvent,
   TransferOwnershipEvent,
   UnblockFriend,
@@ -619,6 +622,10 @@ export class Client {
             } else if (message.streaming_leaved_event) {
               this.onstreamingchannelleaved(
                 <StreamingLeavedEvent>message.streaming_leaved_event
+              );
+            } else if (message.streaming_viewer_count_event) {
+              this.onstreamingviewercount(
+                <StreamingViewerCountEvent>message.streaming_viewer_count_event
               );
             } else if (message.permission_set_event) {
               this.onpermissionset(<PermissionSet>message.permission_set_event);
@@ -1209,6 +1216,12 @@ export class Client {
   onstreamingchannelleaved(streaming_leaved_event: StreamingLeavedEvent) {
     if (this.verbose && window && window.console) {
       console.log(streaming_leaved_event);
+    }
+  }
+
+  onstreamingviewercount(streaming_viewer_count_event: StreamingViewerCountEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(streaming_viewer_count_event);
     }
   }
 
@@ -3441,6 +3454,25 @@ export class Client {
     return this.transport
       .generateCDNSignature(request)
       .then((response: ApiGenerateCDNSignatureResponse) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  /** Where to publish to or watch a stream channel served by mezon-streaming-server. */
+  async getStreamPlayback(
+    session: ApiSession,
+    request: ApiGetStreamPlaybackRequest
+  ): Promise<ApiGetStreamPlaybackResponse> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport
+      .getStreamPlayback(request)
+      .then((response: ApiGetStreamPlaybackResponse) => {
         return Promise.resolve(response);
       });
   }
