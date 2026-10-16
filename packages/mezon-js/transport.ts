@@ -78,6 +78,8 @@ import {
   ApiFriendList,
   ApiGenerateCDNSignatureRequest,
   ApiGenerateCDNSignatureResponse,
+  ApiGetStreamPlaybackRequest,
+  ApiGetStreamPlaybackResponse,
   ApiGenerateClanWebhookRequest,
   ApiGenerateClanWebhookResponse,
   ApiGenerateMeetTokenExternalResponse,
@@ -437,6 +439,7 @@ enum ApiNameEnum {
   SearchCtrlK,
   SearchMentionUsers,
   GenerateCDNSignature,
+  GetStreamPlayback,
 }
 
 export interface MezonTransportHandlers {
@@ -3548,6 +3551,43 @@ export class MezonTransport {
         return tsproto.GenerateCDNSignatureResponse.decode(
           response.message
         ) as ApiGenerateCDNSignatureResponse;
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs
+        )
+      ),
+    ]);
+  }
+
+  /** Where to publish to or watch a stream channel served by mezon-streaming-server. */
+  getStreamPlayback(
+    body: ApiGetStreamPlaybackRequest,
+    options = {}
+  ): Promise<ApiGetStreamPlaybackResponse> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/GetStreamPlayback";
+    const bodyWriter = tsproto.GetStreamPlaybackRequest.encode(
+      tsproto.GetStreamPlaybackRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+
+    return Promise.race([
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return tsproto.GetStreamPlaybackResponse.decode(
+          response.message
+        ) as ApiGetStreamPlaybackResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(

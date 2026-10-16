@@ -1060,6 +1060,16 @@ export interface StreamingLeavedEvent {
   streaming_user_id: string;
 }
 
+/** Streaming viewer count event */
+export interface StreamingViewerCountEvent {
+  /** The unique identifier of the chat clan. */
+  clan_id: string;
+  /** streaming channel id */
+  channel_id: string;
+  /** viewers, publishers not counted */
+  viewer_count: number;
+}
+
 /** Streaming Joined event */
 export interface StreamingJoinedEvent {
   /** The unique identifier of the chat clan. */
@@ -3998,6 +4008,28 @@ export interface ApiGenerateCDNSignatureRequest {
 export interface ApiGenerateCDNSignatureResponse {
   //
   signature?: string;
+}
+
+/**  */
+export interface ApiGetStreamPlaybackRequest {
+  //
+  channel_id?: string;
+  //
+  publish?: boolean;
+}
+
+/**  */
+export interface ApiGetStreamPlaybackResponse {
+  //
+  token?: string;
+  //
+  whip_url?: string;
+  //
+  whep_url?: string;
+  //
+  hls_url?: string;
+  //
+  expires_at?: string;
 }
 
 /** A user's session used to authenticate messages. */
