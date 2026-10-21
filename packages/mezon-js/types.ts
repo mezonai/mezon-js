@@ -1086,6 +1086,7 @@ export interface StreamingJoinedEvent {
   streaming_channel_label: string;
   /** streaming channel id */
   streaming_channel_id: string;
+  is_publisher?: boolean;
 }
 
 /** Streaming start event */
@@ -4140,6 +4141,7 @@ export interface ApiStreamingChannelUser {
   channel_id?: string;
   //
   id?: string;
+  is_publisher?: boolean;
   //
   participant?: string;
   //user for a channel.
