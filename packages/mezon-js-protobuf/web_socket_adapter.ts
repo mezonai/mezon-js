@@ -102,7 +102,13 @@ export class MezonNetworkAdapter implements TransportAdapter {
           return;
         }
 
-        const envelope = tsproto.Envelope.decode(uintBuffer);
+        let envelope: tsproto.Envelope;
+        try {
+          envelope = tsproto.Envelope.decode(uintBuffer);
+        } catch (err) {
+          console.error("WebSocket Protobuf Decode Error:", err);
+          return;
+        }
 
         if (envelope.channel_message) {
           if (envelope.channel_message.code == undefined) {

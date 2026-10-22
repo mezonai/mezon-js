@@ -440,6 +440,7 @@ enum ApiNameEnum {
   SearchMentionUsers,
   GenerateCDNSignature,
   GetStreamPlayback,
+  LinkCDNFile,
 }
 
 export interface MezonTransportHandlers {
@@ -9830,6 +9831,32 @@ export class MezonTransport {
           throw response;
         }
         return {} as ChannelAppEvent;
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs
+        )
+      ),
+    ]);
+  }
+
+  async writeStreamingWatch(
+    channel_id: string,
+    watching: boolean
+  ): Promise<void> {
+    const urlPath = "";
+    const fetchOptions = {
+      streaming_watch: {
+        channel_id: channel_id,
+        watching: watching,
+      },
+    } as any;
+    return Promise.race([
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
       }),
       new Promise<never>((_, reject) =>
         setTimeout(

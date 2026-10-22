@@ -4006,6 +4006,7 @@ export class Client {
             channel_id: gu.channel_id,
             user_id: gu.user_id,
             participant: gu.participant,
+            is_publisher: gu.is_publisher,
           });
         });
         return Promise.resolve(result);
@@ -6765,6 +6766,20 @@ export class Client {
       await this.transport.setFallbackSession(session);
     }
     return this.transport.writeChannelAppEvent(clan_id, channel_id, action);
+  }
+
+  async writeStreamingWatch(
+    session: ApiSession,
+    channel_id: string,
+    watching: boolean
+  ): Promise<void> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+    return this.transport.writeStreamingWatch(channel_id, watching);
   }
 
   async listLogedDevice(session: ApiSession): Promise<LogedDeviceList> {
