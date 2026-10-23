@@ -78,8 +78,11 @@ import {
   ApiFriendList,
   ApiGenerateCDNSignatureRequest,
   ApiGenerateCDNSignatureResponse,
+  ApiGetOverrideEveryoneChannelRequest,
+  ApiGetOverrideEveryoneChannelResponse,
   ApiGetStreamPlaybackRequest,
   ApiGetStreamPlaybackResponse,
+  ApiSetOverrideEveryoneChannelRequest,
   ApiGenerateClanWebhookRequest,
   ApiGenerateClanWebhookResponse,
   ApiGenerateMeetTokenExternalResponse,
@@ -441,6 +444,10 @@ enum ApiNameEnum {
   GenerateCDNSignature,
   GetStreamPlayback,
   LinkCDNFile,
+  SfuBreakoutRoom,
+  SfuBreakoutMerge,
+  SetOverrideEveryoneChannel,
+  GetOverrideEveryoneChannel,
 }
 
 export interface MezonTransportHandlers {
@@ -3589,6 +3596,78 @@ export class MezonTransport {
         return tsproto.GetStreamPlaybackResponse.decode(
           response.message
         ) as ApiGetStreamPlaybackResponse;
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs
+        )
+      ),
+    ]);
+  }
+
+  /** Set override-everyone no-send on a public channel. */
+  setOverrideEveryoneChannel(
+    body: ApiSetOverrideEveryoneChannelRequest,
+    options = {}
+  ): Promise<any> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/SetOverrideEveryoneChannel";
+    const bodyWriter = tsproto.SetOverrideEveryoneChannelRequest.encode(
+      tsproto.SetOverrideEveryoneChannelRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+
+    return Promise.race([
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return {};
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs
+        )
+      ),
+    ]);
+  }
+
+  /** Get override-everyone no-send state for a channel. */
+  getOverrideEveryoneChannel(
+    body: ApiGetOverrideEveryoneChannelRequest,
+    options = {}
+  ): Promise<ApiGetOverrideEveryoneChannelResponse> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/GetOverrideEveryoneChannel";
+    const bodyWriter = tsproto.GetOverrideEveryoneChannelRequest.encode(
+      tsproto.GetOverrideEveryoneChannelRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+
+    return Promise.race([
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return tsproto.GetOverrideEveryoneChannelResponse.decode(
+          response.message
+        ) as ApiGetOverrideEveryoneChannelResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(

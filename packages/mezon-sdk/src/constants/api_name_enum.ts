@@ -210,6 +210,14 @@ export enum ApiNameEnum {
   MarkAsRead,
   UploadBatchAttachmentFile,
   SearchCtrlK,
+  SearchMentionUsers,
+  GenerateCDNSignature,
+  GetStreamPlayback,
+  LinkCDNFile,
+  SfuBreakoutRoom,
+  SfuBreakoutMerge,
+  SetOverrideEveryoneChannel,
+  GetOverrideEveryoneChannel,
 }
 
 export function getApiFromPath(apiPath: string): number | undefined {

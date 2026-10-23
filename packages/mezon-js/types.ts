@@ -1,4 +1,8 @@
-import { ClanBadgeCount, DirectFcmProto } from "mezon-js-protobuf";
+import {
+  ClanBadgeCount,
+  DirectFcmProto,
+  EveryoneChannelExcludeType,
+} from "mezon-js-protobuf";
 import {
   safeJSONParse,
   decodeReactions,
@@ -4031,6 +4035,44 @@ export interface ApiGetStreamPlaybackResponse {
   hls_url?: string;
   //
   expires_at?: string;
+}
+
+export { EveryoneChannelExcludeType };
+
+/**  */
+export interface ApiSetOverrideEveryoneChannelRequest {
+  //
+  clan_id?: string;
+  //
+  channel_id?: string;
+  //
+  override?: boolean;
+  //
+  exclude_type?: EveryoneChannelExcludeType;
+  //
+  exclude_ids?: Array<string>;
+}
+
+/**  */
+export interface ApiGetOverrideEveryoneChannelRequest {
+  //
+  clan_id?: string;
+  //
+  channel_id?: string;
+}
+
+/**  */
+export interface ApiGetOverrideEveryoneChannelResponse {
+  //
+  clan_id?: string;
+  //
+  channel_id?: string;
+  //
+  override?: boolean;
+  //
+  user_ids?: Array<string>;
+  //
+  role_ids?: Array<string>;
 }
 
 /** A user's session used to authenticate messages. */

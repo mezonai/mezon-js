@@ -68,8 +68,11 @@ import {
   ApiSearchMentionUsersResponse,
   ApiGenerateCDNSignatureRequest,
   ApiGenerateCDNSignatureResponse,
+  ApiGetOverrideEveryoneChannelRequest,
+  ApiGetOverrideEveryoneChannelResponse,
   ApiGetStreamPlaybackRequest,
   ApiGetStreamPlaybackResponse,
+  ApiSetOverrideEveryoneChannelRequest,
   ApiPinMessageRequest,
   ApiPinMessagesList,
   ApiDeleteChannelDescRequest,
@@ -3473,6 +3476,44 @@ export class Client {
     return this.transport
       .getStreamPlayback(request)
       .then((response: ApiGetStreamPlaybackResponse) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  /** Set override-everyone no-send on a public channel. */
+  async setOverrideEveryoneChannel(
+    session: ApiSession,
+    request: ApiSetOverrideEveryoneChannelRequest
+  ): Promise<any> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport
+      .setOverrideEveryoneChannel(request)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  /** Get override-everyone no-send state for a channel. */
+  async getOverrideEveryoneChannel(
+    session: ApiSession,
+    request: ApiGetOverrideEveryoneChannelRequest
+  ): Promise<ApiGetOverrideEveryoneChannelResponse> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport
+      .getOverrideEveryoneChannel(request)
+      .then((response: ApiGetOverrideEveryoneChannelResponse) => {
         return Promise.resolve(response);
       });
   }
