@@ -732,6 +732,32 @@ export class MezonApi {
     });
   }
 
+  /** Where to publish to or watch a stream channel served by mezon-streaming-server. */
+  async getStreamPlayback(
+    bearerToken: string,
+    body: tsproto.GetStreamPlaybackRequest,
+    options: any = {},
+  ): Promise<tsproto.GetStreamPlaybackResponse> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined.",
+      );
+    }
+
+    void bearerToken;
+    void options;
+
+    const urlPath = "/mezon.api.Mezon/GetStreamPlayback";
+    const encodedBody = tsproto.GetStreamPlaybackRequest.encode(
+      tsproto.GetStreamPlaybackRequest.fromPartial(body),
+    ).finish();
+
+    return this.invokeMezonApi(urlPath, encodedBody, {
+      emptyAs: tsproto.GetStreamPlaybackResponse.fromPartial({}),
+      decode: (bytes) => tsproto.GetStreamPlaybackResponse.decode(bytes),
+    });
+  }
+
   /** Create a poll in a channel. */
   async createPoll(
     bearerToken: string,
