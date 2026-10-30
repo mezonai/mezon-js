@@ -758,6 +758,32 @@ export class MezonApi {
     });
   }
 
+  /** Generate a CDN signature for a channel. */
+  async generateCDNSignature(
+    bearerToken: string,
+    body: tsproto.GenerateCDNSignatureRequest,
+    options: any = {},
+  ): Promise<tsproto.GenerateCDNSignatureResponse> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined.",
+      );
+    }
+
+    void bearerToken;
+    void options;
+
+    const urlPath = "/mezon.api.Mezon/GenerateCDNSignature";
+    const encodedBody = tsproto.GenerateCDNSignatureRequest.encode(
+      tsproto.GenerateCDNSignatureRequest.fromPartial(body),
+    ).finish();
+
+    return this.invokeMezonApi(urlPath, encodedBody, {
+      emptyAs: tsproto.GenerateCDNSignatureResponse.fromPartial({}),
+      decode: (bytes) => tsproto.GenerateCDNSignatureResponse.decode(bytes),
+    });
+  }
+
   /** Create a poll in a channel. */
   async createPoll(
     bearerToken: string,

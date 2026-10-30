@@ -9,6 +9,8 @@ import {
   GenerateMeetTokenResponse,
   GetStreamPlaybackRequest,
   GetStreamPlaybackResponse,
+  GenerateCDNSignatureRequest,
+  GenerateCDNSignatureResponse,
 } from "../../api/api";
 import { SocketManager } from "../manager/socket_manager";
 import { SessionManager } from "../manager/session_manager";
@@ -468,6 +470,14 @@ export class MezonClientCore extends EventEmitter {
     const sessionToken = this.sessionManager.getSession();
     if (!sessionToken) return;
     return this.apiClient.getStreamPlayback(sessionToken.token, body);
+  }
+
+  async generateCDNSignature(
+    body: GenerateCDNSignatureRequest,
+  ): Promise<GenerateCDNSignatureResponse | undefined> {
+    const sessionToken = this.sessionManager.getSession();
+    if (!sessionToken) return;
+    return this.apiClient.generateCDNSignature(sessionToken.token, body);
   }
 
   async closePoll(body: ApiClosePollRequest): Promise<void | undefined> {
