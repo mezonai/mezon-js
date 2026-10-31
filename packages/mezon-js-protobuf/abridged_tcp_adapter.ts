@@ -17,6 +17,59 @@ type PlainFn<T extends (...args: any[]) => any> = T extends (
   : never;
 
 const CODE_FIN = 0xff;
+const PREFIX_RAW = 0xff;
+const PREFIX_EXTENDED = 0x7f;
+const PREFIX_WEBSOCKET = 0x82;
+const RAW_HEADER_LENGTH = 11;
+const MAX_REALTIME_FRAME_LENGTH = 1 << 20;
+const MAX_API_RESPONSE_LENGTH = 16 << 20;
+const RESPONSE_CODE_TOO_LARGE = 0xffff;
+
+function frameBounds(data: Buffer): [number, number] | undefined {
+  const prefix = data[0];
+  let header: number;
+  let length: number;
+
+  if (prefix === 0x00) {
+    header = 3;
+    length = 0;
+  } else if (prefix === PREFIX_RAW) {
+    if (data.length < RAW_HEADER_LENGTH) return undefined;
+    header = RAW_HEADER_LENGTH;
+    length = data.readUInt32BE(7);
+    if (length > MAX_API_RESPONSE_LENGTH) {
+      throw new Error(`API frame length ${length} is too large`);
+    }
+  } else if (prefix < PREFIX_EXTENDED) {
+    header = 1;
+    length = prefix * 4;
+  } else if (prefix === PREFIX_EXTENDED) {
+    if (data.length < 4) return undefined;
+    header = 4;
+    length = data.readUIntLE(1, 3) * 4;
+  } else if (prefix === PREFIX_WEBSOCKET) {
+    if (data.length < 2) return undefined;
+    if (data[1] & 0x80) throw new Error("Masked WebSocket frame");
+    header = 2;
+    length = data[1];
+    if (length === 126) {
+      if (data.length < 4) return undefined;
+      header = 4;
+      length = data.readUInt16BE(2);
+    } else if (length === 127) {
+      if (data.length < 10) return undefined;
+      header = 10;
+      length = data.readUInt32BE(2) * 2 ** 32 + data.readUInt32BE(6);
+    }
+  } else {
+    throw new Error(`Unexpected first byte ${prefix}`);
+  }
+
+  if (prefix !== PREFIX_RAW && length > MAX_REALTIME_FRAME_LENGTH) {
+    throw new Error(`Realtime frame length ${length} is too large`);
+  }
+  return data.length < header + length ? undefined : [header, header + length];
+}
 
 export class MezonNetworkAdapter implements TransportAdapter {
   private _socket?: any;
@@ -58,6 +111,8 @@ export class MezonNetworkAdapter implements TransportAdapter {
 
     // Assign immediately so isOpen(), send(), and close() work right away
     this._socket = client;
+    this._streams.clear();
+    let pending: Buffer = Buffer.alloc(0);
 
     client.on("secureConnect", () => {
       const tokenBytes = Buffer.from(token, "utf-8");
@@ -75,93 +130,22 @@ export class MezonNetworkAdapter implements TransportAdapter {
     });
 
     client.on("data", (data: Buffer) => {
-      const PREFIX_RAW = 0xff;
-      const CODE_LENGTH = 3;
-      const RAW_HEADER_LENGTH = 7; // Header Length: 1 (Prefix) + 2 (CID) + 4 (Code) = 7 bytes
-      const PAYLOAD_LENGTH = 11; // Header Length: 1 (Prefix) + 2 (CID) + 4 (Code)  + 4 (len payload) = 11 bytes
+      pending = pending.length > 0 ? Buffer.concat([pending, data]) : data;
 
-      if (!this._onMessage) return;
-
-      let headerSize = 0;
-      let payloadLength = 0;
-
-      const prefix = data[0];
-
-      // pong message
-      if (prefix === 0x00) {
-        if (data.length < 3) {
+      while (pending.length > 0 && !client.destroyed) {
+        let bounds: [number, number] | undefined;
+        try {
+          bounds = frameBounds(pending);
+        } catch (err) {
+          console.error("TCP frame desync:", err);
+          client.destroy();
           return;
         }
+        if (!bounds) return;
 
-        // Read the 16-bit CID starting from index 1
-        const cid = data.readUInt16BE(1);
-
-        this._onMessage(cid, 0, { pong: {} });
-
-        return;
-      }
-
-      // API request
-      if (prefix === PREFIX_RAW) {
-        const cid = data.readUInt16BE(1); // Bytes 1-2
-        const code = data.readInt32BE(CODE_LENGTH); // Bytes 3-6 (e.g. 3,4,5,6)
-        if (data.length < RAW_HEADER_LENGTH + 4) {
-          this._onMessage!(cid, code, []);
-          return;
-        }
-        const payloadLen = data.readInt32BE(RAW_HEADER_LENGTH); // Bytes 7-10
-        const payload = data.subarray(
-          PAYLOAD_LENGTH,
-          PAYLOAD_LENGTH + payloadLen,
-        );
-
-        if (!this._streams.has(cid)) {
-          this._streams.set(cid, []);
-        }
-
-        const chunks = this._streams.get(cid)!;
-        const responseCode = (code >>> 16) & 0xffff;
-        const finFlag = code & 0xffff;
-
-        if (finFlag === CODE_FIN) {
-          // If there's a final payload in the FIN packet, add it
-          if (payloadLen > 0) chunks.push(payload);
-
-          const completeBuffer = Buffer.concat(chunks);
-
-          this._onMessage!(cid, responseCode, completeBuffer);
-
-          this._streams.delete(cid);
-        } else {
-          chunks.push(Buffer.from(payload)); // Copy the subarray to ensure data persistence
-        }
-
-        return;
-      }
-
-      if (prefix < 127) {
-        // Standard Abridged: 1-byte header
-        headerSize = 1;
-        payloadLength = prefix * 4;
-      } else if (prefix === 0x7f) {
-        // Extended Abridged: 0x7f + 3-bytes length (Little Endian)
-        headerSize = 4;
-        // Read 3 bytes starting from index 1
-        payloadLength = data.readUIntLE(1, 3) * 4;
-      } else {
-        console.warn("Received unexpected first byte:", prefix);
-        return;
-      }
-
-      const payload = data.subarray(headerSize, headerSize + payloadLength);
-
-      try {
-        const uintBuffer = new Uint8Array(payload);
-        const envelope = tsproto.Envelope.decode(uintBuffer);
-
-        this._onMessage(envelope.cid, 0, envelope);
-      } catch (err) {
-        console.error("TCP Protobuf Decode Error:", err);
+        const frame = pending.subarray(0, bounds[1]);
+        pending = pending.subarray(bounds[1]);
+        this.handleFrame(frame, bounds[0]);
       }
     });
 
@@ -177,6 +161,62 @@ export class MezonNetworkAdapter implements TransportAdapter {
 
     if (signal) {
       signal.addEventListener("abort", () => this.close());
+    }
+  }
+
+  private handleFrame(frame: Buffer, headerSize: number) {
+    const prefix = frame[0];
+
+    // pong message
+    if (prefix === 0x00) {
+      this._onMessage?.(frame.readUInt16BE(1), 0, { pong: {} });
+      return;
+    }
+
+    // API request
+    if (prefix === PREFIX_RAW) {
+      const cid = frame.readUInt16BE(1); // Bytes 1-2
+      const code = frame.readInt32BE(3); // Bytes 3-6 (e.g. 3,4,5,6)
+      const payload = frame.subarray(headerSize);
+
+      if (!this._streams.has(cid)) {
+        this._streams.set(cid, []);
+      }
+
+      const chunks = this._streams.get(cid)!;
+      const responseCode = (code >>> 16) & 0xffff;
+      const finFlag = code & 0xffff;
+
+      if (finFlag === CODE_FIN) {
+        // If there's a final payload in the FIN packet, add it
+        if (payload.length > 0) chunks.push(payload);
+
+        const completeBuffer = Buffer.concat(chunks);
+
+        this._onMessage?.(cid, responseCode, completeBuffer);
+
+        this._streams.delete(cid);
+      } else {
+        chunks.push(Buffer.from(payload)); // Copy the subarray to ensure data persistence
+        if (
+          chunks.reduce((total, chunk) => total + chunk.length, 0) >
+          MAX_API_RESPONSE_LENGTH
+        ) {
+          this._streams.delete(cid);
+          this._onMessage?.(cid, RESPONSE_CODE_TOO_LARGE, Buffer.alloc(0));
+        }
+      }
+
+      return;
+    }
+
+    try {
+      const uintBuffer = new Uint8Array(frame.subarray(headerSize));
+      const envelope = tsproto.Envelope.decode(uintBuffer);
+
+      this._onMessage?.(envelope.cid, 0, envelope);
+    } catch (err) {
+      console.error("TCP Protobuf Decode Error:", err);
     }
   }
 
