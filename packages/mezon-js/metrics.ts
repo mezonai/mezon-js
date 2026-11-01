@@ -52,16 +52,18 @@ export class MetricsLatencyApi {
                 this.totalRequests;
 
             if (fastRate < this.minAllowedFastRate) {
-                window.dispatchEvent(
-                    new CustomEvent(CHECK_HEALTHY, {
-                        detail: {
-                            requestId,
-                            fastRate,
-                            totalRequests: this.totalRequests,
-                            slowCount: this.slowCount,
-                        },
-                    })
-                );
+                if (typeof window !== "undefined") {
+                    window.dispatchEvent(
+                        new CustomEvent(CHECK_HEALTHY, {
+                            detail: {
+                                requestId,
+                                fastRate,
+                                totalRequests: this.totalRequests,
+                                slowCount: this.slowCount,
+                            },
+                        })
+                    );
+                }
                 this.reset();
                 this.windowStartTime = performance.now();
             }
