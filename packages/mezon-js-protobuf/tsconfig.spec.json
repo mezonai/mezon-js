@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "types": ["node", "jest"]
+  },
+  "include": ["./*.ts", "./rtapi/*", "./api/*", "./google/protobuf/*", "./tests/*"]
+}
