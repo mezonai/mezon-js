@@ -563,6 +563,7 @@ export interface StreamingJoinedEvent {
   streaming_channel_label: string;
   /** streaming channel id */
   streaming_channel_id: string;
+  is_publisher: boolean;
 }
 
 export interface HashtagOnMessage extends Hashtag, StartEndIndex {}

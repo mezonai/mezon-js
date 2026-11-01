@@ -432,7 +432,29 @@ export interface Envelope {
     | ScreenShareEvent
     | undefined;
   /** VoiceInteractiveEvent */
-  voice_interactive_event?: VoiceInteractiveEvent | undefined;
+  voice_interactive_event?:
+    | VoiceInteractiveEvent
+    | undefined;
+  /** Metric Message Event */
+  metric_message_event?:
+    | MetricMessageEvent
+    | undefined;
+  /** Start or stop watching a streaming channel as audience */
+  streaming_watch?:
+    | StreamingWatch
+    | undefined;
+  /** SFU breakout room */
+  sfu_breakout_room_event?:
+    | SfuBreakoutRoomEvent
+    | undefined;
+  /** Aggregated audience count of a streaming channel */
+  streaming_viewer_count_event?: StreamingViewerCountEvent | undefined;
+}
+
+export interface SfuBreakoutRoomEvent {
+  channel_id: string;
+  token: string;
+  self_select_ids: string[];
 }
 
 export interface VoiceInteractiveEvent {
@@ -462,6 +484,7 @@ export interface ApiRequestEvent {
   api_index: number;
   api_name: string;
   body: Uint8Array;
+  region: number;
 }
 
 export interface FollowEvent {
@@ -1135,6 +1158,8 @@ export interface StreamingJoinedEvent {
   streaming_channel_label: string;
   /** streaming channel id */
   streaming_channel_id: string;
+  /** true for the stream's publisher; listed viewers (at most 100 per channel) are false */
+  is_publisher: boolean;
 }
 
 /** Streaming start event */
@@ -1155,6 +1180,24 @@ export interface StreamingEndedEvent {
   clan_id: string;
   /** channel id */
   channel_id: string;
+}
+
+/** Audience size of a streaming channel, sent when it changes. Publishers are not counted. */
+export interface StreamingViewerCountEvent {
+  /** clan id */
+  clan_id: string;
+  /** streaming channel id */
+  channel_id: string;
+  /** number of distinct users watching as audience */
+  viewer_count: number;
+}
+
+/** Sent by a client when it starts or stops watching a streaming channel as audience. */
+export interface StreamingWatch {
+  /** streaming channel id */
+  channel_id: string;
+  /** true when the client starts watching, false when it stops */
+  watching: boolean;
 }
 
 export interface ChannelCreatedEvent {
@@ -1601,6 +1644,24 @@ export interface FCMTokens {
   platform: string;
 }
 
+export interface StreamingNode {
+  id: string;
+  role: string;
+  url: string;
+  hls: boolean;
+  sessions: string;
+  max_sessions: string;
+  ts: string;
+  boot: string;
+  seen_ms: string;
+  down: boolean;
+}
+
+export interface StreamingLive {
+  node: string;
+  ts: string;
+}
+
 export interface CheckNameExistedEvent {
   /** name */
   name: string;
@@ -1817,6 +1878,24 @@ export interface GotifyMessage_ExtrasEntry {
   value: string;
 }
 
+export interface BreakoutSession {
+  breakout_id: string;
+  parent_channel_id: string;
+  clan_id: string;
+  room_count: number;
+  break_rule_type: number;
+  list_child_rooms: string[];
+  creator_id: string;
+}
+
+export interface MetricMessageEvent {
+  request_id: string;
+  sessions_active: number;
+  sessions_peak: number;
+  sessions_created_total: string;
+  sessions_closed_total: string;
+}
+
 function createBaseEnvelope(): Envelope {
   return {
     cid: 0,
@@ -1919,6 +1998,10 @@ function createBaseEnvelope(): Envelope {
     topic_in_message_event: undefined,
     screen_share_event: undefined,
     voice_interactive_event: undefined,
+    metric_message_event: undefined,
+    streaming_watch: undefined,
+    sfu_breakout_room_event: undefined,
+    streaming_viewer_count_event: undefined,
   };
 }
 
@@ -2224,6 +2307,18 @@ export const Envelope = {
     }
     if (message.voice_interactive_event !== undefined) {
       VoiceInteractiveEvent.encode(message.voice_interactive_event, writer.uint32(802).fork()).ldelim();
+    }
+    if (message.metric_message_event !== undefined) {
+      MetricMessageEvent.encode(message.metric_message_event, writer.uint32(810).fork()).ldelim();
+    }
+    if (message.streaming_watch !== undefined) {
+      StreamingWatch.encode(message.streaming_watch, writer.uint32(834).fork()).ldelim();
+    }
+    if (message.sfu_breakout_room_event !== undefined) {
+      SfuBreakoutRoomEvent.encode(message.sfu_breakout_room_event, writer.uint32(842).fork()).ldelim();
+    }
+    if (message.streaming_viewer_count_event !== undefined) {
+      StreamingViewerCountEvent.encode(message.streaming_viewer_count_event, writer.uint32(850).fork()).ldelim();
     }
     return writer;
   },
@@ -2935,6 +3030,34 @@ export const Envelope = {
 
           message.voice_interactive_event = VoiceInteractiveEvent.decode(reader, reader.uint32());
           continue;
+        case 101:
+          if (tag !== 810) {
+            break;
+          }
+
+          message.metric_message_event = MetricMessageEvent.decode(reader, reader.uint32());
+          continue;
+        case 104:
+          if (tag !== 834) {
+            break;
+          }
+
+          message.streaming_watch = StreamingWatch.decode(reader, reader.uint32());
+          continue;
+        case 105:
+          if (tag !== 842) {
+            break;
+          }
+
+          message.sfu_breakout_room_event = SfuBreakoutRoomEvent.decode(reader, reader.uint32());
+          continue;
+        case 106:
+          if (tag !== 850) {
+            break;
+          }
+
+          message.streaming_viewer_count_event = StreamingViewerCountEvent.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3179,6 +3302,16 @@ export const Envelope = {
         : undefined,
       voice_interactive_event: isSet(object.voice_interactive_event)
         ? VoiceInteractiveEvent.fromJSON(object.voice_interactive_event)
+        : undefined,
+      metric_message_event: isSet(object.metric_message_event)
+        ? MetricMessageEvent.fromJSON(object.metric_message_event)
+        : undefined,
+      streaming_watch: isSet(object.streaming_watch) ? StreamingWatch.fromJSON(object.streaming_watch) : undefined,
+      sfu_breakout_room_event: isSet(object.sfu_breakout_room_event)
+        ? SfuBreakoutRoomEvent.fromJSON(object.sfu_breakout_room_event)
+        : undefined,
+      streaming_viewer_count_event: isSet(object.streaming_viewer_count_event)
+        ? StreamingViewerCountEvent.fromJSON(object.streaming_viewer_count_event)
         : undefined,
     };
   },
@@ -3486,6 +3619,18 @@ export const Envelope = {
     }
     if (message.voice_interactive_event !== undefined) {
       obj.voice_interactive_event = VoiceInteractiveEvent.toJSON(message.voice_interactive_event);
+    }
+    if (message.metric_message_event !== undefined) {
+      obj.metric_message_event = MetricMessageEvent.toJSON(message.metric_message_event);
+    }
+    if (message.streaming_watch !== undefined) {
+      obj.streaming_watch = StreamingWatch.toJSON(message.streaming_watch);
+    }
+    if (message.sfu_breakout_room_event !== undefined) {
+      obj.sfu_breakout_room_event = SfuBreakoutRoomEvent.toJSON(message.sfu_breakout_room_event);
+    }
+    if (message.streaming_viewer_count_event !== undefined) {
+      obj.streaming_viewer_count_event = StreamingViewerCountEvent.toJSON(message.streaming_viewer_count_event);
     }
     return obj;
   },
@@ -3822,6 +3967,123 @@ export const Envelope = {
       (object.voice_interactive_event !== undefined && object.voice_interactive_event !== null)
         ? VoiceInteractiveEvent.fromPartial(object.voice_interactive_event)
         : undefined;
+    message.metric_message_event = (object.metric_message_event !== undefined && object.metric_message_event !== null)
+      ? MetricMessageEvent.fromPartial(object.metric_message_event)
+      : undefined;
+    message.streaming_watch = (object.streaming_watch !== undefined && object.streaming_watch !== null)
+      ? StreamingWatch.fromPartial(object.streaming_watch)
+      : undefined;
+    message.sfu_breakout_room_event =
+      (object.sfu_breakout_room_event !== undefined && object.sfu_breakout_room_event !== null)
+        ? SfuBreakoutRoomEvent.fromPartial(object.sfu_breakout_room_event)
+        : undefined;
+    message.streaming_viewer_count_event =
+      (object.streaming_viewer_count_event !== undefined && object.streaming_viewer_count_event !== null)
+        ? StreamingViewerCountEvent.fromPartial(object.streaming_viewer_count_event)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseSfuBreakoutRoomEvent(): SfuBreakoutRoomEvent {
+  return { channel_id: "0", token: "", self_select_ids: [] };
+}
+
+export const SfuBreakoutRoomEvent = {
+  encode(message: SfuBreakoutRoomEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "0") {
+      writer.uint32(8).int64(message.channel_id);
+    }
+    if (message.token !== "") {
+      writer.uint32(18).string(message.token);
+    }
+    writer.uint32(26).fork();
+    for (const v of message.self_select_ids) {
+      writer.int64(v);
+    }
+    writer.ldelim();
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SfuBreakoutRoomEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSfuBreakoutRoomEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.token = reader.string();
+          continue;
+        case 3:
+          if (tag === 24) {
+            message.self_select_ids.push(longToString(reader.int64() as Long));
+
+            continue;
+          }
+
+          if (tag === 26) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.self_select_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SfuBreakoutRoomEvent {
+    return {
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      token: isSet(object.token) ? globalThis.String(object.token) : "",
+      self_select_ids: globalThis.Array.isArray(object?.self_select_ids)
+        ? object.self_select_ids.map((e: any) => globalThis.String(e))
+        : [],
+    };
+  },
+
+  toJSON(message: SfuBreakoutRoomEvent): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.token !== "") {
+      obj.token = message.token;
+    }
+    if (message.self_select_ids?.length) {
+      obj.self_select_ids = message.self_select_ids;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SfuBreakoutRoomEvent>, I>>(base?: I): SfuBreakoutRoomEvent {
+    return SfuBreakoutRoomEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SfuBreakoutRoomEvent>, I>>(object: I): SfuBreakoutRoomEvent {
+    const message = createBaseSfuBreakoutRoomEvent();
+    message.channel_id = object.channel_id ?? "0";
+    message.token = object.token ?? "";
+    message.self_select_ids = object.self_select_ids?.map((e) => e) || [];
     return message;
   },
 };
@@ -4169,7 +4431,7 @@ export const TopicInMessageEvent = {
 };
 
 function createBaseApiRequestEvent(): ApiRequestEvent {
-  return { api_index: 0, api_name: "", body: new Uint8Array(0) };
+  return { api_index: 0, api_name: "", body: new Uint8Array(0), region: 0 };
 }
 
 export const ApiRequestEvent = {
@@ -4182,6 +4444,9 @@ export const ApiRequestEvent = {
     }
     if (message.body.length !== 0) {
       writer.uint32(26).bytes(message.body);
+    }
+    if (message.region !== 0) {
+      writer.uint32(32).int32(message.region);
     }
     return writer;
   },
@@ -4214,6 +4479,13 @@ export const ApiRequestEvent = {
 
           message.body = reader.bytes();
           continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.region = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -4228,6 +4500,7 @@ export const ApiRequestEvent = {
       api_index: isSet(object.api_index) ? globalThis.Number(object.api_index) : 0,
       api_name: isSet(object.api_name) ? globalThis.String(object.api_name) : "",
       body: isSet(object.body) ? bytesFromBase64(object.body) : new Uint8Array(0),
+      region: isSet(object.region) ? globalThis.Number(object.region) : 0,
     };
   },
 
@@ -4242,6 +4515,9 @@ export const ApiRequestEvent = {
     if (message.body.length !== 0) {
       obj.body = base64FromBytes(message.body);
     }
+    if (message.region !== 0) {
+      obj.region = Math.round(message.region);
+    }
     return obj;
   },
 
@@ -4253,6 +4529,7 @@ export const ApiRequestEvent = {
     message.api_index = object.api_index ?? 0;
     message.api_name = object.api_name ?? "";
     message.body = object.body ?? new Uint8Array(0);
+    message.region = object.region ?? 0;
     return message;
   },
 };
@@ -9779,6 +10056,7 @@ function createBaseStreamingJoinedEvent(): StreamingJoinedEvent {
     user_id: "0",
     streaming_channel_label: "",
     streaming_channel_id: "0",
+    is_publisher: false,
   };
 }
 
@@ -9804,6 +10082,9 @@ export const StreamingJoinedEvent = {
     }
     if (message.streaming_channel_id !== "0") {
       writer.uint32(56).int64(message.streaming_channel_id);
+    }
+    if (message.is_publisher !== false) {
+      writer.uint32(64).bool(message.is_publisher);
     }
     return writer;
   },
@@ -9864,6 +10145,13 @@ export const StreamingJoinedEvent = {
 
           message.streaming_channel_id = longToString(reader.int64() as Long);
           continue;
+        case 8:
+          if (tag !== 64) {
+            break;
+          }
+
+          message.is_publisher = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -9884,6 +10172,7 @@ export const StreamingJoinedEvent = {
         ? globalThis.String(object.streaming_channel_label)
         : "",
       streaming_channel_id: isSet(object.streaming_channel_id) ? globalThis.String(object.streaming_channel_id) : "0",
+      is_publisher: isSet(object.is_publisher) ? globalThis.Boolean(object.is_publisher) : false,
     };
   },
 
@@ -9910,6 +10199,9 @@ export const StreamingJoinedEvent = {
     if (message.streaming_channel_id !== "0") {
       obj.streaming_channel_id = message.streaming_channel_id;
     }
+    if (message.is_publisher !== false) {
+      obj.is_publisher = message.is_publisher;
+    }
     return obj;
   },
 
@@ -9925,6 +10217,7 @@ export const StreamingJoinedEvent = {
     message.user_id = object.user_id ?? "0";
     message.streaming_channel_label = object.streaming_channel_label ?? "";
     message.streaming_channel_id = object.streaming_channel_id ?? "0";
+    message.is_publisher = object.is_publisher ?? false;
     return message;
   },
 };
@@ -10103,6 +10396,169 @@ export const StreamingEndedEvent = {
     const message = createBaseStreamingEndedEvent();
     message.clan_id = object.clan_id ?? "0";
     message.channel_id = object.channel_id ?? "0";
+    return message;
+  },
+};
+
+function createBaseStreamingViewerCountEvent(): StreamingViewerCountEvent {
+  return { clan_id: "0", channel_id: "0", viewer_count: 0 };
+}
+
+export const StreamingViewerCountEvent = {
+  encode(message: StreamingViewerCountEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "0") {
+      writer.uint32(8).int64(message.clan_id);
+    }
+    if (message.channel_id !== "0") {
+      writer.uint32(16).int64(message.channel_id);
+    }
+    if (message.viewer_count !== 0) {
+      writer.uint32(24).int32(message.viewer_count);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): StreamingViewerCountEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseStreamingViewerCountEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.clan_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.viewer_count = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): StreamingViewerCountEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      viewer_count: isSet(object.viewer_count) ? globalThis.Number(object.viewer_count) : 0,
+    };
+  },
+
+  toJSON(message: StreamingViewerCountEvent): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "0") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.viewer_count !== 0) {
+      obj.viewer_count = Math.round(message.viewer_count);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<StreamingViewerCountEvent>, I>>(base?: I): StreamingViewerCountEvent {
+    return StreamingViewerCountEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<StreamingViewerCountEvent>, I>>(object: I): StreamingViewerCountEvent {
+    const message = createBaseStreamingViewerCountEvent();
+    message.clan_id = object.clan_id ?? "0";
+    message.channel_id = object.channel_id ?? "0";
+    message.viewer_count = object.viewer_count ?? 0;
+    return message;
+  },
+};
+
+function createBaseStreamingWatch(): StreamingWatch {
+  return { channel_id: "0", watching: false };
+}
+
+export const StreamingWatch = {
+  encode(message: StreamingWatch, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "0") {
+      writer.uint32(8).int64(message.channel_id);
+    }
+    if (message.watching !== false) {
+      writer.uint32(16).bool(message.watching);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): StreamingWatch {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseStreamingWatch();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.watching = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): StreamingWatch {
+    return {
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      watching: isSet(object.watching) ? globalThis.Boolean(object.watching) : false,
+    };
+  },
+
+  toJSON(message: StreamingWatch): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.watching !== false) {
+      obj.watching = message.watching;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<StreamingWatch>, I>>(base?: I): StreamingWatch {
+    return StreamingWatch.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<StreamingWatch>, I>>(object: I): StreamingWatch {
+    const message = createBaseStreamingWatch();
+    message.channel_id = object.channel_id ?? "0";
+    message.watching = object.watching ?? false;
     return message;
   },
 };
@@ -14187,6 +14643,285 @@ export const FCMTokens = {
   },
 };
 
+function createBaseStreamingNode(): StreamingNode {
+  return {
+    id: "",
+    role: "",
+    url: "",
+    hls: false,
+    sessions: "0",
+    max_sessions: "0",
+    ts: "0",
+    boot: "0",
+    seen_ms: "0",
+    down: false,
+  };
+}
+
+export const StreamingNode = {
+  encode(message: StreamingNode, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.role !== "") {
+      writer.uint32(18).string(message.role);
+    }
+    if (message.url !== "") {
+      writer.uint32(26).string(message.url);
+    }
+    if (message.hls !== false) {
+      writer.uint32(32).bool(message.hls);
+    }
+    if (message.sessions !== "0") {
+      writer.uint32(40).int64(message.sessions);
+    }
+    if (message.max_sessions !== "0") {
+      writer.uint32(48).int64(message.max_sessions);
+    }
+    if (message.ts !== "0") {
+      writer.uint32(56).int64(message.ts);
+    }
+    if (message.boot !== "0") {
+      writer.uint32(64).int64(message.boot);
+    }
+    if (message.seen_ms !== "0") {
+      writer.uint32(72).int64(message.seen_ms);
+    }
+    if (message.down !== false) {
+      writer.uint32(80).bool(message.down);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): StreamingNode {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseStreamingNode();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.role = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.url = reader.string();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.hls = reader.bool();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.sessions = longToString(reader.int64() as Long);
+          continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.max_sessions = longToString(reader.int64() as Long);
+          continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.ts = longToString(reader.int64() as Long);
+          continue;
+        case 8:
+          if (tag !== 64) {
+            break;
+          }
+
+          message.boot = longToString(reader.int64() as Long);
+          continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.seen_ms = longToString(reader.int64() as Long);
+          continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.down = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): StreamingNode {
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      role: isSet(object.role) ? globalThis.String(object.role) : "",
+      url: isSet(object.url) ? globalThis.String(object.url) : "",
+      hls: isSet(object.hls) ? globalThis.Boolean(object.hls) : false,
+      sessions: isSet(object.sessions) ? globalThis.String(object.sessions) : "0",
+      max_sessions: isSet(object.max_sessions) ? globalThis.String(object.max_sessions) : "0",
+      ts: isSet(object.ts) ? globalThis.String(object.ts) : "0",
+      boot: isSet(object.boot) ? globalThis.String(object.boot) : "0",
+      seen_ms: isSet(object.seen_ms) ? globalThis.String(object.seen_ms) : "0",
+      down: isSet(object.down) ? globalThis.Boolean(object.down) : false,
+    };
+  },
+
+  toJSON(message: StreamingNode): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.role !== "") {
+      obj.role = message.role;
+    }
+    if (message.url !== "") {
+      obj.url = message.url;
+    }
+    if (message.hls !== false) {
+      obj.hls = message.hls;
+    }
+    if (message.sessions !== "0") {
+      obj.sessions = message.sessions;
+    }
+    if (message.max_sessions !== "0") {
+      obj.max_sessions = message.max_sessions;
+    }
+    if (message.ts !== "0") {
+      obj.ts = message.ts;
+    }
+    if (message.boot !== "0") {
+      obj.boot = message.boot;
+    }
+    if (message.seen_ms !== "0") {
+      obj.seen_ms = message.seen_ms;
+    }
+    if (message.down !== false) {
+      obj.down = message.down;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<StreamingNode>, I>>(base?: I): StreamingNode {
+    return StreamingNode.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<StreamingNode>, I>>(object: I): StreamingNode {
+    const message = createBaseStreamingNode();
+    message.id = object.id ?? "";
+    message.role = object.role ?? "";
+    message.url = object.url ?? "";
+    message.hls = object.hls ?? false;
+    message.sessions = object.sessions ?? "0";
+    message.max_sessions = object.max_sessions ?? "0";
+    message.ts = object.ts ?? "0";
+    message.boot = object.boot ?? "0";
+    message.seen_ms = object.seen_ms ?? "0";
+    message.down = object.down ?? false;
+    return message;
+  },
+};
+
+function createBaseStreamingLive(): StreamingLive {
+  return { node: "", ts: "0" };
+}
+
+export const StreamingLive = {
+  encode(message: StreamingLive, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.node !== "") {
+      writer.uint32(10).string(message.node);
+    }
+    if (message.ts !== "0") {
+      writer.uint32(16).int64(message.ts);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): StreamingLive {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseStreamingLive();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.node = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.ts = longToString(reader.int64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): StreamingLive {
+    return {
+      node: isSet(object.node) ? globalThis.String(object.node) : "",
+      ts: isSet(object.ts) ? globalThis.String(object.ts) : "0",
+    };
+  },
+
+  toJSON(message: StreamingLive): unknown {
+    const obj: any = {};
+    if (message.node !== "") {
+      obj.node = message.node;
+    }
+    if (message.ts !== "0") {
+      obj.ts = message.ts;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<StreamingLive>, I>>(base?: I): StreamingLive {
+    return StreamingLive.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<StreamingLive>, I>>(object: I): StreamingLive {
+    const message = createBaseStreamingLive();
+    message.node = object.node ?? "";
+    message.ts = object.ts ?? "0";
+    return message;
+  },
+};
+
 function createBaseCheckNameExistedEvent(): CheckNameExistedEvent {
   return { name: "", condition_id: "0", exist: false, type: 0, clan_id: "0" };
 }
@@ -17255,6 +17990,306 @@ export const GotifyMessage_ExtrasEntry = {
     const message = createBaseGotifyMessage_ExtrasEntry();
     message.key = object.key ?? "";
     message.value = object.value ?? "";
+    return message;
+  },
+};
+
+function createBaseBreakoutSession(): BreakoutSession {
+  return {
+    breakout_id: "0",
+    parent_channel_id: "0",
+    clan_id: "0",
+    room_count: 0,
+    break_rule_type: 0,
+    list_child_rooms: [],
+    creator_id: "0",
+  };
+}
+
+export const BreakoutSession = {
+  encode(message: BreakoutSession, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.breakout_id !== "0") {
+      writer.uint32(8).int64(message.breakout_id);
+    }
+    if (message.parent_channel_id !== "0") {
+      writer.uint32(16).int64(message.parent_channel_id);
+    }
+    if (message.clan_id !== "0") {
+      writer.uint32(24).int64(message.clan_id);
+    }
+    if (message.room_count !== 0) {
+      writer.uint32(32).int32(message.room_count);
+    }
+    if (message.break_rule_type !== 0) {
+      writer.uint32(40).int32(message.break_rule_type);
+    }
+    writer.uint32(50).fork();
+    for (const v of message.list_child_rooms) {
+      writer.int64(v);
+    }
+    writer.ldelim();
+    if (message.creator_id !== "0") {
+      writer.uint32(56).int64(message.creator_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BreakoutSession {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBreakoutSession();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.breakout_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.parent_channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.clan_id = longToString(reader.int64() as Long);
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.room_count = reader.int32();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.break_rule_type = reader.int32();
+          continue;
+        case 6:
+          if (tag === 48) {
+            message.list_child_rooms.push(longToString(reader.int64() as Long));
+
+            continue;
+          }
+
+          if (tag === 50) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.list_child_rooms.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.creator_id = longToString(reader.int64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): BreakoutSession {
+    return {
+      breakout_id: isSet(object.breakout_id) ? globalThis.String(object.breakout_id) : "0",
+      parent_channel_id: isSet(object.parent_channel_id) ? globalThis.String(object.parent_channel_id) : "0",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
+      room_count: isSet(object.room_count) ? globalThis.Number(object.room_count) : 0,
+      break_rule_type: isSet(object.break_rule_type) ? globalThis.Number(object.break_rule_type) : 0,
+      list_child_rooms: globalThis.Array.isArray(object?.list_child_rooms)
+        ? object.list_child_rooms.map((e: any) => globalThis.String(e))
+        : [],
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "0",
+    };
+  },
+
+  toJSON(message: BreakoutSession): unknown {
+    const obj: any = {};
+    if (message.breakout_id !== "0") {
+      obj.breakout_id = message.breakout_id;
+    }
+    if (message.parent_channel_id !== "0") {
+      obj.parent_channel_id = message.parent_channel_id;
+    }
+    if (message.clan_id !== "0") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.room_count !== 0) {
+      obj.room_count = Math.round(message.room_count);
+    }
+    if (message.break_rule_type !== 0) {
+      obj.break_rule_type = Math.round(message.break_rule_type);
+    }
+    if (message.list_child_rooms?.length) {
+      obj.list_child_rooms = message.list_child_rooms;
+    }
+    if (message.creator_id !== "0") {
+      obj.creator_id = message.creator_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<BreakoutSession>, I>>(base?: I): BreakoutSession {
+    return BreakoutSession.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<BreakoutSession>, I>>(object: I): BreakoutSession {
+    const message = createBaseBreakoutSession();
+    message.breakout_id = object.breakout_id ?? "0";
+    message.parent_channel_id = object.parent_channel_id ?? "0";
+    message.clan_id = object.clan_id ?? "0";
+    message.room_count = object.room_count ?? 0;
+    message.break_rule_type = object.break_rule_type ?? 0;
+    message.list_child_rooms = object.list_child_rooms?.map((e) => e) || [];
+    message.creator_id = object.creator_id ?? "0";
+    return message;
+  },
+};
+
+function createBaseMetricMessageEvent(): MetricMessageEvent {
+  return {
+    request_id: "",
+    sessions_active: 0,
+    sessions_peak: 0,
+    sessions_created_total: "0",
+    sessions_closed_total: "0",
+  };
+}
+
+export const MetricMessageEvent = {
+  encode(message: MetricMessageEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.request_id !== "") {
+      writer.uint32(10).string(message.request_id);
+    }
+    if (message.sessions_active !== 0) {
+      writer.uint32(16).int32(message.sessions_active);
+    }
+    if (message.sessions_peak !== 0) {
+      writer.uint32(24).int32(message.sessions_peak);
+    }
+    if (message.sessions_created_total !== "0") {
+      writer.uint32(32).int64(message.sessions_created_total);
+    }
+    if (message.sessions_closed_total !== "0") {
+      writer.uint32(40).int64(message.sessions_closed_total);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MetricMessageEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMetricMessageEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.request_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.sessions_active = reader.int32();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.sessions_peak = reader.int32();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.sessions_created_total = longToString(reader.int64() as Long);
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.sessions_closed_total = longToString(reader.int64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MetricMessageEvent {
+    return {
+      request_id: isSet(object.request_id) ? globalThis.String(object.request_id) : "",
+      sessions_active: isSet(object.sessions_active) ? globalThis.Number(object.sessions_active) : 0,
+      sessions_peak: isSet(object.sessions_peak) ? globalThis.Number(object.sessions_peak) : 0,
+      sessions_created_total: isSet(object.sessions_created_total)
+        ? globalThis.String(object.sessions_created_total)
+        : "0",
+      sessions_closed_total: isSet(object.sessions_closed_total)
+        ? globalThis.String(object.sessions_closed_total)
+        : "0",
+    };
+  },
+
+  toJSON(message: MetricMessageEvent): unknown {
+    const obj: any = {};
+    if (message.request_id !== "") {
+      obj.request_id = message.request_id;
+    }
+    if (message.sessions_active !== 0) {
+      obj.sessions_active = Math.round(message.sessions_active);
+    }
+    if (message.sessions_peak !== 0) {
+      obj.sessions_peak = Math.round(message.sessions_peak);
+    }
+    if (message.sessions_created_total !== "0") {
+      obj.sessions_created_total = message.sessions_created_total;
+    }
+    if (message.sessions_closed_total !== "0") {
+      obj.sessions_closed_total = message.sessions_closed_total;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MetricMessageEvent>, I>>(base?: I): MetricMessageEvent {
+    return MetricMessageEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MetricMessageEvent>, I>>(object: I): MetricMessageEvent {
+    const message = createBaseMetricMessageEvent();
+    message.request_id = object.request_id ?? "";
+    message.sessions_active = object.sessions_active ?? 0;
+    message.sessions_peak = object.sessions_peak ?? 0;
+    message.sessions_created_total = object.sessions_created_total ?? "0";
+    message.sessions_closed_total = object.sessions_closed_total ?? "0";
     return message;
   },
 };
