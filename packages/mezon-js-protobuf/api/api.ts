@@ -4419,6 +4419,14 @@ export interface SfuBreakoutMergeRequest {
   target_id: string;
 }
 
+export interface DMSetting {
+  only_friends_dm: boolean;
+}
+
+export interface UpdateDMSettingRequest {
+  only_friends_dm: boolean;
+}
+
 function createBaseAccount(): Account {
   return {
     user: undefined,
@@ -47395,6 +47403,120 @@ export const SfuBreakoutMergeRequest = {
   fromPartial<I extends Exact<DeepPartial<SfuBreakoutMergeRequest>, I>>(object: I): SfuBreakoutMergeRequest {
     const message = createBaseSfuBreakoutMergeRequest();
     message.target_id = object.target_id ?? "0";
+    return message;
+  },
+};
+
+function createBaseDMSetting(): DMSetting {
+  return { only_friends_dm: false };
+}
+
+export const DMSetting = {
+  encode(message: DMSetting, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.only_friends_dm !== false) {
+      writer.uint32(8).bool(message.only_friends_dm);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DMSetting {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDMSetting();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.only_friends_dm = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DMSetting {
+    return { only_friends_dm: isSet(object.only_friends_dm) ? globalThis.Boolean(object.only_friends_dm) : false };
+  },
+
+  toJSON(message: DMSetting): unknown {
+    const obj: any = {};
+    if (message.only_friends_dm !== false) {
+      obj.only_friends_dm = message.only_friends_dm;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DMSetting>, I>>(base?: I): DMSetting {
+    return DMSetting.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<DMSetting>, I>>(object: I): DMSetting {
+    const message = createBaseDMSetting();
+    message.only_friends_dm = object.only_friends_dm ?? false;
+    return message;
+  },
+};
+
+function createBaseUpdateDMSettingRequest(): UpdateDMSettingRequest {
+  return { only_friends_dm: false };
+}
+
+export const UpdateDMSettingRequest = {
+  encode(message: UpdateDMSettingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.only_friends_dm !== false) {
+      writer.uint32(8).bool(message.only_friends_dm);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateDMSettingRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdateDMSettingRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.only_friends_dm = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpdateDMSettingRequest {
+    return { only_friends_dm: isSet(object.only_friends_dm) ? globalThis.Boolean(object.only_friends_dm) : false };
+  },
+
+  toJSON(message: UpdateDMSettingRequest): unknown {
+    const obj: any = {};
+    if (message.only_friends_dm !== false) {
+      obj.only_friends_dm = message.only_friends_dm;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdateDMSettingRequest>, I>>(base?: I): UpdateDMSettingRequest {
+    return UpdateDMSettingRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UpdateDMSettingRequest>, I>>(object: I): UpdateDMSettingRequest {
+    const message = createBaseUpdateDMSettingRequest();
+    message.only_friends_dm = object.only_friends_dm ?? false;
     return message;
   },
 };
