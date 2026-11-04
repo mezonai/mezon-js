@@ -4075,6 +4075,16 @@ export interface ApiGetOverrideEveryoneChannelResponse {
   role_ids?: Array<string>;
 }
 
+/** User preference for who may start a new DM with this account. */
+export interface ApiDMSetting {
+  only_friends_dm?: boolean;
+}
+
+/** Update the current user's DM privacy setting. */
+export interface ApiUpdateDMSettingRequest {
+  only_friends_dm?: boolean;
+}
+
 /** A user's session used to authenticate messages. */
 export interface ApiSession {
   //True if the corresponding account was just created, false otherwise.

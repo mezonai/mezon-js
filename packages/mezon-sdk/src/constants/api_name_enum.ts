@@ -218,6 +218,8 @@ export enum ApiNameEnum {
   SfuBreakoutMerge,
   SetOverrideEveryoneChannel,
   GetOverrideEveryoneChannel,
+  GetDMSetting,
+  UpdateDMSetting,
 }
 
 export function getApiFromPath(apiPath: string): number | undefined {

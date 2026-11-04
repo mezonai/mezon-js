@@ -70,9 +70,11 @@ import {
   ApiGenerateCDNSignatureResponse,
   ApiGetOverrideEveryoneChannelRequest,
   ApiGetOverrideEveryoneChannelResponse,
+  ApiDMSetting,
   ApiGetStreamPlaybackRequest,
   ApiGetStreamPlaybackResponse,
   ApiSetOverrideEveryoneChannelRequest,
+  ApiUpdateDMSettingRequest,
   ApiPinMessageRequest,
   ApiPinMessagesList,
   ApiDeleteChannelDescRequest,
@@ -3514,6 +3516,39 @@ export class Client {
     return this.transport
       .getOverrideEveryoneChannel(request)
       .then((response: ApiGetOverrideEveryoneChannelResponse) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  /** Get whether only friends may start a new DM with the current user. */
+  async getDMSetting(session: ApiSession): Promise<ApiDMSetting> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport.getDMSetting().then((response: ApiDMSetting) => {
+      return Promise.resolve(response);
+    });
+  }
+
+  /** Update whether only friends may start a new DM with the current user. */
+  async updateDMSetting(
+    session: ApiSession,
+    request: ApiUpdateDMSettingRequest
+  ): Promise<ApiDMSetting> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport
+      .updateDMSetting(request)
+      .then((response: ApiDMSetting) => {
         return Promise.resolve(response);
       });
   }

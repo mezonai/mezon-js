@@ -78,11 +78,13 @@ import {
   ApiFriendList,
   ApiGenerateCDNSignatureRequest,
   ApiGenerateCDNSignatureResponse,
+  ApiDMSetting,
   ApiGetOverrideEveryoneChannelRequest,
   ApiGetOverrideEveryoneChannelResponse,
   ApiGetStreamPlaybackRequest,
   ApiGetStreamPlaybackResponse,
   ApiSetOverrideEveryoneChannelRequest,
+  ApiUpdateDMSettingRequest,
   ApiGenerateClanWebhookRequest,
   ApiGenerateClanWebhookResponse,
   ApiGenerateMeetTokenExternalResponse,
@@ -448,6 +450,8 @@ enum ApiNameEnum {
   SfuBreakoutMerge,
   SetOverrideEveryoneChannel,
   GetOverrideEveryoneChannel,
+  GetDMSetting,
+  UpdateDMSetting,
 }
 
 export interface MezonTransportHandlers {
@@ -3668,6 +3672,62 @@ export class MezonTransport {
         return tsproto.GetOverrideEveryoneChannelResponse.decode(
           response.message
         ) as ApiGetOverrideEveryoneChannelResponse;
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs
+        )
+      ),
+    ]);
+  }
+
+  /** Get the current user's DM privacy setting. */
+  getDMSetting(options = {}): Promise<ApiDMSetting> {
+    const urlPath = "/mezon.api.Mezon/GetDMSetting";
+    const fetchOptions = buildFetchOptions("POST", options, "");
+
+    return Promise.race([
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return tsproto.DMSetting.decode(response.message) as ApiDMSetting;
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs
+        )
+      ),
+    ]);
+  }
+
+  /** Update the current user's DM privacy setting. */
+  updateDMSetting(
+    body: ApiUpdateDMSettingRequest,
+    options = {}
+  ): Promise<ApiDMSetting> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/UpdateDMSetting";
+    const bodyWriter = tsproto.UpdateDMSettingRequest.encode(
+      tsproto.UpdateDMSettingRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+
+    return Promise.race([
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return tsproto.DMSetting.decode(response.message) as ApiDMSetting;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(
