@@ -1596,6 +1596,8 @@ export interface UserProfileUpdatedEvent {
   clan_id: string;
   /** the encrypt_private_key */
   encrypt_private_key: string;
+  /** profile banner url */
+  banner: string;
 }
 
 export interface ConfirmLinkMezonOTPData {
@@ -14047,6 +14049,7 @@ function createBaseUserProfileUpdatedEvent(): UserProfileUpdatedEvent {
     channel_id: "0",
     clan_id: "0",
     encrypt_private_key: "",
+    banner: "",
   };
 }
 
@@ -14072,6 +14075,9 @@ export const UserProfileUpdatedEvent = {
     }
     if (message.encrypt_private_key !== "") {
       writer.uint32(58).string(message.encrypt_private_key);
+    }
+    if (message.banner !== "") {
+      writer.uint32(66).string(message.banner);
     }
     return writer;
   },
@@ -14132,6 +14138,13 @@ export const UserProfileUpdatedEvent = {
 
           message.encrypt_private_key = reader.string();
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.banner = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -14150,6 +14163,7 @@ export const UserProfileUpdatedEvent = {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
       encrypt_private_key: isSet(object.encrypt_private_key) ? globalThis.String(object.encrypt_private_key) : "",
+      banner: isSet(object.banner) ? globalThis.String(object.banner) : "",
     };
   },
 
@@ -14176,6 +14190,9 @@ export const UserProfileUpdatedEvent = {
     if (message.encrypt_private_key !== "") {
       obj.encrypt_private_key = message.encrypt_private_key;
     }
+    if (message.banner !== "") {
+      obj.banner = message.banner;
+    }
     return obj;
   },
 
@@ -14191,6 +14208,7 @@ export const UserProfileUpdatedEvent = {
     message.channel_id = object.channel_id ?? "0";
     message.clan_id = object.clan_id ?? "0";
     message.encrypt_private_key = object.encrypt_private_key ?? "";
+    message.banner = object.banner ?? "";
     return message;
   },
 };

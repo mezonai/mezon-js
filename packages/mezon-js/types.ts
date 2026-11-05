@@ -294,6 +294,8 @@ export interface UserProfileUpdatedEvent {
   clan_id: string;
   // the encrypt_private_key
   encrypt_private_key: string;
+  // profile banner url
+  banner?: string;
 }
 
 /** An acknowledgement received in response to sending a message on a chat channel. */
@@ -1925,6 +1927,8 @@ export interface ApiAccount {
   logo?: string;
   //
   splash_screen?: string;
+  //
+  banner?: string;
   //The user object.
   user?: ApiUser;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user's email was verified.
@@ -4312,6 +4316,8 @@ export interface ApiUpdateAccountRequest {
   logo?: string;
   //
   splash_screen?: string;
+  //
+  banner?: string;
   //The timezone set by the user.
   timezone?: string;
 }
@@ -4437,6 +4443,8 @@ export interface ApiUser {
   list_nick_names?: Array<string>;
   // phone number
   phone_number?: string;
+  //
+  banner?: string;
 }
 
 /**  */
