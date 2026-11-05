@@ -299,6 +299,12 @@ import {
   MessageButtonClicked,
   MultipartUploadAttachment,
   MultipartUploadAttachmentFinishRequest,
+  LinkCDNFileRequest,
+  DeleteSdTopicRequest,
+  SfuBreakoutMergeRequest,
+  SfuBreakoutRoomEvent,
+  SfuBreakoutRoomRequest,
+  SfuBreakoutRoomResponse,
 } from "mezon-js-protobuf";
 import { MezonTransport } from "./transport";
 import { ScreenShareEvent } from "packages/mezon-js-protobuf/rtapi/realtime";
@@ -717,6 +723,10 @@ export class Client {
             } else if (message.voice_interactive_event) {
               this.onvoiceinteractiveevent(
                 <VoiceInteractiveEvent>message.voice_interactive_event
+              );
+            } else if (message.sfu_breakout_room_event) {
+              this.onsfubreakoutroomevent(
+                <SfuBreakoutRoomEvent>message.sfu_breakout_room_event
               );
             } else if (message.pong) {
               if (this.verbose && window && window.console) {
@@ -1296,6 +1306,12 @@ export class Client {
     }
   }
 
+  onsfubreakoutroomevent(sfu_breakout_room_event: SfuBreakoutRoomEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(sfu_breakout_room_event);
+    }
+  }
+
   onchannelappevent(event: ChannelAppEvent) {
     if (this.verbose && window && window.console) {
       console.log(event);
@@ -1665,6 +1681,51 @@ export class Client {
     }
 
     return this.transport.multipartUploadAttachmentFileFinsih(request);
+  }
+
+  /** Copy an already uploaded CDN object to another path. */
+  async linkCDNFile(
+    session: ApiSession,
+    request: LinkCDNFileRequest
+  ): Promise<any> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport.linkCDNFile(request);
+  }
+
+  /** Split a voice channel into breakout rooms. */
+  async sfuBreakoutRoom(
+    session: ApiSession,
+    request: SfuBreakoutRoomRequest
+  ): Promise<SfuBreakoutRoomResponse> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport.sfuBreakoutRoom(request);
+  }
+
+  /** Merge a breakout room back into its parent voice channel. */
+  async sfuBreakoutMerge(
+    session: ApiSession,
+    request: SfuBreakoutMergeRequest
+  ): Promise<any> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport.sfuBreakoutMerge(request);
   }
 
   /** Create a channel within clan */
@@ -2959,6 +3020,23 @@ export class Client {
     }
 
     return this.transport.unlinkEmail(request).then((response: any) => {
+      return response !== undefined;
+    });
+  }
+
+  /** Remove the mezon phone number from the social profiles on the current user's account. */
+  async unlinkMezon(
+    session: ApiSession,
+    request: ApiLinkAccountMezon
+  ): Promise<boolean> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport.unlinkMezon(request).then((response: any) => {
       return response !== undefined;
     });
   }
@@ -5387,6 +5465,21 @@ export class Client {
       .then((response: ApiSdTopic) => {
         return response;
       });
+  }
+
+  //**delete sd topic */
+  async deleteSdTopic(
+    session: ApiSession,
+    request: DeleteSdTopicRequest
+  ): Promise<any> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport.deleteSdTopic(request);
   }
 
   //**list sd topic */

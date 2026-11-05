@@ -5,8 +5,13 @@ import {
 import { encode } from "js-base64";
 import * as tsproto from "mezon-js-protobuf";
 import {
+  DeleteSdTopicRequest,
+  LinkCDNFileRequest,
   MultipartUploadAttachment,
   MultipartUploadAttachmentFinishRequest,
+  SfuBreakoutMergeRequest,
+  SfuBreakoutRoomRequest,
+  SfuBreakoutRoomResponse,
   TransportAdapter,
   MezonNetworkAdapter,
 } from "mezon-js-protobuf";
@@ -1235,6 +1240,35 @@ export class MezonTransport {
     const urlPath = "/mezon.api.Mezon/UnlinkEmail";
     const bodyWriter = tsproto.AccountEmail.encode(
       tsproto.AccountEmail.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+
+    return Promise.race([
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return response;
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** Remove the mezon phone number from the social profiles on the current user's account. */
+  unlinkMezon(body: ApiLinkAccountMezon, options = {}): Promise<any> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/UnlinkMezon";
+    const bodyWriter = tsproto.AccountMezon.encode(
+      tsproto.AccountMezon.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 
@@ -6019,6 +6053,38 @@ export class MezonTransport {
     ]);
   }
 
+  /** Delete Sd Topic */
+  deleteSdTopic(body: DeleteSdTopicRequest, options = {}): Promise<any> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/DeleteSdTopic";
+    const bodyWriter = tsproto.DeleteSdTopicRequest.encode(
+      tsproto.DeleteSdTopicRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+
+    return Promise.race([
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return response;
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs
+        )
+      ),
+    ]);
+  }
+
   /** Delete a specific system messages. */
   deleteSystemMessage(clanId: string, options = {}): Promise<any> {
     if (clanId === null || clanId === undefined) {
@@ -6461,9 +6527,108 @@ export class MezonTransport {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/mezon.api.Mezon/MultipartUploadAttachmentFileStart";
+    const urlPath = "/mezon.api.Mezon/MultipartUploadAttachmentFileFinish";
     const bodyWriter = tsproto.MultipartUploadAttachmentFinishRequest.encode(
       tsproto.MultipartUploadAttachmentFinishRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+
+    return Promise.race([
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return response;
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs
+        )
+      ),
+    ]);
+  }
+
+  /** Copy an already uploaded CDN object to another path. */
+  linkCDNFile(body: LinkCDNFileRequest, options = {}): Promise<any> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/LinkCDNFile";
+    const bodyWriter = tsproto.LinkCDNFileRequest.encode(
+      tsproto.LinkCDNFileRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+
+    return Promise.race([
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return response;
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs
+        )
+      ),
+    ]);
+  }
+
+  /** Split a voice channel into breakout rooms. */
+  sfuBreakoutRoom(
+    body: SfuBreakoutRoomRequest,
+    options = {}
+  ): Promise<SfuBreakoutRoomResponse> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/SfuBreakoutRoom";
+    const bodyWriter = tsproto.SfuBreakoutRoomRequest.encode(
+      tsproto.SfuBreakoutRoomRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+
+    return Promise.race([
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return tsproto.SfuBreakoutRoomResponse.decode(response.message);
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs
+        )
+      ),
+    ]);
+  }
+
+  /** Merge a breakout room back into its parent voice channel. */
+  sfuBreakoutMerge(body: SfuBreakoutMergeRequest, options = {}): Promise<any> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/SfuBreakoutMerge";
+    const bodyWriter = tsproto.SfuBreakoutMergeRequest.encode(
+      tsproto.SfuBreakoutMergeRequest.fromPartial(body)
     );
     const encodedBody = bodyWriter.finish();
 
