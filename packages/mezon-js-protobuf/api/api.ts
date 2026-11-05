@@ -297,6 +297,8 @@ export interface Account {
   encrypt_private_key: string;
   /** password is setted */
   password_setted: boolean;
+  /** Profile banner url */
+  banner: string;
 }
 
 /** Obtain a new authentication token using a refresh token. */
@@ -1146,7 +1148,11 @@ export interface UpdateAccountRequest {
   /** e2ee encrypt private key */
   encrypt_private_key: string;
   /** The email of the user's account. */
-  email: string | undefined;
+  email:
+    | string
+    | undefined;
+  /** Profile banner url */
+  banner: string | undefined;
 }
 
 /** Update fields in a given group. */
@@ -1222,6 +1228,8 @@ export interface User {
   list_nick_names: string[];
   /** online, offline, invisible, idle, do not disturb */
   status: string;
+  /** Profile banner url */
+  banner: string;
 }
 
 /** A collection of zero or more users. */
@@ -4438,6 +4446,7 @@ function createBaseAccount(): Account {
     splash_screen: "",
     encrypt_private_key: "",
     password_setted: false,
+    banner: "",
   };
 }
 
@@ -4469,6 +4478,9 @@ export const Account = {
     }
     if (message.password_setted !== false) {
       writer.uint32(72).bool(message.password_setted);
+    }
+    if (message.banner !== "") {
+      writer.uint32(82).string(message.banner);
     }
     return writer;
   },
@@ -4543,6 +4555,13 @@ export const Account = {
 
           message.password_setted = reader.bool();
           continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.banner = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -4563,6 +4582,7 @@ export const Account = {
       splash_screen: isSet(object.splash_screen) ? globalThis.String(object.splash_screen) : "",
       encrypt_private_key: isSet(object.encrypt_private_key) ? globalThis.String(object.encrypt_private_key) : "",
       password_setted: isSet(object.password_setted) ? globalThis.Boolean(object.password_setted) : false,
+      banner: isSet(object.banner) ? globalThis.String(object.banner) : "",
     };
   },
 
@@ -4595,6 +4615,9 @@ export const Account = {
     if (message.password_setted !== false) {
       obj.password_setted = message.password_setted;
     }
+    if (message.banner !== "") {
+      obj.banner = message.banner;
+    }
     return obj;
   },
 
@@ -4612,6 +4635,7 @@ export const Account = {
     message.splash_screen = object.splash_screen ?? "";
     message.encrypt_private_key = object.encrypt_private_key ?? "";
     message.password_setted = object.password_setted ?? false;
+    message.banner = object.banner ?? "";
     return message;
   },
 };
@@ -11617,6 +11641,7 @@ function createBaseUpdateAccountRequest(): UpdateAccountRequest {
     splash_screen: undefined,
     encrypt_private_key: "",
     email: undefined,
+    banner: undefined,
   };
 }
 
@@ -11654,6 +11679,9 @@ export const UpdateAccountRequest = {
     }
     if (message.email !== undefined) {
       StringValue.encode({ value: message.email! }, writer.uint32(90).fork()).ldelim();
+    }
+    if (message.banner !== undefined) {
+      StringValue.encode({ value: message.banner! }, writer.uint32(98).fork()).ldelim();
     }
     return writer;
   },
@@ -11742,6 +11770,13 @@ export const UpdateAccountRequest = {
 
           message.email = StringValue.decode(reader, reader.uint32()).value;
           continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.banner = StringValue.decode(reader, reader.uint32()).value;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -11764,6 +11799,7 @@ export const UpdateAccountRequest = {
       splash_screen: isSet(object.splash_screen) ? String(object.splash_screen) : undefined,
       encrypt_private_key: isSet(object.encrypt_private_key) ? globalThis.String(object.encrypt_private_key) : "",
       email: isSet(object.email) ? String(object.email) : undefined,
+      banner: isSet(object.banner) ? String(object.banner) : undefined,
     };
   },
 
@@ -11802,6 +11838,9 @@ export const UpdateAccountRequest = {
     if (message.email !== undefined) {
       obj.email = message.email;
     }
+    if (message.banner !== undefined) {
+      obj.banner = message.banner;
+    }
     return obj;
   },
 
@@ -11821,6 +11860,7 @@ export const UpdateAccountRequest = {
     message.splash_screen = object.splash_screen ?? undefined;
     message.encrypt_private_key = object.encrypt_private_key ?? "";
     message.email = object.email ?? undefined;
+    message.banner = object.banner ?? undefined;
     return message;
   },
 };
@@ -12077,6 +12117,7 @@ function createBaseUser(): User {
     mezon_id: "",
     list_nick_names: [],
     status: "",
+    banner: "",
   };
 }
 
@@ -12141,6 +12182,9 @@ export const User = {
     }
     if (message.status !== "") {
       writer.uint32(162).string(message.status);
+    }
+    if (message.banner !== "") {
+      writer.uint32(170).string(message.banner);
     }
     return writer;
   },
@@ -12292,6 +12336,13 @@ export const User = {
 
           message.status = reader.string();
           continue;
+        case 21:
+          if (tag !== 170) {
+            break;
+          }
+
+          message.banner = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -12325,6 +12376,7 @@ export const User = {
         ? object.list_nick_names.map((e: any) => globalThis.String(e))
         : [],
       status: isSet(object.status) ? globalThis.String(object.status) : "",
+      banner: isSet(object.banner) ? globalThis.String(object.banner) : "",
     };
   },
 
@@ -12390,6 +12442,9 @@ export const User = {
     if (message.status !== "") {
       obj.status = message.status;
     }
+    if (message.banner !== "") {
+      obj.banner = message.banner;
+    }
     return obj;
   },
 
@@ -12418,6 +12473,7 @@ export const User = {
     message.mezon_id = object.mezon_id ?? "";
     message.list_nick_names = object.list_nick_names?.map((e) => e) || [];
     message.status = object.status ?? "";
+    message.banner = object.banner ?? "";
     return message;
   },
 };
