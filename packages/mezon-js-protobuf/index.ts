@@ -9,5 +9,6 @@ export {
   ChannelMessageRemove,
   ChannelMessageUpdate,
   ChannelMessageSend,
-  ChannelMessageAck
+  ChannelMessageAck,
+  SfuBreakoutRoomEvent
 } from "./rtapi/realtime";
