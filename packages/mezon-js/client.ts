@@ -707,11 +707,11 @@ export class Client {
                 <VoiceInteractiveEvent>message.voice_interactive_event
               );
             } else if (message.pong) {
-              if (this.verbose && window && window.console) {
+              if (this.verbose && typeof console !== "undefined") {
                 console.log("Pong message received: %o", message);
               }
             } else {
-              if (this.verbose && window && window.console) {
+              if (this.verbose && typeof console !== "undefined") {
                 console.log("Unrecognized message received: %o", message);
               }
             }
@@ -931,415 +931,415 @@ export class Client {
   }
 
   onmessagetyping(messagetyping: MessageTypingEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(messagetyping);
     }
   }
 
   onmessagereaction(messagereaction: ApiMessageReaction) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(messagereaction);
     }
   }
 
   onchannelmessage(channelMessage: ChannelMessage) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(channelMessage);
     }
   }
 
   onchannelpresence(channelPresence: ChannelPresenceEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(channelPresence);
     }
   }
 
   onuserchanneladded(user: UserChannelAddedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(user);
     }
   }
 
   onuserclanadded(user: AddClanUserEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(user);
     }
   }
 
   onuserprofileupdate(user: UserProfileUpdatedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(user);
     }
   }
 
   onuserchannelremoved(user: UserChannelRemovedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(user);
     }
   }
 
   onaddfriend(user: AddFriend) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(user);
     }
   }
 
   onremovefriend(user: RemoveFriend) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(user);
     }
   }
 
   onblockfriend(user: BlockFriend) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(user);
     }
   }
 
   onunblockfriend(user: UnblockFriend) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(user);
     }
   }
 
   onuserclanremoved(user: UserClanRemovedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(user);
     }
   }
 
   onnotification(notification: ApiNotification) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(notification);
     }
   }
 
   onstatuspresence(statusPresence: StatusPresenceEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(statusPresence);
     }
   }
 
   onpinmessage(pin: LastPinMessageEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(pin);
     }
   }
 
   onvoiceended(voice: VoiceEndedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(voice);
     }
   }
 
   onvoicestarted(voice: VoiceStartedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(voice);
     }
   }
 
   onvoicejoined(voiceParticipant: VoiceJoinedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(voiceParticipant);
     }
   }
 
   onvoiceleaved(voiceParticipant: VoiceLeavedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(voiceParticipant);
     }
   }
 
   onchannelcreated(channelCreated: ChannelCreatedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(channelCreated);
     }
   }
 
   oncategoryevent(categoryEvent: CategoryEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(categoryEvent);
     }
   }
 
   onroleevent(roleEvent: RoleEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(roleEvent);
     }
   }
 
   oneventemoji(eventEmoji: EventEmoji) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(eventEmoji);
     }
   }
 
   oneventnotiuserchannel(notiUserChannel: ApiNotificationUserChannel) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(notiUserChannel);
     }
   }
 
   oneventwebhook(webhook_event: ApiWebhook) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(webhook_event);
     }
   }
 
   onchanneldeleted(channelDeleted: ChannelDeletedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(channelDeleted);
     }
   }
 
   onclandeleted(clanDeleted: ClanDeletedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(clanDeleted);
     }
   }
 
   onstickercreated(stickerCreated: StickerCreateEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(stickerCreated);
     }
   }
 
   onstickerdeleted(stickerDeleted: StickerDeleteEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(stickerDeleted);
     }
   }
 
   onstickerupdated(stickerUpdated: StickerUpdateEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(stickerUpdated);
     }
   }
 
   onchannelupdated(channelUpdated: ChannelUpdatedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(channelUpdated);
     }
   }
 
   onchannelarchive(channelArchive: ChannelArchiveEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(channelArchive);
     }
   }
 
   ondeleteaccount(deleteAccountEvent: DeleteAccountEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(deleteAccountEvent);
     }
   }
 
   onclanprofileupdated(clanprofile: ClanProfileUpdatedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(clanprofile);
     }
   }
 
   onclanupdated(clan: ClanUpdatedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(clan);
     }
   }
 
   onlastseenupdated(event: LastSeenMessageEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(event);
     }
   }
 
   onheartbeattimeout() {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log("Heartbeat timeout.");
     }
   }
 
   oncustomstatus(statusEvent: CustomStatusEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(statusEvent);
     }
   }
 
   oncanvasevent(canvasEvent: ChannelCanvas) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(canvasEvent);
     }
   }
 
   oneventcreated(clan_event_created: ApiCreateEventRequest) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(clan_event_created);
     }
   }
 
   oncoffeegiven(give_coffee_event: ApiGiveCoffeeEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(give_coffee_event);
     }
   }
 
   onroleassign(role_assign_event: RoleAssignedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(role_assign_event);
     }
   }
 
   onstreamingchannelstarted(streaming_started_event: StreamingStartedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(streaming_started_event);
     }
   }
 
   onstreamingchannelended(streaming_ended_event: StreamingEndedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(streaming_ended_event);
     }
   }
 
   onstreamingchanneljoined(streaming_joined_event: StreamingJoinedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(streaming_joined_event);
     }
   }
 
   onstreamingchannelleaved(streaming_leaved_event: StreamingLeavedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(streaming_leaved_event);
     }
   }
 
   onpermissionset(permission_set_event: PermissionSet) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(permission_set_event);
     }
   }
 
   onpermissionchanged(permission_changed_event: PermissionChangedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(permission_changed_event);
     }
   }
 
   onunmuteevent(unmute_event: UnmuteEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(unmute_event);
     }
   }
 
   ontokensent(tokenSentEvent: ApiTokenSentEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(tokenSentEvent);
     }
   }
 
   onmessagebuttonclicked(messageButtonClicked: MessageButtonClicked) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(messageButtonClicked);
     }
   }
 
   onmessagedropdownboxselected(msg: DropdownBoxSelected) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(msg);
     }
   }
 
   onmarkasread(event: MarkAsRead) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(event);
     }
   }
 
   onvoicereactionmessage(event: VoiceReactionSend) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(event);
     }
   }
 
   onwebrtcsignalingfwd(event: WebrtcSignalingFwd) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(event);
     }
   }
 
   onactivityupdated(list_activity: ListActivity) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(list_activity);
     }
   }
 
   onsdtopicevent(sd_topic_event: SdTopicEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(sd_topic_event);
     }
   }
 
   onchannelappevent(event: ChannelAppEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(event);
     }
   }
 
   onuserstatusevent(user_status_event: UserStatusEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(user_status_event);
     }
   }
 
   onjoinchannelappevent(join_channel_app_data: JoinChannelAppData) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(join_channel_app_data);
     }
   }
 
   onunpinmessageevent(unpin_message_event: UnpinMessageEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(unpin_message_event);
     }
   }
 
   onquickmenuevent(event: QuickMenuEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(event);
     }
   }
 
   ontransferownership(event: TransferOwnershipEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(event);
     }
   }
 
   onbanneduser(event: BannedUserEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(event);
     }
   }
 
   onlistchannelusersbanned(event: ListChannelUsersBannedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(event);
     }
   }
 
   onmeetparticipantevent(event: MeetParticipantEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(event);
     }
   }
 
   onallowanonymousevent(event: AllowAnonymousEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(event);
     }
   }
 
   onaiagentenabled(event: AiAgentEnabledEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(event);
     }
   }
@@ -1350,25 +1350,25 @@ export class Client {
    * to perform actions before or after the refresh logic.
    */
   onrefreshsession(session: ApiSession): void {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(`Token refresh occurred. Token: ${session.token}`);
     }
   }
 
   ontopicinmessage(event: TopicInMessageEvent): void {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(event);
     }
   }
 
   onscreenshare(event: ScreenShareEvent): void {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(event);
     }
   }
 
   onvoiceinteractiveevent(event: VoiceInteractiveEvent): void {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(event);
     }
   }
