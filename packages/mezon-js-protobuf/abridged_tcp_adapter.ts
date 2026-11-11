@@ -149,15 +149,21 @@ export class MezonNetworkAdapter implements TransportAdapter {
       }
     });
 
-    client.on("error", (err) =>
-      this._onError?.(
-        new ErrorEvent("error", { error: err, message: err.message }),
-      ),
-    );
+    client.on("error", (err: { message: any; }) => {
+      const event =
+        typeof ErrorEvent !== "undefined"
+          ? new ErrorEvent("error", { error: err, message: err.message })
+          : ({ type: "error", error: err, message: err.message } as unknown as Event);
+      this._onError?.(event);
+    });
 
-    client.on("close", (hadError) =>
-      this._onClose?.(new CloseEvent("close", { wasClean: !hadError })),
-    );
+    client.on("close", (hadError: any) => {
+      const event =
+        typeof CloseEvent !== "undefined"
+          ? new CloseEvent("close", { wasClean: !hadError })
+          : ({ type: "close", wasClean: !hadError } as unknown as CloseEvent);
+      this._onClose?.(event);
+    });
 
     if (signal) {
       signal.addEventListener("abort", () => this.close());
