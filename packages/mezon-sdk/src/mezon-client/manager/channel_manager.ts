@@ -5,6 +5,7 @@ import {
   ApiCreateChannelDescRequest,
 } from "../../interfaces";
 import { isValidUserId } from "../../utils/helper";
+import { Session } from "../../session";
 import { SessionManager } from "./session_manager";
 import { SocketManager } from "./socket_manager";
 
@@ -15,6 +16,7 @@ export class ChannelManager {
     private apiClient: MezonApi,
     private socketManager: SocketManager,
     private sessionManager: SessionManager,
+    private ensureValidSession?: () => Promise<Session>,
   ) { }
 
   public async initAllDmChannels(sessionToken: string) {
@@ -83,8 +85,12 @@ export class ChannelManager {
         user_ids: [userId],
         channel_private: 1,
       };
+      const session = this.ensureValidSession
+        ? await this.ensureValidSession()
+        : this.sessionManager.getSession();
+      if (!session?.token) return null;
       const channelDM = await this.apiClient.createChannelDesc(
-        this.sessionManager.getSession()!.token,
+        session.token,
         request,
       );
 

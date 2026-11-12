@@ -65,7 +65,8 @@ export function safeJSONParse(raw: any): any {
     return typeof raw === 'object' ? raw : { t: raw };
   }
 
-  if (!jsonStr || jsonStr === "" || jsonStr === "[]") {
+  const trimmed = jsonStr.trim();
+  if (!trimmed || trimmed === "[]" || (!trimmed.startsWith("{") && !trimmed.startsWith("["))) {
     return { t: jsonStr };
   }
 

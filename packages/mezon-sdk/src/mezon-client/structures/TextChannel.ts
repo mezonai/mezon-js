@@ -293,6 +293,10 @@ export class TextChannel {
     if (!meetingCode) {
       return { error: "Channel not voice channel." };
     }
+    const client = this.clan.getClient?.();
+    if (client?.ensureValidSession) {
+      await client.ensureValidSession();
+    }
     const token = this.clan.sessionToken;
     if (!token) {
       return { error: "Token not found." };

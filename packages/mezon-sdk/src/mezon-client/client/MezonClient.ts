@@ -241,6 +241,7 @@ export class MezonClient extends MezonClientCore {
       const clan = this.clans.get(e.clan_id);
 
       if (!clan) {
+        const activeSession = await this.ensureValidSession();
         const clanObj = new Clan(
           {
             id: e.clan_id!,
@@ -251,7 +252,7 @@ export class MezonClient extends MezonClientCore {
           this,
           this.apiClient,
           this.socketManager,
-          this.sessionManager.getSession()?.token!,
+          activeSession.token,
           this.messageQueue,
           this.messageDB,
         );
