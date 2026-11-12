@@ -1923,7 +1923,7 @@ export interface EventManagement {
   channel_id: string;
   event_status: number;
   repeat_type: number;
-  is_private: boolean;
+  is_external: boolean;
   meet_room: GenerateMezonMeetResponse | undefined;
   co_host: string;
 }
@@ -2206,7 +2206,7 @@ export interface CreateEventRequest {
   repeat_type: number;
   creator_id: string;
   user_id: string;
-  is_private: boolean;
+  is_external: boolean;
   meet_room: GenerateMezonMeetResponse | undefined;
   co_host: string;
 }
@@ -18865,7 +18865,7 @@ function createBaseEventManagement(): EventManagement {
     channel_id: "0",
     event_status: 0,
     repeat_type: 0,
-    is_private: false,
+    is_external: false,
     meet_room: undefined,
     co_host: "0",
   };
@@ -18929,8 +18929,8 @@ export const EventManagement = {
     if (message.repeat_type !== 0) {
       writer.uint32(144).int32(message.repeat_type);
     }
-    if (message.is_private !== false) {
-      writer.uint32(152).bool(message.is_private);
+    if (message.is_external !== false) {
+      writer.uint32(152).bool(message.is_external);
     }
     if (message.meet_room !== undefined) {
       GenerateMezonMeetResponse.encode(message.meet_room, writer.uint32(162).fork()).ldelim();
@@ -19089,7 +19089,7 @@ export const EventManagement = {
             break;
           }
 
-          message.is_private = reader.bool();
+          message.is_external = reader.bool();
           continue;
         case 20:
           if (tag !== 162) {
@@ -19134,7 +19134,7 @@ export const EventManagement = {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
       event_status: isSet(object.event_status) ? globalThis.Number(object.event_status) : 0,
       repeat_type: isSet(object.repeat_type) ? globalThis.Number(object.repeat_type) : 0,
-      is_private: isSet(object.is_private) ? globalThis.Boolean(object.is_private) : false,
+      is_external: isSet(object.is_external) ? globalThis.Boolean(object.is_external) : false,
       meet_room: isSet(object.meet_room) ? GenerateMezonMeetResponse.fromJSON(object.meet_room) : undefined,
       co_host: isSet(object.co_host) ? globalThis.String(object.co_host) : "0",
     };
@@ -19196,8 +19196,8 @@ export const EventManagement = {
     if (message.repeat_type !== 0) {
       obj.repeat_type = Math.round(message.repeat_type);
     }
-    if (message.is_private !== false) {
-      obj.is_private = message.is_private;
+    if (message.is_external !== false) {
+      obj.is_external = message.is_external;
     }
     if (message.meet_room !== undefined) {
       obj.meet_room = GenerateMezonMeetResponse.toJSON(message.meet_room);
@@ -19231,7 +19231,7 @@ export const EventManagement = {
     message.channel_id = object.channel_id ?? "0";
     message.event_status = object.event_status ?? 0;
     message.repeat_type = object.repeat_type ?? 0;
-    message.is_private = object.is_private ?? false;
+    message.is_external = object.is_external ?? false;
     message.meet_room = (object.meet_room !== undefined && object.meet_room !== null)
       ? GenerateMezonMeetResponse.fromPartial(object.meet_room)
       : undefined;
@@ -21948,7 +21948,7 @@ function createBaseCreateEventRequest(): CreateEventRequest {
     repeat_type: 0,
     creator_id: "0",
     user_id: "0",
-    is_private: false,
+    is_external: false,
     meet_room: undefined,
     co_host: "0",
   };
@@ -22001,8 +22001,8 @@ export const CreateEventRequest = {
     if (message.user_id !== "0") {
       writer.uint32(120).int64(message.user_id);
     }
-    if (message.is_private !== false) {
-      writer.uint32(128).bool(message.is_private);
+    if (message.is_external !== false) {
+      writer.uint32(128).bool(message.is_external);
     }
     if (message.meet_room !== undefined) {
       GenerateMezonMeetResponse.encode(message.meet_room, writer.uint32(138).fork()).ldelim();
@@ -22130,7 +22130,7 @@ export const CreateEventRequest = {
             break;
           }
 
-          message.is_private = reader.bool();
+          message.is_external = reader.bool();
           continue;
         case 17:
           if (tag !== 138) {
@@ -22172,7 +22172,7 @@ export const CreateEventRequest = {
       repeat_type: isSet(object.repeat_type) ? globalThis.Number(object.repeat_type) : 0,
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "0",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
-      is_private: isSet(object.is_private) ? globalThis.Boolean(object.is_private) : false,
+      is_external: isSet(object.is_external) ? globalThis.Boolean(object.is_external) : false,
       meet_room: isSet(object.meet_room) ? GenerateMezonMeetResponse.fromJSON(object.meet_room) : undefined,
       co_host: isSet(object.co_host) ? globalThis.String(object.co_host) : "0",
     };
@@ -22225,8 +22225,8 @@ export const CreateEventRequest = {
     if (message.user_id !== "0") {
       obj.user_id = message.user_id;
     }
-    if (message.is_private !== false) {
-      obj.is_private = message.is_private;
+    if (message.is_external !== false) {
+      obj.is_external = message.is_external;
     }
     if (message.meet_room !== undefined) {
       obj.meet_room = GenerateMezonMeetResponse.toJSON(message.meet_room);
@@ -22257,7 +22257,7 @@ export const CreateEventRequest = {
     message.repeat_type = object.repeat_type ?? 0;
     message.creator_id = object.creator_id ?? "0";
     message.user_id = object.user_id ?? "0";
-    message.is_private = object.is_private ?? false;
+    message.is_external = object.is_external ?? false;
     message.meet_room = (object.meet_room !== undefined && object.meet_room !== null)
       ? GenerateMezonMeetResponse.fromPartial(object.meet_room)
       : undefined;
