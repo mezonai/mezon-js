@@ -208,6 +208,7 @@ export class MezonTransport implements Socket {
   private _connectPromise?: Promise<Session>;
   private _heartbeatTimer?: ReturnType<typeof setTimeout>;
   private _hasConnectedOnce: boolean = false;
+  private _handleEventsBound: boolean = false;
 
   public socketEvents: EventEmitter = new EventEmitter();
 
@@ -519,10 +520,13 @@ export class MezonTransport implements Socket {
       this.onerror(evt as unknown as ErrorEvent);
     };
 
-    HandleEvent.forEach((cl) => {
-      const instance = new cl(this);
-      instance.excute();
-    });
+    if (!this._handleEventsBound) {
+      this._handleEventsBound = true;
+      HandleEvent.forEach((cl) => {
+        const instance = new cl(this);
+        instance.excute();
+      });
+    }
 
     this.adapter.onMessage = (cid: number, code: number, message: any) => {
       if (this.verbose) {

@@ -96,9 +96,18 @@ export class Clan {
     return promise;
   }
 
+  private async getValidSessionToken(): Promise<string> {
+    if (typeof this.client?.ensureValidSession === "function") {
+      const session = await this.client.ensureValidSession();
+      this.sessionToken = session.token;
+    }
+    return this.sessionToken;
+  }
+
   private async fetchAndMergeChannels(): Promise<void> {
+    const sessionToken = await this.getValidSessionToken();
     const channels = await this.apiClient.listChannelDescs(
-      this.sessionToken,
+      sessionToken,
       ChannelType.CHANNEL_TYPE_CHANNEL,
       this.id,
     );
@@ -129,8 +138,9 @@ export class Clan {
       console.log("0 < limit <= 500");
       throw new Error("0 < limit <= 500");
     }
+    const sessionToken = await this.getValidSessionToken();
     return this.apiClient
-      .listChannelVoiceUsers(this.sessionToken, clanId, limit)
+      .listChannelVoiceUsers(sessionToken, clanId, limit)
       .then((response: ApiVoiceChannelUserList) => {
         var result: ApiVoiceChannelUserList = {
           voice_channel_users: [],
@@ -157,7 +167,7 @@ export class Clan {
     roleId: string,
     request: MezonUpdateRoleBody,
   ): Promise<boolean> {
-    const session = this.sessionToken;
+    const session = await this.getValidSessionToken();
     return this.apiClient.updateRole(session, roleId, request);
   }
 
@@ -166,7 +176,7 @@ export class Clan {
     state?: number,
     cursor?: string,
   ): Promise<ApiRoleListEventResponse> {
-    const session = this.sessionToken;
+    const session = await this.getValidSessionToken();
     return this.apiClient.listRoles(session, this.id, limit, state, cursor);
   }
 }

@@ -71,6 +71,7 @@ export class MezonClientCore extends EventEmitter {
   public zkProofs!: IZkProof;
   private _mmnInitPromise?: Promise<void>;
   private loginInFlight?: Promise<string>;
+  private reAuthPromise?: Promise<Session> | null;
 
   protected apiClient!: MezonApi;
   protected _mmnClient!: MmnClient;
@@ -154,7 +155,12 @@ export class MezonClientCore extends EventEmitter {
       this.messageDB,
       sessionApi?.tcp_url ?? sessionApi?.ws_url ?? "",
     );
-    this.channelManager = new ChannelManager(this.apiClient, this.socketManager, this.sessionManager);
+    this.channelManager = new ChannelManager(
+      this.apiClient,
+      this.socketManager,
+      this.sessionManager,
+      () => this.ensureValidSession(),
+    );
     if (this.mmnApiUrl) {
       this._mmnClient = new MmnClient({
         baseUrl: this.mmnApiUrl,
@@ -278,6 +284,52 @@ export class MezonClientCore extends EventEmitter {
     }
   }
 
+  public isSessionExpired(bufferSec: number = 0): boolean {
+    const session = this.sessionManager?.getSession();
+    if (!session) return true;
+    return session.isexpired(Math.floor(Date.now() / 1000) + bufferSec);
+  }
+
+  public async ensureValidSession(bufferSec: number = 30): Promise<Session> {
+    const session = this.sessionManager?.getSession();
+    if (session && !session.isexpired(Math.floor(Date.now() / 1000) + bufferSec)) {
+      return session;
+    }
+
+    if (this.reAuthPromise) {
+      return this.reAuthPromise;
+    }
+
+    this.reAuthPromise = (async () => {
+      try {
+        const loginApiClient = new MezonApi(this.token, this.loginBasePath!, this.timeout);
+        const loginSessionManager = new SessionManager(loginApiClient, this.sessionManager?.getSession());
+        const freshSession = await loginSessionManager.reAuthenticate(this.clientId, this.token);
+        if (!this.sessionManager) {
+          this.sessionManager = new SessionManager(this.apiClient, freshSession);
+        } else {
+          this.sessionManager.setSession(freshSession);
+        }
+        if (this.clans) {
+          for (const clan of this.clans.values()) {
+            clan.sessionToken = freshSession.token;
+          }
+        }
+        return freshSession;
+      } finally {
+        this.reAuthPromise = null;
+      }
+    })();
+
+    return this.reAuthPromise;
+  }
+
+  private async _getValidSession(): Promise<Session | undefined> {
+    const session = this.sessionManager?.getSession();
+    if (!session) return undefined;
+    return this.ensureValidSession();
+  }
+
   async handleReconnectSocket() {
     const session = this.sessionManager?.getSession();
     if (!this.sessionManager || !this.channelManager) {
@@ -286,10 +338,23 @@ export class MezonClientCore extends EventEmitter {
       this.initManager(this.loginBasePath!, session ?? undefined);
     }
 
-    const activeSession = this.sessionManager.getSession();
+    let activeSession = this.sessionManager.getSession();
     if (!activeSession) {
       return this.login();
     }
+
+    if (this.isSessionExpired(30)) {
+      try {
+        activeSession = await this.ensureValidSession(30);
+      } catch (error) {
+        console.error(
+          "[mezon-sdk] Re-authenticate failed during reconnect, attempting full login:",
+          error,
+        );
+        return this.login();
+      }
+    }
+
     const sessionConnected = await this.socketManager.connect(activeSession);
     const token = sessionConnected?.token;
     if (!token) {
@@ -419,7 +484,7 @@ export class MezonClientCore extends EventEmitter {
 
   async addQuickMenuAccess(body: ApiQuickMenuAccessPayload) {
     const id = generateSnowflakeId();
-    const sessionToken = this.sessionManager.getSession();
+    const sessionToken = await this._getValidSession();
     if (!sessionToken) return;
     const bot_id = this.clientId;
     const payload: ApiQuickMenuAccessRequest = {
@@ -440,7 +505,7 @@ export class MezonClientCore extends EventEmitter {
   }
 
   async deleteQuickMenuAccess(botId?: string) {
-    const sessionToken = this.sessionManager.getSession();
+    const sessionToken = await this._getValidSession();
     if (!sessionToken) return;
     const botIdPayload = botId ?? this.clientId;
     try {
@@ -451,7 +516,7 @@ export class MezonClientCore extends EventEmitter {
   }
 
   async createPoll(body: ApiCreatePollRequest): Promise<ApiCreatePollResponse | undefined> {
-    const sessionToken = this.sessionManager.getSession();
+    const sessionToken = await this._getValidSession();
     if (!sessionToken) return;
     return this.apiClient.createPoll(sessionToken.token, body);
   }
@@ -459,7 +524,7 @@ export class MezonClientCore extends EventEmitter {
   async generateMeetToken(
     body: GenerateMeetTokenRequest,
   ): Promise<GenerateMeetTokenResponse | undefined> {
-    const sessionToken = this.sessionManager.getSession();
+    const sessionToken = await this._getValidSession();
     if (!sessionToken) return;
     return this.apiClient.generateMeetToken(sessionToken.token, body);
   }
@@ -467,7 +532,7 @@ export class MezonClientCore extends EventEmitter {
   async getStreamPlayback(
     body: GetStreamPlaybackRequest,
   ): Promise<GetStreamPlaybackResponse | undefined> {
-    const sessionToken = this.sessionManager.getSession();
+    const sessionToken = await this._getValidSession();
     if (!sessionToken) return;
     return this.apiClient.getStreamPlayback(sessionToken.token, body);
   }
@@ -475,19 +540,19 @@ export class MezonClientCore extends EventEmitter {
   async generateCDNSignature(
     body: GenerateCDNSignatureRequest,
   ): Promise<GenerateCDNSignatureResponse | undefined> {
-    const sessionToken = this.sessionManager.getSession();
+    const sessionToken = await this._getValidSession();
     if (!sessionToken) return;
     return this.apiClient.generateCDNSignature(sessionToken.token, body);
   }
 
   async closePoll(body: ApiClosePollRequest): Promise<void | undefined> {
-    const sessionToken = this.sessionManager.getSession();
+    const sessionToken = await this._getValidSession();
     if (!sessionToken) return;
     return this.apiClient.closePoll(sessionToken.token, body);
   }
 
   async getPoll(body: ApiGetPollRequest): Promise<ApiGetPollResponse | undefined> {
-    const sessionToken = this.sessionManager.getSession();
+    const sessionToken = await this._getValidSession();
     if (!sessionToken) return;
     return this.apiClient.getPoll(sessionToken.token, body);
   }
@@ -507,7 +572,7 @@ export class MezonClientCore extends EventEmitter {
 
   protected async _fetchChannelFromAPI(id: string): Promise<TextChannel> {
     try {
-      const session = this.sessionManager.getSession()!;
+      const session = (await this._getValidSession())!;
       const channelDetail = await this.apiClient.listChannelDetail(session.token, id);
       if (!channelDetail?.channel_id || channelDetail.channel_id === "0") {
         throw Error(`Invalid channel detail response for ${id}`);
@@ -525,7 +590,7 @@ export class MezonClientCore extends EventEmitter {
   }
 
   protected async _fetchUserFromAPI(id: string): Promise<User> {
-    const session = this.sessionManager.getSession();
+    const session = await this._getValidSession();
     if (!session) {
       throw new Error("Session not initialized when fetching user");
     }
