@@ -2747,7 +2747,7 @@ export interface ApiCreateEventRequest {
   //
   user_id?: string;
   //
-  is_private?: boolean;
+  is_external?: boolean;
   //
   meet_room?: ApiGenerateMezonMeetResponse;
 }
@@ -2951,7 +2951,7 @@ export interface ApiEventManagement {
   //
   repeat_type?: number;
   //
-  is_private?: boolean;
+  is_external?: boolean;
   //
   meet_room?: ApiGenerateMezonMeetResponse;
 }
