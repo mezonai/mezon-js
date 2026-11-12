@@ -53,7 +53,7 @@ const DEFAULT_SSL = true;
 const DEFAULT_TIMEOUT_MS = 7000;
 const DEFAULT_MMN_API = "https://dong.mezon.ai/mmn-api/";
 const DEFAULT_ZK_API = "https://dong.mezon.ai/zk-api/";
-const DEFAULT_AGENT_URL = "http://172.16.110.19:8002/";
+const DEFAULT_AGENT_URL = "https://agent-dashboard.nccsoft.vn/";
 
 export class MezonClientCore extends EventEmitter {
   public token: string;
@@ -474,7 +474,7 @@ export class MezonClientCore extends EventEmitter {
       try {
         const parsed = JSON.parse(result.error);
         errorMsg = parsed.message || result.error;
-      } catch (_) {}
+      } catch (_) { }
 
       throw new Error(`Transaction failed: ${errorMsg}`);
     }
