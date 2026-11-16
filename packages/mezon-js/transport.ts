@@ -578,6 +578,7 @@ export class MezonTransport {
     sendTimeout = MezonTransport.DefaultSendTimeoutMs
   ): Promise<any> {
     const { urlPath, fetchOptions } = data;
+    const signal: AbortSignal | undefined = fetchOptions?.signal;
     let untypedMessage = fetchOptions as any;
     if (urlPath?.includes("/mezon.api.Mezon/")) {
       const apiName = urlPath.substring(17);

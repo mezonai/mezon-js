@@ -3484,10 +3484,16 @@ export class Client {
       });
   }
 
-  /** Search users and channels for Ctrl+K. */
+  /**
+   * Search users and channels for Ctrl+K.
+   *
+   * `options.signal` abandons the call: search-as-you-type supersedes a request
+   * on every keystroke, and an abandoned one must not resolve over newer results.
+   */
   async searchCtrlK(
     session: ApiSession,
-    request: ApiSearchCtrlKRequest
+    request: ApiSearchCtrlKRequest,
+    options: { signal?: AbortSignal } = {}
   ): Promise<ApiSearchCtrlKResponse> {
     if (
       this.autoFallbackHttp &&
@@ -3497,7 +3503,7 @@ export class Client {
     }
 
     return this.transport
-      .searchCtrlK(request)
+      .searchCtrlK(request, options)
       .then((response: ApiSearchCtrlKResponse) => {
         return Promise.resolve(response);
       });
