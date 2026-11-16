@@ -466,6 +466,13 @@ export interface MezonTransportHandlers {
   onMessage: tsproto.SocketMessageHandler;
 }
 
+/** The DOM's abort error shape, so callers can recognise it like a fetch abort. */
+function requestAbortedError(): Error {
+  const error = new Error("The request was aborted.");
+  error.name = "AbortError";
+  return error;
+}
+
 export class MezonTransport {
   public static readonly DefaultSendTimeoutMs = 10000;
 
@@ -571,6 +578,7 @@ export class MezonTransport {
     sendTimeout = MezonTransport.DefaultSendTimeoutMs
   ): Promise<any> {
     const { urlPath, fetchOptions } = data;
+    const signal: AbortSignal | undefined = fetchOptions?.signal;
     let untypedMessage = fetchOptions as any;
     if (urlPath?.includes("/mezon.api.Mezon/")) {
       const apiName = urlPath.substring(17);
@@ -584,7 +592,9 @@ export class MezonTransport {
     }
 
     return new Promise<void>(async (resolve, reject) => {
-      if (!this.adapter.isOpen()) {
+      if (signal?.aborted) {
+        reject(requestAbortedError());
+      } else if (!this.adapter.isOpen()) {
         reject("Socket connection has not been established yet.");
       } else {
         if (untypedMessage.channel_message_send) {
@@ -609,8 +619,20 @@ export class MezonTransport {
         const cid = this.generatecid();
         this.metricLatency.start(cid);
         this.cIds[cid] = { resolve, reject };
+        let timeoutHandle: ReturnType<typeof setTimeout> | undefined;
+        // Abandoning the call (a newer keystroke in search-as-you-type) drops the
+        // pending cid so the late answer is discarded instead of resolving a
+        // request nobody is waiting for anymore.
+        const onAbort = () => {
+          delete this.cIds[cid];
+          if (timeoutHandle) clearTimeout(timeoutHandle);
+          this.metricLatency.end(cid, true);
+          reject(requestAbortedError());
+        };
+        signal?.addEventListener?.("abort", onAbort, { once: true });
         if (sendTimeout !== Infinity && sendTimeout > 0) {
-          setTimeout(() => {
+          timeoutHandle = setTimeout(() => {
+            signal?.removeEventListener?.("abort", onAbort);
             this.metricLatency.end(cid, true);
             reject("The socket timed out while waiting for a response.");
           }, sendTimeout);
