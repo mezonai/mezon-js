@@ -236,6 +236,7 @@ import {
   PermissionSet,
   QuickMenuEvent,
   RemoveFriend,
+  FriendStateUpdated,
   RoleAssignedEvent,
   RoleEvent,
   SdTopicEvent,
@@ -608,6 +609,8 @@ export class Client {
               this.onaddfriend(<AddFriend>message.add_friend);
             } else if (message.remove_friend) {
               this.onremovefriend(<RemoveFriend>message.remove_friend);
+            } else if (message.friend_state_updated) {
+              this.onfriendstateupdated(<FriendStateUpdated>message.friend_state_updated);
             } else if (message.user_clan_removed_event) {
               this.onuserclanremoved(
                 <UserClanRemovedEvent>message.user_clan_removed_event
@@ -1007,6 +1010,12 @@ export class Client {
   }
 
   onremovefriend(user: RemoveFriend) {
+    if (this.verbose && typeof console !== "undefined") {
+      console.log(user);
+    }
+  }
+
+  onfriendstateupdated(user: FriendStateUpdated) {
     if (this.verbose && typeof console !== "undefined") {
       console.log(user);
     }

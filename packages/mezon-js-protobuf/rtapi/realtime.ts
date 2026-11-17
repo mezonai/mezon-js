@@ -448,7 +448,11 @@ export interface Envelope {
     | SfuBreakoutRoomEvent
     | undefined;
   /** Aggregated audience count of a streaming channel */
-  streaming_viewer_count_event?: StreamingViewerCountEvent | undefined;
+  streaming_viewer_count_event?:
+    | StreamingViewerCountEvent
+    | undefined;
+  /** Friend relationship changed by the current user from another session */
+  friend_state_updated?: FriendStateUpdated | undefined;
 }
 
 export interface SfuBreakoutRoomEvent {
@@ -949,6 +953,8 @@ export interface AddFriend {
   display_name: string;
   /** avatar */
   avatar: string;
+  /** true when this call accepted the receiver's pending request */
+  accepted: boolean;
 }
 
 export interface RemoveFriend {
@@ -1566,7 +1572,6 @@ export interface ClanUpdatedEvent {
   hashtags: string;
   /** community vanity short url (clan_discover) */
   short_url: string;
-  /** Pro plan */
   pro_plan: boolean;
 }
 
@@ -1600,7 +1605,6 @@ export interface UserProfileUpdatedEvent {
   encrypt_private_key: string;
   /** profile banner url */
   banner: string;
-  /** Pro plan */
   pro_plan: boolean;
 }
 
@@ -1902,6 +1906,23 @@ export interface MetricMessageEvent {
   sessions_closed_total: string;
 }
 
+/**
+ * Sent to the acting user's own sessions after they add, accept, block or unblock a friend,
+ * so their other devices show the same relationship.
+ */
+export interface FriendStateUpdated {
+  /** the other user */
+  user_id: string;
+  /** username */
+  username: string;
+  /** display name */
+  display_name: string;
+  /** avatar */
+  avatar: string;
+  /** new api.Friend.State of the relationship from the acting user's side */
+  state: number;
+}
+
 function createBaseEnvelope(): Envelope {
   return {
     cid: 0,
@@ -2008,6 +2029,7 @@ function createBaseEnvelope(): Envelope {
     streaming_watch: undefined,
     sfu_breakout_room_event: undefined,
     streaming_viewer_count_event: undefined,
+    friend_state_updated: undefined,
   };
 }
 
@@ -2325,6 +2347,9 @@ export const Envelope = {
     }
     if (message.streaming_viewer_count_event !== undefined) {
       StreamingViewerCountEvent.encode(message.streaming_viewer_count_event, writer.uint32(850).fork()).ldelim();
+    }
+    if (message.friend_state_updated !== undefined) {
+      FriendStateUpdated.encode(message.friend_state_updated, writer.uint32(858).fork()).ldelim();
     }
     return writer;
   },
@@ -3064,6 +3089,13 @@ export const Envelope = {
 
           message.streaming_viewer_count_event = StreamingViewerCountEvent.decode(reader, reader.uint32());
           continue;
+        case 107:
+          if (tag !== 858) {
+            break;
+          }
+
+          message.friend_state_updated = FriendStateUpdated.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3318,6 +3350,9 @@ export const Envelope = {
         : undefined,
       streaming_viewer_count_event: isSet(object.streaming_viewer_count_event)
         ? StreamingViewerCountEvent.fromJSON(object.streaming_viewer_count_event)
+        : undefined,
+      friend_state_updated: isSet(object.friend_state_updated)
+        ? FriendStateUpdated.fromJSON(object.friend_state_updated)
         : undefined,
     };
   },
@@ -3637,6 +3672,9 @@ export const Envelope = {
     }
     if (message.streaming_viewer_count_event !== undefined) {
       obj.streaming_viewer_count_event = StreamingViewerCountEvent.toJSON(message.streaming_viewer_count_event);
+    }
+    if (message.friend_state_updated !== undefined) {
+      obj.friend_state_updated = FriendStateUpdated.toJSON(message.friend_state_updated);
     }
     return obj;
   },
@@ -3987,6 +4025,9 @@ export const Envelope = {
       (object.streaming_viewer_count_event !== undefined && object.streaming_viewer_count_event !== null)
         ? StreamingViewerCountEvent.fromPartial(object.streaming_viewer_count_event)
         : undefined;
+    message.friend_state_updated = (object.friend_state_updated !== undefined && object.friend_state_updated !== null)
+      ? FriendStateUpdated.fromPartial(object.friend_state_updated)
+      : undefined;
     return message;
   },
 };
@@ -8225,7 +8266,7 @@ export const Notifications = {
 };
 
 function createBaseAddFriend(): AddFriend {
-  return { user_id: "0", username: "", display_name: "", avatar: "" };
+  return { user_id: "0", username: "", display_name: "", avatar: "", accepted: false };
 }
 
 export const AddFriend = {
@@ -8241,6 +8282,9 @@ export const AddFriend = {
     }
     if (message.avatar !== "") {
       writer.uint32(34).string(message.avatar);
+    }
+    if (message.accepted !== false) {
+      writer.uint32(40).bool(message.accepted);
     }
     return writer;
   },
@@ -8280,6 +8324,13 @@ export const AddFriend = {
 
           message.avatar = reader.string();
           continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.accepted = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -8295,6 +8346,7 @@ export const AddFriend = {
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
+      accepted: isSet(object.accepted) ? globalThis.Boolean(object.accepted) : false,
     };
   },
 
@@ -8312,6 +8364,9 @@ export const AddFriend = {
     if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
+    if (message.accepted !== false) {
+      obj.accepted = message.accepted;
+    }
     return obj;
   },
 
@@ -8324,6 +8379,7 @@ export const AddFriend = {
     message.username = object.username ?? "";
     message.display_name = object.display_name ?? "";
     message.avatar = object.avatar ?? "";
+    message.accepted = object.accepted ?? false;
     return message;
   },
 };
@@ -18344,6 +18400,125 @@ export const MetricMessageEvent = {
     message.sessions_peak = object.sessions_peak ?? 0;
     message.sessions_created_total = object.sessions_created_total ?? "0";
     message.sessions_closed_total = object.sessions_closed_total ?? "0";
+    return message;
+  },
+};
+
+function createBaseFriendStateUpdated(): FriendStateUpdated {
+  return { user_id: "0", username: "", display_name: "", avatar: "", state: 0 };
+}
+
+export const FriendStateUpdated = {
+  encode(message: FriendStateUpdated, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "0") {
+      writer.uint32(8).int64(message.user_id);
+    }
+    if (message.username !== "") {
+      writer.uint32(18).string(message.username);
+    }
+    if (message.display_name !== "") {
+      writer.uint32(26).string(message.display_name);
+    }
+    if (message.avatar !== "") {
+      writer.uint32(34).string(message.avatar);
+    }
+    if (message.state !== 0) {
+      writer.uint32(40).int32(message.state);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): FriendStateUpdated {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFriendStateUpdated();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.user_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.username = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.display_name = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.avatar = reader.string();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.state = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): FriendStateUpdated {
+    return {
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
+      avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
+      state: isSet(object.state) ? globalThis.Number(object.state) : 0,
+    };
+  },
+
+  toJSON(message: FriendStateUpdated): unknown {
+    const obj: any = {};
+    if (message.user_id !== "0") {
+      obj.user_id = message.user_id;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.display_name !== "") {
+      obj.display_name = message.display_name;
+    }
+    if (message.avatar !== "") {
+      obj.avatar = message.avatar;
+    }
+    if (message.state !== 0) {
+      obj.state = Math.round(message.state);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<FriendStateUpdated>, I>>(base?: I): FriendStateUpdated {
+    return FriendStateUpdated.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<FriendStateUpdated>, I>>(object: I): FriendStateUpdated {
+    const message = createBaseFriendStateUpdated();
+    message.user_id = object.user_id ?? "0";
+    message.username = object.username ?? "";
+    message.display_name = object.display_name ?? "";
+    message.avatar = object.avatar ?? "";
+    message.state = object.state ?? 0;
     return message;
   },
 };
