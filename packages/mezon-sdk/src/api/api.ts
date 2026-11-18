@@ -299,7 +299,6 @@ export interface Account {
   password_setted: boolean;
   /** Profile banner url */
   banner: string;
-  /** Pro plan */
   pro_plan: boolean;
 }
 
@@ -883,6 +882,8 @@ export interface ListFriendsRequest {
   state: number;
   /** An optional next page cursor. */
   cursor: string;
+  /** Sort friends by last_sent (most recent DM first). */
+  sort_by_last_sent: boolean;
 }
 
 /** List groups based on given filters. */
@@ -1236,7 +1237,6 @@ export interface User {
   status: string;
   /** Profile banner url */
   banner: string;
-  /** Pro plan */
   pro_plan: boolean;
 }
 
@@ -1322,7 +1322,6 @@ export interface ClanDesc {
   has_unread_message: boolean;
   /** comma-separated clan hashtags */
   hashtags: string;
-  /** Pro plan */
   pro_plan: boolean;
   /** Total members in clan */
   total_members: number;
@@ -9530,7 +9529,7 @@ export const ListChannelMessagesRequest = {
 };
 
 function createBaseListFriendsRequest(): ListFriendsRequest {
-  return { limit: 0, state: 0, cursor: "" };
+  return { limit: 0, state: 0, cursor: "", sort_by_last_sent: false };
 }
 
 export const ListFriendsRequest = {
@@ -9543,6 +9542,9 @@ export const ListFriendsRequest = {
     }
     if (message.cursor !== "") {
       writer.uint32(26).string(message.cursor);
+    }
+    if (message.sort_by_last_sent !== false) {
+      writer.uint32(32).bool(message.sort_by_last_sent);
     }
     return writer;
   },
@@ -9575,6 +9577,13 @@ export const ListFriendsRequest = {
 
           message.cursor = reader.string();
           continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.sort_by_last_sent = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -9589,6 +9598,7 @@ export const ListFriendsRequest = {
       limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
       state: isSet(object.state) ? globalThis.Number(object.state) : 0,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
+      sort_by_last_sent: isSet(object.sort_by_last_sent) ? globalThis.Boolean(object.sort_by_last_sent) : false,
     };
   },
 
@@ -9603,6 +9613,9 @@ export const ListFriendsRequest = {
     if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
+    if (message.sort_by_last_sent !== false) {
+      obj.sort_by_last_sent = message.sort_by_last_sent;
+    }
     return obj;
   },
 
@@ -9614,6 +9627,7 @@ export const ListFriendsRequest = {
     message.limit = object.limit ?? 0;
     message.state = object.state ?? 0;
     message.cursor = object.cursor ?? "";
+    message.sort_by_last_sent = object.sort_by_last_sent ?? false;
     return message;
   },
 };
