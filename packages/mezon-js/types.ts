@@ -1005,10 +1005,19 @@ export interface AddFriend {
   display_name: string;
   // avatar
   avatar: string;
+  accepted?: boolean;
 }
 export interface RemoveFriend {
   //
   user_id: string;
+}
+
+export interface FriendStateUpdated {
+  user_id: string;
+  username: string;
+  display_name: string;
+  avatar: string;
+  state: number;
 }
 
 export interface BlockFriend {
