@@ -299,7 +299,6 @@ export interface Account {
   password_setted: boolean;
   /** Profile banner url */
   banner: string;
-  /** Pro plan */
   pro_plan: boolean;
 }
 
@@ -883,6 +882,8 @@ export interface ListFriendsRequest {
   state: number;
   /** An optional next page cursor. */
   cursor: string;
+  /** Sort friends by last_sent (most recent DM first). */
+  sort_by_last_sent: boolean;
 }
 
 /** List groups based on given filters. */
@@ -1154,11 +1155,7 @@ export interface UpdateAccountRequest {
     | string
     | undefined;
   /** Profile banner url */
-  banner:
-    | string
-    | undefined;
-  /** Pro plan */
-  pro_plan: boolean | undefined;
+  banner: string | undefined;
 }
 
 /** Update fields in a given group. */
@@ -1236,7 +1233,6 @@ export interface User {
   status: string;
   /** Profile banner url */
   banner: string;
-  /** Pro plan */
   pro_plan: boolean;
 }
 
@@ -1322,7 +1318,6 @@ export interface ClanDesc {
   has_unread_message: boolean;
   /** comma-separated clan hashtags */
   hashtags: string;
-  /** Pro plan */
   pro_plan: boolean;
   /** Total members in clan */
   total_members: number;
@@ -1386,11 +1381,7 @@ export interface UpdateClanDescRequest {
   /** Prevent anonymous */
   prevent_anonymous: boolean;
   /** comma-separated clan hashtags */
-  hashtags:
-    | string
-    | undefined;
-  /** Pro plan */
-  pro_plan: boolean | undefined;
+  hashtags: string | undefined;
 }
 
 /** Delete a clan the user has access to. */
@@ -9530,7 +9521,7 @@ export const ListChannelMessagesRequest = {
 };
 
 function createBaseListFriendsRequest(): ListFriendsRequest {
-  return { limit: 0, state: 0, cursor: "" };
+  return { limit: 0, state: 0, cursor: "", sort_by_last_sent: false };
 }
 
 export const ListFriendsRequest = {
@@ -9543,6 +9534,9 @@ export const ListFriendsRequest = {
     }
     if (message.cursor !== "") {
       writer.uint32(26).string(message.cursor);
+    }
+    if (message.sort_by_last_sent !== false) {
+      writer.uint32(32).bool(message.sort_by_last_sent);
     }
     return writer;
   },
@@ -9575,6 +9569,13 @@ export const ListFriendsRequest = {
 
           message.cursor = reader.string();
           continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.sort_by_last_sent = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -9589,6 +9590,7 @@ export const ListFriendsRequest = {
       limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
       state: isSet(object.state) ? globalThis.Number(object.state) : 0,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
+      sort_by_last_sent: isSet(object.sort_by_last_sent) ? globalThis.Boolean(object.sort_by_last_sent) : false,
     };
   },
 
@@ -9603,6 +9605,9 @@ export const ListFriendsRequest = {
     if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
+    if (message.sort_by_last_sent !== false) {
+      obj.sort_by_last_sent = message.sort_by_last_sent;
+    }
     return obj;
   },
 
@@ -9614,6 +9619,7 @@ export const ListFriendsRequest = {
     message.limit = object.limit ?? 0;
     message.state = object.state ?? 0;
     message.cursor = object.cursor ?? "";
+    message.sort_by_last_sent = object.sort_by_last_sent ?? false;
     return message;
   },
 };
@@ -11677,7 +11683,6 @@ function createBaseUpdateAccountRequest(): UpdateAccountRequest {
     encrypt_private_key: "",
     email: undefined,
     banner: undefined,
-    pro_plan: undefined,
   };
 }
 
@@ -11718,9 +11723,6 @@ export const UpdateAccountRequest = {
     }
     if (message.banner !== undefined) {
       StringValue.encode({ value: message.banner! }, writer.uint32(98).fork()).ldelim();
-    }
-    if (message.pro_plan !== undefined) {
-      BoolValue.encode({ value: message.pro_plan! }, writer.uint32(106).fork()).ldelim();
     }
     return writer;
   },
@@ -11816,13 +11818,6 @@ export const UpdateAccountRequest = {
 
           message.banner = StringValue.decode(reader, reader.uint32()).value;
           continue;
-        case 13:
-          if (tag !== 106) {
-            break;
-          }
-
-          message.pro_plan = BoolValue.decode(reader, reader.uint32()).value;
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -11846,7 +11841,6 @@ export const UpdateAccountRequest = {
       encrypt_private_key: isSet(object.encrypt_private_key) ? globalThis.String(object.encrypt_private_key) : "",
       email: isSet(object.email) ? String(object.email) : undefined,
       banner: isSet(object.banner) ? String(object.banner) : undefined,
-      pro_plan: isSet(object.pro_plan) ? Boolean(object.pro_plan) : undefined,
     };
   },
 
@@ -11888,9 +11882,6 @@ export const UpdateAccountRequest = {
     if (message.banner !== undefined) {
       obj.banner = message.banner;
     }
-    if (message.pro_plan !== undefined) {
-      obj.pro_plan = message.pro_plan;
-    }
     return obj;
   },
 
@@ -11911,7 +11902,6 @@ export const UpdateAccountRequest = {
     message.encrypt_private_key = object.encrypt_private_key ?? "";
     message.email = object.email ?? undefined;
     message.banner = object.banner ?? undefined;
-    message.pro_plan = object.pro_plan ?? undefined;
     return message;
   },
 };
@@ -13399,7 +13389,6 @@ function createBaseUpdateClanDescRequest(): UpdateClanDescRequest {
     short_url: undefined,
     prevent_anonymous: false,
     hashtags: undefined,
-    pro_plan: undefined,
   };
 }
 
@@ -13449,9 +13438,6 @@ export const UpdateClanDescRequest = {
     }
     if (message.hashtags !== undefined) {
       StringValue.encode({ value: message.hashtags! }, writer.uint32(122).fork()).ldelim();
-    }
-    if (message.pro_plan !== undefined) {
-      BoolValue.encode({ value: message.pro_plan! }, writer.uint32(130).fork()).ldelim();
     }
     return writer;
   },
@@ -13568,13 +13554,6 @@ export const UpdateClanDescRequest = {
 
           message.hashtags = StringValue.decode(reader, reader.uint32()).value;
           continue;
-        case 16:
-          if (tag !== 130) {
-            break;
-          }
-
-          message.pro_plan = BoolValue.decode(reader, reader.uint32()).value;
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -13601,7 +13580,6 @@ export const UpdateClanDescRequest = {
       short_url: isSet(object.short_url) ? String(object.short_url) : undefined,
       prevent_anonymous: isSet(object.prevent_anonymous) ? globalThis.Boolean(object.prevent_anonymous) : false,
       hashtags: isSet(object.hashtags) ? String(object.hashtags) : undefined,
-      pro_plan: isSet(object.pro_plan) ? Boolean(object.pro_plan) : undefined,
     };
   },
 
@@ -13652,9 +13630,6 @@ export const UpdateClanDescRequest = {
     if (message.hashtags !== undefined) {
       obj.hashtags = message.hashtags;
     }
-    if (message.pro_plan !== undefined) {
-      obj.pro_plan = message.pro_plan;
-    }
     return obj;
   },
 
@@ -13678,7 +13653,6 @@ export const UpdateClanDescRequest = {
     message.short_url = object.short_url ?? undefined;
     message.prevent_anonymous = object.prevent_anonymous ?? false;
     message.hashtags = object.hashtags ?? undefined;
-    message.pro_plan = object.pro_plan ?? undefined;
     return message;
   },
 };
