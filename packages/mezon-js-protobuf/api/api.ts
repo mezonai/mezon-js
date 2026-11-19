@@ -329,6 +329,10 @@ export interface AddFriendsResponse {
   ids: string[];
   /** The account username of a user. */
   usernames: string[];
+  /** Display name of each user, aligned with ids. */
+  display_names: string[];
+  /** Avatar URL of each user, aligned with ids. */
+  avatars: string[];
 }
 
 /** Add users to a group. */
@@ -4930,7 +4934,7 @@ export const AddFriendsRequest = {
 };
 
 function createBaseAddFriendsResponse(): AddFriendsResponse {
-  return { ids: [], usernames: [] };
+  return { ids: [], usernames: [], display_names: [], avatars: [] };
 }
 
 export const AddFriendsResponse = {
@@ -4942,6 +4946,12 @@ export const AddFriendsResponse = {
     writer.ldelim();
     for (const v of message.usernames) {
       writer.uint32(18).string(v!);
+    }
+    for (const v of message.display_names) {
+      writer.uint32(26).string(v!);
+    }
+    for (const v of message.avatars) {
+      writer.uint32(34).string(v!);
     }
     return writer;
   },
@@ -4977,6 +4987,20 @@ export const AddFriendsResponse = {
 
           message.usernames.push(reader.string());
           continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.display_names.push(reader.string());
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.avatars.push(reader.string());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -4992,6 +5016,12 @@ export const AddFriendsResponse = {
       usernames: globalThis.Array.isArray(object?.usernames)
         ? object.usernames.map((e: any) => globalThis.String(e))
         : [],
+      display_names: globalThis.Array.isArray(object?.display_names)
+        ? object.display_names.map((e: any) => globalThis.String(e))
+        : [],
+      avatars: globalThis.Array.isArray(object?.avatars)
+        ? object.avatars.map((e: any) => globalThis.String(e))
+        : [],
     };
   },
 
@@ -5003,6 +5033,12 @@ export const AddFriendsResponse = {
     if (message.usernames?.length) {
       obj.usernames = message.usernames;
     }
+    if (message.display_names?.length) {
+      obj.display_names = message.display_names;
+    }
+    if (message.avatars?.length) {
+      obj.avatars = message.avatars;
+    }
     return obj;
   },
 
@@ -5013,6 +5049,8 @@ export const AddFriendsResponse = {
     const message = createBaseAddFriendsResponse();
     message.ids = object.ids?.map((e) => e) || [];
     message.usernames = object.usernames?.map((e) => e) || [];
+    message.display_names = object.display_names?.map((e) => e) || [];
+    message.avatars = object.avatars?.map((e) => e) || [];
     return message;
   },
 };
