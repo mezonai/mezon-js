@@ -2913,6 +2913,8 @@ export interface ApiEmojiRecent {
 export interface ApiAddFriendsResponse {
   ids?: Array<string>;
   usernames?: Array<string>;
+  display_names?: Array<string>;
+  avatars?: Array<string>;
 }
 
 /**  */
