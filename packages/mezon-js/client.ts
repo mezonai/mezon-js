@@ -2476,6 +2476,7 @@ export class Client {
               list_nick_names: gu.user!.list_nick_names,
               phone_number: gu.user!.phone_number,
               join_time_seconds: gu.user!.join_time_seconds,
+              pro_plan: gu.user!.pro_plan,
             },
             role_id: gu!.role_id,
             clan_nick: gu!.clan_nick,

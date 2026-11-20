@@ -1946,6 +1946,8 @@ export interface ApiAccount {
   wallet?: number;
   //Password is setted
   password_setted?: boolean;
+  // Mezon Pro subscriber
+  pro_plan?: boolean;
 }
 
 /** Send a app token to the server. Used with authenticate/link/unlink. */
@@ -4456,6 +4458,8 @@ export interface ApiUser {
   phone_number?: string;
   //
   banner?: string;
+  // Mezon Pro subscriber
+  pro_plan?: boolean;
 }
 
 /**  */
