@@ -1897,7 +1897,8 @@ export class MezonTransport {
     direction?: number,
     limit?: number,
     topicId?: string,
-    options = {}
+    options = {},
+    lastSeenMessageId?: string
   ): Promise<ApiChannelMessageList> {
     if (channelId === null || channelId === undefined) {
       throw new Error(
@@ -1914,6 +1915,7 @@ export class MezonTransport {
         direction,
         limit,
         topic_id: topicId,
+        last_seen_message_id: lastSeenMessageId,
       })
     );
     const encodedBody = bodyWriter.finish();
