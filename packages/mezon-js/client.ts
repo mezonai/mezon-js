@@ -2187,7 +2187,8 @@ export class Client {
     messageId?: string,
     direction?: number,
     limit?: number,
-    topicId?: string
+    topicId?: string,
+    lastSeenMessageId?: string
   ): Promise<ChannelMessageList> {
     if (
       this.autoFallbackHttp &&
@@ -2203,7 +2204,9 @@ export class Client {
         messageId,
         direction,
         limit,
-        topicId
+        topicId,
+        {},
+        lastSeenMessageId
       )
       .then((response: ApiChannelMessageList) => {
         const result: ChannelMessageList = {
