@@ -26,6 +26,8 @@ export interface ApiClanDescList {
     welcome_channel_id?: string;
     //Onboarding_banner.
     onboarding_banner?: string;
+    pro_plan?: boolean;
+    total_members?: number;
   }
   
   /** A user's session used to authenticate messages. */

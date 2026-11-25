@@ -497,7 +497,10 @@ export class MezonApi {
     return this.invokeMezonApi(urlPath, encodedBody, { emptyAs: {} as any });
   }
 
-  /** ListQuickMenuAccess */
+  /**
+   * ListQuickMenuAccess
+   * @deprecated Rejected with 403 for bot sessions by mezon-proto-server (`is_bot_allowed_api`).
+   */
   async listQuickMenuAccess(
     bearerToken: string,
     botId?: string,
@@ -711,7 +714,7 @@ export class MezonApi {
   /** Generate an SFU access token for a voice channel. */
   async generateMeetToken(
     bearerToken: string,
-    body: tsproto.GenerateMeetTokenRequest,
+    body: tsproto.DeepPartial<tsproto.GenerateMeetTokenRequest>,
     options: any = {},
   ): Promise<tsproto.GenerateMeetTokenResponse> {
     if (body === null || body === undefined) {
@@ -724,7 +727,13 @@ export class MezonApi {
     void options;
 
     const urlPath = "/mezon.api.Mezon/GenerateMeetToken";
-    const encodedBody = tsproto.GenerateMeetTokenRequest.encode(body).finish();
+    const bodyWriter = tsproto.GenerateMeetTokenRequest.encode(
+      tsproto.GenerateMeetTokenRequest.fromPartial(body),
+    );
+    if (body.current_endpoint_id === 0) {
+      bodyWriter.uint32(32).int32(0);
+    }
+    const encodedBody = bodyWriter.finish();
 
     return this.invokeMezonApi(urlPath, encodedBody, {
       emptyAs: { token: "", url: "" },

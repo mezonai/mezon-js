@@ -24,6 +24,7 @@ import {
 import { ChannelType, Events, TypeMessage } from "../../constants";
 import {
   AIAgentEnabledEvent,
+  FriendStateUpdated,
   MessageButtonClicked,
   Notifications,
   RoleAssignedEvent,
@@ -202,6 +203,11 @@ export class MezonClient extends MezonClientCore {
 
   public onAIAgentSessionSummaryDone(listener: (e: AIAgentSessionSummaryDoneEvent) => void): this {
     this.on(Events.AIAgentSessionSummaryDone.toString(), listener);
+    return this;
+  }
+
+  public onFriendStateUpdated(listener: (e: FriendStateUpdated) => void): this {
+    this.on(Events.FriendStateUpdated.toString(), listener);
     return this;
   }
 

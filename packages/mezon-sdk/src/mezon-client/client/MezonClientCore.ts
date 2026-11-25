@@ -5,6 +5,7 @@ import { TextChannel } from "../structures/TextChannel";
 import { Message, MessageInitData } from "../structures/Message";
 import { MezonApi } from "../../api";
 import {
+  DeepPartial,
   GenerateMeetTokenRequest,
   GenerateMeetTokenResponse,
   GetStreamPlaybackRequest,
@@ -522,7 +523,7 @@ export class MezonClientCore extends EventEmitter {
   }
 
   async generateMeetToken(
-    body: GenerateMeetTokenRequest,
+    body: DeepPartial<GenerateMeetTokenRequest>,
   ): Promise<GenerateMeetTokenResponse | undefined> {
     const sessionToken = await this._getValidSession();
     if (!sessionToken) return;

@@ -40,6 +40,7 @@ export enum InternalEventsSocket {
   Notifications = "notifications",
   QuickMenu = "quick_menu_event",
   AIAgentEnableEvent ="aiagent_enabled_event",
+  FriendStateUpdated = "friend_state_updated",
 }
 
 export enum InternalAgentEvents {
@@ -138,6 +139,9 @@ export enum Events {
 
   /** Listen to agent session summary done */
   AIAgentSessionSummaryDone = InternalAgentEvents.RoomSummaryDone,
+
+  /** Listen to friend state updates across sessions */
+  FriendStateUpdated = InternalEventsSocket.FriendStateUpdated,
 }
 
 /** Events for SSE (Server-Sent Events) */
