@@ -53,6 +53,21 @@ const MAX_API_RESPONSE_LENGTH = 16 << 20;
 const MAX_WRITE_QUEUE_LENGTH = 8 << 20;
 const RESPONSE_CODE_TOO_LARGE = 0xffff;
 
+function encodeEnvelopeCidLast(message: any): Uint8Array {
+  const cid = Number(message?.cid ?? 0);
+  if (!Number.isInteger(cid) || cid <= 0 || cid > 0x7fffffff) {
+    return tsproto.Envelope.encode(
+      tsproto.Envelope.fromPartial(message),
+    ).finish();
+  }
+  return tsproto.Envelope.encode(
+    tsproto.Envelope.fromPartial({ ...message, cid: 0 }),
+  )
+    .uint32(8)
+    .int32(cid)
+    .finish();
+}
+
 function errorEvent(message: string): Event {
   return { type: "error", message } as unknown as Event;
 }
@@ -497,11 +512,7 @@ export class MezonNetworkAdapter implements TransportAdapter {
       return;
     }
 
-    const encoded = Buffer.from(
-      tsproto.Envelope.encode(
-        tsproto.Envelope.fromPartial(message),
-      ).finish(),
-    );
+    const encoded = Buffer.from(encodeEnvelopeCidLast(message));
     const padding = (4 - (encoded.length % 4)) % 4;
     const payload = Buffer.concat([encoded, Buffer.alloc(padding)]);
     if (payload.length > MAX_REALTIME_FRAME_LENGTH) {
