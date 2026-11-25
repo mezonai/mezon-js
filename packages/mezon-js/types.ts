@@ -4880,6 +4880,7 @@ export interface ApiGenerateMeetTokenRequest {
   room_name?: string;
   //
   metadata?: string;
+  current_endpoint_id?: number;
 }
 
 /**  */
