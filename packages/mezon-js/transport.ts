@@ -4085,12 +4085,18 @@ export class MezonTransport {
     limit?: number,
     state?: number,
     cursor?: string,
-    options = {}
+    options = {},
+    sortByLastSent?: boolean
   ): Promise<ApiFriendList> {
     const urlPath = "/mezon.api.Mezon/ListFriends";
 
     const bodyWriter = tsproto.ListFriendsRequest.encode(
-      tsproto.ListFriendsRequest.fromPartial({ limit, state, cursor })
+      tsproto.ListFriendsRequest.fromPartial({
+        limit,
+        state,
+        cursor,
+        sort_by_last_sent: sortByLastSent,
+      })
     );
     const encodedBody = bodyWriter.finish();
 

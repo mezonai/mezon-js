@@ -1245,7 +1245,7 @@ export class Client {
   }
 
   onstreamingviewercount(streaming_viewer_count_event: StreamingViewerCountEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(streaming_viewer_count_event);
     }
   }
@@ -1317,7 +1317,7 @@ export class Client {
   }
 
   onsfubreakoutroomevent(sfu_breakout_room_event: SfuBreakoutRoomEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose && typeof console !== "undefined") {
       console.log(sfu_breakout_room_event);
     }
   }
@@ -2900,7 +2900,8 @@ export class Client {
     session: ApiSession,
     state?: number,
     limit?: number,
-    cursor?: string
+    cursor?: string,
+    sortByLastSent?: boolean
   ): Promise<Friends> {
     if (
       this.autoFallbackHttp &&
@@ -2910,7 +2911,7 @@ export class Client {
     }
 
     return this.transport
-      .listFriends(limit, state, cursor)
+      .listFriends(limit, state, cursor, {}, sortByLastSent)
       .then((response: ApiFriendList) => {
         const result: Friends = {
           friends: [],
@@ -2942,6 +2943,8 @@ export class Client {
               list_nick_names: f.user!.list_nick_names,
               phone_number: f.user!.phone_number,
               about_me: f.user!.about_me,
+              banner: f.user!.banner,
+              pro_plan: f.user!.pro_plan,
             },
             state: f.state,
             source_id: f.source_id,

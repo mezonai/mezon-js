@@ -1754,6 +1754,7 @@ export interface MezonUpdateClanDescBody {
   hashtags?: string;
   // prevent anonymous
   prevent_anonymous?: boolean;
+  pro_plan?: boolean;
 }
 
 /**  */
@@ -1816,6 +1817,7 @@ export interface MezonUpdateEventBody {
   channel_id_old?: string;
   //
   repeat_type?: number;
+  co_host?: string;
 }
 
 /** Update fields in a given role. */
@@ -2526,6 +2528,8 @@ export interface ApiClanDesc {
   prevent_anonymous?: boolean;
   // has unread message
   has_unread_message?: boolean;
+  pro_plan?: boolean;
+  total_members?: number;
 }
 
 /**  */
@@ -2761,6 +2765,7 @@ export interface ApiCreateEventRequest {
   is_external?: boolean;
   //
   meet_room?: ApiGenerateMezonMeetResponse;
+  co_host?: string;
 }
 
 /** Create a event within clan. */
@@ -2967,6 +2972,7 @@ export interface ApiEventManagement {
   is_external?: boolean;
   //
   meet_room?: ApiGenerateMezonMeetResponse;
+  co_host?: string;
 }
 
 /**  */
@@ -4339,6 +4345,7 @@ export interface ApiUpdateAccountRequest {
   banner?: string;
   //The timezone set by the user.
   timezone?: string;
+  pro_plan?: boolean;
 }
 
 /**  */
