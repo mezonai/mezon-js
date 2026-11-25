@@ -7692,6 +7692,9 @@ export class MezonTransport {
     const bodyWriter = tsproto.GenerateMeetTokenRequest.encode(
       tsproto.GenerateMeetTokenRequest.fromPartial(body)
     );
+    if (body.current_endpoint_id === 0) {
+      bodyWriter.uint32(32).int32(0);
+    }
     const encodedBody = bodyWriter.finish();
 
     const fetchOptions = buildFetchOptions("POST", options, "");
