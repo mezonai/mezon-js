@@ -9,8 +9,18 @@
     "./package.json": "./package.json",
     ".": {
       "types": "./dist/index.d.ts",
-      "browser": "./dist/mezon-js-protobuf.esm.mjs",
-      "node": "./dist/mezon-js-protobuf-node.esm.mjs",
+      "browser": {
+        "import": "./dist/mezon-js-protobuf.esm.mjs",
+        "require": "./dist/mezon-js-protobuf.cjs.js",
+        "default": "./dist/mezon-js-protobuf.esm.mjs"
+      },
+      "node": {
+        "import": "./dist/mezon-js-protobuf-node.esm.mjs",
+        "require": "./dist/mezon-js-protobuf-node.cjs.js",
+        "default": "./dist/mezon-js-protobuf-node.esm.mjs"
+      },
+      "import": "./dist/mezon-js-protobuf.esm.mjs",
+      "require": "./dist/mezon-js-protobuf.cjs.js",
       "default": "./dist/mezon-js-protobuf.esm.mjs"
     }
   },
