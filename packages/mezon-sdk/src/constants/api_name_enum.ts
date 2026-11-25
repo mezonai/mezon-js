@@ -220,6 +220,8 @@ export enum ApiNameEnum {
   GetOverrideEveryoneChannel,
   GetDMSetting,
   UpdateDMSetting,
+  RevokeAllSession,
+  RedeemProPlanCoupon,
 }
 
 export function getApiFromPath(apiPath: string): number | undefined {

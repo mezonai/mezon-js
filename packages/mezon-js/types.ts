@@ -4102,6 +4102,12 @@ export interface ApiUpdateDMSettingRequest {
   only_friends_dm?: boolean;
 }
 
+/** Redeem a Pro plan coupon. clan_id "0" unlocks the current user; a clan id unlocks that clan. */
+export interface ApiRedeemProPlanCouponRequest {
+  code?: string;
+  clan_id?: string;
+}
+
 /** A user's session used to authenticate messages. */
 export interface ApiSession {
   //True if the corresponding account was just created, false otherwise.

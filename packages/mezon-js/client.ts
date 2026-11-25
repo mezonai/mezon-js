@@ -74,6 +74,7 @@ import {
   ApiGetStreamPlaybackRequest,
   ApiGetStreamPlaybackResponse,
   ApiSetOverrideEveryoneChannelRequest,
+  ApiRedeemProPlanCouponRequest,
   ApiUpdateDMSettingRequest,
   ApiPinMessageRequest,
   ApiPinMessagesList,
@@ -3649,6 +3650,21 @@ export class Client {
       .then((response: ApiDMSetting) => {
         return Promise.resolve(response);
       });
+  }
+
+  /** Redeem a Pro plan coupon for the current user or a clan the user owns. */
+  async redeemProPlanCoupon(
+    session: ApiSession,
+    request: ApiRedeemProPlanCouponRequest
+  ): Promise<void> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport.redeemProPlanCoupon(request);
   }
 
   /** */
