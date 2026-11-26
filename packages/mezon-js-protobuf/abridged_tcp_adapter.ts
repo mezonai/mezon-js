@@ -25,6 +25,19 @@ const MAX_REALTIME_FRAME_LENGTH = 1 << 20;
 const MAX_API_RESPONSE_LENGTH = 16 << 20;
 const RESPONSE_CODE_TOO_LARGE = 0xffff;
 
+function encodeEnvelopeCidLast(msg: any): Uint8Array {
+  const cid = Number(msg?.cid ?? 0);
+  if (!Number.isInteger(cid) || cid <= 0 || cid > 0x7fffffff) {
+    return tsproto.Envelope.encode(tsproto.Envelope.fromPartial(msg)).finish();
+  }
+  return tsproto.Envelope.encode(
+    tsproto.Envelope.fromPartial({ ...msg, cid: 0 }),
+  )
+    .uint32(8)
+    .int32(cid)
+    .finish();
+}
+
 function frameBounds(data: Buffer): [number, number] | undefined {
   const prefix = data[0];
   let header: number;
@@ -248,9 +261,7 @@ export class MezonNetworkAdapter implements TransportAdapter {
       return;
     }
 
-    let encodedMsg = tsproto.Envelope.encode(
-      tsproto.Envelope.fromPartial(msg),
-    ).finish();
+    const encodedMsg = encodeEnvelopeCidLast(msg);
 
     const paddingNeeded = (4 - (encodedMsg.length % 4)) % 4;
 

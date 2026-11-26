@@ -2,6 +2,7 @@ import { EventEmitter } from "events";
 import tls from "node:tls";
 import { MezonNetworkAdapter } from "../abridged_tcp_adapter";
 import * as tsproto from "../rtapi/realtime";
+import * as api from "../api/api";
 
 class FakeSocket extends EventEmitter {
   destroyed = false;
@@ -104,7 +105,7 @@ function connect() {
     ]);
   };
   adapter.connect("mezon.test", "443", false, "token");
-  return { received, socket };
+  return { received, socket, adapter };
 }
 
 function deliver(reads: Buffer[]) {
@@ -334,5 +335,101 @@ describe("MezonNetworkAdapter TCP framing", () => {
       if (origCloseEvent === undefined) delete g.CloseEvent;
       else g.CloseEvent = origCloseEvent;
     }
+  });
+});
+
+function sentFrame(input: EnvelopeInput) {
+  const { socket, adapter } = connect();
+  const writes: Buffer[] = [];
+  (socket as unknown as { write: (data: Buffer) => boolean }).write = (
+    data,
+  ) => {
+    writes.push(Buffer.from(data));
+    return true;
+  };
+  adapter.send(input);
+  expect(writes).toHaveLength(1);
+  const frame = writes[0];
+  const headerLength = frame[0] < 0x7f ? 1 : 4;
+  const words = headerLength === 1 ? frame[0] : frame.readUIntLE(1, 3);
+  const payload = frame.subarray(headerLength);
+  expect(payload.length).toBe(words * 4);
+  return payload;
+}
+
+function serverUnpad(payload: Buffer) {
+  let end = payload.length;
+  while (end > 0 && payload[end - 1] === 0) end--;
+  return tsproto.Envelope.decode(payload.subarray(0, end));
+}
+
+describe("MezonNetworkAdapter send", () => {
+  afterEach(() => jest.restoreAllMocks());
+
+  const createChannelBody = Buffer.from(
+    api.CreateChannelDescRequest.encode(
+      api.CreateChannelDescRequest.fromPartial({
+        clan_id: "2125496467882774528",
+        category_id: "2125496467937300480",
+        type: 1,
+        channel_label: "c1",
+        user_ids: [],
+      }),
+    ).finish(),
+  );
+  const createChannel: EnvelopeInput = {
+    cid: 7,
+    api_request_event: {
+      api_index: 66,
+      api_name: "CreateChannelDesc",
+      body: createChannelBody,
+    },
+  };
+
+  it("keeps a request whose body ends in a zero byte intact after the server strips trailing zeros", () => {
+    expect(createChannelBody[createChannelBody.length - 1]).toBe(0);
+    const unpatched = encodeEnvelope(createChannel);
+    expect(unpatched[unpatched.length - 1]).toBe(0);
+    const decoded = serverUnpad(sentFrame(createChannel));
+    expect(decoded.cid).toBe(7);
+    expect(
+      Buffer.from(decoded.api_request_event!.body).equals(createChannelBody),
+    ).toBe(true);
+    expect(decoded.api_request_event!.api_name).toBe("CreateChannelDesc");
+  });
+
+  it.each([1, 127, 128, 300, 65535, 0x7fffffff])(
+    "round-trips cid %i after the server strips trailing zeros",
+    (cid) => {
+      const decoded = serverUnpad(sentFrame({ ...createChannel, cid }));
+      expect(decoded.cid).toBe(cid);
+      expect(
+        Buffer.from(decoded.api_request_event!.body).equals(createChannelBody),
+      ).toBe(true);
+    },
+  );
+
+  it("encodes an envelope with a cid to the same message", () => {
+    const decoded = serverUnpad(sentFrame(ack));
+    expect(decoded).toEqual(tsproto.Envelope.decode(encodeEnvelope(ack)));
+  });
+
+  it("sends a ping as the 3-byte ping frame", () => {
+    const { socket, adapter } = connect();
+    const writes: Buffer[] = [];
+    (socket as unknown as { write: (data: Buffer) => boolean }).write = (
+      data,
+    ) => {
+      writes.push(Buffer.from(data));
+      return true;
+    };
+    adapter.send({ cid: 5, ping: {} });
+    expect(writes).toEqual([Buffer.from([0x00, 0x00, 0x05])]);
+  });
+
+  it("leaves an envelope without a cid byte-for-byte unchanged", () => {
+    expect(sentFrame(message).equals(abridgedFrame(message).subarray(4))).toBe(
+      true,
+    );
   });
 });
