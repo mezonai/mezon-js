@@ -5,7 +5,8 @@
     "build": "node build.mjs && rollup -c --bundleConfigAsCjs && tsc --emitDeclarationOnly",
     "build:types": "tsc --emitDeclarationOnly",
     "build:bundle": "node build.mjs",
-    "build:umd": "rollup -c --bundleConfigAsCjs"
+    "build:umd": "rollup -c --bundleConfigAsCjs",
+    "test": "jest --config jest.config.js"
   },
   "description": "JavaScript client for Mezon server written in TypeScript.",
   "main": "dist/mezon-js.cjs.js",
