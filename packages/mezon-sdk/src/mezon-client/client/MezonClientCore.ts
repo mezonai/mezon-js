@@ -55,6 +55,7 @@ const DEFAULT_TIMEOUT_MS = 7000;
 const DEFAULT_MMN_API = "https://dong.mezon.ai/mmn-api/";
 const DEFAULT_ZK_API = "https://dong.mezon.ai/zk-api/";
 const DEFAULT_AGENT_URL = "https://agent-dashboard.nccsoft.vn/";
+const HEALTHY_ENDPOINT_MIN_INTERVAL_MS = 15000;
 
 export class MezonClientCore extends EventEmitter {
   public token: string;
@@ -73,6 +74,7 @@ export class MezonClientCore extends EventEmitter {
   private _mmnInitPromise?: Promise<void>;
   private loginInFlight?: Promise<string>;
   private reAuthPromise?: Promise<Session> | null;
+  private lastHealthyEndpointAskAt = 0;
 
   protected apiClient!: MezonApi;
   protected _mmnClient!: MmnClient;
@@ -264,6 +266,7 @@ export class MezonClientCore extends EventEmitter {
           await this.socketManager.connectSocket(sessionConnected.token);
           await this.channelManager.initAllDmChannels(sessionConnected.token);
           this._initDmChannelCache();
+          await this.socketManager.joinDmClanChat();
         }
         this.emit("ready");
         return JSON.stringify(sessionApi ?? {});
@@ -331,6 +334,70 @@ export class MezonClientCore extends EventEmitter {
     return this.ensureValidSession();
   }
 
+  private _applySessionEndpoints(session: Session): boolean {
+    let changed = false;
+
+    if (session.api_url) {
+      const { host, port, useSSL } = parseUrlToHostAndSSL(session.api_url);
+      const resolvedPort = port || (useSSL ? "443" : "80");
+      const scheme = useSSL ? "https://" : "http://";
+      const nextBasePath = `${scheme}${host}:${resolvedPort}`;
+      if (this.apiClient && this.apiClient.basePath !== nextBasePath) {
+        this.host = host;
+        this.port = resolvedPort;
+        this.useSSL = useSSL;
+        this.apiClient.setBasePath(nextBasePath);
+        changed = true;
+      }
+    }
+
+    const nextTcpUrl = session.tcp_url?.trim() || session.ws_url?.trim();
+    if (nextTcpUrl && this.socketManager?.updateEndpoint(nextTcpUrl)) {
+      changed = true;
+    }
+
+    return changed;
+  }
+
+  private async _resolveHealthyEndpoint(
+    session: Session,
+  ): Promise<{ session: Session; endpointChanged: boolean; renewed: boolean }> {
+    const now = Date.now();
+    if (now - this.lastHealthyEndpointAskAt < HEALTHY_ENDPOINT_MIN_INTERVAL_MS) {
+      return { session, endpointChanged: false, renewed: false };
+    }
+    this.lastHealthyEndpointAskAt = now;
+
+    const credential = session.session_id?.trim() || session.token?.trim();
+    if (!credential || !this.loginBasePath) {
+      return { session, endpointChanged: false, renewed: false };
+    }
+
+    const gatewayApi = new MezonApi(this.token, this.loginBasePath, this.timeout);
+    const { status, payload } = await gatewayApi.getHealthyEndpoint(credential);
+
+    if (payload) {
+      const apiUrl = payload.api_url?.trim();
+      const wsUrl = payload.ws_url?.trim();
+      const tcpUrl = payload.tcp_url?.trim();
+      const sessionId = payload.session_id?.trim();
+      if (apiUrl) session.api_url = apiUrl;
+      if (wsUrl) session.ws_url = wsUrl;
+      if (tcpUrl) session.tcp_url = tcpUrl;
+      if (sessionId) session.session_id = sessionId;
+      const endpointChanged = this._applySessionEndpoints(session);
+      return { session, endpointChanged, renewed: false };
+    }
+
+    if (status === 401 || status === 403) {
+      const freshSession = await this.ensureValidSession(30);
+      const endpointChanged = this._applySessionEndpoints(freshSession);
+      return { session: freshSession, endpointChanged, renewed: true };
+    }
+
+    return { session, endpointChanged: false, renewed: false };
+  }
+
   async handleReconnectSocket() {
     const session = this.sessionManager?.getSession();
     if (!this.sessionManager || !this.channelManager) {
@@ -347,6 +414,7 @@ export class MezonClientCore extends EventEmitter {
     if (this.isSessionExpired(30)) {
       try {
         activeSession = await this.ensureValidSession(30);
+        this._applySessionEndpoints(activeSession);
       } catch (error) {
         console.error(
           "[mezon-sdk] Re-authenticate failed during reconnect, attempting full login:",
@@ -356,7 +424,18 @@ export class MezonClientCore extends EventEmitter {
       }
     }
 
-    const sessionConnected = await this.socketManager.connect(activeSession);
+    let sessionConnected: Session;
+    try {
+      sessionConnected = await this.socketManager.connect(activeSession);
+    } catch (connectError) {
+      const resolved = await this._resolveHealthyEndpoint(activeSession);
+      if (!resolved.endpointChanged && !resolved.renewed) {
+        throw connectError;
+      }
+      activeSession = resolved.session;
+      sessionConnected = await this.socketManager.connect(activeSession);
+    }
+
     const token = sessionConnected?.token;
     if (!token) {
       throw new Error("Missing session token after connect.");
@@ -364,6 +443,7 @@ export class MezonClientCore extends EventEmitter {
     await this.socketManager.connectSocket(token);
     await this.channelManager.initAllDmChannels(token);
     this._initDmChannelCache();
+    await this.socketManager.joinDmClanChat();
     return JSON.stringify(activeSession ?? {});
   }
 

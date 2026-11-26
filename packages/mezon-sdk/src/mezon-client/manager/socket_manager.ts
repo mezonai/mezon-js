@@ -59,6 +59,20 @@ export class SocketManager {
     this.eventsBound = false;
   }
 
+  updateEndpoint(tcpUrl: string): boolean {
+    if (!tcpUrl || tcpUrl === this.tcp_url) {
+      return false;
+    }
+    try {
+      if (this.socket?.isOpen()) {
+        this.socket.close();
+      }
+    } catch { }
+    this.tcp_url = tcpUrl;
+    this.createSocket();
+    return true;
+  }
+
   getSocket() {
     return this.socket;
   }
@@ -185,12 +199,16 @@ export class SocketManager {
     }
   }
 
+  /** Join the DM clan ("0") after DM channels have been fetched and cached. */
+  async joinDmClanChat(): Promise<void> {
+    await this.socket.joinClanChat("0", true);
+  }
+
   private async initClanChannelsAndJoin(clan: ApiClanDesc): Promise<boolean> {
     if (!clan.clan_id) return true;
 
     try {
       if (clan.clan_id === "0") {
-        await this.socket.joinClanChat(clan.clan_id, true);
         return true;
       }
 

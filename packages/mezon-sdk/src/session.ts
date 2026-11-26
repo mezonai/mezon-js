@@ -53,6 +53,7 @@ export class Session implements ISession {
   id_token?: string;
   ws_url?: string;
   tcp_url?: string;
+  session_id?: string;
 
   constructor(apiSession : any) {
     this.token = apiSession.token;
@@ -64,6 +65,7 @@ export class Session implements ISession {
     this.id_token = apiSession?.id_token || apiSession?.idToken
     this.ws_url = apiSession?.ws_url || apiSession?.wsUrl
     this.tcp_url = apiSession?.tcp_url || apiSession?.tcpUrl
+    this.session_id = apiSession?.session_id || apiSession?.sessionId
   }
 
   isexpired(currenttime: number): boolean {
