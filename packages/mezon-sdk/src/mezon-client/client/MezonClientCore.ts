@@ -294,9 +294,16 @@ export class MezonClientCore extends EventEmitter {
     return session.isexpired(Math.floor(Date.now() / 1000) + bufferSec);
   }
 
-  public async ensureValidSession(bufferSec: number = 30): Promise<Session> {
+  public async ensureValidSession(
+    bufferSec: number = 30,
+    force: boolean = false,
+  ): Promise<Session> {
     const session = this.sessionManager?.getSession();
-    if (session && !session.isexpired(Math.floor(Date.now() / 1000) + bufferSec)) {
+    if (
+      !force &&
+      session &&
+      !session.isexpired(Math.floor(Date.now() / 1000) + bufferSec)
+    ) {
       return session;
     }
 
@@ -390,7 +397,7 @@ export class MezonClientCore extends EventEmitter {
     }
 
     if (status === 401 || status === 403) {
-      const freshSession = await this.ensureValidSession(30);
+      const freshSession = await this.ensureValidSession(30, true);
       const endpointChanged = this._applySessionEndpoints(freshSession);
       return { session: freshSession, endpointChanged, renewed: true };
     }
