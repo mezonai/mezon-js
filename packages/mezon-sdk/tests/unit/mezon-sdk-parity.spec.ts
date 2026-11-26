@@ -72,6 +72,8 @@ describe("mezon-sdk protocol parity and CDN signature", () => {
     expect(ApiNameEnum.LinkCDNFile).toBe(214);
     expect(ApiNameEnum.SfuBreakoutRoom).toBe(215);
     expect(ApiNameEnum.RedeemProPlanCoupon).toBe(222);
+    expect(ApiNameEnum.ListJoinPending).toBe(223);
+    expect(ApiNameEnum.ReviewJoinPending).toBe(224);
   });
 
   it("keeps generated protobuf copies identical to mezon-js-protobuf", () => {

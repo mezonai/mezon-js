@@ -281,3 +281,125 @@ describe("mezon-js v2.16.4 protocol fields", () => {
     expect(clan.total_members).toBe(128);
   });
 });
+
+describe("mezon-js v2.16.6 join mode, frame & pending requests", () => {
+  afterEach(() => jest.restoreAllMocks());
+
+  it("encodes and decodes join_mode and frame on updateClanDesc and listClanDescs", async () => {
+    const { client, sent, setReply } = createClientWithMockSend();
+    await client.updateClanDesc(dummySession, "10", {
+      clan_name: "Mezon",
+      join_mode: 1,
+      frame: 3,
+    });
+    expect(tsproto.UpdateClanDescRequest.decode(sent[0].body)).toMatchObject({
+      clan_id: "10",
+      join_mode: 1,
+      frame: 3,
+    });
+
+    await client.updateClanDesc(dummySession, "10", {
+      clan_name: "Mezon",
+      join_mode: 0,
+    });
+    expect(tsproto.UpdateClanDescRequest.decode(sent[1].body)).toMatchObject({
+      clan_id: "10",
+      join_mode: 0,
+    });
+
+    setReply(
+      tsproto.ClanDescList.encode(
+        tsproto.ClanDescList.fromPartial({
+          clandesc: [
+            {
+              clan_id: "10",
+              clan_name: "Mezon",
+              join_mode: 1,
+              frame: 3,
+            },
+          ],
+        }),
+      ).finish(),
+    );
+    const list = await client.listClanDescs(dummySession);
+    expect(list.clandesc![0].join_mode).toBe(1);
+    expect(list.clandesc![0].frame).toBe(3);
+  });
+
+  it("decodes join_pending on inviteUser and calls listJoinPending / reviewJoinPending", async () => {
+    const { client, sent, setReply } = createClientWithMockSend();
+
+    setReply(
+      tsproto.InviteUserRes.encode(
+        tsproto.InviteUserRes.fromPartial({
+          clan_id: "10",
+          channel_id: "20",
+          clan_name: "Mezon",
+          join_pending: true,
+        }),
+      ).finish(),
+    );
+    const inviteRes = await client.inviteUser(dummySession, "99");
+    expect(inviteRes.join_pending).toBe(true);
+
+    setReply(
+      tsproto.ListJoinPendingResponse.encode(
+        tsproto.ListJoinPendingResponse.fromPartial({
+          items: [
+            {
+              id: "1001",
+              clan_id: "10",
+              user_id: "2002",
+              username: "alice",
+              display_name: "Alice",
+              avatar_url: "https://cdn.test/a.png",
+              channel_id: "20",
+              invite_id: "99",
+              create_time_seconds: 1700000000,
+            },
+          ],
+          cursor: "next-cursor",
+        }),
+      ).finish(),
+    );
+    const pending = await client.listJoinPending(dummySession, {
+      clan_id: "10",
+      limit: 25,
+      cursor: "",
+    });
+    expect(sent[1].urlPath).toBe("/mezon.api.Mezon/ListJoinPending");
+    expect(tsproto.ListJoinPendingRequest.decode(sent[1].body)).toMatchObject({
+      clan_id: "10",
+      limit: 25,
+    });
+    expect(pending.cursor).toBe("next-cursor");
+    expect(pending.items).toHaveLength(1);
+    expect(pending.items![0].user_id).toBe("2002");
+
+    setReply(
+      tsproto.ReviewJoinPendingResponse.encode(
+        tsproto.ReviewJoinPendingResponse.fromPartial({
+          clan_id: "10",
+          user_id: "2002",
+          approved: true,
+        }),
+      ).finish(),
+    );
+    const reviewed = await client.reviewJoinPending(dummySession, {
+      clan_id: "10",
+      user_id: "2002",
+      approve: true,
+    });
+    expect(sent[2].urlPath).toBe("/mezon.api.Mezon/ReviewJoinPending");
+    expect(tsproto.ReviewJoinPendingRequest.decode(sent[2].body)).toMatchObject({
+      clan_id: "10",
+      user_id: "2002",
+      approve: true,
+    });
+    expect(reviewed).toMatchObject({
+      clan_id: "10",
+      user_id: "2002",
+      approved: true,
+    });
+  });
+});

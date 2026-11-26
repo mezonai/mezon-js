@@ -76,6 +76,10 @@ import {
   ApiSetOverrideEveryoneChannelRequest,
   ApiRedeemProPlanCouponRequest,
   ApiUpdateDMSettingRequest,
+  ApiListJoinPendingRequest,
+  ApiListJoinPendingResponse,
+  ApiReviewJoinPendingRequest,
+  ApiReviewJoinPendingResponse,
   ApiPinMessageRequest,
   ApiPinMessagesList,
   ApiDeleteChannelDescRequest,
@@ -3668,6 +3672,36 @@ export class Client {
     }
 
     return this.transport.redeemProPlanCoupon(request);
+  }
+
+  /** List pending join requests for a clan (clan owner only). */
+  async listJoinPending(
+    session: ApiSession,
+    request: ApiListJoinPendingRequest
+  ): Promise<ApiListJoinPendingResponse> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport.listJoinPending(request);
+  }
+
+  /** Approve or reject a pending join request for a clan (clan owner only). */
+  async reviewJoinPending(
+    session: ApiSession,
+    request: ApiReviewJoinPendingRequest
+  ): Promise<ApiReviewJoinPendingResponse> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport.reviewJoinPending(request);
   }
 
   /** */

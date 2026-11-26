@@ -222,6 +222,8 @@ export enum ApiNameEnum {
   UpdateDMSetting,
   RevokeAllSession,
   RedeemProPlanCoupon,
+  ListJoinPending,
+  ReviewJoinPending,
 }
 
 export function getApiFromPath(apiPath: string): number | undefined {
