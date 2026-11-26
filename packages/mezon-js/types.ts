@@ -3136,6 +3136,8 @@ export interface ApiInviteUserRes {
   community_banner: string;
   //
   is_community: boolean;
+  // true when the clan requires approval and the invite created a pending join request instead of joining
+  join_pending?: boolean;
 }
 
 /** Add link invite users to. */
