@@ -254,4 +254,85 @@ describe("MezonNetworkAdapter TCP framing", () => {
     expect(received).toEqual([raw(13, 0xffff, Buffer.alloc(0))]);
     expect(socket.destroyed).toBe(false);
   });
+
+  it("falls back to plain error and close objects when global Event constructors are absent", () => {
+    const g = globalThis as Record<string, unknown>;
+    const origErrorEvent = g.ErrorEvent;
+    const origCloseEvent = g.CloseEvent;
+    try {
+      delete g.ErrorEvent;
+      delete g.CloseEvent;
+
+      const socket = new FakeSocket();
+      jest
+        .spyOn(tls, "connect")
+        .mockReturnValueOnce(socket as unknown as tls.TLSSocket);
+      const adapter = new MezonNetworkAdapter();
+      const errors: unknown[] = [];
+      const closes: unknown[] = [];
+      adapter.onError = (evt) => errors.push(evt);
+      adapter.onClose = (evt) => closes.push(evt);
+      adapter.connect("mezon.test", "443", false, "token");
+
+      const err = new Error("boom");
+      socket.emit("error", err);
+      socket.emit("close", true);
+      socket.emit("close", false);
+
+      expect(errors).toEqual([{ type: "error", error: err, message: "boom" }]);
+      expect(closes).toEqual([
+        { type: "close", wasClean: false },
+        { type: "close", wasClean: true },
+      ]);
+    } finally {
+      if (origErrorEvent !== undefined) g.ErrorEvent = origErrorEvent;
+      if (origCloseEvent !== undefined) g.CloseEvent = origCloseEvent;
+    }
+  });
+
+  it("uses global ErrorEvent and CloseEvent when defined", () => {
+    const g = globalThis as Record<string, unknown>;
+    const origErrorEvent = g.ErrorEvent;
+    const origCloseEvent = g.CloseEvent;
+    class StubErrorEvent {
+      constructor(
+        public type: string,
+        public init: { error: unknown; message: string },
+      ) {}
+    }
+    class StubCloseEvent {
+      constructor(
+        public type: string,
+        public init: { wasClean: boolean },
+      ) {}
+    }
+    try {
+      g.ErrorEvent = StubErrorEvent;
+      g.CloseEvent = StubCloseEvent;
+
+      const socket = new FakeSocket();
+      jest
+        .spyOn(tls, "connect")
+        .mockReturnValueOnce(socket as unknown as tls.TLSSocket);
+      const adapter = new MezonNetworkAdapter();
+      const errors: unknown[] = [];
+      const closes: unknown[] = [];
+      adapter.onError = (evt) => errors.push(evt);
+      adapter.onClose = (evt) => closes.push(evt);
+      adapter.connect("mezon.test", "443", false, "token");
+
+      const err = new Error("reset");
+      socket.emit("error", err);
+      socket.emit("close", false);
+
+      expect(errors[0]).toBeInstanceOf(StubErrorEvent);
+      expect(closes[0]).toBeInstanceOf(StubCloseEvent);
+      expect((closes[0] as StubCloseEvent).init.wasClean).toBe(true);
+    } finally {
+      if (origErrorEvent === undefined) delete g.ErrorEvent;
+      else g.ErrorEvent = origErrorEvent;
+      if (origCloseEvent === undefined) delete g.CloseEvent;
+      else g.CloseEvent = origCloseEvent;
+    }
+  });
 });
