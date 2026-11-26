@@ -48,6 +48,21 @@ export interface ApiClanDescList {
     tcp_url?: string;
     // id token for zklogin
     id_token?: string;
+    // session id from gateway
+    session_id?: string;
+  }
+
+  export interface HealthyEndpointPayload {
+    api_url?: string;
+    ws_url?: string;
+    tcp_url?: string;
+    session_id?: string;
+    user_id?: string;
+  }
+
+  export interface HealthyEndpointResponse {
+    status: number;
+    payload: HealthyEndpointPayload | null;
   }
   
   /** Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user. */

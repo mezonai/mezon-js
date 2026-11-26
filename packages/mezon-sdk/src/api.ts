@@ -20,6 +20,8 @@ import {
   ApiRoleListEventResponse,
   ApiSession,
   ApiVoiceChannelUserList,
+  HealthyEndpointPayload,
+  HealthyEndpointResponse,
   MezonUpdateRoleBody,
 } from "./interfaces";
 import { ChannelMessageAck } from "./interfaces/socket";
@@ -69,9 +71,42 @@ export class MezonApi {
 
   constructor(
     readonly apiKey: string,
-    readonly basePath: string,
+    public basePath: string,
     readonly timeoutMs: number,
   ) { }
+
+  setBasePath(basePath: string): void {
+    this.basePath = basePath;
+  }
+
+  /** Ask the gateway for a healthy node endpoint for the current session. */
+  async getHealthyEndpoint(credential: string): Promise<HealthyEndpointResponse> {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), this.timeoutMs);
+    try {
+      const url = `${this.basePath.replace(/\/+$/, "")}/v2/healthy/endpoint`;
+      const res = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${credential}`,
+        },
+        signal: controller.signal,
+      });
+      if (!res.ok) {
+        return { status: res.status, payload: null };
+      }
+      try {
+        const payload = (await res.json()) as HealthyEndpointPayload;
+        return { status: res.status, payload };
+      } catch {
+        return { status: res.status, payload: null };
+      }
+    } catch {
+      return { status: 0, payload: null };
+    } finally {
+      clearTimeout(timer);
+    }
+  }
 
   setTransport(transport: Pick<MezonTransport, "isOpen" | "send">) {
     this.transport = transport;

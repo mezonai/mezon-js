@@ -41,6 +41,7 @@ export class SessionManager {
         if (apiSession.ws_url) this.session.ws_url = apiSession.ws_url;
         if (apiSession.tcp_url) this.session.tcp_url = apiSession.tcp_url;
         if (apiSession.id_token) this.session.id_token = apiSession.id_token;
+        this.session.session_id = apiSession.session_id;
         return this.session;
       }
       this.session = new Session(apiSession);
