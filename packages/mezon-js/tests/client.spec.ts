@@ -280,4 +280,27 @@ describe("mezon-js v2.16.4 protocol fields", () => {
     expect(clan.pro_plan).toBe(true);
     expect(clan.total_members).toBe(128);
   });
+
+  it("encodes the clan frame on updateClanDesc, including 0 to clear it, and decodes it from listClanDescs", async () => {
+    const { client, sent, setReply } = createClientWithMockSend();
+    await client.updateClanDesc(dummySession, "10", { clan_name: "Mezon", frame: 5 });
+    expect(tsproto.UpdateClanDescRequest.decode(sent[0].body).frame).toBe(5);
+
+    await client.updateClanDesc(dummySession, "10", { clan_name: "Mezon", frame: 0 });
+    expect(tsproto.UpdateClanDescRequest.decode(sent[1].body).frame).toBe(0);
+
+    await client.updateClanDesc(dummySession, "10", { clan_name: "Mezon" });
+    expect(tsproto.UpdateClanDescRequest.decode(sent[2].body).frame).toBeUndefined();
+
+    setReply(
+      tsproto.ClanDescList.encode(
+        tsproto.ClanDescList.fromPartial({
+          clandesc: [{ clan_id: "10", clan_name: "Mezon", pro_plan: true, frame: 7 }],
+        }),
+      ).finish(),
+    );
+    const list = await client.listClanDescs(dummySession);
+    const clan: ApiClanDesc = list.clandesc![0];
+    expect(clan.frame).toBe(7);
+  });
 });

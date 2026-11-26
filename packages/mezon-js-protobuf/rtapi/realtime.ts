@@ -1573,6 +1573,9 @@ export interface ClanUpdatedEvent {
   /** community vanity short url (clan_discover) */
   short_url: string;
   pro_plan: boolean;
+  /** Join mode: 0 = join instantly with invite (default), 1 = request to join, owner approves */
+  join_mode: number;
+  frame: number;
 }
 
 /** clan profile updated event */
@@ -13729,6 +13732,8 @@ function createBaseClanUpdatedEvent(): ClanUpdatedEvent {
     hashtags: "",
     short_url: "",
     pro_plan: false,
+    join_mode: 0,
+    frame: 0,
   };
 }
 
@@ -13781,6 +13786,12 @@ export const ClanUpdatedEvent = {
     }
     if (message.pro_plan !== false) {
       writer.uint32(128).bool(message.pro_plan);
+    }
+    if (message.join_mode !== 0) {
+      writer.uint32(136).int32(message.join_mode);
+    }
+    if (message.frame !== 0) {
+      writer.uint32(144).int32(message.frame);
     }
     return writer;
   },
@@ -13904,6 +13915,20 @@ export const ClanUpdatedEvent = {
 
           message.pro_plan = reader.bool();
           continue;
+        case 17:
+          if (tag !== 136) {
+            break;
+          }
+
+          message.join_mode = reader.int32();
+          continue;
+        case 18:
+          if (tag !== 144) {
+            break;
+          }
+
+          message.frame = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -13931,6 +13956,8 @@ export const ClanUpdatedEvent = {
       hashtags: isSet(object.hashtags) ? globalThis.String(object.hashtags) : "",
       short_url: isSet(object.short_url) ? globalThis.String(object.short_url) : "",
       pro_plan: isSet(object.pro_plan) ? globalThis.Boolean(object.pro_plan) : false,
+      join_mode: isSet(object.join_mode) ? globalThis.Number(object.join_mode) : 0,
+      frame: isSet(object.frame) ? globalThis.Number(object.frame) : 0,
     };
   },
 
@@ -13984,6 +14011,12 @@ export const ClanUpdatedEvent = {
     if (message.pro_plan !== false) {
       obj.pro_plan = message.pro_plan;
     }
+    if (message.join_mode !== 0) {
+      obj.join_mode = Math.round(message.join_mode);
+    }
+    if (message.frame !== 0) {
+      obj.frame = Math.round(message.frame);
+    }
     return obj;
   },
 
@@ -14008,6 +14041,8 @@ export const ClanUpdatedEvent = {
     message.hashtags = object.hashtags ?? "";
     message.short_url = object.short_url ?? "";
     message.pro_plan = object.pro_plan ?? false;
+    message.join_mode = object.join_mode ?? 0;
+    message.frame = object.frame ?? 0;
     return message;
   },
 };
