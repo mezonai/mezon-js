@@ -788,6 +788,7 @@ export interface ClanUpdatedEvent {
   // community vanity short url (clan_discover)
   short_url?: string;
   pro_plan?: boolean;
+  join_mode?: number;
   // Clan Pro decoration frame number, 0 = none
   frame?: number;
 }
@@ -1758,6 +1759,8 @@ export interface MezonUpdateClanDescBody {
   // prevent anonymous
   prevent_anonymous?: boolean;
   pro_plan?: boolean;
+  // 0 = join instantly with an invite, 1 = request to join, the owner approves
+  join_mode?: number;
   // Clan Pro decoration frame: 0 clears it, n is entry n of the client frame catalog
   frame?: number;
 }
@@ -2535,6 +2538,8 @@ export interface ApiClanDesc {
   has_unread_message?: boolean;
   pro_plan?: boolean;
   total_members?: number;
+  // 0 = join instantly with an invite, 1 = request to join, the owner approves
+  join_mode?: number;
   frame?: number;
 }
 

@@ -281,7 +281,7 @@ describe("mezon-js v2.16.4 protocol fields", () => {
     expect(clan.total_members).toBe(128);
   });
 
-  it("encodes the clan frame on updateClanDesc, including 0 to clear it, and decodes it from listClanDescs", async () => {
+  it("encodes the clan frame (0 clears it) and join_mode on updateClanDesc and decodes both from listClanDescs", async () => {
     const { client, sent, setReply } = createClientWithMockSend();
     await client.updateClanDesc(dummySession, "10", { clan_name: "Mezon", frame: 5 });
     expect(tsproto.UpdateClanDescRequest.decode(sent[0].body).frame).toBe(5);
@@ -292,15 +292,19 @@ describe("mezon-js v2.16.4 protocol fields", () => {
     await client.updateClanDesc(dummySession, "10", { clan_name: "Mezon" });
     expect(tsproto.UpdateClanDescRequest.decode(sent[2].body).frame).toBeUndefined();
 
+    await client.updateClanDesc(dummySession, "10", { clan_name: "Mezon", join_mode: 1 });
+    expect(tsproto.UpdateClanDescRequest.decode(sent[3].body).join_mode).toBe(1);
+
     setReply(
       tsproto.ClanDescList.encode(
         tsproto.ClanDescList.fromPartial({
-          clandesc: [{ clan_id: "10", clan_name: "Mezon", pro_plan: true, frame: 7 }],
+          clandesc: [{ clan_id: "10", clan_name: "Mezon", pro_plan: true, frame: 7, join_mode: 1 }],
         }),
       ).finish(),
     );
     const list = await client.listClanDescs(dummySession);
     const clan: ApiClanDesc = list.clandesc![0];
     expect(clan.frame).toBe(7);
+    expect(clan.join_mode).toBe(1);
   });
 });
