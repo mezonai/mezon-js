@@ -41,6 +41,8 @@ export enum InternalEventsSocket {
   QuickMenu = "quick_menu_event",
   AIAgentEnableEvent ="aiagent_enabled_event",
   FriendStateUpdated = "friend_state_updated",
+  VoiceJoinWaitingEvent = "voice_join_waiting_event",
+  VoiceJoinReviewedEvent = "voice_join_reviewed_event",
 }
 
 export enum InternalAgentEvents {

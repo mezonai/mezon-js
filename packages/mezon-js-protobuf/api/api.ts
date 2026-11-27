@@ -1334,6 +1334,8 @@ export interface ClanDesc {
   /** Join mode: 0 = join instantly with invite (default), 1 = request to join, owner approves */
   join_mode: number;
   frame: number;
+  /** Direct voice access: true (default / unset) = join voice directly, false = wait for participant admission */
+  direct_voice_access: boolean | undefined;
 }
 
 /** Clan information */
@@ -1403,7 +1405,11 @@ export interface UpdateClanDescRequest {
     | undefined;
   /** Join mode: 0 = join instantly with invite, 1 = request to join, owner approves */
   join_mode: number | undefined;
-  frame: number | undefined;
+  frame:
+    | number
+    | undefined;
+  /** Direct voice access: true = join voice directly, false = wait for participant admission */
+  direct_voice_access: boolean | undefined;
 }
 
 /** Delete a clan the user has access to. */
@@ -4514,6 +4520,41 @@ export interface ReviewJoinPendingRequest {
 /** Response after reviewing a pending clan join request. */
 export interface ReviewJoinPendingResponse {
   clan_id: string;
+  user_id: string;
+  approved: boolean;
+}
+
+/** A user currently waiting to be admitted into a voice channel. */
+export interface VoiceJoinWaitingUser {
+  user_id: string;
+  username: string;
+  display_name: string;
+  avatar: string;
+  create_time_seconds: string;
+}
+
+/** Request to list users currently waiting to join a voice channel (active voice participants only). */
+export interface ListVoiceJoinWaitingRequest {
+  channel_id: string;
+}
+
+/** Response containing users currently waiting to join a voice channel. */
+export interface ListVoiceJoinWaitingResponse {
+  channel_id: string;
+  users: VoiceJoinWaitingUser[];
+}
+
+/** Request for an active voice participant to admit or reject a waiting user. */
+export interface ReviewVoiceJoinRequest {
+  channel_id: string;
+  user_id: string;
+  /** True to admit (issue SFU token and deliver via VoiceJoinReviewedEvent), false to reject. */
+  approve: boolean;
+}
+
+/** Response after reviewing a pending voice join request. */
+export interface ReviewVoiceJoinResponse {
+  channel_id: string;
   user_id: string;
   approved: boolean;
 }
@@ -13071,6 +13112,7 @@ function createBaseClanDesc(): ClanDesc {
     total_members: 0,
     join_mode: 0,
     frame: 0,
+    direct_voice_access: undefined,
   };
 }
 
@@ -13144,6 +13186,9 @@ export const ClanDesc = {
     }
     if (message.frame !== 0) {
       writer.uint32(184).int32(message.frame);
+    }
+    if (message.direct_voice_access !== undefined) {
+      BoolValue.encode({ value: message.direct_voice_access! }, writer.uint32(194).fork()).ldelim();
     }
     return writer;
   },
@@ -13316,6 +13361,13 @@ export const ClanDesc = {
 
           message.frame = reader.int32();
           continue;
+        case 24:
+          if (tag !== 194) {
+            break;
+          }
+
+          message.direct_voice_access = BoolValue.decode(reader, reader.uint32()).value;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -13350,6 +13402,7 @@ export const ClanDesc = {
       total_members: isSet(object.total_members) ? globalThis.Number(object.total_members) : 0,
       join_mode: isSet(object.join_mode) ? globalThis.Number(object.join_mode) : 0,
       frame: isSet(object.frame) ? globalThis.Number(object.frame) : 0,
+      direct_voice_access: isSet(object.direct_voice_access) ? Boolean(object.direct_voice_access) : undefined,
     };
   },
 
@@ -13424,6 +13477,9 @@ export const ClanDesc = {
     if (message.frame !== 0) {
       obj.frame = Math.round(message.frame);
     }
+    if (message.direct_voice_access !== undefined) {
+      obj.direct_voice_access = message.direct_voice_access;
+    }
     return obj;
   },
 
@@ -13455,6 +13511,7 @@ export const ClanDesc = {
     message.total_members = object.total_members ?? 0;
     message.join_mode = object.join_mode ?? 0;
     message.frame = object.frame ?? 0;
+    message.direct_voice_access = object.direct_voice_access ?? undefined;
     return message;
   },
 };
@@ -13568,6 +13625,7 @@ function createBaseUpdateClanDescRequest(): UpdateClanDescRequest {
     pro_plan: undefined,
     join_mode: undefined,
     frame: undefined,
+    direct_voice_access: undefined,
   };
 }
 
@@ -13626,6 +13684,9 @@ export const UpdateClanDescRequest = {
     }
     if (message.frame !== undefined) {
       Int32Value.encode({ value: message.frame! }, writer.uint32(146).fork()).ldelim();
+    }
+    if (message.direct_voice_access !== undefined) {
+      BoolValue.encode({ value: message.direct_voice_access! }, writer.uint32(154).fork()).ldelim();
     }
     return writer;
   },
@@ -13763,6 +13824,13 @@ export const UpdateClanDescRequest = {
 
           message.frame = Int32Value.decode(reader, reader.uint32()).value;
           continue;
+        case 19:
+          if (tag !== 154) {
+            break;
+          }
+
+          message.direct_voice_access = BoolValue.decode(reader, reader.uint32()).value;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -13792,6 +13860,7 @@ export const UpdateClanDescRequest = {
       pro_plan: isSet(object.pro_plan) ? Boolean(object.pro_plan) : undefined,
       join_mode: isSet(object.join_mode) ? Number(object.join_mode) : undefined,
       frame: isSet(object.frame) ? Number(object.frame) : undefined,
+      direct_voice_access: isSet(object.direct_voice_access) ? Boolean(object.direct_voice_access) : undefined,
     };
   },
 
@@ -13851,6 +13920,9 @@ export const UpdateClanDescRequest = {
     if (message.frame !== undefined) {
       obj.frame = message.frame;
     }
+    if (message.direct_voice_access !== undefined) {
+      obj.direct_voice_access = message.direct_voice_access;
+    }
     return obj;
   },
 
@@ -13877,6 +13949,7 @@ export const UpdateClanDescRequest = {
     message.pro_plan = object.pro_plan ?? undefined;
     message.join_mode = object.join_mode ?? undefined;
     message.frame = object.frame ?? undefined;
+    message.direct_voice_access = object.direct_voice_access ?? undefined;
     return message;
   },
 };
@@ -48567,6 +48640,436 @@ export const ReviewJoinPendingResponse = {
   fromPartial<I extends Exact<DeepPartial<ReviewJoinPendingResponse>, I>>(object: I): ReviewJoinPendingResponse {
     const message = createBaseReviewJoinPendingResponse();
     message.clan_id = object.clan_id ?? "0";
+    message.user_id = object.user_id ?? "0";
+    message.approved = object.approved ?? false;
+    return message;
+  },
+};
+
+function createBaseVoiceJoinWaitingUser(): VoiceJoinWaitingUser {
+  return { user_id: "0", username: "", display_name: "", avatar: "", create_time_seconds: "0" };
+}
+
+export const VoiceJoinWaitingUser = {
+  encode(message: VoiceJoinWaitingUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "0") {
+      writer.uint32(8).int64(message.user_id);
+    }
+    if (message.username !== "") {
+      writer.uint32(18).string(message.username);
+    }
+    if (message.display_name !== "") {
+      writer.uint32(26).string(message.display_name);
+    }
+    if (message.avatar !== "") {
+      writer.uint32(34).string(message.avatar);
+    }
+    if (message.create_time_seconds !== "0") {
+      writer.uint32(40).int64(message.create_time_seconds);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): VoiceJoinWaitingUser {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVoiceJoinWaitingUser();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.user_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.username = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.display_name = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.avatar = reader.string();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.create_time_seconds = longToString(reader.int64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): VoiceJoinWaitingUser {
+    return {
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
+      avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.String(object.create_time_seconds) : "0",
+    };
+  },
+
+  toJSON(message: VoiceJoinWaitingUser): unknown {
+    const obj: any = {};
+    if (message.user_id !== "0") {
+      obj.user_id = message.user_id;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.display_name !== "") {
+      obj.display_name = message.display_name;
+    }
+    if (message.avatar !== "") {
+      obj.avatar = message.avatar;
+    }
+    if (message.create_time_seconds !== "0") {
+      obj.create_time_seconds = message.create_time_seconds;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<VoiceJoinWaitingUser>, I>>(base?: I): VoiceJoinWaitingUser {
+    return VoiceJoinWaitingUser.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<VoiceJoinWaitingUser>, I>>(object: I): VoiceJoinWaitingUser {
+    const message = createBaseVoiceJoinWaitingUser();
+    message.user_id = object.user_id ?? "0";
+    message.username = object.username ?? "";
+    message.display_name = object.display_name ?? "";
+    message.avatar = object.avatar ?? "";
+    message.create_time_seconds = object.create_time_seconds ?? "0";
+    return message;
+  },
+};
+
+function createBaseListVoiceJoinWaitingRequest(): ListVoiceJoinWaitingRequest {
+  return { channel_id: "0" };
+}
+
+export const ListVoiceJoinWaitingRequest = {
+  encode(message: ListVoiceJoinWaitingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "0") {
+      writer.uint32(8).int64(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListVoiceJoinWaitingRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListVoiceJoinWaitingRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListVoiceJoinWaitingRequest {
+    return { channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0" };
+  },
+
+  toJSON(message: ListVoiceJoinWaitingRequest): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListVoiceJoinWaitingRequest>, I>>(base?: I): ListVoiceJoinWaitingRequest {
+    return ListVoiceJoinWaitingRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListVoiceJoinWaitingRequest>, I>>(object: I): ListVoiceJoinWaitingRequest {
+    const message = createBaseListVoiceJoinWaitingRequest();
+    message.channel_id = object.channel_id ?? "0";
+    return message;
+  },
+};
+
+function createBaseListVoiceJoinWaitingResponse(): ListVoiceJoinWaitingResponse {
+  return { channel_id: "0", users: [] };
+}
+
+export const ListVoiceJoinWaitingResponse = {
+  encode(message: ListVoiceJoinWaitingResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "0") {
+      writer.uint32(8).int64(message.channel_id);
+    }
+    for (const v of message.users) {
+      VoiceJoinWaitingUser.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListVoiceJoinWaitingResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListVoiceJoinWaitingResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.users.push(VoiceJoinWaitingUser.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListVoiceJoinWaitingResponse {
+    return {
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      users: globalThis.Array.isArray(object?.users)
+        ? object.users.map((e: any) => VoiceJoinWaitingUser.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ListVoiceJoinWaitingResponse): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.users?.length) {
+      obj.users = message.users.map((e) => VoiceJoinWaitingUser.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListVoiceJoinWaitingResponse>, I>>(base?: I): ListVoiceJoinWaitingResponse {
+    return ListVoiceJoinWaitingResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListVoiceJoinWaitingResponse>, I>>(object: I): ListVoiceJoinWaitingResponse {
+    const message = createBaseListVoiceJoinWaitingResponse();
+    message.channel_id = object.channel_id ?? "0";
+    message.users = object.users?.map((e) => VoiceJoinWaitingUser.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseReviewVoiceJoinRequest(): ReviewVoiceJoinRequest {
+  return { channel_id: "0", user_id: "0", approve: false };
+}
+
+export const ReviewVoiceJoinRequest = {
+  encode(message: ReviewVoiceJoinRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "0") {
+      writer.uint32(8).int64(message.channel_id);
+    }
+    if (message.user_id !== "0") {
+      writer.uint32(16).int64(message.user_id);
+    }
+    if (message.approve !== false) {
+      writer.uint32(24).bool(message.approve);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ReviewVoiceJoinRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseReviewVoiceJoinRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.user_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.approve = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ReviewVoiceJoinRequest {
+    return {
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
+      approve: isSet(object.approve) ? globalThis.Boolean(object.approve) : false,
+    };
+  },
+
+  toJSON(message: ReviewVoiceJoinRequest): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.user_id !== "0") {
+      obj.user_id = message.user_id;
+    }
+    if (message.approve !== false) {
+      obj.approve = message.approve;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ReviewVoiceJoinRequest>, I>>(base?: I): ReviewVoiceJoinRequest {
+    return ReviewVoiceJoinRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ReviewVoiceJoinRequest>, I>>(object: I): ReviewVoiceJoinRequest {
+    const message = createBaseReviewVoiceJoinRequest();
+    message.channel_id = object.channel_id ?? "0";
+    message.user_id = object.user_id ?? "0";
+    message.approve = object.approve ?? false;
+    return message;
+  },
+};
+
+function createBaseReviewVoiceJoinResponse(): ReviewVoiceJoinResponse {
+  return { channel_id: "0", user_id: "0", approved: false };
+}
+
+export const ReviewVoiceJoinResponse = {
+  encode(message: ReviewVoiceJoinResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "0") {
+      writer.uint32(8).int64(message.channel_id);
+    }
+    if (message.user_id !== "0") {
+      writer.uint32(16).int64(message.user_id);
+    }
+    if (message.approved !== false) {
+      writer.uint32(24).bool(message.approved);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ReviewVoiceJoinResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseReviewVoiceJoinResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.channel_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.user_id = longToString(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.approved = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ReviewVoiceJoinResponse {
+    return {
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "0",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
+      approved: isSet(object.approved) ? globalThis.Boolean(object.approved) : false,
+    };
+  },
+
+  toJSON(message: ReviewVoiceJoinResponse): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "0") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.user_id !== "0") {
+      obj.user_id = message.user_id;
+    }
+    if (message.approved !== false) {
+      obj.approved = message.approved;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ReviewVoiceJoinResponse>, I>>(base?: I): ReviewVoiceJoinResponse {
+    return ReviewVoiceJoinResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ReviewVoiceJoinResponse>, I>>(object: I): ReviewVoiceJoinResponse {
+    const message = createBaseReviewVoiceJoinResponse();
+    message.channel_id = object.channel_id ?? "0";
     message.user_id = object.user_id ?? "0";
     message.approved = object.approved ?? false;
     return message;

@@ -224,6 +224,7 @@ export enum ApiNameEnum {
   RedeemProPlanCoupon,
   ListJoinPending,
   ReviewJoinPending,
+  ReviewVoiceJoin,
 }
 
 export function getApiFromPath(apiPath: string): number | undefined {
