@@ -1165,7 +1165,10 @@ export interface UpdateAccountRequest {
     | string
     | undefined;
   /** Pro plan */
-  pro_plan: boolean | undefined;
+  pro_plan:
+    | boolean
+    | undefined;
+  /** Pro avatar frame: -1 hides it, 0 = automatic, n = frame n of the client catalog; unset keeps the stored value */
   frame: number | undefined;
 }
 
@@ -1245,6 +1248,7 @@ export interface User {
   /** Profile banner url */
   banner: string;
   pro_plan: boolean;
+  /** Pro avatar frame: -1 hidden, 0 automatic (derived from the user id), n = frame n of the client catalog */
   frame: number;
 }
 

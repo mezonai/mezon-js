@@ -1619,6 +1619,7 @@ export interface UserProfileUpdatedEvent {
   /** profile banner url */
   banner: string;
   pro_plan: boolean;
+  /** Pro avatar frame, set only when it changed: -1 hidden, 0 automatic, n = frame n of the client catalog */
   frame: number | undefined;
 }
 
