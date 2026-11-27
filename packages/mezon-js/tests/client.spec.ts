@@ -325,3 +325,220 @@ describe("mezon-js v2.16.4 protocol fields", () => {
     expect(event.frame).toBe(5);
   });
 });
+
+describe("mezon-js v2.16.6 join mode, frame & pending requests", () => {
+  afterEach(() => jest.restoreAllMocks());
+
+  it("encodes and decodes join_mode and frame on updateClanDesc and listClanDescs", async () => {
+    const { client, sent, setReply } = createClientWithMockSend();
+    await client.updateClanDesc(dummySession, "10", {
+      clan_name: "Mezon",
+      join_mode: 1,
+      frame: 3,
+    });
+    expect(tsproto.UpdateClanDescRequest.decode(sent[0].body)).toMatchObject({
+      clan_id: "10",
+      join_mode: 1,
+      frame: 3,
+    });
+
+    await client.updateClanDesc(dummySession, "10", {
+      clan_name: "Mezon",
+      join_mode: 0,
+    });
+    expect(tsproto.UpdateClanDescRequest.decode(sent[1].body)).toMatchObject({
+      clan_id: "10",
+      join_mode: 0,
+    });
+
+    setReply(
+      tsproto.ClanDescList.encode(
+        tsproto.ClanDescList.fromPartial({
+          clandesc: [
+            {
+              clan_id: "10",
+              clan_name: "Mezon",
+              join_mode: 1,
+              frame: 3,
+            },
+          ],
+        }),
+      ).finish(),
+    );
+    const list = await client.listClanDescs(dummySession);
+    expect(list.clandesc![0].join_mode).toBe(1);
+    expect(list.clandesc![0].frame).toBe(3);
+  });
+
+  it("decodes join_pending on inviteUser and calls listJoinPending / reviewJoinPending", async () => {
+    const { client, sent, setReply } = createClientWithMockSend();
+
+    setReply(
+      tsproto.InviteUserRes.encode(
+        tsproto.InviteUserRes.fromPartial({
+          clan_id: "10",
+          channel_id: "20",
+          clan_name: "Mezon",
+          join_pending: true,
+        }),
+      ).finish(),
+    );
+    const inviteRes = await client.inviteUser(dummySession, "99");
+    expect(inviteRes.join_pending).toBe(true);
+
+    setReply(
+      tsproto.ListJoinPendingResponse.encode(
+        tsproto.ListJoinPendingResponse.fromPartial({
+          items: [
+            {
+              id: "1001",
+              clan_id: "10",
+              user_id: "2002",
+              username: "alice",
+              display_name: "Alice",
+              avatar_url: "https://cdn.test/a.png",
+              channel_id: "20",
+              invite_id: "99",
+              create_time_seconds: 1700000000,
+            },
+          ],
+          cursor: "next-cursor",
+        }),
+      ).finish(),
+    );
+    const pending = await client.listJoinPending(dummySession, {
+      clan_id: "10",
+      limit: 25,
+      cursor: "",
+    });
+    expect(sent[1].urlPath).toBe("/mezon.api.Mezon/ListJoinPending");
+    expect(tsproto.ListJoinPendingRequest.decode(sent[1].body)).toMatchObject({
+      clan_id: "10",
+      limit: 25,
+    });
+    expect(pending.cursor).toBe("next-cursor");
+    expect(pending.items).toHaveLength(1);
+    expect(pending.items![0].user_id).toBe("2002");
+
+    setReply(
+      tsproto.ReviewJoinPendingResponse.encode(
+        tsproto.ReviewJoinPendingResponse.fromPartial({
+          clan_id: "10",
+          user_id: "2002",
+          approved: true,
+        }),
+      ).finish(),
+    );
+    const reviewed = await client.reviewJoinPending(dummySession, {
+      clan_id: "10",
+      user_id: "2002",
+      approve: true,
+    });
+    expect(sent[2].urlPath).toBe("/mezon.api.Mezon/ReviewJoinPending");
+    expect(tsproto.ReviewJoinPendingRequest.decode(sent[2].body)).toMatchObject({
+      clan_id: "10",
+      user_id: "2002",
+      approve: true,
+    });
+    expect(reviewed).toMatchObject({
+      clan_id: "10",
+      user_id: "2002",
+      approved: true,
+    });
+  });
+
+  it("supports direct_voice_access and voice waiting-room RPCs and events", async () => {
+    const { client, sent, setReply } = createClientWithMockSend();
+
+    const updateReq: MezonUpdateClanDescBody = {
+      clan_name: "Voice Clan",
+      direct_voice_access: false,
+    };
+    await client.updateClanDesc(dummySession, "10", updateReq);
+    expect(tsproto.UpdateClanDescRequest.decode(sent[0].body)).toMatchObject({
+      clan_id: "10",
+      clan_name: "Voice Clan",
+      direct_voice_access: false,
+    });
+
+    const decodedClan: ApiClanDesc = tsproto.ClanDesc.decode(
+      tsproto.ClanDesc.encode(
+        tsproto.ClanDesc.fromPartial({
+          clan_id: "10",
+          clan_name: "Voice Clan",
+          direct_voice_access: false,
+        }),
+      ).finish(),
+    );
+    expect(decodedClan.direct_voice_access).toBe(false);
+
+    const decodedDefaultClan: ApiClanDesc = tsproto.ClanDesc.decode(
+      tsproto.ClanDesc.encode(
+        tsproto.ClanDesc.fromPartial({
+          clan_id: "11",
+          clan_name: "Default Clan",
+        }),
+      ).finish(),
+    );
+    expect(decodedDefaultClan.direct_voice_access).toBeUndefined();
+
+    setReply(
+      tsproto.GenerateMeetTokenResponse.encode(
+        tsproto.GenerateMeetTokenResponse.fromPartial({
+          token: "",
+          url: "wss://sfu.test/ws",
+        }),
+      ).finish(),
+    );
+    const meetRes = await client.generateMeetToken(dummySession, {
+      channel_id: "200",
+      room_name: "",
+      metadata: "Bob;bob.png",
+    });
+    expect(meetRes.token).toBe("");
+    expect(meetRes.url).toBe("wss://sfu.test/ws");
+
+    setReply(
+      tsproto.ReviewVoiceJoinResponse.encode(
+        tsproto.ReviewVoiceJoinResponse.fromPartial({
+          channel_id: "200",
+          user_id: "1002",
+          approved: true,
+        }),
+      ).finish(),
+    );
+    const reviewRes = await client.reviewVoiceJoin(dummySession, {
+      channel_id: "200",
+      user_id: "1002",
+      approve: true,
+    });
+    expect(sent[2].urlPath).toBe("/mezon.api.Mezon/ReviewVoiceJoin");
+    expect(reviewRes).toMatchObject({
+      channel_id: "200",
+      user_id: "1002",
+      approved: true,
+    });
+
+    const decodedEnv = rtapi.Envelope.decode(
+      rtapi.Envelope.encode(
+        rtapi.Envelope.fromPartial({
+          voice_join_reviewed_event: {
+            clan_id: "10",
+            channel_id: "200",
+            user_id: "1002",
+            reviewer_id: "1001",
+            approved: true,
+            token: "jwt-token",
+            url: "wss://sfu.test/ws",
+          },
+        }),
+      ).finish(),
+    );
+    expect(decodedEnv.voice_join_reviewed_event).toMatchObject({
+      channel_id: "200",
+      user_id: "1002",
+      approved: true,
+      token: "jwt-token",
+    });
+  });
+});

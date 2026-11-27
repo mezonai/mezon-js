@@ -788,9 +788,12 @@ export interface ClanUpdatedEvent {
   // community vanity short url (clan_discover)
   short_url?: string;
   pro_plan?: boolean;
+  // 0 = join instantly with an invite, 1 = request to join, the owner approves
   join_mode?: number;
   // Clan Pro decoration frame number, 0 = none
   frame?: number;
+  // true (default / unset) = join voice directly, false = wait for participant admission
+  direct_voice_access?: boolean;
 }
 
 export interface ClanProfileUpdatedEvent {
@@ -1763,6 +1766,8 @@ export interface MezonUpdateClanDescBody {
   join_mode?: number;
   // Clan Pro decoration frame: 0 clears it, n is entry n of the client frame catalog
   frame?: number;
+  // true = join voice directly, false = wait for participant admission
+  direct_voice_access?: boolean;
 }
 
 /**  */
@@ -2541,6 +2546,8 @@ export interface ApiClanDesc {
   // 0 = join instantly with an invite, 1 = request to join, the owner approves
   join_mode?: number;
   frame?: number;
+  // true (default / unset) = join voice directly, false = wait for participant admission
+  direct_voice_access?: boolean;
 }
 
 /**  */
@@ -4125,6 +4132,83 @@ export interface ApiUpdateDMSettingRequest {
 export interface ApiRedeemProPlanCouponRequest {
   code?: string;
   clan_id?: string;
+}
+
+/** Request to list pending clan join requests (clan owner only). */
+export interface ApiListJoinPendingRequest {
+  clan_id: string;
+  limit?: number;
+  cursor?: string;
+}
+
+/** A single pending clan join request. */
+export interface ApiJoinPendingItem {
+  id: string;
+  clan_id: string;
+  user_id: string;
+  username?: string;
+  display_name?: string;
+  avatar_url?: string;
+  channel_id?: string;
+  invite_id?: string;
+  create_time_seconds?: number;
+}
+
+/** Response containing pending clan join requests. */
+export interface ApiListJoinPendingResponse {
+  items?: Array<ApiJoinPendingItem>;
+  cursor?: string;
+}
+
+/** Request for clan owner to approve or reject a pending join request. */
+export interface ApiReviewJoinPendingRequest {
+  clan_id: string;
+  user_id: string;
+  approve: boolean;
+}
+
+/** Response after reviewing a pending clan join request. */
+export interface ApiReviewJoinPendingResponse {
+  clan_id?: string;
+  user_id?: string;
+  approved?: boolean;
+}
+
+/** Request for an active voice participant to admit or reject a waiting user. */
+export interface ApiReviewVoiceJoinRequest {
+  channel_id: string;
+  user_id: string;
+  approve: boolean;
+}
+
+/** Response after reviewing a pending voice join request. */
+export interface ApiReviewVoiceJoinResponse {
+  channel_id?: string;
+  user_id?: string;
+  approved?: boolean;
+}
+
+/** Sent to active voice participants when a user enters the voice waiting room. */
+export interface VoiceJoinWaitingEvent {
+  clan_id: string;
+  channel_id: string;
+  user_id: string;
+  username: string;
+  display_name: string;
+  avatar: string;
+  create_time_seconds: string;
+  action: number;
+}
+
+/** Sent to a waiting user (with token/url when approved) and active participants when a voice join request is resolved. */
+export interface VoiceJoinReviewedEvent {
+  clan_id: string;
+  channel_id: string;
+  user_id: string;
+  reviewer_id: string;
+  approved: boolean;
+  token: string;
+  url: string;
 }
 
 /** A user's session used to authenticate messages. */

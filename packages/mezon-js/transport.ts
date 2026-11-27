@@ -91,6 +91,12 @@ import {
   ApiSetOverrideEveryoneChannelRequest,
   ApiRedeemProPlanCouponRequest,
   ApiUpdateDMSettingRequest,
+  ApiListJoinPendingRequest,
+  ApiListJoinPendingResponse,
+  ApiReviewJoinPendingRequest,
+  ApiReviewJoinPendingResponse,
+  ApiReviewVoiceJoinRequest,
+  ApiReviewVoiceJoinResponse,
   ApiGenerateClanWebhookRequest,
   ApiGenerateClanWebhookResponse,
   ApiGenerateMeetTokenExternalResponse,
@@ -460,6 +466,9 @@ enum ApiNameEnum {
   UpdateDMSetting,
   RevokeAllSession,
   RedeemProPlanCoupon,
+  ListJoinPending,
+  ReviewJoinPending,
+  ReviewVoiceJoin,
 }
 
 export interface MezonTransportHandlers {
@@ -3823,6 +3832,117 @@ export class MezonTransport {
         if (response.code != 0) {
           throw response;
         }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs
+        )
+      ),
+    ]);
+  }
+
+  /** List pending join requests for a clan (owner only). */
+  listJoinPending(
+    body: ApiListJoinPendingRequest,
+    options = {}
+  ): Promise<ApiListJoinPendingResponse> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/ListJoinPending";
+    const bodyWriter = tsproto.ListJoinPendingRequest.encode(
+      tsproto.ListJoinPendingRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+
+    return Promise.race([
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return tsproto.ListJoinPendingResponse.decode(
+          response.message
+        ) as ApiListJoinPendingResponse;
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs
+        )
+      ),
+    ]);
+  }
+
+  /** Approve or reject a pending clan join request (owner only). */
+  reviewJoinPending(
+    body: ApiReviewJoinPendingRequest,
+    options = {}
+  ): Promise<ApiReviewJoinPendingResponse> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/ReviewJoinPending";
+    const bodyWriter = tsproto.ReviewJoinPendingRequest.encode(
+      tsproto.ReviewJoinPendingRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+
+    return Promise.race([
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return tsproto.ReviewJoinPendingResponse.decode(
+          response.message
+        ) as ApiReviewJoinPendingResponse;
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs
+        )
+      ),
+    ]);
+  }
+
+  /** Admit or reject a user waiting to join a voice channel (active voice participants only). */
+  reviewVoiceJoin(
+    body: ApiReviewVoiceJoinRequest,
+    options = {}
+  ): Promise<ApiReviewVoiceJoinResponse> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/mezon.api.Mezon/ReviewVoiceJoin";
+    const bodyWriter = tsproto.ReviewVoiceJoinRequest.encode(
+      tsproto.ReviewVoiceJoinRequest.fromPartial(body)
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+
+    return Promise.race([
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return tsproto.ReviewVoiceJoinResponse.decode(
+          response.message
+        ) as ApiReviewVoiceJoinResponse;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(

@@ -76,6 +76,14 @@ import {
   ApiSetOverrideEveryoneChannelRequest,
   ApiRedeemProPlanCouponRequest,
   ApiUpdateDMSettingRequest,
+  ApiListJoinPendingRequest,
+  ApiListJoinPendingResponse,
+  ApiReviewJoinPendingRequest,
+  ApiReviewJoinPendingResponse,
+  ApiReviewVoiceJoinRequest,
+  ApiReviewVoiceJoinResponse,
+  VoiceJoinWaitingEvent,
+  VoiceJoinReviewedEvent,
   ApiPinMessageRequest,
   ApiPinMessagesList,
   ApiDeleteChannelDescRequest,
@@ -732,6 +740,14 @@ export class Client {
               this.onsfubreakoutroomevent(
                 <SfuBreakoutRoomEvent>message.sfu_breakout_room_event
               );
+            } else if (message.voice_join_waiting_event) {
+              this.onvoicejoinwaiting(
+                <VoiceJoinWaitingEvent>message.voice_join_waiting_event
+              );
+            } else if (message.voice_join_reviewed_event) {
+              this.onvoicejoinreviewed(
+                <VoiceJoinReviewedEvent>message.voice_join_reviewed_event
+              );
             } else if (message.pong) {
               if (this.verbose && typeof console !== "undefined") {
                 console.log("Pong message received: %o", message);
@@ -1319,6 +1335,18 @@ export class Client {
   onsfubreakoutroomevent(sfu_breakout_room_event: SfuBreakoutRoomEvent) {
     if (this.verbose && typeof console !== "undefined") {
       console.log(sfu_breakout_room_event);
+    }
+  }
+
+  onvoicejoinwaiting(voice_join_waiting_event: VoiceJoinWaitingEvent) {
+    if (this.verbose && typeof console !== "undefined") {
+      console.log(voice_join_waiting_event);
+    }
+  }
+
+  onvoicejoinreviewed(voice_join_reviewed_event: VoiceJoinReviewedEvent) {
+    if (this.verbose && typeof console !== "undefined") {
+      console.log(voice_join_reviewed_event);
     }
   }
 
@@ -3668,6 +3696,51 @@ export class Client {
     }
 
     return this.transport.redeemProPlanCoupon(request);
+  }
+
+  /** List pending join requests for a clan (clan owner only). */
+  async listJoinPending(
+    session: ApiSession,
+    request: ApiListJoinPendingRequest
+  ): Promise<ApiListJoinPendingResponse> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport.listJoinPending(request);
+  }
+
+  /** Approve or reject a pending join request for a clan (clan owner only). */
+  async reviewJoinPending(
+    session: ApiSession,
+    request: ApiReviewJoinPendingRequest
+  ): Promise<ApiReviewJoinPendingResponse> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport.reviewJoinPending(request);
+  }
+
+  /** Admit or reject a user waiting to join a voice channel (active voice participants only). */
+  async reviewVoiceJoin(
+    session: ApiSession,
+    request: ApiReviewVoiceJoinRequest
+  ): Promise<ApiReviewVoiceJoinResponse> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport.reviewVoiceJoin(request);
   }
 
   /** */
