@@ -296,6 +296,8 @@ export interface UserProfileUpdatedEvent {
   encrypt_private_key: string;
   // profile banner url
   banner?: string;
+  // Pro avatar frame, present only when it changed
+  frame?: number;
 }
 
 /** An acknowledgement received in response to sending a message on a chat channel. */
@@ -4443,6 +4445,8 @@ export interface ApiUpdateAccountRequest {
   //The timezone set by the user.
   timezone?: string;
   pro_plan?: boolean;
+  // Pro avatar frame: -1 hides it, 0 sets automatic, n is entry n of the client frame catalog
+  frame?: number;
 }
 
 /**  */
@@ -4570,6 +4574,8 @@ export interface ApiUser {
   banner?: string;
   // Mezon Pro subscriber
   pro_plan?: boolean;
+  // Pro avatar frame: -1 hidden, 0 automatic, n is entry n of the client frame catalog
+  frame?: number;
 }
 
 /**  */

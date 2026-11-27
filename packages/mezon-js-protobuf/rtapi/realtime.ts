@@ -1619,6 +1619,7 @@ export interface UserProfileUpdatedEvent {
   /** profile banner url */
   banner: string;
   pro_plan: boolean;
+  frame: number | undefined;
 }
 
 export interface ConfirmLinkMezonOTPData {
@@ -14256,6 +14257,7 @@ function createBaseUserProfileUpdatedEvent(): UserProfileUpdatedEvent {
     encrypt_private_key: "",
     banner: "",
     pro_plan: false,
+    frame: undefined,
   };
 }
 
@@ -14287,6 +14289,9 @@ export const UserProfileUpdatedEvent = {
     }
     if (message.pro_plan !== false) {
       writer.uint32(72).bool(message.pro_plan);
+    }
+    if (message.frame !== undefined) {
+      Int32Value.encode({ value: message.frame! }, writer.uint32(82).fork()).ldelim();
     }
     return writer;
   },
@@ -14361,6 +14366,13 @@ export const UserProfileUpdatedEvent = {
 
           message.pro_plan = reader.bool();
           continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.frame = Int32Value.decode(reader, reader.uint32()).value;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -14381,6 +14393,7 @@ export const UserProfileUpdatedEvent = {
       encrypt_private_key: isSet(object.encrypt_private_key) ? globalThis.String(object.encrypt_private_key) : "",
       banner: isSet(object.banner) ? globalThis.String(object.banner) : "",
       pro_plan: isSet(object.pro_plan) ? globalThis.Boolean(object.pro_plan) : false,
+      frame: isSet(object.frame) ? Number(object.frame) : undefined,
     };
   },
 
@@ -14413,6 +14426,9 @@ export const UserProfileUpdatedEvent = {
     if (message.pro_plan !== false) {
       obj.pro_plan = message.pro_plan;
     }
+    if (message.frame !== undefined) {
+      obj.frame = message.frame;
+    }
     return obj;
   },
 
@@ -14430,6 +14446,7 @@ export const UserProfileUpdatedEvent = {
     message.encrypt_private_key = object.encrypt_private_key ?? "";
     message.banner = object.banner ?? "";
     message.pro_plan = object.pro_plan ?? false;
+    message.frame = object.frame ?? undefined;
     return message;
   },
 };
