@@ -1165,7 +1165,11 @@ export interface UpdateAccountRequest {
     | string
     | undefined;
   /** Pro plan */
-  pro_plan: boolean | undefined;
+  pro_plan:
+    | boolean
+    | undefined;
+  /** Unused: the avatar frame is saved with UpdateUserDecoration */
+  frame: number | undefined;
 }
 
 /** Update fields in a given group. */
@@ -1244,6 +1248,8 @@ export interface User {
   /** Profile banner url */
   banner: string;
   pro_plan: boolean;
+  /** Unused (always 0): read the avatar frame with ListUserDecorations */
+  frame: number;
 }
 
 /** A collection of zero or more users. */
@@ -4557,6 +4563,27 @@ export interface ReviewVoiceJoinResponse {
   channel_id: string;
   user_id: string;
   approved: boolean;
+}
+
+/** A user's avatar decoration. frame: -1 hidden, 0 automatic (derived from the user id), n = frame n of the client catalog. */
+export interface UserDecoration {
+  user_id: string;
+  frame: number;
+}
+
+/** Read the decorations of up to 500 users. */
+export interface ListUserDecorationsRequest {
+  user_ids: string[];
+}
+
+/** Decorations for the requested users, one entry per user (frame 0 when none is stored). */
+export interface UserDecorationList {
+  decorations: UserDecoration[];
+}
+
+/** Set the caller's avatar frame (-1..1000; a value above 0 needs Pro). */
+export interface UpdateUserDecorationRequest {
+  frame: number;
 }
 
 function createBaseAccount(): Account {
@@ -11853,6 +11880,7 @@ function createBaseUpdateAccountRequest(): UpdateAccountRequest {
     email: undefined,
     banner: undefined,
     pro_plan: undefined,
+    frame: undefined,
   };
 }
 
@@ -11896,6 +11924,9 @@ export const UpdateAccountRequest = {
     }
     if (message.pro_plan !== undefined) {
       BoolValue.encode({ value: message.pro_plan! }, writer.uint32(106).fork()).ldelim();
+    }
+    if (message.frame !== undefined) {
+      Int32Value.encode({ value: message.frame! }, writer.uint32(114).fork()).ldelim();
     }
     return writer;
   },
@@ -11998,6 +12029,13 @@ export const UpdateAccountRequest = {
 
           message.pro_plan = BoolValue.decode(reader, reader.uint32()).value;
           continue;
+        case 14:
+          if (tag !== 114) {
+            break;
+          }
+
+          message.frame = Int32Value.decode(reader, reader.uint32()).value;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -12022,6 +12060,7 @@ export const UpdateAccountRequest = {
       email: isSet(object.email) ? String(object.email) : undefined,
       banner: isSet(object.banner) ? String(object.banner) : undefined,
       pro_plan: isSet(object.pro_plan) ? Boolean(object.pro_plan) : undefined,
+      frame: isSet(object.frame) ? Number(object.frame) : undefined,
     };
   },
 
@@ -12066,6 +12105,9 @@ export const UpdateAccountRequest = {
     if (message.pro_plan !== undefined) {
       obj.pro_plan = message.pro_plan;
     }
+    if (message.frame !== undefined) {
+      obj.frame = message.frame;
+    }
     return obj;
   },
 
@@ -12087,6 +12129,7 @@ export const UpdateAccountRequest = {
     message.email = object.email ?? undefined;
     message.banner = object.banner ?? undefined;
     message.pro_plan = object.pro_plan ?? undefined;
+    message.frame = object.frame ?? undefined;
     return message;
   },
 };
@@ -12345,6 +12388,7 @@ function createBaseUser(): User {
     status: "",
     banner: "",
     pro_plan: false,
+    frame: 0,
   };
 }
 
@@ -12415,6 +12459,9 @@ export const User = {
     }
     if (message.pro_plan !== false) {
       writer.uint32(176).bool(message.pro_plan);
+    }
+    if (message.frame !== 0) {
+      writer.uint32(184).int32(message.frame);
     }
     return writer;
   },
@@ -12580,6 +12627,13 @@ export const User = {
 
           message.pro_plan = reader.bool();
           continue;
+        case 23:
+          if (tag !== 184) {
+            break;
+          }
+
+          message.frame = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -12615,6 +12669,7 @@ export const User = {
       status: isSet(object.status) ? globalThis.String(object.status) : "",
       banner: isSet(object.banner) ? globalThis.String(object.banner) : "",
       pro_plan: isSet(object.pro_plan) ? globalThis.Boolean(object.pro_plan) : false,
+      frame: isSet(object.frame) ? globalThis.Number(object.frame) : 0,
     };
   },
 
@@ -12686,6 +12741,9 @@ export const User = {
     if (message.pro_plan !== false) {
       obj.pro_plan = message.pro_plan;
     }
+    if (message.frame !== 0) {
+      obj.frame = Math.round(message.frame);
+    }
     return obj;
   },
 
@@ -12716,6 +12774,7 @@ export const User = {
     message.status = object.status ?? "";
     message.banner = object.banner ?? "";
     message.pro_plan = object.pro_plan ?? false;
+    message.frame = object.frame ?? 0;
     return message;
   },
 };
@@ -49072,6 +49131,269 @@ export const ReviewVoiceJoinResponse = {
     message.channel_id = object.channel_id ?? "0";
     message.user_id = object.user_id ?? "0";
     message.approved = object.approved ?? false;
+    return message;
+  },
+};
+
+function createBaseUserDecoration(): UserDecoration {
+  return { user_id: "0", frame: 0 };
+}
+
+export const UserDecoration = {
+  encode(message: UserDecoration, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "0") {
+      writer.uint32(8).int64(message.user_id);
+    }
+    if (message.frame !== 0) {
+      writer.uint32(16).int32(message.frame);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserDecoration {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserDecoration();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.user_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.frame = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UserDecoration {
+    return {
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
+      frame: isSet(object.frame) ? globalThis.Number(object.frame) : 0,
+    };
+  },
+
+  toJSON(message: UserDecoration): unknown {
+    const obj: any = {};
+    if (message.user_id !== "0") {
+      obj.user_id = message.user_id;
+    }
+    if (message.frame !== 0) {
+      obj.frame = Math.round(message.frame);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UserDecoration>, I>>(base?: I): UserDecoration {
+    return UserDecoration.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UserDecoration>, I>>(object: I): UserDecoration {
+    const message = createBaseUserDecoration();
+    message.user_id = object.user_id ?? "0";
+    message.frame = object.frame ?? 0;
+    return message;
+  },
+};
+
+function createBaseListUserDecorationsRequest(): ListUserDecorationsRequest {
+  return { user_ids: [] };
+}
+
+export const ListUserDecorationsRequest = {
+  encode(message: ListUserDecorationsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    writer.uint32(10).fork();
+    for (const v of message.user_ids) {
+      writer.int64(v);
+    }
+    writer.ldelim();
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListUserDecorationsRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListUserDecorationsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag === 8) {
+            message.user_ids.push(longToString(reader.int64() as Long));
+
+            continue;
+          }
+
+          if (tag === 10) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.user_ids.push(longToString(reader.int64() as Long));
+            }
+
+            continue;
+          }
+
+          break;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListUserDecorationsRequest {
+    return {
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+    };
+  },
+
+  toJSON(message: ListUserDecorationsRequest): unknown {
+    const obj: any = {};
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListUserDecorationsRequest>, I>>(base?: I): ListUserDecorationsRequest {
+    return ListUserDecorationsRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListUserDecorationsRequest>, I>>(object: I): ListUserDecorationsRequest {
+    const message = createBaseListUserDecorationsRequest();
+    message.user_ids = object.user_ids?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseUserDecorationList(): UserDecorationList {
+  return { decorations: [] };
+}
+
+export const UserDecorationList = {
+  encode(message: UserDecorationList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.decorations) {
+      UserDecoration.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserDecorationList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserDecorationList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.decorations.push(UserDecoration.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UserDecorationList {
+    return {
+      decorations: globalThis.Array.isArray(object?.decorations)
+        ? object.decorations.map((e: any) => UserDecoration.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: UserDecorationList): unknown {
+    const obj: any = {};
+    if (message.decorations?.length) {
+      obj.decorations = message.decorations.map((e) => UserDecoration.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UserDecorationList>, I>>(base?: I): UserDecorationList {
+    return UserDecorationList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UserDecorationList>, I>>(object: I): UserDecorationList {
+    const message = createBaseUserDecorationList();
+    message.decorations = object.decorations?.map((e) => UserDecoration.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseUpdateUserDecorationRequest(): UpdateUserDecorationRequest {
+  return { frame: 0 };
+}
+
+export const UpdateUserDecorationRequest = {
+  encode(message: UpdateUserDecorationRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.frame !== 0) {
+      writer.uint32(8).int32(message.frame);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateUserDecorationRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdateUserDecorationRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.frame = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpdateUserDecorationRequest {
+    return { frame: isSet(object.frame) ? globalThis.Number(object.frame) : 0 };
+  },
+
+  toJSON(message: UpdateUserDecorationRequest): unknown {
+    const obj: any = {};
+    if (message.frame !== 0) {
+      obj.frame = Math.round(message.frame);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdateUserDecorationRequest>, I>>(base?: I): UpdateUserDecorationRequest {
+    return UpdateUserDecorationRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UpdateUserDecorationRequest>, I>>(object: I): UpdateUserDecorationRequest {
+    const message = createBaseUpdateUserDecorationRequest();
+    message.frame = object.frame ?? 0;
     return message;
   },
 };

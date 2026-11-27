@@ -460,7 +460,11 @@ export interface Envelope {
     | VoiceJoinWaitingEvent
     | undefined;
   /** Sent to a waiting user (with SFU token/url on approval) and to active participants when a voice join request is resolved */
-  voice_join_reviewed_event?: VoiceJoinReviewedEvent | undefined;
+  voice_join_reviewed_event?:
+    | VoiceJoinReviewedEvent
+    | undefined;
+  /** A user's avatar decoration changed (sent to the user's clans and to their own notifications stream) */
+  user_decoration_updated_event?: UserDecorationUpdatedEvent | undefined;
 }
 
 export interface SfuBreakoutRoomEvent {
@@ -1619,7 +1623,7 @@ export interface UserProfileUpdatedEvent {
   /** profile banner url */
   banner: string;
   pro_plan: boolean;
-  /** Pro avatar frame, set only when it changed: -1 hidden, 0 automatic, n = frame n of the client catalog */
+  /** Unused: frame changes are sent as UserDecorationUpdatedEvent */
   frame: number | undefined;
 }
 
@@ -1964,6 +1968,12 @@ export interface VoiceJoinReviewedEvent {
   url: string;
 }
 
+/** A user's avatar decoration changed. frame: -1 hidden, 0 automatic, n = frame n of the client catalog. */
+export interface UserDecorationUpdatedEvent {
+  user_id: string;
+  frame: number;
+}
+
 function createBaseEnvelope(): Envelope {
   return {
     cid: 0,
@@ -2073,6 +2083,7 @@ function createBaseEnvelope(): Envelope {
     friend_state_updated: undefined,
     voice_join_waiting_event: undefined,
     voice_join_reviewed_event: undefined,
+    user_decoration_updated_event: undefined,
   };
 }
 
@@ -2399,6 +2410,9 @@ export const Envelope = {
     }
     if (message.voice_join_reviewed_event !== undefined) {
       VoiceJoinReviewedEvent.encode(message.voice_join_reviewed_event, writer.uint32(874).fork()).ldelim();
+    }
+    if (message.user_decoration_updated_event !== undefined) {
+      UserDecorationUpdatedEvent.encode(message.user_decoration_updated_event, writer.uint32(882).fork()).ldelim();
     }
     return writer;
   },
@@ -3159,6 +3173,13 @@ export const Envelope = {
 
           message.voice_join_reviewed_event = VoiceJoinReviewedEvent.decode(reader, reader.uint32());
           continue;
+        case 110:
+          if (tag !== 882) {
+            break;
+          }
+
+          message.user_decoration_updated_event = UserDecorationUpdatedEvent.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3422,6 +3443,9 @@ export const Envelope = {
         : undefined,
       voice_join_reviewed_event: isSet(object.voice_join_reviewed_event)
         ? VoiceJoinReviewedEvent.fromJSON(object.voice_join_reviewed_event)
+        : undefined,
+      user_decoration_updated_event: isSet(object.user_decoration_updated_event)
+        ? UserDecorationUpdatedEvent.fromJSON(object.user_decoration_updated_event)
         : undefined,
     };
   },
@@ -3750,6 +3774,9 @@ export const Envelope = {
     }
     if (message.voice_join_reviewed_event !== undefined) {
       obj.voice_join_reviewed_event = VoiceJoinReviewedEvent.toJSON(message.voice_join_reviewed_event);
+    }
+    if (message.user_decoration_updated_event !== undefined) {
+      obj.user_decoration_updated_event = UserDecorationUpdatedEvent.toJSON(message.user_decoration_updated_event);
     }
     return obj;
   },
@@ -4110,6 +4137,10 @@ export const Envelope = {
     message.voice_join_reviewed_event =
       (object.voice_join_reviewed_event !== undefined && object.voice_join_reviewed_event !== null)
         ? VoiceJoinReviewedEvent.fromPartial(object.voice_join_reviewed_event)
+        : undefined;
+    message.user_decoration_updated_event =
+      (object.user_decoration_updated_event !== undefined && object.user_decoration_updated_event !== null)
+        ? UserDecorationUpdatedEvent.fromPartial(object.user_decoration_updated_event)
         : undefined;
     return message;
   },
@@ -18988,6 +19019,80 @@ export const VoiceJoinReviewedEvent = {
     message.approved = object.approved ?? false;
     message.token = object.token ?? "";
     message.url = object.url ?? "";
+    return message;
+  },
+};
+
+function createBaseUserDecorationUpdatedEvent(): UserDecorationUpdatedEvent {
+  return { user_id: "0", frame: 0 };
+}
+
+export const UserDecorationUpdatedEvent = {
+  encode(message: UserDecorationUpdatedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "0") {
+      writer.uint32(8).int64(message.user_id);
+    }
+    if (message.frame !== 0) {
+      writer.uint32(16).int32(message.frame);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserDecorationUpdatedEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserDecorationUpdatedEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.user_id = longToString(reader.int64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.frame = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UserDecorationUpdatedEvent {
+    return {
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "0",
+      frame: isSet(object.frame) ? globalThis.Number(object.frame) : 0,
+    };
+  },
+
+  toJSON(message: UserDecorationUpdatedEvent): unknown {
+    const obj: any = {};
+    if (message.user_id !== "0") {
+      obj.user_id = message.user_id;
+    }
+    if (message.frame !== 0) {
+      obj.frame = Math.round(message.frame);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UserDecorationUpdatedEvent>, I>>(base?: I): UserDecorationUpdatedEvent {
+    return UserDecorationUpdatedEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UserDecorationUpdatedEvent>, I>>(object: I): UserDecorationUpdatedEvent {
+    const message = createBaseUserDecorationUpdatedEvent();
+    message.user_id = object.user_id ?? "0";
+    message.frame = object.frame ?? 0;
     return message;
   },
 };

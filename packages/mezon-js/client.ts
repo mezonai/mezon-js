@@ -84,6 +84,9 @@ import {
   ApiReviewVoiceJoinResponse,
   VoiceJoinWaitingEvent,
   VoiceJoinReviewedEvent,
+  ApiUserDecoration,
+  ApiUserDecorationList,
+  UserDecorationUpdatedEvent,
   ApiPinMessageRequest,
   ApiPinMessagesList,
   ApiDeleteChannelDescRequest,
@@ -748,6 +751,10 @@ export class Client {
               this.onvoicejoinreviewed(
                 <VoiceJoinReviewedEvent>message.voice_join_reviewed_event
               );
+            } else if (message.user_decoration_updated_event) {
+              this.onuserdecorationupdated(
+                <UserDecorationUpdatedEvent>message.user_decoration_updated_event
+              );
             } else if (message.pong) {
               if (this.verbose && typeof console !== "undefined") {
                 console.log("Pong message received: %o", message);
@@ -1347,6 +1354,14 @@ export class Client {
   onvoicejoinreviewed(voice_join_reviewed_event: VoiceJoinReviewedEvent) {
     if (this.verbose && typeof console !== "undefined") {
       console.log(voice_join_reviewed_event);
+    }
+  }
+
+  onuserdecorationupdated(
+    user_decoration_updated_event: UserDecorationUpdatedEvent
+  ) {
+    if (this.verbose && typeof console !== "undefined") {
+      console.log(user_decoration_updated_event);
     }
   }
 
@@ -3742,6 +3757,34 @@ export class Client {
     }
 
     return this.transport.reviewVoiceJoin(request);
+  }
+
+  async listUserDecorations(
+    session: ApiSession,
+    userIds: string[]
+  ): Promise<ApiUserDecorationList> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport.listUserDecorations(userIds);
+  }
+
+  async updateUserDecoration(
+    session: ApiSession,
+    frame: number
+  ): Promise<ApiUserDecoration> {
+    if (
+      this.autoFallbackHttp &&
+      this._connectionState !== ConnectionState.CONNECTED
+    ) {
+      await this.transport.setFallbackSession(session);
+    }
+
+    return this.transport.updateUserDecoration(frame);
   }
 
   /** */
