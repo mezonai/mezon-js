@@ -542,3 +542,57 @@ describe("mezon-js v2.16.6 join mode, frame & pending requests", () => {
     });
   });
 });
+
+describe("mezon-js Pro avatar frame (user)", () => {
+  it("encodes frame on updateAccount, including 0 and -1, and omits it when unset", async () => {
+    const { client, sent } = createClientWithMockSend();
+    await client.updateAccount(dummySession, { frame: 5 });
+    await client.updateAccount(dummySession, { frame: 0 });
+    await client.updateAccount(dummySession, { frame: -1 });
+    await client.updateAccount(dummySession, { banner: "https://cdn.test/b.png" });
+    expect(tsproto.UpdateAccountRequest.decode(sent[0].body).frame).toBe(5);
+    expect(tsproto.UpdateAccountRequest.decode(sent[1].body).frame).toBe(0);
+    expect(tsproto.UpdateAccountRequest.decode(sent[2].body).frame).toBe(-1);
+    expect(tsproto.UpdateAccountRequest.decode(sent[3].body).frame).toBeUndefined();
+  });
+
+  it("keeps the user frame in listClanUsers and getAccount", async () => {
+    const { client, setReply } = createClientWithMockSend();
+    setReply(
+      tsproto.ClanUserList.encode(
+        tsproto.ClanUserList.fromPartial({
+          clan_users: [
+            { user: { id: "1", username: "a", pro_plan: true, frame: 7 } },
+            { user: { id: "2", username: "b", pro_plan: true, frame: -1 } },
+            { user: { id: "3", username: "c" } },
+          ],
+        }),
+      ).finish(),
+    );
+    const list = await client.listClanUsers(dummySession, "10");
+    expect(list.clan_users!.map((u) => u.user!.frame)).toEqual([7, -1, 0]);
+
+    setReply(
+      tsproto.Account.encode(
+        tsproto.Account.fromPartial({ user: { id: "1", pro_plan: true, frame: 3 }, pro_plan: true }),
+      ).finish(),
+    );
+    const account = await client.getAccount(dummySession);
+    expect(account.user!.frame).toBe(3);
+  });
+
+  it("decodes the frame on user_profile_updated_event only when it is sent", () => {
+    const decode = (frame?: number) =>
+      rtapi.Envelope.decode(
+        rtapi.Envelope.encode(
+          rtapi.Envelope.fromPartial({
+            user_profile_updated_event: { user_id: "1", clan_id: "10", frame },
+          }),
+        ).finish(),
+      ).user_profile_updated_event!.frame;
+    expect(decode(4)).toBe(4);
+    expect(decode(0)).toBe(0);
+    expect(decode(-1)).toBe(-1);
+    expect(decode(undefined)).toBeUndefined();
+  });
+});
