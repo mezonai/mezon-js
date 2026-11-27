@@ -788,8 +788,9 @@ export interface ClanUpdatedEvent {
   // community vanity short url (clan_discover)
   short_url?: string;
   pro_plan?: boolean;
-  // join mode: 0 = instant with invite, 1 = request to join, owner approves
+  // 0 = join instantly with an invite, 1 = request to join, the owner approves
   join_mode?: number;
+  // Clan Pro decoration frame number, 0 = none
   frame?: number;
 }
 
@@ -1759,8 +1760,9 @@ export interface MezonUpdateClanDescBody {
   // prevent anonymous
   prevent_anonymous?: boolean;
   pro_plan?: boolean;
-  // join mode: 0 = instant with invite, 1 = request to join, owner approves
+  // 0 = join instantly with an invite, 1 = request to join, the owner approves
   join_mode?: number;
+  // Clan Pro decoration frame: 0 clears it, n is entry n of the client frame catalog
   frame?: number;
 }
 
@@ -2537,7 +2539,7 @@ export interface ApiClanDesc {
   has_unread_message?: boolean;
   pro_plan?: boolean;
   total_members?: number;
-  // join mode: 0 = instant with invite, 1 = request to join, owner approves
+  // 0 = join instantly with an invite, 1 = request to join, the owner approves
   join_mode?: number;
   frame?: number;
 }
@@ -3135,7 +3137,7 @@ export interface ApiInviteUserRes {
   community_banner: string;
   //
   is_community: boolean;
-  // True when clan join_mode requires owner approval and the request was added to join_pending.
+  // true when the clan requires approval and the invite created a pending join request instead of joining
   join_pending?: boolean;
 }
 

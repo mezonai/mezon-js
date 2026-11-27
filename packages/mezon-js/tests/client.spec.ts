@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import * as tsproto from "../../mezon-js-protobuf/api/api";
+import * as rtapi from "../../mezon-js-protobuf/rtapi/realtime";
 import { Client } from "../client";
 import { MezonTransport } from "../transport";
 import type {
@@ -279,6 +280,49 @@ describe("mezon-js v2.16.4 protocol fields", () => {
     const clan: ApiClanDesc = list.clandesc![0];
     expect(clan.pro_plan).toBe(true);
     expect(clan.total_members).toBe(128);
+  });
+
+  it("encodes the clan frame (0 clears it) and join_mode on updateClanDesc and decodes both from listClanDescs", async () => {
+    const { client, sent, setReply } = createClientWithMockSend();
+    await client.updateClanDesc(dummySession, "10", { clan_name: "Mezon", frame: 5 });
+    expect(tsproto.UpdateClanDescRequest.decode(sent[0].body).frame).toBe(5);
+
+    await client.updateClanDesc(dummySession, "10", { clan_name: "Mezon", frame: 0 });
+    expect(tsproto.UpdateClanDescRequest.decode(sent[1].body).frame).toBe(0);
+
+    await client.updateClanDesc(dummySession, "10", { clan_name: "Mezon" });
+    expect(tsproto.UpdateClanDescRequest.decode(sent[2].body).frame).toBeUndefined();
+
+    await client.updateClanDesc(dummySession, "10", { clan_name: "Mezon", join_mode: 1 });
+    expect(tsproto.UpdateClanDescRequest.decode(sent[3].body).join_mode).toBe(1);
+
+    await client.updateClanDesc(dummySession, "10", { clan_name: "Mezon", join_mode: 0 });
+    expect(tsproto.UpdateClanDescRequest.decode(sent[4].body).join_mode).toBe(0);
+    expect(tsproto.UpdateClanDescRequest.decode(sent[2].body).join_mode).toBeUndefined();
+
+    setReply(
+      tsproto.ClanDescList.encode(
+        tsproto.ClanDescList.fromPartial({
+          clandesc: [{ clan_id: "10", clan_name: "Mezon", pro_plan: true, frame: 7, join_mode: 1 }],
+        }),
+      ).finish(),
+    );
+    const list = await client.listClanDescs(dummySession);
+    const clan: ApiClanDesc = list.clandesc![0];
+    expect(clan.frame).toBe(7);
+    expect(clan.join_mode).toBe(1);
+  });
+
+  it("decodes pro_plan, join_mode and frame from a clan_updated_event envelope", () => {
+    const bytes = rtapi.Envelope.encode(
+      rtapi.Envelope.fromPartial({
+        clan_updated_event: { clan_id: "10", clan_name: "Mezon", pro_plan: true, join_mode: 1, frame: 5 },
+      }),
+    ).finish();
+    const event = rtapi.Envelope.decode(bytes).clan_updated_event!;
+    expect(event.pro_plan).toBe(true);
+    expect(event.join_mode).toBe(1);
+    expect(event.frame).toBe(5);
   });
 });
 
