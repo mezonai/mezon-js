@@ -12,5 +12,6 @@ export {
   ChannelMessageAck,
   SfuBreakoutRoomEvent,
   VoiceJoinWaitingEvent,
-  VoiceJoinReviewedEvent
+  VoiceJoinReviewedEvent,
+  UserDecorationUpdatedEvent
 } from "./rtapi/realtime";

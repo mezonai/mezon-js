@@ -225,6 +225,8 @@ export enum ApiNameEnum {
   ListJoinPending,
   ReviewJoinPending,
   ReviewVoiceJoin,
+  ListUserDecorations,
+  UpdateUserDecoration,
 }
 
 export function getApiFromPath(apiPath: string): number | undefined {

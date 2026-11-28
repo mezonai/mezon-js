@@ -10,8 +10,11 @@ import type {
   ApiEventManagement,
   ApiSession,
   ApiUpdateAccountRequest,
+  ApiUserDecoration,
+  ApiUserDecorationList,
   MezonUpdateClanDescBody,
   MezonUpdateEventBody,
+  UserDecorationUpdatedEvent,
 } from "../types";
 
 const dummySession: ApiSession = {
@@ -594,5 +597,140 @@ describe("mezon-js Pro avatar frame (user)", () => {
     expect(decode(0)).toBe(0);
     expect(decode(-1)).toBe(-1);
     expect(decode(undefined)).toBeUndefined();
+  });
+});
+
+describe("mezon-js user decoration API", () => {
+  beforeEach(() => jest.useFakeTimers());
+  afterEach(() => {
+    jest.useRealTimers();
+    jest.restoreAllMocks();
+  });
+
+  it("maps ListUserDecorations to 226 and UpdateUserDecoration to 227", () => {
+    const transport = new MezonTransport("defaultkey", 5000, "http://127.0.0.1:7350");
+    expect(transport.getApiFromPath("ListUserDecorations")).toBe(226);
+    expect(transport.getApiFromPath("UpdateUserDecoration")).toBe(227);
+  });
+
+  it("encodes and decodes listUserDecorations including frames 5, 0, -1 and empty list", async () => {
+    const { client, sent, setReply } = createClientWithMockSend();
+    const expected: ApiUserDecorationList = {
+      decorations: [
+        { user_id: "101", frame: 5 },
+        { user_id: "102", frame: 0 },
+        { user_id: "103", frame: -1 },
+      ],
+    };
+    setReply(
+      tsproto.UserDecorationList.encode(
+        tsproto.UserDecorationList.fromPartial(expected),
+      ).finish(),
+    );
+
+    const res = await client.listUserDecorations(dummySession, ["101", "102", "103"]);
+    expect(sent[0].urlPath).toBe("/mezon.api.Mezon/ListUserDecorations");
+    expect(tsproto.ListUserDecorationsRequest.decode(sent[0].body)).toEqual({
+      user_ids: ["101", "102", "103"],
+      clan_id: "0",
+    });
+    expect(res).toEqual(expected);
+
+    setReply(
+      tsproto.UserDecorationList.encode(
+        tsproto.UserDecorationList.fromPartial({ decorations: [] }),
+      ).finish(),
+    );
+    const emptyRes = await client.listUserDecorations(dummySession, []);
+    expect(tsproto.ListUserDecorationsRequest.decode(sent[1].body)).toEqual({
+      user_ids: [],
+      clan_id: "0",
+    });
+    expect(emptyRes).toEqual({ decorations: [] });
+
+    setReply(
+      tsproto.UserDecorationList.encode(
+        tsproto.UserDecorationList.fromPartial({ decorations: [{ user_id: "101", frame: 5 }] }),
+      ).finish(),
+    );
+    const clanRes = await client.listUserDecorations(dummySession, [], "2114000554567929856");
+    expect(tsproto.ListUserDecorationsRequest.decode(sent[2].body)).toEqual({
+      user_ids: [],
+      clan_id: "2114000554567929856",
+    });
+    expect(clanRes).toEqual({ decorations: [{ user_id: "101", frame: 5 }] });
+  });
+
+  it("encodes and decodes updateUserDecoration for frames 5, 0, and -1", async () => {
+    const { client, sent, setReply } = createClientWithMockSend();
+    const frames = [5, 0, -1];
+    for (let i = 0; i < frames.length; i++) {
+      const frame = frames[i];
+      const expected: ApiUserDecoration = { user_id: "101", frame };
+      setReply(
+        tsproto.UserDecoration.encode(
+          tsproto.UserDecoration.fromPartial(expected),
+        ).finish(),
+      );
+      const res = await client.updateUserDecoration(dummySession, frame);
+      expect(sent[i].urlPath).toBe("/mezon.api.Mezon/UpdateUserDecoration");
+      expect(tsproto.UpdateUserDecorationRequest.decode(sent[i].body)).toEqual({ frame });
+      expect(res).toEqual(expected);
+    }
+  });
+
+  it("encodes/decodes user_decoration_updated_event and dispatches to onuserdecorationupdated", async () => {
+    for (const frame of [5, 0, -1]) {
+      const decoded = rtapi.Envelope.decode(
+        rtapi.Envelope.encode(
+          rtapi.Envelope.fromPartial({
+            user_decoration_updated_event: { user_id: "101", frame },
+          }),
+        ).finish(),
+      );
+      expect(decoded.user_decoration_updated_event).toEqual({ user_id: "101", frame });
+    }
+
+    const client = new Client("defaultkey", "127.0.0.1", "7350", false, 5000, false);
+    const transport = (client as unknown as { transport: MezonTransport }).transport;
+    let capturedHandlers: Parameters<MezonTransport["connect"]>[4] | undefined;
+    jest
+      .spyOn(transport, "connect")
+      .mockImplementation((_sid, _url, _cs, _v, handlers) => {
+        capturedHandlers = handlers;
+        handlers.onOpen({} as Event);
+      });
+
+    const connectPromise = client.connect("sid", "127.0.0.1:7350", false, false);
+    await connectPromise;
+
+    const received: UserDecorationUpdatedEvent[] = [];
+    client.onuserdecorationupdated = (e) => received.push(e);
+
+    const decodedEnv = rtapi.Envelope.decode(
+      rtapi.Envelope.encode(
+        rtapi.Envelope.fromPartial({
+          user_decoration_updated_event: { user_id: "101", frame: -1 },
+        }),
+      ).finish(),
+    );
+    await capturedHandlers!.onMessage(0, 0, decodedEnv);
+    expect(received).toEqual([{ user_id: "101", frame: -1 }]);
+    client.disconnect(false);
+  });
+
+  it("logs onuserdecorationupdated only when verbose is true", () => {
+    const logSpy = jest.spyOn(console, "log").mockImplementation(() => undefined);
+    const client = new Client("defaultkey", "127.0.0.1", "7350", false, 5000, false);
+    const evt: UserDecorationUpdatedEvent = { user_id: "101", frame: 5 };
+
+    client.verbose = true;
+    expect(() => client.onuserdecorationupdated(evt)).not.toThrow();
+    expect(logSpy).toHaveBeenCalledWith(evt);
+
+    logSpy.mockClear();
+    client.verbose = false;
+    client.onuserdecorationupdated(evt);
+    expect(logSpy).not.toHaveBeenCalled();
   });
 });

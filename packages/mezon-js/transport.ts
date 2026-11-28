@@ -97,6 +97,8 @@ import {
   ApiReviewJoinPendingResponse,
   ApiReviewVoiceJoinRequest,
   ApiReviewVoiceJoinResponse,
+  ApiUserDecoration,
+  ApiUserDecorationList,
   ApiGenerateClanWebhookRequest,
   ApiGenerateClanWebhookResponse,
   ApiGenerateMeetTokenExternalResponse,
@@ -469,6 +471,8 @@ enum ApiNameEnum {
   ListJoinPending,
   ReviewJoinPending,
   ReviewVoiceJoin,
+  ListUserDecorations,
+  UpdateUserDecoration,
 }
 
 export interface MezonTransportHandlers {
@@ -3943,6 +3947,72 @@ export class MezonTransport {
         return tsproto.ReviewVoiceJoinResponse.decode(
           response.message
         ) as ApiReviewVoiceJoinResponse;
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs
+        )
+      ),
+    ]);
+  }
+
+  listUserDecorations(
+    userIds: string[],
+    clanId?: string,
+    options = {}
+  ): Promise<ApiUserDecorationList> {
+    const urlPath = "/mezon.api.Mezon/ListUserDecorations";
+    const bodyWriter = tsproto.ListUserDecorationsRequest.encode(
+      tsproto.ListUserDecorationsRequest.fromPartial({
+        user_ids: userIds ?? [],
+        clan_id: clanId ?? "0",
+      })
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+
+    return Promise.race([
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return tsproto.UserDecorationList.decode(
+          response.message
+        ) as ApiUserDecorationList;
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Request timed out.")),
+          this.timeoutMs
+        )
+      ),
+    ]);
+  }
+
+  updateUserDecoration(
+    frame: number,
+    options = {}
+  ): Promise<ApiUserDecoration> {
+    const urlPath = "/mezon.api.Mezon/UpdateUserDecoration";
+    const bodyWriter = tsproto.UpdateUserDecorationRequest.encode(
+      tsproto.UpdateUserDecorationRequest.fromPartial({ frame })
+    );
+    const encodedBody = bodyWriter.finish();
+
+    const fetchOptions = buildFetchOptions("POST", options, "");
+    fetchOptions.body = encodedBody;
+
+    return Promise.race([
+      this.send({ urlPath, fetchOptions }).then(async (response) => {
+        if (response.code != 0) {
+          throw response;
+        }
+        return tsproto.UserDecoration.decode(
+          response.message
+        ) as ApiUserDecoration;
       }),
       new Promise<never>((_, reject) =>
         setTimeout(

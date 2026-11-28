@@ -43,6 +43,7 @@ export enum InternalEventsSocket {
   FriendStateUpdated = "friend_state_updated",
   VoiceJoinWaitingEvent = "voice_join_waiting_event",
   VoiceJoinReviewedEvent = "voice_join_reviewed_event",
+  UserDecorationUpdatedEvent = "user_decoration_updated_event",
 }
 
 export enum InternalAgentEvents {

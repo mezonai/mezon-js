@@ -4213,6 +4213,20 @@ export interface VoiceJoinReviewedEvent {
   url: string;
 }
 
+export interface ApiUserDecoration {
+  user_id?: string;
+  frame?: number;
+}
+
+export interface ApiUserDecorationList {
+  decorations?: ApiUserDecoration[];
+}
+
+export interface UserDecorationUpdatedEvent {
+  user_id: string;
+  frame: number;
+}
+
 /** A user's session used to authenticate messages. */
 export interface ApiSession {
   //True if the corresponding account was just created, false otherwise.
