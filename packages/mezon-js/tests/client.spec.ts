@@ -632,6 +632,7 @@ describe("mezon-js user decoration API", () => {
     expect(sent[0].urlPath).toBe("/mezon.api.Mezon/ListUserDecorations");
     expect(tsproto.ListUserDecorationsRequest.decode(sent[0].body)).toEqual({
       user_ids: ["101", "102", "103"],
+      clan_id: "0",
     });
     expect(res).toEqual(expected);
 
@@ -643,8 +644,21 @@ describe("mezon-js user decoration API", () => {
     const emptyRes = await client.listUserDecorations(dummySession, []);
     expect(tsproto.ListUserDecorationsRequest.decode(sent[1].body)).toEqual({
       user_ids: [],
+      clan_id: "0",
     });
     expect(emptyRes).toEqual({ decorations: [] });
+
+    setReply(
+      tsproto.UserDecorationList.encode(
+        tsproto.UserDecorationList.fromPartial({ decorations: [{ user_id: "101", frame: 5 }] }),
+      ).finish(),
+    );
+    const clanRes = await client.listUserDecorations(dummySession, [], "2114000554567929856");
+    expect(tsproto.ListUserDecorationsRequest.decode(sent[2].body)).toEqual({
+      user_ids: [],
+      clan_id: "2114000554567929856",
+    });
+    expect(clanRes).toEqual({ decorations: [{ user_id: "101", frame: 5 }] });
   });
 
   it("encodes and decodes updateUserDecoration for frames 5, 0, and -1", async () => {

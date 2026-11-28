@@ -3959,12 +3959,14 @@ export class MezonTransport {
 
   listUserDecorations(
     userIds: string[],
+    clanId?: string,
     options = {}
   ): Promise<ApiUserDecorationList> {
     const urlPath = "/mezon.api.Mezon/ListUserDecorations";
     const bodyWriter = tsproto.ListUserDecorationsRequest.encode(
       tsproto.ListUserDecorationsRequest.fromPartial({
         user_ids: userIds ?? [],
+        clan_id: clanId ?? "0",
       })
     );
     const encodedBody = bodyWriter.finish();

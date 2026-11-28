@@ -3761,7 +3761,8 @@ export class Client {
 
   async listUserDecorations(
     session: ApiSession,
-    userIds: string[]
+    userIds: string[],
+    clanId?: string
   ): Promise<ApiUserDecorationList> {
     if (
       this.autoFallbackHttp &&
@@ -3770,7 +3771,7 @@ export class Client {
       await this.transport.setFallbackSession(session);
     }
 
-    return this.transport.listUserDecorations(userIds);
+    return this.transport.listUserDecorations(userIds, clanId);
   }
 
   async updateUserDecoration(

@@ -4571,12 +4571,13 @@ export interface UserDecoration {
   frame: number;
 }
 
-/** Read the decorations of up to 500 users. */
+/** Read avatar decorations: up to 500 user_ids (clan_id 0), or the members of one clan (clan_id set, user_ids empty; the caller must be a member). */
 export interface ListUserDecorationsRequest {
   user_ids: string[];
+  clan_id: string;
 }
 
-/** Decorations for the requested users, one entry per user (frame 0 when none is stored). */
+/** user_ids mode: one entry per existing user (frame 0 when none is stored). clan_id mode: only members whose frame is not 0; a member left out has frame 0. */
 export interface UserDecorationList {
   decorations: UserDecoration[];
 }
@@ -49210,7 +49211,7 @@ export const UserDecoration = {
 };
 
 function createBaseListUserDecorationsRequest(): ListUserDecorationsRequest {
-  return { user_ids: [] };
+  return { user_ids: [], clan_id: "0" };
 }
 
 export const ListUserDecorationsRequest = {
@@ -49220,6 +49221,9 @@ export const ListUserDecorationsRequest = {
       writer.int64(v);
     }
     writer.ldelim();
+    if (message.clan_id !== "0") {
+      writer.uint32(16).int64(message.clan_id);
+    }
     return writer;
   },
 
@@ -49247,6 +49251,13 @@ export const ListUserDecorationsRequest = {
           }
 
           break;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.clan_id = longToString(reader.int64() as Long);
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -49259,6 +49270,7 @@ export const ListUserDecorationsRequest = {
   fromJSON(object: any): ListUserDecorationsRequest {
     return {
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "0",
     };
   },
 
@@ -49266,6 +49278,9 @@ export const ListUserDecorationsRequest = {
     const obj: any = {};
     if (message.user_ids?.length) {
       obj.user_ids = message.user_ids;
+    }
+    if (message.clan_id !== "0") {
+      obj.clan_id = message.clan_id;
     }
     return obj;
   },
@@ -49276,6 +49291,7 @@ export const ListUserDecorationsRequest = {
   fromPartial<I extends Exact<DeepPartial<ListUserDecorationsRequest>, I>>(object: I): ListUserDecorationsRequest {
     const message = createBaseListUserDecorationsRequest();
     message.user_ids = object.user_ids?.map((e) => e) || [];
+    message.clan_id = object.clan_id ?? "0";
     return message;
   },
 };
